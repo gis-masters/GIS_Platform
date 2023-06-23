@@ -1,4 +1,4 @@
-import { ComponentType } from 'react';
+import { ComponentType, ReactNode } from 'react';
 
 import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FormControlProps } from '../../../components/Form/Control/Form-Control';
@@ -48,6 +48,7 @@ export interface OldSchema {
   relations?: Relation[];
   calcFiledFunction?: string;
   customRuleFunction?: string;
+  definitionQuery?: string;
 }
 
 export interface OldContentType {
@@ -61,9 +62,10 @@ export interface OldContentType {
   printTemplates?: string[];
   relations?: Relation[];
   attributes: Partial<OldPropertySchema>[];
+  definitionQuery?: string;
 }
 
-export type PropertyEnumeration = { title: string; value: string | number };
+export type PropertyEnumeration = { title: string; value: string | number; startIcon?: ReactNode; endIcon?: ReactNode };
 
 interface OldBasePropertySchema {
   name: string;

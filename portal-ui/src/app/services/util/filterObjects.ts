@@ -1,10 +1,16 @@
 import escapeStringRegexp from 'escape-string-regexp';
 import sift from 'sift';
 
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
+
 export type FilterQueryValue = string | number | boolean | (string | number | boolean)[] | RegExp | string[];
 
 export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];
+}
+
+export function filterFeatures(features: WfsFeature[], query: FilterQuery): WfsFeature[] {
+  return features.filter(({ properties }) => sift(prepareLike(query))(properties));
 }
 
 export function filterObjects<T>(arr: T[], query: FilterQuery): T[] {

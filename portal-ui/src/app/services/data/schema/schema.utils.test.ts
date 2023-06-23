@@ -42,6 +42,14 @@ const schemaWithViews: Schema = {
       title: 'Представление 2',
       type: 'VIEW',
       properties: [{ name: 'shape_area', required: true }]
+    },
+    {
+      id: 'viewsId3',
+      title: 'Представление 3',
+      type: 'VIEW',
+      styleName: 'borderLine',
+      definitionQuery: 'shape_area > 20000',
+      properties: [{ name: 'title' }]
     }
   ]
 };
@@ -61,6 +69,25 @@ const schemaWithAppliedView1: Schema = {
     }
   ],
   geometryType: GeometryType.MULTI_POLYGON
+};
+
+const schemaWithAppliedView3: Schema = {
+  name: 'border1',
+  appliedView: 'viewsId3',
+  title: 'Представление 3',
+  tableName: 'border1',
+  properties: [
+    {
+      name: 'title',
+      title: 'Наименование',
+      required: true,
+      asTitle: true,
+      propertyType: PropertyType.STRING
+    }
+  ],
+  geometryType: GeometryType.MULTI_POLYGON,
+  styleName: 'borderLine',
+  definitionQuery: 'shape_area > 20000'
 };
 
 const schemaWithContentTypes: Schema = {
@@ -194,6 +221,10 @@ describe('утилита применения представления applyVi
     const schemaWithAppliedView1 = applyView(schemaWithViewsAndRelations, 'viewsId1');
 
     expect(schemaWithAppliedView1.relations).toStrictEqual(viewRelations);
+  });
+
+  test('при применении представления к схеме переопределяются поля definitionQuery и styleName', () => {
+    expect(applyView(schemaWithViews, 'viewsId3')).toStrictEqual(schemaWithAppliedView3);
   });
 });
 

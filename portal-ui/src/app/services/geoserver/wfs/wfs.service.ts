@@ -1,15 +1,26 @@
 import { chunk } from 'lodash';
+import { MultiPolygon } from 'ol/geom';
+import { intersects, and } from 'ol/format/filter';
 
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
+import { schemaService } from '../../data/schema/schema.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { filterFeatures } from '../../util/filterObjects';
+import { olProjection } from '../projections.service';
+import { cqlConcat } from '../../util/cqlConcat';
 import { cqlBuild } from '../../util/cqlBuild';
+import { cqlParse } from '../../util/cqlParse';
 import { PageOptions } from '../../models';
 import { cql2ol } from '../../util/cql2ol';
 import { Mime } from '../../util/Mime';
 import { WFS } from '../../ol/WFS';
 
 import { WfsFeature, WfsFeatureCollection } from './wfs.models';
-import { wfsClient } from './wfs.client';
 import { generateWfsSortParam } from './wfs.util';
+import { wfsClient } from './wfs.client';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
   return {
@@ -31,6 +42,7 @@ const MAX_PAGE_SIZE = 10_000;
 export async function getFeatures(
   layer: CrgVectorLayer,
   pageOptions: PageOptions,
+  definitionQuery = '',
   featureIds: string[] = [],
   featureIdsNegative = false
 ): Promise<[WfsFeature[], number, number, number]> {
@@ -42,6 +54,7 @@ export async function getFeatures(
       pagedResult = await getFeatures(
         layer,
         { ...pageOptions, page, pageSize: MAX_PAGE_SIZE },
+        definitionQuery,
         featureIds,
         featureIdsNegative
       );
@@ -62,7 +75,7 @@ export async function getFeatures(
     count: String(pageOptions.pageSize)
   };
 
-  const cqlFilter = cqlBuild(pageOptions.filter);
+  const cqlFilter = cqlConcat(cqlBuild(pageOptions.filter), definitionQuery);
   const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
 
   const featureRequest = new WFS().writeGetFeature({
@@ -90,6 +103,9 @@ export async function getFeatures(
     const { ...paramsForTotalCount } = params;
     paramsForTotalCount.startindex = '0';
     paramsForTotalCount.count = '1';
+    if (definitionQuery) {
+      paramsForTotalCount.cql_filter = definitionQuery;
+    }
     const totalResponse = await wfsClient.getFeatureCollection(paramsForTotalCount);
     featuresTotal = totalResponse.totalFeatures;
   }
@@ -105,21 +121,21 @@ export async function getFeatureCollectionByXmlFilter(xml: string): Promise<WfsF
   return wfsClient.getFeatureCollectionByXmlFilter(xml);
 }
 
-export async function getFeaturesById(ids: string[], complexName: string): Promise<WfsFeature[]> {
+export async function getFeaturesById(ids: string[], complexName: string, definitionQuery = ''): Promise<WfsFeature[]> {
   const limit = 100;
 
   if (ids.length > limit) {
     const result: WfsFeature[] = [];
 
     for (const batch of chunk(ids, limit)) {
-      const features = await getFeaturesById(batch, complexName);
+      const features = await getFeaturesById(batch, complexName, definitionQuery);
       result.push(...features);
     }
 
     return result;
   }
 
-  const params = {
+  const params: Record<string, string> = {
     outputFormat: Mime.JSON,
     service: 'wfs',
     version: '2.0.0',
@@ -128,7 +144,48 @@ export async function getFeaturesById(ids: string[], complexName: string): Promi
     featureID: ids.join(',')
   };
 
-  const { features } = await wfsClient.getFeatureCollection(params);
+  let { features } = await wfsClient.getFeatureCollection(params);
+
+  if (definitionQuery) {
+    const filter = cqlParse(definitionQuery);
+    features = filterFeatures(features, filter);
+  }
 
   return features;
+}
+
+export async function makeXmlPolygonIntersect(
+  complexName: string,
+  polygon: MultiPolygon,
+  srsName: string,
+  selectionType: MapSelectionTypes
+): Promise<string> {
+  const tableName = complexName.split(':')[1];
+  const layer = currentProject.getLayerByTableName(tableName);
+  const baseSchema = await schemaService.getSchema(layer.schemaId);
+  const schema = applyView(baseSchema, layer.view);
+  const geometryFieldName = getGeometryFieldName(baseSchema);
+  const cqlFilter: string = cqlConcat(cqlBuild(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
+  const olFilter = cqlFilter
+    ? and(intersects(geometryFieldName, polygon, olProjection.id), cql2ol(cqlFilter))
+    : intersects(geometryFieldName, polygon, olProjection.id);
+
+  const featureRequest = new WFS().writeGetFeature({
+    srsName,
+    featureTypes: [complexName],
+    outputFormat: Mime.JSON,
+    filter: olFilter,
+    featureNS: '',
+    featurePrefix: '',
+    maxFeatures:
+      selectionType === MapSelectionTypes.REMOVE
+        ? undefined
+        : Math.max(
+            mapStore.selectingFeaturesLimit -
+              (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
+            1
+          )
+  });
+
+  return new XMLSerializer().serializeToString(featureRequest);
 }

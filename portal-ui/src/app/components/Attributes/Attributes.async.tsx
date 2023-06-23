@@ -50,8 +50,10 @@ export default class Attributes extends Component<IClassNameProps> {
           const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);
 
           if (isLayerFilterExist) {
-            if (modifiedLayer.id === this.currentLayer.id) {
-              this.tableInvoke.reset();
+            if (modifiedLayer.id === this.currentLayer?.id) {
+              if (this.tableInvoke?.reset) {
+                this.tableInvoke.reset();
+              }
             } else {
               attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
             }

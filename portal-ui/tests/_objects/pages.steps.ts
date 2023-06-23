@@ -1,5 +1,4 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
-import { DataTable } from '@cucumber/cucumber';
 
 import { blPage } from './pages/BL.page';
 import { root } from './blocks/Root/Root';
@@ -75,25 +74,23 @@ Given('я нахожусь на странице карты проекта', asy
 });
 
 Given(
-  'я нахожусь на странице карты проекта, спозиционированной на объектах созданного слоя',
-  async function (this: ScenarioScope, table: DataTable) {
+  'я нахожусь на странице карты проекта, спозиционированной на объектах созданного слоя: {strings}',
+  async function (this: ScenarioScope, ids: string[]) {
     const { latestDataset, latestVectorTable, latestProject } = this;
-
-    const data = table.raw()[1];
 
     const mapPage = new MapPage(latestProject.id);
     await mapPage.openWithPositionToFeatures(
       latestProject.id,
       latestDataset.identifier,
       latestVectorTable.identifier,
-      data[0].split(', ')
+      ids
     );
   }
 );
 
 Given(
-  'я нахожусь на странице карты проекта, спозиционированной на объектах слоя {string}',
-  async function (this: ScenarioScope, layerTitle: string, table: DataTable) {
+  'я нахожусь на странице карты проекта, спозиционированной на объектах слоя {string}: {strings}',
+  async function (this: ScenarioScope, layerTitle: string, ids: string[]) {
     const { latestDataset, latestProject } = this;
 
     const tableName = this.findLayerByTitle(layerTitle).tableName;
@@ -101,14 +98,8 @@ Given(
       throw new Error(`У слоя '${layerTitle}' отсутствует название таблицы, по которой он создан`);
     }
 
-    const data = table.raw()[1];
     const mapPage = new MapPage(latestProject.id);
-    await mapPage.openWithPositionToFeatures(
-      latestProject.id,
-      latestDataset.identifier,
-      tableName,
-      data[0].split(', ')
-    );
+    await mapPage.openWithPositionToFeatures(latestProject.id, latestDataset.identifier, tableName, ids);
   }
 );
 

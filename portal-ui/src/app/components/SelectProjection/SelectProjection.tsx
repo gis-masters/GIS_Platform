@@ -6,7 +6,7 @@ import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 import { FormField } from '../Form/Field/Form-Field';
 import { FormLabel } from '../Form/Label/Form-Label';
-import { FormControl } from '../Form/Control/Form-Control.composed';
+import { cnFormControl } from '../Form/Control/Form-Control';
 import { viewedProjections } from '../../services/geoserver/projections.service';
 
 const cnSelectProjection = cn('SelectProjection');
@@ -23,7 +23,7 @@ export class SelectProjection extends Component<SelectProjectionProps> {
     return (
       <FormField className={cnSelectProjection(null, [className])}>
         <FormLabel htmlFor='projSelector'>Система координат</FormLabel>
-        <FormControl>
+        <div className={cnFormControl()}>
           <Select
             className={cnSelectProjection('Selector')}
             value={value}
@@ -36,7 +36,7 @@ export class SelectProjection extends Component<SelectProjectionProps> {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </div>
       </FormField>
     );
   }

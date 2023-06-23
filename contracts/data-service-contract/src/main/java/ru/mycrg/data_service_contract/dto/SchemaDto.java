@@ -33,6 +33,7 @@ public class SchemaDto {
     private String originName;
     private String type;
     private String styleName;
+    private String definitionQuery;
     private boolean readOnly;
     private GeometryType geometryType;
     private List<ContentType> contentTypes = new ArrayList<>();
@@ -170,6 +171,14 @@ public class SchemaDto {
 
     public void setStyleName(String styleName) {
         this.styleName = styleName;
+    }
+
+    public String getDefinitionQuery() {
+        return definitionQuery;
+    }
+
+    public void setDefinitionQuery(String definitionQuery) {
+        this.definitionQuery = definitionQuery;
     }
 
     public boolean isCompatibleByGeometry(SchemaDto otherSchema) {

@@ -35,7 +35,7 @@ class FormViewTypeString extends Component<FormControlProps> {
       >
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue code={code}>
-          <TextOverflow value={code ? String(fieldValue) : nl2br(String(fieldValue))} />
+          <TextOverflow>{code ? String(fieldValue) : nl2br(String(fieldValue))}</TextOverflow>
         </FormViewValue>
         <FormViewErrors errors={errors} />
       </div>

@@ -35,9 +35,9 @@ export const schemaForSchema: SimpleSchema = {
       propertyType: PropertyType.STRING,
       display: 'code',
       name: 'schema',
-      validationFormula: (value: string): string[] | undefined => {
+      validationFormula: (value: unknown): string[] | undefined => {
         try {
-          JSON.parse(value);
+          JSON.parse(String(value));
         } catch {
           return ['Некорректное значение'];
         }
@@ -53,19 +53,24 @@ export interface Schema {
   name: string;
   title: string;
   description?: string;
-  appliedContentType?: string;
-  appliedView?: string;
   properties: PropertySchema[];
+
   tableName?: string;
   styleName?: string;
   geometryType?: SupportedGeometryType;
   readOnly?: boolean;
-  contentTypes?: ContentType[];
-  views?: ContentType[];
-  childOnly?: boolean;
-  children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
   relations?: Relation[];
+  definitionQuery?: string;
+
+  appliedContentType?: string;
+  appliedView?: string;
+  contentTypes?: ContentType[];
+  views?: ContentType[];
+
+  childOnly?: boolean;
+  children?: { library?: string; contentType: string }[];
+
   calcFiledFunction?: string;
   customRuleFunction?: string;
 }
@@ -81,6 +86,7 @@ export interface ContentType {
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
   relations?: Relation[];
+  definitionQuery?: string;
 }
 
 export interface Relation {
@@ -166,7 +172,7 @@ export interface PropertySchemaDatetime extends BasePropertySchema {
   defaultValue?: string;
 }
 
-export type PropertyOption = { title: string; value: string | number };
+export type PropertyOption = { title: string; value: string | number; startIcon?: ReactNode; endIcon?: ReactNode };
 
 export interface PropertySchemaChoice extends BasePropertySchema {
   propertyType: PropertyType.CHOICE;

@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { ListItemText, MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { MenuItem, Select, SelectChangeEvent, ToggleButton, ToggleButtonGroup } from '@mui/material';
 
 import { PropertyType, PropertySchemaChoice } from '../../../../services/data/schema/schema.models';
 
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
 
-export const cnChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
-
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_choice.scss';
+
+const cnFormChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
 
 const EMPTY = '~~~empty_value~~~';
 
@@ -42,18 +42,26 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               displayEmpty
               onChange={this.handleChangeSelect}
               error={!!errors?.length}
+              renderValue={selected =>
+                options.find(({ value }) => String(value) === String(selected))?.title || (
+                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                )
+              }
               variant={variant}
             >
               {!valueIsAllowed && (
-                <MenuItem className={cnChoiceMenuItem()} value={fieldValue as string | number} color='#666'>
-                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                <MenuItem className={cnFormChoiceMenuItem()} value={fieldValue as string | number} color='#666'>
+                  <ListItemText>
+                    <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                  </ListItemText>
                 </MenuItem>
               )}
 
               {options.map((item, i) => {
                 return (
-                  <MenuItem className={cnChoiceMenuItem()} key={i} value={item.value}>
-                    {item.title}
+                  <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item.value}>
+                    <ListItemText>{item.title}</ListItemText>
+                    {item.endIcon}
                   </MenuItem>
                 );
               })}

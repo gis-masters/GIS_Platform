@@ -14,6 +14,8 @@ public class ContentType {
     private String icon;
     private Boolean childOnly;
     private String styleName;
+    private String definitionQuery;
+
     private List<Object> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
@@ -101,5 +103,13 @@ public class ContentType {
 
     public void setStyleName(String styleName) {
         this.styleName = styleName;
+    }
+
+    public String getDefinitionQuery() {
+        return definitionQuery;
+    }
+
+    public void setDefinitionQuery(String definitionQuery) {
+        this.definitionQuery = definitionQuery;
     }
 }

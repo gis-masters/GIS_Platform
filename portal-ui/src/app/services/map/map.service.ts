@@ -49,6 +49,11 @@ import { sleep } from '../util/sleep';
 import { services } from '../services';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjects';
 import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
+import { Schema } from '../data/schema/schema.models';
+import { Mime } from '../util/Mime';
+import { schemaService } from '../data/schema/schema.service';
+import { applyView } from '../data/schema/schema.utils';
+import { cqlConcat } from '../util/cqlConcat';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -73,8 +78,6 @@ interface LayerAdditionalProps {
   crgInfo: CrgAdditionalLayerInfo;
 }
 
-const imageFormat = 'image/vnd.jpeg-png8';
-
 class MapService {
   private static _instance: MapService;
 
@@ -94,22 +97,22 @@ class MapService {
   modificationDisabled = new Emitter();
   modificationDone = new Emitter<Geometry>();
 
-  map: Map;
-  view: View;
-  scaleLine: ScaleLine;
-  draftSource: VectorSource<SimpleGeometry>;
+  map?: Map;
+  view?: View;
+  scaleLine?: ScaleLine;
+  draftSource?: VectorSource<SimpleGeometry>;
 
   // Подложка
   private basemapLayer = new TileLayer();
 
-  private markersSource: VectorSource<SimpleGeometry>;
-  private zoom: number;
+  private markersSource?: VectorSource<SimpleGeometry>;
+  private zoom?: number;
 
-  private center: number[];
-  private draftStyle: Style;
+  private center?: number[];
+  private draftStyle?: Style;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
-  private drawHandler: (e: DrawEvent) => void;
+  private drawHandler?: (e: DrawEvent) => void;
 
   private isModifying = false;
 
@@ -218,10 +221,13 @@ class MapService {
     });
 
     this.map.on('moveend', () => {
-      this.mapMoved.emit({
-        zoom: this.map.getView().getZoom(),
-        center: this.map.getView().getCenter()
-      });
+      const view = this.map?.getView();
+      const center = view?.getCenter();
+      const zoom = view?.getZoom();
+
+      if (center && zoom) {
+        this.mapMoved.emit({ zoom, center });
+      }
     });
 
     this.map.on('singleclick', e => {
@@ -243,6 +249,9 @@ class MapService {
   }
 
   destroyMap() {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить destroyMap. Карта не создана');
+    }
     communicationService.beforeMapDestroy.emit();
     this.drawOff();
     this.map.unset('target');
@@ -256,106 +265,119 @@ class MapService {
     });
   }
 
-  addExternalGeoserverLayers(layers: CrgExternalLayer[], zIndex: number) {
-    layers.forEach(layer => {
-      const { tableName, transparency, dataSourceUri } = layer;
+  addExternalGeoserverLayer(layer: CrgExternalLayer, zIndex: number) {
+    const { tableName, transparency = 100, dataSourceUri } = layer;
 
-      const layerOnMap = this.getLayerByName(tableName);
-      if (layerOnMap) {
-        layerOnMap.setVisible(true);
-        layerOnMap.setOpacity(transparency / 100);
-        layerOnMap.setZIndex(zIndex);
-      } else {
-        const params: CrgWmsParams = {
-          LAYERS: tableName,
-          FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
-        };
-
-        const commonLayerParams = {
-          visible: true,
-          opacity: transparency / 100,
-          zIndex
-        };
-
-        const commonWMSParams = {
-          url: dataSourceUri,
-          params,
-          serverType: 'geoserver' as ServerType,
-          crossOrigin: 'anonymous'
-        };
-
-        const layer: ImageLayer<ImageSource> = new ImageLayer({
-          source: new ImageWMS({
-            imageLoadFunction: this.externalGisMapServerLoadFunction,
-            ...commonWMSParams,
-            ratio: 1
-          }),
-          ...commonLayerParams
-        });
-
-        const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
-
-        layer.setProperties(props);
-
-        this.map.addLayer(layer);
-      }
-    });
-  }
-
-  addExternalLayers(layers: CrgExternalLayer[], zIndex: number) {
-    layers.forEach(layer => {
-      const layerOnMap = this.getLayerByName(layer.tableName);
-      if (layerOnMap) {
-        layerOnMap.setVisible(true);
-        layerOnMap.setOpacity(layer.transparency / 100);
-        layerOnMap.setZIndex(zIndex);
-      } else {
-        const tileLayer = new TileLayer({
-          source: new TileArcGISRest({
-            url: layer.dataSourceUri,
-            params: {
-              LAYERS: layer.tableName
-            },
-            tileLoadFunction: this.externalGisMapServerLoadFunction
-          }),
-          visible: true,
-          opacity: layer.transparency / 100,
-          zIndex: zIndex
-        });
-
-        const props: LayerAdditionalProps = {
-          crgInfo: { isUserLayer: true }
-        };
-
-        tileLayer.setProperties(props);
-
-        this.map.addLayer(tileLayer);
-      }
-    });
-  }
-
-  addLayers(layers: CrgLayer[], zIndex: number, opacity: number) {
-    if (!layers.length) {
-      return;
+    if (!this.map) {
+      throw new Error('Невозможно выполнить addExternalGeoserverLayer. Карта не создана');
     }
 
-    const styleName = layers[0]?.styleName;
-    const resultName = this.calcLayerName(layers);
+    const layerOnMap = this.getLayerByName(tableName);
+    if (layerOnMap) {
+      layerOnMap.setVisible(true);
+      layerOnMap.setOpacity(transparency / 100);
+      layerOnMap.setZIndex(zIndex);
+    } else {
+      const params: CrgWmsParams = {
+        LAYERS: tableName,
+        FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
+      };
+
+      const commonLayerParams = {
+        visible: true,
+        opacity: transparency / 100,
+        zIndex
+      };
+
+      const commonWMSParams = {
+        url: dataSourceUri,
+        params,
+        serverType: 'geoserver' as ServerType,
+        crossOrigin: 'anonymous'
+      };
+
+      const layer: ImageLayer<ImageSource> = new ImageLayer({
+        source: new ImageWMS({
+          imageLoadFunction: this.externalGisMapServerLoadFunction,
+          ...commonWMSParams,
+          ratio: 1
+        }),
+        ...commonLayerParams
+      });
+
+      const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+
+      layer.setProperties(props);
+
+      this.map.addLayer(layer);
+    }
+  }
+
+  addExternalLayer(layer: CrgExternalLayer, zIndex: number) {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить addExternalLayers. Карта не создана');
+    }
+
+    const layerOnMap = this.getLayerByName(layer.tableName);
+    if (layerOnMap) {
+      layerOnMap.setVisible(true);
+      layerOnMap.setOpacity((layer.transparency ?? 100) / 100);
+      layerOnMap.setZIndex(zIndex);
+    } else {
+      const tileLayer = new TileLayer({
+        source: new TileArcGISRest({
+          url: layer.dataSourceUri,
+          params: {
+            LAYERS: layer.tableName
+          },
+          tileLoadFunction: this.externalGisMapServerLoadFunction
+        }),
+        visible: true,
+        opacity: (layer.transparency ?? 100) / 100,
+        zIndex: zIndex
+      });
+
+      const props: LayerAdditionalProps = {
+        crgInfo: { isUserLayer: true }
+      };
+
+      tileLayer.setProperties(props);
+
+      this.map.addLayer(tileLayer);
+    }
+  }
+
+  async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить addLayers. Карта не создана');
+    }
+
+    const { tableName, complexName, styleName, schemaId, view } = layer;
+
+    if (!tableName || !complexName) {
+      throw new Error('Некорректный слой в методе addLayers');
+    }
 
     const params: CrgWmsParams = {
       STYLES: styleName,
-      LAYERS: resultName,
-      FORMAT: imageFormat
+      LAYERS: complexName,
+      FORMAT: Mime.VND_JPEG_PNG8
     };
 
-    const { tableName } = layers[0];
     const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName));
     const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
     modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
 
-    if (!this.isNotFilteredLayer(layers)) {
+    if (schemaId) {
+      const { definitionQuery }: Schema = applyView(await schemaService.getSchema(schemaId), view);
+      if (definitionQuery) {
+        params.CQL_FILTER = definitionQuery;
+      }
+    }
+
+    if (attributesTableStore.isLayerFiltered(layer)) {
       if (Object.keys(filter).length) {
-        params.CQL_FILTER = cqlBuild(filter);
+        params.CQL_FILTER = cqlConcat(cqlBuild(filter), params.CQL_FILTER);
       }
 
       if (
@@ -383,7 +405,7 @@ class MapService {
       crossOrigin: 'anonymous'
     };
 
-    const layer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
+    const olLayer: ImageLayer<ImageSource> | TileLayer<TileSource> = this.isTiledWms
       ? new TileLayer({
           source: new TileWMS({ tileLoadFunction: this.crgLayersLoadFunction, ...commonWMSParams }),
           ...commonLayerParams
@@ -395,17 +417,9 @@ class MapService {
 
     const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
 
-    layer.setProperties(props);
+    olLayer.setProperties(props);
 
-    this.map.addLayer(layer);
-  }
-
-  private isNotFilteredLayer(layers: CrgLayer[]) {
-    return !(layers.length === 1 && attributesTableStore.isLayerFiltered(layers[0]));
-  }
-
-  private calcLayerName(layers: CrgLayer[]) {
-    return layers.map(layer => layer.complexName).join(',');
+    this.map.addLayer(olLayer);
   }
 
   /**
@@ -421,11 +435,14 @@ class MapService {
 
   // Принудительный рефреш
   refreshAllLayers() {
-    this.getUserLayers().forEach(layer => layer.getSource().refresh());
+    this.getUserLayers().forEach(layer => layer.getSource()?.refresh());
   }
 
   // Очистить карту от слоя, который отображал объект.
   clearDraft() {
+    if (!this.draftSource) {
+      throw new Error('Draft source is not created');
+    }
     const collection = this.draftSource.getFeaturesCollection();
     const count = collection ? collection.getLength() : 0;
     this.draftSource.clear(count > 10);
@@ -433,36 +450,58 @@ class MapService {
 
   // Очистить карту от всех слоёв.
   clearMap() {
-    this.getUserLayers().forEach(layer => this.map.removeLayer(layer));
+    if (!this.map) {
+      throw new Error('Невозможно выполнить clearMap. Карта не создана');
+    }
+
+    this.getUserLayers().forEach(layer => this.map?.removeLayer(layer));
   }
 
   /**
    * Подсвечивает объект. (очищает черновой слой)
    */
   highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: CrgProjection) {
+    if (!this.draftSource) {
+      throw new Error('Draft source is not created');
+    }
+
     const featuresInOlProjection: WfsFeature[] = [...features]
       .filter(({ geometry }) => geometry)
-      .map((feature: WfsFeature) => ({
-        ...feature,
-        geometry: transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection)
-      }));
+      .map((feature: WfsFeature<Coordinate | CoordinateEdited>): WfsFeature => {
+        const geometry = transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection);
+
+        if (!geometry) {
+          throw new Error('Geometry is not defined');
+        }
+
+        return {
+          ...feature,
+          geometry
+        };
+      });
 
     this.clearDraft();
 
-    const olFeatures = featuresInOlProjection
-      .map(feature => {
-        try {
-          return wfsFeatureToFeature(feature);
-        } catch (error) {
-          services.logger.error(`Can't highlight feature: '${feature.id}'`, error);
+    const olFeatures: Feature<SimpleGeometry>[] = [];
+    for (const wfsFeature of featuresInOlProjection) {
+      try {
+        const olFeature = wfsFeatureToFeature(wfsFeature);
+        if (olFeature) {
+          olFeatures.push(olFeature);
         }
-      })
-      .filter(Boolean);
+      } catch (error) {
+        services.logger.error(`Can't highlight feature: '${wfsFeature.id}'`, error);
+      }
+    }
 
     this.draftSource.addFeatures(olFeatures);
   }
 
   private getSystemLayer(name: string): BaseLayer | undefined {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить getSystemLayer. Карта не создана');
+    }
+
     return this.map
       .getLayers()
       .getArray()
@@ -478,6 +517,9 @@ class MapService {
   }
 
   showSelectionMarker(coordinates: Coordinate[][][]) {
+    if (!this.draftSource) {
+      throw new Error('Невозможно выполнить showSelectionMarker. Карта не создана');
+    }
     const feature: WfsFeature = {
       type: 'Feature',
       geometry: {
@@ -495,19 +537,33 @@ class MapService {
 
       setTimeout(() => {
         try {
-          this.draftSource.removeFeature(olFeature);
+          this.draftSource?.removeFeature(olFeature);
         } catch {}
       }, 500);
     }
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number], minResolution?: number) {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить fitToBbox. Карта не создана');
+    }
+
     // constrainResolution Ломает view на слоях с геометрией Point
     this.map.getView().fit(bbox, { padding, minResolution });
   }
 
-  getResolution() {
-    return this.view.getResolution();
+  getResolution(): number {
+    if (!this.view) {
+      throw new Error('Невозможно выполнить getResolution. Карта не создана');
+    }
+
+    const resolution = this.view.getResolution();
+
+    if (!resolution) {
+      throw new Error('Невозможно выполнить getResolution. Разрешение не определено');
+    }
+
+    return resolution;
   }
 
   private round(n: number) {
@@ -540,6 +596,10 @@ class MapService {
   }
 
   enableDraftModification() {
+    if (!this.draftSourceModify || !this.map) {
+      throw new Error('Невозможно выполнить enableDraftModification. Карта не создана');
+    }
+
     this.isModifying = true;
     this.selectDraftColor();
     this.draftSourceModify.on('modifyend', this.modificationHandler);
@@ -548,6 +608,10 @@ class MapService {
   }
 
   disableDraftModification() {
+    if (!this.draftSourceModify || !this.map) {
+      throw new Error('Невозможно выполнить disableDraftModification. Карта не создана');
+    }
+
     this.isModifying = false;
     this.selectDraftColor();
     this.draftSourceModify.un('modifyend', this.modificationHandler);
@@ -562,6 +626,10 @@ class MapService {
   }
 
   draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {
+    if (!this.map) {
+      throw new Error('Невозможно выполнить draw. Карта не создана');
+    }
+
     this.drawOff();
     document.body.classList.add('global-crosshair-cursor');
 
@@ -629,7 +697,7 @@ class MapService {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       data = error?.error;
     }
-    const blob = new Blob([data], { type: imageFormat });
+    const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
 
     mapStore.enrollLoadingFinish();
@@ -655,7 +723,7 @@ class MapService {
       data = error.error;
     }
 
-    const blob = new Blob([data], { type: imageFormat });
+    const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
     mapStore.enrollLoadingFinish();
   }

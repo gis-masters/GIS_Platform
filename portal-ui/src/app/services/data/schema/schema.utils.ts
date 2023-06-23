@@ -38,7 +38,7 @@ export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   return applyTypeToSchemaOld(schema, view);
 }
 
-function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchema {
+function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType | undefined): OldSchema {
   const clonedSchema = cloneDeep(schema);
 
   if (type) {
@@ -48,7 +48,8 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
       children = clonedSchema.children,
       childOnly = clonedSchema.childOnly,
       printTemplates = clonedSchema.printTemplates,
-      relations = clonedSchema.relations
+      relations = clonedSchema.relations,
+      definitionQuery = clonedSchema.definitionQuery
     } = type;
     const actualProperties: OldPropertySchema[] = attributes.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
@@ -62,7 +63,8 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
       childOnly,
       printTemplates,
       styleName,
-      relations
+      relations,
+      definitionQuery
     });
 
     delete clonedSchema.views;
@@ -70,7 +72,7 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
 
     for (const [key, value] of Object.entries(clonedSchema)) {
       if (value === undefined) {
-        delete clonedSchema[key];
+        delete clonedSchema[key as keyof typeof clonedSchema];
       }
     }
   }
@@ -78,7 +80,7 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType): OldSchem
   return clonedSchema;
 }
 
-export function applyView(schema: Schema, viewId: string): Schema {
+export function applyView(schema: Schema, viewId?: string): Schema {
   const view = schema.views?.find(cType => cType.id === viewId);
   const resultSchema = applyTypeToSchema(schema, view);
 
@@ -100,7 +102,7 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   return resultSchema;
 }
 
-function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
+function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schema {
   const clonedSchema = cloneDeep(schema);
 
   if (type) {
@@ -111,7 +113,8 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
       children = clonedSchema.children,
       childOnly = clonedSchema.childOnly,
       printTemplates = clonedSchema.printTemplates,
-      relations = clonedSchema.relations
+      relations = clonedSchema.relations,
+      definitionQuery = clonedSchema.definitionQuery
     } = type;
     const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
       const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
@@ -126,7 +129,8 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
       children,
       childOnly,
       printTemplates,
-      relations
+      relations,
+      definitionQuery
     });
 
     delete clonedSchema.views;
@@ -134,7 +138,7 @@ function applyTypeToSchema(schema: Schema, type: ContentType): Schema {
 
     for (const [key, value] of Object.entries(clonedSchema)) {
       if (value === undefined) {
-        delete clonedSchema[key];
+        delete clonedSchema[key as keyof typeof clonedSchema];
       }
     }
   }
@@ -161,7 +165,7 @@ export function convertNewToOldSchema({ properties, contentTypes, views, ...rest
 }
 
 function convertOldToNewContentType(contentType: OldContentType): ContentType {
-  const newContentType = {
+  const newContentType: ContentType & Partial<OldContentType> = {
     ...contentType,
     properties: convertOldToNewProperties(contentType.attributes as OldPropertySchema[])
   };
@@ -172,7 +176,7 @@ function convertOldToNewContentType(contentType: OldContentType): ContentType {
 }
 
 function convertNewToOldContentType(contentType: ContentType): OldContentType {
-  const oldContentType = {
+  const oldContentType: OldContentType & Partial<ContentType> = {
     ...contentType,
     attributes: convertNewToOldProperties(contentType.properties as PropertySchema[])
   };
@@ -372,10 +376,11 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 }
 
 export const valueWellKnownFormulas: Record<string, ValueFormula> = {
-  inherit: (obj, property, parent) => parent[property.name] as unknown,
+  inherit: (obj, property, parent) => (parent as Record<string, unknown>)[property.name],
 
-  parentDocument: (obj, property, parent: LibraryRecord) => {
-    const value: DocumentInfo[] = [{ id: parent.id, libraryTableName: parent.libraryTableName, title: parent.title }];
+  parentDocument: (obj, property, parent: unknown) => {
+    const { libraryTableName, id, title } = parent as LibraryRecord;
+    const value: DocumentInfo[] = [{ id, title, libraryTableName }];
 
     return JSON.stringify(value);
   },
@@ -385,12 +390,17 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
       url:
         `/data-management/library/${String(valueFormulaParams.library)}/registry?filter=` +
         encodeURI(
-          JSON.stringify({ applicant_name: { $ilike: `%${String(obj[valueFormulaParams.property as string])}%` } })
+          JSON.stringify({
+            applicant_name: {
+              $ilike: `%${String((obj as Record<string, unknown>)[valueFormulaParams.property as string])}%`
+            }
+          })
         ),
       text: valueFormulaParams.text
     }),
 
-  linkToFeaturesMentioningThisDocument: (obj: LibraryRecord, { valueFormulaParams = {} }) => {
+  linkToFeaturesMentioningThisDocument: (obj, { valueFormulaParams = {} }) => {
+    const { id, libraryTableName } = obj as LibraryRecord;
     const {
       projectId,
       property,
@@ -403,9 +413,9 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
       text?: string;
     };
     const pathname = `/projects/${projectId}/map`;
-    const filter = `${property}%20LIKE%20%27%25{%22id%22:${obj.id},%25%22libraryTableName%22:%22${obj.libraryTableName}%22%25%27`;
+    const filter = `${property}%20LIKE%20%27%25{%22id%22:${id},%25%22libraryTableName%22:%22${libraryTableName}%22%25%27`;
 
-    if (!obj.id || !obj.libraryTableName) {
+    if (!id || !libraryTableName) {
       return [];
     }
 
@@ -461,9 +471,11 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
     return '';
   },
 
-  [PropertyType.FLOAT](value: unknown, property: PropertySchemaFloat) {
-    if (value && typeof property.precision === 'number') {
-      value = Number(value).toFixed(property.precision);
+  [PropertyType.FLOAT](value: unknown, property: PropertySchema) {
+    const precision = (property as PropertySchemaFloat).precision;
+
+    if (value && typeof precision === 'number') {
+      value = Number(value).toFixed(precision);
     }
 
     return String(value).replace('.', ',');
@@ -478,8 +490,9 @@ export function getReadablePropertyValue(value: unknown, property?: PropertySche
     return '';
   }
 
-  if (valueToReadableTransformers[property.propertyType]) {
-    return valueToReadableTransformers[property.propertyType](value, property);
+  const transformer = valueToReadableTransformers[property.propertyType];
+  if (transformer) {
+    return transformer(value, property);
   }
 
   return String(value ?? '');

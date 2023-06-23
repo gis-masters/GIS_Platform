@@ -10,14 +10,14 @@ import { communicationService } from '../../communication.service';
 
 import { Schema } from './schema.models';
 import { schemaClient } from './schema.client';
-import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
+import { applyView, convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
 import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 
 class SchemaService {
   private static _instance: SchemaService;
 
   private schemas: { [key: string]: Promise<OldSchema> } = {};
-  private schemasResolvers: { [key: string]: (value?: OldSchema) => void } = {};
+  private schemasResolvers: { [key: string]: (value: OldSchema | PromiseLike<OldSchema>) => void } = {};
   private schemasRejecters: { [key: string]: () => void } = {};
   private fetchingPool: string[] = [];
   private fetchingAllSchemas?: Promise<void>;
@@ -49,6 +49,10 @@ class SchemaService {
   @boundMethod
   async getSchema(name: string): Promise<Schema> {
     return convertOldToNewSchema(await this.getOldSchema(name));
+  }
+
+  async getSchemaForVectorLayer(layer: CrgVectorLayer): Promise<Schema> {
+    return applyView(await this.getSchema(layer.schemaId), layer.view);
   }
 
   async getAllOldSchemas(): Promise<OldSchema[]> {
@@ -106,6 +110,8 @@ class SchemaService {
       layerNameWithGeomType = layerName + '_point';
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
+    // @ts-ignore
     return (await this.getBySimilarId(layerNameWithGeomType)) || (await this.getBySimilarId(layerName));
   }
 
@@ -119,13 +125,21 @@ class SchemaService {
       return '';
     }
 
-    return schema.properties
-      .filter(simpleProperty => simpleProperty.valueType === ValueType.CHOICE && simpleProperty.enumerations)
-      .reduce<string>((val: string, simpleProperty: OldPropertySchemaChoice) => {
-        return simpleProperty.enumerations.reduce<string>((title: string, item) => {
-          return String(bugObject.classId) === item.value ? item.title : title;
-        }, val);
-      }, '');
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
+    // @ts-ignore
+    return (
+      schema.properties
+        .filter(simpleProperty => simpleProperty.valueType === ValueType.CHOICE && simpleProperty.enumerations)
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
+        // @ts-ignore
+        .reduce<string>((val: string, simpleProperty: OldPropertySchemaChoice) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
+          // @ts-ignore
+          return simpleProperty.enumerations.reduce<string>((title: string, item) => {
+            return String(bugObject.classId) === item.value ? item.title : title;
+          }, val);
+        }, '')
+    );
   }
 
   /**
@@ -240,14 +254,14 @@ class SchemaService {
 
   async createSchema(schema: Schema) {
     this.schemas = {};
-    this.fetchingAllSchemas = null;
+    this.fetchingAllSchemas = undefined;
     await schemaClient.createSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'create', data: schema });
   }
 
   async updateSchema(schema: Schema) {
     this.schemas = {};
-    this.fetchingAllSchemas = null;
+    this.fetchingAllSchemas = undefined;
     await schemaClient.updateSchema(convertNewToOldSchema(schema));
     communicationService.schemaUpdated.emit({ type: 'update', data: schema });
   }

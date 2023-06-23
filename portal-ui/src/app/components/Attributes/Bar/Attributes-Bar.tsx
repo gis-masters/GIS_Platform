@@ -7,14 +7,15 @@ import { action, observable, makeObservable, computed } from 'mobx';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
-import { calculateValues } from '../../../services/formValidation.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { schemaService } from '../../../services/data/schema/schema.service';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { calculateValues } from '../../../services/formValidation.service';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
+import { applyView } from '../../../services/data/schema/schema.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
-import { applyView } from '../../../services/data/schema/schema.utils';
 import { XTableColumn } from '../../XTable/XTable.models';
 import { XTableInvoke } from '../../XTable/XTable';
 
@@ -31,7 +32,6 @@ import { AttributesCheckMaster } from '../CheckMaster/Attributes-CheckMaster';
 import { AttributesCheckFilter } from '../CheckFilter/Attributes-CheckFilter';
 import { AttributesFiltersEnabler } from '../FiltersEnabler/Attributes-FiltersEnabler';
 import { AttributesBarRightActions } from '../BarRightActions/Attributes-BarRightActions';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { AttributesTable, AttributesTableRecord, FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
@@ -125,7 +125,12 @@ export class AttributesBar extends Component<AttributesBarProps> {
       {
         field: '_idCheck',
         title: (
-          <AttributesCheckMaster layer={layer} featuresMatched={this.featuresMatched} pageOptions={this.pageOptions} />
+          <AttributesCheckMaster
+            layer={layer}
+            featuresMatched={this.featuresMatched}
+            pageOptions={this.pageOptions}
+            definitionQuery={this.schema?.definitionQuery}
+          />
         ),
         CustomFilterComponent: AttributesCheckFilter,
         filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
@@ -145,6 +150,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]> {
     const { layer } = this.props;
+
     const filter = cloneDeep(pageOptions.filter || {});
     const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
     modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
@@ -157,6 +163,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     const [features, totalPages, featuresMatched, featuresTotal] = await getFeatures(
       layer,
       { ...pageOptions, filter },
+      this.schema?.definitionQuery,
       featureIds,
       filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
     );

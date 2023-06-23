@@ -1,4 +1,4 @@
-import { NgModule, ErrorHandler, ModuleWithProviders } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -155,7 +155,7 @@ import { MessagesRegistryComponent } from './components/messages-registry/messag
     }),
     NgxMaskModule.forRoot(),
     LoadingModule
-  ] as ModuleWithProviders<unknown>[],
+  ],
   providers: [
     {
       provide: ErrorHandler,

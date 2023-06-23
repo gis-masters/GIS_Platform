@@ -1,10 +1,8 @@
 import { isEqual } from 'lodash';
 import { Feature } from 'ol';
 import { Extent } from 'ol/extent';
-import { MultiPolygon, SimpleGeometry } from 'ol/geom';
-import { intersects, and } from 'ol/format/filter';
+import { SimpleGeometry } from 'ol/geom';
 import { Coordinate } from 'ol/coordinate';
-import { WFS } from 'ol/format';
 
 import {
   CoordinateEdited,
@@ -14,19 +12,12 @@ import {
   WfsMultiPolygonGeometry,
   WfsPointGeometry
 } from './wfs.models';
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
-import { currentProject } from '../../../stores/CurrentProject.store';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
 import { getGeometryFieldName } from '../../data/schema/schema.utils';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { schemaService } from '../../data/schema/schema.service';
-import { olProjection } from '../projections.service';
 import { PageOptions, SortOrder } from '../../models';
-import { cqlBuild } from '../../util/cqlBuild';
-import { cql2ol } from '../../util/cql2ol';
 import { services } from '../../services';
-import { Mime } from '../../util/Mime';
 
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
   const { tableName, schemaId } = layer;
@@ -179,39 +170,4 @@ export function mergeExtents(extents: Extent[]): Extent {
   }
 
   return resultExtent;
-}
-
-export async function makeXmlPolygonIntersect(
-  complexName: string,
-  polygon: MultiPolygon,
-  srsName: string,
-  selectionType: MapSelectionTypes
-): Promise<string> {
-  const tableName = complexName.split(':')[1];
-  const layer = currentProject.getLayerByTableName(tableName);
-  const schema = await schemaService.getSchema(layer.schemaId);
-  const geometryFieldName = getGeometryFieldName(schema);
-  const cqlFilter: string = cqlBuild(attributesTableStore.getLayerFilter(tableName));
-  const olFilter = cqlFilter
-    ? and(intersects(geometryFieldName, polygon, olProjection.id), cql2ol(cqlFilter))
-    : intersects(geometryFieldName, polygon, olProjection.id);
-
-  const featureRequest = new WFS().writeGetFeature({
-    srsName,
-    featureTypes: [complexName],
-    outputFormat: Mime.JSON,
-    filter: olFilter,
-    featureNS: '',
-    featurePrefix: '',
-    maxFeatures:
-      selectionType === MapSelectionTypes.REMOVE
-        ? undefined
-        : Math.max(
-            mapStore.selectingFeaturesLimit -
-              (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
-            1
-          )
-  });
-
-  return new XMLSerializer().serializeToString(featureRequest);
 }

@@ -1,3 +1,6 @@
+import { createElement } from 'react';
+import { ListItemIcon, Tooltip } from '@mui/material';
+import { FilterAltOutlined } from '@mui/icons-material';
 import { isEqual } from 'lodash';
 import { action } from 'mobx';
 
@@ -132,7 +135,22 @@ export function getViewChoiceOptions(views: ContentType[]): PropertyOption[] | u
   return [
     { title: 'Вид по умолчанию', value: '' },
     ...(views?.map(type => {
-      return { title: type.title, value: type.id };
+      return {
+        title: type.title,
+        value: type.id,
+        endIcon: type.definitionQuery
+          ? createElement(Tooltip, {
+              title: createElement(
+                'span',
+                {},
+                'Для этого представления задан определяющий запрос (Definition Query). Будут отображены только объекты, удовлетворяющие условию запроса:',
+                createElement('br'),
+                createElement('code', { children: type.definitionQuery })
+              ),
+              children: createElement(ListItemIcon, {}, createElement(FilterAltOutlined, { fontSize: 'small' }))
+            })
+          : undefined
+      };
     }) || [])
   ];
 }

@@ -15,6 +15,8 @@ import { Mime } from '../util/Mime';
 import { Toast } from '../../components/Toast/Toast';
 import { CrgLayer } from '../gis/layers/layers.models';
 import { projectsService } from '../gis/projects/projects.service';
+import { applyView } from '../data/schema/schema.utils';
+import { schemaService } from '../data/schema/schema.service';
 
 export interface FeatureError {
   id: string;
@@ -181,8 +183,9 @@ async function restoreRecentOpenedFeatures() {
       );
 
       if (currentLayer) {
+        const schema = applyView(await schemaService.getSchema(currentLayer.schemaId), currentLayer.view);
         const featuresIds = featuresCutIds.map(cutId => `${currentLayer.tableName}.${cutId}`);
-        const layerFeatures = await getFeaturesById(featuresIds, currentLayer.complexName);
+        const layerFeatures = await getFeaturesById(featuresIds, currentLayer.complexName, schema?.definitionQuery);
 
         deletedFeatures.push(
           ...featuresIds
@@ -190,7 +193,7 @@ async function restoreRecentOpenedFeatures() {
             .map(featureId => ({
               id: featureId.split('.')[1],
               layerTitle: currentLayer.title,
-              message: 'Объект удален'
+              message: 'Объект отсутствует'
             }))
         );
 

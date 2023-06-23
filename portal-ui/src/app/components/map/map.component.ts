@@ -13,8 +13,7 @@ import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { TreeItem } from '../../services/gis/projects/projects.models';
+import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { fetchBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
@@ -25,7 +24,6 @@ import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { FilterQuery } from '../../services/util/filterObjects';
 
 @Component({
   selector: 'crg-map',
@@ -41,7 +39,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   cn = cn('map');
 
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   async ngOnInit() {
@@ -67,35 +65,26 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     this.reactionDisposer = reaction(
-      (): [TreeItem<CrgLayer>[][], Record<string, FilterQuery>, Record<string, true>] => [
-        currentProject.visibleLayersBatched,
+      () => [
+        currentProject.visibleOnMapLayers.map(({ payload }) => payload.view),
         cloneDeep(attributesTableStore.filter),
         cloneDeep(attributesTableStore.filterDisabled)
       ],
-      ([visibleBatches]: [TreeItem<CrgLayer>[][], Record<string, FilterQuery>, Record<string, true>]) => {
+      async () => {
         mapService.hideUserLayers();
 
-        visibleBatches.forEach((batch, i) => {
-          const { actualTransparency } = batch[0];
+        for (let i = 0; i < currentProject.visibleOnMapLayers.length; i++) {
+          const { actualTransparency, payload: layer } = currentProject.visibleOnMapLayers[i];
+          const zIndex = currentProject.visibleOnMapLayers.length - i;
 
-          const layers = batch.map(item => item.payload).reverse();
-
-          void mapService.addLayers(
-            layers.filter(l => l.type !== CrgLayerType.EXTERNAL && l.type !== CrgLayerType.EXTERNAL_GEOSERVER),
-            visibleBatches.length - i,
-            actualTransparency / 100
-          );
-
-          mapService.addExternalLayers(
-            layers.filter(l => l.type === CrgLayerType.EXTERNAL) as CrgExternalLayer[],
-            visibleBatches.length - i
-          );
-
-          mapService.addExternalGeoserverLayers(
-            layers.filter(l => l.type === CrgLayerType.EXTERNAL_GEOSERVER) as CrgExternalLayer[],
-            visibleBatches.length - i
-          );
-        });
+          if (layer.type === CrgLayerType.EXTERNAL) {
+            mapService.addExternalLayer(layer as CrgExternalLayer, zIndex);
+          } else if (layer.type === CrgLayerType.EXTERNAL_GEOSERVER) {
+            mapService.addExternalGeoserverLayer(layer as CrgExternalLayer, zIndex);
+          } else {
+            await mapService.addLayer(layer, zIndex, actualTransparency / 100);
+          }
+        }
 
         mapService.highlightFeatures(mapStore.highlightedFeatures);
       },

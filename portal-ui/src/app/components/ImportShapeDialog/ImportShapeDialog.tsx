@@ -11,7 +11,8 @@ import { awaitProcess } from '../../services/data/processes/processes.service';
 import { isZipFile } from '../../services/data/files/files.util';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';
-import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { Form, FormField, FormLabel } from '../Form/Form';
+import { cnFormControl } from '../Form/Control/Form-Control';
 import { FileInput } from '../FileInput/FileInput';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -58,9 +59,9 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
             <Form id='importShapeFileForm' onSubmit={this.submitHandler}>
               <FormField>
                 <FormLabel htmlFor='importShapeFileField'>Файл</FormLabel>
-                <FormControl>
+                <div className={cnFormControl()}>
                   <FileInput accept={Mime.ZIP} fullWidth onChange={this.changeHandler} id='importShapeFileField' />
-                </FormControl>
+                </div>
               </FormField>
             </Form>
           </DialogContent>

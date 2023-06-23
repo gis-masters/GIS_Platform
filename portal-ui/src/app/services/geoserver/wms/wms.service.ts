@@ -40,16 +40,20 @@ export async function getMap(url: string): Promise<Blob> {
 
 export async function getMapByXml(url: string): Promise<Blob> {
   const parsedUrl = new URL(url);
-  const featureIdParam = parsedUrl.searchParams.get('featureId');
+  const featureIdParam: string = parsedUrl.searchParams.get('featureId') || '';
   const cqlFilter = parsedUrl.searchParams.get('CQL_FILTER');
-  const layerComplexName = parsedUrl.searchParams.get('LAYERS');
+  const layerComplexName: string = parsedUrl.searchParams.get('LAYERS') || '';
   const featureIdsNegative = Boolean(parsedUrl.searchParams.get('featureIdsNegative'));
-  const [x1, y1, x2, y2] = parsedUrl.searchParams.get('BBOX').split(',');
+  const [x1, y1, x2, y2] = parsedUrl.searchParams.get('BBOX')?.split(',') || [];
   const width = parsedUrl.searchParams.get('WIDTH');
   const height = parsedUrl.searchParams.get('HEIGHT');
   const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
   const [, tableName] = layerComplexName.split(':');
   const layer = currentProject.vectorLayers.find(l => l.tableName === tableName);
+
+  if (!featureIdParam || !layerComplexName || !x1 || !y1 || !x2 || !y2) {
+    throw new Error('Неверные параметры запроса');
+  }
 
   const getFeatureRequest: Element = new WFS().writeGetFeature({
     featureNS: '',

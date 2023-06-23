@@ -23,6 +23,7 @@ interface AttributesCheckMasterProps {
   layer: CrgVectorLayer;
   pageOptions: PageOptions;
   featuresMatched: number;
+  definitionQuery: string | undefined;
 }
 
 @observer
@@ -121,12 +122,12 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   }
 
   private async getAllFeatures(): Promise<WfsFeature[]> {
-    const { layer, pageOptions } = this.props;
-    const options = cloneDeep(pageOptions);
+    const { layer, pageOptions, definitionQuery } = this.props;
+    const options = { ...cloneDeep(pageOptions), page: 0, pageSize: mapStore.selectingFeaturesLimit };
 
     removeFieldFilter(options.filter, FILTER_BY_SELECTION);
 
-    const [features] = await getFeatures(layer, { ...options, page: 0, pageSize: mapStore.selectingFeaturesLimit });
+    const [features] = await getFeatures(layer, options, definitionQuery);
 
     return features;
   }

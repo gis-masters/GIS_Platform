@@ -37,7 +37,7 @@ class FormControlTypeDocument extends Component<FormControlProps> {
   private handleChange(value: DocumentInfo[]) {
     const { onChange, property } = this.props;
 
-    if (onChange) {
+    if (onChange && property) {
       onChange({
         value: JSON.stringify(value),
         propertyName: property.name

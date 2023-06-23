@@ -1,4 +1,4 @@
-import React, { Component, createRef, ReactElement, RefObject } from 'react';
+import React, { Component, createRef, RefObject } from 'react';
 import { parseInt } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -6,6 +6,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 
 import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { ChildrenProps } from '../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./TextOverflow.scss';
 
@@ -13,12 +14,8 @@ const MAX_SHOWING_TEXT_LINES = 3;
 
 const cnTextOverflow = cn('TextOverflow');
 
-interface TextOverflowProps {
-  value: string | number | (string | ReactElement)[];
-}
-
 @observer
-export class TextOverflow extends Component<TextOverflowProps> {
+export class TextOverflow extends Component<ChildrenProps> {
   @observable private textOverflow = false;
   @observable private isAllTextVisible = false;
 
@@ -26,7 +23,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
   private wrapperRef: RefObject<HTMLDivElement> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.resizeHandler);
 
-  constructor(props: TextOverflowProps) {
+  constructor(props: ChildrenProps) {
     super(props);
     makeObservable(this);
   }
@@ -39,8 +36,8 @@ export class TextOverflow extends Component<TextOverflowProps> {
     this.setTextOverflow();
   }
 
-  componentDidUpdate(prevProps: Readonly<TextOverflowProps>): void {
-    if (prevProps.value !== this.props.value) {
+  componentDidUpdate(prevProps: Readonly<ChildrenProps>): void {
+    if (prevProps.children !== this.props.children) {
       this.setTextOverflow();
       this.hideText();
     }
@@ -53,12 +50,12 @@ export class TextOverflow extends Component<TextOverflowProps> {
   }
 
   render() {
-    const { value } = this.props;
+    const { children } = this.props;
 
     return (
       <div ref={this.wrapperRef} className={cnTextOverflow()}>
         <span ref={this.ref} className={cnTextOverflow('Value', { hidePartOfText: !this.isAllTextVisible })}>
-          {value}
+          {children}
         </span>
 
         {this.textOverflow &&

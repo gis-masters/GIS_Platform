@@ -27,7 +27,7 @@ class FormViewTypeChoice extends Component<FormControlProps> {
       <div className={cnFormView({ inSet, fullWidthForOldForm, empty: !title && !valueCanBeDisplayed }, [className])}>
         <>
           {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
-          <TextOverflow value={title || (valueCanBeDisplayed ? fieldValue : '—')} />
+          <TextOverflow>{title || (valueCanBeDisplayed ? fieldValue : '—')}</TextOverflow>
           <FormViewErrors errors={errors} />
         </>
       </div>

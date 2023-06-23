@@ -51,7 +51,7 @@ export class DatasetActionsEdit extends Component<DatasetActionsEditProps> {
             children: 'Сохранить'
           }}
           onClose={this.closeDialog}
-          title='Редактирование данных'
+          title='Редактирование набора данных'
         />
       </>
     );

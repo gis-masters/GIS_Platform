@@ -8,6 +8,7 @@ import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
+import { updateLayer } from './updateLayer';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
@@ -31,6 +32,23 @@ Given(
     this.latestLayer = await createLayer(latestProject.id, layer);
   }
 );
+
+Given('у данного слоя включено представление {string}', async function (this: ScenarioScope, viewTitle: string) {
+  const { latestLayer, latestProject } = this;
+
+  if (!latestLayer.schemaId || !latestLayer.id) {
+    throw new Error('У слоя не указана схема или идентификатор');
+  }
+
+  const schema = await getSchema(latestLayer.schemaId);
+  const view = schema.views?.find(view => view.title === viewTitle);
+
+  if (!view) {
+    throw new Error(`Представление ${viewTitle} не найдено`);
+  }
+
+  await updateLayer(latestLayer.id, { view: view.id }, latestProject.id);
+});
 
 Given('в созданном проекте существует внешний слой', async function (this: ScenarioScope, table: DataTable) {
   const { latestProject } = this;

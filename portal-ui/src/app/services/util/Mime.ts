@@ -7,5 +7,6 @@ export enum Mime {
   TEXT_XML = 'text/xml',
   TEXT = 'text/plain',
   ZIP = 'application/zip, application/x-zip-compressed, multipart/x-zip',
-  FORM_DATA = 'multipart/form-data'
+  FORM_DATA = 'multipart/form-data',
+  VND_JPEG_PNG8 = 'image/vnd.jpeg-png8'
 }

@@ -2,7 +2,6 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { attributesTableStore } from './AttributesTable.store';
 import { Role } from '../services/data/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
 import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
@@ -14,8 +13,6 @@ import {
   CrgVectorLayer,
   NewCrgLayer
 } from '../services/gis/layers/layers.models';
-
-const MAX_LAYERS_IN_BATCH = 5;
 
 interface CrgProjectData extends CrgProject {
   layers: (CrgLayer | NewCrgLayer)[];
@@ -131,48 +128,6 @@ class CurrentProject implements CrgProjectData {
   @computed
   get visibleOnMapLayers(): TreeItem<CrgLayer>[] {
     return this.tree.filter(item => !item.isGroup && item.visible && !item.hiddenByZoom) as TreeItem<CrgLayer>[];
-  }
-
-  @computed
-  get visibleLayersBatched(): TreeItem<CrgLayer>[][] {
-    return cloneDeep(this.visibleOnMapLayers).reduce((acc: TreeItem<CrgLayer>[][], currentItem: TreeItem<CrgLayer>) => {
-      if (!acc.length) {
-        return [[currentItem]];
-      }
-
-      const lastBatch = acc[acc.length - 1];
-      const previousItem = lastBatch[lastBatch.length - 1];
-
-      if (this.canBeBatched(lastBatch, previousItem, currentItem)) {
-        lastBatch.push(currentItem);
-      } else {
-        acc.push([currentItem]);
-      }
-
-      return acc;
-    }, []);
-  }
-
-  private canBeBatched(
-    lastBatch: TreeItem<CrgLayer>[],
-    previousItem: TreeItem<CrgLayer>,
-    currentItem: TreeItem<CrgLayer>
-  ) {
-    const previousTransparency = previousItem.actualTransparency;
-    const previousType = previousItem.payload.type;
-    const currentTransparency = currentItem.actualTransparency;
-    const currentType = currentItem.payload.type;
-
-    return (
-      currentTransparency === previousTransparency &&
-      currentType === previousType &&
-      currentType !== CrgLayerType.RASTER &&
-      lastBatch.length < MAX_LAYERS_IN_BATCH &&
-      !attributesTableStore.isLayerFiltered(currentItem.payload) &&
-      !attributesTableStore.isLayerFiltered(previousItem.payload) &&
-      !previousItem.payload.styleName &&
-      !currentItem.payload.styleName
-    );
   }
 
   @computed

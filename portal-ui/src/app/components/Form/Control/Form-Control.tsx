@@ -12,7 +12,7 @@ export const cnFormControl = cn('Form', 'Control');
 export interface FormControlProps extends IClassNameProps, ChildrenProps {
   htmlId?: string;
   type?: PropertyType;
-  property?: PropertySchema;
+  property: PropertySchema;
   fieldValue?: unknown;
   formValue?: unknown;
   inSet?: boolean;

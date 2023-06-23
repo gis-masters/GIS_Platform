@@ -15,13 +15,13 @@ import {
 } from '../../services/gis/layers/layers.utils';
 import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
-import { ContentType, PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { ContentType, PropertySchema, PropertyType, ValueFormula } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
 import { getDefaultValues, getViewChoiceOptions } from '../Form/Form.utils';
-import { validateFormValue } from '../../services/formValidation.service';
+import { FieldValidator, validateFormValue } from '../../services/formValidation.service';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';
@@ -59,7 +59,7 @@ const layerTypeOptions = [
   { title: 'Внешний слой (веб-сервис ArcGis)', value: 'external' }
 ];
 
-const validateLayer = value => {
+const validateLayer: FieldValidator = value => {
   if (!value) {
     return ['Некорректное значение'];
   }
@@ -70,8 +70,8 @@ const minZoomTitle = 'Уровень масштабной детализации
 @observer
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private usedVectorTables: VectorTable[] = [];
-  @observable private usedVectorTablesRequest?: Promise<VectorTable[]>;
-  @observable private views?: ContentType[] = [];
+  private usedVectorTablesRequest?: Promise<VectorTable[]>;
+  @observable private views: ContentType[] = [];
   @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
 
   constructor(props: AddLayerDialogProps) {
@@ -124,9 +124,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @action.bound
   private handleFormChange(formValue: FormValue) {
     this.formValue = formValue;
-
-    if (formValue.datasource && formValue.layerType === CrgLayerType.VECTOR) {
-      void this.getSchema(formValue.datasource?.vectorTable?.schemaId);
+    const schemaId = formValue?.datasource?.vectorTable?.schemaId;
+    if (schemaId && formValue.datasource && formValue.layerType === CrgLayerType.VECTOR) {
+      void this.getSchema(schemaId);
     }
   }
 
@@ -162,7 +162,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @computed
   private get fields(): PropertySchema[] {
     if (!this.formValue?.layerType || this.formValue?.layerType === CrgLayerType.VECTOR) {
-      const options = getViewChoiceOptions(this.views);
+      const options = getViewChoiceOptions(this.views) || [];
 
       return [
         {
@@ -204,14 +204,12 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           name: 'view',
           title: 'Представление',
           hidden: !this.formValue?.datasource || options.length <= 1,
-          options: options,
+          options,
           defaultValue: '',
           propertyType: PropertyType.CHOICE
         }
       ];
-    }
-
-    if (this.formValue?.layerType === CrgLayerType.RASTER) {
+    } else if (this.formValue?.layerType === CrgLayerType.RASTER) {
       return [
         {
           name: 'layerType',
@@ -248,9 +246,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           validationFormula: validateLayer
         }
       ];
-    }
-
-    if (this.formValue?.layerType === CrgLayerType.EXTERNAL) {
+    } else if (this.formValue?.layerType === CrgLayerType.EXTERNAL) {
       return [
         {
           name: 'layerType',
@@ -293,15 +289,21 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         }
       ];
     }
+
+    throw new Error('Неизвестный тип слоя');
   }
 
   @boundMethod
   private async add() {
-    const { datasource = {}, title, minZoom, dataSourceUri, tableName, layerType, view } = this.formValue;
+    const { datasource = {}, title = '', minZoom, dataSourceUri, tableName, layerType, view } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
     const dataStoreName = currentUser.workspaceName;
 
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
+      if (!dataset || !vectorTable) {
+        throw new Error('Не указаны обязательные параметры');
+      }
+
       const schema = await schemaService.getSchema(vectorTable.schemaId);
       const styleName = schema?.views?.find(({ id }) => id === view)?.styleName;
 
@@ -317,7 +319,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         minZoom,
         styleName: styleName || schema.styleName || vectorTable.schemaId,
         view
-      } as CrgLayer);
+      });
       this.clearForm();
 
       this.close();
@@ -326,10 +328,14 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const externalDefaults = externalLayerDefaults();
     const rasterDefaults = rasterLayerDefaults();
 
-    if (this.valid && layerType === CrgLayerType.RASTER) {
+    if (this.valid && layerType === CrgLayerType.RASTER && this.formValue.datasource) {
       const { libraryRecord, file } = this.formValue.datasource;
 
       try {
+        if (!libraryRecord || !file) {
+          throw new Error('Не указаны обязательные параметры');
+        }
+
         const record = await getLibraryRecord(library.table_name, libraryRecord.id);
         const { path } = await getFile(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
@@ -374,10 +380,10 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
   }
 
-  private async checkUsedTables(): Promise<VectorTable> {
+  private async checkUsedTables(): Promise<void> {
     if (this.usedVectorTablesRequest) {
       await this.usedVectorTablesRequest;
-      this.usedVectorTablesRequest = null;
+      delete this.usedVectorTablesRequest;
       await this.checkUsedTables();
 
       return;
@@ -414,7 +420,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     );
 
     const newUsedVectorTables = await this.usedVectorTablesRequest;
-    this.usedVectorTablesRequest = null;
+    delete this.usedVectorTablesRequest;
 
     if (alreadyUsedVectorTables.length !== this.usedVectorTables.length || newUsedVectorTables.length > 0) {
       this.setUsedVectorTables([...alreadyUsedVectorTables, ...newUsedVectorTables]);
@@ -422,11 +428,16 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   }
 
   @action
-  private setViews(views: ContentType[]) {
+  private setViews(views: ContentType[] = []) {
     this.views = views;
   }
 
-  private calculateTitle(value: FormValue) {
-    return value.title || value?.datasource?.vectorTable?.title || value?.datasource?.file?.title;
-  }
+  private calculateTitle: ValueFormula = (value): string => {
+    return (
+      (value as FormValue)?.title ||
+      (value as FormValue)?.datasource?.vectorTable?.title ||
+      (value as FormValue)?.datasource?.file?.title ||
+      ''
+    );
+  };
 }

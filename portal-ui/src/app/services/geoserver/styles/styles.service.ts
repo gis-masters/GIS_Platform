@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { schemaService } from '../../data/schema/schema.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLegendGraphic } from '../wms/wms.service';
 import { mapService } from '../../map/map.service';
@@ -17,15 +18,23 @@ import {
   StyleRule
 } from './styles.models';
 import { stylesClient } from './styles.client';
+import { cqlConcat } from '../../util/cqlConcat';
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
 export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
-  if (!parsedStyles[layer.styleName]) {
-    parsedStyles[layer.styleName] = loadLayerStyleRules(layer);
+  const schema = await schemaService.getSchemaForVectorLayer(layer);
+  const styleName = layer.styleName || schema.styleName;
+
+  if (!styleName) {
+    return [];
   }
 
-  return await parsedStyles[layer.styleName];
+  if (!parsedStyles[styleName]) {
+    parsedStyles[styleName] = loadLayerStyleRules(layer);
+  }
+
+  return await parsedStyles[styleName];
 }
 
 async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
@@ -35,8 +44,8 @@ async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> 
   const rulesWithoutLegend: Omit<StyleRule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
     .filter(ruleXml => ruleXml.querySelector('Name') && ruleXml.querySelector('Title'))
     .map(ruleXml => ({
-      name: ruleXml.querySelector('Name').innerHTML,
-      title: ruleXml.querySelector('Title').innerHTML,
+      name: ruleXml.querySelector('Name')?.innerHTML,
+      title: ruleXml.querySelector('Title')?.innerHTML,
       filter: ruleXml.querySelector('ElseFilter')
         ? { operator: StyleFilterOperator.ELSE }
         : parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
@@ -139,35 +148,47 @@ export async function getStyleSld(complexStyleName: string): Promise<string> {
 }
 
 export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): Promise<FilteredStylesResponse[]> {
+  if (!mapService.view) {
+    throw new Error('Карта не инициализирована');
+  }
+
   const [x1, y1, x2, y2] = mapService.view.calculateExtent();
   const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
   const requestData: FilteredStylesLayerRequest[] = await Promise.all(
-    layers.map(async layer => ({
-      dataset: layer.dataset,
-      identifier: layer.tableName,
-      ecqlFilter: filterDisabled[layer.tableName]
-        ? null
-        : cqlBuild(attributesTableStore.getLayerFilter(layer.tableName)),
-      filter: {
-        operator: StyleFilterOperator.INTERSECTS,
-        propertyName: 'shape',
-        literal: {
-          type: GeometryType.MULTI_POLYGON,
-          coordinates: [
-            [
+    layers.map(async layer => {
+      const { definitionQuery } = await schemaService.getSchemaForVectorLayer(layer);
+
+      let ecqlFilter: string | undefined = definitionQuery;
+
+      if (!filterDisabled[layer.tableName]) {
+        ecqlFilter = cqlConcat(ecqlFilter, cqlBuild(attributesTableStore.getLayerFilter(layer.tableName)));
+      }
+
+      return {
+        dataset: layer.dataset,
+        identifier: layer.tableName,
+        ecqlFilter,
+        filter: {
+          operator: StyleFilterOperator.INTERSECTS,
+          propertyName: 'shape',
+          literal: {
+            type: GeometryType.MULTI_POLYGON,
+            coordinates: [
               [
-                [x1, y1],
-                [x2, y1],
-                [x2, y2],
-                [x1, y2],
-                [x1, y1]
+                [
+                  [x1, y1],
+                  [x2, y1],
+                  [x2, y2],
+                  [x1, y2],
+                  [x1, y1]
+                ]
               ]
             ]
-          ]
-        }
-      },
-      rules: await getLayerStyleRules(layer)
-    }))
+          }
+        },
+        rules: await getLayerStyleRules(layer)
+      };
+    })
   );
 
   return stylesClient.getLegendForMapView(requestData);

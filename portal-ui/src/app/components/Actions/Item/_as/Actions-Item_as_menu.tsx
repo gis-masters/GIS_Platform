@@ -25,7 +25,7 @@ const ActionsItemAsMenu: FC<ActionsItemProps> = observer(
         )}
       </ActionsMenuOpenContext.Consumer>
     ) : (
-      <Link href={url} variant='contents' disabled={!url || Boolean(onClick)} download={download}>
+      <Link href={url || ''} variant='contents' disabled={!url || Boolean(onClick)} download={download}>
         <MenuItem className={cnActionsItem(null, [className])} disabled={disabled} onClick={onClick}>
           <ListItemIcon>{icon}</ListItemIcon>
           <ListItemText>{title}</ListItemText>

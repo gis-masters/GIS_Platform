@@ -11,7 +11,8 @@ import { importXml } from '../../services/data/import-xml/import-xml.service';
 import { mapService } from '../../services/map/map.service';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';
-import { Form, FormControl, FormField, FormLabel } from '../Form/Form';
+import { cnFormControl } from '../Form/Control/Form-Control';
+import { Form, FormField, FormLabel } from '../Form/Form';
 import { FileInput } from '../FileInput/FileInput';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
@@ -45,9 +46,9 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
           <Form id='importXmlFileForm' onSubmit={this.submitHandler}>
             <FormField>
               <FormLabel htmlFor='importXmlFileField'>Файл</FormLabel>
-              <FormControl>
+              <div className={cnFormControl()}>
                 <FileInput accept={Mime.XML} fullWidth onChange={this.changeHandler} id='importXmlFileField' />
-              </FormControl>
+              </div>
             </FormField>
           </Form>
         </DialogContent>

@@ -98,6 +98,16 @@ export function replaceHiddenProjectionId(projectionId: string): string {
   return replaceMap[projectionId] || projectionId;
 }
 
+function getLocalProjectionById(projectionId: string): CrgProjection {
+  const projection = projections.find(({ id }) => id === projectionId);
+
+  if (!projection) {
+    throw new Error('Не найдена проекция ' + projectionId);
+  }
+
+  return projection;
+}
+
 export function getProjection(projectionStr: string): CrgProjection {
   // мы ожидаем, что запрашивается одна из зарегистрированных проекций по id
   const projection = projections.find(({ id }) => id === projectionStr);
@@ -117,14 +127,18 @@ export function getProjection(projectionStr: string): CrgProjection {
   return projection;
 }
 
-export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection | undefined {
+export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection {
   const layer = getLayerByFeatureInCurrentProject(feature);
 
-  return getProjection(layer?.nativeCRS);
+  if (!layer) {
+    throw new Error('Не найден слой для объекта');
+  }
+
+  return getProjection(layer.nativeCRS);
 }
 
-export const olProjection = projections.find(({ id }) => id === 'EPSG:3857');
-export const defaultProjection = projections.find(({ id }) => id === 'EPSG:7829');
+export const olProjection: CrgProjection = getLocalProjectionById('EPSG:3857');
+export const defaultProjection: CrgProjection = getLocalProjectionById('EPSG:7829');
 
 export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate): Coordinate {
   if (projFrom.id === projTo.id) {

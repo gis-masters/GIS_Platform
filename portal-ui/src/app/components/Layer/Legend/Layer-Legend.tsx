@@ -26,10 +26,10 @@ interface LayerLegendProps {
 
 @observer
 export class LayerLegend extends Component<LayerLegendProps> {
-  @observable private legend?: StyleRule[] = [];
-  @observable private filteredLegend?: StyleRule[];
+  @observable private legend: StyleRule[] = [];
+  @observable private filteredLegend: StyleRule[] = [];
   @observable private filterEnabled = true;
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
   private operationId?: symbol;
 
   constructor(props: LayerLegendProps) {
@@ -39,26 +39,26 @@ export class LayerLegend extends Component<LayerLegendProps> {
 
   async componentDidMount() {
     mapService.mapMoved.on(async () => {
-      await this.filterLegend();
+      await this.fetchFilteredLegend();
     }, this);
 
     this.reactionDisposer = reaction(
       () => [cloneDeep(attributesTableStore.filter), cloneDeep(attributesTableStore.filterDisabled)],
-      () => {
-        void this.filterLegend();
+      async () => {
+        await this.fetchFilteredLegend();
       },
-      {
-        fireImmediately: true
-      }
+      { fireImmediately: true }
     );
 
     this.setLegend(await getLayerStyleRules(this.props.layer));
 
-    await this.filterLegend();
+    await this.fetchFilteredLegend();
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    if (this.reactionDisposer) {
+      this.reactionDisposer();
+    }
     Emitter.scopeOff(this);
   }
 
@@ -82,17 +82,16 @@ export class LayerLegend extends Component<LayerLegendProps> {
   }
 
   @boundMethod
-  private async filterLegend() {
+  private async fetchFilteredLegend() {
     const { layer } = this.props;
 
-    const legendRequestId = Symbol();
-    this.operationId = legendRequestId;
+    const operationId = Symbol();
+    this.operationId = operationId;
 
     try {
       const filteredStylesResponse = await filterLegendForCurrentMapView([layer]);
 
-      // если за время обращения к api случился следующий запрос
-      if (this.operationId !== legendRequestId) {
+      if (this.operationId !== operationId) {
         return;
       }
 
@@ -107,7 +106,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
 
       this.setFilteredLegend(filteredLegend);
     } catch {
-      this.setFilteredLegend(this.legend || []);
+      this.setFilteredLegend(this.legend);
     }
   }
 
