@@ -100,6 +100,7 @@ export class UsersAdd extends Component<UsersAddProps> {
     return [
       { title: 'Фамилия', field: 'surname', filterable: true, sortable: true },
       { title: 'Имя', field: 'name', filterable: true, sortable: true },
+      { title: 'Отчество', field: 'middleName', filterable: true, sortable: true },
       { title: 'e-mail', field: 'email', filterable: true, sortable: true, getIdBadge: ({ id }) => id }
     ];
   }

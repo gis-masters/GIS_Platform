@@ -14,17 +14,17 @@ export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItem
   const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
   const from =
     col.type === PropertyType.DATETIME
-      ? formatDate(filterValue.$gte as string, col.settings?.format)
-      : filterValue.$gte;
+      ? formatDate(filterValue?.$gte as string, col.settings?.format)
+      : filterValue?.$gte;
   const to =
     col.type === PropertyType.DATETIME
-      ? formatDate(filterValue.$lte as string, col.settings?.format)
-      : filterValue.$lte;
+      ? formatDate(filterValue?.$lte as string, col.settings?.format)
+      : filterValue?.$lte;
 
   const value = (
     <>
-      {(filterValue.$gte || filterValue.$gte === 0) && 'от'} {from}{' '}
-      {(filterValue.$lte || filterValue.$lte === 0) && 'до'} {to}
+      {(filterValue?.$gte || filterValue?.$gte === 0) && 'от'} {from}{' '}
+      {(filterValue?.$lte || filterValue?.$lte === 0) && 'до'} {to}
     </>
   );
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -17,6 +17,12 @@ class FormControlTypeUserId extends Component<FormControlProps> {
   @observable private user?: MinimizedCrgUser;
   private operationId?: symbol;
 
+  constructor(props: FormControlProps) {
+    super(props);
+
+    makeObservable(this);
+  }
+
   async componentDidMount() {
     await this.fetchUser();
   }
@@ -32,7 +38,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
 
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
-        <Users value={[this.user]} editable onChange={this.handleChange} />
+        <Users value={this.user ? [this.user] : []} editable onChange={this.handleChange} />
         <FormErrors errors={errors} />
       </div>
     );
@@ -42,7 +48,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
   private handleChange(value: MinimizedCrgUser[]) {
     const { onChange, property } = this.props;
 
-    if (onChange) {
+    if (onChange && property) {
       onChange({
         value: value[0]?.id ?? null,
         propertyName: property.name
@@ -75,6 +81,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
       id: user.id,
       name: user.name,
       surname: user.surname,
+      middleName: user.middleName,
       email: user.email
     };
   }

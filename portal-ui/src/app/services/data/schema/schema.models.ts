@@ -199,6 +199,10 @@ export interface PropertySchemaUser extends BasePropertySchema {
   multiple?: boolean;
 }
 
+export interface PropertySchemaUserId extends BasePropertySchema {
+  propertyType: PropertyType.USER_ID;
+}
+
 export interface PropertySchemaLookup extends BasePropertySchema {
   propertyType: PropertyType.LOOKUP;
 }
@@ -264,5 +268,6 @@ export type PropertySchema =
   | PropertySchemaFile
   | PropertySchemaDocument
   | PropertySchemaUser
+  | PropertySchemaUserId
   | PropertySchemaCustom
   | PropertySchemaGeometry;

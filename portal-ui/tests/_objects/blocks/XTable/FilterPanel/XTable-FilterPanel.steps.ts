@@ -19,16 +19,16 @@ Then('в панели фильтров xTable я нажимаю на крест�
 });
 
 Then('панель фильтров xTable не отображается', async () => {
-  expect(await xTableFilterPanelBlock.isEmpty()).toBeTruthy();
+  await expect(await xTableFilterPanelBlock.isEmpty()).toBeTruthy();
 });
 
 Then('в панели фильтров xTable присутствует кнопка очистки фильтров', async () => {
-  expect(await xTableFilterPanelBlock.hasClearAll()).toBeTruthy();
+  await expect(await xTableFilterPanelBlock.hasClearAll()).toBeTruthy();
 });
 
 Then(
   /^в панели фильтров xTable (присутствует|отсутствует) фильтр по полю "([^"]*)"( со значением "([^"]*)")?$/,
   async (present: string, title: string, value?: string) => {
-    expect(await xTableFilterPanelBlock.hasItem(title, value)).toBe(present === 'присутствует');
+    await expect(await xTableFilterPanelBlock.hasItem(title, value)).toBe(present === 'присутствует');
   }
 );

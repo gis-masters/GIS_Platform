@@ -18,6 +18,7 @@ export const Highlight: FC<HighlightProps> = ({ enabled, word, children }) => {
   let actualWord: string | RegExp;
 
   if (
+    word &&
     typeof word === 'object' &&
     !Array.isArray(word) &&
     !(word instanceof RegExp) &&

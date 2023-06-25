@@ -3,7 +3,14 @@ import sift from 'sift';
 
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 
-export type FilterQueryValue = string | number | boolean | (string | number | boolean)[] | RegExp | string[];
+export type FilterQueryValue =
+  | string
+  | number
+  | boolean
+  | (string | number | boolean | null)[]
+  | RegExp
+  | string[]
+  | null;
 
 export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];
@@ -42,7 +49,9 @@ export function getFieldFilterValue(
   field: string
 ): FilterQueryValue | FilterQuery | FilterQuery[] | undefined {
   if (Array.isArray(filter.$and)) {
-    const entry: FilterQuery = (filter.$and as FilterQuery[]).find(filterEntry => filterEntry[field] !== undefined);
+    const entry: FilterQuery | undefined = (filter.$and as FilterQuery[]).find(
+      filterEntry => filterEntry[field] !== undefined
+    );
 
     if (entry) {
       return entry[field];
@@ -55,7 +64,7 @@ export function getFieldFilterValue(
 export function getFieldFilterPart(filter: FilterQuery, field: string): FilterQuery | undefined {
   const [and, index] = getFilterRootAnd(filter, field);
   if (index !== -1) {
-    const entry: FilterQuery = and.find(
+    const entry: FilterQuery | undefined = and.find(
       filterEntry =>
         filterEntry[field] !== undefined ||
         (filterEntry.$or && filterEntry.$or[0] && (filterEntry.$or[0] as FilterQuery)[field]) !== undefined
@@ -77,7 +86,7 @@ export function getFieldFilterPart(filter: FilterQuery, field: string): FilterQu
 export function modifyFieldFilterValue(
   filter: FilterQuery,
   field: string,
-  value?: FilterQueryValue | FilterQuery
+  value?: FilterQueryValue | FilterQuery | null
 ): void {
   if (value === undefined) {
     removeFieldFilter(filter, field);
@@ -86,11 +95,12 @@ export function modifyFieldFilterValue(
   }
 }
 
-export function getFilterRootAnd(filter: FilterQuery, field?: string): [FilterQuery[], number] {
+export function getFilterRootAnd(filter: FilterQuery, field = ''): [FilterQuery[], number] {
   const and: FilterQuery[] | undefined = filter.$and as FilterQuery[];
   const index = and?.findIndex(
     entry =>
-      entry[field] !== undefined || (entry.$or && entry.$or[0] && (entry.$or[0] as FilterQuery)[field]) !== undefined
+      entry[field] !== undefined ||
+      (Array.isArray(entry.$or) && entry.$or[0] && (entry.$or[0] as FilterQuery)[field]) !== undefined
   );
 
   return [and, index === undefined ? -1 : index];
@@ -112,13 +122,15 @@ export function removeFieldFilter(filter: FilterQuery, field: string): void {
     }
   } else {
     delete filter[field];
-    if (filter.$or && filter.$or[field]) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore // todo починить (https://dev.azure.com/programgeoplan/GIS%20Platform/_workitems/edit/6054)
+    if (Array.isArray(filter.$or) && filter.$or[field]) {
       delete filter.$or;
     }
   }
 }
 
-function addFieldFilter(filter: FilterQuery, field: string, value: FilterQueryValue | FilterQuery): void {
+function addFieldFilter(filter: FilterQuery, field: string, value: FilterQueryValue | FilterQuery | null): void {
   const [and, index] = getFilterRootAnd(filter, field);
   if (and) {
     if (index === -1) {
@@ -133,6 +145,7 @@ function addFieldFilter(filter: FilterQuery, field: string, value: FilterQueryVa
     for (const oldField of Object.keys(filter)) {
       delete filter[oldField];
     }
+
     filter.$and = newAndValue;
   }
 }

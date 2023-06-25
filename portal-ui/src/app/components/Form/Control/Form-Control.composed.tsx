@@ -12,6 +12,7 @@ import { withTypeFloat } from './_type/Form-Control_type_float';
 import { withTypeFias } from './_type/Form-Control_type_fias';
 import { withTypeFile } from './_type/Form-Control_type_file';
 import { withTypeDocument } from './_type/Form-Control_type_document';
+import { withTypeUserId } from './_type/Form-Control_type_userId';
 import { withTypeUser } from './_type/Form-Control_type_user';
 import { withTypeUrl } from './_type/Form-Control_type_url';
 
@@ -31,5 +32,6 @@ export const FormControl = compose(
   withTypeDocument,
   withTypeUrl,
   withTypeUser,
+  withTypeUserId,
   withTypeDatetime
 )(Presenter) as typeof Presenter;

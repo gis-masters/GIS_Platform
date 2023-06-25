@@ -41,7 +41,7 @@ class XTableFilterTypeBool extends Component<XTableFilterProps> {
   }
 
   @computed
-  private get value(): boolean {
+  private get value(): boolean | null {
     const { filterQuery, field } = this.props;
     const value = getFieldFilterValue(filterQuery, field);
 

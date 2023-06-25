@@ -16,7 +16,7 @@ export const withTypeString = withBemMod<
   const { filter, col } = props;
   const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
 
-  const value = <>{filterValue.$ilike}</>;
+  const value = <>{filterValue?.$ilike}</>;
 
   return <XTableFilterPanelItemContentBase {...props} value={value} />;
 });

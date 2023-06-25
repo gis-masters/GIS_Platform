@@ -3,8 +3,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { ChooseXTableDialog } from './ChooseXTableDialog';
 import { PropertyType } from '../../services/data/schema/schema.models';
-import { TestData, testDataForTables } from '../XTable/XTable.stories';
+import { TestData } from '../XTable/XTable.stories';
 import { XTableColumn } from '../XTable/XTable.models';
+import { testDataForTables } from '../XTable/testDataForTables';
 
 export default {
   title: 'ChooseXTableDialog',

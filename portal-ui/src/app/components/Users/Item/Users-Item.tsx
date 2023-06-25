@@ -34,7 +34,7 @@ export class UsersItem extends Component<UsersItemProps> {
           <LookupIcon>
             <Icon color='action' />
           </LookupIcon>
-          {`${item.surname} ${item.name} ${item.middleName || ''}`}
+          {item.surname} {item.name} {item.middleName}
           {editable && (numerous || multiple) && <LookupNameGap />}
           {editable && (
             <LookupActions>

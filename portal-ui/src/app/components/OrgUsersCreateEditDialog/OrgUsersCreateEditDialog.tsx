@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
 
-import { Toast } from '../Toast/Toast';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
@@ -82,6 +80,11 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
         propertyType: PropertyType.STRING
       },
       {
+        name: 'bossId',
+        title: 'Начальник',
+        propertyType: PropertyType.USER_ID
+      },
+      {
         name: 'phone',
         title: 'Контактный номер телефона',
         required: true,
@@ -114,13 +117,15 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
   @boundMethod
   private async save(value: NewUserData) {
     const { user, create } = this.props;
-    try {
-      await (create ? usersService.create(value) : usersService.edit(getPatch(value, user), user.id));
-    } catch (error) {
-      Toast.error(error as AxiosError);
 
-      return;
+    if (create) {
+      await usersService.create(value);
+      this.props.onClose();
     }
-    this.props.onClose();
+
+    if (!create && user) {
+      await usersService.edit(getPatch(value, user), user.id);
+      this.props.onClose();
+    }
   }
 }

@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { allUsers } from '../../stores/AllUsers.store';
 import { allGroups } from '../../stores/AllGroups.store';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { usersService } from '../../services/auth/users/users.service';
@@ -60,6 +61,13 @@ export class OrgUsers extends Component {
       field: 'department',
       filterable: true,
       sortable: true
+    },
+    {
+      title: 'Начальник',
+      field: 'bossId',
+      filterable: true,
+      sortable: true,
+      type: PropertyType.USER_ID
     },
     {
       title: 'Контактный номер телефона',
