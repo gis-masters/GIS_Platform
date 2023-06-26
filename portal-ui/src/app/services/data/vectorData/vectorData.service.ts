@@ -125,9 +125,11 @@ export async function getVectorTableConnections(vectorTableIdentifier: string): 
 export async function createFeature(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  feature: NewWfsFeature
+  feature: NewWfsFeature | WfsFeature
 ): Promise<WfsFeature> {
-  const response = await vectorDataClient.createFeature(datasetIdentifier, vectorTableIdentifier, feature);
+  const newFeature: NewWfsFeature = { geometry: feature.geometry, type: feature.type, properties: feature.properties };
+
+  const response = await vectorDataClient.createFeature(datasetIdentifier, vectorTableIdentifier, newFeature);
   communicationService.featuresUpdated.emit({ type: 'create', data: response });
 
   return response;

@@ -6,10 +6,11 @@ import { action, observable, makeObservable } from 'mobx';
 import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { isLinear, isPolygonal, isPoint } from '../../services/geoserver/wfs/wfs.util';
 
 import '!style-loader!css-loader!sass-loader!./SelectSuitableVectorLayerDialog.scss';
 
@@ -71,7 +72,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
         actionButtonProps={{ children: 'Копировать' }}
         additionalAction={
           <div className={cnSelectSuitableVectorLayerDialog('Description')}>
-            Для копирования доступны редактируемые слои, совпадающие по типу геометрии&nbsp;(
+            Для копирования доступны <b>редактируемые</b> слои, совпадающие по типу геометрии&nbsp;(
             {features && features[0]?.geometry?.type}) и&nbsp;проекции&nbsp;({currentLayer?.nativeCRS})
           </div>
         }
@@ -89,7 +90,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       currentProject.vectorLayers.map(({ schemaId }) => schemaService.getSchema(schemaId))
     );
 
-    const currentLayer = this.props.currentLayer;
+    const { currentLayer, features } = this.props;
     const layersUpdatePermissions: boolean[] = [];
     for (const layer of currentProject.vectorableLayers) {
       layersUpdatePermissions.push(await isUpdateAllowed(layer));
@@ -105,11 +106,21 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       return (
         currentLayer.complexName !== layer.complexName &&
         currentLayer.nativeCRS === layer.nativeCRS &&
-        this.props.features?.every(({ geometry }) => geometry.type === geometryType) &&
+        this.isCompatibleByGeometry(features, geometryType) &&
         layersUpdatePermissions[i]
       );
     });
 
     this.setLayersAvailableForCopy(layersAvailableForCopy);
+  }
+
+  private isCompatibleByGeometry(features: WfsFeature[], geometryType: GeometryType): boolean {
+    return features?.every(
+      ({ geometry }) =>
+        geometry.type === geometryType ||
+        isLinear(geometryType, geometry.type) ||
+        isPolygonal(geometryType, geometry.type) ||
+        isPoint(geometryType, geometry.type)
+    );
   }
 }

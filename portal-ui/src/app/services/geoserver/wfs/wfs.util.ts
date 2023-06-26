@@ -78,16 +78,22 @@ export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdit
   }
 }
 
-function isLinear(geometryType: GeometryType) {
-  return geometryType === GeometryType.LINE_STRING || geometryType === GeometryType.MULTI_LINE_STRING;
+export function isLinear(...geometryTypes: GeometryType[]): boolean {
+  return geometryTypes.every(
+    geometryType => geometryType === GeometryType.LINE_STRING || geometryType === GeometryType.MULTI_LINE_STRING
+  );
 }
 
-function isPolygonal(geometryType: GeometryType) {
-  return geometryType === GeometryType.POLYGON || geometryType === GeometryType.MULTI_POLYGON;
+export function isPolygonal(...geometryTypes: GeometryType[]): boolean {
+  return geometryTypes.every(
+    geometryType => geometryType === GeometryType.POLYGON || geometryType === GeometryType.MULTI_POLYGON
+  );
 }
 
-function isPoint(geometryType: GeometryType) {
-  return geometryType === GeometryType.POINT || geometryType === GeometryType.MULTI_POINT;
+export function isPoint(...geometryTypes: GeometryType[]): boolean {
+  return geometryTypes.every(
+    geometryType => geometryType === GeometryType.POINT || geometryType === GeometryType.MULTI_POINT
+  );
 }
 
 export function selectLabelForGeometryType(
