@@ -12,6 +12,7 @@ import ru.mycrg.auth_service.dto.UserProjection;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,4 +37,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     @RestResource(exported = false)
     Optional<User> findByEmail(@Param("email") String email);
+
+    @RestResource(exported = false)
+    List<User> findByBossId(Integer bossId);
 }

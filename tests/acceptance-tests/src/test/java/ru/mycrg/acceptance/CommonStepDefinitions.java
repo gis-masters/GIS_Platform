@@ -85,6 +85,12 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.valueOf(count), response.jsonPath().get("page.totalElements"));
     }
 
+    @Then("В списке присутствуют определённое кол-во элементов: {string}")
+    public void checkTotalElementsInList(String count) {
+        List<Object> objectList = response.jsonPath().get("");
+        assertEquals(Integer.valueOf(count), Integer.valueOf(objectList.size()));
+    }
+
     @And("Данные отсортированы по {string} и {string} в {string}")
     public void isDataSorted(String sortingType, String sortingDirection, String entity) {
         jsonPath = response.jsonPath();

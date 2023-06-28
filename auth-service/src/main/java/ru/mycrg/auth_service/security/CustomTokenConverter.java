@@ -16,10 +16,7 @@ import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CustomTokenConverter extends JwtAccessTokenConverter {
@@ -76,10 +73,14 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
                                          .map(Group::getId)
                                          .collect(Collectors.toList());
 
+            Set<Integer> minions = new HashSet<>();
+            fetchMinions(minions, user.getId());
+
             additionalInfo.put("user_id", user.getId());
             additionalInfo.put("user_name", user.getGeoserverLogin());
             additionalInfo.put("crg_login", user.getLogin());
             additionalInfo.put("groups", usersGroups);
+            additionalInfo.put("minions", minions);
 
             Optional<IdNameProjection> oOrganization;
             if (orgId == null) {
@@ -104,5 +105,17 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
         }
 
         return additionalInfo;
+    }
+
+    private void fetchMinions(Set<Integer> minions, Long bossId) {
+        Set<Integer> currentMinions = userRepository.findByBossId(bossId.intValue())
+                                                     .stream().map(user -> user.getId().intValue())
+                                                     .collect(Collectors.toSet());
+
+        minions.addAll(currentMinions);
+
+        currentMinions.forEach(id -> {
+            fetchMinions(minions, id.longValue());
+        });
     }
 }

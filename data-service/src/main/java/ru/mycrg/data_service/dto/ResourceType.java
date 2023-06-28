@@ -9,5 +9,6 @@ public enum ResourceType {
     FEATURE,
     SCHEMA,
     BASEMAP,
-    REESTR
+    REESTR,
+    TASK
 }

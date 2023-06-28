@@ -1,0 +1,80 @@
+package ru.mycrg.data_service.service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.data_service.entity.TaskLog;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.TaskLogRepository;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
+
+@Service
+@Transactional
+public class TaskLogService {
+
+    private final TaskLogRepository taskLogRepository;
+    private final BaseDao baseDao;
+
+    public TaskLogService(TaskLogRepository taskLogRepository, BaseDao baseDao) {
+        this.taskLogRepository = taskLogRepository;
+        this.baseDao = baseDao;
+    }
+
+    @NotNull
+    public Page<TaskLog> findAll(String ecqlFilter, Pageable pageable) {
+        List<TaskLog> taskLogs;
+        ResourceQualifier taskLogTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks_log");
+        try {
+            taskLogs = baseDao.findAll(taskLogTable, ecqlFilter, pageable, TaskLog.class);
+        } catch (BadSqlGrammarException ex) {
+            String message = "Не удалось выполнить запрос на выборку из журнала задач. ";
+            logError(message, ex);
+
+            throw new BadRequestException(message);
+        }
+
+        long total = baseDao.getTotal(taskLogTable, ecqlFilter);
+
+        return new PageImpl<>(taskLogs, pageable, total);
+    }
+
+    @NotNull
+    public TaskLog getById(@NotNull Long id) {
+        return taskLogRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(TaskLog.class, id));
+    }
+
+    @NotNull
+    public List<TaskLog> getByTaskId(@NotNull Long id) {
+        return taskLogRepository
+                .findAllByTaskIdIs(id);
+    }
+
+    public void create(TaskLogDto logDto, Object taskBody) {
+        TaskLog taskLog = new TaskLog();
+        taskLog.setTaskId(logDto.getTaskId());
+        taskLog.setEventType(logDto.getEventType());
+        taskLog.setMassage(mapper.convertValue(taskBody, JsonNode.class));
+        taskLog.setCreatedAt(LocalDateTime.now());
+
+        taskLogRepository.save(taskLog);
+    }
+}
