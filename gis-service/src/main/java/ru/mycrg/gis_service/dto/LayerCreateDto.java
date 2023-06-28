@@ -74,6 +74,8 @@ public class LayerCreateDto {
 
     private String view;
 
+    private String errorText;
+
     public LayerCreateDto() {
         //Required by framework
     }
@@ -238,6 +240,14 @@ public class LayerCreateDto {
         this.view = view;
     }
 
+    public String getErrorText() {
+        return errorText;
+    }
+
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -260,7 +270,8 @@ public class LayerCreateDto {
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
                 "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
                 "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
-                "\"view\":" + (view == null ? "null" : "\"" + view + "\"") +
+                "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +
+                "\"error_text\":" + (errorText == null ? "null" : "\"" + errorText + "\"") +
                 "}";
     }
 }

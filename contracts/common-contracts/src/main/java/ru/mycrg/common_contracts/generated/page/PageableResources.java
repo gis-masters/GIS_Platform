@@ -1,4 +1,4 @@
-package ru.mycrg.common_contracts.page;
+package ru.mycrg.common_contracts.generated.page;
 
 import java.util.List;
 

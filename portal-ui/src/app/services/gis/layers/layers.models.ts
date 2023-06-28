@@ -60,6 +60,7 @@ interface CrgBaseLayer extends CrgEntity {
   maxZoom?: number;
   complexName?: string;
   parentId?: number;
+  errorText?: string;
 }
 
 export type NewCrgLayer = Partial<CrgLayer>;

@@ -1,5 +1,5 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getStyleSld } from '../styles/styles.service';
 import { cqlBuild } from '../../util/cqlBuild';
 import { cql2ol } from '../../util/cql2ol';
@@ -118,34 +118,63 @@ export async function getMapByXml(url: string): Promise<Blob> {
   return await wmsClient.getMapByXml(xml);
 }
 
-export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boolean; errors?: string[] }> {
-  const url = new URL(wmsClient.getWmsUrl());
+export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; errors?: string[] }> {
+  if (layer.type === CrgLayerType.VECTOR) {
+    const url = new URL(wmsClient.getWmsUrl());
 
-  url.searchParams.set('SERVICE', 'WMS');
-  url.searchParams.set('VERSION', '1.3.0');
-  url.searchParams.set('REQUEST', 'GetMap');
-  url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
-  url.searchParams.set('TRANSPARENT', 'true');
-  url.searchParams.set('LAYERS', layer.complexName);
-  url.searchParams.set('CRS', 'EPSG:3857');
-  url.searchParams.set('STYLES', '');
-  url.searchParams.set('WIDTH', '300');
-  url.searchParams.set('HEIGHT', '300');
-  url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
+    url.searchParams.set('SERVICE', 'WMS');
+    url.searchParams.set('VERSION', '1.3.0');
+    url.searchParams.set('REQUEST', 'GetMap');
+    url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
+    url.searchParams.set('TRANSPARENT', 'true');
+    url.searchParams.set('LAYERS', layer.complexName);
+    url.searchParams.set('CRS', 'EPSG:3857');
+    url.searchParams.set('STYLES', '');
+    url.searchParams.set('WIDTH', '300');
+    url.searchParams.set('HEIGHT', '300');
+    url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
 
-  const result = await wmsClient.getMap(url.toString());
+    const result = await wmsClient.getMap(url.toString());
 
-  if (typeof result === 'string' || result.type === Mime.TEXT_XML) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(typeof result === 'string' ? result : await result.text(), Mime.XML);
-    const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
-      (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
-    );
+    if (typeof result === 'string' || result.type === Mime.TEXT_XML) {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(typeof result === 'string' ? result : await result.text(), Mime.XML);
+      const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
+        (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
+      );
 
-    return { ok: false, errors };
+      return { ok: false, errors };
+    }
+  } else if (layer.type === CrgLayerType.EXTERNAL_GEOSERVER || layer.type === CrgLayerType.EXTERNAL) {
+    if (!layer.errorText) {
+      return { ok: true };
+    }
+
+    const url = new URL(layer.dataSourceUri);
+    url.searchParams.set('F', 'Image');
+    url.searchParams.set('FORMAT', 'PNG32');
+    url.searchParams.set('TRANSPARENT', 'true');
+    url.searchParams.set('LAYERS', layer.complexName);
+    url.searchParams.set('SIZE', '1024,1024');
+    url.searchParams.set('BBOX', '3740789.9457623847,5618140.688217526,3740809.055019456,5618159.797474598');
+    url.searchParams.set('bboxSR', '102100');
+    url.searchParams.set('imageSR', '102100');
+    url.searchParams.set('DPI', '360');
+
+    const errors = [layer.errorText];
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        return { ok: false, errors };
+      }
+    } catch {
+      return { ok: false, errors };
+    }
+
+    return { ok: true };
+  } else {
+    return { ok: true };
   }
-
-  return { ok: true };
 }
 
 /**
@@ -153,6 +182,7 @@ export async function testLayerByWms(layer: CrgVectorLayer): Promise<{ ok: boole
  *
  * @param complexLayerName  Название слоя в формате 'workspace:layerName'
  * @param ruleName          Название правила в стиле.
+ * @param style             Название стилея.
  */
 export async function getLegendGraphic(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
   return await wmsClient.getLegendGraphic(complexLayerName, ruleName, style);

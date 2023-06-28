@@ -1,8 +1,8 @@
 package ru.mycrg.common_utils.page;
 
 import org.springframework.data.domain.Pageable;
-import ru.mycrg.common_contracts.page.Page;
-import ru.mycrg.common_contracts.page.PageableResources;
+import ru.mycrg.common_contracts.generated.page.Page;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 
 import java.util.ArrayList;
 

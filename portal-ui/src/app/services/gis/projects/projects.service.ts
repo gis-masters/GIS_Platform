@@ -158,17 +158,16 @@ class ProjectsService {
   async testCurrentProjectLayers() {
     const testingProjectId = currentProject.id;
 
-    for (const layer of currentProject.vectorLayers) {
+    for (const layer of currentProject.layers) {
       // если пользователь успел убежать из проекта, пока мы слои щупали
       if (currentProject.id !== testingProjectId) {
         break;
       }
 
-      const { errors } = await testLayerByWms(layer);
-
-      if (errors?.length) {
-        currentProject.setLayerError(layer.complexName, errors);
-        services.logger.error(errors);
+      const result = await testLayerByWms(layer);
+      if (result?.errors?.length && layer.complexName) {
+        currentProject.setLayerError(layer.complexName, result.errors);
+        services.logger.error(result.errors);
       }
     }
   }

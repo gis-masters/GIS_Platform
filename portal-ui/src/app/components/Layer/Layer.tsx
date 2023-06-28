@@ -73,6 +73,7 @@ export class Layer extends Component<LayerProps> {
     const { title, enabled, transparency } = data;
     const { expanded } = data as CrgLayersGroup;
     const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
+    const isVectorLayer = (data as CrgLayer).type === CrgLayerType.VECTOR;
     const hiddenByZoomTooltipText = hiddenByZoom
       ? `${out ? 'Уменьшите' : 'Увеличьте'} карту, чтобы увидеть объекты`
       : '';
@@ -101,7 +102,7 @@ export class Layer extends Component<LayerProps> {
 
         <LayerInnards show={this.open && !isGroup} depth={depth}>
           {this.isError && <LayerErrors errors={this.errors} />}
-          <LayerLegend layer={data as CrgVectorLayer} />
+          {isVectorLayer && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>
 
         <LayerMenu
@@ -166,7 +167,10 @@ export class Layer extends Component<LayerProps> {
       group.expanded = !group.expanded;
     } else {
       const { type } = data as CrgLayer;
-      if (type !== CrgLayerType.VECTOR || editMode) {
+      if (
+        (type !== CrgLayerType.VECTOR && type !== CrgLayerType.EXTERNAL && type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
+        editMode
+      ) {
         return;
       }
 

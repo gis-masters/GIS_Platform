@@ -25,6 +25,7 @@ public class LayerProjection {
     private final String dataStoreName;
     private final String contentType;
     private final String view;
+    private final String errorText;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
         this.id = layer.getId();
@@ -48,6 +49,7 @@ public class LayerProjection {
         this.complexName = orgWorkspaceName + ":" + tableName;
         this.contentType = layer.getContentType();
         this.view = layer.getView();
+        this.errorText = layer.getErrorText();
     }
 
     public Long getId() {
@@ -132,5 +134,9 @@ public class LayerProjection {
 
     public String getView() {
         return view;
+    }
+
+    public String getErrorText() {
+        return errorText;
     }
 }

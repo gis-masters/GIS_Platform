@@ -44,6 +44,8 @@ public class LayerUpdateDto {
 
     private String view;
 
+    private String errorText;
+
     @Length(min = 1, max = 255)
     private String styleName;
 
@@ -145,5 +147,13 @@ public class LayerUpdateDto {
 
     public void setView(String view) {
         this.view = view;
+    }
+
+    public String getErrorText() {
+        return errorText;
+    }
+
+    public void setErrorText(String errorText) {
+        this.errorText = errorText;
     }
 }

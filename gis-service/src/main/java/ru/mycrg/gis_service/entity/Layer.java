@@ -85,6 +85,8 @@ public class Layer implements Identifiable<Long> {
 
     private String view;
 
+    private String errorText;
+
     public Layer() {
         // Required
     }
@@ -112,6 +114,7 @@ public class Layer implements Identifiable<Long> {
         lastModified = LocalDateTime.now();
         contentType = dto.getContentType();
         view = dto.getView();
+        errorText = dto.getErrorText();
     }
 
     public Layer(LayerCreateDto dto, Project project) {
@@ -303,6 +306,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setView(String view) {
         this.view = view;
+    }
+
+    public String getErrorText() {
+        return errorText;
+    }
+
+    public void setErrorText(String healthCheck) {
+        this.errorText = healthCheck;
     }
 
     @Override

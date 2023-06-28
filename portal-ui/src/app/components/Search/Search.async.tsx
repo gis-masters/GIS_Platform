@@ -140,19 +140,15 @@ export default class Search extends Component {
       const err = error as AxiosError;
 
       Toast.warn({
-        message: `Ошибка ответа росреестра ${kadNum}`,
-        details: (
-          <div style={{ 'word-break': 'break-word' }}>
-            <p> Для решения данной проблемы воспользуйтесь нижеуказанными способами:</p>
-            <p>
-              1. Перейдите на сайт
-              <a href='https://pkk.rosreestr.ru/' target='_blank'>
-                https://pkk.rosreestr.ru/
-              </a>
-              и разрешите браузеру доступ.
-            </p>
-            <p>2. Используйте Яндекс браузер (Yandex Browser)</p>
-          </div>
+        message: (
+          <>
+            Ошибка ответа росреестра {kadNum}
+            <br />
+            Воспользуйтесь{' '}
+            <a href='https://www.gosuslugi.ru/crt' target='_blank'>
+              инструкцией
+            </a>
+          </>
         )
       });
       services.logger.error(`Ошибка ответа росреестра: ${kadNum}`, err.message);

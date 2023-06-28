@@ -84,6 +84,11 @@ export class LayerLegend extends Component<LayerLegendProps> {
   @boundMethod
   private async fetchFilteredLegend() {
     const { layer } = this.props;
+    if (!layer.styleName) {
+      this.setFilteredLegend([]);
+
+      return;
+    }
 
     const operationId = Symbol();
     this.operationId = operationId;

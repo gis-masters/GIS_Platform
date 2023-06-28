@@ -2,6 +2,7 @@ import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { default as OlFeature } from 'ol/Feature';
 import { Geometry } from 'ol/geom';
+import * as DOMPurify from 'dompurify';
 
 import { AppModule } from './app/app.module';
 import { environment, EnvironmentData } from './app/services/environment';
@@ -56,3 +57,27 @@ if (environment.production) {
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((error: unknown) => console.error(error));
+
+// Хук для сохранения "target"='_blank' в ссылках после оборачивания санитайзером
+const TEMP_ATTR = 'data-target';
+DOMPurify.addHook('beforeSanitizeAttributes', function (n) {
+  if (n.tagName === 'A' && n.hasAttribute('target')) {
+    const attribute = n.getAttribute('target');
+    if (attribute) {
+      n.setAttribute(TEMP_ATTR, attribute);
+    }
+  }
+});
+DOMPurify.addHook('afterSanitizeAttributes', function (n) {
+  if (n.tagName === 'A' && n.hasAttribute(TEMP_ATTR)) {
+    const attribute = n.getAttribute(TEMP_ATTR);
+    if (attribute) {
+      n.setAttribute('target', attribute);
+      n.removeAttribute(TEMP_ATTR);
+    }
+
+    if (n.getAttribute('target') === '_blank') {
+      n.setAttribute('rel', 'noopener');
+    }
+  }
+});

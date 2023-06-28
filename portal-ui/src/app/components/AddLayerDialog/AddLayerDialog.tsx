@@ -286,6 +286,12 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           required: true,
           wellKnownRegex: 'url',
           propertyType: PropertyType.STRING
+        },
+        {
+          name: 'errorText',
+          title: 'Сообщение об ошибке',
+          description: 'Сообщение, которое отображается, когда внешний слой не работает',
+          propertyType: PropertyType.STRING
         }
       ];
     }
@@ -295,7 +301,16 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
   @boundMethod
   private async add() {
-    const { datasource = {}, title = '', minZoom, dataSourceUri, tableName, layerType, view } = this.formValue;
+    const {
+      datasource = {},
+      title = '',
+      minZoom,
+      dataSourceUri,
+      tableName,
+      layerType,
+      view,
+      errorText
+    } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
     const dataStoreName = currentUser.workspaceName;
 
@@ -372,7 +387,8 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         title,
         dataSourceUri: dataSourceUri,
         minZoom,
-        tableName
+        tableName,
+        errorText: errorText
       });
       this.clearForm();
 
