@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller;
+package ru.mycrg.data_service.controller.tasks;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +20,12 @@ import javax.validation.Valid;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
+import static ru.mycrg.data_service.util.StringUtil.camelCaseToSnakeCaseForEcqlFilter;
 
 @RestController
 @RequestMapping(value = "/tasks")
 public class TaskController {
+
     private final Mediator mediator;
     private final TaskService taskService;
 
@@ -32,13 +34,30 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-
     @PostMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> createTask(@Valid @RequestBody TaskCreateDto taskCreateDto) {
         Task createdTask = mediator.execute(new CreateTaskRequest(taskCreateDto));
 
         return new ResponseEntity<>(createdTask, CREATED);
+    }
+
+    @GetMapping
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> getTasks(
+            @RequestParam(name = "filter", required = false, defaultValue = "") String ecqlFilter,
+            Pageable pageable) {
+        Page<Task> tasks = taskService.findAll(camelCaseToSnakeCaseForEcqlFilter(ecqlFilter), pageable);
+
+        return ResponseEntity.ok(pageFromList(tasks, pageable));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Task task = taskService.getById(id);
+
+        return ResponseEntity.ok(task);
     }
 
     @PatchMapping("/{id}")
@@ -71,22 +90,5 @@ public class TaskController {
         mediator.execute(new UpdateTaskStatusRequest(TaskStatus.CANCELED, id));
 
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getTasks(@RequestParam(name = "filter", required = false) String ecqlFilter,
-                                           Pageable pageable) {
-        Page<Task> tasks = taskService.findAll(ecqlFilter, pageable);
-
-        return ResponseEntity.ok(pageFromList(tasks, pageable));
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        Task task = taskService.getById(id);
-
-        return ResponseEntity.ok(task);
     }
 }

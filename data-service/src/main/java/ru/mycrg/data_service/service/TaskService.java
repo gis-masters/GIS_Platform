@@ -9,16 +9,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.entity.Task;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.TaskRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
 
-import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.StringUtil.join;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,31 +32,52 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final BaseDao baseDao;
+    private final IAuthenticationFacade authenticationFacade;
 
-    public TaskService(TaskRepository taskRepository, BaseDao baseDao) {
+    public TaskService(TaskRepository taskRepository,
+                       BaseDao baseDao,
+                       IAuthenticationFacade authenticationFacade) {
         this.taskRepository = taskRepository;
         this.baseDao = baseDao;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @NotNull
     public Page<Task> findAll(String ecqlFilter, Pageable pageable) {
-        List<Task> tasks;
-        ResourceQualifier taskTable = new ResourceQualifier("data", "tasks");
         try {
-            tasks = baseDao.findAll(taskTable, ecqlFilter, pageable, Task.class);
+            ResourceQualifier taskQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks");
+            String filter = modifyFilterByAssignedToMe(ecqlFilter);
+
+            log.debug("filter: {}", filter);
+
+            List<Task> tasks = baseDao.findAll(taskQualifier, filter, pageable, Task.class);
+            long total = baseDao.getTotal(taskQualifier, filter);
+
+            return new PageImpl<>(tasks, pageable, total);
         } catch (BadSqlGrammarException ex) {
             String message = "Не удалось выполнить запрос на выборку задач. ";
-            if (nonNull(ex.getCause()) && nonNull(ex.getCause().getMessage())) {
-                message += "Причина: " + ex.getCause().getMessage();
-            }
-            log.error(message);
+            logError(message, ex);
 
             throw new BadRequestException(message);
+        } catch (Exception e) {
+            String message = "Не удалось получить все задачи.";
+            logError(message, e);
+
+            throw new DataServiceException(message);
+        }
+    }
+
+    private String modifyFilterByAssignedToMe(String ecqlFilter) {
+        List<Long> minionIds = authenticationFacade.getUserDetails().getMinions();
+        Long userId = authenticationFacade.getUserDetails().getUserId();
+        minionIds.add(userId);
+        String joined = join(minionIds, ", ");
+
+        if (ecqlFilter == null || ecqlFilter.isBlank()) {
+            return String.format("assigned_to IN (%s)", joined);
         }
 
-        long quantityOfTasks = baseDao.getTotal(taskTable, ecqlFilter);
-
-        return new PageImpl<>(tasks, pageable, quantityOfTasks);
+        return String.format("(%s) AND (assigned_to IN (%s))", ecqlFilter, joined);
     }
 
     @NotNull

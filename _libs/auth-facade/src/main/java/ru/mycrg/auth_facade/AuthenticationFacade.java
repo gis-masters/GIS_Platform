@@ -20,6 +20,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     private final String CLAIM_USER_CRG_LOGIN = "crg_login";
     private final String CLAIM_ORGANIZATIONS = "organizations";
     private final String CLAIM_GROUPS = "groups";
+    private final String CLAIM_MINIONS = "minions";
 
     @Override
     public String getAccessToken() {
@@ -79,6 +80,11 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         getValue(decodedDetails, CLAIM_GROUPS)
                 .ifPresent(groups -> {
                     ((List) groups).forEach(id -> userDetails.addGroupId(Long.valueOf(String.valueOf(id))));
+                });
+
+        getValue(decodedDetails, CLAIM_MINIONS)
+                .ifPresent(minions -> {
+                    ((List) minions).forEach(id -> userDetails.addMinionId(Long.valueOf(String.valueOf(id))));
                 });
 
         return userDetails;

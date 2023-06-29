@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.auth_service.entity.User;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,12 +58,11 @@ public class UserDao {
                 : whereSection + " AND organization_id = " + orgId;
 
         String query = "SELECT count(*) FROM users " +
-                "LEFT JOIN organizations_users ou on users.id = ou.users_id" +
-                " " + whereSection;
+                "LEFT JOIN organizations_users ou ON users.id = ou.users_id " + whereSection;
 
         log.debug("Query getTotal users: [{}]", query);
 
-        return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+        return pJdbcTemplate.queryForObject(query, new HashMap<>(), Long.class);
     }
 
     @NotNull

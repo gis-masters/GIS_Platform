@@ -25,6 +25,25 @@ public class StringUtil {
         return joinAndQuoteMark(ids, DEFAULT_QUOTE_MARK, DEFAULT_DELIMITER);
     }
 
+    public static String camelCaseToSnakeCase(String str) {
+        String converted = str.replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
+                              .replaceAll("([a-z])([A-Z])", "$1_$2")
+                              .toLowerCase();
+
+        return converted.length() == str.length() ? str : converted;
+    }
+
+    public static String camelCaseToSnakeCaseForEcqlFilter(String ecqlFilter) {
+        String[] words = ecqlFilter.split(" ");
+
+        StringBuilder result = new StringBuilder();
+        for (String word: words) {
+            result.append(camelCaseToSnakeCase(word)).append(" ");
+        }
+
+        return result.toString().trim();
+    }
+
     private static String joinAndQuoteMark(Collection<String> ids,
                                            String quoteMark,
                                            String delimiter) {

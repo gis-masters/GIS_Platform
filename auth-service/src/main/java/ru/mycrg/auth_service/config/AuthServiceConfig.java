@@ -21,6 +21,7 @@ public class AuthServiceConfig {
         knownSettings.put("editProjectLayer", "Настройка слоев проекта");
         knownSettings.put("sedDialog", "СЭД Диалог");
         knownSettings.put("reestrs", "Реестры");
+        knownSettings.put("taskManagement", "Управление задачами");
 
         return knownSettings;
     }
