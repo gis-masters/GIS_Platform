@@ -49,7 +49,8 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
 
         Task updatedTask = taskRepository.save(taskFromDb);
 
-        taskLogService.create(new TaskLogDto("Статус задачи обновлён на: " + newStatus, updatedTask.getId()),
+        taskLogService.create(new TaskLogDto("Статус задачи обновлён на: " + newStatus.getTranslatedStatus(),
+                                             updatedTask.getId()),
                               updatedTask);
 
         return updatedTask;

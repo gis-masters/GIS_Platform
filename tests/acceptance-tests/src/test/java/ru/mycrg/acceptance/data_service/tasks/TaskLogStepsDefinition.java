@@ -5,9 +5,10 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition.currentTaskId;
 
 public class TaskLogStepsDefinition extends BaseStepsDefinitions {
@@ -25,9 +26,12 @@ public class TaskLogStepsDefinition extends BaseStepsDefinitions {
                        get("/" + currentTaskId);
     }
 
-    @Then("В ответе поле eventType имеет значение {string}")
+    @Then("Текущая задача в журнале задач имеет следующие изменения: {string}")
     public void checkFieldEventType(String value) {
         List<String> eventTypes = response.jsonPath().get("eventType");
-        assertEquals(value, eventTypes.get(0));
+
+        List<String> expectedChanges = Arrays.asList(value.split(","));
+
+        expectedChanges.forEach(expected -> assertTrue(eventTypes.contains(expected.trim())));
     }
 }
