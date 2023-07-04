@@ -25,7 +25,7 @@ class LoginFormBlock extends Block {
   async checkErrorMessage(errorMessage: string) {
     const $errorMessage = await this.$('errorMessage');
     await $errorMessage.waitForDisplayed();
-    expect(await $errorMessage.getText()).toEqual(errorMessage);
+    await expect(await $errorMessage.getText()).toEqual(errorMessage);
   }
 
   async checkOrganizationsListVisibility() {

@@ -16,7 +16,7 @@ class LayerPropertiesDialogBlock extends Block {
 
     const view = await $layerPropertyFormDialogViewSelect.getText();
 
-    expect(view).toEqual(viewTitle);
+    await expect(view).toEqual(viewTitle);
   }
 
   async layerPropertyDialogSelectOptionByTitle(optionTitle: string): Promise<void> {

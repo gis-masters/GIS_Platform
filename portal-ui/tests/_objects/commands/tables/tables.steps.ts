@@ -3,7 +3,7 @@ import { Given } from '@wdio/cucumber-framework';
 
 import { TestUser } from '../auth/testUsers';
 import { ScenarioScope } from '../../ScenarioScope';
-import { getPreparedFeatures } from './features.templates';
+import { getTestFeatures } from './testFeatures';
 import { createVectorTableAs } from './createVectorTableAs';
 import { createRecordAsAdmin } from './vectorTableRecordsManagement';
 import { getUserByEmail } from '../auth/getUserByEmail';
@@ -62,8 +62,8 @@ Given(
   }
 );
 
-Given('таблица наполнена данными {string}', async function (this: ScenarioScope, title: string) {
-  this.latestFeatures = getPreparedFeatures(title, this.latestSchema);
+Given('таблица наполнена данными {string}', async function (this: ScenarioScope, key: string) {
+  this.latestFeatures = getTestFeatures(key, this.latestSchema);
   for (const feature of this.latestFeatures) {
     await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
   }

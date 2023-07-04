@@ -68,7 +68,7 @@ class ExplorerBlock extends Block {
 
   async testTitles(dirty: string) {
     const titles = dirty.slice(1, -1).split('", "');
-    expect(titles).toEqual(await this.getListTitles());
+    await expect(titles).toEqual(await this.getListTitles());
   }
 
   async testEmptiness() {

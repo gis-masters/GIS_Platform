@@ -27,6 +27,10 @@ Then('открывается форма просмотра объекта', asyn
   await editFeatureBlock.waitForVisible();
 });
 
+Then('не открывается форма просмотра объекта', async function () {
+  await editFeatureBlock.waitForHidden();
+});
+
 When('дожидаюсь появления формы редактирования объекта', async function () {
   await editFeatureBlock.waitForVisible();
 });

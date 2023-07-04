@@ -5,5 +5,5 @@ import { layerBlock } from './Layer.block';
 Then('в панели слоёв включен пункт {string}', async (itemName: string) => {
   const layerVisible = await layerBlock.isLayerVisible(itemName);
 
-  expect(layerVisible).toEqual(true);
+  await expect(layerVisible).toEqual(true);
 });

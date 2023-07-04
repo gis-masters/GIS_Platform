@@ -6,11 +6,6 @@ import { sortOrderButtonBlock } from '../SortOrderButtonBlock/SortOrderButtonBlo
 
 import { SortOrder } from '../../../../src/app/services/models';
 
-const sortTypes: Record<string, number> = {
-  'По-умолчанию': 1,
-  Названию: 2
-};
-
 export const sortDirections: Record<string, SortOrder> = {
   'По возрастанию': SortOrder.ASC,
   'По убыванию': SortOrder.DESC
@@ -100,7 +95,7 @@ class ProjectsBlock extends Block {
 
     const $$projectsCards = await this.$$('projectsCards');
 
-    expect($$projectsCards.length).toEqual(1);
+    await expect($$projectsCards.length).toEqual(1);
 
     return await this.getProjectCardText($$projectsCards[0]);
   }
@@ -118,11 +113,11 @@ class ProjectsBlock extends Block {
         ?.getAttribute('data-id');
     }, name);
 
-    if (!id) {
-      throw new Error(`Не найден проект "${name}"`);
-    } else {
+    if (id) {
       const $projectCard = await browser.$(`.ProjectCard[data-id="${id}"]`);
       await $projectCard.waitForClickable({ timeout: 5000, timeoutMsg: `Не появился проект ${name}[${id}]` });
+    } else {
+      throw new Error(`Не найден проект "${name}"`);
     }
   }
 

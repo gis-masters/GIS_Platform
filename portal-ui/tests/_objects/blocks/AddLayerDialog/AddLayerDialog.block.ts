@@ -12,7 +12,7 @@ class AddLayerDialogBlock extends Block {
     await $addLayerDialogViewField.waitForDisplayed();
 
     const vectorTableTitle = await $addLayerDialogViewField.getText();
-    expect(vectorTableTitle).toEqual('Представление');
+    await expect(vectorTableTitle).toEqual('Представление');
   }
 
   async checkViewFieldIsNotAppear(): Promise<void> {

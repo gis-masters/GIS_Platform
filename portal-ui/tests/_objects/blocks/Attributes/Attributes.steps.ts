@@ -154,14 +154,13 @@ Then(
 );
 
 Then(
-  'результат фильтрации в атрибутивной таблице по полю {string} соответствует ожидаемому {string}',
-  async function (colTitle: string, expectedAsString: string) {
+  'в атрибутивной таблице в колонке {string} значения: {strings}',
+  async function (colTitle: string, expected: string[]) {
     await browser.pause(200); // бага в browser.waitUntil
-    await browser.waitUntil(async () => {
-      const values = await attributesBlock.xTable.getColValues(colTitle);
-
-      return isEqual(values, expectedAsString.split(', ').filter(Boolean));
-    }, waitUntilOptions);
+    await browser.waitUntil(
+      async () => isEqual(await attributesBlock.xTable.getColValues(colTitle), expected),
+      waitUntilOptions
+    );
   }
 );
 

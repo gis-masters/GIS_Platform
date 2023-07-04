@@ -11,13 +11,13 @@ class MapBlock extends Block {
   async layerObjectNotVisibleOnMap(layerName: string): Promise<void> {
     const layerVisibility = await getLayerVisibility(layerName);
 
-    expect(layerVisibility).toEqual(false);
+    await expect(layerVisibility).toEqual(false);
   }
 
   async layerObjectVisibleOnMap(layerName: string): Promise<void> {
     const layerVisibility = await getLayerVisibility(layerName);
 
-    expect(layerVisibility).toEqual(true);
+    await expect(layerVisibility).toEqual(true);
   }
 
   async clickOnMap(): Promise<void> {
