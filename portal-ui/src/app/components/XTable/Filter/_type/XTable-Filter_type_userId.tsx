@@ -7,9 +7,10 @@ import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
 
-import { allUsers } from '../../../../stores/AllUsers.store';
-import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
+import { usersService } from '../../../../services/auth/users/users.service';
+import { allUsers } from '../../../../stores/AllUsers.store';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
@@ -24,6 +25,11 @@ class XTableFilterTypeUserId extends Component<XTableFilterProps> {
   constructor(props: XTableFilterProps) {
     super(props);
     makeObservable(this);
+  }
+  componentDidMount(): void {
+    if (!allUsers.list?.length) {
+      void usersService.initUsersListStore();
+    }
   }
 
   render() {
@@ -57,9 +63,13 @@ class XTableFilterTypeUserId extends Component<XTableFilterProps> {
 
   @computed
   private get options(): PropertyOption[] {
-    const options = allUsers.list.map(user => {
-      return { title: `${user.surname || ''} ${user.name} ${user.middleName || ''}`, value: user.id };
-    });
+    const options = allUsers.list
+      .map(user => {
+        if (user.enabled) {
+          return { title: `${user.surname || ''} ${user.name} ${user.middleName || ''}`, value: user.id };
+        }
+      })
+      .filter(Boolean) as PropertyOption[];
 
     return [{ title: 'Не заполнено', value: EMPTY }, ...options];
   }

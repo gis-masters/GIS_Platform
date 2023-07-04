@@ -3,7 +3,7 @@ import { PageableResponse, PageOptions, PageQueryParams } from '../models';
 import { cqlBuild } from '../util/cqlBuild';
 
 export function preparePageOptions(
-  { page, sort, sortOrder: sortOrder, filter, pageSize, queryParams = {} }: PageOptions,
+  { page, sort, sortOrder, filter, pageSize, queryParams = {} }: PageOptions,
   useCQL = false
 ): PageQueryParams {
   if (useCQL && filter && Object.keys(filter).length) {

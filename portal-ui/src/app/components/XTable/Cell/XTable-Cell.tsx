@@ -35,7 +35,18 @@ export const XTableCell = observer((({
   align,
   hidden: hiddenBySettings
 }) => {
-  const { CellContent, cellContentProps, cellProps, field, getIdBadge, AfterCellContent, hidden, type, settings } = col;
+  const {
+    CellContent,
+    cellContentProps,
+    cellProps,
+    field,
+    getIdBadge,
+    AfterCellContent,
+    BeforeCellContent,
+    hidden,
+    type,
+    settings
+  } = col;
 
   return (
     <TableCell
@@ -48,6 +59,9 @@ export const XTableCell = observer((({
       {...(cellProps || {})}
       style={{ '--XTableCellWidth': width }}
     >
+      {BeforeCellContent && (
+        <BeforeCellContent rowData={rowData} filterActive={filterActive} filterParams={filterQuery} col={col} />
+      )}
       <XTableCellContent
         singleLineContent={singleLineContent}
         type={type}
@@ -72,7 +86,6 @@ export const XTableCell = observer((({
           </>
         )}
       </XTableCellContent>
-
       {AfterCellContent && (
         <AfterCellContent rowData={rowData} filterActive={filterActive} filterParams={filterQuery} col={col} />
       )}

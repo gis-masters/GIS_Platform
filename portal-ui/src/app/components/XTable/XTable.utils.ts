@@ -10,6 +10,8 @@ const filterableTypes = new Set([
   PropertyType.DATETIME,
   PropertyType.DOCUMENT,
   PropertyType.FLOAT,
+  PropertyType.USER_ID,
+  PropertyType.USER,
   PropertyType.INT,
   PropertyType.STRING
 ]);
@@ -18,6 +20,8 @@ const sortableTypes = new Set([
   PropertyType.BOOL,
   PropertyType.CALCULATED,
   PropertyType.CHOICE,
+  PropertyType.USER_ID,
+  PropertyType.USER,
   PropertyType.DATETIME,
   PropertyType.DURATION,
   PropertyType.FLOAT,
@@ -34,8 +38,8 @@ export function getXTableColumnsFromSchema<T>(schema: Schema, overrides?: XTable
 
 export function defaultRowIdGetter<
   T extends { id?: string | number; identifier?: string; table_name?: string; name?: string }
->({ id, identifier, table_name, name }: T): string | number {
-  return id || identifier || table_name || name;
+>(data: T): string | number | undefined {
+  return data?.id || data?.identifier || data?.table_name || data?.name;
 }
 
 export function getXTableColumnsFromSchemaWithLowerCaseKeys(
@@ -74,6 +78,9 @@ function _getXTableColumnsFromSchema<T>(
       hidden: property.hidden,
       sortable: sortableTypes.has(property.propertyType),
       minWidth: property.minWidth,
+      BeforeCellContent: relations?.length
+        ? (XTableRelationsButton as XTableColumn<T>['BeforeCellContent'])
+        : undefined,
       AfterCellContent: relations?.length ? (XTableRelationsButton as XTableColumn<T>['AfterCellContent']) : undefined,
       cellProps: { padding: smallPaddingTypes.has(property.propertyType) ? 'checkbox' : undefined },
 

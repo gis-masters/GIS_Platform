@@ -15,6 +15,7 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         downloadFiles: true,
         dataManagement: true,
         editProjectLayer: true,
+        taskManagement: true,
         createLibraryItem: true
       },
       organization: {
@@ -23,6 +24,7 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         downloadFiles: true,
         dataManagement: true,
         editProjectLayer: true,
+        taskManagement: true,
         createLibraryItem: true
       }
     })

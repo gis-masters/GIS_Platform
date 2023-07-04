@@ -76,7 +76,7 @@ class FormControlTypeUserId extends Component<FormControlProps> {
   }
 
   @action
-  private setUser(user?: CrgUser) {
+  private setUser(user?: CrgUser | MinimizedCrgUser) {
     this.user = user && {
       id: user.id,
       name: user.name,

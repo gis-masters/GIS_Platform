@@ -75,6 +75,7 @@ import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-te
 import { SystemManagementComponent } from './components/system-management/system-management.component';
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
 import { MessagesRegistryComponent } from './components/messages-registry/messages-registry.component';
+import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +137,8 @@ import { MessagesRegistryComponent } from './components/messages-registry/messag
     FeaturesSidebarTeaserComponent,
     SystemManagementComponent,
     EditFeatureActionsComponent,
-    MessagesRegistryComponent
+    MessagesRegistryComponent,
+    TasksJournalComponent
   ],
   imports: [
     HttpClientModule,

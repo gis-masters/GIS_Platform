@@ -9,6 +9,7 @@ import { withTypeFloat } from './_type/XTable-FilterPanelItemContent_type_float'
 import { withTypeId } from './_type/XTable-FilterPanelItemContent_type_id';
 import { withTypeInt } from './_type/XTable-FilterPanelItemContent_type_int';
 import { withTypeString } from './_type/XTable-FilterPanelItemContent_type_string';
+import { withTypeUserId } from './_type/XTable-FilterPanelItemContent_type_userId';
 
 export const XTableFilterPanelItemContent = compose(
   withTypeString,
@@ -17,6 +18,7 @@ export const XTableFilterPanelItemContent = compose(
   withTypeInt,
   withTypeFloat,
   withTypeDocument,
+  withTypeUserId,
   withTypeBool,
   withTypeChoice
 )(XTableFilterPanelItemContentBase) as typeof XTableFilterPanelItemContentBase;

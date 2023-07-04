@@ -1,0 +1,28 @@
+body .TasksJournal {
+  position: relative;
+
+  overflow: hidden;
+
+  height: 100%;
+  padding: 20px 30px 44px;
+
+  &-Table {
+    height: 100%;
+  }
+
+  &-CellStatus {
+    position: relative;
+
+    padding-left: 35px;
+  }
+
+  &-Actions {
+    opacity: 0.3;
+  }
+
+  &-Actions:focus,
+  &-Actions.Actions_open,
+  .MuiTableRow-hover:hover .TasksJournal-Actions {
+    opacity: 1;
+  }
+}

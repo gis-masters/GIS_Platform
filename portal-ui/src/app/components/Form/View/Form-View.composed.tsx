@@ -13,6 +13,7 @@ import { withTypeSet } from './_type/Form-View_type_set';
 import { withTypeString } from './_type/Form-View_type_string';
 import { withTypeUser } from './_type/Form-View_type_user';
 import { withTypeUrl } from './_type/Form-View_type_url';
+import { withTypeUserId } from './_type/Form-View_type_userId';
 import { FormView as Presenter } from './Form-View';
 
 export const FormView = compose(
@@ -26,6 +27,7 @@ export const FormView = compose(
   withTypeFias,
   withTypeFile,
   withTypeUser,
+  withTypeUserId,
   withTypeSet,
   withTypeString,
   withTypeUrl

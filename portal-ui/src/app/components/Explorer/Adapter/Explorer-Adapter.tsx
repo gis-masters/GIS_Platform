@@ -28,6 +28,7 @@ import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_sc
 import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
 import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistries';
+import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: { [key in ExplorerItemType]: Adapter } = {
@@ -48,7 +49,8 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: ExplorerAdapterTypeMessagesRegistriesRoot,
   [ExplorerItemType.MESSAGES_REGISTRY]: ExplorerAdapterTypeMessagesRegistry,
   [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
-  [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot
+  [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot,
+  [ExplorerItemType.TASKS_ROOT]: ExplorerAdapterTypeTasksRoot
 };
 
 const lackOfRightMessage = 'Недостаточно прав';

@@ -8,6 +8,7 @@ import { Lookup } from '../Lookup/Lookup';
 import { UsersAdd } from './Add/Users-Add';
 import { UsersItem } from './Item/Users-Item';
 import { LookupList } from '../Lookup/List/Lookup-List';
+import { Toast } from '../Toast/Toast';
 
 const cnUsers = cn('Users');
 
@@ -20,14 +21,15 @@ export interface UsersProps {
 
 export default class Users extends Component<UsersProps> {
   render() {
-    const { value, multiple, editable } = this.props;
+    const { value, multiple = false, editable = false } = this.props;
     const numerous = value.length > 1;
+    const clearedValue = value.filter(Boolean);
 
     return (
       <Lookup className={cnUsers()}>
-        {!!value.length && (
+        {!!clearedValue.length && (
           <LookupList multiple={multiple} numerous={numerous} editable={editable}>
-            {value.map((item, i) => {
+            {clearedValue.map((item, i) => {
               return (
                 <UsersItem
                   item={item}
@@ -51,13 +53,22 @@ export default class Users extends Component<UsersProps> {
   @boundMethod
   private deleteHandler(deletingItem: MinimizedCrgUser) {
     const { onChange, value } = this.props;
-    onChange(value.filter(({ id }) => !(id === deletingItem.id)));
+
+    if (onChange) {
+      onChange(value.filter(({ id }) => !(id === deletingItem.id)));
+    } else {
+      Toast.error('Ошибка удаления пользователя');
+    }
   }
 
   @boundMethod
   private addHandler(selectedUsers: MinimizedCrgUser[]) {
     const { onChange } = this.props;
 
-    onChange(selectedUsers);
+    if (onChange) {
+      onChange(selectedUsers);
+    } else {
+      Toast.error('Ошибка добавления пользователя');
+    }
   }
 }

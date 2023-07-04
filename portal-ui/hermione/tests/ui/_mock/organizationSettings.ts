@@ -13,6 +13,7 @@ export async function mockOrganizationSettings(browser: WebdriverIO.Browser) {
       dataManagement: true,
       editProjectLayer: true,
       createLibraryItem: true,
+      taskManagement: true,
       downloadXml: true
     })
   });

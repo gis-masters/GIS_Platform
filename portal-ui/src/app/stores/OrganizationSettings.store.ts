@@ -65,6 +65,11 @@ export class OrganizationSettings {
   }
 
   @computed
+  get taskManagement(): boolean {
+    return this.allowedToUse(this.orgSettings?.system?.taskManagement, this.orgSettings?.organization?.taskManagement);
+  }
+
+  @computed
   get createLibraryItem(): boolean {
     return this.allowedToUse(
       this.orgSettings?.system?.createLibraryItem,

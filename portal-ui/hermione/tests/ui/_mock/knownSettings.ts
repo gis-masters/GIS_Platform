@@ -13,6 +13,7 @@ export async function mockKnownSettings(browser: WebdriverIO.Browser) {
       editProjectLayer: 'Настройка слоев проекта',
       dataManagement: 'Управление данными',
       createProject: 'Создание проекта',
+      taskManagement: 'Управление задачами',
       downloadFiles: 'Скачать документ'
     })
   });

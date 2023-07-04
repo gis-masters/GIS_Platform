@@ -74,10 +74,10 @@ public class TaskService {
         String joined = join(minionIds, ", ");
 
         if (ecqlFilter == null || ecqlFilter.isBlank()) {
-            return String.format("assigned_to IN (%s)", joined);
+            return String.format("owner_id IN (%s)", joined);
         }
 
-        return String.format("(%s) AND (assigned_to IN (%s))", ecqlFilter, joined);
+        return String.format("(%s) AND (owner_id IN (%s))", ecqlFilter, joined);
     }
 
     @NotNull

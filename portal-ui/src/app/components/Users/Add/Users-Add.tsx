@@ -44,7 +44,7 @@ export class UsersAdd extends Component<UsersAddProps> {
           color='primary'
           onClick={this.openDialog}
         >
-          {filled ? 'Добавить пользователя' : 'Выбрать пользователя'}
+          {filled && multiple ? 'Добавить пользователя' : 'Выбрать пользователя'}
         </Button>
 
         <ChooseXTableDialog<MinimizedCrgUser>
@@ -67,15 +67,17 @@ export class UsersAdd extends Component<UsersAddProps> {
     const users = await usersService.getUsers(pageOptions);
 
     return [
-      users[0].map(user => {
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          surname: user.surname,
-          middleName: user.middleName || ''
-        };
-      }),
+      users[0]
+        .map(user => {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            surname: user.surname,
+            middleName: user.middleName || ''
+          };
+        })
+        .filter(Boolean),
       users[1]
     ];
   }

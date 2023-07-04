@@ -30,6 +30,7 @@ export enum ExplorerItemType {
   PROJECTS_ROOT = 'pr',
   BASEMAPS_ROOT = 'br',
   SCHEMAS_ROOT = 'sr',
+  TASKS_ROOT = 'tr',
   MESSAGES_REGISTRIES_ROOT = 'mrr',
   ROOT = 'r'
 }
@@ -107,7 +108,7 @@ export interface Adapter {
     item: ExplorerItemData,
     id: string,
     type: ExplorerItemType
-  ) => ExplorerItemData | Promise<ExplorerItemData>;
+  ) => ExplorerItemData | Promise<ExplorerItemData> | undefined;
   getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
   getChildrenSortDefaultOrder?: (item: ExplorerItemData) => SortOrder;
   getChildrenFilterField?: (item: ExplorerItemData) => string;

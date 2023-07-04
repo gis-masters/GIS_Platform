@@ -26,6 +26,7 @@ import { SystemManagementGuardService } from './services/system-management-guard
 import { SystemAdminGuardService } from './services/system-admin-guard.service';
 import { MessagesRegistryPageComponent } from './pages/messages-registry/messages-registry-page.component';
 import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
+import { TasksJournalPageComponent } from './pages/tasks-journal/tasks-journal-page.component';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -192,6 +193,15 @@ const routes: AppRoutes = [
     data: { page: Pages.REGISTRY }
   },
   {
+    path: 'data-management/tasks-journal',
+    component: TasksJournalPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.TASKS_JOURNAL }
+  },
+  {
     path: 'data-management/library/:libraryTableName/document/:documentId',
     component: LibraryDocumentPageComponent,
     canActivate: [SystemAdminGuardService],
@@ -236,5 +246,6 @@ export const routingComponents = [
   RestorePasswordFormPageComponent,
   ChangePasswordFormPageComponent,
   MessagesRegistryPageComponent,
+  TasksJournalPageComponent,
   TestDataPreparationPageComponent
 ];

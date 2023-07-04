@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 
@@ -35,6 +36,13 @@ function getChildren(): ExplorerItemData[] {
       payload: null
     }
   ];
+
+  if (organizationSettings.taskManagement) {
+    baseChildren.push({
+      type: ExplorerItemType.TASKS_ROOT,
+      payload: null
+    });
+  }
 
   if (!currentUser.isAdmin) {
     return baseChildren;
@@ -75,7 +83,7 @@ export class ExplorerAdapterTypeRoot {
     return [getChildren(), 1, 0];
   }
 
-  static getChildById(item: ExplorerItemData, id: string): ExplorerItemData {
+  static getChildById(item: ExplorerItemData, id: string): ExplorerItemData | undefined {
     if (id === 'datasetRoot') {
       return {
         type: ExplorerItemType.DATASET_ROOT,
@@ -109,6 +117,12 @@ export class ExplorerAdapterTypeRoot {
     if (id === 'messagesRegistries') {
       return {
         type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT,
+        payload: null
+      };
+    }
+    if (id === 'tasksRoot') {
+      return {
+        type: ExplorerItemType.TASKS_ROOT,
         payload: null
       };
     }

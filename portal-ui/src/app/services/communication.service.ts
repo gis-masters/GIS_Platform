@@ -7,6 +7,7 @@ import { WfsFeature } from './geoserver/wfs/wfs.models';
 import { FileInfo } from './data/files/files.models';
 import { Schema } from './data/schema/schema.models';
 import { Emitter } from './common/Emitter';
+import { Task } from './data/task/task.models';
 
 export interface ObjectDto {
   id: string;
@@ -46,6 +47,7 @@ class CommunicationService {
   schemaUpdated = new Emitter<DataChangeEventDetail<Schema>>();
   vectorTableUpdated = new Emitter<DataChangeEventDetail<VectorTable>>();
   layerUpdated = new Emitter<DataChangeEventDetail<CrgLayer>>();
+  taskUpdated = new Emitter<DataChangeEventDetail<Task>>();
 
   off(scope: unknown) {
     Emitter.scopeOff(scope);

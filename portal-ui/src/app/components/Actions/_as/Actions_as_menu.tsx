@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu } from '@mui/material';
-import { MoreHoriz } from '@mui/icons-material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
@@ -27,7 +27,7 @@ class Container extends Component<IClassNameProps & ChildrenProps> {
     return (
       <ActionsMenuOpenContext.Provider value={open}>
         <IconButton size='small' className={cnActions({ open }, [className])} onClick={this.toggleOpen} color='primary'>
-          <MoreHoriz fontSize='small' />
+          <MenuIcon fontSize='small' />
         </IconButton>
 
         <Menu open={open} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close} keepMounted>
