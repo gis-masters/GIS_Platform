@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 import { http } from '../../../src/app/services/api/http.service';
 import { getTestUser, TestUser } from './auth/testUsers';
 import { fetchUserToken } from './auth/fetchUserToken';
+import { logLevel } from './logLevel';
 
 const colors = {
   red: '\u001B[31m',
@@ -28,67 +29,75 @@ const methodColors = {
 let currentUser: TestUser | undefined;
 
 http.axios.interceptors.request.use(config => {
-  console.log('');
-  console.log(
-    colors.gray,
-    'REQUEST',
-    methodColors[config.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
-    config.method?.toLocaleUpperCase(),
-    colors.cyan,
-    config.url
-  );
-
-  if (config.data) {
-    try {
-      console.log(colors.gray, 'REQUEST DATA:', colors.none, JSON.stringify(config.data));
-    } catch {
-      console.log(colors.gray, 'REQUEST DATA:', colors.none, config.data);
-    }
-  }
-
   if (currentUser?.token) {
-    console.log(colors.gray, 'USER:', colors.none, currentUser.email);
-
     config.headers.Authorization = 'Bearer ' + currentUser?.token;
     currentUser = undefined;
   }
 
-  console.log('');
+  if (logLevel()) {
+    console.log('');
+    console.log(
+      colors.gray,
+      'REQUEST',
+      methodColors[config.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
+      config.method?.toLocaleUpperCase(),
+      colors.cyan,
+      config.url
+    );
+
+    if (config.data) {
+      try {
+        console.log(colors.gray, 'REQUEST DATA:', colors.none, JSON.stringify(config.data));
+      } catch {
+        console.log(colors.gray, 'REQUEST DATA:', colors.none, config.data);
+      }
+    }
+
+    if (currentUser?.token) {
+      console.log(colors.gray, 'USER:', colors.none, currentUser.email);
+    }
+
+    console.log('');
+  }
 
   return config;
 });
 
 http.axios.interceptors.response.use(
   response => {
-    console.log('');
-    console.log(
-      colors.gray,
-      'RESPONSE',
-      colors.green,
-      response.status,
-      methodColors[response.config.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
-      response.config.method?.toLocaleUpperCase(),
-      colors.cyan,
-      response.config.url
-    );
-    console.log(colors.gray, 'RESPONSE DATA:', colors.none, response.data);
-    console.log('');
+    if (logLevel()) {
+      console.log('');
+      console.log(
+        colors.gray,
+        'RESPONSE',
+        colors.green,
+        response.status,
+        methodColors[response.config.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
+        response.config.method?.toLocaleUpperCase(),
+        colors.cyan,
+        response.config.url
+      );
+      console.log(colors.gray, 'RESPONSE DATA:', colors.none, response.data);
+      console.log('');
+    }
 
     return response;
   },
   (error: AxiosError) => {
-    console.log('');
-    console.log(
-      colors.gray,
-      'RESPONSE',
-      colors.red,
-      error?.response?.status,
-      methodColors[error?.config?.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
-      error?.config?.method?.toLocaleUpperCase(),
-      colors.cyan,
-      error?.config?.url
-    );
-    console.log('');
+    if (logLevel('warn')) {
+      console.log('');
+      console.log(
+        colors.gray,
+        'RESPONSE',
+        colors.red,
+        error?.response?.status,
+        methodColors[error?.config?.method?.toLocaleLowerCase() as keyof typeof methodColors] || colors.none,
+        error?.config?.method?.toLocaleUpperCase(),
+        colors.cyan,
+        error?.config?.url
+      );
+      console.log('');
+    }
 
     return Promise.reject(error);
   }

@@ -104,14 +104,6 @@ export function getEsiaUrl(): string {
   return `${url}/esia?redirect=${redirectFromEsia}`;
 }
 
-export function getOrganizationSettingsUrl(): string {
-  return getBaseUrl() + '/organizations/settings';
-}
-
-export function getOrganizationKnownSettingsUrl(): string {
-  return getBaseUrl() + '/organizations/known-settings';
-}
-
 function getDataUrl(): string {
   return getBaseUrl() + '/api/data';
 }

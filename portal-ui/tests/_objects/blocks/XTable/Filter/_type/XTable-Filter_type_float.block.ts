@@ -21,29 +21,32 @@ class XTableFilterTypeFloatBlock extends Block {
   async checkFilterableLteItems(lte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    expect(values.length).toEqual(4);
-    values.forEach(val => {
-      expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
-    });
+    await expect(values.length).toEqual(4);
+
+    for (const val of values) {
+      await expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
+    }
   }
 
   async checkFilterableGteItems2(gte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    expect(values.length).toEqual(5);
-    values.forEach(val => {
-      expect(Number(val)).toBeLessThanOrEqual(Number(gte));
-    });
+    await expect(values.length).toEqual(5);
+
+    for (const val of values) {
+      await expect(Number(val)).toBeLessThanOrEqual(Number(gte));
+    }
   }
 
   async checkFilterableGteItems3(lte: string, gte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    expect(values.length).toEqual(5);
-    values.forEach(val => {
-      expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
-      expect(Number(val)).toBeLessThanOrEqual(Number(gte));
-    });
+    await expect(values.length).toEqual(5);
+
+    for (const val of values) {
+      await expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
+      await expect(Number(val)).toBeLessThanOrEqual(Number(gte));
+    }
   }
 }
 

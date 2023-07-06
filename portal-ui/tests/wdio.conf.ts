@@ -75,6 +75,7 @@ export const config: Options.Testrunner = {
   hostname: '10.10.10.116',
   port: 4444,
   path: '/wd/hub',
+
   //
   // ==================
   // Specify Test Files
@@ -96,6 +97,7 @@ export const config: Options.Testrunner = {
   exclude: [
     // 'path/to/excluded/files'
   ],
+
   //
   // ============
   // Capabilities
@@ -112,7 +114,7 @@ export const config: Options.Testrunner = {
   // and 30 processes will get spawned. The property handles how many capabilities
   // from the same test should run tests.
   //
-  maxInstances: 5,
+  maxInstances: 3,
   //
   // If you have trouble getting all important capabilities together, check out the
   // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -123,7 +125,7 @@ export const config: Options.Testrunner = {
       // maxInstances can get overwritten per capability. So if you have an in-house Selenium
       // grid with only 5 firefox instances available you can make sure that not more than
       // 5 instances get started at a time.
-      maxInstances: 3,
+      // maxInstances: 3,
       //
       browserName: 'chrome',
       acceptInsecureCerts: true,
@@ -136,6 +138,7 @@ export const config: Options.Testrunner = {
       // excludeDriverLogs: ['bugreport', 'server'],
     }
   ],
+
   //
   // ===================
   // Test Configurations
@@ -143,7 +146,7 @@ export const config: Options.Testrunner = {
   // Define all options that are relevant for the WebdriverIO instance here
   //
   // Level of logging verbosity: trace | debug | info | warn | error | silent
-  logLevel: 'info',
+  logLevel: 'error',
   //
   // Set specific log levels per logger
   // loggers:
@@ -195,7 +198,8 @@ export const config: Options.Testrunner = {
         blockOutStatusBar: true,
         blockOutToolBar: true
       }
-    ]
+    ],
+    'shared-store'
   ],
 
   // Framework you want to run your specs with.
@@ -213,7 +217,7 @@ export const config: Options.Testrunner = {
   // specFileRetriesDelay: 0,
   //
   // Whether or not retried specfiles should be retried immediately or deferred to the end of the queue
-  // specFileRetriesDeferred: false,
+  specFileRetriesDeferred: false,
   //
   // Test reporter for stdout.
   // The only one supported by default is 'dot'
@@ -242,7 +246,7 @@ export const config: Options.Testrunner = {
     // <boolean> invoke formatters without executing steps
     dryRun: false,
     // <boolean> abort the run on first failure
-    failFast: false,
+    failFast: true,
     // <boolean> hide step definition snippets for pending steps
     snippets: true,
     // <boolean> hide source uris
@@ -252,10 +256,12 @@ export const config: Options.Testrunner = {
     // <string> (expression) only execute the features or scenarios with tags matching the expression
     // tagExpression: 'not @skip',
     // <number> timeout for step definitions
-    timeout: 20_000,
+    timeout: 30_000,
     // <boolean> Enable this config to treat undefined definitions as warnings.
     ignoreUndefinedDefinitions: false
   },
+
+  execArgv: ['--experimental-global-customevent']
 
   //
   // =====
@@ -265,6 +271,7 @@ export const config: Options.Testrunner = {
   // it and to build services around it. You can either apply a single function or an array of
   // methods to it. If one of them returns with a promise, WebdriverIO will wait until that promise got
   // resolved to continue.
+
   /**
    * Gets executed once before all workers get launched.
    * @param {Object} config wdio configuration object
@@ -272,6 +279,7 @@ export const config: Options.Testrunner = {
    */
   // onPrepare: function (config, capabilities) {
   // },
+
   /**
    * Gets executed before a worker process is spawned and can be used to initialize specific service
    * for that worker as well as modify runtime environments in an async fashion.
@@ -281,9 +289,9 @@ export const config: Options.Testrunner = {
    * @param  {[type]} args     object that will be merged with the main configuration once worker is initialized
    * @param  {[type]} execArgv list of string arguments passed to the worker process
    */
-  execArgv: ['--experimental-global-customevent']
   // onWorkerStart: function (cid, caps, specs, args, execArgv) {
   // },
+
   /**
    * Gets executed just after a worker process has exited.
    * @param  {String} cid      capability id (e.g 0-0)
@@ -293,6 +301,7 @@ export const config: Options.Testrunner = {
    */
   // onWorkerEnd: function (cid, exitCode, specs, retries) {
   // },
+
   /**
    * Gets executed just before initializing the webdriver session and test framework. It allows you
    * to manipulate configurations depending on the capability or spec.
@@ -301,8 +310,9 @@ export const config: Options.Testrunner = {
    * @param {Array.<String>} specs List of spec file paths that are to be run
    * @param {String} cid worker id (e.g. 0-0)
    */
-  // beforeSession: function (config, capabilities, specs, cid) {
+  // beforeSession: async function (/*config, capabilities, specs, cid*/) {
   // },
+
   /**
    * Gets executed before test execution begins. At this point you can access to all global
    * variables like `browser`. It is the perfect place to define custom commands.
@@ -312,6 +322,7 @@ export const config: Options.Testrunner = {
    */
   // before: function (capabilities, specs) {
   // },
+
   /**
    * Runs before a WebdriverIO command gets executed.
    * @param {String} commandName hook command name
@@ -319,6 +330,7 @@ export const config: Options.Testrunner = {
    */
   // beforeCommand: function (commandName, args) {
   // },
+
   /**
    * Cucumber Hooks
    *
@@ -328,6 +340,7 @@ export const config: Options.Testrunner = {
    */
   // beforeFeature: function (uri, feature) {
   // },
+
   /**
    *
    * Runs before a Cucumber Scenario.
@@ -336,6 +349,7 @@ export const config: Options.Testrunner = {
    */
   // beforeScenario: function (world, context) {
   // },
+
   /**
    *
    * Runs before a Cucumber Step.
@@ -345,6 +359,7 @@ export const config: Options.Testrunner = {
    */
   // beforeStep: function (step, scenario, context) {
   // },
+
   /**
    *
    * Runs after a Cucumber Step.
@@ -358,6 +373,7 @@ export const config: Options.Testrunner = {
    */
   // afterStep: function (step, scenario, result, context) {
   // },
+
   /**
    *
    * Runs after a Cucumber Scenario.
@@ -371,6 +387,7 @@ export const config: Options.Testrunner = {
   // afterScenario: async function () {
   //   await browser.reloadSession();
   // }
+
   /**
    *
    * Runs after a Cucumber Feature.
@@ -389,6 +406,7 @@ export const config: Options.Testrunner = {
    */
   // afterCommand: function (commandName, args, result, error) {
   // },
+
   /**
    * Gets executed after all tests are done. You still have access to all global variables from
    * the test.
@@ -398,6 +416,7 @@ export const config: Options.Testrunner = {
    */
   // after: function (result, capabilities, specs) {
   // },
+
   /**
    * Gets executed right after terminating the webdriver session.
    * @param {Object} config wdio configuration object
@@ -406,6 +425,7 @@ export const config: Options.Testrunner = {
    */
   // afterSession: function (config, capabilities, specs) {
   // },
+
   /**
    * Gets executed after all workers got shut down and the process is about to exit. An error
    * thrown in the onComplete hook will result in the test run failing.
@@ -414,13 +434,14 @@ export const config: Options.Testrunner = {
    * @param {Array.<Object>} capabilities list of capabilities details
    * @param {<Object>} results object containing test results
    */
-  // onComplete: function(exitCode, config, capabilities, results) {
+  // onComplete: function (exitCode, config, capabilities, results) {
   // },
+
   /**
    * Gets executed when a refresh happens.
    * @param {String} oldSessionId session ID of the old session
    * @param {String} newSessionId session ID of the new session
    */
-  // onReload: function(oldSessionId, newSessionId) {
+  // onReload: function (oldSessionId, newSessionId) {
   // }
 };

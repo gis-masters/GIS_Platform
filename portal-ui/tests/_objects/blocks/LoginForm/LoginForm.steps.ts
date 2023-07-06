@@ -1,10 +1,10 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { getTestUser } from '../../commands/auth/testUsers';
+import { TestUser } from '../../commands/auth/testUsers';
 import { loginFormBlock } from './LoginForm.block';
 
-When('я авторизуюсь в форме авторизации как {string}', async (username: string) => {
-  const { email, password } = getTestUser(username);
+When('я авторизуюсь в форме авторизации как {user}', async ({ email, password }: TestUser) => {
+  await loginFormBlock.waitForVisible();
   await loginFormBlock.fillAndSubmit(email, password);
 });
 
@@ -24,7 +24,8 @@ When('я нажимаю на пункт {string} в списке организ�
   await loginFormBlock.clickOrganization(title);
 });
 
-Then(/^в списке организаций на форме входа перечислены: (".+"[ ,]*)+$/, async (dirty: string) => {
-  const titles = dirty.slice(1, -1).split('", "');
-  expect(titles).toEqual(await loginFormBlock.getOrganizations());
+Then('в списке организаций на форме входа перечислены: {strings}', async (titles: string[]) => {
+  const organizations = await loginFormBlock.getOrganizations();
+  const cleanOrganizations = organizations.map(org => org.replace(/ \d+$/, '')); // remove trailing number
+  await expect(titles).toEqual(cleanOrganizations);
 });

@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 import { PropertyType, Schema } from '../../../src/app/services/data/schema/schema.models';
+import { logLevel } from '../commands/logLevel';
 
 export const supportedTypesForGeneration: PropertyType[] = [
   PropertyType.STRING,
@@ -68,7 +69,9 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
         break;
       }
       default: {
-        console.warn(`generateRandomProperties не поддерживает тип поля: ${propertyType}`);
+        if (logLevel()) {
+          console.warn(`generateRandomProperties не поддерживает тип поля: ${propertyType}`);
+        }
       }
     }
   }

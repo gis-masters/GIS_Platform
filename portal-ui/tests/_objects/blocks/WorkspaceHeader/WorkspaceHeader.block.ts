@@ -8,7 +8,7 @@ class WorkspaceHeaderBlock extends Block {
   };
 
   async testOrganization(organization: string) {
-    await expect(this.$('organization')).toHaveText(organization);
+    await expect(this.$('organization')).toHaveTextContaining(organization);
   }
 
   async waitForLoaderEnd(): Promise<void> {

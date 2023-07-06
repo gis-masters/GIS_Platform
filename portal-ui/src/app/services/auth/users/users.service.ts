@@ -1,11 +1,11 @@
 import { debounce } from 'lodash';
 import { AxiosError } from 'axios';
 
-import { services } from '../../services';
-import { PageOptions } from '../../models';
 import { allUsers } from '../../../stores/AllUsers.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { organizationSettingsService } from '../../organization-settings';
+import { organizationsService } from '../organizations/organizations.service';
+import { PageOptions } from '../../models';
+import { services } from '../../services';
 
 import { usersClient } from './users.client';
 import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
@@ -42,7 +42,7 @@ class UsersService {
       }
     }
 
-    await organizationSettingsService.fetch();
+    await organizationsService.fetch();
   }
 
   async getAll(): Promise<CrgUser[]> {

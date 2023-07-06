@@ -8,16 +8,16 @@ import { xTableFilterTypeFloatBlock } from './Filter/_type/XTable-Filter_type_fl
 
 Then('в первой колонке таблицы xTable содержатся только элементы:', async ({ rawTable }: { rawTable: string[][] }) => {
   const values = rawTable.flat();
-  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+  await expect(values).toEqual(await xTableBlock.getFirstColCellValues());
 });
 
 Then('в первой колонке таблицы xTable содержатся только элементы {string}', async (valuesDirty: string) => {
   const values = valuesDirty.split(', ');
-  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+  await expect(values).toEqual(await xTableBlock.getFirstColCellValues());
 });
 
 Then('таблица xTable не содержит записей', async () => {
-  expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
+  await expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
 });
 
 // фильтр document

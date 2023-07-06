@@ -5,7 +5,7 @@ import { usersService } from '../../../../src/app/services/auth/users/users.serv
 import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.page';
 import { createOrganization } from './createOrganization';
-import { TestUser, testUsers } from './testUsers';
+import { TestUser, getTestUser } from './testUsers';
 import { homePage } from '../../pages/Home.page';
 import { createTestUsers } from './createTestUsers';
 import { Page } from '../../Page';
@@ -79,11 +79,11 @@ async function authenticateAsSomeAdmin(admin: RegData, thenPage?: Page): Promise
 }
 
 export async function authenticateAsAdmin(thenPage?: Page): Promise<void> {
-  await authenticateAsSomeAdmin(testUsers['Администратор организации'], thenPage);
+  await authenticateAsSomeAdmin(getTestUser('Администратор организации'), thenPage);
 }
 
 export async function authenticateAsOtherAdmin(thenPage?: Page): Promise<void> {
-  await authenticateAsSomeAdmin(testUsers['Администратор другой организации'], thenPage);
+  await authenticateAsSomeAdmin(getTestUser('Администратор другой организации'), thenPage);
 }
 
 export async function authenticateAs({ email, password }: TestUser, thenPage?: Page): Promise<void> {

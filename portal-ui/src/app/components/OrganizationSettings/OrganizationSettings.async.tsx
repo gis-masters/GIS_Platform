@@ -7,7 +7,7 @@ import { cloneDeep } from 'lodash';
 import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 
 import { organizationSettings, OrgSettings } from '../../stores/OrganizationSettings.store';
-import { organizationSettingsService } from '../../services/organization-settings';
+import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { SimpleSchema } from '../../services/data/schema/schema.models';
 import { Button } from '../Button/Button';
@@ -65,7 +65,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     );
 
     if (this.formValue) {
-      this.setSchema(organizationSettingsService.orgSchema(this.formValue, this.props.systemManagement));
+      this.setSchema(organizationsService.orgSchema(this.formValue, this.props.systemManagement));
     }
   }
 
@@ -115,7 +115,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     const id = systemManagement ? orgSettings.id : organizationSettings.orgSettings.id;
     const payload = { id, settings: value };
 
-    await organizationSettingsService.setOrganizationSettings(payload);
+    await organizationsService.setOrganizationSettings(payload);
     Toast.success('Настройки успешно обновлены');
     this.setBusy(false);
   }

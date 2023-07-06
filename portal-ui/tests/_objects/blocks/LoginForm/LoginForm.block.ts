@@ -40,7 +40,7 @@ class LoginFormBlock extends Block {
     for (const $item of $$organizationsListItems) {
       const title = await $item.getText();
 
-      if (title === orgTitle) {
+      if (title.startsWith(orgTitle)) {
         await $item.click();
 
         return;

@@ -6,7 +6,8 @@
     "expect": true,
     "$$": true,
     "$": true,
-    "process": true
+    "process": true,
+    "testOrganizationIndex": true
   },
   "parserOptions": {
     "project": "./tests/tsconfig.json"

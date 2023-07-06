@@ -7,7 +7,7 @@ When('в таблице xTable я ввожу в поле фильтра типа
 });
 
 Then('в таблице xTable в поле фильтра типа id введено значение {string}', async (value: string) => {
-  expect(await xTableFilterTypeIdBlock.getValue()).toEqual(value);
+  await expect(await xTableFilterTypeIdBlock.getValue()).toEqual(value);
 });
 
 When('в таблице xTable я ввожу в поле фильтра типа id 2, 3 и 5 через {string}', async (divType: string) => {

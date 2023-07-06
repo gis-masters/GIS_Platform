@@ -4,6 +4,7 @@ import { Container } from '@mui/material';
 import { action, makeObservable, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 
+import { organizationsService } from '../../../services/auth/organizations/organizations.service';
 import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
@@ -40,6 +41,12 @@ export class SystemManagementContent extends Component {
   constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
+
+    if (!('__clearAllTestOrganizations' in window)) {
+      Object.assign(window, {
+        __clearAllTestOrganizations: organizationsService.__clearAllTestOrganizations
+      });
+    }
   }
 
   render() {

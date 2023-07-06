@@ -1,5 +1,4 @@
 import { Block } from '../../../Block';
-import { saveScreenshot } from '../../../commands/saveScreenshot';
 import { MuiSelectBlock } from '../../MuiSelect/MuiSelect.block';
 
 class LayerPropertiesDialogBlock extends Block {
@@ -10,7 +9,6 @@ class LayerPropertiesDialogBlock extends Block {
   };
 
   async viewFieldFirstValue(viewTitle: string): Promise<void> {
-    await saveScreenshot();
     const $layerPropertyFormDialogViewSelect = await this.$('layerPropertyFormDialogViewSelect');
     await $layerPropertyFormDialogViewSelect.waitForClickable();
 

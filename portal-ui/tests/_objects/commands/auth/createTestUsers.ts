@@ -1,14 +1,12 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { getUserByEmail } from './getUserByEmail';
-import { testUsers } from './testUsers';
+import { getAllTestUsers, getTestUser } from './testUsers';
 import { createUserAs } from './createUserAs';
 import { editUser } from './editUser';
 
 export async function createTestUsers(): Promise<void> {
-  for (const { company, email, firstName, lastName, middleName, contactPhone, job, password } of Object.values(
-    testUsers
-  )) {
-    if (company === 'Hogwarts' && job !== 'Администратор организации') {
+  for (const { company, email, firstName, lastName, middleName, contactPhone, job, password } of getAllTestUsers()) {
+    if (company.startsWith('Hogwarts') && job !== 'Администратор организации') {
       await createUserAs(
         {
           email,
@@ -27,12 +25,12 @@ export async function createTestUsers(): Promise<void> {
 
   await sleep(5000); // wait for users ready
 
-  const deadUser = await getUserByEmail('fred@dead');
+  const deadUser = await getUserByEmail(getTestUser('Деактивированный пользователь').email);
   await editUser({ enabled: false }, deadUser.id);
 }
 
 export async function createTestUsersInOtherOrganization(): Promise<void> {
-  const { email, firstName, lastName, middleName, job, department, contactPhone, password } = testUsers['Питер'];
+  const { email, firstName, lastName, middleName, job, department, contactPhone, password } = getTestUser('Питер');
 
   await createUserAs(
     {

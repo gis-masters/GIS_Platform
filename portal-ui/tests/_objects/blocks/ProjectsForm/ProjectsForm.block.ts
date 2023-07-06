@@ -21,7 +21,7 @@ class ProjectFormBlock extends Block {
   }
 
   async testInputValue(title: string) {
-    expect(await this.getInputValue()).toEqual(title);
+    await expect(await this.getInputValue()).toEqual(title);
   }
 
   async inputIsFocused(): Promise<void> {

@@ -3,7 +3,7 @@ import { observable, action, computed, makeObservable } from 'mobx';
 import { currentUser } from './CurrentUser.store';
 
 export interface OrgSettings {
-  id: string;
+  id: number;
   name?: string;
   system?: Record<string, boolean>;
   organization?: Record<string, boolean>;

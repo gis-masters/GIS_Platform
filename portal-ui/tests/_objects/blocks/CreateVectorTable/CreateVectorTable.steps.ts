@@ -10,5 +10,5 @@ When('я создаю новую векторную таблицу с назва
 When('отсутствует кнопка создания векторной таблицы', async () => {
   const isExist = await explorerBlock.isCreateLayerBtnExist();
 
-  expect(isExist).toEqual(false);
+  await expect(isExist).toEqual(false);
 });

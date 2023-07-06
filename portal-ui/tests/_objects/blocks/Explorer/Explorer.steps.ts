@@ -39,14 +39,14 @@ When('я выбираю созданный набор данных', async funct
   await explorerBlock.selectExplorerItem(this.latestDataset.title);
 });
 
-Then(/^список названий в explorer: (".+"[ ,]*)+$/, async (dirty: string) => {
-  await explorerBlock.testTitles(dirty);
+Then('список названий в explorer: {strings}', async (titles: string[]) => {
+  await expect(titles).toEqual(await explorerBlock.getListTitles());
 });
 
 Then('список в explorer пуст', async () => {
   await explorerBlock.testEmptiness();
 });
 
-Then(/^в списке элементов explorer присутствует "([^"]*)"$/, async (itemTitle: string) => {
-  expect(await explorerBlock.getListTitles()).toContain(itemTitle);
+Then('в списке элементов explorer присутствует {string}', async (itemTitle: string) => {
+  await expect(await explorerBlock.getListTitles()).toContain(itemTitle);
 });

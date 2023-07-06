@@ -6,5 +6,7 @@ import { config as baseConfig } from './wdio.conf';
 export const config: Options.Testrunner = {
   ...baseConfig,
 
-  baseUrl: `http://${getMyOfficeIp()}:6006/`
+  baseUrl: `http://${getMyOfficeIp()}:6006/`,
+
+  specFileRetries: 0
 };

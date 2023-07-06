@@ -21,6 +21,8 @@ export const config: Options.Testrunner = {
     }
   ],
 
+  specFileRetries: 0,
+
   async beforeScenario() {
     await browser.url('http://localhost:4200/test-data-preparation');
   }

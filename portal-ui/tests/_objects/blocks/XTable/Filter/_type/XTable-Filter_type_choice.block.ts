@@ -46,8 +46,8 @@ class XTableFilterTypeChoiceBlock extends Block {
 
     const values = await xTableBlock.getFirstColCellValues();
 
-    expect(values.length).toEqual(1);
-    expect(values).toEqual(['Дерево']);
+    await expect(values.length).toEqual(1);
+    await expect(values).toEqual(['Дерево']);
   }
 
   async checkFilterableItems() {
@@ -56,8 +56,8 @@ class XTableFilterTypeChoiceBlock extends Block {
     await browser.pause(300);
 
     const values = await xTableBlock.getFirstColCellValues();
-    expect(values.length).toEqual(6);
-    expect(values).toEqual(['Дерево', 'Железо', 'Стекло', 'Железо', 'Стекло', 'Стекло']);
+    await expect(values.length).toEqual(6);
+    await expect(values).toEqual(['Дерево', 'Железо', 'Стекло', 'Железо', 'Стекло', 'Стекло']);
   }
 }
 

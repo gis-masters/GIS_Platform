@@ -5,7 +5,7 @@ import { root } from './blocks/Root/Root';
 import { MapPage } from './pages/Map.page';
 import { Page, pagesRegistry } from './Page';
 import { ScenarioScope } from './ScenarioScope';
-import { testUsers } from './commands/auth/testUsers';
+import { TestUser } from './commands/auth/testUsers';
 import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
@@ -41,15 +41,9 @@ Then('открылась страница {string}', async (title: string) => {
 });
 
 When(
-  'я перехожу на страницу {string} с гостевыми логином-паролем пользователя {string}',
-  async (pageTitle: string, user: keyof typeof testUsers) => {
-    if (!testUsers[user]) {
-      throw new Error(`Нет пользователя "${user}"`);
-    }
-
-    const { email, password } = testUsers[user];
-
-    await browser.url(findPage(pageTitle).url + `/?guestName=${email}&guestPass=${password}`);
+  'я перехожу на страницу {string} с гостевыми логином-паролем пользователя {user}',
+  async (pageTitle: string, user: TestUser) => {
+    await browser.url(findPage(pageTitle).url + `/?guestName=${user.email}&guestPass=${user.password}`);
     await root.waitForExist();
   }
 );

@@ -66,11 +66,6 @@ class ExplorerBlock extends Block {
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
 
-  async testTitles(dirty: string) {
-    const titles = dirty.slice(1, -1).split('", "');
-    await expect(titles).toEqual(await this.getListTitles());
-  }
-
   async testEmptiness() {
     const $empty = await this.$('empty');
     await $empty.waitForDisplayed();

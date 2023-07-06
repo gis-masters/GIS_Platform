@@ -14,7 +14,7 @@ export function getRoleByTitle(title: string): Role {
 
 export type TestUser = RegData & { token?: string; middleName: string; job: string; department: string };
 
-export const testUsers: Record<
+const testUsers: Record<
   | 'Администратор системы'
   | 'Администратор организации'
   | 'Гарри'
@@ -138,10 +138,21 @@ export const testUsers: Record<
 
 export function getTestUser(username: string): TestUser {
   const user: TestUser | undefined = testUsers[username as keyof typeof testUsers];
+  const testOrganizationIndex = global.testOrganizationIndex;
 
   if (!user) {
     throw new Error(`Не существует тестовый пользователь "${username}"`);
   }
 
-  return user;
+  return user.job === 'Администратор системы'
+    ? user
+    : {
+        ...user,
+        email: `${user.email}${testOrganizationIndex || 0}`,
+        company: `${user.company} ${testOrganizationIndex || 0}`
+      };
+}
+
+export function getAllTestUsers(): TestUser[] {
+  return Object.keys(testUsers).map(getTestUser);
 }

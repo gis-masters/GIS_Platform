@@ -15,14 +15,14 @@ When('в таблице xTable я ввожу в поле фильтра типа
 });
 
 Then('в таблице xTable кнопка переключения режимов фильтра типа string имеет жёлтую подсветку', async () => {
-  expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeTruthy();
+  await expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeTruthy();
 });
 
 Then('в таблице xTable кнопка переключения режимов фильтра типа string не имеет жёлтой подсветки', async () => {
-  expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeFalsy();
+  await expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeFalsy();
 });
 
 Then('в таблице xTable фильтр типа string переходит в нестрогий режим с пустым полем', async () => {
-  expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeFalsy();
-  expect(await xTableFilterTypeStringBlock.getValue()).toEqual('');
+  await expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeFalsy();
+  await expect(await xTableFilterTypeStringBlock.getValue()).toEqual('');
 });
