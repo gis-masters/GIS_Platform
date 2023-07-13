@@ -255,6 +255,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         getAllAndFillEntityCount();
     }
 
+    @When("При выборке пользователей данные не были утеряны")
+    public void checkThatUsersDataIsFull() {
+        List<Map<String, Object>> users = response.jsonPath().getList("content");
+        users.stream()
+             .filter(user -> (user.get("name").equals("test1")) || (user.get("name").equals("test2")))
+             .forEach(user -> assertTrue(checkUserDataIsFull(user)));
+    }
+
     @When("Текущий пользователь запрашивает пользователей с фильтрацией")
     public void getUsersByFilter(DataTable datatable) {
         List<Map<String, String>> filterCases = datatable.asMaps();
@@ -449,6 +457,46 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
         assertNotNull(error);
         assertTrue(error.contains("Пользователь не найден(а) по идентификатору:"));
+    }
+
+    private boolean checkUserDataIsFull(Map<String, Object> userData) {
+        if (Objects.isNull(userData.get("email"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("name"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("surname"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("phone"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("login"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("middleName"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("department"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("geoserverLogin"))) {
+            return false;
+        }
+
+        if (Objects.isNull(userData.get("geoserverLogin"))) {
+            return false;
+        }
+
+        return true;
     }
 
     private void getAllUsersIdAllPages(Integer entitiesPerPage) {

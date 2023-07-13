@@ -126,6 +126,13 @@ Feature: Действия с пользователями
     When  Администратор делает постраничный запрос на всех пользователей, по 5 пользователей на странице
     Then  Дублирование пользователей, при выборке постранично, не происходит
 
+  Scenario: При выборке всех пользователей из базы данных данные не теряются
+    Given Существуют пользователи
+      | test1 | middleNameTest1 | surnameTest1 | tester | NUMBER_10 | EMAIL_20 | testtestQ1 | IT-Department |
+      | test2 | middleNameTest2 | surnameTest2 | tester | NUMBER_10 | EMAIL_20 | testtestQ1 | IT-Department |
+    When Администратор делает постраничный запрос на пользователей
+    Then При выборке пользователей данные не были утеряны
+
   Scenario Outline: Обновление полей пользователя доступно администратору организации
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |

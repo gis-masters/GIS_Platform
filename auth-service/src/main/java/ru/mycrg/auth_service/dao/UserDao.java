@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -48,7 +47,7 @@ public class UserDao {
 
         log.debug("Request find all by path: [{}]", query);
 
-        return pJdbcTemplate.query(query, params, new BeanPropertyRowMapper<>(User.class));
+        return pJdbcTemplate.query(query, params, new UsersMapper());
     }
 
     public Long getTotal(String ecqlFilter, Long orgId) {

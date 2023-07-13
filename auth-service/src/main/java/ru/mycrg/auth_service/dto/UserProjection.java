@@ -38,5 +38,4 @@ public interface UserProjection {
     String getGeoserverLogin();
 
     Integer getBossId();
-
 }
