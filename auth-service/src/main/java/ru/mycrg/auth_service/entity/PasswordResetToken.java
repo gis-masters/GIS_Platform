@@ -12,7 +12,7 @@ public class PasswordResetToken {
     @Column(columnDefinition = "serial")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
     @Column(length = 50)

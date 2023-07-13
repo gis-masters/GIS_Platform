@@ -129,6 +129,13 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         resetPassRequest(body);
     }
 
+    @When("Текущий пользователь отправляет запрос на восстановление пароля")
+    public void passwordResetRequestForCurrentUser() {
+        String body = format("{\"email\": \"%s\", \"origin\": \"%s\"}", userDto.getEmail(), "http://localhost:8100");
+
+        resetPassRequest(body);
+    }
+
     @When("Пользователь делает запрос на восстановление пароля с невалидными данными {string} {string}")
     public void passwordResetRequestWithInvalidData(String email, String origin) {
         String body = format("{\"email\": \"%s\", \"origin\": \"%s\"}", email, origin);
