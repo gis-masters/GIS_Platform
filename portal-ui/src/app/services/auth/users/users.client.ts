@@ -36,7 +36,7 @@ class UsersClient extends Client {
     return await http.get<CrgUserRaw>(this.getUserUrl(id));
   }
 
-  async allUsers(): Promise<CrgUserRaw[]> {
+  async getAllUsers(): Promise<CrgUserRaw[]> {
     return http.getPaged<CrgUserRaw>(this.getUsersUrl());
   }
 

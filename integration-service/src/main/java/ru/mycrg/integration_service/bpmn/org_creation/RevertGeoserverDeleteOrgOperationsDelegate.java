@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.org_deletion;
+package ru.mycrg.integration_service.bpmn.org_creation;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -9,37 +9,48 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_DELETED_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
-public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
+public class RevertGeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(GeoserverDeleteOrgOperationsDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(RevertGeoserverDeleteOrgOperationsDelegate.class);
 
     private final BaseHttpService baseHttpService;
 
-    public GeoserverDeleteOrgOperationsDelegate(BaseHttpService baseHttpService) {
+    public RevertGeoserverDeleteOrgOperationsDelegate(BaseHttpService baseHttpService) {
         this.baseHttpService = baseHttpService;
     }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
-        Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
-        List<String> geoserverLogins = (List<String>) execution.getVariable(USERS_VAR_NAME);
+        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
+        OrganizationInitializedEvent event = objectMapper
+                .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        String usersJson = objectMapper.writeValueAsString(geoserverLogins);
+        Long orgId = event.getOrgId();
+        String accessToken = event.getToken();
+        List<String> geoserverLogins = new ArrayList<>();
+        String login = event.getOwnerEmail() + "_" + orgId;
+
+        log.debug("GeoserverDeleteOrgOperationsDelegate. OrgId: {} User: {}", orgId, login);
+
+        geoserverLogins.add(login);
 
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
-                usersJson);
+                objectMapper.writeValueAsString(geoserverLogins));
 
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations/" + orgId))

@@ -46,7 +46,7 @@ class UsersService {
   }
 
   async getAll(): Promise<CrgUser[]> {
-    const rawUsers = await usersClient.allUsers();
+    const rawUsers = await usersClient.getAllUsers();
 
     return rawUsers.map(this.fixAuthorities);
   }

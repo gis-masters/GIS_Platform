@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.org_deletion;
+package ru.mycrg.integration_service.bpmn.org_creation;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -7,31 +7,39 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 
 import java.net.URL;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_DELETED_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
-public class DeleteDbDelegate implements JavaDelegate {
+public class RevertDeleteDbDelegate implements JavaDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(DeleteDbDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(RevertDeleteDbDelegate.class);
 
     private final BaseHttpService baseHttpService;
 
-    public DeleteDbDelegate(BaseHttpService baseHttpService) {
+    public RevertDeleteDbDelegate(BaseHttpService baseHttpService) {
         this.baseHttpService = baseHttpService;
     }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Object orgId = execution.getVariable(ORG_ID_VAR_NAME);
-        Object accessToken = execution.getVariable(TOKEN_VAR_NAME);
+        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
+        OrganizationInitializedEvent event = objectMapper
+                .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
+        Long orgId = event.getOrgId();
+        String accessToken = event.getToken();
         String dbName = getDefaultDatabaseName(orgId.toString());
+
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getDataServiceUrl(), "/databases/" + dbName))
                 .addHeader("Authorization", "Bearer " + accessToken)

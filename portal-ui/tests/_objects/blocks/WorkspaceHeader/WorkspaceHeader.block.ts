@@ -13,6 +13,11 @@ class WorkspaceHeaderBlock extends Block {
 
   async waitForLoaderEnd(): Promise<void> {
     const loader = await this.$('loader');
+    try {
+      await loader.waitForDisplayed({ timeout: 1000 });
+    } catch {
+      // ignore
+    }
     await loader.waitForDisplayed({ reverse: true });
   }
 }

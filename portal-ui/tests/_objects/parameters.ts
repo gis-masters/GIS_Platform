@@ -23,6 +23,6 @@ defineParameterType({
 
 defineParameterType({
   name: 'strings',
-  regexp: /(".+"( ,)*)+/,
-  transformer: joined => joined.slice(1, -1).split('", "')
+  regexp: /(".+"( ,)*)+|-/,
+  transformer: joined => joined?.slice(1, -1).split('", "') || []
 });

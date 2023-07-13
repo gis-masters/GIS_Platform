@@ -1,35 +1,32 @@
-import { OrganizationsListItemInfo } from '../../../../src/app/services/auth/auth/auth.models';
-import { authClient } from '../../../../src/app/services/auth/auth/auth.client';
-import { authenticateAs } from './authenticate';
 import { TestUser } from './testUsers';
+import { getUserToken } from './getUserToken';
+import { createTestOrganizations } from './createTestOrganizations';
 
 let retries = 0;
-const MAX_AUTH_RETRIES = 3;
+const MAX_AUTH_RETRIES = 5;
+const AUTH_RETRY_DELAY = 1000;
 
-export async function fetchUserToken(user: TestUser): Promise<string> {
+export async function fetchUserToken(user: TestUser, suppressOrganizationCreation = false): Promise<void> {
   if (user.token) {
-    return user.token;
+    return;
   }
 
-  let token: string | OrganizationsListItemInfo[];
-
   try {
-    token = await authClient.authenticate({ username: user.email, password: user.password });
+    user.token = await getUserToken(user);
     retries = 0;
   } catch {
     retries++;
+    await browser.pause(AUTH_RETRY_DELAY);
     if (retries > MAX_AUTH_RETRIES) {
       throw new Error(`Не удаётся получить токен пользователя "${user.email}"`);
     }
-    await authenticateAs(user);
-    token = await fetchUserToken(user);
-  }
 
-  if (typeof token === 'string') {
-    user.token = token;
-  } else {
-    throw new TypeError('К выбору организации мы пока не готовы');
-  }
+    if (!suppressOrganizationCreation) {
+      await createTestOrganizations();
+    }
 
-  return user.token;
+    await browser.pause(AUTH_RETRY_DELAY);
+
+    await fetchUserToken(user, true);
+  }
 }

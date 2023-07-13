@@ -17,13 +17,13 @@ Feature: Атрибутивная таблица: фильтрация - баз�
     Then  в атрибутивной таблице в колонке "<fieldTitle>" значения: <expected>
 
     Examples:
-      | fieldTitle | from | to  | expected      |
-      | Поле INT   | 300  |     | "314", "5555" |
-      | Поле INT   |      | 300 | "9"           |
-      | Поле INT   | 1    | 2   |               |
-      | Поле FLOAT | 0.6  |     | "3.14", "644" |
-      | Поле FLOAT | 0    | 1   | "0.58"        |
-      | Поле FLOAT |      | 200 | "3.14", "0.58"    |
+      | fieldTitle | from | to  | expected       |
+      | Поле INT   | 300  |     | "314", "5555"  |
+      | Поле INT   |      | 300 | "9"            |
+      | Поле INT   | 1    | 2   | -              |
+      | Поле FLOAT | 0.6  |     | "3.14", "644"  |
+      | Поле FLOAT | 0    | 1   | "0.58"         |
+      | Поле FLOAT |      | 200 | "3.14", "0.58" |
 
   Scenario Outline: Пользователь может фильтровать по датам
     Given я авторизован как "Гарри"
@@ -60,10 +60,10 @@ Feature: Атрибутивная таблица: фильтрация - баз�
     Then  в атрибутивной таблице в колонке "<fieldTitle>" значения: <expected>
 
     Examples:
-      | fieldTitle    | filter | expected              | description                                                                      |
-      | Поле DOCUMENT | cat    | catta                 |                                                                                  |
-      | Поле DOCUMENT | Q      | sequi                 | Поиск не зависит от регистра                                                     |
-      | Поле DOCUMENT | u      | sequi, sciurus, catta | Фильтр работает НЕ КОРРЕКНТО. Ищет просто по строке, в которой есть 'dl_default' |
+      | fieldTitle    | filter | expected                    | description                                                                      |
+      | Поле DOCUMENT | cat    | "catta"                     |                                                                                  |
+      | Поле DOCUMENT | Q      | "sequi"                     | Поиск не зависит от регистра                                                     |
+      | Поле DOCUMENT | u      | "sequi", "sciurus", "catta" | Фильтр работает НЕ КОРРЕКНТО. Ищет просто по строке, в которой есть 'dl_default' |
 
   Scenario Outline: Пользователь может фильтровать по полю типа CHOICE
     Given я авторизован как "Гарри"
@@ -76,7 +76,7 @@ Feature: Атрибутивная таблица: фильтрация - баз�
       | fieldTitle  | selected                | checkedFieldTitle | expected |
       | Поле CHOICE | Не заполнено            | ID                | "1"      |
       | Поле CHOICE | Модульная односторонняя | ID                | "2", "3" |
-      | Поле CHOICE | Модульная двухсторонняя | ID                |          |
+      | Поле CHOICE | Модульная двухсторонняя | ID                | -        |
 
   Scenario Outline: Пользователь может фильтровать по нескольким полям: "<firstFieldTitle>", "<secondFieldTitle>"
     Given я авторизован как "Гарри"
@@ -88,5 +88,5 @@ Feature: Атрибутивная таблица: фильтрация - баз�
 
     Examples:
       | firstFieldTitle | from | to  | selected                | secondFieldTitle | checkedFieldTitle | expected |
-      | Поле CHOICE     | 100  |     | Модульная односторонняя | Поле FLOAT       | ID                | "3"        |
-      | Поле CHOICE     |      | 500 | Не заполнено            | Поле INT         | ID                | "1"        |
+      | Поле CHOICE     | 100  |     | Модульная односторонняя | Поле FLOAT       | ID                | "3"      |
+      | Поле CHOICE     |      | 500 | Не заполнено            | Поле INT         | ID                | "1"      |

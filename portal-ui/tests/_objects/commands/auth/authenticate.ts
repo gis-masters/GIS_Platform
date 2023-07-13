@@ -4,11 +4,10 @@ import { authService } from '../../../../src/app/services/auth/auth/auth.service
 import { usersService } from '../../../../src/app/services/auth/users/users.service';
 import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.page';
-import { createOrganization } from './createOrganization';
 import { TestUser, getTestUser } from './testUsers';
 import { homePage } from '../../pages/Home.page';
-import { createTestUsers } from './createTestUsers';
 import { Page } from '../../Page';
+import { createTestOrganizations } from './createTestOrganizations';
 
 declare const window: {
   currentUser: typeof currentUser;
@@ -50,32 +49,24 @@ async function authenticate(
 }
 
 async function authenticateAsSomeAdmin(admin: RegData, thenPage?: Page): Promise<void> {
-  const { email, password, company } = admin;
+  const { email, password } = admin;
   const { ok } = await authenticate(email, password, thenPage);
 
   if (ok) {
     return;
   }
 
-  const cookieKey = 'TEST_createdOrganization' + company;
-  const [notFirstTime] = await browser.getCookies(cookieKey);
-  if (notFirstTime) {
-    return;
-  }
-
-  await browser.setCookies({ name: cookieKey, value: '1' });
-
-  await createOrganization(admin);
+  await createTestOrganizations();
 
   for (let i = 0; i < 10; i++) {
-    await sleep(5000);
     const { ok } = await authenticate(email, password, thenPage);
     if (ok) {
       return;
     }
+    await sleep(5000);
   }
 
-  throw new Error('Не удалось создать организацию ' + company);
+  throw new Error('Не удалось авторизоваться ');
 }
 
 export async function authenticateAsAdmin(thenPage?: Page): Promise<void> {
@@ -90,7 +81,6 @@ export async function authenticateAs({ email, password }: TestUser, thenPage?: P
   const { ok } = await authenticate(email, password, thenPage);
   if (!ok) {
     await authenticateAsAdmin();
-    await createTestUsers();
     await authenticate(email, password, thenPage);
   }
 }

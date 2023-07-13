@@ -99,8 +99,7 @@ export function getFilterRootAnd(filter: FilterQuery, field = ''): [FilterQuery[
   const and: FilterQuery[] | undefined = filter.$and as FilterQuery[];
   const index = and?.findIndex(
     entry =>
-      entry[field] !== undefined ||
-      (Array.isArray(entry.$or) && entry.$or[0] && (entry.$or[0] as FilterQuery)[field]) !== undefined
+      entry[field] !== undefined || (entry.$or && entry.$or[0] && (entry.$or[0] as FilterQuery)[field]) !== undefined
   );
 
   return [and, index === undefined ? -1 : index];

@@ -111,9 +111,7 @@ export async function requestAs<R, A extends unknown[]>(
   clientMethod: (...b: A) => Promise<R>,
   ...args: A
 ): Promise<R> {
-  if (!user.token) {
-    await fetchUserToken(user);
-  }
+  await fetchUserToken(user);
 
   currentUser = user;
 

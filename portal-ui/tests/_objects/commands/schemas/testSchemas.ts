@@ -12,7 +12,6 @@ import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
-import { allTypesWithAsTitle } from './testSchemas/allTypesWithAsTitle';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 
@@ -21,7 +20,6 @@ const testSchemas: Schema[] = [
   allTypesChoiceAsString,
   allTypesEditable,
   allTypesReadonly,
-  allTypesWithAsTitle,
   editable,
   forTestTitles,
   readonly,
