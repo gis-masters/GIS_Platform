@@ -32,7 +32,7 @@ import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.s
 import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
-import { communicationService } from '../../../services/communication.service';
+import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { services } from '../../../services/services';
@@ -102,6 +102,14 @@ export class LayerMenu extends Component<LayerMenuProps> {
     await this.fetchPermissions();
 
     this.setLayersDeleteAllowed(isLayersManagementAllowed());
+
+    communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
+      const { data } = e.detail;
+
+      if (data.id === this.rasterDocument?.id) {
+        await this.updateDocument(data);
+      }
+    }, this);
   }
 
   render() {
@@ -433,13 +441,28 @@ export class LayerMenu extends Component<LayerMenuProps> {
     }
   }
 
+  private async updateDocument(record: LibraryRecord) {
+    const { libraryTableName, id } = record;
+
+    await this.setDocument(libraryTableName, id);
+  }
+
   @boundMethod
   private async getLayerDocument() {
-    const { libraryId, recordId } = this.props.entity as CrgRasterLayer;
+    await this.setDocument(
+      (this.props.entity as CrgRasterLayer).libraryId,
+      (this.props.entity as CrgRasterLayer).recordId,
+      true
+    );
+  }
+
+  private async setDocument(libraryId: string, recordId: number, openDialog = false) {
     try {
       const document = await getLibraryRecord(libraryId, recordId);
       this.setRasterDocument(document);
-      this.openDialog();
+      if (openDialog) {
+        this.openDialog();
+      }
     } catch (error) {
       const err = error as AxiosError;
       Toast.warn(`Ошибка получения документа. ${err.message}`);

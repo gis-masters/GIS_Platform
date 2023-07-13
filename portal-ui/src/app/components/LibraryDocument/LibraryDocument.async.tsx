@@ -3,6 +3,7 @@ import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { formatDate } from '../../services/util/date.util';
@@ -40,6 +41,13 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
     await this.fetchSchema();
 
     if (document) {
+      await this.getBreadcrumbsItems();
+    }
+  }
+
+  async componentDidUpdate(prevProps: LibraryDocumentProps) {
+    const { document } = this.props;
+    if (!isEqual(prevProps.document, document)) {
       await this.getBreadcrumbsItems();
     }
   }
