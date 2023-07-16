@@ -6,8 +6,6 @@ import io.restassured.response.Response;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
@@ -15,6 +13,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.geoserverLogin;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
@@ -128,15 +127,9 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
         checkGeoserverServiceRules(orgId);
     }
 
-    @And("На Геосервере отсутствует пользователь {string}")
-    public void isUserAbsentOnGeoserver(String userRole) {
-        getBaseRequestWithCurrentCookie()
-                .when().
-                get("/geoserver/rest/security/roles.json")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("roles", not(hasItems(userRole)));
+    @And("На Геосервере отсутствует пользователь")
+    public void isUserAbsentOnGeoserver() {
+        checkOwnerOfOrganizationAbsentOnGeoserver(geoserverLogin);
     }
 
     @And("На Геосервере отсутствует роль")
@@ -271,6 +264,19 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_OK).
                         body("users.findAll { it.enabled == true }.userName",
                              hasItems(geoserverLogin));
+    }
+
+    public void checkOwnerOfOrganizationAbsentOnGeoserver(String ownerEmail) {
+        String geoserverLogin = ownerEmail + "_" + orgId;
+        String body = String.format("users.findAll { it.userName == \"%s\" }", geoserverLogin);
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/security/usergroup/service/postgres_db_user_service/users.json")
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK)
+                        .body(body, equalTo(new ArrayList()));
     }
 
     public void checkGeoserverServiceRules(Integer orgId) {

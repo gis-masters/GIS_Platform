@@ -176,7 +176,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         assertEquals(jsonPath.get("status"), status);
 
-        orgPool.put(orgId, orgDto);
+        updateUsersAndOrgPool(status);
     }
 
     @And("Поля совпадают с переданными")
@@ -312,7 +312,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Удалена БД организации")
-    public void isOrgDbNotExist() {
+    public void isOrgDbNotExist() throws InterruptedException {
+        sleep(2000);
+
         Response response = getDatabase(orgId);
 
         checkStatusCodeIs(response, SC_NOT_FOUND);
@@ -383,6 +385,14 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         get("/organizations/" + orgId);
 
         assertNotNull(orgId);
+    }
+
+    private void updateUsersAndOrgPool(String status) {
+        if (!status.equalsIgnoreCase("DELETING")) {
+            orgPool.put(orgId, orgDto);
+        } else {
+            userPool.remove(userPool.get(-1));
+        }
     }
 
     private void checkStatusCodeIs(Response response, int code) {

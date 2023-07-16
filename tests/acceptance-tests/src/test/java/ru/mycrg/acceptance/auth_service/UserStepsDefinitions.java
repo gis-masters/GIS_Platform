@@ -418,6 +418,15 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         get("/current");
     }
 
+    @When("Получаем данные владельца организации")
+    public void getDataOfOrgAdmin() {
+        authorizationBase.loginAsOwner();
+        getCurrent();
+
+        geoserverLogin = response.jsonPath().get("geoserverLogin");
+        assertNotNull(geoserverLogin);
+    }
+
     @When("Пользователь делает запрос на обновление чужого пользователя")
     public void patchForeignUser(DataTable datatable) {
         setUserDtoFields(datatable);
