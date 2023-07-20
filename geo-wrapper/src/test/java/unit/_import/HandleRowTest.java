@@ -13,6 +13,7 @@ import ru.mycrg.wrapper.service.import_.DataHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class HandleRowTest {
     private ClassLoader classLoader = getClass().getClassLoader();
 
     @Test
-    public void shouldEncodingStrings() throws IOException {
+    public void shouldEncodingStrings() throws IOException, URISyntaxException {
         // PREPARE
         SchemaDto schema = getSchemaFromFile("educationSchema.json");
         Map<String, Object> dbRow = new HashMap<>() {{
@@ -61,7 +62,7 @@ public class HandleRowTest {
     }
 
     @Test
-    public void shouldConvertWrongDataToNull() throws IOException, SQLException {
+    public void shouldConvertWrongDataToNull() throws IOException, SQLException, URISyntaxException {
         // PREPARE
         PGobject pgObject = new PGobject();
         pgObject.setValue("032165198161651981");
@@ -103,8 +104,8 @@ public class HandleRowTest {
         assertEquals(NULL_MARKER, result.get("created_da2"));
     }
 
-    private SchemaDto getSchemaFromFile(String fName) throws IOException {
-        File file = new File(Objects.requireNonNull(classLoader.getResource(fName)).getFile());
+    private SchemaDto getSchemaFromFile(String fName) throws IOException, URISyntaxException {
+        File file = new File(Objects.requireNonNull(classLoader.getResource(fName)).toURI().getPath());
 
         return mapper.readValue(file, SchemaDto.class);
     }

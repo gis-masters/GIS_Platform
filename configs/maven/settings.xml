@@ -4,10 +4,9 @@
                               https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <servers>
         <server>
-            <!-- Expires on: 11.03.2023 -->
             <id>GisPlatformFeed</id>
-            <username>programgeoplan</username>
-            <password>wa77z6jnotx3k5yny36m7j5op2wyxbem6sha3s3md7yo5pu67dya</password>
+            <username>DefaultCollection</username>
+            <password>ooqinp6mi2qca7oep7mclzmjthcr7nv34lind4ftnqdehinofx5a</password>
         </server>
     </servers>
 </settings>
