@@ -1,4 +1,5 @@
 import { createTestUsers, createTestUsersInOtherOrganization } from './createTestUsers';
+import { sleep } from '../../../../src/app/services/util/sleep';
 import { createOrganization } from './createOrganization';
 import { TestUser, getTestUser } from './testUsers';
 import { getUserToken } from './getUserToken';
@@ -6,6 +7,9 @@ import { getUserToken } from './getUserToken';
 export async function createTestOrganizations(): Promise<void> {
   const admin = getTestUser('Администратор организации');
   const otherAdmin = getTestUser('Администратор другой организации');
+
+  await sleep(5000 * ((global.testOrganizationIndex || 1) - 1));
+
   await createOrganization(admin);
   await waitForToken(admin);
 
