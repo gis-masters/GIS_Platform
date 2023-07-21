@@ -460,6 +460,22 @@ public class BaseStepsDefinitions {
         assertTrue(((String) response.jsonPath().get(field)).contains(value));
     }
 
+    public int getUserIdByName(String name) {
+        return userPool.entrySet().stream()
+                       .filter(item -> item.getValue().getName().equals(name))
+                       .findFirst()
+                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: " + name))
+                       .getKey();
+    }
+
+    public UserCreateDto getUserByName(String name) {
+        return userPool.entrySet().stream()
+                       .filter(item -> item.getValue().getName().equals(name))
+                       .findFirst()
+                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: " + name))
+                       .getValue();
+    }
+
     private void deleteEntity(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().

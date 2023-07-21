@@ -43,10 +43,13 @@ public class TaskService {
     }
 
     @NotNull
-    public Page<Task> findAll(String ecqlFilter, Pageable pageable) {
+    public Page<Task> getAll(String ecqlFilter, Pageable pageable) {
         try {
             ResourceQualifier taskQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks");
-            String filter = modifyFilterByAssignedToMe(ecqlFilter);
+            String filter = ecqlFilter;
+            if (!authenticationFacade.isOrganizationAdmin()) {
+                filter = modifyFilterByAssignedToMe(ecqlFilter);
+            }
 
             log.debug("filter: {}", filter);
 
@@ -68,16 +71,16 @@ public class TaskService {
     }
 
     private String modifyFilterByAssignedToMe(String ecqlFilter) {
-        List<Long> minionIds = authenticationFacade.getUserDetails().getMinions();
+        List<Long> minionIds = authenticationFacade.getUserDetails().getAllMinions();
         Long userId = authenticationFacade.getUserDetails().getUserId();
         minionIds.add(userId);
         String joined = join(minionIds, ", ");
 
         if (ecqlFilter == null || ecqlFilter.isBlank()) {
-            return String.format("owner_id IN (%s)", joined);
+            return String.format("owner_id IN (%s) OR assigned_to IN (%s)", joined, userId);
         }
 
-        return String.format("(%s) AND (owner_id IN (%s))", ecqlFilter, joined);
+        return String.format("(owner_id IN (%s) OR assigned_to IN (%s)) AND (%s)", joined, userId, ecqlFilter);
     }
 
     @NotNull

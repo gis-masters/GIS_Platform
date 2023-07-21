@@ -8,6 +8,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
+
 @Entity
 @Table(name = "tasks")
 public class Task {
@@ -50,6 +52,18 @@ public class Task {
 
     public Task() {
         // Required
+    }
+
+    public Task(TaskType type, Long ownerId, Long assignedTo, LocalDate dueDate, String description, Long creator) {
+        this.type = type;
+        this.ownerId = ownerId;
+        this.assignedTo = assignedTo;
+        this.dueDate = dueDate;
+        this.description = description;
+        this.createdBy = creator;
+
+        this.status = CREATED;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Long getId() {

@@ -1,17 +1,26 @@
 package ru.mycrg.data_service_contract.dto;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 
 public class TaskCreateDto {
 
-    @Pattern(regexp = "^(ASSIGNABLE|SYSTEM|CUSTOM)$", message = "Допустимые значения поля type: ASSIGNABLE, SYSTEM или CUSTOM")
+    @NotNull
+    @Pattern(regexp = "^(ASSIGNABLE|SYSTEM|CUSTOM)$",
+             message = "Допустимые значения поля type: ASSIGNABLE, SYSTEM или CUSTOM")
     private String type;
 
-    private Long assignedTo;
-
+    @NotNull
+    @Positive
     private Long ownerId;
 
+    @Positive
+    private Long assignedTo;
+
+    @Future
     private LocalDate dueDate;
 
     private String description;

@@ -11,16 +11,11 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import java.security.Principal;
 import java.util.*;
 
+import static ru.mycrg.auth_facade.JwtDetails.*;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN;
 
 public class AuthenticationFacade implements IAuthenticationFacade {
-
-    private final String CLAIM_USER_ID = "user_id";
-    private final String CLAIM_USER_CRG_LOGIN = "crg_login";
-    private final String CLAIM_ORGANIZATIONS = "organizations";
-    private final String CLAIM_GROUPS = "groups";
-    private final String CLAIM_MINIONS = "minions";
 
     @Override
     public String getAccessToken() {
@@ -67,24 +62,29 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         UserDetails userDetails = new UserDetails();
         Map<String, Object> decodedDetails = decode(getAuthentication());
 
-        getValue(decodedDetails, CLAIM_USER_ID)
+        getValue(decodedDetails, USER_ID)
                 .ifPresent(o -> {
                     userDetails.setUserId(Long.valueOf(String.valueOf(o)));
                 });
 
-        getValue(decodedDetails, CLAIM_USER_CRG_LOGIN)
+        getValue(decodedDetails, USER_CRG_LOGIN)
                 .ifPresent(o -> {
                     userDetails.setCrgLogin(String.valueOf(o));
                 });
 
-        getValue(decodedDetails, CLAIM_GROUPS)
+        getValue(decodedDetails, GROUPS)
                 .ifPresent(groups -> {
                     ((List) groups).forEach(id -> userDetails.addGroupId(Long.valueOf(String.valueOf(id))));
                 });
 
-        getValue(decodedDetails, CLAIM_MINIONS)
+        getValue(decodedDetails, MINIONS)
                 .ifPresent(minions -> {
                     ((List) minions).forEach(id -> userDetails.addMinionId(Long.valueOf(String.valueOf(id))));
+                });
+
+        getValue(decodedDetails, DIRECT_MINIONS)
+                .ifPresent(minions -> {
+                    ((List) minions).forEach(id -> userDetails.addDirectMinionId(Long.valueOf(String.valueOf(id))));
                 });
 
         return userDetails;
@@ -95,7 +95,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
         try {
             Map<String, Object> decodedDetails = decode(authentication);
 
-            Optional<Object> oOrganization = getValue(decodedDetails, CLAIM_ORGANIZATIONS);
+            Optional<Object> oOrganization = getValue(decodedDetails, ORGANIZATIONS);
             if (oOrganization.isPresent()) {
                 Map<String, Object> firstOrg = (Map<String, Object>) ((ArrayList) oOrganization.get()).get(0);
                 Optional<Object> oValue = getValue(firstOrg, "id");

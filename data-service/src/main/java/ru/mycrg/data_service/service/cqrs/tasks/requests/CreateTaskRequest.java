@@ -12,8 +12,8 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateTaskRequest implements IRequest<Task>, Auditable {
 
-    private TaskCreateDto taskCreateDto;
     private Task task;
+    private final TaskCreateDto taskCreateDto;
 
     public CreateTaskRequest(TaskCreateDto taskCreateDto) {
         this.taskCreateDto = taskCreateDto;

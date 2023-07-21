@@ -7,6 +7,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.PasswordResetDto;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +43,13 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizeAsCurrentUser();
     }
 
+    @Given("я авторизован как {string}")
+    public void orgOwnerAuthorized(String userName) {
+        UserCreateDto user = getUserByName(userName);
+
+        authorizationBase.loginAs(user.getEmail(), user.getPassword());
+    }
+
     @When("Авторизируемся владельцем организации")
     public void authorizeAsOrgOwner() {
         authorizationBase.loginAsOwner();
@@ -55,13 +63,13 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @When("Авторизируемся пользователем у которого email прописан в верхнем регистре")
     public void authorizeAsUserIgnoreUsernameCase() {
         String email = userDto.getEmail().toUpperCase();
-        authorizationBase.loginAsUserWithEmailAndPassword(email, userDto.getPassword());
+        authorizationBase.loginAs(email, userDto.getPassword());
     }
 
     @When("Авторизируемся пользователем у которого в поле email имеются отступы")
     public void authorizeAsUserIgnoreWhitespace() {
         String email = "   " + userDto.getEmail() + "   ";
-        authorizationBase.loginAsUserWithEmailAndPassword(email, userDto.getPassword());
+        authorizationBase.loginAs(email, userDto.getPassword());
     }
 
     @When("Владелец организации авторизован")

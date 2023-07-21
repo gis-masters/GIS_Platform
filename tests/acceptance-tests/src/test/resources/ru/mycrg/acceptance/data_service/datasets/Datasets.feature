@@ -66,7 +66,7 @@ Feature: Наборы данных (datasets)
   Scenario Outline: Фильтрация по title 'набора данных' должна быть не чувствительна к регистру
     When Отправляется запрос на создание набора "someDatasetTitle" "STRING_5" "STRING_0" "STRING_0" "500"
     When Администратор делает запрос на выборку наборов с фильтрацией по полю "<filterKey>" и значению: "<filterValue>"
-    Then В выборке присутствуют определённое кол-во элементов: "1"
+    Then В выборке присутствуют определённое кол-во элементов: 1
     Examples:
       | filterKey | filterValue |
       | title     | SOME        |

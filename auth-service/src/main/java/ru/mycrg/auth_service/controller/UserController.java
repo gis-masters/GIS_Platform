@@ -120,7 +120,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<UserProjection> getUserById(@PathVariable Long id) {
-        UserProjection userProjection = userService.findProjectionById(id);
+        UserProjection userProjection = userService.findById(id);
 
         return ResponseEntity.ok(userProjection);
     }

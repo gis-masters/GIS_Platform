@@ -250,6 +250,84 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("Существует иерархия пользователей {string}")
+    public void createUsersByHierarchy(String hierarchy) throws InterruptedException {
+        if ("Иерархия вариант 1".equals(hierarchy)) {
+            // orgOwner
+            //   fiz1
+            //   fiz2
+            //     fiz3
+            //       fiz4
+            // fiz5
+
+            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", hierarchy);
+
+            getCurrent();
+            Integer ownerId = response.jsonPath().get("id");
+            assertNotNull(ownerId);
+            System.out.println(" Id владельца организации: " + ownerId);
+
+            UserCreateDto dto = userPool.get(-1);
+            userPool.put(ownerId, dto);
+            userPool.remove(-1);
+
+            String password = "aA111111";
+
+            // Пользователь fiz1, у которого начальником будет владелец организации
+            UserCreateDto fiz1 = new UserCreateDto("fiz1", "fiz1", "fiz1", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), password, "dep");
+            fiz1.setBossId(ownerId);
+
+            System.out.println("*** *** Create user fiz1");
+            userDto = fiz1;
+            createUser(fiz1);
+
+            // Пользователь fiz2, у которого начальником будет владелец организации
+            UserCreateDto fiz2 = new UserCreateDto("fiz2", "fiz2", "fiz2", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), password, "dep");
+            fiz2.setBossId(ownerId);
+
+            System.out.println("*** *** Create user fiz2");
+            userDto = fiz2;
+            createUser(fiz2);
+            Integer fiz2Id = userId;
+
+            // Пользователь fiz3, у которого начальником будет fiz2
+            UserCreateDto fiz3 = new UserCreateDto("fiz3", "fiz3", "fiz3", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), password, "dep");
+            fiz3.setBossId(fiz2Id);
+
+            System.out.println("*** *** Create user fiz3");
+            userDto = fiz3;
+            createUser(fiz3);
+            Integer fiz3Id = userId;
+
+            // Пользователь fiz4, у которого начальником будет fiz3
+            UserCreateDto fiz4 = new UserCreateDto("fiz4", "fiz4", "fiz4", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), password, "dep");
+            fiz4.setBossId(fiz3Id);
+
+            System.out.println("*** *** Create user fiz4");
+            userDto = fiz4;
+            createUser(fiz4);
+
+            // Пользователь fiz5, без начальника
+            UserCreateDto fiz5 = new UserCreateDto("fiz5", "fiz5", "fiz5", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), password, "dep");
+
+            System.out.println("*** *** Create user fiz5");
+            userDto = fiz5;
+            createUser(fiz5);
+
+            userPool.forEach((id, userDto) -> {
+                System.out.printf("id: %d. Name: '%s' Email: '%s'%n", id, userDto.getName(), userDto.getEmail());
+            });
+        } else {
+            throw new IllegalStateException(
+                    String.format("Unknown hierarchy: '%s'. Plz implement it first.", hierarchy));
+        }
+    }
+
     @When("Администратор делает постраничный запрос на пользователей")
     public void getUsersCount() {
         getAllAndFillEntityCount();
@@ -545,9 +623,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private boolean isUserExistInPool(String eMail) {
+        System.out.println("Try found user in pool by email: " + eMail);
+
         return userPool
                 .values().stream()
-                .anyMatch(dto -> eMail.equals(dto.getEmail()));
+                .filter(Objects::nonNull)
+                .anyMatch(dto -> {
+                    System.out.println("User: " + dto);
+
+                    return eMail.equals(dto.getEmail());
+                });
     }
 
     private void makeExactUserAsCurrent(String email) {

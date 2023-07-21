@@ -203,27 +203,21 @@ public class UserService {
     }
 
     /**
-     * Возвращает пользователя если выполняются условия
-     * <ol>
-     * <li>Если запрос пришел от root
-     * <li>Если запрос пришел от администратора организации и запрашиваемый является пользователем организации
-     * <li>Если запрос пришел от самого пользователя
-     * </ol>
+     * Супер админ может получить пользователя любой организации.
+     * Любой пользователь может получить любого пользователя из своей организации.
      *
      * @param id Идентификатор пользователя
      *
      * @throws NotFoundException если пользователь не существует
-     * @throws NotFoundException если нет прав на просмотр пользователя
+     * @throws NotFoundException если пользователя нет в этой организации
      * @see ru.mycrg.auth_service_contract.Authorities
      */
-    public UserProjection findProjectionById(Long id) {
-        User user = findById(id).orElseThrow(() -> new NotFoundException(id));
-
-        return projectionFactory.createProjection(UserProjection.class, user);
+    public UserProjection findById(Long id) {
+        return projectionFactory.createProjection(UserProjection.class, findOrThrow(id));
     }
 
     public void delete(Long id) {
-        UserProjection userProjection = findProjectionById(id);
+        UserProjection userProjection = findById(id);
         log.debug("Try delete user: {}", userProjection.getEmail());
 
         userRepository.findById(id).ifPresent(user -> {
@@ -259,7 +253,7 @@ public class UserService {
     }
 
     public void addAuthority(Long id, String authority) {
-        UserProjection userProjection = findProjectionById(id);
+        UserProjection userProjection = findById(id);
 
         if (!isUserHasAuthority(userProjection, authority)) {
             userRepository.findById(userProjection.getId()).ifPresent(user -> user.addAuthority(authority));
@@ -267,7 +261,7 @@ public class UserService {
     }
 
     public void removeAuthority(Long id, String authority) {
-        UserProjection userProjection = findProjectionById(id);
+        UserProjection userProjection = findById(id);
 
         if (isUserHasAuthority(userProjection, authority)) {
             userRepository.findById(userProjection.getId()).ifPresent(user -> user.removeAuthority(authority));
@@ -277,7 +271,7 @@ public class UserService {
     }
 
     public void update(Long userId, UserUpdateDto dto) {
-        User userForUpdate = findById(userId).orElseThrow(() -> new NotFoundException(userId));
+        User userForUpdate = findOrThrow(userId);
 
         if (dto.getName() != null) {
             userForUpdate.setName(dto.getName());
@@ -332,12 +326,11 @@ public class UserService {
                              .anyMatch(aProjection -> authority.equalsIgnoreCase(aProjection.getAuthority()));
     }
 
-    private Optional<User> findById(Long id) {
-        Optional<User> oUser = Optional.empty();
-
+    private User findOrThrow(Long id) {
         if (authenticationFacade.isRoot()) {
-            oUser = userRepository.findById(id);
-        } else if (authenticationFacade.isOrganizationAdmin()) {
+            return userRepository.findById(id)
+                                 .orElseThrow(() -> new NotFoundException(id));
+        } else {
             String ownerName = authenticationFacade.getLogin();
 
             User owner = userRepository.findByLoginIgnoreCase(ownerName)
@@ -346,17 +339,10 @@ public class UserService {
             Set<Organization> organizations = owner.getOrganizations();
             Organization organization = organizations.iterator().next();
 
-            oUser = organization
-                    .getUsers().stream()
-                    .filter(u -> u.getId().equals(id))
-                    .findFirst();
-        } else {
-            Optional<User> someUser = userRepository.findById(id);
-            if (someUser.isPresent() && authenticationFacade.getLogin().equals(someUser.get().getEmail())) {
-                oUser = someUser;
-            }
+            return organization.getUsers().stream()
+                               .filter(user -> user.getId().equals(id))
+                               .findFirst()
+                               .orElseThrow(() -> new NotFoundException(id));
         }
-
-        return oUser;
     }
 }

@@ -12,8 +12,8 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class UpdateTaskRequest implements IRequest<Task>, Auditable {
 
-    private TaskUpdateDto taskUpdateDto;
-    private Long taskId;
+    private final TaskUpdateDto taskUpdateDto;
+    private final Long taskId;
     private Task task;
 
     public UpdateTaskRequest(TaskUpdateDto taskUpdateDto, Long taskId) {

@@ -30,10 +30,6 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         checkCookieAndWriteAsCurrent(response);
     }
 
-    public void loginAs(String email, String password) {
-        loginAsUserWithEmailAndPassword(email, password);
-    }
-
     public void loginAsCurrentUser() {
         System.out.println("login as current user: " + userDto.getEmail());
 
@@ -42,7 +38,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         checkCookieAndWriteAsCurrent(response);
     }
 
-    public void loginAsUserWithEmailAndPassword(String email, String password) {
+    public void loginAs(String email, String password) {
         response = authorizeUser(email, password, "user");
 
         checkCookieAndWriteAsCurrent(response);

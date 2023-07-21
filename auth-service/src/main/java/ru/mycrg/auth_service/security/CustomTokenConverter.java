@@ -19,6 +19,8 @@ import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.auth_facade.JwtDetails.*;
+
 public class CustomTokenConverter extends JwtAccessTokenConverter {
 
     private final Logger log = LoggerFactory.getLogger(CustomTokenConverter.class);
@@ -75,12 +77,15 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
 
             Set<Integer> minions = new HashSet<>();
             fetchMinions(minions, user.getId());
+            Set<Integer> directMinions = fetchDirectMinions(user.getId());
+            minions.removeAll(directMinions);
 
-            additionalInfo.put("user_id", user.getId());
-            additionalInfo.put("user_name", user.getGeoserverLogin());
-            additionalInfo.put("crg_login", user.getLogin());
-            additionalInfo.put("groups", usersGroups);
-            additionalInfo.put("minions", minions);
+            additionalInfo.put(USER_ID, user.getId());
+            additionalInfo.put(USER_NAME, user.getGeoserverLogin());
+            additionalInfo.put(USER_CRG_LOGIN, user.getLogin());
+            additionalInfo.put(GROUPS, usersGroups);
+            additionalInfo.put(MINIONS, minions);
+            additionalInfo.put(DIRECT_MINIONS, directMinions);
 
             Optional<IdNameProjection> oOrganization;
             if (orgId == null) {
@@ -100,17 +105,23 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
             }
 
             oOrganization.ifPresent(org -> {
-                additionalInfo.put("organizations", List.of(org));
+                additionalInfo.put(ORGANIZATIONS, List.of(org));
             });
         }
 
         return additionalInfo;
     }
 
+    private Set<Integer> fetchDirectMinions(Long bossId) {
+        return userRepository.findByBossId(bossId.intValue())
+                             .stream().map(user -> user.getId().intValue())
+                             .collect(Collectors.toSet());
+    }
+
     private void fetchMinions(Set<Integer> minions, Long bossId) {
         Set<Integer> currentMinions = userRepository.findByBossId(bossId.intValue())
-                                                     .stream().map(user -> user.getId().intValue())
-                                                     .collect(Collectors.toSet());
+                                                    .stream().map(user -> user.getId().intValue())
+                                                    .collect(Collectors.toSet());
 
         minions.addAll(currentMinions);
 

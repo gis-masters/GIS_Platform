@@ -40,7 +40,7 @@ Feature: Управление реестрами
       | System 314 | goo | SOME_OTHER | some impossible body |
       | System 1   | fiz | SOME_OTHER | some yellow body     |
     When Администратор делает запрос на выборку из реестра входящих с фильтрацией по полю "<filterKey>" и значению "<filterValue>"
-    Then В выборке присутствуют определённое кол-во элементов: "<expected>"
+    Then В выборке присутствуют определённое кол-во элементов: <expected>
     Examples:
       | filterKey | filterValue | expected |
       | system    | System 314  | 2        |

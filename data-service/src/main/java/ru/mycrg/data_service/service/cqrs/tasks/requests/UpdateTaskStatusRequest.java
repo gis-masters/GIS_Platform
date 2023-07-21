@@ -12,8 +12,8 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class UpdateTaskStatusRequest implements IRequest<Task>, Auditable {
 
-    private TaskStatus taskStatus;
-    private Long taskId;
+    private final Long taskId;
+    private final TaskStatus taskStatus;
 
     public UpdateTaskStatusRequest(TaskStatus taskStatus, Long taskId) {
         this.taskStatus = taskStatus;

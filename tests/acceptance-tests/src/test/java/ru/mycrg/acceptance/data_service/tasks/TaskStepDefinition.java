@@ -1,15 +1,23 @@
 package ru.mycrg.acceptance.data_service.tasks;
 
-import io.cucumber.java.en.And;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.dto.TaskCreateDto;
+import ru.mycrg.data_service_contract.enums.TaskStatus;
 
+import java.util.List;
+
+import static io.restassured.http.ContentType.JSON;
 import static org.junit.Assert.assertEquals;
+import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 public class TaskStepDefinition extends BaseStepsDefinitions {
 
@@ -17,6 +25,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     public static TaskCreateDto taskCreateDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
+    private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -24,80 +33,115 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                     .basePath("/api/data/tasks");
     }
 
-    @When("Отправляется запрос на создание задачи {string} {string} {string} {string}")
-    public void createTaskRequest(String assignedTo,
-                                  String ownerId,
+    @Given("Создана задача")
+    public void createTaskForOrgOwner() {
+        userStepsDefinitions.getCurrent();
+        Integer ownerId = response.jsonPath().get("id");
+
+        createTaskRequest(ownerId, ownerId, "CUSTOM", "test description");
+    }
+
+    @Given("Существуют задачи")
+    public void initTasks(DataTable dataTable) {
+        List<List<String>> tasks = dataTable.asLists();
+        for (List<String> task: tasks) {
+            int assignedToId = getUserIdByName(task.get(0));
+            int ownerId = getUserIdByName(task.get(1));
+
+            taskCreateDto = new TaskCreateDto(task.get(2), (long) assignedToId, (long) ownerId, null, task.get(3));
+            createTask(taskCreateDto);
+
+            assertEquals(201, response.statusCode());
+        }
+    }
+
+    @Given("Текущая задача переведена в статус {string}")
+    public void updateStatus(String status) {
+        updateCurrentTaskStatus(TaskStatus.valueOf(status));
+
+        assertEquals(204, response.getStatusCode());
+    }
+
+    @When("я меняю статус текущей задачи на: {string}")
+    public void updateStatus2(String status) {
+        updateCurrentTaskStatus(TaskStatus.valueOf(status));
+    }
+
+    @When("Отправляется запрос на создание задачи {int} {int} {string} {string}")
+    public void createTaskRequest(int assignedTo,
+                                  int ownerId,
                                   String type,
                                   String description) {
-        taskCreateDto = new TaskCreateDto(type,
-                                          Long.valueOf(assignedTo),
-                                          Long.valueOf(ownerId),
-                                          null,
-                                          description);
-
-        createTask(taskCreateDto);
-
-        currentTaskId = extractEntityIdFromResponse(response);
-    }
-
-    @Given("Существует задача")
-    public void initDataset() {
-        taskCreateDto = new TaskCreateDto("CUSTOM", 1L, 1L, null, "test");
+        taskCreateDto = new TaskCreateDto(type, (long) assignedTo, (long) ownerId, null, description);
 
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
     }
 
-    @When("Переведение текущей задачи в статус IN_PROGRESS")
-    public void setTaskInProgress() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        put("/" + currentTaskId + "/in-progress");
+    @When("я создаю задачу на пользователя {string}")
+    public void createTaskRequest(String userName) {
+        int ownerId = getUserIdByName(userName);
 
-        assertEquals(204, response.getStatusCode());
+        taskCreateDto = new TaskCreateDto("CUSTOM", (long) ownerId, (long) ownerId, null, "description");
+
+        createTask(taskCreateDto);
+        currentTaskId = extractEntityIdFromResponse(response);
     }
 
-    @When("Переведение текущей задачи в статус DONE")
-    public void setTaskInDone() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        put("/" + currentTaskId + "/done");
+    @When("пользователем {string} создана задача на пользователя {string}")
+    public void createTaskRequest(String creatorName, String ownerName) {
+        UserCreateDto creator = getUserByName(creatorName);
+        authorizationBase.loginAs(creator.getEmail(), creator.getPassword());
 
-        assertEquals(204, response.getStatusCode());
+        int ownerId = getUserIdByName(ownerName);
+        taskCreateDto = new TaskCreateDto("CUSTOM", (long) ownerId, (long) ownerId, null, "old description");
+
+        createTask(taskCreateDto);
+        currentTaskId = extractEntityIdFromResponse(response);
     }
 
-    @When("Переведение текущей задачи в статус CANCEL")
-    public void setTaskInCancel() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        put("/" + currentTaskId + "/cancel");
-
-        assertEquals(204, response.getStatusCode());
+    @When("я меняю описание текущей задачи на: {string}")
+    public void updateTasksDescription(String description) {
+        updateCurrentTask("{\"description\": \"" + description + "\"}");
     }
 
-    @And("Задача имеет статус {string}")
-    public void checkTaskStatus(String status) {
+    @When("я делаю выборку всех задач")
+    public void getAllTasks() {
+        getTasks();
+
+        assertEquals(200, response.getStatusCode());
+    }
+
+    @When("я делаю выборку всех задач с фильтром {string}")
+    public void getAllTasks(String filter) {
+        getTasks(filter);
+
+        assertEquals(200, response.getStatusCode());
+    }
+
+    @Then("описание текущей задачи изменено на: {string}")
+    public void checkDescriptionForCurrentTask(String expectedDescription) {
         getTaskByIdentifier(currentTaskId);
 
-        String statusFromDb = response.jsonPath().get("status");
+        String currentDescription = response.jsonPath().get("description");
 
-        assertEquals(status, statusFromDb);
+        assertEquals(expectedDescription, currentDescription);
+    }
+
+    @Then("задача изменила статус на {string}")
+    public void checkStatusForCurrentTask(String expectedStatus) {
+        getTaskByIdentifier(currentTaskId);
+
+        String currentStatus = response.jsonPath().get("status");
+
+        assertEquals(expectedStatus, currentStatus);
     }
 
     private void createTask(TaskCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
+                        contentType(JSON)
                 .when().
                         log().ifValidationFails().
                         post();
@@ -107,5 +151,50 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + taskId);
+    }
+
+    private void getTasks() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+    }
+
+    private void getTasks(String filter) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?filter=" + filter);
+    }
+
+    private void updateCurrentTaskStatus(TaskStatus status) {
+        String apiWay = "";
+        if (status.equals(IN_PROGRESS)) {
+            apiWay = "in-progress";
+        } else if (status.equals(DONE)) {
+            apiWay = "done";
+        } else if (status.equals(CANCELED)) {
+            apiWay = "cancel";
+        }
+
+        updateCurrentTaskStatus(currentTaskId, apiWay);
+    }
+
+    private void updateCurrentTaskStatus(int taskId, String way) {
+        String url = String.format("/%d/%s", taskId, way);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(JSON)
+                .when().
+                        log().ifValidationFails().
+                        put(url);
+    }
+
+    private void updateCurrentTask(String json) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(json).
+                        contentType(PATCH_CONTENT_TYPE)
+                .when().
+                        patch("/" + currentTaskId);
     }
 }

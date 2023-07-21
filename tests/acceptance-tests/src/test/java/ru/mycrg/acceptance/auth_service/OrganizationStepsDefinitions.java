@@ -10,13 +10,12 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
+import ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.data_service_contract.enums.TaskType;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
@@ -32,7 +31,13 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static String emailForFeature;
     public static OrganizationCreateDto orgDto;
 
+    private static final Map<String, Boolean> knownOrgTemplates = new HashMap<>() {{
+        put("для тестирования доступности задач согласно иерархии пользователей", false);
+    }};
+
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
+    private final TaskStepDefinition taskStepDefinition = new TaskStepDefinition();
+    private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
     private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
 
     @When("Отправляется запрос на создание организации")
@@ -206,10 +211,16 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         clearAllOrganizationPools();
 
         if (isOrgExistInPool(eMail)) {
+            System.out.println("---OrgExistInPool--- " + eMail);
+
             makeExactOrgAsCurrent(eMail);
         } else if (!orgPool.isEmpty() && isPassedEmailRandom) {
+            System.out.println("---makeFirstAvailableOrgAsCurrent---");
+
             makeFirstAvailableOrgAsCurrent();
         } else {
+            System.out.println("---sendCreateOrganizationRequest---");
+
             sendCreateOrganizationRequest(dataTable);
 
             assertEquals(SC_ACCEPTED, response.getStatusCode());
@@ -218,6 +229,159 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
             waitUntilOrganizationSuccessfullyCreated(orgId);
         }
+    }
+
+    @Given("Существует организация созданная по шаблону: {string}")
+    public void initEnhancedOrganization(String orgTemplate) throws InterruptedException {
+        if (!knownOrgTemplates.containsKey(orgTemplate)) {
+            throw new IllegalStateException(
+                    String.format("Unknown orgTemplate: %s Plz implement it first!", orgTemplate));
+        }
+
+        if ("для тестирования доступности задач согласно иерархии пользователей".equals(orgTemplate)) {
+            Boolean orgCreated = knownOrgTemplates.get(orgTemplate);
+            if (!orgCreated) {
+                List<String> org1 = new ArrayList<>();
+                org1.add("ООО Задачи");
+                org1.add("1234567888");
+                org1.add("orgOwner");
+                org1.add("Задач");
+                org1.add("EMAIL_11");
+                org1.add("aA111111");
+
+                List<List<String>> orgData = new ArrayList<>();
+                orgData.add(org1);
+
+                sendCreateOrganizationRequest(DataTable.create(orgData));
+                assertEquals(SC_ACCEPTED, response.getStatusCode());
+                checkOrgIdInLocationSetAsCurrentPutInPool();
+                waitUntilOrganizationSuccessfullyCreated(orgId);
+
+                authorizationBase.loginAsOwner();
+                userStepsDefinitions.createUsersByHierarchy("Иерархия вариант 1");
+                initTasks();
+
+                knownOrgTemplates.put(orgTemplate, true);
+            } else {
+                System.out.println("Organization already created by template: " + orgTemplate);
+            }
+        }
+    }
+
+    private void initTasks() {
+        // Create tasks as owner
+        authorizationBase.loginAsOwner();
+        List<String> task1 = new ArrayList<>();
+        task1.add("orgOwner");
+        task1.add("orgOwner");
+        task1.add(TaskType.CUSTOM.name());
+        task1.add("orgOwner task 1");
+
+        List<String> task2 = new ArrayList<>();
+        task2.add("orgOwner");
+        task2.add("orgOwner");
+        task2.add(TaskType.CUSTOM.name());
+        task2.add("orgOwner task 2");
+
+        List<String> task3 = new ArrayList<>();
+        task3.add("fiz1");
+        task3.add("fiz1");
+        task3.add(TaskType.CUSTOM.name());
+        task3.add("fiz1 task 1");
+
+        List<String> task4 = new ArrayList<>();
+        task4.add("fiz1");
+        task4.add("fiz1");
+        task4.add(TaskType.CUSTOM.name());
+        task4.add("fiz1 task 2");
+
+        List<String> task5 = new ArrayList<>();
+        task5.add("fiz1");
+        task5.add("fiz1");
+        task5.add(TaskType.CUSTOM.name());
+        task5.add("fiz1 task 3");
+
+        List<String> task6 = new ArrayList<>();
+        task6.add("fiz2");
+        task6.add("fiz2");
+        task6.add(TaskType.CUSTOM.name());
+        task6.add("fiz2 task 1");
+
+        List<String> task7 = new ArrayList<>();
+        task7.add("fiz2");
+        task7.add("fiz2");
+        task7.add(TaskType.CUSTOM.name());
+        task7.add("fiz2 task 2");
+
+        List<List<String>> tasksForOwner = new ArrayList<>();
+        tasksForOwner.add(task1);
+        tasksForOwner.add(task2);
+        tasksForOwner.add(task3);
+        tasksForOwner.add(task4);
+        tasksForOwner.add(task5);
+        tasksForOwner.add(task6);
+        tasksForOwner.add(task7);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForOwner));
+
+        // Create tasks as fiz2
+        UserCreateDto user2 = getUserByName("fiz2");
+        authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
+
+        List<String> task8 = new ArrayList<>();
+        task8.add("fiz3");
+        task8.add("fiz3");
+        task8.add(TaskType.CUSTOM.name());
+        task8.add("fiz3 task 1");
+
+        List<List<String>> tasksForFiz2 = new ArrayList<>();
+        tasksForFiz2.add(task8);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz2));
+
+        // Create tasks as fiz3
+        UserCreateDto user3 = getUserByName("fiz3");
+        authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
+
+        List<String> task9 = new ArrayList<>();
+        task9.add("fiz4");
+        task9.add("fiz4");
+        task9.add(TaskType.CUSTOM.name());
+        task9.add("fiz4 task 1");
+
+        List<String> task10 = new ArrayList<>();
+        task10.add("fiz4");
+        task10.add("fiz4");
+        task10.add(TaskType.CUSTOM.name());
+        task10.add("fiz4 task 2");
+
+        List<String> task11 = new ArrayList<>();
+        task11.add("fiz4");
+        task11.add("fiz4");
+        task11.add(TaskType.CUSTOM.name());
+        task11.add("fiz4 task 3");
+
+        List<List<String>> tasksForFiz4 = new ArrayList<>();
+        tasksForFiz4.add(task9);
+        tasksForFiz4.add(task10);
+        tasksForFiz4.add(task11);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz4));
+
+        // Create tasks as fiz5
+        UserCreateDto user5 = getUserByName("fiz5");
+        authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
+
+        List<String> task5_1 = new ArrayList<>();
+        task5_1.add("fiz5");
+        task5_1.add("fiz5");
+        task5_1.add(TaskType.CUSTOM.name());
+        task5_1.add("fiz5 task 1");
+
+        List<List<String>> tasksForFiz5 = new ArrayList<>();
+        tasksForFiz5.add(task5_1);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz5));
     }
 
     @Given("Существует новая организация")

@@ -2,15 +2,19 @@ package ru.mycrg.data_service.service.cqrs.tasks.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.entity.Task;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.TaskRepository;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service_contract.dto.TaskCreateDto;
-import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.data_service_contract.enums.TaskType;
 import ru.mycrg.mediator.IRequestHandler;
+
+import java.util.List;
+import java.util.Objects;
 
 @Component
 public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskRequest, Task> {
@@ -29,23 +33,28 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
 
     @Override
     public Task handle(CreateTaskRequest request) {
-        Long userId = authenticationFacade.getUserDetails().getUserId();
         TaskCreateDto taskCreateDto = request.getTaskCreateDto();
+        Long ownerId = taskCreateDto.getOwnerId();
 
-        Task task = new Task();
-        task.setAssignedTo(taskCreateDto.getAssignedTo());
-        task.setCreatedBy(userId);
-        task.setStatus(TaskStatus.CREATED);
-        task.setDueDate(taskCreateDto.getDueDate());
-        task.setOwnerId(taskCreateDto.getOwnerId());
-        task.setType(TaskType.valueOf(taskCreateDto.getType()));
-        task.setDescription(taskCreateDto.getDescription());
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+        List<Long> directMinions = userDetails.getDirectMinions();
 
-        task = taskRepository.save(task);
+        if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
+            throw new BadRequestException("Задачу можно назначить только на своего непосредственного подчиненного");
+        }
 
-        request.setTask(task);
+        Task task = new Task(TaskType.valueOf(taskCreateDto.getType()),
+                             ownerId,
+                             taskCreateDto.getAssignedTo(),
+                             taskCreateDto.getDueDate(),
+                             taskCreateDto.getDescription(),
+                             userDetails.getUserId());
 
-        taskLogService.create(new TaskLogDto("Создание новой задачи", task.getId()), taskCreateDto);
+        Task newTask = taskRepository.save(task);
+
+        request.setTask(newTask);
+
+        taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask);
 
         return task;
     }

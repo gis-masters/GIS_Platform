@@ -12,7 +12,6 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service_contract.dto.TaskCreateDto;
 import ru.mycrg.data_service_contract.dto.TaskUpdateDto;
-import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
@@ -21,6 +20,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.util.StringUtil.camelCaseToSnakeCaseForEcqlFilter;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 @RestController
 @RequestMapping(value = "/tasks")
@@ -34,35 +34,35 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @PostMapping
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> createTask(@Valid @RequestBody TaskCreateDto taskCreateDto) {
-        Task createdTask = mediator.execute(new CreateTaskRequest(taskCreateDto));
-
-        return new ResponseEntity<>(createdTask, CREATED);
-    }
-
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getTasks(
+    public ResponseEntity<Object> getAll(
             @RequestParam(name = "filter", required = false, defaultValue = "") String ecqlFilter,
             Pageable pageable) {
-        Page<Task> tasks = taskService.findAll(camelCaseToSnakeCaseForEcqlFilter(ecqlFilter), pageable);
+        Page<Task> tasks = taskService.getAll(camelCaseToSnakeCaseForEcqlFilter(ecqlFilter), pageable);
 
         return ResponseEntity.ok(pageFromList(tasks, pageable));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<Task> getById(@PathVariable Long id) {
         Task task = taskService.getById(id);
 
         return ResponseEntity.ok(task);
     }
 
+    @PostMapping
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> create(@Valid @RequestBody TaskCreateDto taskCreateDto) {
+        Task createdTask = mediator.execute(new CreateTaskRequest(taskCreateDto));
+
+        return new ResponseEntity<>(createdTask, CREATED);
+    }
+
     @PatchMapping("/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> updateTask(@Valid @RequestBody TaskUpdateDto taskUpdateDto, @PathVariable Long id) {
+    public ResponseEntity<Object> update(@Valid @RequestBody TaskUpdateDto taskUpdateDto, @PathVariable Long id) {
         mediator.execute(new UpdateTaskRequest(taskUpdateDto, id));
 
         return ResponseEntity.noContent().build();
@@ -71,7 +71,7 @@ public class TaskController {
     @PutMapping("/{id}/done")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> setStatusToDone(@PathVariable Long id) {
-        mediator.execute(new UpdateTaskStatusRequest(TaskStatus.DONE, id));
+        mediator.execute(new UpdateTaskStatusRequest(DONE, id));
 
         return ResponseEntity.noContent().build();
     }
@@ -79,7 +79,7 @@ public class TaskController {
     @PutMapping("/{id}/in-progress")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> setStatusToProgress(@PathVariable Long id) {
-        mediator.execute(new UpdateTaskStatusRequest(TaskStatus.IN_PROGRESS, id));
+        mediator.execute(new UpdateTaskStatusRequest(IN_PROGRESS, id));
 
         return ResponseEntity.noContent().build();
     }
@@ -87,7 +87,7 @@ public class TaskController {
     @PutMapping("/{id}/cancel")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> setStatusToCancel(@PathVariable Long id) {
-        mediator.execute(new UpdateTaskStatusRequest(TaskStatus.CANCELED, id));
+        mediator.execute(new UpdateTaskStatusRequest(CANCELED, id));
 
         return ResponseEntity.noContent().build();
     }
