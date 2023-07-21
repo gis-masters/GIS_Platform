@@ -7,6 +7,7 @@ import ru.mycrg.data_service_contract.enums.TaskType;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
@@ -49,6 +50,39 @@ public class Task {
 
     @Column(name = "due_date")
     private LocalDate dueDate;
+
+    @Column
+    private UUID guid;
+
+    @Column
+    private String number;
+
+    @Column
+    private LocalDate date;
+
+    @Column
+    private String personName;
+
+    @Column
+    private String coverLetterNum;
+
+    @Column
+    private LocalDate coverLetterDate;
+
+    @Column
+    private String requestType;
+
+    @Column
+    private String isName;
+
+    @Column
+    private String dataType;
+
+    @Column
+    private String recordStatus;
+
+    @Column
+    private String userName;
 
     public Task() {
         // Required
@@ -152,5 +186,93 @@ public class Task {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public UUID getGuid() {
+        return guid;
+    }
+
+    public void setGuid(UUID guid) {
+        this.guid = guid;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
+    }
+
+    public String getCoverLetterNum() {
+        return coverLetterNum;
+    }
+
+    public void setCoverLetterNum(String coverLetterNum) {
+        this.coverLetterNum = coverLetterNum;
+    }
+
+    public LocalDate getCoverLetterDate() {
+        return coverLetterDate;
+    }
+
+    public void setCoverLetterDate(LocalDate coverLetterDate) {
+        this.coverLetterDate = coverLetterDate;
+    }
+
+    public String getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(String requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getIsName() {
+        return isName;
+    }
+
+    public void setIsName(String isName) {
+        this.isName = isName;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getRecordStatus() {
+        return recordStatus;
+    }
+
+    public void setRecordStatus(String recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -16,5 +16,6 @@ public enum ValueType {
     BINARY,
     FIAS,
     FILE,
-    DOCUMENT
+    DOCUMENT,
+    USER_ID
 }
