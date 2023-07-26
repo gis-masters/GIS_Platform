@@ -6,34 +6,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.service.GisogdRfIntegrator;
+import ru.mycrg.data_service.service.gisogd.GisogdRfPublisher;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
 @RestController
-@RequestMapping("/gisogd_rf")
+@RequestMapping("/gisogd-rf")
 public class GisogdRfController {
 
-    private final GisogdRfIntegrator gisogdRfIntegrator;
+    private final GisogdRfPublisher gisogdRfPublisher;
 
-    public GisogdRfController(GisogdRfIntegrator gisogdRfIntegrator) {
-        this.gisogdRfIntegrator = gisogdRfIntegrator;
+    public GisogdRfController(GisogdRfPublisher gisogdRfPublisher) {
+        this.gisogdRfPublisher = gisogdRfPublisher;
     }
 
     @PostMapping("/send")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> send(@RequestParam String libraryId,
-                                       @RequestParam(required = false, defaultValue = "") String contentTypeId) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId, LIBRARY);
+                                       @RequestParam Long recordId) {
+        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId, recordId, LIBRARY);
 
-        final String tokenGisogdRF = gisogdRfIntegrator.getTokenGisogdRF();
+        Long taskId = gisogdRfPublisher.publish(qualifier);
 
-        gisogdRfIntegrator.send(tokenGisogdRF, lQualifier, contentTypeId);
-
-        return ResponseEntity.status(OK).build();
+        return ResponseEntity.status(CREATED).body(taskId);
     }
 }

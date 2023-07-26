@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -11,7 +12,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +51,23 @@ public class BaseDao {
 
             return Optional.empty();
         }
+    }
+
+    public IRecord findBy(ResourceQualifier qualifier,
+                          String ecqlFilter,
+                          @Nullable SchemaDto schema) {
+        String query = String.format("SELECT * FROM %s %s",
+                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
+        log.debug("Find by schema and by filter: [{}]", query);
+
+        return pJdbcTemplate
+                .getJdbcTemplate()
+                .queryForObject(query, new RecordRowMapper(schema));
+    }
+
+    public IRecord findBy(ResourceQualifier qualifier,
+                          String ecqlFilter) {
+        return findBy(qualifier, ecqlFilter, null);
     }
 
     public <T> List<T> findAll(ResourceQualifier qualifier,

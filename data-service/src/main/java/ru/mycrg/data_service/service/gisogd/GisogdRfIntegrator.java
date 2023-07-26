@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.service.gisogd;
 
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -9,6 +9,7 @@ import ru.mycrg.data_service.config.IntegrationConfig;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

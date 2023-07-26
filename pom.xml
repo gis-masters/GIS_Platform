@@ -85,6 +85,7 @@
         <module>contracts/data-service-contract</module>
         <module>contracts/audit-service-contract</module>
         <module>contracts/resource-analyzer-contract</module>
+        <module>contracts/gisogd-service-contract</module>
 
         <module>contracts/messagebus-starter</module>
         <module>contracts/validator</module>
