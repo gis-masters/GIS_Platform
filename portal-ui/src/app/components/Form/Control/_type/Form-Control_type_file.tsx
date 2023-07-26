@@ -13,7 +13,7 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, formRole, errors, fieldValue, fullWidthForOldForm } = this.props;
     let value = (fieldValue || []) as FileInfo[];
 
     try {
@@ -26,7 +26,13 @@ class FormControlTypeFile extends Component<FormControlProps> {
 
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
-        <Files value={value} property={property as PropertySchemaFile} editable onChange={this.handleChange} />
+        <Files
+          showPlaceAction={formRole === 'viewDocument'}
+          value={value}
+          property={property as PropertySchemaFile}
+          editable
+          onChange={this.handleChange}
+        />
         <FormErrors errors={errors} />
       </div>
     );

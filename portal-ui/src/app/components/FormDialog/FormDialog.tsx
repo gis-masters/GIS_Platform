@@ -14,6 +14,7 @@ import { getDefaultValues } from '../Form/Form.utils';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { Button, ButtonProps } from '../Button/Button';
+import { FormRole } from '../Form/Form.async';
 import { FormProps } from '../Form/Form';
 
 const cnFormDialog = cn('FormDialog');
@@ -24,6 +25,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;
+  formRole?: FormRole;
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
@@ -50,6 +52,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       open,
       unclosable = false,
       schema,
+      formRole,
       value = getDefaultValues(schema.properties),
       additionalAction,
       actionButtonProps = {},
@@ -75,6 +78,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 className={cnFormDialog()}
                 schema={schema}
                 value={value}
+                formRole={formRole}
                 auto
                 onFormSubmit={this.submitHandler}
                 onFormChange={onFormChange}

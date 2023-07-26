@@ -26,6 +26,8 @@ import '!style-loader!css-loader!sass-loader!./Form.scss';
 
 const cnForm = cn('Form');
 
+export type FormRole = 'viewDocument';
+
 export interface FormProps<T>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
   schema?: Schema | SimpleSchema;
@@ -39,6 +41,7 @@ export interface FormProps<T>
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
   actions?: ReactNode;
   readonly?: boolean;
+  formRole?: FormRole;
   labelInTextField?: boolean;
   auto?: boolean;
   actionFunction?: (value: T) => Promise<void> | void;
@@ -114,6 +117,7 @@ export default class Form<T> extends Component<FormProps<T>> {
       onActionError,
       actions,
       readonly,
+      formRole,
       labelInTextField,
       actionFunction,
       auto,
@@ -128,6 +132,7 @@ export default class Form<T> extends Component<FormProps<T>> {
           <FormContent<T>
             schema={schema}
             formValue={this.value}
+            formRole={formRole}
             onFormChange={this.changeHandler}
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}

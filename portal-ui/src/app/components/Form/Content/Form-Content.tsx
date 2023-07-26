@@ -18,6 +18,7 @@ import { FormControl } from '../Control/Form-Control.composed';
 import { FormView } from '../View/Form-View.composed';
 import { FormField } from '../Field/Form-Field';
 import { FormLabel } from '../Label/Form-Label';
+import { FormRole } from '../Form.async';
 
 import '!style-loader!css-loader!sass-loader!../Relations/Form-Relations.scss';
 
@@ -28,6 +29,7 @@ interface FormContentProps<T> extends IClassNameProps {
   schema: Schema | SimpleSchema;
   formValue: Partial<T>;
   errors?: FieldErrors[];
+  formRole?: FormRole;
   onFormChange?: (changedValue: Partial<T>) => void;
   onFieldChange?: (value: T[keyof T & string], propertyName: keyof T & string, prevValue: T[keyof T & string]) => void;
   onFieldNeedValidate?: (value: T[keyof T & string], propertyName: keyof T & string) => void;
@@ -38,7 +40,7 @@ interface FormContentProps<T> extends IClassNameProps {
 @observer
 export class FormContent<T> extends Component<FormContentProps<T>> {
   render() {
-    const { schema, formValue, className, errors = [], readonly, labelInTextField } = this.props;
+    const { schema, formValue, className, formRole, errors = [], readonly, labelInTextField } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
@@ -81,6 +83,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
               {propertyReadonly ? (
                 <FormView
                   property={propertySchema}
+                  formRole={formRole}
                   type={propertySchema.propertyType}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   errors={propertyErrors}
@@ -89,6 +92,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                 <FormControl
                   htmlId={htmlId}
                   property={propertySchema}
+                  formRole={formRole}
                   type={propertySchema.propertyType}
                   onChange={this.fieldChangeHandler}
                   onNeedValidate={this.fieldNeedValidateHandler}

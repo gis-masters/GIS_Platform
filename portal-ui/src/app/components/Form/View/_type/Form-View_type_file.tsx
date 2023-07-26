@@ -14,7 +14,7 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 @observer
 class FormViewTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, errors, fieldValue, formRole, fullWidthForOldForm } = this.props;
     let value = (fieldValue || []) as FileInfo[];
 
     try {
@@ -28,7 +28,11 @@ class FormViewTypeFile extends Component<FormControlProps> {
     return (
       <div className={cnFormView({ inSet, fullWidthForOldForm }, [className])}>
         {value.length ? (
-          <Files value={value} property={property as PropertySchemaFile} />
+          <Files
+            showPlaceAction={formRole === 'viewDocument'}
+            value={value}
+            property={property as PropertySchemaFile}
+          />
         ) : (
           <FormViewValue>—</FormViewValue>
         )}

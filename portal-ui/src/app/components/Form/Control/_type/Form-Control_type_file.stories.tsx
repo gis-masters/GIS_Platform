@@ -25,6 +25,15 @@ const fieldsSingle: PropertySchema[] = [
   }
 ];
 
+const fileFieldsMultiple: PropertySchema[] = [
+  {
+    propertyType: PropertyType.FILE,
+    name: 'files',
+    multiple: true,
+    title: 'dxf'
+  }
+];
+
 const fieldsMultiple: PropertySchema[] = [
   {
     propertyType: PropertyType.FILE,
@@ -37,6 +46,10 @@ const fieldsMultiple: PropertySchema[] = [
 ];
 
 const singleFileData: [FileInfo] = [{ id: 'someId', title: 'cert.pdf', size: 666 }];
+const multipleFilesData2: FileInfo[] = [
+  { id: 'someId11', title: 'test.dxf', size: 666 },
+  { id: 'someId11', title: 'test.gml', size: 666 }
+];
 const multipleFilesData: FileInfo[] = [
   { id: 'someId1', title: '.htaccess', size: 666 },
   { id: 'someId2', title: 'long.extension', size: 666 },
@@ -51,13 +64,14 @@ const multipleFilesData: FileInfo[] = [
   }
 ];
 const valueSingle: TestData = { certificate: singleFileData };
+const valueMultiple2: TestData = { files: multipleFilesData2 };
 const valueMultiple: TestData = { photos: multipleFilesData };
 const valueMultipleScroll: TestData = { photos: [...multipleFilesData, ...multipleFilesData] };
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
 const settings: OrgSettings = {
-  id: '10',
+  id: 10,
   organization: {
     createLibraryItem: true,
     createProject: true,
@@ -99,6 +113,21 @@ export const SingleEditableEmpty = Template.bind({});
 SingleEditableEmpty.args = {
   schema: { properties: fieldsSingle },
   value: {},
+  auto: true
+};
+
+export const MultipleEditableWithFormRoleViewDocument = Template.bind({});
+MultipleEditableWithFormRoleViewDocument.args = {
+  schema: { properties: fileFieldsMultiple },
+  value: valueMultiple2,
+  formRole: 'viewDocument',
+  auto: true
+};
+
+export const MultipleEditableWithoutFormRoles = Template.bind({});
+MultipleEditableWithoutFormRoles.args = {
+  schema: { properties: fileFieldsMultiple },
+  value: valueMultiple2,
   auto: true
 };
 

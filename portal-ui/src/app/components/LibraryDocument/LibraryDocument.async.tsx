@@ -60,7 +60,14 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
         <Breadcrumbs className={cnLibraryDocument('Breadcrumbs')} itemsType='link' items={this.breadcrumbsItems} />
 
         <div className={cnLibraryDocument('DocumentCard')}>
-          {this.schema && <ViewContentWidget schema={this.schema} data={document} title='Карточка документа' />}
+          {this.schema && (
+            <ViewContentWidget
+              formRole='viewDocument'
+              schema={this.schema}
+              data={document}
+              title='Карточка документа'
+            />
+          )}
         </div>
 
         <div className={cnLibraryDocument('Date')}>

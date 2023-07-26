@@ -61,7 +61,12 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
         {this.currentRecord && (
           <>
             <ExplorerInfoDescItem multiline>
-              <ViewContentWidget schema={this.schema} data={this.currentRecord} title='Карточка документа' />
+              <ViewContentWidget
+                formRole='viewDocument'
+                schema={this.schema}
+                data={this.currentRecord}
+                title='Карточка документа'
+              />
             </ExplorerInfoDescItem>
 
             <PermissionsWidget

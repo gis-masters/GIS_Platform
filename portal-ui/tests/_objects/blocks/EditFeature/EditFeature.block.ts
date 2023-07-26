@@ -30,8 +30,7 @@ class EditFeatureBlock extends Block {
     const $editFeatureLoader = await this.$('editFeatureLoading');
     await $editFeatureLoader.waitForDisplayed({ reverse: true });
 
-    const $editFeatureForm = await this.$('editFeatureForm');
-    await $editFeatureForm.waitForDisplayed({ timeout: 4000 });
+    await this.waitForEditFeatureForm();
 
     const values = await this.getFormFieldsLabels();
     await expect(values).toEqual([title]);
@@ -79,6 +78,11 @@ class EditFeatureBlock extends Block {
     const $container = await editFeatureBlock.$('container');
 
     return await extractValues(await $container.$$('.EditFeatureGeometry-CoordInput input'));
+  }
+
+  async waitForEditFeatureForm(): Promise<void> {
+    const $editFeatureForm = await this.$('editFeatureForm');
+    await $editFeatureForm.waitForDisplayed({ timeout: 4000 });
   }
 
   async changeEditFormFieldValue(title: string, value: string): Promise<void> {

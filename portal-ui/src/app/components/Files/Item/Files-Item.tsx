@@ -40,6 +40,7 @@ interface FilesItemProps {
   statusText: string | undefined;
   numerous: boolean;
   multiple: boolean;
+  showPlaceAction?: boolean;
   onDelete(item: FileInfo): void;
   onPreview(item: FileInfo): void;
 }
@@ -80,7 +81,7 @@ export class FilesItem extends Component<FilesItemProps> {
   }
 
   render() {
-    const { item, editable, status, file, statusText, numerous, multiple, onPreview } = this.props;
+    const { item, editable, status, file, statusText, numerous, multiple, showPlaceAction, onPreview } = this.props;
     const ext = getFileExtension(item.title);
     const baseName = getFileBaseName(item.title);
     const disabled = ['loading', 'new', 'error'].includes(status);
@@ -94,7 +95,7 @@ export class FilesItem extends Component<FilesItemProps> {
           {!!status && <LookupStatus status={status} statusText={statusText} />}
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-            {(isGmlFile(item) || isDxfFile(item)) && <FilesPlacement fileInfo={item} />}
+            {showPlaceAction && (isGmlFile(item) || isDxfFile(item)) && <FilesPlacement fileInfo={item} />}
             {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
             {editable && <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />}
           </LookupActions>

@@ -29,6 +29,7 @@ export interface FilesProps {
   value: FileInfo[];
   property: PropertySchemaFile;
   editable?: boolean;
+  showPlaceAction?: boolean;
   onChange?(value: FileInfo[]): void;
 }
 
@@ -56,7 +57,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   render() {
-    const { value, property, editable } = this.props;
+    const { value, property, editable, showPlaceAction } = this.props;
     const { multiple } = property;
     const numerous = value.length > 1;
 
@@ -75,6 +76,7 @@ export default class Files extends Component<FilesProps> {
                     onPreview={this.previewHandler}
                     key={`${item.id}_${i}`}
                     editable={editable}
+                    showPlaceAction={showPlaceAction}
                     status={newbie?.status}
                     file={newbie?.file}
                     statusText={newbie?.statusText}

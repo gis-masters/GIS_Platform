@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
+import { FormRole } from '../Form/Form.async';
 
 import '!style-loader!css-loader!sass-loader!./ViewContentWidget.scss';
 
@@ -14,14 +15,15 @@ interface ViewContentWidgetProps {
   schema: Schema | SimpleSchema;
   data: unknown;
   title: string;
+  formRole?: FormRole;
 }
 
-export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema, title }) => (
+export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema, title, formRole }) => (
   <>
     <span className={cnViewContentWidget('Title')}>{title}:</span>
     <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
       <RegistryConsumer id='common'>
-        {({ Form }: CommonDiRegistry) => <Form schema={schema} value={data} readonly />}
+        {({ Form }: CommonDiRegistry) => <Form formRole={formRole} schema={schema} value={data} readonly />}
       </RegistryConsumer>
     </Paper>
   </>

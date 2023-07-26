@@ -17,7 +17,7 @@ Then(
 Then('форма просмотра объекта открывается в режиме {string}', async function (mode: string) {
   const expected = mode === 'чтения';
 
-  await editFeatureBlock.waitForVisible();
+  await editFeatureBlock.waitForEditFeatureForm();
   const isReadonly = await editFeatureBlock.isReadonlyMode();
 
   await expect(isReadonly).toEqual(expected);

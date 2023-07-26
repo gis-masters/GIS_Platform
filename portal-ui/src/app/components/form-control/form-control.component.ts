@@ -82,6 +82,7 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
         property: convertedProperty,
         type: convertedProperty.propertyType,
         fieldValue: value,
+        formRole: 'viewDocument',
         variant: 'outlined',
         onChange: this.handleChange,
         fullWidthForOldForm: true
