@@ -51,14 +51,20 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
         updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
     }
 
-    @When("Владелец организации устанавливает свойство {string} в значение {string}")
-    public void updateSpecificOrgSettingAsOwner(String key, String value) {
+    @When("Владелец организации устанавливает настройки организации {string}")
+    public void updateSpecificOrgSettingAsOwner(String settings) {
         authorizationBase.loginAsOwner();
 
-        Map<String, Object> settings = new HashMap<>();
-        settings.put(key, value);
+        List<String> settingsArray = new ArrayList<>(Arrays.asList(settings.split(",")));
+        Map<String, Object> settingsMap = new HashMap<>();
+        settingsArray.forEach(setting -> {
+            setting = setting.trim();
+            String[] settingsSplit = setting.split(":");
 
-        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
+            settingsMap.put(settingsSplit[0], settingsSplit[1]);
+        });
+
+        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settingsMap)));
     }
 
     @And("Возвращает существующие настройки и их описание")

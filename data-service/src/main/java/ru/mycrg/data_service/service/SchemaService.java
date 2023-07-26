@@ -23,21 +23,53 @@ import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 public class SchemaService {
 
     private final DataSchemaRepository schemaRepository;
+    private final OrgSettingsKeeper orgSettingsKeeper;
 
-    public SchemaService(DataSchemaRepository schemaRepository) {
+    public SchemaService(DataSchemaRepository schemaRepository,
+                         OrgSettingsKeeper orgSettingsKeeper) {
         this.schemaRepository = schemaRepository;
+        this.orgSettingsKeeper = orgSettingsKeeper;
     }
 
     public List<SchemaDto> getSchemas(List<String> featureNames) {
+        List<SchemaDto> result;
         if (featureNames.isEmpty()) {
-            return schemaRepository.findAll().stream()
-                                   .map(SchemaMapper::mapToDto)
-                                   .collect(Collectors.toList());
+            result = schemaRepository.findAll().stream()
+                                     .map(SchemaMapper::mapToDto)
+                                     .collect(Collectors.toList());
         } else {
-            return schemaRepository.findByNameIn(featureNames).stream()
-                                   .map(SchemaMapper::mapToDto)
-                                   .collect(Collectors.toList());
+            result = schemaRepository.findByNameIn(featureNames).stream()
+                                     .map(SchemaMapper::mapToDto)
+                                     .collect(Collectors.toList());
         }
+
+        return result.stream()
+                     .filter(this::isAllowedBySettings)
+                     .collect(Collectors.toList());
+    }
+
+    /**
+     * Когда включены все приказы то возращаем все схемы Когда все приказы вЫключены то возращаем все схемы которые без
+     * тегов Когда вЫключен "приказ 10" то возращаем все схемы которые без тегов и 123 приказ Когда вЫключен "приказ
+     * 123" то возращаем все схемы которые без тегов и 10 приказ
+     *
+     * @param schema
+     */
+    private boolean isAllowedBySettings(SchemaDto schema) {
+        boolean byOrder10Allowed = orgSettingsKeeper.isOrder10Allowed();
+        boolean byOrder123Allowed = orgSettingsKeeper.isOrder123Allowed();
+
+        if (schema.getTags().isEmpty()) {
+            return true;
+        }
+        if (byOrder10Allowed && schema.getTags().contains("Приказ 10")) {
+            return true;
+        }
+        if (byOrder123Allowed && schema.getTags().contains("Приказ 123")) {
+            return true;
+        }
+
+        return false;
     }
 
     public List<SchemaDto> getSchemasWithReglaments() {
@@ -92,6 +124,28 @@ public class SchemaService {
      * регламентов
      */
     private boolean isReglamentsExist(Schema schema) {
+        AtomicBoolean isReglamentExist = new AtomicBoolean(false);
+        schema.getClassRule().get("properties").forEach(props -> {
+            if (props.get("valueType").toString().equals("\"" + URL.name() + "\"")) {
+                isReglamentExist.set(true);
+            }
+        });
+
+        return isReglamentExist.get();
+    }
+
+    private boolean isSchemaForPrikaz10(Schema schema) {
+        AtomicBoolean isReglamentExist = new AtomicBoolean(false);
+        schema.getClassRule().get("properties").forEach(props -> {
+            if (props.get("valueType").toString().equals("\"" + URL.name() + "\"")) {
+                isReglamentExist.set(true);
+            }
+        });
+
+        return isReglamentExist.get();
+    }
+
+    private boolean isSchemaForPrikaz123(Schema schema) {
         AtomicBoolean isReglamentExist = new AtomicBoolean(false);
         schema.getClassRule().get("properties").forEach(props -> {
             if (props.get("valueType").toString().equals("\"" + URL.name() + "\"")) {

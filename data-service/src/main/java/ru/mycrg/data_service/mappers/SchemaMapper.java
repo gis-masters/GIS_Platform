@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

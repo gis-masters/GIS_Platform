@@ -9,6 +9,7 @@ public class SchemaDto {
     private String title;
     private String description;
     private String tableName;
+    private List<String> tags = new ArrayList<>();
     private List<SimplePropertyDto> properties = new ArrayList<>();
     private String customRuleFunction = "";
     private String calcFiledFunction = "";
@@ -139,5 +140,13 @@ public class SchemaDto {
 
     public void setStyleName(String styleName) {
         this.styleName = styleName;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

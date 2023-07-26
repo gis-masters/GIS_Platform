@@ -23,6 +23,9 @@ public class AuthServiceConfig {
         knownSettings.put("reestrs", "Реестры");
         knownSettings.put("taskManagement", "Управление задачами");
 
+        knownSettings.put("prikaz_123", "Приказ 123");
+        knownSettings.put("prikaz_10", "Приказ 10");
+
         return knownSettings;
     }
 }

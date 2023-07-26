@@ -36,6 +36,7 @@ public class SchemaDto {
     private String definitionQuery;
     private boolean readOnly;
     private GeometryType geometryType;
+    private List<String> tags = new ArrayList<>();
     private List<ContentType> contentTypes = new ArrayList<>();
     private List<ContentType> views = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
@@ -183,5 +184,13 @@ public class SchemaDto {
 
     public boolean isCompatibleByGeometry(SchemaDto otherSchema) {
         return getGeometryType().equals(otherSchema.getGeometryType());
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 }

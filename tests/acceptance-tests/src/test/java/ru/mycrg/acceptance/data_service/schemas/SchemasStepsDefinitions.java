@@ -1,19 +1,23 @@
 package ru.mycrg.acceptance.data_service.schemas;
 
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.data_service.dto.schemas.SimplePropertyDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SchemasStepsDefinitions extends BaseStepsDefinitions {
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     public static String currentSchemaName;
 
@@ -23,6 +27,45 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
         return super.getBaseRequestWithCurrentCookie()
                     .basePath(basePath);
+    }
+
+    @When("Владелец организации делает запрос на все схемы")
+    public void fetchAllKnownSchemas() {
+        authorizationBase.loginAsOwner();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?schemaIds=");
+    }
+
+    @Then("Количество схем соответствует ожидаемому: {int}")
+    public void getSchemasCount(int schemasQuantity) {
+        int schemasCount = getEntitiesCount();
+        assertEquals(schemasQuantity, schemasCount);
+    }
+
+    @Then("В выборке схем отстутсвуют схемы с тэгом {string}")
+    public void checkThatNoSchemasWithTag(String tag) {
+        List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
+
+        long quantityHasTag = tagsFromSchemas.stream()
+                                             .filter(Objects::nonNull)
+                                             .filter(tags -> tags.contains(tag))
+                                             .count();
+
+        assertEquals(0, quantityHasTag);
+    }
+
+    @Then("В выборке схем присутствуют схемы с тэгом {string}")
+    public void checkThatSchemasWithTag(String tag) {
+        List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
+
+        long quantityHasTag = tagsFromSchemas.stream()
+                                             .filter(Objects::nonNull)
+                                             .filter(tags -> tags.contains(tag))
+                                             .count();
+
+        assertTrue(quantityHasTag > 0);
     }
 
     @When("Существует некая схема")
@@ -148,27 +191,30 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 createSchema(targetSchema);
 
                 break;
+            case "с тэгом 'Приказ 10'":
+                SchemaDto schemaWithOrder10 = prepareSchemaWithTags();
+                schemaWithOrder10.setName("schemaWithTagsOrder10");
+                schemaWithOrder10.setTitle("с тэгом 'Приказ 10'");
+                schemaWithOrder10.setTags(List.of("Приказ 10"));
+
+                createSchema(schemaWithOrder10);
+
+                break;
+            case "с тэгом 'Приказ 123'":
+                SchemaDto schemaWithOrder123 = prepareSchemaTarget();
+                schemaWithOrder123.setName("schemaWithTagsOrder123");
+                schemaWithOrder123.setTitle("с тэгом 'Приказ 123");
+                schemaWithOrder123.setTags(List.of("Приказ 123"));
+
+                createSchema(schemaWithOrder123);
+
+                break;
             default:
                 throw new IllegalStateException("Unknown schema: " + schemaTemplate);
         }
     }
 
-    private void createSchema(SchemaDto dto) {
-        currentSchemaName = dto.getName();
-        scenarioSchemas.put(dto.getTitle(), dto);
-
-        super.createEntity(dto);
-
-        if (response.statusCode() == 409) {
-            System.out.println("Схема уже существует, обновим");
-
-            updateCurrentSchema(dto);
-        } else if (response.statusCode() != 201) {
-            throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
-        }
-    }
-
-    public void updateCurrentSchema(SchemaDto dto) {
+    private void updateCurrentSchema(SchemaDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
@@ -197,6 +243,21 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         dto.setReadOnly(true);
 
         return dto;
+    }
+
+    private void createSchema(SchemaDto dto) {
+        currentSchemaName = dto.getName();
+        scenarioSchemas.put(dto.getTitle(), dto);
+
+        super.createEntity(dto);
+
+        if (response.statusCode() == 409) {
+            System.out.println("Схема уже существует, обновим");
+
+            updateCurrentSchema(dto);
+        } else if (response.statusCode() != 201) {
+            throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
+        }
     }
 
     private SchemaDto prepareFunctionalZoneWithCalculatedFields() {
@@ -290,7 +351,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                         "  ]" +
                         "}", SchemaDto.class);
     }
-    
+
     private SchemaDto prepareHardcodedDefaultSchema() {
         return gson.fromJson(
                 "{" +
@@ -575,6 +636,56 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                         "  \"tableName\": \"copy_test_consumer\"," +
                         "  \"styleName\": \"generic\"," +
                         "  \"geometryType\": \"MultiPolygon\"," +
+                        "  \"properties\": [" +
+                        "    {" +
+                        "      \"name\": \"field_1\"," +
+                        "      \"title\": \"area_generated_1\"," +
+                        "      \"valueType\": \"DOUBLE\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_2\"," +
+                        "      \"title\": \"area_generated_2\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_3\"," +
+                        "      \"title\": \"choice->string\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_4\"," +
+                        "      \"title\": \"string->choice\"," +
+                        "      \"valueType\": \"CHOICE\"," +
+                        "      \"enumerations\": [" +
+                        "        {" +
+                        "          \"title\": \"first option\"," +
+                        "          \"value\": \"1\"" +
+                        "        }," +
+                        "        {" +
+                        "          \"title\": \"second option\"," +
+                        "          \"value\": \"2\"" +
+                        "        }" +
+                        "      ]" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"shape\"," +
+                        "      \"title\": \"Поле для геометрии\"," +
+                        "      \"valueType\": \"GEOMETRY\"" +
+                        "    }" +
+                        "  ]" +
+                        "}", SchemaDto.class);
+    }
+
+    private SchemaDto prepareSchemaWithTags() {
+        return gson.fromJson(
+                "{" +
+                        "  \"name\": \"schemaWithTags\"," +
+                        "  \"title\": \"Схема для тестирования тэгов\"," +
+                        "  \"readOnly\": false," +
+                        "  \"tableName\": \"copy_test_consumer\"," +
+                        "  \"styleName\": \"generic\"," +
+                        "  \"geometryType\": \"MultiPolygon\"," +
+                        "  \"tags\": []," +
                         "  \"properties\": [" +
                         "    {" +
                         "      \"name\": \"field_1\"," +

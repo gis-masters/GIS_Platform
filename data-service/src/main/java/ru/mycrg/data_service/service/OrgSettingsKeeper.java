@@ -35,7 +35,19 @@ public class OrgSettingsKeeper {
         throwIfNotAllowed("reestrs");
     }
 
-    public void throwIfNotAllowed(String setting) {
+    public boolean isOrder10Allowed() {
+        Object oSetting = serviceSettings.get("prikaz_10");
+
+        return oSetting == null || Boolean.parseBoolean(oSetting.toString());
+    }
+
+    public boolean isOrder123Allowed() {
+        Object oSetting = serviceSettings.get("prikaz_123");
+
+        return oSetting == null || Boolean.parseBoolean(oSetting.toString());
+    }
+
+    private void throwIfNotAllowed(String setting) {
         Object oSetting = serviceSettings.get(setting);
         if (oSetting != null && !Boolean.parseBoolean(oSetting.toString())) {
             log.info("{} notAllowed by settings", oSetting);
