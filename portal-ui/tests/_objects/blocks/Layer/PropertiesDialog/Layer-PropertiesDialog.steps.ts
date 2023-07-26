@@ -16,3 +16,10 @@ When('в диалоговом окне `Свойства слоя` нажима�
 
   await attributesBlock.waitForLoadingDisappear();
 });
+
+When(
+  'в диалоговом окне свойств слоя у формы в поле {string} типа string я ввожу значение {string}',
+  async (title: string, value: string) => {
+    await layerPropertiesDialogBlock.setStringFieldValue(title, value);
+  }
+);
