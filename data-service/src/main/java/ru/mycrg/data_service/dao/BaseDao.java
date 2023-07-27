@@ -70,6 +70,22 @@ public class BaseDao {
         return findBy(qualifier, ecqlFilter, null);
     }
 
+    public Optional<IRecord> findById(ResourceQualifier qualifier,
+                                      @Nullable SchemaDto schema) {
+        String query = String.format("SELECT * FROM %s WHERE id = :id", qualifier.getTableQualifier());
+
+        log.debug("find record by id: [{}]", query);
+
+        return pJdbcTemplate.query(query,
+                                   new MapSqlParameterSource("id", qualifier.getRecordId()),
+                                   new RecordRowMapper(schema))
+                            .stream().findFirst();
+    }
+
+    public Optional<IRecord> findById(ResourceQualifier qualifier) {
+        return findById(qualifier, null);
+    }
+
     public <T> List<T> findAll(ResourceQualifier qualifier,
                                String ecqlFilter,
                                Pageable pageable,

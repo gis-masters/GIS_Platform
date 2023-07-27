@@ -100,24 +100,7 @@ public class RecordsDao {
 
     public Optional<IRecord> findById(ResourceQualifier qualifier,
                                       SchemaDto schema) {
-        try {
-            String query = String.format("SELECT * FROM %s WHERE id = :id", qualifier.getTableQualifier());
-
-            log.debug("find record by id: [{}]", query);
-
-            List<IRecord> records = pJdbcTemplate.query(query,
-                                                        new MapSqlParameterSource("id", qualifier.getRecordId()),
-                                                        new RowMapperResultSetExtractor<>(
-                                                                new RecordRowMapper(schema)
-                                                        ));
-            if (records == null || records.isEmpty()) {
-                return Optional.empty();
-            }
-
-            return Optional.ofNullable(records.get(0));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        return baseDao.findById(qualifier, schema);
     }
 
     //Сейчас подходит только для третьей библиотеки. Захардкоженнный запрос.

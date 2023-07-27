@@ -1,7 +1,5 @@
 package ru.mycrg.gisog_service_contract;
 
-import ru.mycrg.gisog_service_contract.dto.LandPlot;
-import ru.mycrg.gisog_service_contract.dto.Territory;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.util.Map;
@@ -15,21 +13,18 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
     private Map<String, Object> document;
     private Map<String, Object> inboxData;
-    private Territory territory;
-    private LandPlot landPlot;
+    private Map<String, Object> layer;
 
     public PublishToGisogdRfEvent(String token,
                                   Map<String, Object> document,
                                   Map<String, Object> inboxData,
-                                  Territory territory,
-                                  LandPlot landPlot) {
+                                  Map<String, Object> layer) {
         super(UUID.randomUUID(), DATA_TO_GISOGD_QUEUE);
 
         this.token = token;
         this.document = document;
         this.inboxData = inboxData;
-        this.territory = territory;
-        this.landPlot = landPlot;
+        this.layer = layer;
     }
 
     public String getToken() {
@@ -56,19 +51,11 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
         this.document = document;
     }
 
-    public Territory getTerritory() {
-        return territory;
+    public Map<String, Object> getLayer() {
+        return layer;
     }
 
-    public void setTerritory(Territory territory) {
-        this.territory = territory;
-    }
-
-    public LandPlot getLandPlot() {
-        return landPlot;
-    }
-
-    public void setLandPlot(LandPlot landPlot) {
-        this.landPlot = landPlot;
+    public void setLayer(Map<String, Object> layer) {
+        this.layer = layer;
     }
 }

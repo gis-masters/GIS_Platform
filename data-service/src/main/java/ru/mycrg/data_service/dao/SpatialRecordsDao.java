@@ -46,6 +46,17 @@ public class SpatialRecordsDao {
         this.sqlParameterSourceFactory = parameterSourceMapperFactory;
     }
 
+    public String fetchGeometryAsGeoJson(ResourceQualifier qualifier, int srid) {
+        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape, %d)) FROM %s WHERE %s = %d",
+                              srid, qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecordIdAsLong());
+
+        log.debug("fetch geometry as text: [{}]", query);
+
+        return pJdbcTemplate.queryForObject(query,
+                                            new MapSqlParameterSource(PRIMARY_KEY, qualifier.getRecordIdAsLong()),
+                                            String.class);
+    }
+
     public Optional<Feature> findById(ResourceQualifier qualifier, SchemaDto schema) {
         try {
             String query = format("SELECT * FROM %s WHERE %s = %d",
