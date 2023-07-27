@@ -16,12 +16,13 @@ import { Delete, DeleteOutline, ExpandMore } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
-import { getFileConnections } from '../../../services/data/files/files.service';
-import { FileConnection } from '../../../services/data/files/files.models';
 import { Schema } from '../../../services/data/schema/schema.models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
+import { FileConnection } from '../../../services/data/files/files.models';
+import { getFileConnections } from '../../../services/data/files/files.service';
 import { getLibraryRecordFiles } from '../../../services/data/files/files.util';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/docLibrary/docLibrary.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { Button } from '../../Button/Button';
 
@@ -46,9 +47,9 @@ interface FileConnections {
 export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActionsDeleteProps> {
   @observable private dialogOpen = false;
   @observable private busy = false;
-  @observable private deleteAllowed: boolean;
-  @observable private btnLoading: boolean;
-  @observable private errorMessage: string;
+  @observable private deleteAllowed = false;
+  @observable private btnLoading = false;
+  @observable private errorMessage = '';
   @observable private connections?: FileConnections[];
 
   constructor(props: LibraryDocumentActionsDeleteProps) {
@@ -135,7 +136,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
     await this.showFilesConnections();
 
     this.setErrorMessage(
-      records.length ? 'Раздел не пустой. Для его удаления необходимо сперва удалить все элементы внутри.' : undefined
+      records.length ? 'Раздел не пустой. Для его удаления необходимо сперва удалить все элементы внутри.' : ''
     );
   }
 
@@ -198,6 +199,6 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
 
   @action
   private setConnections(connections: FileConnections[]) {
-    this.connections = connections.filter(Boolean);
+    this.connections = connections.filter(notFalsyFilter);
   }
 }

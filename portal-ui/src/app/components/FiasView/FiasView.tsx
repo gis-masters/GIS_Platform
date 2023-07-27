@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { Fias } from '../../services/data/fias/fias.models';
+import { FiasValue } from '../../services/data/fias/fias.models';
 
 const cnFiasView = cn('FiasView');
 
 interface FiasViewProps {
-  value: Fias;
+  value: FiasValue;
 }
 
 export const FiasView: FC<FiasViewProps> = ({ value }) => (

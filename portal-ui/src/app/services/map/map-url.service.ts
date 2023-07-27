@@ -1,14 +1,15 @@
 import { Coordinate } from 'ol/coordinate';
 
-import { services } from '../services';
-import { sleep } from '../util/sleep';
 import { mapStore } from '../../stores/Map.store';
-import { extractFeatureId } from '../geoserver/feature.util';
 import { Pages, route } from '../../stores/Route.store';
-import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { buildFeaturesUrlFragment, FeaturesUrlFragment } from './map.util';
+import { extractFeatureId } from '../geoserver/feature.util';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
+import { services } from '../services';
+import { sleep } from '../util/sleep';
 
 export async function setMapPositionToUrl(zoom: number, center: Coordinate): Promise<void> {
   await sleep(100);
@@ -34,7 +35,7 @@ export async function setEnabledLayerToUrl(): Promise<void> {
         return layer.id;
       }
     })
-    .filter(Boolean);
+    .filter(notFalsyFilter);
 
   if (layers) {
     await sleep(200);
@@ -79,7 +80,7 @@ export async function setSelectedFeaturesToUrl(): Promise<void> {
   await services.ngZone.run(async () => {
     await services.router.navigate([location.pathname], {
       queryParams: {
-        features: getFeaturesUrlFragment(mapStore.selectedFeatures),
+        features: mapStore.selectedFeatures ? getFeaturesUrlFragment(mapStore.selectedFeatures) : null,
         queryFilter: null,
         queryLayers: null
       },

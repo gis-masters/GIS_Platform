@@ -97,7 +97,7 @@ export async function placeFile(
   const { path, id, title } = await getFile(file.id);
   const group = layersGroupCreating && (await layersGroupCreating);
 
-  const rasterLayer: CrgRasterLayer = {
+  const rasterLayer: Omit<CrgRasterLayer, 'id'> = {
     title: getFileBaseName(title),
     type: CrgLayerType.RASTER,
     mode: fileOptions.mode,

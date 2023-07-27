@@ -3,16 +3,17 @@ import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
 import { getPointResolution } from 'ol/proj';
 
+import { mapStore } from '../../stores/Map.store';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
+import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { saveAsBlob } from '../util/FileSaver';
 import { mapService } from './map.service';
-import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
-import { mapStore } from '../../stores/Map.store';
-import { Legend } from '../../components/Legend/Legend';
-import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { sleep } from '../util/sleep';
+import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
+import { Legend } from '../../components/Legend/Legend';
 
 const BASE_SCALE_LINE_DPI = 150;
 
@@ -74,7 +75,14 @@ interface MapImageOptions {
 }
 
 export async function getMapImage(options: MapImageOptions = {}): Promise<string> {
-  const { resolution, withDesignations, translateX, translateY, mime, hideScaleDigits } = {
+  const {
+    resolution,
+    withDesignations,
+    translateX,
+    translateY,
+    mime,
+    hideScaleDigits = false
+  } = {
     resolution: printSettings.resolution,
     withDesignations: true,
     translateX: 0,
@@ -87,6 +95,10 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
 
   const { map, view, scaleLine } = mapService;
   const { width, height, legend, showSystemLayers } = printSettings;
+
+  if (!map || !view || !scaleLine) {
+    throw new Error('Map is not initialized');
+  }
 
   const size = map.getSize();
   const viewResolution = view.getResolution();
@@ -111,16 +123,31 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       mapCanvas.width = width;
       mapCanvas.height = height;
       const mapContext = mapCanvas.getContext('2d');
+      if (!mapContext) {
+        throw new Error('Canvas context is not initialized');
+      }
       mapContext.fillStyle = '#ffffff';
       mapContext.fillRect(0, 0, width, height);
 
-      document.querySelectorAll('.ol-layer canvas').forEach((canvas: HTMLCanvasElement) => {
+      document.querySelectorAll('.ol-layer canvas').forEach((canvas: Element) => {
+        if (!(canvas instanceof HTMLCanvasElement)) {
+          throw new TypeError('Canvas is not canvas');
+        }
+
         if (canvas.width > 0) {
+          const parent = canvas.parentElement;
+          if (!parent) {
+            throw new Error('Impossible, but parent is not found');
+          }
           const opacity = canvas.parentElement.style.opacity;
           mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
 
           // Get the transform parameters from the style's transform matrix
-          const matrix = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform)[1].split(',').map(Number);
+          const matrixTransform = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform);
+          if (!matrixTransform) {
+            throw new Error('Matrix transform is not found');
+          }
+          const matrix = matrixTransform[1].split(',').map(Number);
 
           // Apply the transform to the export map context
           CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix as unknown as [DOMMatrix2DInit]);
@@ -233,6 +260,9 @@ async function drawWindRose(mapContext: CanvasRenderingContext2D, designationsRe
       roseCanvas.width = size;
       roseCanvas.height = size;
       const roseContext = roseCanvas.getContext('2d');
+      if (!roseContext) {
+        throw new Error('Canvas context is not initialized');
+      }
       roseContext.save();
       roseContext.translate(size / 2, size / 2);
       roseContext.rotate(rotation);
@@ -295,7 +325,10 @@ async function getDateImageSrc(resolution?: number): Promise<string> {
 
 async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): Promise<void> {
   for (const item of mapStore.measureItems) {
-    const container = item.tooltipOverlay.getElement().parentElement;
+    const container = item.tooltipOverlay.getElement()?.parentElement;
+    if (!container) {
+      continue;
+    }
     const translateFound = /(-?\d+(?:\.\d+)?)px, (-?\d+(?:\.\d+)?)px/.exec(container.style.transform);
 
     if (!translateFound) {
@@ -393,12 +426,16 @@ async function autoFilterLegend() {
               l => l.type === CrgLayerType.VECTOR && l.tableName === identifier && l.dataset === dataset
             );
 
+            if (!layer) {
+              return;
+            }
+
             return printSettings.allLegend.find(
               legendRule => legendRule.layerId === layer.id && legendRule.name === ruleName
             );
           })
         )
-        .filter(Boolean)
+        .filter(notFalsyFilter)
     );
   } catch {
     printSettings.setLegendItems(printSettings.allLegend);
@@ -408,18 +445,25 @@ async function autoFilterLegend() {
 function setPrintSize(resolution: number, translateX: number, translateY: number) {
   const { map, view, scaleLine } = mapService;
   const { width, height, scale } = printSettings;
-  const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, view.getCenter());
+
+  if (!map || !view || !scaleLine) {
+    throw new Error('Map is not initialized');
+  }
+
+  const center = view.getCenter();
+
+  if (!center) {
+    throw new Error('Map center is not initialized');
+  }
+
+  const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, center);
 
   scaleLine.setDpi(resolution);
   map.setSize([width, height]);
   view.setResolution(scaleResolution);
 
   if (translateX || translateY) {
-    view.centerOn(
-      view.getCenter(),
-      [width, height],
-      [width / 2 + width * translateX, height / 2 + height * translateY]
-    );
+    view.centerOn(center, [width, height], [width / 2 + width * translateX, height / 2 + height * translateY]);
   }
 }
 

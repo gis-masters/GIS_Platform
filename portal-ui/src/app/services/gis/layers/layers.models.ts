@@ -10,8 +10,8 @@ export enum CrgLayerType {
 }
 
 interface CrgEntity {
+  id: number;
   title: string;
-  id?: number;
   enabled?: boolean;
   position?: number;
   transparency?: number;

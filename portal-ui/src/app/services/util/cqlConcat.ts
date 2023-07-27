@@ -1,3 +1,5 @@
+import { notFalsyFilter } from './NotFalsyFilter';
+
 export function cqlConcat(...queries: (string | undefined | null)[]): string {
-  return queries.filter(Boolean).join(' AND ');
+  return queries.filter(notFalsyFilter).join(' AND ');
 }

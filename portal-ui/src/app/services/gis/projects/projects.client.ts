@@ -71,7 +71,7 @@ class ProjectsClient extends GisClient {
     return http.get<CrgLayersGroup[]>(this.getProjectGroupsUrl(projectId));
   }
 
-  async createGroup(group: CrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
+  async createGroup(group: Omit<CrgLayersGroup, 'id'>, projectId: number): Promise<CrgLayersGroup> {
     return http.post<CrgLayersGroup>(this.getProjectGroupsUrl(projectId), group);
   }
 

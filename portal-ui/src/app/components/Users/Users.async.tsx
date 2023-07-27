@@ -3,12 +3,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { MinimizedCrgUser } from '../../services/auth/users/users.models';
-
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
+import { Toast } from '../Toast/Toast';
+
 import { UsersAdd } from './Add/Users-Add';
 import { UsersItem } from './Item/Users-Item';
-import { LookupList } from '../Lookup/List/Lookup-List';
-import { Toast } from '../Toast/Toast';
 
 const cnUsers = cn('Users');
 
@@ -23,7 +24,7 @@ export default class Users extends Component<UsersProps> {
   render() {
     const { value, multiple = false, editable = false } = this.props;
     const numerous = value.length > 1;
-    const clearedValue = value.filter(Boolean);
+    const clearedValue = value.filter(notFalsyFilter);
 
     return (
       <Lookup className={cnUsers()}>

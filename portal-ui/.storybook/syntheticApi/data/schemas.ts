@@ -21,7 +21,6 @@ export const schemas: OldSchema[] = [
         name: 'shape',
         required: true,
         valueType: ValueType.GEOMETRY,
-        sequenceNumber: 21,
         allowedValues: ['Polygon']
       },
       {
@@ -30,7 +29,6 @@ export const schemas: OldSchema[] = [
         required: true,
         valueType: ValueType.CHOICE,
         foreignKeyType: 'INTEGER',
-        sequenceNumber: 2,
         enumerations: [
           { value: '2', title: 'Не выполнялось' },
           { value: '1', title: 'Готов' },
@@ -43,8 +41,7 @@ export const schemas: OldSchema[] = [
         name: 'project',
         title: 'Ссылка на проект',
         required: true,
-        valueType: ValueType.URL,
-        sequenceNumber: 3
+        valueType: ValueType.URL
       },
       {
         name: 'ruleid',
@@ -52,26 +49,22 @@ export const schemas: OldSchema[] = [
         required: true,
         hidden: true,
         valueType: ValueType.STRING,
-        sequenceNumber: 10,
         maxLength: 254
       },
       {
         name: 'proj_date',
         title: 'Дата формирования проекта',
-        valueType: ValueType.DATETIME,
-        sequenceNumber: 4
+        valueType: ValueType.DATETIME
       },
       {
         name: 'last_apd',
         title: 'Дата последнего обновления данных',
-        valueType: ValueType.DATETIME,
-        sequenceNumber: 5
+        valueType: ValueType.DATETIME
       },
       {
         name: 'contact',
         title: 'Контактное лицо',
         valueType: ValueType.STRING,
-        sequenceNumber: 6,
         maxLength: 254
       },
       {
@@ -82,7 +75,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 7,
         maxLength: 254
       },
       {
@@ -93,7 +85,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 8,
         enumerations: [
           { value: '1', title: 'Доступ предоставлен' },
           { value: '1', title: 'Доступ не предоставлен' },
@@ -107,8 +98,7 @@ export const schemas: OldSchema[] = [
         hidden: false,
         objectIdentityOnUi: false,
         readOnly: false,
-        valueType: ValueType.DATETIME,
-        sequenceNumber: 9
+        valueType: ValueType.DATETIME
       },
       {
         name: 'note',
@@ -118,7 +108,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: true,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 1,
         maxLength: 254
       },
       {
@@ -130,7 +119,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.CHOICE,
         foreignKeyType: 'STRING',
-        sequenceNumber: 8,
         enumerations: [
           { value: 'Соколова', title: 'Соколова' },
           { value: 'Лютикова', title: 'Лютикова' },
@@ -166,7 +154,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.INT,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -177,7 +164,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.BOOLEAN,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -188,7 +174,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -199,7 +184,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.INT,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -210,7 +194,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 500,
         minWidth: 0
       },
@@ -222,7 +205,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -234,7 +216,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -245,7 +226,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -257,7 +237,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 11,
         minWidth: 0
       },
@@ -269,7 +248,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -281,7 +259,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -292,7 +269,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -303,7 +279,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: '1.01', title: 'Схема территориального планирования Российской Федерации' },
@@ -461,7 +436,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: '0С.1', title: 'Действующий' },
@@ -476,7 +450,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -488,7 +461,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -500,7 +472,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 6,
         minWidth: 0
       },
       {
@@ -512,7 +483,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -523,7 +493,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -536,7 +505,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -547,7 +515,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -561,7 +528,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -572,7 +538,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -584,7 +549,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 6,
         minWidth: 0
       },
       {
@@ -595,7 +559,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -607,7 +570,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.GEOMETRY,
-        sequenceNumber: 10,
         minWidth: 0,
         allowedValues: ['Polygon']
       }
@@ -629,8 +591,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_status',
@@ -644,8 +605,7 @@ export const schemas: OldSchema[] = [
               { title: 'Действующий', value: '0С.1' },
               { title: 'Недействующий', value: '0С.2' }
             ],
-            allowedValues: [],
-            sequenceNumber: 2
+            allowedValues: []
           },
           {
             name: 'doc_num',
@@ -653,8 +613,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_date',
@@ -664,8 +623,7 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
           {
             name: 'org_name',
@@ -673,8 +631,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_num',
@@ -682,8 +639,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_date',
@@ -693,10 +649,9 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
-          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY, sequenceNumber: 2 }
+          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY }
         ],
         printTemplates: []
       },
@@ -713,8 +668,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_status',
@@ -728,8 +682,7 @@ export const schemas: OldSchema[] = [
               { title: 'Действующий', value: '0С.1' },
               { title: 'Недействующий', value: '0С.2' }
             ],
-            allowedValues: [],
-            sequenceNumber: 2
+            allowedValues: []
           },
           {
             name: 'doc_num',
@@ -737,8 +690,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_date',
@@ -748,8 +700,7 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
           {
             name: 'org_name',
@@ -757,8 +708,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_num',
@@ -766,8 +716,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_date',
@@ -777,10 +726,9 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
-          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY, sequenceNumber: 2 }
+          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY }
         ],
         printTemplates: []
       },
@@ -796,8 +744,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_status',
@@ -811,8 +758,7 @@ export const schemas: OldSchema[] = [
               { title: 'Действующий', value: '0С.1' },
               { title: 'Недействующий', value: '0С.2' }
             ],
-            allowedValues: [],
-            sequenceNumber: 2
+            allowedValues: []
           },
           {
             name: 'doc_num',
@@ -820,8 +766,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_date',
@@ -831,8 +776,7 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
           {
             name: 'org_name',
@@ -840,8 +784,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_num',
@@ -849,8 +792,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_date',
@@ -860,10 +802,9 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
-          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY, sequenceNumber: 2 }
+          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY }
         ],
         printTemplates: []
       },
@@ -879,8 +820,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_status',
@@ -889,8 +829,7 @@ export const schemas: OldSchema[] = [
             enumerations: [
               { title: 'Действующий', value: '0С.1' },
               { title: 'Недействующий', value: '0С.2' }
-            ],
-            sequenceNumber: 2
+            ]
           },
           {
             name: 'doc_num',
@@ -898,8 +837,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'doc_date',
@@ -909,8 +847,7 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
           {
             name: 'org_name',
@@ -918,8 +855,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_num',
@@ -927,8 +863,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: false,
             maxLength: 254,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           },
           {
             name: 'reg_date',
@@ -938,10 +873,9 @@ export const schemas: OldSchema[] = [
             required: false,
             valueType: ValueType.DATETIME,
             description: '',
-            allowedValues: [],
-            sequenceNumber: 6
+            allowedValues: []
           },
-          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY, sequenceNumber: 2 }
+          { name: 'binary', title: 'Выбор файла', required: true, valueType: ValueType.BINARY }
         ],
         printTemplates: []
       },
@@ -956,8 +890,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           }
         ],
         printTemplates: []
@@ -980,7 +913,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.INT,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -991,7 +923,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.BOOLEAN,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1002,7 +933,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.BOOLEAN,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1013,7 +943,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: 'Проектный', title: 'Проектный' },
@@ -1029,7 +958,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1040,7 +968,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.INT,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1051,7 +978,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 500,
         minWidth: 0
       },
@@ -1063,7 +989,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -1075,7 +1000,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1086,7 +1010,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -1098,7 +1021,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 11,
         minWidth: 0
       },
@@ -1110,7 +1032,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 500,
         minWidth: 0
       },
@@ -1122,7 +1043,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: 'GP', title: 'Генеральный план' },
@@ -1141,7 +1061,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [{ value: 'EPSG:28406', title: 'Pulkovo 1942 / Gauss-Kruger zone 6' }]
       },
@@ -1154,7 +1073,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.CHOICE,
         foreignKeyType: 'INTEGER',
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: '500000', title: '500000' },
@@ -1177,7 +1095,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       },
@@ -1189,7 +1106,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1200,7 +1116,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1211,7 +1126,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: '1.01', title: 'Схема территориального планирования Российской Федерации' },
@@ -1369,7 +1283,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.CHOICE,
-        sequenceNumber: 2,
         minWidth: 0,
         enumerations: [
           { value: '0С.1', title: 'Действующий' },
@@ -1384,7 +1297,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -1396,7 +1308,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -1408,7 +1319,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 6,
         minWidth: 0
       },
       {
@@ -1419,7 +1329,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 6,
         minWidth: 0
       },
       {
@@ -1431,7 +1340,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1442,7 +1350,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -1455,7 +1362,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1466,7 +1372,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 500,
         minWidth: 0
       },
@@ -1480,7 +1385,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         valueType: ValueType.LOOKUP,
         resourcePath: '/api/data/document-libraries/{documentLibraryId}',
-        sequenceNumber: 0,
         minWidth: 0
       },
       {
@@ -1491,7 +1395,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.DATETIME,
-        sequenceNumber: 6,
         minWidth: 0
       },
       {
@@ -1503,7 +1406,6 @@ export const schemas: OldSchema[] = [
         readOnly: false,
         multiple: true,
         valueType: ValueType.FILE,
-        sequenceNumber: 0,
         minWidth: 0,
         maxSize: 50000000,
         maxFiles: 10
@@ -1516,7 +1418,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 254,
         minWidth: 0
       },
@@ -1528,7 +1429,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.GEOMETRY,
-        sequenceNumber: 10,
         minWidth: 0,
         allowedValues: ['Polygon']
       },
@@ -1540,7 +1440,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.BINARY,
-        sequenceNumber: 2,
         minWidth: 0
       },
       {
@@ -1551,7 +1450,6 @@ export const schemas: OldSchema[] = [
         objectIdentityOnUi: false,
         readOnly: false,
         valueType: ValueType.STRING,
-        sequenceNumber: 0,
         maxLength: 50,
         minWidth: 0
       }
@@ -1567,7 +1465,7 @@ export const schemas: OldSchema[] = [
         title: 'Файл GML',
         icon: 'DOCUMENT',
         attributes: [
-          { name: 'title', required: true, sequenceNumber: 10 },
+          { name: 'title', required: true },
           {
             name: 'test_value',
             title: 'Документы территориального планирования',
@@ -1575,13 +1473,12 @@ export const schemas: OldSchema[] = [
             required: false,
             maxLength: 200,
             valueType: ValueType.STRING,
-            defaultValue: 'Территориальное планирование (Цифровая модель GML)',
-            sequenceNumber: 0
+            defaultValue: 'Территориальное планирование (Цифровая модель GML)'
           },
-          { name: 'approve_date', required: true, sequenceNumber: 20 },
-          { name: 'document_type', required: true, sequenceNumber: 30 },
-          { name: 'oktmo', required: true, sequenceNumber: 40 },
-          { name: 'scale', required: true, sequenceNumber: 50 },
+          { name: 'approve_date', required: true },
+          { name: 'document_type', required: true },
+          { name: 'oktmo', required: true },
+          { name: 'scale', required: true },
           { name: 'is_public' },
           {
             name: 'any_field_name',
@@ -1601,10 +1498,10 @@ export const schemas: OldSchema[] = [
         icon: 'GPZU',
         children: [],
         attributes: [
-          { name: 'title', required: true, sequenceNumber: 10 },
-          { name: 'oktmo', required: false, sequenceNumber: 20 },
-          { name: 'document_type', required: false, sequenceNumber: 30 },
-          { name: 'approve_date', required: false, sequenceNumber: 40 },
+          { name: 'title', required: true },
+          { name: 'oktmo', required: false },
+          { name: 'document_type', required: false },
+          { name: 'approve_date', required: false },
           {
             name: 'test_value',
             title: 'Документы территориального планирования',
@@ -1612,26 +1509,23 @@ export const schemas: OldSchema[] = [
             required: false,
             maxLength: 200,
             valueType: ValueType.STRING,
-            defaultValue: 'Генеральный план городских округов',
-            sequenceNumber: 0
+            defaultValue: 'Генеральный план городских округов'
           },
-          { name: 'scale', required: false, sequenceNumber: 50 },
-          { name: 'native_crs', required: false, sequenceNumber: 60 },
+          { name: 'scale', required: false },
+          { name: 'native_crs', required: false },
           {
             name: 'is_public',
             title: 'Публичный документ',
             hidden: false,
             required: false,
-            valueType: ValueType.BOOLEAN,
-            sequenceNumber: 0
+            valueType: ValueType.BOOLEAN
           },
           {
             name: 'is_folder',
             title: 'Признак раздела',
             hidden: false,
             required: false,
-            valueType: ValueType.BOOLEAN,
-            sequenceNumber: 0
+            valueType: ValueType.BOOLEAN
           },
           {
             name: 'status_type',
@@ -1644,8 +1538,7 @@ export const schemas: OldSchema[] = [
               { title: 'Утвержденный', value: 'Утвержденный' },
               { title: 'Архивный', value: 'Архивный' }
             ],
-            allowedValues: [],
-            sequenceNumber: 2
+            allowedValues: []
           },
           {
             name: 'any_field_name',
@@ -1664,10 +1557,10 @@ export const schemas: OldSchema[] = [
         title: 'Материалы по обоснованию в виде карт',
         icon: 'GPZU',
         attributes: [
-          { name: 'title', required: true, sequenceNumber: 10 },
-          { name: 'oktmo', required: true, sequenceNumber: 20 },
-          { name: 'document_type', required: true, sequenceNumber: 30 },
-          { name: 'approve_date', required: true, sequenceNumber: 40 },
+          { name: 'title', required: true },
+          { name: 'oktmo', required: true },
+          { name: 'document_type', required: true },
+          { name: 'approve_date', required: true },
           {
             name: 'test_value',
             title: 'Документы территориального планирования',
@@ -1675,11 +1568,10 @@ export const schemas: OldSchema[] = [
             required: false,
             maxLength: 50,
             valueType: ValueType.STRING,
-            defaultValue: 'Материалы по обоснованию в виде карт',
-            sequenceNumber: 0
+            defaultValue: 'Материалы по обоснованию в виде карт'
           },
-          { name: 'scale', required: true, sequenceNumber: 50 },
-          { name: 'native_crs', required: true, sequenceNumber: 60 },
+          { name: 'scale', required: true },
+          { name: 'native_crs', required: true },
           {
             name: 'status_type',
             title: 'Статус документа',
@@ -1691,10 +1583,9 @@ export const schemas: OldSchema[] = [
               { title: 'Утвержденный', value: 'Утвержденный' },
               { title: 'Архивный', value: 'Архивный' }
             ],
-            allowedValues: [],
-            sequenceNumber: 2
+            allowedValues: []
           },
-          { name: 'binary', required: true, sequenceNumber: 80 }
+          { name: 'binary', required: true }
         ],
         printTemplates: []
       },
@@ -1704,9 +1595,9 @@ export const schemas: OldSchema[] = [
         title: 'Материалы по обоснованию в текстовой форме',
         children: [],
         attributes: [
-          { name: 'title', required: true, sequenceNumber: 10 },
-          { name: 'approve_date', required: true, sequenceNumber: 40 },
-          { name: 'binary', required: true, sequenceNumber: 80 }
+          { name: 'title', required: true },
+          { name: 'approve_date', required: true },
+          { name: 'binary', required: true }
         ],
         printTemplates: []
       },
@@ -1716,9 +1607,9 @@ export const schemas: OldSchema[] = [
         title: 'Положение о территориальном планировании',
         children: [],
         attributes: [
-          { name: 'title', required: true, sequenceNumber: 10 },
-          { name: 'approve_date', required: true, sequenceNumber: 40 },
-          { name: 'binary', required: true, sequenceNumber: 80 }
+          { name: 'title', required: true },
+          { name: 'approve_date', required: true },
+          { name: 'binary', required: true }
         ],
         printTemplates: []
       },
@@ -1733,8 +1624,7 @@ export const schemas: OldSchema[] = [
             hidden: false,
             required: true,
             maxLength: 500,
-            valueType: ValueType.STRING,
-            sequenceNumber: 0
+            valueType: ValueType.STRING
           }
         ],
         printTemplates: []

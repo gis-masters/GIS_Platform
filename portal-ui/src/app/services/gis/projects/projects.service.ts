@@ -213,7 +213,7 @@ class ProjectsService {
     return await projectsClient.getProjectGroups(projectId);
   }
 
-  async createGroup(group: CrgLayersGroup, projectId: number): Promise<CrgLayersGroup> {
+  async createGroup(group: Omit<CrgLayersGroup, 'id'>, projectId: number): Promise<CrgLayersGroup> {
     return await projectsClient.createGroup(group, projectId);
   }
 

@@ -31,12 +31,12 @@ export const cnLayer = cn('Layer');
 
 export interface LayerProps extends IClassNameProps {
   isGroup: boolean;
-  isEmptyGroup: boolean;
+  isEmptyGroup?: boolean;
   data: TreeItemPayload;
-  depth: number;
-  visible: boolean;
-  hiddenByZoom: boolean;
-  errors: string[];
+  depth?: number;
+  visible?: boolean;
+  hiddenByZoom?: boolean;
+  errors?: string[];
   editMode: boolean;
   highlighted: boolean;
   onEyeClick: () => void;
@@ -124,7 +124,7 @@ export class Layer extends Component<LayerProps> {
   private get open(): boolean {
     const { isGroup, data } = this.props;
 
-    return isGroup ? (data as CrgLayersGroup).expanded : this._open;
+    return isGroup ? Boolean((data as CrgLayersGroup).expanded) : this._open;
   }
 
   @computed
@@ -197,7 +197,7 @@ export class Layer extends Component<LayerProps> {
     this.menuAnchor = e.target as HTMLButtonElement;
     this.menuOpen = true;
 
-    const button: HTMLButtonElement = document.querySelector(':focus');
+    const button: HTMLButtonElement | null = document.querySelector(':focus');
     if (button) {
       button.blur();
     }

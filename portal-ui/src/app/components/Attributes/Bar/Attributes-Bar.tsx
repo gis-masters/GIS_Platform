@@ -16,6 +16,7 @@ import { applyView } from '../../../services/data/schema/schema.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
+import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableColumn } from '../../XTable/XTable.models';
 import { XTableInvoke } from '../../XTable/XTable';
 
@@ -168,11 +169,20 @@ export class AttributesBar extends Component<AttributesBarProps> {
       filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
     );
 
-    const tableRecords: AttributesTableRecord[] = features.map(feature => ({
-      cutId: extractFeatureId(feature.id),
-      feature,
-      ...calculateValues(feature.properties, this.schema.properties)
-    }));
+    const tableRecords: AttributesTableRecord[] = features.map(feature => {
+      const featureCalcProperties = calculateValues(feature.properties, this.schema.properties);
+      const properties = this.schema?.properties || [];
+
+      for (const property of properties) {
+        featureCalcProperties[property.name] = convertToComplexField(property, featureCalcProperties);
+      }
+
+      return {
+        cutId: extractFeatureId(feature.id),
+        feature,
+        ...featureCalcProperties
+      };
+    });
 
     this.setFeaturesTotal(featuresTotal);
     this.setFeaturesMatched(featuresMatched);

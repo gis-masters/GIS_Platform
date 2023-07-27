@@ -16,7 +16,7 @@ export async function createLayer(newLayer: NewCrgLayer, projectId: number): Pro
   return await layersClient.createLayer(newLayer, projectId);
 }
 
-export async function createRasterLayer(layer: CrgRasterLayer, projectId: number): Promise<CrgLayer> {
+export async function createRasterLayer(layer: Omit<CrgRasterLayer, 'id'>, projectId: number): Promise<CrgLayer> {
   return await layersClient.createLayer(layer, projectId);
 }
 

@@ -3,7 +3,9 @@ import { AxiosRequestConfig } from 'axios';
 import { libraryRecordPermissionsSyntheticController } from './libraryRecordPermissions.syntheticController';
 import { libraryRecordsSyntheticController } from './libraryRecords.syntheticController';
 import { libraryRecordSyntheticController } from './libraryRecord.syntheticController';
+import { fiasAddressSyntheticController } from './fiasAddress.syntheticController';
 import { librariesSyntheticController } from './libraries.syntheticController';
+import { fiasOktmoSyntheticController } from './fiasOktmo.syntheticController';
 import { projectsSyntheticController } from './projects.syntheticController';
 import { librarySyntheticController } from './library.syntheticController';
 import { schemasSyntheticController } from './schemas.syntheticController';
@@ -28,7 +30,9 @@ const controllers: SyntheticController[] = [
   projectsSyntheticController,
   schemasSyntheticController,
   groupsSyntheticController,
-  usersSyntheticController
+  usersSyntheticController,
+  fiasOktmoSyntheticController,
+  fiasAddressSyntheticController
 ];
 
 export function selectController(url: string) {

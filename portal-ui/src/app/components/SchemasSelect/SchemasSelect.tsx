@@ -3,6 +3,7 @@ import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
@@ -18,9 +19,9 @@ const cnSchemasSelectDialog = cn('SchemasSelect', 'Dialog');
 @observer
 export class SchemasSelect extends Component<FormControlProps> {
   @observable private dialogOpen = false;
-  @observable private allSchemas: Schema[];
-  @observable private disabledItems: Schema[];
-  @observable private selectedSchema: string;
+  @observable private allSchemas?: Schema[];
+  @observable private disabledItems?: Schema[];
+  @observable private selectedSchema?: string;
 
   private cols: XTableColumn<Schema>[] = [
     {
@@ -139,7 +140,7 @@ export class SchemasSelect extends Component<FormControlProps> {
           return schema;
         }
       })
-      .filter(Boolean);
+      .filter(notFalsyFilter);
   }
 
   @action.bound
@@ -150,11 +151,11 @@ export class SchemasSelect extends Component<FormControlProps> {
   @action.bound
   private setDisabledItems() {
     this.disabledItems = this.allSchemas
-      .map(schema => {
+      ?.map(schema => {
         if (!schema.geometryType) {
           return schema;
         }
       })
-      .filter(Boolean);
+      .filter(notFalsyFilter);
   }
 }

@@ -38,16 +38,14 @@ export abstract class Block<S extends Selectors = Selectors> {
     return $parent.$$(this.selectors[key]);
   }
 
-  async waitForExist(): Promise<true | void> {
+  async waitForExist(): Promise<void> {
     const $container = await this.$('container');
-
-    return $container.waitForExist({ timeout: 5000 });
+    await $container.waitForExist({ timeout: 5000 });
   }
 
-  async waitForVisible(): Promise<true | void> {
+  async waitForVisible(): Promise<void> {
     const $container = await this.$('container');
-
-    return $container.waitForDisplayed({ timeout: 5000 });
+    await $container.waitForDisplayed({ timeout: 5000 });
   }
 
   async waitForHidden(): Promise<void> {

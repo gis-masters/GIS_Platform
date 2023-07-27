@@ -9,8 +9,9 @@ import { Button } from '../../Button/Button';
 import { PageOptions } from '../../../services/models';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { usersService } from '../../../services/auth/users/users.service';
+import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnUsersAdd = cn('Users', 'Add');
@@ -77,7 +78,7 @@ export class UsersAdd extends Component<UsersAddProps> {
             middleName: user.middleName || ''
           };
         })
-        .filter(Boolean),
+        .filter(notFalsyFilter),
       users[1]
     ];
   }

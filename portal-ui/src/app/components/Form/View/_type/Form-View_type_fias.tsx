@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { Fias } from '../../../../services/data/fias/fias.models';
+import { FiasValue } from '../../../../services/data/fias/fias.models';
 import { FiasView } from '../../../FiasView/FiasView';
 
 import { cnFormView } from '../Form-View';
@@ -17,7 +17,7 @@ class FormViewTypeFias extends Component<FormControlProps> {
 
     return (
       <div className={cnFormView({ inSet }, [className])}>
-        <FiasView value={fieldValue as Fias} />
+        <FiasView value={fieldValue as FiasValue} />
         <FormViewErrors errors={errors} />
       </div>
     );

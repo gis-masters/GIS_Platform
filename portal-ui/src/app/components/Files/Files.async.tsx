@@ -11,6 +11,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
 import { isPreviewAllowed } from '../../services/data/files/files.util';
 import { createFile } from '../../services/data/files/files.service';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { FileInfo } from '../../services/data/files/files.models';
 import { environment } from '../../services/environment';
 import { sleep } from '../../services/util/sleep';
@@ -48,8 +49,7 @@ export default class Files extends Component<FilesProps> {
   private uploadPool: FileInfo[] = [];
   @observable private newbies: NewbieFile[] = [];
   @observable private previewOpen = false;
-  @observable private startingImageForPreview: FileInfo;
-  @observable private deletingItem: FileInfo;
+  @observable private startingImageForPreview?: FileInfo;
 
   constructor(props: FilesProps) {
     super(props);
@@ -159,7 +159,7 @@ export default class Files extends Component<FilesProps> {
             return item;
           }
         })
-        .filter(Boolean);
+        .filter(notFalsyFilter);
     }
   }
 
@@ -184,11 +184,12 @@ export default class Files extends Component<FilesProps> {
   }
 
   private async upload() {
-    if (this.uploadingNow || !this.uploadPool.length) {
+    const fileInfo = this.uploadPool.shift();
+
+    if (this.uploadingNow || !fileInfo) {
       return;
     }
 
-    const fileInfo = this.uploadPool.shift();
     // ограничения по размеру файла, если админ - 1гб, если юзер но без данных в схеме - 10мб
     const maxSizeBites = currentUser.isAdmin ? 1_073_741_824 : this.props.property.maxSize || 10_485_760;
 
@@ -262,7 +263,7 @@ export default class Files extends Component<FilesProps> {
     this.newbies.push(newbie);
   }
 
-  private getNewbie(id: string): NewbieFile {
+  private getNewbie(id: string): NewbieFile | undefined {
     return this.newbies.find(newbie => newbie.id === id);
   }
 

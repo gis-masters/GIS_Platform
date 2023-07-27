@@ -9,6 +9,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { communicationService } from '../../../services/communication.service';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import {
   CoordinateEdited,
   GeometryType,
@@ -36,7 +37,7 @@ interface EditFeatureGeometryAsTextProps {
 @observer
 export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTextProps> {
   @observable private isOpen = false;
-  @observable private text: string;
+  @observable private text = '';
 
   constructor(props: EditFeatureGeometryAsTextProps) {
     super(props);
@@ -129,7 +130,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       .replace(/,/g, '.')
       .split('\n')
       .map(row => row.trim().replace(/\s+/g, ' '))
-      .filter(Boolean)
+      .filter(notFalsyFilter)
       .map(row => {
         const rowArr = row.split(/\s/);
         rowArr.reverse();

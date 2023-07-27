@@ -16,6 +16,7 @@ import {
   ValueFormula
 } from './data/schema/schema.models';
 import { valueWellKnownFormulas } from './data/schema/schema.utils';
+import { notFalsyFilter } from './util/NotFalsyFilter';
 
 const messages = {
   required: 'Обязательное поле ',
@@ -67,7 +68,7 @@ export function validateFieldValue(value: unknown, property: PropertySchema, for
     field: property.name,
     hidden: property.hidden,
     title: property.title,
-    messages: validatorsList?.flatMap(validator => validator(value, property, formValue)).filter(Boolean)
+    messages: validatorsList?.flatMap(validator => validator(value, property, formValue)).filter(notFalsyFilter)
   };
 }
 
@@ -289,7 +290,7 @@ export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[]
   }));
 }
 
-export function calculateValues<T>(obj: T | Partial<T>, properties: PropertySchema[]): T {
+export function calculateValues<T>(obj: T | Partial<T> = {}, properties: PropertySchema[]): T {
   const value = cloneDeep(obj);
 
   for (const property of properties) {

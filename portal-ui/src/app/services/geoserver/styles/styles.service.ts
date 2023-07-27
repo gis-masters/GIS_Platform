@@ -3,6 +3,7 @@ import { cloneDeep } from 'lodash';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { schemaService } from '../../data/schema/schema.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { getLegendGraphic } from '../wms/wms.service';
 import { mapService } from '../../map/map.service';
 import { GeometryType } from '../wfs/wfs.models';
@@ -54,12 +55,9 @@ async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> 
   return await Promise.all(
     rulesWithoutLegend.map(async rule => {
       const blob = await getLegendGraphic(layer.complexName, rule.name, layer.styleName);
-      const img = await createImageFromBlob(blob);
+      const legend = await createImageFromBlob(blob);
 
-      return {
-        ...rule,
-        legend: img
-      };
+      return { ...rule, legend };
     })
   );
 }
@@ -108,7 +106,7 @@ function parseFilter(xmlFilter?: Element): StyleFilter | undefined {
   ) {
     return {
       operator,
-      filters: [...xmlFilter.children].map(parseFilter).filter(Boolean)
+      filters: [...xmlFilter.children].map(parseFilter).filter(notFalsyFilter)
     };
   }
 }

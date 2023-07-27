@@ -3,12 +3,13 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Layer } from '../../Layer/Layer';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgLayer, CrgLayerType } from '../../../services/gis/layers/layers.models';
+import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 
@@ -58,14 +59,15 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
       const layer = item.payload as CrgLayer;
 
       if (layer.type === CrgLayerType.VECTOR) {
-        const features = mapStore.selectedFeatures
-          .map(feat => {
-            const [tableName] = feat.id.split('.');
-            if (tableName !== layer.tableName) {
-              return feat;
-            }
-          })
-          .filter(Boolean);
+        const features =
+          mapStore.selectedFeatures
+            ?.map(feat => {
+              const [tableName] = feat.id.split('.');
+              if (tableName !== layer.tableName) {
+                return feat;
+              }
+            })
+            .filter(notFalsyFilter) || [];
 
         mapSelectionService.selectFeatures(features, MapSelectionTypes.REPLACE);
       }

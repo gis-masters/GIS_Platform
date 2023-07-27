@@ -8,6 +8,7 @@ import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/doc
 import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { addFilterPart, FilterQuery } from '../../services/util/filterObjects';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { Toast } from '../Toast/Toast';
 
 const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
@@ -49,16 +50,16 @@ export async function getLibraryRecordBreadcrumbs(
 
   try {
     let parentsInfo = await Promise.all(
-      getIdsFromPath(path).map(async pathId => {
+      getIdsFromPath(path || '').map(async pathId => {
         const { id, title } = await getLibraryRecord(libraryTableName, pathId);
 
         return { id, title };
       })
     );
 
-    parentsInfo = parentsInfo.filter(Boolean);
+    parentsInfo = parentsInfo.filter(notFalsyFilter);
 
-    let pathWithoutCurrent: string;
+    let pathWithoutCurrent = '';
     const itemParentsBreadcrumbs: BreadcrumbsItemData[] = parentsInfo?.map((parent, index) => {
       const folders: (string | number)[] = [];
       for (let i = 0; i < index + 1; i++) {
@@ -132,7 +133,7 @@ export function getRegistryUrlWithPath(
 }
 
 export function getIdsFromPath(path: string): number[] {
-  return (path || '').replace(/%/g, '').split('/').map(Number).filter(Boolean);
+  return (path || '').replace(/%/g, '').split('/').map(Number).filter(notFalsyFilter);
 }
 
 export function getPathFilter(pathIds: number[]): FilterQuery {

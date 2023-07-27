@@ -5,6 +5,7 @@ import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 import { XTableExtraColumnType } from '../../XTable.models';
@@ -14,7 +15,7 @@ import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_id.scss';
 @observer
 class XTableFilterTypeId extends Component<XTableFilterProps> {
   @observable private currentInput = '';
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
 
   constructor(props: XTableFilterProps) {
     super(props);
@@ -35,7 +36,9 @@ class XTableFilterTypeId extends Component<XTableFilterProps> {
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    if (this.reactionDisposer) {
+      this.reactionDisposer();
+    }
   }
 
   render() {
@@ -66,7 +69,7 @@ class XTableFilterTypeId extends Component<XTableFilterProps> {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     this.setCurrentInput(e.target.value.replace(/[^\d ,]/g, ''));
-    const value: number[] = this.currentInput.replace(/\D+/g, ',').split(',').filter(Boolean).map(Number);
+    const value: number[] = this.currentInput.replace(/\D+/g, ',').split(',').filter(notFalsyFilter).map(Number);
 
     onBeforeFilterChange();
 

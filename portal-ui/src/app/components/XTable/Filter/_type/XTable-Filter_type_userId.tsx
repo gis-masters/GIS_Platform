@@ -10,6 +10,7 @@ import { cn } from '@bem-react/classname';
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { usersService } from '../../../../services/auth/users/users.service';
+import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 import { allUsers } from '../../../../stores/AllUsers.store';
 
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
@@ -69,7 +70,7 @@ class XTableFilterTypeUserId extends Component<XTableFilterProps> {
           return { title: `${user.surname || ''} ${user.name} ${user.middleName || ''}`, value: user.id };
         }
       })
-      .filter(Boolean) as PropertyOption[];
+      .filter(notFalsyFilter) as PropertyOption[];
 
     return [{ title: 'Не заполнено', value: EMPTY }, ...options];
   }

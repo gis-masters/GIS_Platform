@@ -18,7 +18,7 @@ import { boundMethod } from 'autobind-decorator';
 import { alertLayerOperationError, createLayer } from '../../../services/gis/layers/layers.service';
 import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { CrgVectorLayer, NewCrgLayer } from '../../../services/gis/layers/layers.models';
+import { NewCrgLayer } from '../../../services/gis/layers/layers.models';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
@@ -197,7 +197,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   }
 
   @action
-  private setVectorTablesLayers(vectorTablesLayers: CrgVectorLayer[]) {
+  private setVectorTablesLayers(vectorTablesLayers: NewCrgLayer[]) {
     this.vectorTablesLayers = vectorTablesLayers;
   }
 }

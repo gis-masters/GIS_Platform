@@ -16,6 +16,7 @@ import {
   validateFormValue
 } from '../../services/formValidation.service';
 import { services } from '../../services/services';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 
 import { getDefaultValues, isEqualExceptCalculated } from './Form.utils';
 import { FormContent } from './Content/Form-Content';
@@ -54,13 +55,13 @@ export interface FormProps<T>
 
 @observer
 export default class Form<T> extends Component<FormProps<T>> {
-  private initialValue: Partial<T>;
+  private initialValue: Partial<T> = {};
   @observable private value?: Partial<T>;
   @observable private errors?: FieldErrors[];
   @observable private serverErrors?: FieldErrors[];
-  @observable private hiddenFieldsErrors?: string[] = [];
-  @observable private generalServerErrors?: string[] = [];
-  private valueReactionDisposer: IReactionDisposer;
+  @observable private hiddenFieldsErrors: string[] = [];
+  @observable private generalServerErrors: string[] = [];
+  private valueReactionDisposer?: IReactionDisposer;
 
   constructor(props: FormProps<T>) {
     super(props);
@@ -68,7 +69,7 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     const properties = props.schema?.properties;
 
-    if (props.schema?.properties) {
+    if (properties) {
       this.value = calculateValues(cloneDeep(props.value || getDefaultValues(properties)), properties);
       this.initialValue = calculateValues(this.value, properties);
     }
@@ -83,9 +84,10 @@ export default class Form<T> extends Component<FormProps<T>> {
     this.valueReactionDisposer = reaction(
       () => cloneDeep(this.props.value),
       value => {
-        if (!isEqualExceptCalculated(value, this.initialValue, this.props.schema)) {
-          this.setValue(calculateValues(value, this.props.schema?.properties));
-          this.initialValue = cloneDeep(value);
+        const { schema } = this.props;
+        if (schema && !isEqualExceptCalculated(value, this.initialValue, schema)) {
+          this.setValue(calculateValues(value, schema.properties));
+          this.initialValue = cloneDeep(value || {});
         }
       }
     );
@@ -93,14 +95,16 @@ export default class Form<T> extends Component<FormProps<T>> {
 
   componentDidUpdate() {
     const { value, schema } = this.props;
-    if (!isEqualExceptCalculated(value, this.initialValue, schema)) {
+    if (schema && !isEqualExceptCalculated(value, this.initialValue, schema)) {
       this.setValue(calculateValues(value, schema?.properties));
-      this.initialValue = cloneDeep(value);
+      this.initialValue = cloneDeep(value || {});
     }
   }
 
   componentWillUnmount() {
-    this.valueReactionDisposer();
+    if (this.valueReactionDisposer) {
+      this.valueReactionDisposer();
+    }
   }
 
   render() {
@@ -109,6 +113,7 @@ export default class Form<T> extends Component<FormProps<T>> {
       children,
       className,
       errors,
+      value,
       onFormChange,
       onFormSubmit,
       onFieldChange,
@@ -131,8 +136,8 @@ export default class Form<T> extends Component<FormProps<T>> {
         {!!schema && (
           <FormContent<T>
             schema={schema}
-            formValue={this.value}
             formRole={formRole}
+            formValue={this.value || {}}
             onFormChange={this.changeHandler}
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}
@@ -150,6 +155,11 @@ export default class Form<T> extends Component<FormProps<T>> {
   @boundMethod
   private changeHandler(changedValue: Partial<T>) {
     const { onFormChange, auto, schema } = this.props;
+
+    if (!schema) {
+      return;
+    }
+
     const value = calculateValues(changedValue, schema.properties);
 
     if (auto) {
@@ -173,14 +183,13 @@ export default class Form<T> extends Component<FormProps<T>> {
 
     if (auto && actionFunction) {
       const errors = this.validate();
-
       const hiddenErrors = errors
         .map(error => {
           if (error.hidden) {
-            return `Поле ${error.title}: ${error.messages.join(error.messages.length > 1 ? ', ' : '')}`;
+            return `Поле ${error.title}: ${error.messages?.join(error.messages.length > 1 ? ', ' : '')}`;
           }
         })
-        .filter(Boolean);
+        .filter(notFalsyFilter);
 
       if (hiddenErrors.length) {
         hiddenErrors.forEach(hiddenError => {
@@ -208,8 +217,13 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @boundMethod
-  private validate() {
+  private validate(): FieldErrors[] {
     const { schema } = this.props;
+
+    if (!schema) {
+      return [];
+    }
+
     const errors = validateFormValue(this.value, schema.properties);
     this.setErrors(errors);
 

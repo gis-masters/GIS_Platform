@@ -10,6 +10,7 @@ import { applyView, getReadablePropertyValue } from '../../../services/data/sche
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { services } from '../../../services/services';
@@ -81,7 +82,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
       ...cols
         .filter(({ field, hidden }) => field && !hidden)
         .map(({ field }) => schema.properties.find(({ name }) => name.toLowerCase() === String(field).toLowerCase()))
-        .filter(Boolean)
+        .filter(notFalsyFilter)
     ];
     const header = properties.map(prop => prop.title || prop.name);
     const body = records.map(feature => this.prepareFeature(properties, feature));

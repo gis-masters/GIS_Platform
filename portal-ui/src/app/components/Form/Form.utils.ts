@@ -16,14 +16,14 @@ import {
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
 import { UrlInfo } from './Control/_type/Form-Control_type_url';
-import { Fias } from '../../services/data/fias/fias.models';
+import { FiasValue } from '../../services/data/fias/fias.models';
 import { services } from '../../services/services';
 
 const fromComplex: Partial<
   Record<PropertyType, <T>(propertySchema: PropertySchema, formValue: Partial<T>, fieldValue: unknown) => Partial<T>>
 > = {
   [PropertyType.FIAS]: <T>(field: PropertySchema, formValue: Partial<T>, fieldValue: unknown = {}): Partial<T> => {
-    const fias = fieldValue as Fias;
+    const fias = fieldValue as FiasValue;
     const name = String(field.name);
 
     return {
@@ -39,11 +39,13 @@ const toComplex: Partial<Record<PropertyType, <T>(field: PropertySchema, formVal
   [PropertyType.FIAS]: <T>(field: PropertySchema, formValue: Partial<T>) => {
     const name = String(field.name);
 
-    return {
+    const value: FiasValue = {
       address: formValue[name + '__address'] as string,
       id: formValue[name + '__id'] as number,
       oktmo: formValue[name + '__oktmo'] as string
     };
+
+    return value;
   }
 };
 
@@ -122,7 +124,7 @@ export function isEqualExceptCalculated<T>(
   schema: Schema | SimpleSchema
 ): boolean {
   for (const key of Object.keys({ ...a, ...b })) {
-    const property = schema?.properties?.find(({ name }) => name === key);
+    const property = schema.properties?.find(({ name }) => name === key);
     if (!property?.calculatedValueFormula && !property?.calculatedValueWellKnownFormula && !isEqual(a[key], b[key])) {
       return false;
     }

@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { DataClient } from '../DataClient';
 import { http } from '../../api/http.service';
 
-import { Fias } from './fias.models';
+import { FiasApiItem } from './fias.models';
 
 @boundClass
 class FiasClient extends DataClient {
@@ -13,22 +13,22 @@ class FiasClient extends DataClient {
     return this._instance || (this._instance = new this());
   }
 
-  private getFiasAddressesUrl(): string {
+  private getAddressUrl(): string {
     return this.getDataUrl() + '/integration/fias/fulladdress';
   }
 
-  private getFiasOktmoUrl(): string {
+  private getOktmoUrl(): string {
     return this.getDataUrl() + '/integration/fias/oktmo';
   }
 
-  async getFiasAddresses(address: string): Promise<Fias[]> {
-    return http.get<Fias[]>(this.getFiasAddressesUrl(), {
+  async getAddressItems(address: string): Promise<FiasApiItem[]> {
+    return http.get<FiasApiItem[]>(this.getAddressUrl(), {
       params: { address }
     });
   }
 
-  async getFiasOktmoAddresses(cityName: string): Promise<Fias[]> {
-    return http.get<Fias[]>(this.getFiasOktmoUrl(), {
+  async getOktmoItems(cityName: string): Promise<FiasApiItem[]> {
+    return http.get<FiasApiItem[]>(this.getOktmoUrl(), {
       params: { cityName }
     });
   }

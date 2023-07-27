@@ -10,7 +10,7 @@ import { parsePageOptions } from '../utils';
 class LibraryRecordsSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records.*$/;
 
-  get(config: InternalAxiosRequestConfig): PageableResponse<LibraryRecordRaw> {
+  get(config: InternalAxiosRequestConfig): PageableResponse<{ content: LibraryRecordRaw }> {
     const match = config.url?.match(this.pattern);
     const libraryTableName = match?.at(1) || '';
     const pageOptions = parsePageOptions(config);

@@ -125,8 +125,7 @@ export class XTableBlock extends Block {
   }
 
   async sortColumn(title: string, direction: string): Promise<void> {
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
 
     const $headCellTitle = await this.getHeadCellTitle(title);
     await $headCellTitle.waitForClickable();
@@ -138,6 +137,16 @@ export class XTableBlock extends Block {
     } else {
       throw new Error('Unsupported direction: ' + direction);
     }
+  }
+
+  async waitForLoading(): Promise<void> {
+    const $loading = await this.$('loading');
+    try {
+      await $loading.waitForDisplayed();
+    } catch {
+      // ignore
+    }
+    await $loading.waitForDisplayed({ reverse: true });
   }
 
   async filterNumerableColumn(colTitle: string, lte: string, gte: string): Promise<void> {

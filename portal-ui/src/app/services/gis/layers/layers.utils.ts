@@ -15,7 +15,7 @@ const defaultProps = {
 
 export function vectorLayerDefaults(): Pick<
   CrgVectorLayer,
-  'id' | 'dataStoreName' | 'complexName' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
+  'dataStoreName' | 'complexName' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
 > {
   return {
     ...defaultProps,
@@ -27,7 +27,7 @@ export function vectorLayerDefaults(): Pick<
 
 export function rasterLayerDefaults(): Pick<
   CrgRasterLayer,
-  'id' | 'nativeCRS' | 'mode' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
+  'nativeCRS' | 'mode' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
 > {
   return {
     ...defaultProps,

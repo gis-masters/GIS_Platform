@@ -11,9 +11,10 @@ import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
-import { Form, FormControl, FormField, FormLabel } from './Form';
-import { FormActions } from './Actions/Form-Actions';
 import { getDefaultValues } from './Form.utils';
+import { Form, FormField, FormLabel } from './Form';
+import { FormActions } from './Actions/Form-Actions';
+import { cnFormControl } from './Control/Form-Control';
 import { FormStoryActions, cnFormStoryActions } from '../FormStoryActions/FormStoryActions';
 
 export default {
@@ -326,15 +327,15 @@ ContentOnly.args = {
     <>
       <FormField>
         <FormLabel htmlFor='someTitle'>Название</FormLabel>
-        <FormControl>
+        <div className={cnFormControl()}>
           <TextField id='someTitle' value={'Some title'} fullWidth variant='standard' />
-        </FormControl>
+        </div>
       </FormField>
       <FormField>
         <FormLabel htmlFor='someDescription'>Описание</FormLabel>
-        <FormControl>
+        <div className={cnFormControl()}>
           <TextField id='someDescription' value={'Some description'} fullWidth variant='standard' />
-        </FormControl>
+        </div>
       </FormField>
       <FormActions>
         <Button color='primary'>Отправить</Button>
@@ -406,6 +407,7 @@ const schemaWithDefaultValue: SimpleSchema = {
     }
   ]
 };
+
 export const DefaultValue = Template.bind({});
 DefaultValue.args = {
   id: 'defaultValue',

@@ -12,14 +12,14 @@ import {
   OldPropertySchemaDouble
 } from '../data/schema/schemaOld.models';
 import { services } from '../services';
-import { Fias } from '../data/fias/fias.models';
+import { FiasValue } from '../data/fias/fias.models';
 
 export interface ValidationError {
   attribute: string;
   error: string;
 }
 
-export interface ErrorMessages {
+interface ErrorMessages {
   required?: string;
   mustBeEmpty?: string;
   wrongChoice?: string;
@@ -33,6 +33,9 @@ export interface ErrorMessages {
   minInclusive?: string;
 }
 
+/**
+ * @deprecated legacy
+ */
 export class FeaturePropertyValidators {
   static validateCustomRules(
     featureProperties: { [key: string]: unknown },
@@ -70,7 +73,7 @@ export class FeaturePropertyValidators {
 
       if (
         propertySchema.valueType === ValueType.FIAS &&
-        isEmpty((currentValue as Fias)?.address) &&
+        isEmpty((control.value as FiasValue)?.address) &&
         propertySchema.required
       ) {
         errors.required = 'Поле обязательно к заполнению';
