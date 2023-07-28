@@ -49,7 +49,7 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer
-              id='SelectLibraryRecord'
+              explorerRole='SelectLibraryRecord'
               className={cnSelectFileInLibraryRecord('Explorer')}
               preset={ExplorerItemType.LIBRARY_ROOT}
               onSelect={this.handleSelect}

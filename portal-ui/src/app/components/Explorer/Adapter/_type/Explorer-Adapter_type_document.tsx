@@ -14,6 +14,7 @@ import { FileTiff } from '../../../Icons/FileTiff';
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerStore } from '../../Explorer.store';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -56,7 +57,11 @@ export class ExplorerAdapterTypeDocument {
     return item.payload.type === 'tif' ? <FileTiff color='primary' /> : <InsertDriveFile color='primary' />;
   }
 
-  static isFolder(item: ExplorerItemData<LibraryRecord>): boolean {
+  static isFolder(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): boolean {
+    if (store.explorerRole === 'dm') {
+      return false;
+    }
+
     return !!getLibraryRecordFiles(item.payload).length;
   }
 

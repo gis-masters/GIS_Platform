@@ -92,7 +92,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
               <RegistryConsumer id='common'>
                 {({ Explorer }: CommonDiRegistry) => (
                   <Explorer
-                    id='DocumentsSelectDialog'
+                    explorerRole='DocumentsSelectDialog'
                     className={cnDocumentsSelectDialog('Explorer')}
                     path={this.path}
                     onSelect={this.handleSelect}

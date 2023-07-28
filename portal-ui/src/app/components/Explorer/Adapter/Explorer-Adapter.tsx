@@ -76,8 +76,8 @@ export function getIcon(item: ExplorerItemData): ReactNode {
   return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFileOutlined />;
 }
 
-export function isFolder(item: ExplorerItemData): boolean {
-  return adapters[item.type].isFolder(item);
+export function isFolder(item: ExplorerItemData, store?: ExplorerStore): boolean {
+  return adapters[item.type].isFolder(item, store);
 }
 
 export function customOpenActionIcon(item: ExplorerItemData): ReactNode {
@@ -94,7 +94,7 @@ export async function getChildren(
   store: ExplorerStore,
   service: ExplorerService
 ): Promise<[ExplorerItemData[], number] | undefined> {
-  if (isFolder(item) && adapters[item.type].getChildren) {
+  if (isFolder(item, store) && adapters[item.type].getChildren) {
     try {
       return await adapters[item.type].getChildren(item, pageOptions, store, service);
     } catch (error) {

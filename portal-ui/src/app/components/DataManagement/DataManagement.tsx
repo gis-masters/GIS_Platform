@@ -30,7 +30,7 @@ export class DataManagement extends Component {
           urlChangeEnabled
           withInfoPanel
           fixedHeight
-          id='dm'
+          explorerRole='dm'
           libraryViewSwitch={
             this.library && <LibraryViewSwitch to='registry' library={this.library} path={this.path} />
           }

@@ -8,6 +8,15 @@ import { Emitter } from '../../services/common/Emitter';
 import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
 
+export type ExplorerRole =
+  | 'SelectVectorTable'
+  | 'SelectLibraryRecord'
+  | 'DocumentMove'
+  | 'DocumentsSelectDialog'
+  | 'dm'
+  | 'ConnectionsToProjectsWidget'
+  | 'ConnectionsToProjectsWidget';
+
 export enum ExplorerItemType {
   NONE = 'none',
 
@@ -87,7 +96,7 @@ export interface Adapter {
   getMeta: (item: ExplorerItemData) => string;
   getDescription?: (item: ExplorerItemData) => ReactNode;
   getIcon?: (item: ExplorerItemData) => ReactNode;
-  isFolder: (item: ExplorerItemData) => boolean;
+  isFolder: (item: ExplorerItemData, store: ExplorerStore) => boolean;
   customOpenActionIcon?: (item: ExplorerItemData) => ReactNode;
   customOpenAction?: (item: ExplorerItemData) => void;
   getChildren?: (

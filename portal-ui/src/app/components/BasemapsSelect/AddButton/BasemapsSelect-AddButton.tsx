@@ -51,7 +51,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
           <DialogContent>
             <Explorer
               className={cnBasemapsSelectAddButton('Explorer')}
-              id='ConnectionsToProjectsWidget'
+              explorerRole='ConnectionsToProjectsWidget'
               preset={ExplorerItemType.BASEMAPS_ROOT}
               onSelect={this.setSelectedProject}
               onOpen={this.handleOpen}

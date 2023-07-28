@@ -22,6 +22,7 @@ import {
   emptyItem,
   ExplorerItemData,
   ExplorerItemType,
+  ExplorerRole,
   KeyAction,
   keyActions,
   loadingItem
@@ -58,7 +59,7 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData[] }> = {
 };
 
 export interface ExplorerProps extends IClassNameProps {
-  id: string;
+  explorerRole?: ExplorerRole;
   title?: string;
   path?: ExplorerItemData[]; // [0] - root
   preset?: keyof typeof presets;
@@ -86,7 +87,7 @@ export default class Explorer extends Component<ExplorerProps> {
 
   constructor(props: ExplorerProps) {
     super(props);
-    this.store = new ExplorerStore(props.id);
+    this.store = new ExplorerStore(props.explorerRole);
     this.service = new ExplorerService(this.store);
     this.store.setCustomFilters(props.customFilters || {});
     this.init(props);
@@ -267,7 +268,7 @@ export default class Explorer extends Component<ExplorerProps> {
 
   @boundMethod
   openItem(item: ExplorerItemData, depth: number = this.store.path.length - 1): void {
-    if (!isFolder(item)) {
+    if (!isFolder(item, this.store)) {
       return;
     }
 
@@ -334,12 +335,12 @@ export default class Explorer extends Component<ExplorerProps> {
     const explorerOptions: ExplorerUrlOptions = [page, pageSize, sort, sortOrder, filter];
     const encodedURIOptions = JSON.stringify(explorerOptions);
 
-    const { id } = this.props;
+    const { explorerRole } = this.props;
 
     await services.router.navigate([location.pathname], {
       queryParams: {
-        ['path_' + id]: encodedURIPath,
-        ['opts_' + id]: encodedURIOptions
+        ['path_' + explorerRole]: encodedURIPath,
+        ['opts_' + explorerRole]: encodedURIOptions
       },
       queryParamsHandling: 'merge',
       replaceUrl
@@ -351,10 +352,10 @@ export default class Explorer extends Component<ExplorerProps> {
   private async restoreStateFromUrl(url: URL = new URL(window.location.href)) {
     this.store.setRestoringFromUrl(true);
 
-    const { id, onOpen } = this.props;
+    const { explorerRole, onOpen } = this.props;
 
-    if (url.searchParams.get(`path_${id}`)) {
-      const urlExplorerPath = url.searchParams.get(`path_${id}`);
+    if (url.searchParams.get(`path_${explorerRole}`)) {
+      const urlExplorerPath = url.searchParams.get(`path_${explorerRole}`);
       const pathUrlItems = chunk(JSON.parse(urlExplorerPath) as string[], 2) as ExplorerUrlItem[];
       const path = this.store.path.slice(0, 1);
 
@@ -384,7 +385,7 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   private restoreOptions(url: URL) {
-    const urlExplorerOptions = url.searchParams.get(`opts_${this.props.id}`);
+    const urlExplorerOptions = url.searchParams.get(`opts_${this.props.explorerRole}`);
 
     if (!urlExplorerOptions) {
       return;

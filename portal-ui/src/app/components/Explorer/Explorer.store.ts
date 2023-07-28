@@ -2,10 +2,10 @@ import { action, computed, observable, makeObservable } from 'mobx';
 
 import { SortOrder } from '../../services/models';
 
-import { CustomFilters, ExplorerItemData, pageSizeVariants, SortItem } from './Explorer.models';
+import { CustomFilters, ExplorerItemData, ExplorerRole, pageSizeVariants, SortItem } from './Explorer.models';
 
 export class ExplorerStore {
-  readonly id: string;
+  readonly explorerRole: ExplorerRole;
   readonly pageSizeStorageKey: string;
   @observable path: ExplorerItemData[] = [];
   @observable items: ExplorerItemData[] = [];
@@ -20,10 +20,10 @@ export class ExplorerStore {
   @observable loading = false;
   @observable restoringFromUrl = false;
 
-  constructor(id: string) {
+  constructor(explorerRole: ExplorerRole) {
     makeObservable(this);
-    this.id = id;
-    this.pageSizeStorageKey = 'ExplorerPageSize' + id;
+    this.explorerRole = explorerRole;
+    this.pageSizeStorageKey = 'ExplorerPageSize' + explorerRole;
     const storedSize = Number(localStorage.getItem(this.pageSizeStorageKey));
     if (pageSizeVariants.includes(storedSize) && this.pageSize !== storedSize) {
       this.setPageSize(storedSize);

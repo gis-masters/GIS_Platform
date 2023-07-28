@@ -99,7 +99,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                     {({ Explorer }: CommonDiRegistry) => (
                       <Explorer
                         className={cnConnectionsToProjectsWidget('Explorer')}
-                        id='ConnectionsToProjectsWidget'
+                        explorerRole='ConnectionsToProjectsWidget'
                         preset={ExplorerItemType.PROJECTS_ROOT}
                         onSelect={this.handleSelect}
                         onOpen={this.handleOpen}

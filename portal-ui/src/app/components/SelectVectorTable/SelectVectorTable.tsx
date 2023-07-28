@@ -60,7 +60,7 @@ export class SelectVectorTable extends Component<SelectVectorTableProps> {
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer
-              id='SelectVectorTable'
+              explorerRole='SelectVectorTable'
               className={cnSelectVectorTable('Explorer')}
               preset={ExplorerItemType.DATASET_ROOT}
               onSelect={this.handleSelect}

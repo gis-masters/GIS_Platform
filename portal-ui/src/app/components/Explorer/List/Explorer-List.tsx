@@ -95,7 +95,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
       meta: getMeta(item),
       icon: getIcon(item),
       selected: selectedItem,
-      isFolder: isFolder(item),
+      isFolder: isFolder(item, store),
       itemRef: selectedItem ? this.selectedItemRef : undefined,
       customOpenActionIcon: customOpenActionIcon(item),
       customOpenAction,

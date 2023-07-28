@@ -72,7 +72,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
             <RegistryConsumer id='common'>
               {({ Explorer }: CommonDiRegistry) => (
                 <Explorer
-                  id='DocumentMove'
+                  explorerRole='DocumentMove'
                   path={this.path}
                   onSelect={this.handleSelect}
                   disabledTester={this.testForDisabled}

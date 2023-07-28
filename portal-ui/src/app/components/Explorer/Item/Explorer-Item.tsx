@@ -46,7 +46,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   }
 
   render() {
-    const { title, meta, selected, isFolder, customOpenActionIcon, icon, itemRef } = this.props;
+    const { title, meta, selected, customOpenActionIcon, icon, isFolder, itemRef } = this.props;
 
     return (
       <ListItemButton
