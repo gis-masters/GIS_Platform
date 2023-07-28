@@ -6,12 +6,15 @@ import { cloneDeep } from 'lodash';
 import { services } from '../../services/services';
 import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
-import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { addFilterPart, FilterQuery } from '../../services/util/filterObjects';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+import { BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Toast } from '../Toast/Toast';
+import { getDataset } from '../../services/data/vectorData/vectorData.service';
 
 const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
+const datasetRootUrlItems = ['r', 'root', 'dr', 'datasetRoot'];
 
 export function getLibraryFolderExplorerUrl(libraryTableName: string, path: number[]): string {
   const urlPath = [
@@ -24,6 +27,31 @@ export function getLibraryFolderExplorerUrl(libraryTableName: string, path: numb
   ];
 
   return `/data-management?path_dm=${JSON.stringify(urlPath)}`;
+}
+
+export async function getVectorTableBreadcrumbs(item: VectorTable): Promise<BreadcrumbsItemData[]> {
+  const { dataset, identifier, title } = item;
+  const datasetRootPath = JSON.stringify([...datasetRootUrlItems, 'none', 'none']);
+  const datasetPath = JSON.stringify([...datasetRootUrlItems, 'dataset', dataset, 'none', 'none']);
+  const datasetItem = await getDataset(dataset);
+  const currentItem = ['table', identifier];
+  const pathWithoutCurrent = JSON.stringify([...datasetRootUrlItems, 'dataset', dataset, ...currentItem]);
+
+  return [
+    { title: <HomeOutlined />, url: '/data-management' },
+    {
+      title: 'Наборы данных',
+      url: `/data-management?path_dm=${datasetRootPath}`
+    },
+    {
+      title: datasetItem.title,
+      url: `/data-management?path_dm=${datasetPath}`
+    },
+    {
+      title: <b>{title}</b>,
+      url: `/data-management?path_dm=${pathWithoutCurrent}`
+    }
+  ];
 }
 
 export async function getLibraryRecordBreadcrumbs(

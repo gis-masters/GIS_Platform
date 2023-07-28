@@ -170,7 +170,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               <ListItemIcon>
                 <FileOpenOutlined />
               </ListItemIcon>
-              Информация
+              Источник данных
             </MenuItem>
           )}
 
@@ -179,7 +179,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               <ListItemIcon>
                 <FileOpenOutlined />
               </ListItemIcon>
-              Информация
+              Источник данных
             </MenuItem>
           )}
 
