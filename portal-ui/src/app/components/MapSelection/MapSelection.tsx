@@ -11,11 +11,19 @@ import { IconButton } from '../IconButton/IconButton';
 
 const cnMapSelection = cn('MapSelection');
 
+const tooltipMsg = (
+  <>
+    <div>Выделение рамкой</div>
+    <div>Shift + ЛКМ - добавляет объекты</div>
+    <div>Ctrl + ЛКМ - снимает выделение с объектов</div>
+  </>
+);
+
 @observer
 export class MapSelection extends Component {
   render() {
     return (
-      <Tooltip title='Выбор объектов'>
+      <Tooltip title={tooltipMsg}>
         <IconButton
           className={cnMapSelection()}
           onClick={this.handleViewModeClick}

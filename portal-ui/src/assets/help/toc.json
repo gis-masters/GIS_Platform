@@ -62,7 +62,7 @@
       }
     ]
   },
-  
+
   {
     "id": "map",
     "title": "Карта",
@@ -253,9 +253,9 @@
             "contentUrl": "/assets/help/map/mapTools/print/00print.html"
           },
           {
-            "id": "selectObjects",
-            "title": "Выбор объектов",
-            "contentUrl": "/assets/help/map/mapTools/multipleSampling/11multipleSampling.html"
+            "id": "multipleSampling",
+            "title": "Выбор и очистка объектов",
+            "contentUrl": "/assets/help/map/mapTools/print/11multipleSampling.html"
           },
           {
             "id": "unloadingGML",
@@ -327,95 +327,95 @@
   {
     "id": "data-management",
     "title": "Управление данными",
-    "children": 
-    [
+    "children": [
       {
         "id": "dataSetsMain",
         "title": "Наборы данных",
         "children": [
-      {
-        "id": "dataSets",
-        "title": "Наборы данных",
-        "contentUrl": "/assets/help/5dataManagement/1dataSets/01dataSets.html"
-      },
+          {
+            "id": "dataSets",
+            "title": "Наборы данных",
+            "contentUrl": "/assets/help/5dataManagement/1dataSets/01dataSets.html"
+          },
 
-      {
-        "id": "editDataset",
-        "title": "Редактирование набора данных",
-        "contentUrl": "/assets/help/5dataManagement/8editDataset/08editDataset.html"
-      },
+          {
+            "id": "editDataset",
+            "title": "Редактирование набора данных",
+            "contentUrl": "/assets/help/5dataManagement/8editDataset/08editDataset.html"
+          },
 
-      {
-        "id": "11layerInDataset",
-        "title": "Создание пустого векторого слоя",
-        "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
-      },
+          {
+            "id": "11layerInDataset",
+            "title": "Создание пустого векторого слоя",
+            "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
+          },
 
-      {
-        "id": "representation",
-        "title": "Представления векторной таблицы",
-        "contentUrl": "/assets/help/5dataManagement/12representation/12representation.html"
-      }
-    ]},
-    {
-      "id": "libraryDocsMain",
-      "title": "Библиотеки документов",
-      "children": [
-      {
-        "id": "libraryDocs",
-        "title": "Библиотека документов",
-        "contentUrl": "/assets/help/5dataManagement/2libraryDocs/02libraryDocs.html"
+          {
+            "id": "representation",
+            "title": "Представления векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/12representation/12representation.html"
+          }
+        ]
       },
-
       {
-        "id": "documentCard",
-        "title": "Карточка документа",
-        "contentUrl": "/assets/help/5dataManagement/4documentCard/04documentCard.html"
+        "id": "libraryDocsMain",
+        "title": "Библиотеки документов",
+        "children": [
+          {
+            "id": "libraryDocs",
+            "title": "Библиотека документов",
+            "contentUrl": "/assets/help/5dataManagement/2libraryDocs/02libraryDocs.html"
+          },
+
+          {
+            "id": "documentCard",
+            "title": "Карточка документа",
+            "contentUrl": "/assets/help/5dataManagement/4documentCard/04documentCard.html"
+          },
+
+          {
+            "id": "registry",
+            "title": "Реестр документов",
+            "contentUrl": "/assets/help/5dataManagement/5registry/05registry.html"
+          },
+
+          {
+            "id": "placement_project",
+            "title": "Размещение растровых файлов в проект",
+            "contentUrl": "/assets/help/5dataManagement/6placement_project/06placement_project.html"
+          },
+
+          {
+            "id": "00gmlImport(ENU_NED)",
+            "title": "Размещение файлов GML в проекте",
+            "contentUrl": "/assets/help/5dataManagement/9gmlImport(ENU_NED)/09gmlImport(ENU_NED).html"
+          },
+
+          {
+            "id": "dxf",
+            "title": "Размещение файлов DXF в проекте",
+            "contentUrl": "/assets/help/5dataManagement/10dxf/10dxf.html"
+          },
+
+          {
+            "id": "print_information",
+            "title": "Печать документа",
+            "contentUrl": "/assets/help/5dataManagement/7print_information/07print_information.html"
+          },
+
+          {
+            "id": "related_doc",
+            "title": "Связность документов",
+            "contentUrl": "/assets/help/5dataManagement/8related_doc/08related_doc.html"
+          },
+
+          {
+            "id": "moveDocument",
+            "title": "Перемещение документов",
+            "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
+          }
+        ]
       },
-
-      {
-        "id": "registry",
-        "title": "Реестр документов",
-        "contentUrl": "/assets/help/5dataManagement/5registry/05registry.html"
-      },
-
-      {
-        "id": "placement_project",
-        "title": "Размещение растровых файлов в проект",
-        "contentUrl": "/assets/help/5dataManagement/6placement_project/06placement_project.html"
-      },
-    
-
-      {
-        "id": "00gmlImport(ENU_NED)",
-        "title": "Размещение файлов GML в проекте",
-        "contentUrl": "/assets/help/5dataManagement/9gmlImport(ENU_NED)/09gmlImport(ENU_NED).html"
-      },
-
-      {
-        "id": "dxf",
-        "title": "Размещение файлов DXF в проекте",
-        "contentUrl": "/assets/help/5dataManagement/10dxf/10dxf.html"
-      },
-
-      {
-        "id": "print_information",
-        "title": "Печать документа",
-        "contentUrl": "/assets/help/5dataManagement/7print_information/07print_information.html"
-      },
-
-      {
-        "id": "related_doc",
-        "title": "Связность документов",
-        "contentUrl": "/assets/help/5dataManagement/8related_doc/08related_doc.html"
-      },
-
-      {
-        "id": "moveDocument",
-        "title": "Перемещение документов",
-        "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
-      }
-    ]},
       {
         "id": "substrate",
         "title": "Картографические подосновы",
@@ -423,7 +423,7 @@
       }
     ]
   },
-  
+
   {
     "id": "org-admin",
     "title": "Управление организацией",
