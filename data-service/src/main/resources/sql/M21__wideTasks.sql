@@ -5,37 +5,37 @@ ALTER TABLE IF EXISTS data.tasks
     ALTER COLUMN owner_id DROP NOT NULL;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN guid uuid;
+    ADD COLUMN IF NOT EXISTS guid uuid;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN "number" bigint;
+    ADD COLUMN IF NOT EXISTS "number" bigint;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN date timestamp without time zone;
+    ADD COLUMN IF NOT EXISTS date timestamp without time zone;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN person_name character varying;
+    ADD COLUMN IF NOT EXISTS person_name character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN cover_letter_num character varying;
+    ADD COLUMN IF NOT EXISTS cover_letter_num character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN cover_letter_date timestamp without time zone;
+    ADD COLUMN IF NOT EXISTS cover_letter_date timestamp without time zone;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN request_type character varying;
+    ADD COLUMN IF NOT EXISTS request_type character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN is_name character varying;
+    ADD COLUMN IF NOT EXISTS is_name character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN data_type character varying;
+    ADD COLUMN IF NOT EXISTS data_type character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN record_status character varying;
+    ADD COLUMN IF NOT EXISTS record_status character varying;
 
 ALTER TABLE IF EXISTS data.tasks
-    ADD COLUMN user_name character varying;
+    ADD COLUMN IF NOT EXISTS user_name character varying;
 
 
 INSERT INTO data.schemas (name, class_rule)
