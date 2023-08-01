@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public class GisogdRfDao {
 
@@ -16,26 +19,31 @@ public class GisogdRfDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long findJoinedToDocumentLayerRecordId(String dataset,
-                                                  String layer,
-                                                  String libraryQualifier,
-                                                  Object recordId) {
+    public Optional<Long> findJoinedToDocumentLayerRecordId(String dataset,
+                                                            String layer,
+                                                            String libraryQualifier,
+                                                            Object recordId) {
         String query = "" +
                 "SELECT " +
-                "  dl.id AS layer_record_id " +
+                "  layer_record_id " +
                 "FROM " +
                 "  " + libraryQualifier + " AS dl " +
                 "  join (" +
                 "    SELECT " +
+                "      ttt.objectid AS layer_record_id," +
                 "      jsonb_extract_path_text(elem :: jsonb, 'id') AS layerRecordId" +
                 "    FROM" +
-                "      " + dataset + "." + layer + "," +
+                "      " + dataset + "." + layer + " AS ttt," +
                 "      LATERAL jsonb_array_elements_text(file :: jsonb) AS elem" +
                 "  ) AS layer on dl.id :: int = layer.layerRecordId :: int " +
                 "WHERE dl.id = " + recordId + " limit (1)";
 
         log.debug("find joined to document layer record id for gisogdRf: [{}]", query);
 
-        return jdbcTemplate.queryForObject(query, Long.class);
+        List<Long> ids = jdbcTemplate.queryForList(query, Long.class);
+
+        return ids.isEmpty()
+                ? Optional.empty()
+                : Optional.ofNullable(ids.get(0));
     }
 }

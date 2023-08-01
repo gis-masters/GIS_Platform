@@ -18,6 +18,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -52,6 +53,8 @@ public class GisogdRfPublisher {
     }
 
     public Long publish(ResourceQualifier qualifier) {
+        log.debug("Try publish: {}", qualifier);
+
         IRecord document = baseDao
                 .findById(qualifier)
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.toString()));
@@ -93,37 +96,68 @@ public class GisogdRfPublisher {
 
             Map<String, Object> formulaParams = (Map<String, Object>) property.getValueFormulaParams();
             List<String> layerComplexNames = (List<String>) formulaParams.get("layers");
-            String firstLayerName = layerComplexNames.get(0).split(":")[1];
-            if (firstLayerName == null) {
-                throw new IllegalStateException("Не верно заданы параметры valueFormulaParams. " +
-                                                        "Не удалось вытащить название слоя из 'layers'");
+            log.info("Found layers: {}", layerComplexNames.size());
+
+            String datasetIdentifier = null;
+            String layerName = null;
+            Long recordId = null;
+            for (String layerComplexName: layerComplexNames) {
+                layerName = layerComplexName.split(":")[1];
+                if (layerName == null) {
+                    log.warn("Не верно заданы параметры valueFormulaParams. " +
+                                     "Не удалось вытащить название слоя из layerComplexName: {}", layerComplexName);
+                    continue;
+                }
+
+                // Тащим запись о слое, чтобы достать путь к набору данных
+                String filterForLayer = "identifier = '" + layerName + "'";
+                Optional<IRecord> oLayer = baseDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
+                if (oLayer.isEmpty()) {
+                    log.warn("Не найден слой: {}", layerName);
+                    continue;
+                }
+
+                long datasetId = Long.parseLong(oLayer.get().getContent().get("path").toString().split("root/")[1]);
+
+                // Тащим запись о наборе данных, чтобы достать его название
+                IRecord dataset = baseDao
+                        .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
+                        .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
+                datasetIdentifier = dataset.getContent().get("identifier").toString();
+                log.debug("founded dataset: {}", datasetIdentifier);
+
+                // Ищем в слое запись, которая ссылается на документ. Берем id.
+                Optional<Long> oRecordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
+                                                                                         layerName,
+                                                                                         qualifier.getTableQualifier(),
+                                                                                         qualifier.getRecordId());
+
+                if (oRecordId.isPresent()) {
+                    recordId = oRecordId.get();
+
+                    break;
+                } else {
+                    log.debug("NOT found record in LAYER: {}.{}", datasetIdentifier, layerName);
+                }
             }
 
-            // Тащим запись о слое, чтобы достать путь к набору данных
-            String filterForLayer = "identifier = '" + firstLayerName + "'";
-            IRecord layer = baseDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
-            long datasetId = Long.parseLong(layer.getContent().get("path").toString().split("root/")[1]);
+            if (recordId == null || datasetIdentifier == null || layerName == null) {
+                throw new IllegalStateException("Не удалось найти запись.");
+            }
 
-            // Тащим запись о наборе данных, чтобы достать его название
-            IRecord dataset = baseDao
-                    .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
-                    .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
-            String datasetIdentifier = dataset.getContent().get("identifier").toString();
+            log.debug("Founded record with ID: '{}' in LAYER: {}.{}", recordId, datasetIdentifier, layerName);
 
-            // Ищем в слое запись, которая ссылается на документ. Берем id.
-            Long recordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
-                                                                          firstLayerName,
-                                                                          qualifier.getTableQualifier(),
-                                                                          qualifier.getRecordId());
-
-            ResourceQualifier lrQualifier = new ResourceQualifier(datasetIdentifier, firstLayerName, recordId, TABLE);
-            IRecord layerRecord = baseDao.findBy(lrQualifier, "objectId = " + recordId);
+            ResourceQualifier lrQualifier = new ResourceQualifier(datasetIdentifier, layerName, recordId, TABLE);
+            Optional<IRecord> oLayerRecord = baseDao.findBy(lrQualifier, "objectId = " + recordId);
+            if (oLayerRecord.isEmpty()) {
+                throw new IllegalStateException("Не найдена запись: " + recordId);
+            }
 
             // вытащим геометрию в формате WGS-84 (3857)
             String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(lrQualifier, 3857);
-            layerRecord.getContent().put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
+            oLayerRecord.get().getContent().put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
 
-            return layerRecord;
+            return oLayerRecord.get();
         } catch (Exception e) {
             String msg = "Не удается получить информацию о слое, связанном с документом. По причине: " + e.getMessage();
 
@@ -139,6 +173,7 @@ public class GisogdRfPublisher {
         }
 
         return baseDao.findBy(new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks", inboxDataKey, TASK),
-                              String.format("guid = '%s'", inboxDataKey));
+                              String.format("guid = '%s'", inboxDataKey))
+                      .orElseThrow(() -> new IllegalStateException("Не найдено входящее сообщение: " + inboxDataKey));
     }
 }

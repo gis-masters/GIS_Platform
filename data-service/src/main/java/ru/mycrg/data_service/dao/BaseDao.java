@@ -53,20 +53,26 @@ public class BaseDao {
         }
     }
 
-    public IRecord findBy(ResourceQualifier qualifier,
-                          String ecqlFilter,
-                          @Nullable SchemaDto schema) {
+    public Optional<IRecord> findBy(ResourceQualifier qualifier,
+                                   String ecqlFilter,
+                                   @Nullable SchemaDto schema) {
         String query = String.format("SELECT * FROM %s %s",
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
         log.debug("Find by schema and by filter: [{}]", query);
 
-        return pJdbcTemplate
+        List<IRecord> records = pJdbcTemplate
                 .getJdbcTemplate()
-                .queryForObject(query, new RecordRowMapper(schema));
+                .query(query, new RecordRowMapper(schema));
+
+        if (records.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(records.get(0));
     }
 
-    public IRecord findBy(ResourceQualifier qualifier,
-                          String ecqlFilter) {
+    public Optional<IRecord> findBy(ResourceQualifier qualifier,
+                                   String ecqlFilter) {
         return findBy(qualifier, ecqlFilter, null);
     }
 
