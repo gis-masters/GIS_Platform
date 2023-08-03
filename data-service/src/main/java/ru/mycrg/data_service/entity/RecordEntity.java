@@ -59,6 +59,7 @@ public class RecordEntity implements IRecord {
                 "}";
     }
 
+    @Override
     public void put(String s, Object o) {
         this.getContent().put(s, o);
     }

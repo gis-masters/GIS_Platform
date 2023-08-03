@@ -37,6 +37,12 @@ ALTER TABLE IF EXISTS data.tasks
 ALTER TABLE IF EXISTS data.tasks
     ADD COLUMN IF NOT EXISTS user_name character varying;
 
+ALTER TABLE IF EXISTS data.tasks
+    ADD COLUMN IF NOT EXISTS document_library_name character varying(100);
+
+ALTER TABLE IF EXISTS data.tasks
+    ADD COLUMN IF NOT EXISTS content_type_id character varying(50);
+
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'tasks_schema_v1',
@@ -109,12 +115,19 @@ SELECT 'tasks_schema_v1',
             {
               "name": "assigned_to",
               "title": "Исполнитель",
-              "valueType": "USER_ID"
+              "valueType": "USER_ID",
+              "onlySubordinates": true
             },
             {
               "name": "due_date",
               "title": "Срок исполнения",
               "valueType": "DATETIME"
+            },
+            {
+              "name": "document_library_name",
+              "title": "Связь с библиотекой",
+              "valueType": "STRING",
+              "maxLength": 100
             },
             {
               "name": "guid",
@@ -233,6 +246,12 @@ SELECT 'tasks_schema_v1',
               "title": "Уполномоченный",
               "description": "Фамилия, имя, отчество (последнее при наличии) уполномоченного лица, органа, осуществляющего ведение информационной системы, или наименование автоматического сервиса программных редств информационной системы, обработавшего данные, поступившие на размещение в информационную систему",
               "valueType": "STRING"
+            },
+            {
+              "name": "content_type_id",
+              "title": "Тип документа",
+              "valueType": "STRING",
+              "maxLength": 50
             }
           ],
           "contentTypes": [
@@ -261,10 +280,6 @@ SELECT 'tasks_schema_v1',
                   "required": true
                 },
                 {
-                  "name": "owner_id",
-                  "required": true
-                },
-                {
                   "name": "assigned_to"
                 },
                 {
@@ -287,10 +302,6 @@ SELECT 'tasks_schema_v1',
                 },
                 {
                   "name": "date",
-                  "required": true
-                },
-                {
-                  "name": "person_name",
                   "required": true
                 },
                 {

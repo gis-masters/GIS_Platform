@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.ProcessDao;
 import ru.mycrg.data_service.dto.DetailsModel;
-import ru.mycrg.data_service.dto.TaskModel;
+import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -104,7 +104,7 @@ public class ProcessService {
         log.info("Процесс {}: '{}' завершился неудачей", process.getId(), process.getTitle());
     }
 
-    public void addTask(Process process, TaskModel taskModel) {
+    public void addTask(Process process, ProcessModel processModel) {
         try {
             log.debug("Add subStep to process: {}", process.getId());
 
@@ -114,7 +114,7 @@ public class ProcessService {
             }
 
             DetailsModel details = mapper.readValue(content, DetailsModel.class);
-            details.addTask(taskModel);
+            details.addTask(processModel);
 
             JsonNode jsonNode = JsonConverter.toJsonNode(details);
 

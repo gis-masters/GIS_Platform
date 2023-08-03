@@ -14,6 +14,8 @@ public interface IRecord {
 
     void setContent(Map<String, Object> content);
 
+    void put(String s, Object o);
+
     @Nullable
     String getTitle();
 

@@ -9,10 +9,11 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
-import ru.mycrg.data_service_contract.dto.TaskCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.http.ContentType.JSON;
 import static org.junit.Assert.assertEquals;
@@ -22,7 +23,7 @@ import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 public class TaskStepDefinition extends BaseStepsDefinitions {
 
     public static Integer currentTaskId;
-    public static TaskCreateDto taskCreateDto;
+    public static Map<String, Object> taskCreateDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
     private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
@@ -48,7 +49,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             int assignedToId = getUserIdByName(task.get(0));
             int ownerId = getUserIdByName(task.get(1));
 
-            taskCreateDto = new TaskCreateDto(task.get(2), (long) assignedToId, (long) ownerId, null, task.get(3));
+            taskCreateDto = new HashMap<>();
+            taskCreateDto.put("type", task.get(2));
+            taskCreateDto.put("assigned_to", (long) assignedToId);
+            taskCreateDto.put("owner_id", (long) ownerId);
+            taskCreateDto.put("description", task.get(3));
+
             createTask(taskCreateDto);
 
             assertEquals(201, response.statusCode());
@@ -72,7 +78,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                                   int ownerId,
                                   String type,
                                   String description) {
-        taskCreateDto = new TaskCreateDto(type, (long) assignedTo, (long) ownerId, null, description);
+        taskCreateDto = new HashMap<>();
+        taskCreateDto.put("type", type);
+        taskCreateDto.put("assigned_to", (long) assignedTo);
+        taskCreateDto.put("owner_id", (long) ownerId);
+        taskCreateDto.put("description", description);
+
 
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
@@ -82,7 +93,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     public void createTaskRequest(String userName) {
         int ownerId = getUserIdByName(userName);
 
-        taskCreateDto = new TaskCreateDto("CUSTOM", (long) ownerId, (long) ownerId, null, "description");
+        taskCreateDto = new HashMap<>();
+        taskCreateDto.put("type", "CUSTOM");
+        taskCreateDto.put("assigned_to", (long) ownerId);
+        taskCreateDto.put("owner_id", (long) ownerId);
+        taskCreateDto.put("description", "description");
+
 
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
@@ -94,7 +110,11 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         authorizationBase.loginAs(creator.getEmail(), creator.getPassword());
 
         int ownerId = getUserIdByName(ownerName);
-        taskCreateDto = new TaskCreateDto("CUSTOM", (long) ownerId, (long) ownerId, null, "old description");
+        taskCreateDto = new HashMap<>();
+        taskCreateDto.put("type", "CUSTOM");
+        taskCreateDto.put("assigned_to", (long) ownerId);
+        taskCreateDto.put("owner_id", (long) ownerId);
+        taskCreateDto.put("description", "old description");
 
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
@@ -137,7 +157,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(expectedStatus, currentStatus);
     }
 
-    private void createTask(TaskCreateDto dto) {
+    private void createTask(Map<String, Object> dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).

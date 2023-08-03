@@ -3,7 +3,7 @@ package ru.mycrg.data_service.queue.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dto.TaskModel;
+import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.processes.ProcessService;
@@ -66,7 +66,7 @@ public class ExportHandler implements IEventHandler {
                 return;
             }
 
-            TaskModel subProcess = new TaskModel(
+            ProcessModel subProcess = new ProcessModel(
                     responseEvent.getPayload().toString(),
                     responseEvent.getStatus(),
                     responseEvent.getError());

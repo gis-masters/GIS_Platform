@@ -3,22 +3,23 @@ package ru.mycrg.data_service.service.cqrs.tasks.requests;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.data_service.entity.Task;
-import ru.mycrg.data_service_contract.dto.TaskUpdateDto;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.mediator.IRequest;
+import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
-public class UpdateTaskRequest implements IRequest<Task>, Auditable {
+public class UpdateTaskRequest implements IRequest<Voidy>, Auditable {
 
-    private final TaskUpdateDto taskUpdateDto;
     private final Long taskId;
-    private Task task;
+    private final IRecord newTask;
 
-    public UpdateTaskRequest(TaskUpdateDto taskUpdateDto, Long taskId) {
-        this.taskUpdateDto = taskUpdateDto;
+    private IRecord oldTask;
+
+    public UpdateTaskRequest(Long taskId, IRecord newTask) {
         this.taskId = taskId;
+        this.newTask = newTask;
     }
 
     @Override
@@ -28,22 +29,22 @@ public class UpdateTaskRequest implements IRequest<Task>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(taskUpdateDto, JsonNode.class),
-                "UPDATE",
-                task.getDescription() == null ? "unknown" : task.getDescription(),
-                TASK.name(),
-                task.getId());
+        return new CrgAuditEvent(mapper.convertValue(newTask, JsonNode.class),
+                                 "UPDATE",
+                                 newTask.getTitle() == null ? "unknown" : newTask.getTitle(),
+                                 TASK.name(),
+                                 newTask.getId());
     }
 
-    public TaskUpdateDto getTaskUpdateDto() {
-        return taskUpdateDto;
+    public IRecord getNewTask() {
+        return newTask;
     }
 
     public Long getTaskId() {
         return taskId;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public void setTask(IRecord task) {
+        this.oldTask = task;
     }
 }

@@ -39,6 +39,8 @@ spring:
     port: 5672
     username: fiz
     password: 314
+  jackson:
+    default-property-inclusion: non_null
   devtools:
     remote:
       secret: some_fiz_sercret

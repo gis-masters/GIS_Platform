@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dto.TaskModel;
+import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.processes.ProcessService;
@@ -71,12 +71,12 @@ public class ImportHandler implements IEventHandler {
 
     private void addSubStep(Process process, ImportResponseEvent event) {
         try {
-            TaskModel subProcess = new TaskModel();
+            ProcessModel subProcess = new ProcessModel();
             if (!event.getPayload().equals("")) {
                 ImportMqResponse rPayload = mapper.convertValue(event.getPayload(), ImportMqResponse.class);
-                subProcess = new TaskModel(rPayload.getTargetLayer(), event.getStatus(), event.getError());
+                subProcess = new ProcessModel(rPayload.getTargetLayer(), event.getStatus(), event.getError());
             } else if (event.getDescription() != null) {
-                subProcess = new TaskModel(event.getStatus(), event.getError());
+                subProcess = new ProcessModel(event.getStatus(), event.getError());
             } else {
                 log.warn("Task for processId: {} not have any description/payload?", process.getId());
             }

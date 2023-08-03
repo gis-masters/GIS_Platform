@@ -81,7 +81,6 @@
         <module>contracts/common-contracts</module>
         <module>contracts/messagebus-contract</module>
         <module>contracts/auth-service-contract</module>
-        <module>contracts/integration-service-contract</module>
         <module>contracts/data-service-contract</module>
         <module>contracts/audit-service-contract</module>
         <module>contracts/resource-analyzer-contract</module>

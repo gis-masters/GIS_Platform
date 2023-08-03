@@ -1,61 +1,93 @@
 package ru.mycrg.data_service.service.cqrs.tasks.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service.entity.Task;
+import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.repository.TaskRepository;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
-import ru.mycrg.data_service_contract.dto.TaskCreateDto;
-import ru.mycrg.data_service_contract.enums.TaskType;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+
+import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.CREATED;
 
 @Component
-public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskRequest, Task> {
+public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskRequest, IRecord> {
 
-    private final TaskRepository taskRepository;
+    private final Logger log = LoggerFactory.getLogger(CreateTaskRequestHandler.class);
+
+    private final RecordsDao recordsDao;
     private final TaskLogService taskLogService;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final IAuthenticationFacade authenticationFacade;
 
-    public CreateTaskRequestHandler(TaskRepository taskRepository,
+    public CreateTaskRequestHandler(RecordsDao recordsDao,
                                     TaskLogService taskLogService,
+                                    DdlTablesSpecial ddlTablesSpecial,
                                     IAuthenticationFacade authenticationFacade) {
-        this.taskRepository = taskRepository;
+        this.recordsDao = recordsDao;
         this.taskLogService = taskLogService;
+        this.ddlTablesSpecial = ddlTablesSpecial;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
-    public Task handle(CreateTaskRequest request) {
-        TaskCreateDto taskCreateDto = request.getTaskCreateDto();
-        Long ownerId = taskCreateDto.getOwnerId();
+    public IRecord handle(CreateTaskRequest request) {
+        try {
+            SchemaDto schema = request.getSchema();
+            RecordEntity record = request.getRecord();
+            ResourceQualifier qualifier = request.getQualifier();
 
-        UserDetails userDetails = authenticationFacade.getUserDetails();
-        List<Long> directMinions = userDetails.getDirectMinions();
+            log.debug("try create task: {}", record);
 
-        if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
-            throw new BadRequestException("Задачу можно назначить только на своего непосредственного подчиненного");
+            String ownerAsString = record.getAsString("owner_id");
+            if (ownerAsString == null) {
+                throw new BadRequestException("Отсутствует обязательное поле: owner_id");
+            }
+
+            Long ownerId = Long.valueOf(ownerAsString);
+            UserDetails userDetails = authenticationFacade.getUserDetails();
+            List<Long> directMinions = userDetails.getDirectMinions();
+            if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
+                throw new BadRequestException("Задачу можно назначить только на своего непосредственного подчиненного");
+            }
+
+            Map<String, Object> props = record.getContent();
+            props.put("status", CREATED.name());
+            props.put("created_by", userDetails.getUserId());
+
+            throwIfNotMatchTableColumns(props.keySet(), ddlTablesSpecial.getAllColumnNames(qualifier.getTable()));
+
+            IRecord newTask = recordsDao.addRecord(qualifier, record, schema);
+
+            taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask);
+
+            return newTask;
+        } catch (CrgDaoException e) {
+            if (e.hasErrors()) {
+                List<ErrorInfo> errorInfoList = new ArrayList<>();
+                e.getErrors().forEach((field, msg) -> errorInfoList.add(new ErrorInfo(field, msg)));
+
+                throw new BadRequestException(e.getMessage(), errorInfoList);
+            } else {
+                throw new DataServiceException(e.getMessage(), e.getCause());
+            }
         }
-
-        Task task = new Task(TaskType.valueOf(taskCreateDto.getType()),
-                             ownerId,
-                             taskCreateDto.getAssignedTo(),
-                             taskCreateDto.getDueDate(),
-                             taskCreateDto.getDescription(),
-                             userDetails.getUserId());
-
-        Task newTask = taskRepository.save(task);
-
-        request.setTask(newTask);
-
-        taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask);
-
-        return task;
     }
 }

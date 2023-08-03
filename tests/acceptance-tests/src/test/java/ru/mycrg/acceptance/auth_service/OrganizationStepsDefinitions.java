@@ -376,7 +376,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         task5_1.add("fiz5");
         task5_1.add("fiz5");
         task5_1.add(TaskType.CUSTOM.name());
-        task5_1.add("fiz5 task 1");
+        task5_1.add("description of fiz5 task 1");
 
         List<List<String>> tasksForFiz5 = new ArrayList<>();
         tasksForFiz5.add(task5_1);

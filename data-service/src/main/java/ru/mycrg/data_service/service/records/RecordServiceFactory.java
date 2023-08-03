@@ -23,8 +23,6 @@ public class RecordServiceFactory {
      * <p>
      * Владелец организации должен иметь безусловный доступ.
      *
-     * @param qualifier Квалификатор ресурса
-     *
      * @return {@link IRecordsService}
      */
     public IRecordsService get() {

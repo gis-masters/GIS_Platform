@@ -11,16 +11,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
-import ru.mycrg.data_service.entity.Task;
+import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.TaskRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.StringUtil.join;
 
@@ -28,22 +32,34 @@ import static ru.mycrg.data_service.util.StringUtil.join;
 @Transactional(readOnly = true)
 public class TaskService {
 
+    public static final String TASK_TABLE_NAME = "tasks";
+    public static final String TASKS_SCHEMA = "tasks_schema_v1";
+    public static final ResourceQualifier TASK_QUALIFIER = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME,
+                                                                                 TASK);
+
     private final Logger log = LoggerFactory.getLogger(TaskService.class);
 
-    private final TaskRepository taskRepository;
     private final BaseDao baseDao;
+    private final SchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
-    public TaskService(TaskRepository taskRepository,
-                       BaseDao baseDao,
+    public TaskService(BaseDao baseDao,
+                       SchemaService schemaService,
                        IAuthenticationFacade authenticationFacade) {
-        this.taskRepository = taskRepository;
         this.baseDao = baseDao;
+        this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
     }
 
     @NotNull
-    public Page<Task> getAll(String ecqlFilter, Pageable pageable) {
+    public Map<String, Object> getById(@NotNull Long id) {
+        return baseDao.findById(new ResourceQualifier(TASK_QUALIFIER, id))
+                      .map(IRecord::getContent)
+                      .orElseThrow(() -> new NotFoundException("Не найдена задача по id:" + id));
+    }
+
+    @NotNull
+    public Page<Object> getAll(String ecqlFilter, Pageable pageable) {
         try {
             ResourceQualifier taskQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks");
             String filter = ecqlFilter;
@@ -53,7 +69,14 @@ public class TaskService {
 
             log.debug("filter: {}", filter);
 
-            List<Task> tasks = baseDao.findAll(taskQualifier, filter, pageable, Task.class);
+            SchemaDto tasksSchema = this.schemaService
+                    .getSchemaByName(TASKS_SCHEMA)
+                    .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+
+            List<Object> tasks = baseDao.findAll(taskQualifier, filter, pageable, new RecordRowMapper(tasksSchema))
+                                        .stream()
+                                        .map(IRecord::getContent)
+                                        .collect(Collectors.toList());
             long total = baseDao.getTotal(taskQualifier, filter);
 
             return new PageImpl<>(tasks, pageable, total);
@@ -81,12 +104,5 @@ public class TaskService {
         }
 
         return String.format("(owner_id IN (%s) OR assigned_to IN (%s)) AND (%s)", joined, userId, ecqlFilter);
-    }
-
-    @NotNull
-    public Task getById(@NotNull Long id) {
-        return taskRepository
-                .findById(id)
-                .orElseThrow(() -> new NotFoundException(Task.class, id));
     }
 }

@@ -148,17 +148,6 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("title"));
         assertTrue(presentedData.containsKey("thumbnailUrn"));
         assertTrue(presentedData.containsKey("type"));
-        assertTrue(presentedData.containsKey("url"));
-        assertTrue(presentedData.containsKey("layerName"));
-        assertTrue(presentedData.containsKey("style"));
-        assertTrue(presentedData.containsKey("projection"));
-        assertTrue(presentedData.containsKey("format"));
-        assertTrue(presentedData.containsKey("size"));
-        assertTrue(presentedData.containsKey("resolution"));
-        assertTrue(presentedData.containsKey("matrixIds"));
-        assertTrue(presentedData.containsKey("createdAt"));
-        assertTrue(presentedData.containsKey("lastModified"));
-        assertTrue(presentedData.containsKey("_links"));
     }
 
     @And("Сервер передает ID созданной подложки")

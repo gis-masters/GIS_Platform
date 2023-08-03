@@ -8,6 +8,7 @@ public enum SystemLibraryAttributes {
     CREATED_AT("created_at"),
     LAST_MODIFIED("last_modified"),
     CREATED_BY("created_by"),
+    UPDATED_BY("updated_by"),
     INNER_PATH("inner_path"),
     FILE_TYPE("type"),
     SIZE("size"),

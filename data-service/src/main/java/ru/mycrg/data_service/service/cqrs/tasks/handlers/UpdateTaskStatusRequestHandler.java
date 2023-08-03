@@ -3,66 +3,95 @@ package ru.mycrg.data_service.service.cqrs.tasks.handlers;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service.entity.Task;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.TaskRepository;
+import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.TaskLogService;
+import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
+import ru.mycrg.mediator.Voidy;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
+import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.LAST_MODIFIED;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.UPDATED_BY;
 
 @Component
-public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTaskStatusRequest, Task> {
+public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTaskStatusRequest, Voidy> {
 
-    private final TaskRepository taskRepository;
+    private final RecordsDao recordsDao;
+    private final TaskService taskService;
+    private final SchemaService schemaService;
     private final TaskLogService taskLogService;
     private final IAuthenticationFacade authenticationFacade;
 
-    public UpdateTaskStatusRequestHandler(TaskRepository taskRepository,
+    public UpdateTaskStatusRequestHandler(RecordsDao recordsDao,
+                                          TaskService taskService,
+                                          SchemaService schemaService,
                                           TaskLogService taskLogService,
                                           IAuthenticationFacade authenticationFacade) {
-        this.taskRepository = taskRepository;
+        this.recordsDao = recordsDao;
+        this.taskService = taskService;
+        this.schemaService = schemaService;
         this.taskLogService = taskLogService;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
-    public Task handle(UpdateTaskStatusRequest request) {
+    public Voidy handle(UpdateTaskStatusRequest request) {
         TaskStatus newStatus = request.getTaskStatus();
         Long taskId = request.getTaskId();
 
-        Task taskFromDb = taskRepository
-                .findById(taskId)
-                .orElseThrow(() -> new NotFoundException("Не найдена задача: " + taskId));
+        Map<String, Object> task = taskService.getById(taskId);
 
         UserDetails userDetails = authenticationFacade.getUserDetails();
-        Long ownerId = taskFromDb.getOwnerId();
+        Long ownerId = Long.valueOf(task.get("owner_id").toString());
         List<Long> directMinions = userDetails.getDirectMinions();
         if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
             throw new BadRequestException(
-                    "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
+                    "Разрешено редактировать только свои задачи или задачи своих непосредственных подчиненных");
         }
 
-        taskFromDb.setUpdatedBy(userDetails.getUserId());
-        taskFromDb.setLastModified(LocalDateTime.now());
+        Map<String, Object> dataForUpdate = new HashMap<>();
+        dataForUpdate.put(UPDATED_BY.getName(), userDetails.getUserId());
+        dataForUpdate.put(LAST_MODIFIED.getName(), LocalDateTime.now());
 
         if (nonNull(newStatus)) {
-            taskFromDb.setStatus(newStatus);
+            dataForUpdate.put("status", newStatus.toString());
         }
 
-        Task updatedTask = taskRepository.save(taskFromDb);
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
+                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
-        taskLogService.create(new TaskLogDto("Статус задачи обновлён на: " + newStatus.getTranslatedStatus(),
-                                             updatedTask.getId()),
-                              updatedTask);
+        try {
+            recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, taskId),
+                                        dataForUpdate,
+                                        tasksSchema);
 
-        return updatedTask;
+            Map<String, Object> updatedTask = taskService.getById(taskId);
+            taskLogService.create(
+                    new TaskLogDto("Статус задачи обновлён на: " + newStatus.getTranslatedStatus(), taskId),
+                    updatedTask
+            );
+        } catch (CrgDaoException e) {
+            throw new DataServiceException("Не удалось обновить статус задачи: " + taskId);
+        }
+
+        return new Voidy();
     }
 }

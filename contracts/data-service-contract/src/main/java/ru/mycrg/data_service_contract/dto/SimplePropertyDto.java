@@ -33,6 +33,7 @@ public class SimplePropertyDto {
     private Boolean readOnly;
     private Boolean multiple;
     private Boolean asTitle;
+    private Boolean onlySubordinates;
 
     private String description;
     private Updateability updateability;
@@ -453,5 +454,13 @@ public class SimplePropertyDto {
 
     public void setAsTitle(Boolean asTitle) {
         this.asTitle = asTitle;
+    }
+
+    public Boolean getOnlySubordinates() {
+        return onlySubordinates;
+    }
+
+    public void setOnlySubordinates(Boolean onlySubordinates) {
+        this.onlySubordinates = onlySubordinates;
     }
 }

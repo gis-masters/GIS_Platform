@@ -3,20 +3,25 @@ package ru.mycrg.data_service.service.cqrs.tasks.requests;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.data_service.entity.Task;
-import ru.mycrg.data_service_contract.dto.TaskCreateDto;
+import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
-public class CreateTaskRequest implements IRequest<Task>, Auditable {
+public class CreateTaskRequest implements IRequest<IRecord>, Auditable {
 
-    private Task task;
-    private final TaskCreateDto taskCreateDto;
+    private final SchemaDto schema;
+    private final RecordEntity record;
+    private final ResourceQualifier qualifier;
 
-    public CreateTaskRequest(TaskCreateDto taskCreateDto) {
-        this.taskCreateDto = taskCreateDto;
+    public CreateTaskRequest(SchemaDto schema, ResourceQualifier qualifier, RecordEntity record) {
+        this.schema = schema;
+        this.record = record;
+        this.qualifier = qualifier;
     }
 
     @Override
@@ -26,18 +31,22 @@ public class CreateTaskRequest implements IRequest<Task>, Auditable {
 
     @Override
     public CrgAuditEvent getEvent() {
-        return new CrgAuditEvent(mapper.convertValue(taskCreateDto, JsonNode.class),
-                "CREATE",
-                task.getDescription() == null ? "unknown" : task.getDescription(),
-                TASK.name(),
-                task.getId());
+        return new CrgAuditEvent(mapper.convertValue(record, JsonNode.class),
+                                 "CREATE",
+                                 qualifier.getTable() == null ? "unknown" : qualifier.getTable(),
+                                 TASK.name(),
+                                 record.getId() == null ? -1 : record.getId());
     }
 
-    public TaskCreateDto getTaskCreateDto() {
-        return taskCreateDto;
+    public SchemaDto getSchema() {
+        return schema;
     }
 
-    public void setTask(Task task) {
-        this.task = task;
+    public RecordEntity getRecord() {
+        return record;
+    }
+
+    public ResourceQualifier getQualifier() {
+        return qualifier;
     }
 }
