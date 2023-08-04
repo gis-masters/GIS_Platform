@@ -5,7 +5,10 @@ import org.springframework.data.domain.Pageable;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+
+import java.util.List;
 
 public interface IRecordsService {
 
@@ -26,6 +29,13 @@ public interface IRecordsService {
      */
     IRecord getById(ResourceQualifier rQualifier,
                     Object recordId);
+
+    IRecord getById(ResourceQualifier rQualifier,
+                    Object recordId,
+                    SchemaDto schema);
+
+    List<DocumentVersioningDto> getVersionsByRecordId(ResourceQualifier rQualifier,
+                                                      Object recordId);
 
     IRecord createRecord(ResourceQualifier lQualifier,
                          IRecord record,

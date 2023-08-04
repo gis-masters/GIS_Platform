@@ -17,7 +17,8 @@ public enum SystemLibraryAttributes {
     OKTMO("oktmo"),
     INTENTS("intents"),
     ROLE("role"),
-    IS_FOLDER("is_folder");
+    IS_FOLDER("is_folder"),
+    VERSIONS("versions");
 
     private final String name;
 

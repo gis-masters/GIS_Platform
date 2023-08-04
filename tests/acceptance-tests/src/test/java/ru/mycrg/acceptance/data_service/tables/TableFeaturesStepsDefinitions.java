@@ -199,7 +199,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void updateFeatureInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "new title");
-        properties.put("created_at", "");
+        properties.put("created_at", "2022-11-10 00:00:00");
 
         updateFeature(new GeoJsonModel(properties));
     }

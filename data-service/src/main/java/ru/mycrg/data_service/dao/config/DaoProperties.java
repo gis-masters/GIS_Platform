@@ -12,6 +12,8 @@ public class DaoProperties {
     /**
      * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
      */
+    public static final String ID = "id";
+
     public static final String PRIMARY_KEY = "objectid";
 
     public static final String GLOBAL_KEY = "globalid";

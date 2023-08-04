@@ -117,7 +117,7 @@ public class DdlTablesSpecial {
     public List<String> getAllColumnNames(String tableName) {
         String query = "SELECT column_name " +
                 "FROM INFORMATION_SCHEMA.COLUMNS " +
-                "WHERE TABLE_NAME = '" + tableName + "'";
+                "WHERE TABLE_NAME = '" + tableName.toLowerCase() + "'";
 
         return jdbcTemplate.queryForList(query, String.class);
     }

@@ -233,7 +233,13 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         firstProperty.setTitle("firstPropertyTitle");
         firstProperty.setValueType("STRING");
 
+        SimplePropertyDto secondProperty = new SimplePropertyDto();
+        secondProperty.setName("path");
+        secondProperty.setTitle("secondPropertyTitle");
+        secondProperty.setValueType("STRING");
+
         properties.add(firstProperty);
+        properties.add(secondProperty);
 
         SchemaDto dto = new SchemaDto();
         dto.setName(name);

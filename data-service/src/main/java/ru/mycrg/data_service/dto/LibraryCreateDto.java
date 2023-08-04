@@ -11,6 +11,8 @@ public class LibraryCreateDto {
     @Size(max = 50)
     private String schemaId;
 
+    private boolean versioned;
+
     public LibraryCreateDto() {
     }
 
@@ -28,5 +30,13 @@ public class LibraryCreateDto {
 
     public void setSchemaId(String schemaId) {
         this.schemaId = schemaId;
+    }
+
+    public boolean isVersioned() {
+        return versioned;
+    }
+
+    public void setVersioned(boolean versioned) {
+        this.versioned = versioned;
     }
 }

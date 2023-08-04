@@ -3,24 +3,24 @@ package ru.mycrg.data_service.dao.ddl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generatePropertySqlString;
 
-@Repository
-public class DdlTablesBase extends DdlBase {
+@Service
+public class DdlLibrary extends DdlBase {
 
-    private final Logger log = LoggerFactory.getLogger(DdlTablesBase.class);
+    private final Logger log = LoggerFactory.getLogger(DdlLibrary.class);
 
-    public DdlTablesBase(JdbcTemplate jdbcTemplate,
-                         SchemasAndTablesRepository schemasAndTablesRepository,
-                         List<IWellKnownFormulaGenerator> generators) {
+    public DdlLibrary(JdbcTemplate jdbcTemplate,
+                      SchemasAndTablesRepository schemasAndTablesRepository,
+                      List<IWellKnownFormulaGenerator> generators) {
         super(jdbcTemplate, schemasAndTablesRepository, generators);
     }
 
@@ -30,18 +30,21 @@ public class DdlTablesBase extends DdlBase {
         StringBuilder propertiesBuilder = new StringBuilder();
 
         for (SimplePropertyDto property: schemaProperties) {
-            String formulaName = property.getCalculatedValueWellKnownFormula();
+            if (!property.getName().equalsIgnoreCase(ID)) {
+                String formulaName = property.getCalculatedValueWellKnownFormula();
 
-            String generateProperties = generatePropertySqlString(property);
-            String result = wellKnownFormulaGenerate(formulaName, generateProperties);
+                String generateProperties = generatePropertySqlString(property);
+                String result = wellKnownFormulaGenerate(formulaName, generateProperties);
 
-            propertiesBuilder.append(",").append(result);
+                propertiesBuilder.append(",").append(result);
+            }
         }
+        propertiesBuilder.append(", versions jsonb");
 
         String query = String.format(
                 "CREATE TABLE %1$s (%2$s serial NOT NULL %3$s ); ALTER TABLE ONLY %1$s ADD " +
                         "CONSTRAINT %4$s_pkey PRIMARY KEY (%2$s);",
-                target, PRIMARY_KEY, propertiesBuilder, targetTable);
+                target, ID, propertiesBuilder, targetTable);
 
         log.debug("Create table query: [{}]", query);
 

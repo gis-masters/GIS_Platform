@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.ddl.DdlTablesBase;
+import ru.mycrg.data_service.dao.ddl.DdlLibrary;
 import ru.mycrg.data_service.dto.LibraryCreateDto;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -24,18 +24,18 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
     private final SchemaService schemaService;
     private final DocumentLibraryRepository libraryRepository;
     private final IAuthenticationFacade authenticationFacade;
-    private final DdlTablesBase ddlTablesBase;
+    private final DdlLibrary ddlLibrary;
     private final DocLibraryProtector docLibraryProtector;
 
     public CreateLibraryRequestHandler(SchemaService schemaService,
                                        DocumentLibraryRepository libraryRepository,
                                        IAuthenticationFacade authenticationFacade,
-                                       DdlTablesBase ddlTablesBase,
+                                       DdlLibrary ddlLibrary,
                                        DocLibraryProtector docLibraryProtector) {
         this.schemaService = schemaService;
         this.libraryRepository = libraryRepository;
         this.authenticationFacade = authenticationFacade;
-        this.ddlTablesBase = ddlTablesBase;
+        this.ddlLibrary = ddlLibrary;
         this.docLibraryProtector = docLibraryProtector;
     }
 
@@ -59,10 +59,11 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         library.setTableName(schema.getTableName());
         library.setCreatedBy(authenticationFacade.getLogin());
         library.setPath("/root");
+        library.setVersioned(dto.isVersioned());
 
         libraryRepository.save(library);
 
-        ddlTablesBase.create(library.getTableName(), schema.getProperties());
+        ddlLibrary.create(library.getTableName(), schema.getProperties());
 
         LibraryModel libraryModel = new LibraryModel(library);
         request.setLibraryModel(libraryModel);

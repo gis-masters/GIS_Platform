@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
+import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.time.LocalDateTime;
@@ -86,7 +87,7 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler prepareJsonb() {
+    public SystemAttributeHandler prepareFilesAsJsonb() {
         getSchema().getProperties().stream()
                    .filter(property -> FILE.equals(property.getValueTypeAsEnum()))
                    .forEach(property -> {
@@ -95,6 +96,30 @@ public class SystemAttributeHandler {
                            result.put(property.getName(), toJsonNode(value));
                        }
                    });
+
+        return this;
+    }
+
+    public SystemAttributeHandler updateVersionsField(Map<String, Object> previousRecordContent) {
+        boolean isFolder = Boolean.parseBoolean(String.valueOf(result.get(IS_FOLDER.getName())));
+        if (isFolder) {
+            return this;
+        }
+        Map<String, Object> contentWithOldVersions = new HashMap<>(previousRecordContent);
+
+        List<DocumentVersioningDto> allVersions = Objects.nonNull(contentWithOldVersions.get(VERSIONS.getName()))
+                ? (List<DocumentVersioningDto>) contentWithOldVersions.get(VERSIONS.getName())
+                : new ArrayList<>();
+
+        Map<String, Object> contentWithoutVersion = new HashMap<>(previousRecordContent);
+        contentWithoutVersion.remove(VERSIONS.getName());
+
+        DocumentVersioningDto newVersion = new DocumentVersioningDto(authenticationFacade.getUserDetails().getUserId(),
+                                                                     LocalDateTime.now(),
+                                                                     contentWithoutVersion);
+        allVersions.add(newVersion);
+
+        result.put(VERSIONS.getName(), toJsonNode(allVersions));
 
         return this;
     }

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.records;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
@@ -17,8 +19,10 @@ import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
+import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -27,6 +31,7 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.*;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
@@ -113,12 +118,18 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public IRecord getById(ResourceQualifier rQualifier, Object recordId) {
+        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
+
+        return getById(rQualifier, recordId, schema);
+    }
+
+    @Override
+    public IRecord getById(ResourceQualifier rQualifier, Object recordId, SchemaDto schema) {
         String definedRole = null;
 
         // Создаю новый - переходное решение пока некоторые квалификаторы не включают в себя идентификатор записи
         ResourceQualifier recordQualifier = new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD);
 
-        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
         IRecord record = recordsDao.findById(recordQualifier, schema)
                                    .orElseThrow(() -> new NotFoundException(recordId));
         Map<String, Object> content = record.getContent();
@@ -197,6 +208,22 @@ public class UserRecordsService implements IRecordsService {
             content.put(ROLE.getName(), definedRole);
 
             return record;
+        }
+    }
+
+    @Override
+    public List<DocumentVersioningDto> getVersionsByRecordId(ResourceQualifier rQualifier, Object recordId) {
+        IRecord record = getById(rQualifier, recordId);
+        String versions = record.getAsString(VERSIONS.getName());
+        if (record.isFolder() || !Objects.nonNull(versions)) {
+            return new ArrayList<>();
+        }
+
+        try {
+            return mapper.readValue(versions, new TypeReference<List<DocumentVersioningDto>>() {
+            });
+        } catch (IOException e) {
+            throw new DataServiceException("Не удалось получить версии документа: " + rQualifier);
         }
     }
 

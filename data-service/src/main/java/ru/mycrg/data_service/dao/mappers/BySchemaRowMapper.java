@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -13,11 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
-import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
-import static ru.mycrg.data_service_contract.enums.ValueType.UUID;
+import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 public class BySchemaRowMapper {
 
@@ -41,6 +41,12 @@ public class BySchemaRowMapper {
                     List<FileDescription> descriptions = mapper.readValue(object.toString(),
                                                                           new TypeReference<List<FileDescription>>() {
                                                                           });
+
+                    properties.put(columnName, descriptions);
+                } else if (valueType.equals(VERSIONS)) {
+                    List<DocumentVersioningDto> descriptions = mapper.readValue(object.toString(),
+                                                                                new TypeReference<List<DocumentVersioningDto>>() {
+                                                                                });
 
                     properties.put(columnName, descriptions);
                 } else if (valueType.equals(UUID)) {

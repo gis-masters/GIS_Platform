@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
@@ -20,12 +21,13 @@ import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.MoveRecordToNewParentRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
+import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
@@ -35,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Boolean.TRUE;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -44,6 +47,7 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.PagingAndSortingUtil.fetchFoldersFirst;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 
 @Validated
 @RestController
@@ -81,7 +85,7 @@ public class DocumentLibraryRecordsController {
 
         Page<RecordDto> page = recordServiceFactory.get()
                                                    .getPaged(lQualifier, newPageable, parent, ecqlFilter)
-                                                   .map(RecordDto::new);
+                                                   .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
         return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
     }
@@ -103,7 +107,7 @@ public class DocumentLibraryRecordsController {
 
         Page<RecordDto> page = recordServiceFactory.get()
                                                    .getAsRegistry(lQualifier, newPageable, ecqlFilter)
-                                                   .map(RecordDto::new);
+                                                   .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
         return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
     }
@@ -116,7 +120,21 @@ public class DocumentLibraryRecordsController {
 
         IRecord record = recordServiceFactory.get().getById(qualifier, recId);
 
-        return ResponseEntity.ok(record.getContent());
+        return ResponseEntity.ok(removeVersionsFromRecord(record).getContent());
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/document-libraries/{docLibId}/records/{recId}/versions")
+    public List<DocumentVersioningDto> getVersionsByRecordId(@PathVariable String docLibId,
+                                                             @PathVariable Long recId) {
+        LibraryModel libraryInfo = (LibraryModel) libraryService.getInfo(docLibId);
+        if (TRUE.equals(libraryInfo.getVersioned())) {
+            ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+
+            return recordServiceFactory.get().getVersionsByRecordId(qualifier, recId);
+        } else {
+            throw new BadRequestException("Библиотека не является версионируемой: " + docLibId);
+        }
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -219,5 +237,13 @@ public class DocumentLibraryRecordsController {
                                         linkTo(DocumentLibraryRecordsController.class)
                                                 .slash("/api/data/document-libraries/" + docLibId + "/records")
                                                 .withSelfRel());
+    }
+
+    @NotNull
+    private static IRecord removeVersionsFromRecord(IRecord record) {
+        Map<String, Object> content = record.getContent();
+        content.remove(VERSIONS.getName(), content.get(VERSIONS.getName()));
+
+        return record;
     }
 }

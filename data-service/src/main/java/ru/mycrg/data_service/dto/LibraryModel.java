@@ -14,6 +14,9 @@ public class LibraryModel extends ResourceModel {
     @JsonProperty("table_name")
     private String tableName;
 
+    @JsonProperty("versioned")
+    private Boolean versioned;
+
     public LibraryModel() {
         super();
     }
@@ -31,6 +34,7 @@ public class LibraryModel extends ResourceModel {
               null);
 
         this.tableName = String.valueOf(library.get("table_name"));
+        this.versioned = Boolean.parseBoolean(String.valueOf(library.get("versioned")));
     }
 
     public LibraryModel(DocumentLibrary dl) {
@@ -46,6 +50,7 @@ public class LibraryModel extends ResourceModel {
               null);
 
         this.tableName = dl.getTableName();
+        this.versioned = dl.isVersioned();
     }
 
     public LibraryModel(DocumentLibrary dl, String role) {
@@ -61,9 +66,14 @@ public class LibraryModel extends ResourceModel {
               role);
 
         this.tableName = dl.getTableName();
+        this.versioned = dl.isVersioned();
     }
 
     public String getTableName() {
         return tableName;
+    }
+
+    public Boolean getVersioned() {
+        return versioned;
     }
 }

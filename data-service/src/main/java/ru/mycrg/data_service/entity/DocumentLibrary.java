@@ -43,6 +43,9 @@ public class DocumentLibrary {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
+    @Column
+    private boolean versioned;
+
     public DocumentLibrary() {
         // Framework required
     }
@@ -132,5 +135,13 @@ public class DocumentLibrary {
 
     public void setRegistryCounter(Long registryCounter) {
         this.registryCounter = registryCounter;
+    }
+
+    public boolean isVersioned() {
+        return versioned;
+    }
+
+    public void setVersioned(boolean versioned) {
+        this.versioned = versioned;
     }
 }

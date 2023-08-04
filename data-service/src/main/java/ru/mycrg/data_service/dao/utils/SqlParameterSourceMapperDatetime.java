@@ -35,30 +35,30 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
 
         LocalDateTime dateTime = null;
         String asString = value.toString();
-        if (!asString.isEmpty()) {
-            try {
-                log.debug("'{}' try as DateTime '{}'", value, SYSTEM_DATETIME_PATTERN);
+        if (asString.isEmpty()) {
+            return;
+        }
 
-                dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
-            } catch (Exception e) {
-                log.warn("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
-            }
+        try {
+            log.debug("'{}' try as DateTime '{}'", value, SYSTEM_DATETIME_PATTERN);
 
+            dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
+        } catch (Exception e) {
+            log.warn("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
             try {
                 log.debug("Try as LocalDate '{}'", SYSTEM_DATE_PATTERN);
 
                 dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
                                     .atTime(0, 0, 0);
-            } catch (Exception e) {
+            } catch (Exception e1) {
                 log.warn("Not a LocalDate '{}'", SYSTEM_DATE_PATTERN);
-            }
+                try {
+                    log.debug("Try as Zoned(ISO_ZONED_DATE_TIME) 'yyyy-MM-dd'T'HH:mm:ssZ'. Use ONE format plz!");
 
-            try {
-                log.debug("Try as Zoned(ISO_ZONED_DATE_TIME) 'yyyy-MM-dd'T'HH:mm:ssZ'. Use ONE format plz!");
-
-                dateTime = ZonedDateTime.parse(asString).toLocalDateTime();
-            } catch (Exception e) {
-                log.error("Not supported DateTime format: {}", asString);
+                    dateTime = ZonedDateTime.parse(asString).toLocalDateTime();
+                } catch (Exception e2) {
+                    log.error("Not supported DateTime format: {}", asString);
+                }
             }
         }
 

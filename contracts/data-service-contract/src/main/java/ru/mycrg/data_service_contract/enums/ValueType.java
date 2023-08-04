@@ -17,5 +17,6 @@ public enum ValueType {
     FIAS,
     FILE,
     DOCUMENT,
-    USER_ID
+    USER_ID,
+    VERSIONS
 }
