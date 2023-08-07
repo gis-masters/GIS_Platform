@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { HomeOutlined } from '@mui/icons-material';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
+import { services } from '../../services/services';
 import { formatDate } from '../../services/util/date.util';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { applyContentType } from '../../services/data/schema/schema.utils';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
-import { getLibraryRecordBreadcrumbs } from '../DataManagement/DataManagement.utils';
+import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
 import { docLibraryClient } from '../../services/data/docLibrary/docLibrary.client';
+import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
+import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
+import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 
@@ -101,11 +107,95 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
   }
 
   private async getBreadcrumbsItems() {
-    this.setBreadcrumbsItems(await getLibraryRecordBreadcrumbs(this.props.document, true));
+    this.setBreadcrumbsItems(await this.getLibraryRecordBreadcrumbs(this.props.document, true));
   }
 
   @action.bound
   private setBreadcrumbsItems(breadcrumbsItems: BreadcrumbsItemData[]) {
     this.breadcrumbsItems = breadcrumbsItems;
+  }
+
+  private async getLibraryRecordBreadcrumbs(
+    item: LibraryRecord,
+    includeSelf?: boolean
+  ): Promise<BreadcrumbsItemData[]> {
+    const { libraryTableName, path, id, title, is_folder: isFolder } = item;
+    const libraryRootPath = JSON.stringify([...libraryRootUrlItems, 'none', 'none']);
+    const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, 'none', 'none']);
+    const library = await getLibrary(libraryTableName);
+    const currentItem = isFolder ? ['folder', id] : ['doc', id];
+
+    const breadcrumbs = [
+      { title: <HomeOutlined />, url: '/data-management' },
+      {
+        title: 'Библиотеки документов',
+        url: `/data-management?path_dm=${libraryRootPath}`
+      },
+      {
+        title: library.title,
+        url: `/data-management?path_dm=${libraryPath}`
+      }
+    ];
+
+    try {
+      let parentsInfo = await Promise.all(
+        getIdsFromPath(path || '').map(async pathId => {
+          const { id, title } = await getLibraryRecord(libraryTableName, pathId);
+
+          return { id, title };
+        })
+      );
+
+      parentsInfo = parentsInfo.filter(notFalsyFilter);
+
+      let pathWithoutCurrent = '';
+      const itemParentsBreadcrumbs: BreadcrumbsItemData[] = parentsInfo?.map((parent, index) => {
+        const folders: (string | number)[] = [];
+        for (let i = 0; i < index + 1; i++) {
+          folders.push('folder', parentsInfo[i].id);
+        }
+
+        const folderPath = JSON.stringify([
+          ...libraryRootUrlItems,
+          'library',
+          libraryTableName,
+          ...folders,
+          'none',
+          'none'
+        ]);
+
+        if (includeSelf) {
+          pathWithoutCurrent = JSON.stringify([
+            ...libraryRootUrlItems,
+            'library',
+            libraryTableName,
+            ...folders,
+            ...currentItem
+          ]);
+        }
+
+        return {
+          title: parent.title,
+          url: `/data-management?path_dm=${folderPath}`
+        };
+      });
+
+      if (includeSelf) {
+        itemParentsBreadcrumbs.push({
+          title: <b>{title}</b>,
+          url: `/data-management?path_dm=${
+            pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
+          }`
+        });
+      }
+
+      return [...breadcrumbs, ...itemParentsBreadcrumbs];
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка получения документа. ${err.message}`);
+      services.logger.warn(`Ошибка получения документа. ${err.message}`);
+
+      return breadcrumbs;
+    }
   }
 }

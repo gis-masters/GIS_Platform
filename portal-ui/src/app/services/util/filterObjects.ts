@@ -1,7 +1,7 @@
-import escapeStringRegexp from 'escape-string-regexp';
 import sift from 'sift';
 
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
+import { escapeStringRegexp } from './escapeStringRegexp';
 
 export type FilterQueryValue =
   | string

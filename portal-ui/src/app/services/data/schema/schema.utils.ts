@@ -31,6 +31,7 @@ import { DocumentInfo } from '../../../components/Documents/Documents';
 import { formatDate } from '../../util/date.util';
 import { FileInfo } from '../files/files.models';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 
 export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   const view = schema.views?.find(cType => cType.id === viewId);
@@ -400,20 +401,33 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
     }),
 
   linkToFeaturesMentioningThisDocument: (obj, { valueFormulaParams = {} }) => {
-    const { id, libraryTableName } = obj as LibraryRecord;
+    const { id, libraryTableName, path } = obj as LibraryRecord;
     const {
       projectId,
       property,
       layers,
-      text = 'Связанные объекты'
+      text = 'Связанные объекты',
+      includeParents = false
     } = valueFormulaParams as {
       projectId: number;
       property: string;
       layers: string[];
       text?: string;
+      includeParents?: boolean;
     };
     const pathname = `/projects/${projectId}/map`;
-    const filter = `${property}%20LIKE%20%27%25{%22id%22:${id},%25%22libraryTableName%22:%22${libraryTableName}%22%25%27`;
+    const ids: number[] = [id];
+    if (includeParents) {
+      ids.push(...getIdsFromPath(path));
+    }
+    const parts = ids
+      .map(
+        currId =>
+          `${property}%20LIKE%20%27%25{%22id%22:${currId},%25%22libraryTableName%22:%22${libraryTableName}%22%25%27`
+      )
+      .join(')%20OR%20(');
+    const ps = ids.length > 1 ? '()' : ['', ''];
+    const filter = `${ps[0]}${parts}${ps[1]}`;
 
     if (!id || !libraryTableName) {
       return [];
