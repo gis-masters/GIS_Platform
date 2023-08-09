@@ -1,3 +1,5 @@
+import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
 import { Block } from '../../Block';
 import { hasClass } from '../../utils/hasClass';
 import { sleep } from '../../../../src/app/services/util/sleep';
@@ -13,7 +15,8 @@ class EditFeatureBlock extends Block {
     editFeatureLabel: '.edit-feature__label',
     editFeatureField: '.edit-feature__field',
     editFeatureLoading: '.edit-feature .loading',
-    editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText'
+    editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText',
+    lookupStatus: '.edit-feature .Lookup-Status'
   };
 
   async clickSaveButton(): Promise<void> {
@@ -107,6 +110,21 @@ class EditFeatureBlock extends Block {
         return $field;
       }
     }
+  }
+
+  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
+    const $lookupStatus = await this.$('lookupStatus');
+
+    try {
+      await $lookupStatus.waitForDisplayed();
+    } catch {
+      // ignore
+    }
+
+    await super.assertSelfie(tag, {
+      hideElements: [$lookupStatus, ...(checkElementOptions?.hideElements || [])],
+      ...checkElementOptions
+    });
   }
 }
 

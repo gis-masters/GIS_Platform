@@ -1,3 +1,5 @@
+import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
 export const blocksRegistry: Record<string, Block> = {};
 
 interface Selectors {
@@ -50,13 +52,11 @@ export abstract class Block<S extends Selectors = Selectors> {
 
   async waitForHidden(): Promise<void> {
     const $container = await this.$('container');
-
     await $container.waitForDisplayed({ reverse: true, timeout: 5000 });
   }
 
-  async assertSelfie(tag = 'plain', checkElementOptions = {}): Promise<void> {
+  async assertSelfie(tag = 'plain', checkElementOptions: WdioCheckElementMethodOptions = {}): Promise<void> {
     const $container = await this.$('container');
-
     await expect(await browser.checkElement($container, `${this.name}-${tag}`, checkElementOptions)).toEqual(0);
   }
 

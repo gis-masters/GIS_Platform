@@ -138,7 +138,7 @@ const value = observable({
     { url: 'text', text: 'text' }
   ]),
   document: JSON.stringify([
-    { url: 'http://10.10.10.172/reglaments/Gorodskoi_okrug_Simferopol/GL.html', text: 'regl 1' },
+    { url: `${location.origin}/assets/test/html-fragment.html`, text: 'help' },
     { url: 'http://10.10.10.172/reglaments/Gorodskoi_okrug_Alushta/SH-1.html', text: 'regl 2' },
     { url: 'text', text: 'text' }
   ]),
