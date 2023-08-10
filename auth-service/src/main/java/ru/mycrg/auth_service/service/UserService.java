@@ -330,19 +330,21 @@ public class UserService {
         if (authenticationFacade.isRoot()) {
             return userRepository.findById(id)
                                  .orElseThrow(() -> new NotFoundException(id));
-        } else {
-            String ownerName = authenticationFacade.getLogin();
-
-            User owner = userRepository.findByLoginIgnoreCase(ownerName)
-                                       .orElseThrow(() -> new NotFoundException(ownerName));
-
-            Set<Organization> organizations = owner.getOrganizations();
-            Organization organization = organizations.iterator().next();
-
-            return organization.getUsers().stream()
-                               .filter(user -> user.getId().equals(id))
-                               .findFirst()
-                               .orElseThrow(() -> new NotFoundException(id));
         }
+
+        String ownerName = authenticationFacade.getLogin();
+        Long orgId = authenticationFacade.getOrganizationId();
+
+        return userRepository
+                .findByLoginIgnoreCase(ownerName)
+                .orElseThrow(() -> new NotFoundException(ownerName))
+                .getOrganizations().stream()
+                .filter(organization -> organization.getId().equals(orgId))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Не найдена организация: " + orgId))
+                .getUsers().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(id));
     }
 }
