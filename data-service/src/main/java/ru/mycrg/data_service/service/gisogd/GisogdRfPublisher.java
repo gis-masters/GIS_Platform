@@ -8,44 +8,64 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
+import ru.mycrg.gisog_service_contract.dto.Document;
+import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
+import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
+import static ru.mycrg.data_service_contract.enums.TaskType.SYSTEM;
 
 @Service
 public class GisogdRfPublisher {
 
+    private static final String TARGET_COLUMN = "gisogdrf_publication_datetime";
+
     private final Logger log = LoggerFactory.getLogger(GisogdRfPublisher.class);
 
     private final BaseDao baseDao;
+    private final Mediator mediator;
     private final GisogdRfDao gisogdRfDao;
+    private final SchemaService schemaService;
     private final IMessageBusProducer messageBus;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DocumentLibraryService libraryService;
     private final IAuthenticationFacade authenticationFacade;
 
     public GisogdRfPublisher(BaseDao baseDao,
+                             Mediator mediator,
                              GisogdRfDao gisogdRfDao,
+                             SchemaService schemaService,
                              IMessageBusProducer messageBus,
                              SpatialRecordsDao spatialRecordsDao,
                              DocumentLibraryService libraryService,
                              IAuthenticationFacade authenticationFacade) {
         this.baseDao = baseDao;
+        this.mediator = mediator;
         this.gisogdRfDao = gisogdRfDao;
+        this.schemaService = schemaService;
         this.messageBus = messageBus;
         this.libraryService = libraryService;
         this.spatialRecordsDao = spatialRecordsDao;
@@ -58,18 +78,54 @@ public class GisogdRfPublisher {
         IRecord document = baseDao
                 .findById(qualifier)
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.toString()));
+        String guid = document.getAsString(GUID.getName());
+        String contentType = document.getAsString(CONTENT_TYPE_ID.getName());
 
-        IRecord inboxData = fetchInbox(qualifier, document);
-        IRecord layerRecord = fetchJoinedToDocumentLayer(qualifier);
+        Document parent = new Document(UUID.fromString(guid), qualifier.getTable(), contentType, document.getContent());
+        Document inbox = fetchInbox(qualifier, document);
+        Document layer = fetchJoinedToDocumentLayer(qualifier);
 
         messageBus.produce(
-                new PublishToGisogdRfEvent(authenticationFacade.getAccessToken(),
-                                           document.getContent(),
-                                           inboxData.getContent(),
-                                           layerRecord.getContent()));
+                new PublishToGisogdRfEvent(-314L, parent, List.of(inbox, layer)));
 
         // TODO: create task and return id
         return -314L;
+    }
+
+    /**
+     * Публикация всего.
+     * <p><br>
+     * Список таблиц, из которых отправляются данные должен формироваться по критерию: в схеме данных есть поле
+     * gisogdrf_publication_datetime
+     * <p><br>
+     * <p> Существуют критерии какие записи должны быть отправлены:
+     * <ul>
+     *   <li>не отправляются папки</li>
+     *   <li>направляются документы, у которых не указана gisogdrf_publication_datetime - это новые, еще ни разу не
+     *       синхронизированные документы.</li>
+     *   <li>направляются документы, у которых last_modified после даты gisogdrf_publication_datetime - это обновленные
+     *       документы</li>
+     * </ul>
+     *
+     * @return Идентификатор начатой системной задачи.
+     */
+    public Long fullPublication() {
+        List<String> schemas = getSchemasPublishedToGisogdRf(TARGET_COLUMN);
+        if (schemas.isEmpty()) {
+            String msg = String.format(
+                    "Не найдено предназначенных для отправки в ГИСОГД РФ библиотек. Не найдено схем с полем: %s",
+                    TARGET_COLUMN);
+            log.warn(msg);
+
+            throw new BadRequestException(msg);
+        }
+
+        IRecord record = createSystemTask();
+
+        log.debug("Found {} schemas prepared to publish to GISOGD RF", schemas.size());
+        schemas.forEach(this::publishLibrary);
+
+        return record.getId();
     }
 
     /**
@@ -80,7 +136,7 @@ public class GisogdRfPublisher {
      *
      * @return Квалификатор объекта слоя
      */
-    private IRecord fetchJoinedToDocumentLayer(ResourceQualifier qualifier) {
+    private Document fetchJoinedToDocumentLayer(ResourceQualifier qualifier) {
         try {
             String targetFormulaName = "linkToFeaturesMentioningThisDocument";
 
@@ -157,7 +213,10 @@ public class GisogdRfPublisher {
             String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(lrQualifier, 3857);
             oLayerRecord.get().getContent().put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
 
-            return oLayerRecord.get();
+            IRecord record = oLayerRecord.get();
+            String guid = record.getAsString(GUID.getName());
+
+            return new Document(UUID.fromString(guid), layerName, layerName, record.getContent());
         } catch (Exception e) {
             String msg = "Не удается получить информацию о слое, связанном с документом. По причине: " + e.getMessage();
 
@@ -166,14 +225,46 @@ public class GisogdRfPublisher {
         }
     }
 
-    private IRecord fetchInbox(ResourceQualifier qualifier, IRecord record) {
+    private Document fetchInbox(ResourceQualifier qualifier, IRecord record) {
         String inboxDataKey = record.getAsString("inbox_data_key");
         if (inboxDataKey == null) {
             throw new DataServiceException("Поле inbox_data_key не заполнено для объекта: " + qualifier.toString());
         }
 
-        return baseDao.findBy(new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks", inboxDataKey, TASK),
-                              String.format("guid = '%s'", inboxDataKey))
-                      .orElseThrow(() -> new IllegalStateException("Не найдено входящее сообщение: " + inboxDataKey));
+        IRecord inbox = baseDao.findBy(new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks", inboxDataKey, TASK),
+                                       String.format("guid = '%s'", inboxDataKey))
+                               .orElseThrow(() -> new IllegalStateException(
+                                       "Не найдено входящее сообщение: " + inboxDataKey));
+
+        String guid = inbox.getAsString(GUID.getName());
+
+        return new Document(UUID.fromString(guid), "inbox_data", "inbox_data", inbox.getContent());
+    }
+
+    private void publishLibrary(String library) {
+        log.info("LIBRARY: {}", library);
+
+        // выбирать порциями и отправлять.
+    }
+
+    private List<String> getSchemasPublishedToGisogdRf(String targetProperty) {
+        return schemaService.getBySpecificProperty(targetProperty).stream()
+                            .map(SchemaDto::getTableName)
+                            .collect(Collectors.toList());
+    }
+
+    private IRecord createSystemTask() {
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
+                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+
+        Map<String, Object> content = new HashMap<>();
+        content.put("owner_id", authenticationFacade.getUserDetails().getUserId());
+        content.put("type", SYSTEM.name());
+
+        return mediator.execute(
+                new CreateTaskRequest(tasksSchema,
+                                      new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
+                                      new RecordEntity(content)));
     }
 }

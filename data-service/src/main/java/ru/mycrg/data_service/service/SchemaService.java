@@ -79,6 +79,12 @@ public class SchemaService {
                                .collect(Collectors.toList());
     }
 
+    public List<SchemaDto> getBySpecificProperty(String property) {
+        return schemaRepository.findBySpecificProperty(property).stream()
+                               .map(SchemaMapper::mapToDto)
+                               .collect(Collectors.toList());
+    }
+
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
         return schemaRepository.findByName(name).stream()
                                .findFirst()

@@ -12,6 +12,7 @@ import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -89,6 +90,28 @@ public class TableService {
         Page<IResourceModel> page = getPaged(datasetId, null, PageRequest.of(0, 1));
 
         return page.getTotalElements();
+    }
+
+    public String getDatasetByTableName(String tableName) {
+        Optional<SchemasAndTables> table = schemasAndTablesRepository.findByIdentifier(tableName);
+        if (table.isEmpty()) {
+            throw new BadRequestException("Таблица " + tableName + " отсутствует в базе данных.");
+        }
+
+        String tablePath = table.get().getPath();
+        if (tablePath.equals("/root")) {
+            throw new BadRequestException("Данный квалификатор " + tableName + " не является табличным");
+        }
+
+        String[] parentIdSplitted = tablePath.split("/root/");
+        Long parentId = Long.valueOf(parentIdSplitted[1]);
+
+        Optional<SchemasAndTables> parentDataset = schemasAndTablesRepository.findById(parentId);
+        if (parentDataset.isEmpty()) {
+            throw new BadRequestException("Не существует набора данных для таблицы " + tableName);
+        }
+
+        return parentDataset.get().getIdentifier();
     }
 
     public IResourceModel getInfo(ResourceQualifier tQualifier) {
