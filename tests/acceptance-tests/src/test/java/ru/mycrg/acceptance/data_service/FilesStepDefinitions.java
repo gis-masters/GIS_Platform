@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
@@ -204,6 +205,17 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                         statusCode(SC_NOT_FOUND).
                         body("message",
                              equalTo("Ресурс не найден по идентификатору: " + secondFileId));
+    }
+
+    @Then("файлы принадлежащие этой записи НЕ удаляются")
+    public void checkThenFileAreNotDeleted() throws InterruptedException {
+        sleep(800);
+
+        getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + secondFileId)
+                .then().
+                        statusCode(SC_OK);
     }
 
     @Given("Существует файл {string}")

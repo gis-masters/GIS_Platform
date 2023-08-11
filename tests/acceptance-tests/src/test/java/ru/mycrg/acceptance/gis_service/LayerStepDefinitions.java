@@ -30,7 +30,6 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileI
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFilePath;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
-import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.currentSchemaName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
@@ -390,19 +389,19 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerPool.remove(layerId);
     }
 
-    @Then("Слой, созданный на основе файла, отсутствует на gis-service")
-    public void checkThatRelatedLayerWasDeleted() throws InterruptedException {
+    @Then("Слой, созданный на основе файла, есть на gis-service")
+    public void checkThatRelatedLayerWasNotDeleted() throws InterruptedException {
         sleep(1000);
 
         super.getEntityById(layerId);
 
         int statusCode = response.getStatusCode();
 
-        assertEquals(404, statusCode);
+        assertEquals(200, statusCode);
     }
 
-    @Then("Слой, созданный на основе файла, отсутствует на geoserver")
-    public void checkThatRelatedLayerWasDeletedOnGeoserver() {
+    @Then("Слой, созданный на основе файла, есть на geoserver")
+    public void checkThatRelatedLayerWasNotDeletedOnGeoserver() {
         getCurrentWorkspaceAndStoreName();
 
         response = getBaseRequestWithCurrentCookie()
@@ -412,7 +411,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         int statusCode = response.getStatusCode();
 
-        assertEquals(404, statusCode);
+        assertEquals(200, statusCode);
     }
 
     @And("В ответе на удаление слоя проекта есть упоминание ID")

@@ -100,9 +100,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                                 updateFilesRelation.getOldRecord());
         } else if (request instanceof IDeleteFilesRelation) {
             IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
+            // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты
 
-            deleteRelatedFiles(deleteFilesRelation.getSchema(),
-                               deleteFilesRelation.getRecord());
+//            deleteRelatedFiles(deleteFilesRelation.getSchema(),
+//                               deleteFilesRelation.getRecord());
         } else {
             log.warn("Unknown request type");
         }
@@ -166,7 +167,9 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                               some.removeAll(oldIds);
 
                               updateFilesInfo(some, qualifier);
-                              deleteFiles(oldIds, newIds);
+
+                              // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты
+                              // deleteFiles(oldIds, newIds);
                           });
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при обновлении", e);

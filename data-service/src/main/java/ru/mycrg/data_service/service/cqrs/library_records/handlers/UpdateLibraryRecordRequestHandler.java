@@ -120,7 +120,7 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
                         .build();
             }
 
-            newRecord.setContent(modifiedProps); // ?????
+            newRecord.setContent(modifiedProps);
 
             recordsDao.updateRecordById(recordQualifier, modifiedProps, schema);
 
