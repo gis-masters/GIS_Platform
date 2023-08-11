@@ -16,8 +16,7 @@ public class Scheduler {
         this.taskScheduler = taskScheduler;
     }
 
-    // @Scheduled(cron = "0 0 * * * *")
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *")
     public void hourlyJob() {
         taskScheduler.closeOldTasks();
     }

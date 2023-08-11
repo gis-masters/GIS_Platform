@@ -14,9 +14,9 @@ import ru.mycrg.data_service.service.resources.TableService;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
+import static ru.mycrg.data_service.service.gisogd.GisogdRfPublisher.INBOX_MARKER;
 
 @RestController
 @RequestMapping("/gisogd-rf")
@@ -38,9 +38,7 @@ public class GisogdRfController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> send(@RequestParam String entityName,
                                        @RequestParam Long entityId) {
-        ResourceQualifier qualifier = makeQualifier(entityName, entityId);
-
-        Long taskId = gisogdRfPublisher.publish(qualifier);
+        Long taskId = gisogdRfPublisher.publish(makeQualifier(entityName, entityId));
 
         return ResponseEntity.status(CREATED).body(taskId);
     }
@@ -54,8 +52,8 @@ public class GisogdRfController {
     }
 
     private ResourceQualifier makeQualifier(String entityName, Long entityId) {
-        if (entityName.toLowerCase().contains("inbox_data")) {
-            return new ResourceQualifier(TASK_QUALIFIER, entityId);
+        if (entityName.toLowerCase().contains(INBOX_MARKER)) {
+            return new ResourceQualifier(TASK_QUALIFIER, entityId, TASK);
         } else if (itIsLibrary(entityName)) {
             return new ResourceQualifier(SYSTEM_SCHEMA_NAME, entityName, entityId, LIBRARY);
         } else {

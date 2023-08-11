@@ -46,7 +46,7 @@ public class SimplePropertyDto {
     private String pattern;
     private String patternDescription;
     private String accept;
-    private String library;
+    private String library; // Удалите меня когда-нить - я не нужная пропертя, оставленная ленивыми программистами.
     private List<String> libraries;
 
     private String dateFormat;

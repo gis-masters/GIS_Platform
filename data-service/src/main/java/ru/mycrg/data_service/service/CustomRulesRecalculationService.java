@@ -9,13 +9,12 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
-import ru.mycrg.data_service_contract.dto.ResourceQualifierDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service_contract.dto.ResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -30,23 +29,21 @@ public class CustomRulesRecalculationService {
 
     private final Logger log = LoggerFactory.getLogger(CustomRulesRecalculationService.class);
 
-    private final CustomRuleCalculator customRuleCalculator;
-    private final SpatialRecordsDao spatialRecordsDao;
-    private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final SchemaService schemaService;
     private final BaseDao baseDao;
+    private final SchemaExtractor schemaExtractor;
+    private final SpatialRecordsDao spatialRecordsDao;
     private final IResourceProtector datasetProtector;
+    private final CustomRuleCalculator customRuleCalculator;
 
     public CustomRulesRecalculationService(CustomRuleCalculator customRuleCalculator,
                                            SpatialRecordsDao spatialRecordsDao,
-                                           SchemasAndTablesRepository schemasAndTablesRepository,
-                                           SchemaService schemaService, BaseDao baseDao,
+                                           BaseDao baseDao,
+                                           SchemaExtractor schemaExtractor,
                                            IResourceProtector datasetProtector) {
+        this.baseDao = baseDao;
+        this.schemaExtractor = schemaExtractor;
         this.customRuleCalculator = customRuleCalculator;
         this.spatialRecordsDao = spatialRecordsDao;
-        this.schemasAndTablesRepository = schemasAndTablesRepository;
-        this.schemaService = schemaService;
-        this.baseDao = baseDao;
         this.datasetProtector = datasetProtector;
     }
 
@@ -54,7 +51,8 @@ public class CustomRulesRecalculationService {
         for (ResourceQualifierDto resourceQualifier: rQualifiersDto) {
             ResourceQualifier rQualifier = new ResourceQualifier(resourceQualifier.getSchema(),
                                                                  resourceQualifier.getTable());
-            SchemaDto schema = findSchemaForQualifier(rQualifier);
+            SchemaDto schema = schemaExtractor.get(rQualifier)
+                                              .orElseThrow(() -> new NotFoundException(rQualifier.getTableQualifier()));
             if (!datasetProtector.isEditAllowed(new ResourceQualifier(resourceQualifier.getSchema()))) {
                 log.error("Недостаточно прав для редактирования набора: {}", rQualifier.getSchema());
 
@@ -88,14 +86,5 @@ public class CustomRulesRecalculationService {
                 }
             }
         }
-    }
-
-    private SchemaDto findSchemaForQualifier(ResourceQualifier rQualifier) {
-        String schemaId = schemasAndTablesRepository.findSchemaIdByIdentifier(rQualifier.getTable())
-                                                    .orElseThrow(() -> new NotFoundException(
-                                                            rQualifier.getTableQualifier()));
-
-        return schemaService.getSchemaByName(schemaId)
-                            .orElseThrow(() -> new NotFoundException(rQualifier.getTableQualifier()));
     }
 }

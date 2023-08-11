@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +21,11 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @Transactional
 @Repository
@@ -54,8 +58,8 @@ public class BaseDao {
     }
 
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
-                                   String ecqlFilter,
-                                   @Nullable SchemaDto schema) {
+                                    String ecqlFilter,
+                                    @Nullable SchemaDto schema) {
         String query = String.format("SELECT * FROM %s %s",
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
         log.debug("Find by schema and by filter: [{}]", query);
@@ -71,19 +75,25 @@ public class BaseDao {
         return Optional.ofNullable(records.get(0));
     }
 
+    public Optional<IRecord> findBy(ResourceQualifier qualifier) {
+        return findBy(qualifier, "", null);
+    }
+
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
-                                   String ecqlFilter) {
+                                    String ecqlFilter) {
         return findBy(qualifier, ecqlFilter, null);
     }
 
     public Optional<IRecord> findById(ResourceQualifier qualifier,
                                       @Nullable SchemaDto schema) {
-        String query = String.format("SELECT * FROM %s WHERE id = :id", qualifier.getTableQualifier());
+        String fieldId = getIdField(qualifier);
+        String query = String.format("SELECT * FROM %s WHERE %s = :%s",
+                                     qualifier.getTableQualifier(), fieldId, fieldId);
 
         log.debug("find record by id: [{}]", query);
 
         return pJdbcTemplate.query(query,
-                                   new MapSqlParameterSource("id", qualifier.getRecordId()),
+                                   new MapSqlParameterSource(fieldId, qualifier.getRecordId()),
                                    new RecordRowMapper(schema))
                             .stream().findFirst();
     }
@@ -151,6 +161,15 @@ public class BaseDao {
             log.debug(msg);
 
             throw new CrgDaoException(msg, e.getCause());
+        }
+    }
+
+    @NotNull
+    private static String getIdField(ResourceQualifier qualifier) {
+        if (TABLE.equals(qualifier.getType())) {
+            return PRIMARY_KEY;
+        } else {
+            return ID;
         }
     }
 }
