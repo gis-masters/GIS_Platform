@@ -5,7 +5,17 @@ import { createUserAs } from './createUserAs';
 import { editUser } from './editUser';
 
 export async function createTestUsers(): Promise<void> {
-  for (const { company, email, firstName, lastName, middleName, contactPhone, job, password } of getAllTestUsers()) {
+  for (const {
+    company,
+    email,
+    firstName,
+    lastName,
+    middleName,
+    contactPhone,
+    department,
+    job,
+    password
+  } of getAllTestUsers()) {
     if (company.startsWith('Hogwarts') && job !== 'Администратор организации') {
       await createUserAs(
         {
@@ -15,6 +25,7 @@ export async function createTestUsers(): Promise<void> {
           middleName,
           enabled: true,
           phone: contactPhone,
+          department,
           job,
           password
         },

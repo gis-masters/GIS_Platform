@@ -32,7 +32,7 @@ class LayerPropertiesDialogBlock extends Block {
 
   async setStringFieldValue(title: string, value: string): Promise<void> {
     const formBlock = new FormBlock(this.selectors.container);
-    const $field = await formBlock.getCreateTableDialogField(title);
+    const $field = await formBlock.getField(title);
 
     if (!$field) {
       throw new Error(`Не найден элемент ${title}`);

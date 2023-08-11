@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { PersonAdd, PersonAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 import { Button } from '../../Button/Button';
-import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
 
 const cnOrgUsersCreate = cn('OrgUsers', 'Create');
 
@@ -29,7 +29,8 @@ export class OrgUsersCreate extends Component {
         >
           Создать пользователя
         </Button>
-        <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} create />
+
+        <UserCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} create />
       </>
     );
   }

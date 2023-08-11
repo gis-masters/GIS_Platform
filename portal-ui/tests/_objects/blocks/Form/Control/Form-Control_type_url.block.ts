@@ -8,10 +8,7 @@ class FormControlTypeUrlBlock extends Block {
 
   async clickAddUrlBtn(title: string): Promise<void> {
     const formBlock = new FormBlock();
-    const $field = await formBlock.getCreateTableDialogField(title);
-    if (!$field) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
+    const $field = await formBlock.getField(title);
 
     const $addUrlBtn = await $field.$('.UrlsList-AddUrl');
     await $addUrlBtn.click();
@@ -19,7 +16,7 @@ class FormControlTypeUrlBlock extends Block {
 
   async clickFirstUrlLink(title: string): Promise<void> {
     const formBlock = new FormBlock();
-    const $field = await formBlock.getCreateTableDialogField(title);
+    const $field = await formBlock.getField(title);
     if (!$field) {
       throw new Error(`Не найден элемент ${title}`);
     }

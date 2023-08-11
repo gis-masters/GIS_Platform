@@ -8,10 +8,7 @@ class FormControlTypeUserBlock extends Block {
 
   async clickAddUserBtn(title: string): Promise<void> {
     const formBlock = new FormBlock();
-    const $field = await formBlock.getCreateTableDialogField(title);
-    if (!$field) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
+    const $field = await formBlock.getField(title);
 
     const $addUserBtn = await $field.$('.Users-Add');
     await $addUserBtn.click();

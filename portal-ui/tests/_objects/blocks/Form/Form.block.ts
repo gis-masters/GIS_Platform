@@ -35,16 +35,13 @@ export class FormBlock extends Block {
   }
 
   async getFieldInputRoot(title: string): Promise<WebdriverIO.Element> {
-    const $tableField = await this.getCreateTableDialogField(title);
-    if (!$tableField) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
+    const $tableField = await this.getField(title);
 
     return await $tableField.$('.MuiInputBase-root');
   }
 
   async getCustomFieldRoot(title: string): Promise<WebdriverIO.Element> {
-    const $tableField = await this.getCreateTableDialogField(title);
+    const $tableField = await this.getField(title);
     if (!$tableField) {
       throw new Error(`Не найден элемент ${title}`);
     }
@@ -52,7 +49,7 @@ export class FormBlock extends Block {
     return await $tableField.$('.Form-Control_type_custom');
   }
 
-  async getCreateTableDialogField(fieldName: string): Promise<WebdriverIO.Element | undefined> {
+  async getField(fieldName: string): Promise<WebdriverIO.Element> {
     const $$fields = await this.$$('formFields');
 
     for (const $field of $$fields) {
@@ -62,5 +59,7 @@ export class FormBlock extends Block {
         return $field;
       }
     }
+
+    throw new Error(`Не найден элемент ${fieldName}`);
   }
 }

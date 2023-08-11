@@ -11,6 +11,7 @@ import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
 import { Schema } from '../../src/app/services/data/schema/schema.models';
+import { OrgAdminPage } from './pages/OrgAdmin';
 
 function findPage(title: string): Page {
   const page = Object.values(pagesRegistry).find(page => page.title === title);
@@ -192,4 +193,10 @@ Given('я на странице табличного представления 
   const { table_name } = await getDocumentsLibraryByTitle(libraryTitle);
   const libraryRegistryPage = new LibraryRegistryPage(table_name);
   await libraryRegistryPage.open();
+});
+
+// org Admin
+
+Given('я нахожусь во вкладке `Пользователи` на странице управлении организацией', async () => {
+  await new OrgAdminPage().open();
 });

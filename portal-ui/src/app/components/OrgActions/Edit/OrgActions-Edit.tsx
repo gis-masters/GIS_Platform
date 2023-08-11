@@ -6,7 +6,7 @@ import { Tooltip, IconButton } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
 import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
-import { OrgUsersCreateEditDialog } from '../../OrgUsersCreateEditDialog/OrgUsersCreateEditDialog';
+import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
 import { CrgUser } from '../../../services/auth/users/users.models';
 
@@ -37,7 +37,7 @@ export class OrgActionsEdit extends Component<OrgActionsEditProps> {
         {this.props.group ? (
           <OrgGroupsCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} group={this.props.group} />
         ) : (
-          <OrgUsersCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} user={this.props.user} />
+          <UserCreateEditDialog open={this.dialogOpen} onClose={this.closeDialog} user={this.props.user} />
         )}
       </>
     );

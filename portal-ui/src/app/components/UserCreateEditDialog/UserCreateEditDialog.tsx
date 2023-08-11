@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { getPatch } from '../../services/util/patch';
@@ -9,9 +10,11 @@ import { PropertySchema, PropertySchemaString, PropertyType } from '../../servic
 import { NewUserData, CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 
-import '!style-loader!css-loader!sass-loader!./OrgUsersCreateEditDialog.scss';
+import '!style-loader!css-loader!sass-loader!./UserCreateEditDialog.scss';
 
-interface OrgUsersCreateEditDialogProps {
+const cnUserCreateEditDialog = cn('UserCreateEditDialog');
+
+interface UserCreateEditDialogProps {
   open: boolean;
   onClose: () => void;
   create?: boolean;
@@ -19,8 +22,8 @@ interface OrgUsersCreateEditDialogProps {
 }
 
 @observer
-export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialogProps> {
-  constructor(props: OrgUsersCreateEditDialogProps) {
+export class UserCreateEditDialog extends Component<UserCreateEditDialogProps> {
+  constructor(props: UserCreateEditDialogProps) {
     super(props);
     makeObservable(this);
   }
@@ -30,6 +33,7 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
 
     return (
       <FormDialog
+        className={cnUserCreateEditDialog()}
         open={open}
         schema={{ properties: this.userProperties }}
         value={user}
@@ -76,7 +80,6 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
       {
         name: 'department',
         title: 'Организация',
-        required: true,
         propertyType: PropertyType.STRING
       },
       {
@@ -124,7 +127,11 @@ export class OrgUsersCreateEditDialog extends Component<OrgUsersCreateEditDialog
     }
 
     if (!create && user) {
-      await usersService.edit(getPatch(value, user), user.id);
+      const patch = getPatch(value, user);
+      if (Object.keys(patch).length) {
+        await usersService.edit(patch, user.id);
+      }
+
       this.props.onClose();
     }
   }
