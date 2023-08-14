@@ -134,9 +134,6 @@ function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schem
       definitionQuery
     });
 
-    delete clonedSchema.views;
-    delete clonedSchema.contentTypes;
-
     for (const [key, value] of Object.entries(clonedSchema)) {
       if (value === undefined) {
         delete clonedSchema[key as keyof typeof clonedSchema];

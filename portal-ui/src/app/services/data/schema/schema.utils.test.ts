@@ -68,6 +68,28 @@ const schemaWithAppliedView1: Schema = {
       propertyType: PropertyType.STRING
     }
   ],
+  views: [
+    {
+      id: 'viewsId1',
+      title: 'Представление 1',
+      type: 'VIEW',
+      properties: [{ name: 'title' }]
+    },
+    {
+      id: 'viewsId2',
+      title: 'Представление 2',
+      type: 'VIEW',
+      properties: [{ name: 'shape_area', required: true }]
+    },
+    {
+      id: 'viewsId3',
+      title: 'Представление 3',
+      type: 'VIEW',
+      styleName: 'borderLine',
+      definitionQuery: 'shape_area > 20000',
+      properties: [{ name: 'title' }]
+    }
+  ],
   geometryType: GeometryType.MULTI_POLYGON
 };
 
@@ -83,6 +105,28 @@ const schemaWithAppliedView3: Schema = {
       required: true,
       asTitle: true,
       propertyType: PropertyType.STRING
+    }
+  ],
+  views: [
+    {
+      id: 'viewsId1',
+      title: 'Представление 1',
+      type: 'VIEW',
+      properties: [{ name: 'title' }]
+    },
+    {
+      id: 'viewsId2',
+      title: 'Представление 2',
+      type: 'VIEW',
+      properties: [{ name: 'shape_area', required: true }]
+    },
+    {
+      id: 'viewsId3',
+      title: 'Представление 3',
+      type: 'VIEW',
+      styleName: 'borderLine',
+      definitionQuery: 'shape_area > 20000',
+      properties: [{ name: 'title' }]
     }
   ],
   geometryType: GeometryType.MULTI_POLYGON,
@@ -134,6 +178,20 @@ const schemaWithAppliedContentType: Schema = {
       title: 'Наименование',
       required: true,
       propertyType: PropertyType.STRING
+    }
+  ],
+  contentTypes: [
+    {
+      id: 'doc1',
+      title: 'тип документа 1',
+      type: 'DOCUMENT',
+      properties: [{ name: 'title', required: true }]
+    },
+    {
+      id: 'doc2',
+      title: 'тип документа 2',
+      type: 'DOCUMENT',
+      properties: [{ name: 'area', title: 'Площадь, кв.м', required: true }]
     }
   ]
 };
