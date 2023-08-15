@@ -38,7 +38,8 @@ public class GisogdRfController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> send(@RequestParam String entityName,
                                        @RequestParam Long entityId) {
-        Long taskId = gisogdRfPublisher.publish(makeQualifier(entityName, entityId));
+        long taskId = -314L;
+        gisogdRfPublisher.publish(taskId, makeQualifier(entityName, entityId));
 
         return ResponseEntity.status(CREATED).body(taskId);
     }

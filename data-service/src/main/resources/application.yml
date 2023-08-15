@@ -65,6 +65,7 @@ crg-options:
   integration:
     sed-url: https://httpbin.org/anything
     gisogd-rf: https://gisogd.npc.ba/api/rgmu
+    gisogd-rf-publication-limit: 100
     gisogd-rf-token: https://id-gisogd.npc.ba/oidc/connect/token
     gisogd-rf-client-id: gisogdrfclient1
     gisogd-rf-client-secret: XDZ8XHY8TPR2WKXR6MHPTJ0MH0V4RT9QGHZOB90D6SQG9VNA67Y2QQJ4R

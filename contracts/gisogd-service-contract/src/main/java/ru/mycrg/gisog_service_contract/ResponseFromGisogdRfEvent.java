@@ -17,6 +17,10 @@ public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
     private Status status;
     private Map<String, String> content;
 
+    public ResponseFromGisogdRfEvent() {
+        // Required
+    }
+
     public ResponseFromGisogdRfEvent(IMessageBusEvent event) {
         super(event.getId(), GISOGD_TO_DATA_QUEUE);
     }

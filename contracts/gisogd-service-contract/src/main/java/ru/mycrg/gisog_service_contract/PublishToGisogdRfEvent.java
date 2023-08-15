@@ -15,6 +15,10 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
     private Document parent;
     private List<Document> children;
 
+    public PublishToGisogdRfEvent() {
+        // Required
+    }
+
     public PublishToGisogdRfEvent(Long taskId,
                                   Document parent,
                                   List<Document> children) {

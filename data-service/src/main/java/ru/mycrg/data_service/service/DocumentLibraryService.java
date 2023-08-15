@@ -38,12 +38,12 @@ import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 @Service
 public class DocumentLibraryService {
 
-    private final SchemaService schemaService;
-    private final DocumentLibraryRepository libraryRepository;
-    private final DocumentLibraryDao libraryDao;
     private final RecordsDao recordsDao;
-    private final IAuthenticationFacade authenticationFacade;
+    private final DocumentLibraryDao libraryDao;
+    private final DocumentLibraryRepository libraryRepository;
     private final BasePermissionsRepository permissionsRepository;
+    private final SchemaService schemaService;
+    private final IAuthenticationFacade authenticationFacade;
 
     @Value("${crg-options.fileStoragePath}")
     private String defaultPath;
@@ -130,6 +130,12 @@ public class DocumentLibraryService {
     public SchemaDto getSchema(String docLibId) {
         return schemaService.getSchemaByName(getInfo(docLibId).getSchemaId())
                             .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
+    }
+
+    public List<ResourceQualifier> getLibrariesCreatedBySchema(String schemaId) {
+        return libraryRepository.findBySchemaId(schemaId).stream()
+                                .map(dl -> new ResourceQualifier(SYSTEM_SCHEMA_NAME, dl.getTableName(), LIBRARY))
+                                .collect(Collectors.toList());
     }
 
     public Page<FileResourceDto> getAllFilePathForAllLibraries(Pageable pageable) {

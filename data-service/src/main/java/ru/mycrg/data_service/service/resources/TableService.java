@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service.resources;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -16,32 +18,48 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
+import ru.mycrg.data_service.service.SystemAttributeHandler;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Service
 public class TableService {
 
-    private final IAuthenticationFacade authenticationFacade;
-    private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final BasePermissionsRepository permissionsRepository;
+    private final Logger log = LoggerFactory.getLogger(TableService.class);
+
     private final BaseDao baseDao;
+    private final IAuthenticationFacade authenticationFacade;
+    private final SystemAttributeHandler systemAttributeHandler;
+    private final BasePermissionsRepository permissionsRepository;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public TableService(IAuthenticationFacade authenticationFacade,
                         SchemasAndTablesRepository schemasAndTablesRepository,
                         BasePermissionsRepository permissionsRepository,
-                        BaseDao baseDao) {
+                        BaseDao baseDao,
+                        SystemAttributeHandler systemAttributeHandler) {
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsRepository = permissionsRepository;
         this.baseDao = baseDao;
+        this.systemAttributeHandler = systemAttributeHandler;
+    }
+
+    public List<ResourceQualifier> getTablesCreatedBySchema(String schemaId) {
+        return schemasAndTablesRepository.findBySchemaId(schemaId).stream()
+                                         .map(buildFullQualifier())
+                                         .filter(Objects::nonNull)
+                                         .collect(Collectors.toList());
     }
 
     public Page<IResourceModel> getPaged(String datasetIdentifier, String ecqlFilter, Pageable pageable) {
@@ -153,5 +171,26 @@ public class TableService {
             ecqlFilter = ecqlFilter + " AND path = '" + pathTo + "'";
         }
         return ecqlFilter;
+    }
+
+    @NotNull
+    private Function<SchemasAndTables, ResourceQualifier> buildFullQualifier() {
+        return table -> {
+            Optional<Long> oParentId = systemAttributeHandler.getLastIdFromPath(table.getPath());
+            if (oParentId.isPresent()) {
+                Long parentId = oParentId.get();
+
+                Optional<SchemasAndTables> parent = schemasAndTablesRepository.findById(parentId);
+                if (parent.isEmpty()) {
+                    log.warn("Не найден набор данных по id: " + parentId);
+                } else {
+                    return null;
+                }
+
+                return new ResourceQualifier("", table.getIdentifier(), TABLE);
+            }
+
+            return null;
+        };
     }
 }

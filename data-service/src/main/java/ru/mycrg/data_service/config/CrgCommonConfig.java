@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.common_utils.ScriptCalculator;
 
+import java.time.ZoneId;
+
 @Configuration
 public class CrgCommonConfig {
 
@@ -13,6 +15,8 @@ public class CrgCommonConfig {
     public static final String SYSTEM_DATE_PATTERN = "yyyy-MM-dd";
 
     public static final String SYSTEM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+
+    public static final ZoneId DEFAULT_ZONE = ZoneId.of("Europe/Moscow");
 
     @Bean
     public CrgScriptEngine crgScriptEngine() {
