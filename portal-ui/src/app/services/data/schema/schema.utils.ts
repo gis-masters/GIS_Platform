@@ -32,6 +32,7 @@ import { formatDate } from '../../util/date.util';
 import { FileInfo } from '../files/files.models';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
+import { FilterQuery } from '../../util/filterObjects';
 
 export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   const view = schema.views?.find(cType => cType.id === viewId);
@@ -433,6 +434,42 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
     return JSON.stringify([
       {
         url: `${pathname}?queryLayers=${layers.join(',')}&queryFilter=${filter}`,
+        text
+      }
+    ]);
+  },
+
+  linkToDocumentsMentioningThisDocument: (obj, { valueFormulaParams = {} }) => {
+    const { id, libraryTableName, path } = obj as LibraryRecord;
+    const {
+      library,
+      property,
+      text = 'Связанные документы',
+      includeParents = false
+    } = valueFormulaParams as {
+      library: number;
+      property: string;
+      text?: string;
+      includeParents?: boolean;
+    };
+    const pathname = `/data-management/library/${library}/registry`;
+    const ids: number[] = [id];
+    if (includeParents) {
+      ids.push(...getIdsFromPath(path));
+    }
+
+    const parts: FilterQuery[] = ids.map(currId => ({
+      [property]: { $ilike: `%{"id":${currId},%"libraryTableName":"${libraryTableName}"%` }
+    }));
+    const filter: string = encodeURI(JSON.stringify(parts.length === 1 ? parts[0] : { $or: parts }));
+
+    if (!id || !libraryTableName) {
+      return [];
+    }
+
+    return JSON.stringify([
+      {
+        url: `${pathname}?filter=${filter}`,
         text
       }
     ]);
