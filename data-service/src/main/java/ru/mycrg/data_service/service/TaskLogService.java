@@ -2,8 +2,6 @@ package ru.mycrg.data_service.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +27,9 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 @Transactional
 public class TaskLogService {
 
+    public static final String TASK_LOG_TABLE_NAME = "tasks_log";
+    public static final ResourceQualifier TASK_LOG_QUALIFIER = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                                                     TASK_LOG_TABLE_NAME);
     private final TaskLogRepository taskLogRepository;
     private final BaseDao baseDao;
 
@@ -40,9 +41,8 @@ public class TaskLogService {
     @NotNull
     public Page<TaskLog> findAll(String ecqlFilter, Pageable pageable) {
         List<TaskLog> taskLogs;
-        ResourceQualifier taskLogTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks_log");
         try {
-            taskLogs = baseDao.findAll(taskLogTable, ecqlFilter, pageable, TaskLog.class);
+            taskLogs = baseDao.findAll(TASK_LOG_QUALIFIER, ecqlFilter, pageable, TaskLog.class);
         } catch (BadSqlGrammarException ex) {
             String message = "Не удалось выполнить запрос на выборку из журнала задач. ";
             logError(message, ex);
@@ -50,7 +50,7 @@ public class TaskLogService {
             throw new BadRequestException(message);
         }
 
-        long total = baseDao.getTotal(taskLogTable, ecqlFilter);
+        long total = baseDao.getTotal(TASK_LOG_QUALIFIER, ecqlFilter);
 
         return new PageImpl<>(taskLogs, pageable, total);
     }

@@ -11,6 +11,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
+import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
@@ -106,6 +108,14 @@ public class TaskController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> setStatusToCancel(@PathVariable Long id) {
         mediator.execute(new UpdateTaskStatusRequest(CANCELED, id));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/all")
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> deleteAllTasks() {
+        mediator.execute(new DeleteAllTasksRequest());
 
         return ResponseEntity.noContent().build();
     }

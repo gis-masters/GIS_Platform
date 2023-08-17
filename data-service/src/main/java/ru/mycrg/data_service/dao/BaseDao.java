@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -161,6 +162,23 @@ public class BaseDao {
             log.debug(msg);
 
             throw new CrgDaoException(msg, e.getCause());
+        }
+    }
+
+    public void removeAllRecords(ResourceQualifier rQualifier) {
+        try {
+            String query = String.format("DELETE FROM %s",
+                                         rQualifier.getTableQualifier());
+
+            log.debug("Request to delete all records: [{}]", query);
+
+            pJdbcTemplate.getJdbcTemplate().execute(query);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось выполнить удаление объектов из: '%s'",
+                                       rQualifier.getTableQualifier());
+            log.debug(msg);
+
+            throw new DataServiceException(msg, e.getCause());
         }
     }
 
