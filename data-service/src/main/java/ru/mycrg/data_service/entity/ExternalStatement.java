@@ -1,12 +1,12 @@
 package ru.mycrg.data_service.entity;
 
 import ru.mycrg.data_service.dto.ExternalStatementDto;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.nonNull;
@@ -60,7 +60,7 @@ public class ExternalStatement {
         this.applicant = applicant;
         this.status = status;
         this.statementDate = statementDate;
-        this.createdAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        this.createdAt = DateTimeUtil.now();
     }
 
     public ExternalStatement(ExternalStatementDto statementDto) {

@@ -14,12 +14,12 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
 
         Map<String, Object> dataForUpdate = new HashMap<>();
         dataForUpdate.put(UPDATED_BY.getName(), userDetails.getUserId());
-        dataForUpdate.put(LAST_MODIFIED.getName(), LocalDateTime.now());
+        dataForUpdate.put(LAST_MODIFIED.getName(), DateTimeUtil.now());
 
         if (nonNull(newStatus)) {
             dataForUpdate.put("status", newStatus.toString());

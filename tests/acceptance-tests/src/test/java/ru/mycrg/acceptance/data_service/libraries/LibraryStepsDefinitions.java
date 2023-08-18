@@ -40,6 +40,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public static String currentLibraryTableName;
 
     public static Integer currentDocumentId;
+    public static Integer deletedDocumentId;
     public static DefaultDocumentModel currentDocument;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
@@ -105,7 +106,9 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("пользователь делает выборку всех документов в виде реестра")
     public void fetchAsRegistry() {
-        getRecordsAsRegistry("((is_folder+IN(false)+OR+is_folder+IS+null))+AND+(path+ILIKE+%27%2Froot%25%27)");
+        getRecordsAsRegistry(
+                "((is_folder+IN(false)+OR+is_folder+IS+null))+AND+(((path+LIKE+'/root/%'))+OR+((path+=+'/root')))",
+                DEFAULT_LIBRARY);
 
         assertEquals(200, response.statusCode());
     }
@@ -114,16 +117,26 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void checkAllowedFiles() {
         List<Map<String, Object>> records = response.jsonPath().getList("_embedded.records.content");
 
-        boolean isFileExist = records
-                .stream()
-                .anyMatch(stringObjectMap -> !parseBoolean(stringObjectMap.get("is_folder").toString()));
+        if (nonNull(records)) {
+            boolean isFileExist = records
+                    .stream()
+                    .anyMatch(stringObjectMap -> !parseBoolean(stringObjectMap.get("is_folder").toString()));
 
-        assertFalse(isFileExist);
+            assertFalse(isFileExist);
+        }
     }
 
     @When("Пользователь удаляет запись в библиотеке")
     public void deleteLibraryDocument() {
         deleteRecord(currentDocumentId);
+    }
+
+    @Given("Текущая запись была удалена")
+    public void currentLibraryRecordWasDeleted() {
+        deletedDocumentId = currentDocumentId;
+        deleteRecord(deletedDocumentId);
+
+        assertEquals(204, response.getStatusCode());
     }
 
     @When("Администратор обновляет запись библиотеки - удаляет файл")
@@ -316,6 +329,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertTrue(nonNull(firstVersion.getContent()));
     }
 
+    @When("В ответе версии текущего документа не заполнены")
+    public void responseContainsVersionOfDocumentIsNotFill() {
+        jsonPath = response.jsonPath();
+        List<DocumentVersioningDto> versions = jsonPath.getList("", DocumentVersioningDto.class);
+        assertTrue(versions.isEmpty());
+    }
+
     @When("Тело ответа содержит предыдущие версии изменений текущего документа")
     public void responseContainsAllVersionOfDocument() {
         String field = "firstproperty";
@@ -441,6 +461,17 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         getAllRecordsSorted(sortingFactor, sortingDirection);
     }
 
+    @When("Пользователь делает запрос на получение всех записей из библиотеки по-умолчанию")
+    public void getAllRecordsFromDefaultLibrary() {
+        getAllRecords(DEFAULT_LIBRARY);
+    }
+
+    @When("Пользователь делает запрос на получение удалённых записей из библиотеки по-умолчанию")
+    public void getAllRemovedRecordsFromDefaultLibrary() {
+        String ecqlFilter = "(is_deleted+=+'true')";
+        getRecordsAsRegistry(ecqlFilter, DEFAULT_LIBRARY);
+    }
+
     @When("Пользователь делает запрос в реестре с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsInRegisterSortedByCurrentUser(String sortingFactor, String sortingDirection) {
         String filter = "((is_folder+IN('false')+OR+is_folder+IS+null))";
@@ -464,6 +495,39 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         authorizationBase.loginAsCurrentUser();
 
         getRecordById(folder11Id);
+    }
+
+    @And("Удалённая запись НЕ возвращается в теле ответа")
+    public void checkThatCurrentDeletedDocumentNotInResponse() {
+        List<Integer> recordIds = response.jsonPath().get("_embedded.records.content.id");
+        if (Objects.nonNull(recordIds) && !recordIds.isEmpty()) {
+            recordIds.forEach(id -> assertNotEquals(currentDocumentId, id));
+        }
+    }
+
+    @Then("Запись присутствует в БД")
+    public void checkThatDocumentInDataBase() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentDocumentId));
+
+        assertEquals(200, response.statusCode());
+    }
+
+    @Then("У записи поле {string} имеет значение {string}")
+    public void checkValueInField(String field, String value) {
+        String actualValue = response.jsonPath().get(field).toString();
+
+        assertEquals(actualValue, value);
+    }
+
+    @And("Удалённая запись возвращается в теле ответа")
+    public void checkThatCurrentDeletedDocumentInResponse() {
+        List<Integer> recordIds = response.jsonPath().get("_embedded.records.content.id");
+        if (Objects.nonNull(recordIds) && !recordIds.isEmpty()) {
+            long idCount = recordIds.stream().filter(id -> id.equals(deletedDocumentId)).count();
+            assertEquals(1L, idCount);
+        }
     }
 
     @And("Папки находятся в начале списка")
@@ -644,6 +708,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         updateDocument(currentDocumentId, payload, DEFAULT_LIBRARY);
     }
 
+    private void getAllRecords(String libraryId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records", libraryId));
+    }
+
     private void getAllRecordsSorted(String sortingFiled, String sortingDirection) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -659,7 +729,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                          String filter) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/%s/records/as_registry?sort=%s,%s&filer=%s&%s",
+                        get(String.format("/%s/records/as_registry?sort=%s,%s&filter=%s&%s",
                                           DEFAULT_LIBRARY,
                                           sortingFiled,
                                           sortingDirection,
@@ -668,7 +738,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     private void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId) {
-        String url = String.format("/%s/records/as_registry?filer=%s&recordId=%s",
+        String url = String.format("/%s/records/as_registry?filter=%s&recordId=%s",
                                    DEFAULT_LIBRARY,
                                    ecqlFilter,
                                    recordId);
@@ -678,12 +748,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         get(url);
     }
 
-    private void getRecordsAsRegistry(String ecqlFilter) {
-        String url = String.format("/%s/records/as_registry?filer=%s", DEFAULT_LIBRARY, ecqlFilter);
+    private void getRecordsAsRegistry(String ecqlFilter, String libraryId) {
+        String url = String.format("/%s/records/as_registry?filter=%s", libraryId, ecqlFilter);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(url);
+                       get(url);
     }
 
     private String getRecordBodyForDlDefaultWithIncorrectField() {

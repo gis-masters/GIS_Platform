@@ -19,10 +19,10 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.ContentType;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -99,7 +99,7 @@ public class DocumentLibraryService {
 
         Long oldRegistryNumber = library.getRegistryCounter();
         library.setRegistryCounter(oldRegistryNumber + 1);
-        library.setLastModified(LocalDateTime.now());
+        library.setLastModified(DateTimeUtil.now());
 
         libraryRepository.save(library);
 

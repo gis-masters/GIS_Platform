@@ -73,6 +73,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M21__wideTasks.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M22__initNewSchemas_123.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M23__updateDocLibraries.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M24__addColumnDeletedToLibraries.sql"));
             }
 
             tempDataSource.close();

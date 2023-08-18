@@ -40,6 +40,7 @@ public class DdlLibrary extends DdlBase {
             }
         }
         propertiesBuilder.append(", versions jsonb");
+        propertiesBuilder.append(", is_deleted boolean DEFAULT false");
 
         String query = String.format(
                 "CREATE TABLE %1$s (%2$s serial NOT NULL %3$s ); ALTER TABLE ONLY %1$s ADD " +

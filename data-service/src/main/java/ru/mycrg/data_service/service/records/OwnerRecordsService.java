@@ -79,6 +79,10 @@ public class OwnerRecordsService implements IRecordsService {
 
         ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
 
+        ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
+                ? ecqlFilter
+                : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
+
         SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
         List<IRecord> records = recordsDao.findAll(lQualifier, ecqlFilter, schema, pageable);
         long total = recordsDao.getTotal(lQualifier, ecqlFilter);
@@ -89,6 +93,13 @@ public class OwnerRecordsService implements IRecordsService {
     @Override
     public Page<IRecord> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
         SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+        if (ecqlFilter.isEmpty()) {
+            ecqlFilter = "";
+        }
+
+        ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
+                ? ecqlFilter
+                : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
         List<IRecord> records = recordsDao.findAll(lQualifier, ecqlFilter, schema, pageable).stream()
                                           .filter(record -> record.getContent().get(PATH.getName()) != null)

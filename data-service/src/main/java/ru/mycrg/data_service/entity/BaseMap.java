@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -51,11 +52,11 @@ public class BaseMap {
     private Integer matrixIds;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = DateTimeUtil.now();
 
     @Column(name = "last_modified")
     private @LastModifiedDate
-    LocalDateTime lastModified = LocalDateTime.now();
+    LocalDateTime lastModified = DateTimeUtil.now();
 
     @Column(name = "pluggable_to_new_project")
     private Boolean pluggableToNewProject;

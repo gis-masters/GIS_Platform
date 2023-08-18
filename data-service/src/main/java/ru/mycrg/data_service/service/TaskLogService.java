@@ -15,8 +15,8 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.TaskLogRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -73,7 +73,7 @@ public class TaskLogService {
         taskLog.setTaskId(logDto.getTaskId());
         taskLog.setEventType(logDto.getEventType());
         taskLog.setMassage(mapper.convertValue(taskBody, JsonNode.class));
-        taskLog.setCreatedAt(LocalDateTime.now());
+        taskLog.setCreatedAt(DateTimeUtil.now());
 
         taskLogRepository.save(taskLog);
     }

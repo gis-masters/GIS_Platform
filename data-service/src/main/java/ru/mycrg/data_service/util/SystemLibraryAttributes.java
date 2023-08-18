@@ -19,7 +19,8 @@ public enum SystemLibraryAttributes {
     INTENTS("intents"),
     ROLE("role"),
     IS_FOLDER("is_folder"),
-    VERSIONS("versions");
+    VERSIONS("versions"),
+    IS_DELETED("is_deleted");
 
     private final String name;
 

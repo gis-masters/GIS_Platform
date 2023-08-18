@@ -2,6 +2,7 @@ package ru.mycrg.data_service.entity;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,11 +38,11 @@ public class DocumentLibrary {
     private String createdBy;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = DateTimeUtil.now();
 
     @Column(name = "last_modified")
     private @LastModifiedDate
-    LocalDateTime lastModified = LocalDateTime.now();
+    LocalDateTime lastModified = DateTimeUtil.now();
 
     @Column
     private boolean versioned;

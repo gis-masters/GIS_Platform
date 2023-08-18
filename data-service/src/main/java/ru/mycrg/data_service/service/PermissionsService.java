@@ -21,8 +21,8 @@ import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -154,8 +154,8 @@ public class PermissionsService {
         Permission permission = new Permission();
         permission.setRole(role);
         permission.setPrincipal(principal);
-        permission.setCreatedAt(LocalDateTime.now());
-        permission.setLastModified(LocalDateTime.now());
+        permission.setCreatedAt(DateTimeUtil.now());
+        permission.setLastModified(DateTimeUtil.now());
         permission.setCreatedBy(authenticationFacade.getLogin());
         permission.setResourceTable(targetTable.getTable());
         permission.setResourceId(id);

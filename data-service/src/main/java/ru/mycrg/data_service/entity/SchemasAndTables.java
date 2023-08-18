@@ -3,6 +3,7 @@ package ru.mycrg.data_service.entity;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -42,11 +43,11 @@ public class SchemasAndTables {
     private Integer itemsCount;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = DateTimeUtil.now();
 
     @Column(name = "last_modified")
     private @LastModifiedDate
-    LocalDateTime lastModified = LocalDateTime.now();
+    LocalDateTime lastModified = DateTimeUtil.now();
 
     @Column(name = "fias__oktmo")
     private String fiasOktmo;
@@ -93,8 +94,8 @@ public class SchemasAndTables {
         this.path = path;
 
         this.itemsCount = 0;
-        this.createdAt = LocalDateTime.now();
-        this.lastModified = LocalDateTime.now();
+        this.createdAt = DateTimeUtil.now();
+        this.lastModified = DateTimeUtil.now();
     }
 
     public long getId() {

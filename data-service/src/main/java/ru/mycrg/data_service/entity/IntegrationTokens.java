@@ -1,9 +1,10 @@
 package ru.mycrg.data_service.entity;
 
+import ru.mycrg.data_service.util.DateTimeUtil;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Entity
 @Table(name = "integration_tokens", schema = "public")
@@ -33,7 +34,7 @@ public class IntegrationTokens {
         this.serviceName = serviceName;
         this.token = token;
 
-        this.updatedAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        this.updatedAt = DateTimeUtil.now();
     }
 
     public Long getId() {

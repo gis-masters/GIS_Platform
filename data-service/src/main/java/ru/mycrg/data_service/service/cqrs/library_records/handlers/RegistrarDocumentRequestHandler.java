@@ -10,6 +10,7 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.RegisterDocum
 import ru.mycrg.data_service.service.records.IRecordsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
@@ -52,7 +53,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
     @Override
     public String handle(RegisterDocumentRequest request) {
         ResourceQualifier rQualifier = request.getQualifier();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = DateTimeUtil.now();
         String libraryId = rQualifier.getTable();
         Long registryNumber = librariesService.incrementRegistryNumber(libraryId);
         SchemaDto schema = librariesService.getSchema(libraryId);
@@ -80,7 +81,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
     }
 
     private String getLibraryNumber(String libraryId) {
-        return libraryId.replaceAll("\\D+","");
+        return libraryId.replaceAll("\\D+", "");
     }
 
     private Optional<String> extractOktmo(IRecord record) {

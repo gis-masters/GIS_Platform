@@ -68,13 +68,18 @@ public class UserRecordsService implements IRecordsService {
 
         long total;
         List<IRecord> records;
+
         if (parentId != null) {
             ResourceQualifier recordQualifier = new ResourceQualifier(lQualifier, parentId, LIBRARY_RECORD);
             IRecord parent = recordsDao.findById(recordQualifier, schema)
                                        .orElseThrow(() -> new NotFoundException("Запись не найдена: " + parentId));
 
             path = String.format("%s/%d", parent.getContent().get("path"), parentId);
+
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
+            ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
+                    ? ecqlFilter
+                    : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
             Set<String> ids = systemAttributeHandler.extractFolderIdsFromPath(path);
 
@@ -88,6 +93,9 @@ public class UserRecordsService implements IRecordsService {
             }
         } else {
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
+            ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
+                    ? ecqlFilter
+                    : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
             records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, schema, pageable);
             total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
@@ -109,6 +117,10 @@ public class UserRecordsService implements IRecordsService {
             String pathToMeAndChildren = MessageFormat.format("{0}/{1}/%", record.getContent().get(PATH.getName()), id);
             paths.add(pathToMeAndChildren);
         });
+
+        ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
+                ? ecqlFilter
+                : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
         List<IRecord> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, schema, pageable);
         long total = recordsDao.getTotalAllowed(lQualifier, ids, paths, ecqlFilter);
@@ -215,7 +227,7 @@ public class UserRecordsService implements IRecordsService {
     public List<DocumentVersioningDto> getVersionsByRecordId(ResourceQualifier rQualifier, Object recordId) {
         IRecord record = getById(rQualifier, recordId);
         String versions = record.getAsString(VERSIONS.getName());
-        if (record.isFolder() || !Objects.nonNull(versions)) {
+        if (record.isFolder() || !nonNull(versions)) {
             return new ArrayList<>();
         }
 

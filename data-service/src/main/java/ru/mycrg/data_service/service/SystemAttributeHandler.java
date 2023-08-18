@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -115,7 +115,7 @@ public class SystemAttributeHandler {
         contentWithoutVersion.remove(VERSIONS.getName());
 
         DocumentVersioningDto newVersion = new DocumentVersioningDto(authenticationFacade.getUserDetails().getUserId(),
-                                                                     LocalDateTime.now(),
+                                                                     DateTimeUtil.now(),
                                                                      contentWithoutVersion);
         allVersions.add(newVersion);
 
@@ -165,7 +165,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler fillCreator() {
         if (attributeDefined(CREATED_AT)) {
-            result.put(CREATED_AT.getName(), LocalDateTime.now());
+            result.put(CREATED_AT.getName(), DateTimeUtil.now());
         }
 
         if (attributeDefined(CREATED_BY)) {
@@ -177,7 +177,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler updateModifiedTime() {
         if (attributeDefined(LAST_MODIFIED)) {
-            result.put(LAST_MODIFIED.getName(), LocalDateTime.now());
+            result.put(LAST_MODIFIED.getName(), DateTimeUtil.now());
         }
 
         return this;

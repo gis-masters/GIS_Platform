@@ -222,6 +222,12 @@ public class SqlBuilder {
             case FILE:
                 result = attrDescription.getName() + " jsonb";
                 break;
+            case BOOLEAN:
+                result = attrDescription.getName() + " boolean";
+                break;
+            case UUID:
+                result = attrDescription.getName() + " uuid";
+                break;
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueTypeAsEnum());
 

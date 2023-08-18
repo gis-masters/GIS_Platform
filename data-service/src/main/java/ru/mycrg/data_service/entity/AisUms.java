@@ -1,11 +1,11 @@
 package ru.mycrg.data_service.entity;
 
 import ru.mycrg.data_service.dto.AisUmsDto;
+import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Entity
 @Table(name = "ais_ums", schema = "public")
@@ -53,7 +53,7 @@ public class AisUms {
         this.propertyType = propertyType;
         this.departmentName = departmentName;
 
-        this.createdAt = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        this.createdAt = DateTimeUtil.now();
     }
 
     public AisUms(AisUmsDto aisUmsDto) {
