@@ -1,6 +1,7 @@
 package ru.mycrg.gisog_service_contract.dto;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Document {
@@ -51,5 +52,22 @@ public class Document {
 
     public void setContent(Map<String, Object> content) {
         this.content = content;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Document document = (Document) o;
+        return Objects.equals(guid, document.guid) && Objects.equals(name, document.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(guid, name);
     }
 }

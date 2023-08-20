@@ -1,10 +1,13 @@
 package ru.mycrg.data_service.service.gisogd;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
@@ -24,15 +27,21 @@ import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
+import ru.mycrg.data_service_contract.dto.TypeUrlData;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -45,6 +54,7 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
 import static ru.mycrg.data_service_contract.enums.TaskType.SYSTEM;
 import static ru.mycrg.data_service_contract.enums.ValueType.DOCUMENT;
+import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
 public class GisogdRfPublisher {
@@ -110,16 +120,17 @@ public class GisogdRfPublisher {
         }
 
         Document inbox = fetchInbox(qualifier, parentDoc);
-        Document layer = fetchJoinedByUrlLayers(qualifier);
-        List<Document> childDocuments = fetchJoinedDocuments(qualifier, parentDoc);
+        Set<Document> childrenByUrlFormula = fetchByUrlAsFormula(qualifier);
+        Set<Document> childrenByUrlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent);
+        List<Document> childDocuments = fetchByTypeDocument(qualifier, parentDoc);
 
         List<Document> children = new ArrayList<>(childDocuments);
         if (inbox != null) {
             children.add(inbox);
         }
-        if (layer != null) {
-            children.add(layer);
-        }
+
+        children.addAll(childrenByUrlFormula);
+        children.addAll(childrenByUrlDirectly);
 
         messageBus.produce(
                 new PublishToGisogdRfEvent(taskId,
@@ -205,7 +216,7 @@ public class GisogdRfPublisher {
         }
     }
 
-    private List<Document> fetchJoinedDocuments(ResourceQualifier qualifier, IRecord parent) {
+    private List<Document> fetchByTypeDocument(ResourceQualifier qualifier, IRecord parent) {
         try {
             List<Document> result = new ArrayList<>();
 
@@ -242,19 +253,20 @@ public class GisogdRfPublisher {
 
                     ResourceQualifier childQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, library, id, LIBRARY);
                     try {
-                        baseDao.findBy(childQualifier)
+                        baseDao.findById(childQualifier)
                                .ifPresentOrElse(record -> {
                                    String guid = record.getAsString(GUID.getName());
                                    String contentType = record.getAsString(CONTENT_TYPE_ID.getName());
 
-                                   result.add(
-                                           new Document(UUID.fromString(guid), library, contentType,
-                                                        record.getContent()));
+                                   result.add(new Document((guid != null) ? fromString(guid) : null,
+                                                           library,
+                                                           contentType,
+                                                           record.getContent()));
                                }, () -> {
                                    log.warn("Не найден связанный документ. [{}]", childQualifier.getQualifier());
                                });
                     } catch (Exception e) {
-                        log.warn("Не удалось получить документ: [{}]", childQualifier.getQualifier());
+                        log.warn("Не удалось получить документ: [{}]", childQualifier.getQualifier(), e);
                     }
                 }
             }
@@ -269,69 +281,218 @@ public class GisogdRfPublisher {
         }
     }
 
+    @NotNull
+    private Set<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier, Map<String, Object> parentContent) {
+        log.debug("Собираем объекты по связям типа URL связанными напрямую. для: {}", qualifier.getQualifier());
+
+        Optional<SchemaDto> oSchema = schemaExtractor.get(qualifier);
+        if (oSchema.isEmpty()) {
+            return new HashSet<>();
+        }
+
+        // Заранее понятно что это дичь - но пока схемы не трогаем.
+        // Нужно строить логику не на основе того что чего-то нет, а явно - на основе того что что-то есть.
+        return oSchema.get()
+                      .getProperties().stream()
+                      .filter(propertyDto -> URL.name().equalsIgnoreCase(propertyDto.getValueType()))
+                      .filter(propertyDto -> propertyDto.getCalculatedValueWellKnownFormula() == null &&
+                              propertyDto.getCalculatedValueFormula() == null)
+                      .flatMap(property -> fetchByTypeUrlDirectly(qualifier, property, parentContent).stream())
+                      .collect(Collectors.toSet());
+    }
+
+    private List<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier,
+                                                  SimplePropertyDto property,
+                                                  Map<String, Object> parentContent) {
+        Object value = null;
+        try {
+            value = parentContent.get(property.getName());
+
+            List<TypeUrlData> urls = mapper.readValue(value.toString(),
+                                                      new TypeReference<List<TypeUrlData>>() {
+                                                      });
+
+            for (TypeUrlData url: urls) {
+                MultiValueMap<String, String> queryParams = UriComponentsBuilder
+                        .fromUriString(URLDecoder.decode(String.valueOf(url.getUrl()), UTF_8)).build()
+                        .getQueryParams();
+
+                List<String> features = queryParams.get("features");
+
+                log.debug("features: {}", features);
+            }
+        } catch (IOException e) {
+            log.error("Некорректно задан URL: [{}]", value, e);
+        }
+
+        return new ArrayList<>();
+    }
+
     /**
-     * В схеме заданной библиотеки, пытаемся найти поле типа URL, отвечающее за связь со слоем.
+     * В схеме заданной библиотеки, собираем объекты по связям типа URL.
      * <p>
-     * Чтобы по этой информации найти конкретный объект слоя.
      *
      * @param qualifier библиотека документов.
      *
      * @return Квалификатор объекта слоя
      */
-    @Nullable
-    private Document fetchJoinedByUrlLayers(ResourceQualifier qualifier) {
+    @NotNull
+    private Set<Document> fetchByUrlAsFormula(ResourceQualifier qualifier) {
+        log.debug("Собираем объекты по связям типа URL c формулой 'linkToFeaturesMentioningThisDocument' для: {}",
+                  qualifier.getQualifier());
+
+        return getPropsByFormula(qualifier, "linkToFeaturesMentioningThisDocument")
+                .stream()
+                .flatMap(property -> fetchByUrlAsFormula(qualifier, property).stream())
+                .collect(Collectors.toSet());
+    }
+
+    private List<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, SimplePropertyDto property) {
+        List<Document> result = new ArrayList<>();
+
+        Map<String, Object> formulaParams = (Map<String, Object>) property.getValueFormulaParams();
+        boolean includeParents = false;
+        if (formulaParams.containsKey("includeParents")) {
+            includeParents = (boolean) formulaParams.get("includeParents");
+        }
+
+        List<String> layerComplexNames = (List<String>) formulaParams.get("layers");
+        log.debug("In property: '{}' found layers: {}", property.getName(), layerComplexNames.size());
+        if (layerComplexNames.isEmpty()) {
+            log.warn("Не корректно настроено поле: {}. Отсутствуют слои.", property.getName());
+
+            return result;
+        }
+
+        boolean isTerritoryKey = "territorykey".equalsIgnoreCase(property.getName());
+        if (isTerritoryKey) {
+            Optional<Document> oDocument = fetchTerritoryKey(qualifier, layerComplexNames, false);
+            if (oDocument.isPresent()) {
+                result.add(oDocument.get());
+
+                return result;
+            } else {
+                log.debug("Не удалось найти territorykey [includeParents = false]");
+
+                oDocument = fetchTerritoryKey(qualifier, layerComplexNames, true);
+                if (oDocument.isPresent()) {
+                    result.add(oDocument.get());
+
+                    return result;
+                } else {
+                    log.debug("Не удалось найти territorykey [includeParents = true]");
+                }
+            }
+        } else {
+            for (String complexName: layerComplexNames) {
+                Optional<ResourceQualifier> objectQualifier = findRecord(qualifier, complexName, includeParents);
+                if (objectQualifier.isEmpty()) {
+                    log.debug("Не удалось найти запись в слое: {}", complexName);
+
+                    continue;
+                }
+
+                result.add(prepareDocument(objectQualifier.get()));
+            }
+        }
+
+        return result;
+    }
+
+    private Optional<Document> fetchTerritoryKey(ResourceQualifier qualifier,
+                                                 List<String> layerComplexNames,
+                                                 boolean includeParent) {
+        ResourceQualifier territory = null;
+        for (String complexName: layerComplexNames) {
+            Optional<ResourceQualifier> objectQualifier = findRecord(qualifier, complexName, includeParent);
+            if (objectQualifier.isPresent()) {
+                territory = objectQualifier.get();
+
+                break;
+            }
+        }
+
+        if (territory != null) {
+            Document territoryKey = prepareDocument(territory);
+            territoryKey.setName("territorykey");
+            territoryKey.setContentType("territorykey");
+
+            return Optional.of(territoryKey);
+        }
+
+        return Optional.empty();
+    }
+
+    @NotNull
+    private Document prepareDocument(ResourceQualifier recordQualifier) {
+        log.debug("Founded record: '{}'", recordQualifier.getQualifier());
+
+        Optional<IRecord> oLayerRecord = baseDao.findBy(recordQualifier,
+                                                        "objectId = " + recordQualifier.getRecordId());
+        if (oLayerRecord.isEmpty()) {
+            throw new IllegalStateException("Не найдена запись: " + recordQualifier.getRecordId());
+        }
+        IRecord record = oLayerRecord.get();
+
+        // вытащим геометрию в формате WGS-84 (3857)
+        String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(recordQualifier, 3857);
+        String guid = record.getAsString(GUID.getName());
+        Map<String, Object> content = record.getContent();
+        content.put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
+
+        return new Document((guid != null) ? fromString(guid) : null,
+                            recordQualifier.getTable(),
+                            recordQualifier.getTable(),
+                            content);
+    }
+
+    private Optional<ResourceQualifier> findRecord(ResourceQualifier qualifier,
+                                                   String complexName,
+                                                   boolean includeParents) {
+        log.debug("Fetch from layer: {}", complexName);
+
         try {
-            String targetFormulaName = "linkToFeaturesMentioningThisDocument";
+            String layerName = complexName.split(":")[1];
+            if (layerName == null) {
+                log.warn("Не верно заданы параметры valueFormulaParams. " +
+                                 "Не удалось вытащить название слоя из layerComplexName: {}", complexName);
 
-            Optional<SchemaDto> oSchema = schemaExtractor.get(qualifier);
-            if (oSchema.isEmpty()) {
-                return null;
+                return Optional.empty();
             }
 
-            Optional<SimplePropertyDto> oProperty = oSchema
-                    .get().getProperties().stream()
-                    .filter(propertyDto -> targetFormulaName.equals(propertyDto.getCalculatedValueWellKnownFormula()))
-                    .findFirst();
-            if (oProperty.isEmpty()) {
-                log.debug("Нет связанных по URL объектов. Ожидается 'calculatedValueWellKnownFormula': " +
-                                  "'linkToFeaturesMentioningThisDocument'");
+            // Тащим запись о слое, чтобы достать путь к набору данных
+            String filterForLayer = "identifier = '" + layerName + "'";
+            Optional<IRecord> oLayer = baseDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
+            if (oLayer.isEmpty()) {
+                log.warn("Не найден слой: {}", layerName);
 
-                return null;
+                return Optional.empty();
             }
 
-            Map<String, Object> formulaParams = (Map<String, Object>) oProperty.get().getValueFormulaParams();
-            List<String> layerComplexNames = (List<String>) formulaParams.get("layers");
-            log.info("Found layers: {}", layerComplexNames.size());
+            long datasetId = Long.parseLong(oLayer.get().getContent().get("path").toString().split("root/")[1]);
 
-            String datasetIdentifier = null;
-            String layerName = null;
+            // Тащим запись о наборе данных, чтобы достать его название
+            IRecord dataset = baseDao
+                    .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
+                    .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
+            String datasetIdentifier = dataset.getContent().get("identifier").toString();
+            log.debug("founded dataset: {}", datasetIdentifier);
+
+            // Ищем в слое запись, которая ссылается на документ. Берем id.
             Long recordId = null;
-            for (String layerComplexName: layerComplexNames) {
-                layerName = layerComplexName.split(":")[1];
-                if (layerName == null) {
-                    log.warn("Не верно заданы параметры valueFormulaParams. " +
-                                     "Не удалось вытащить название слоя из layerComplexName: {}", layerComplexName);
-                    continue;
+            if (includeParents) {
+                Optional<Long> oRecordId = gisogdRfDao
+                        .findJoinedToDocumentLayerRecordIdWithParents(datasetIdentifier,
+                                                                      layerName,
+                                                                      qualifier.getTableQualifier(),
+                                                                      qualifier.getRecordId());
+
+                if (oRecordId.isPresent()) {
+                    recordId = oRecordId.get();
+                } else {
+                    log.debug("Not found record in LAYER: '{}.{}' Mode: [PARENT ON]", datasetIdentifier, layerName);
                 }
-
-                // Тащим запись о слое, чтобы достать путь к набору данных
-                String filterForLayer = "identifier = '" + layerName + "'";
-                Optional<IRecord> oLayer = baseDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
-                if (oLayer.isEmpty()) {
-                    log.warn("Не найден слой: {}", layerName);
-                    continue;
-                }
-
-                long datasetId = Long.parseLong(oLayer.get().getContent().get("path").toString().split("root/")[1]);
-
-                // Тащим запись о наборе данных, чтобы достать его название
-                IRecord dataset = baseDao
-                        .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
-                        .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
-                datasetIdentifier = dataset.getContent().get("identifier").toString();
-                log.debug("founded dataset: {}", datasetIdentifier);
-
-                // Ищем в слое запись, которая ссылается на документ. Берем id.
+            } else {
                 Optional<Long> oRecordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
                                                                                          layerName,
                                                                                          qualifier.getTableQualifier(),
@@ -339,39 +500,42 @@ public class GisogdRfPublisher {
 
                 if (oRecordId.isPresent()) {
                     recordId = oRecordId.get();
-
-                    break;
                 } else {
-                    log.debug("NOT found record in LAYER: {}.{}", datasetIdentifier, layerName);
+                    log.debug("Not found record in LAYER: '{}.{}' Mode: [PARENT OFF]", datasetIdentifier, layerName);
                 }
             }
 
-            if (recordId == null || datasetIdentifier == null || layerName == null) {
-                throw new IllegalStateException("Не удалось найти запись.");
-            }
-
-            log.debug("Founded record with ID: '{}' in LAYER: {}.{}", recordId, datasetIdentifier, layerName);
-
-            ResourceQualifier lrQualifier = new ResourceQualifier(datasetIdentifier, layerName, recordId, TABLE);
-            Optional<IRecord> oLayerRecord = baseDao.findBy(lrQualifier, "objectId = " + recordId);
-            if (oLayerRecord.isEmpty()) {
-                throw new IllegalStateException("Не найдена запись: " + recordId);
-            }
-
-            // вытащим геометрию в формате WGS-84 (3857)
-            String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(lrQualifier, 3857);
-            oLayerRecord.get().getContent().put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
-
-            IRecord record = oLayerRecord.get();
-            String guid = record.getAsString(GUID.getName());
-
-            return new Document(fromString(guid), layerName, layerName, record.getContent());
+            return recordId == null
+                    ? Optional.empty()
+                    : Optional.of(new ResourceQualifier(datasetIdentifier, layerName, recordId, FEATURE));
         } catch (Exception e) {
-            String msg = "Не удается получить информацию о слое, связанном с документом. По причине: " + e.getMessage();
-
-            log.error(msg);
-            throw new DataServiceException(msg);
+            log.error("Не удается получить информацию из слоя: {}. По причине: {}",
+                      complexName, e.getMessage(), e);
         }
+
+        return Optional.empty();
+    }
+
+    @NotNull
+    private List<SimplePropertyDto> getPropsByFormula(ResourceQualifier qualifier, String formulaName) {
+        Optional<SchemaDto> oSchema = schemaExtractor.get(qualifier);
+        if (oSchema.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<SimplePropertyDto> result = oSchema
+                .get()
+                .getProperties().stream()
+                .filter(propertyDto -> formulaName.equals(propertyDto.getCalculatedValueWellKnownFormula()))
+                .collect(Collectors.toList());
+
+        if (result.isEmpty()) {
+            log.debug("Нет свойств с заданной формулой: '{}'", formulaName);
+
+            return new ArrayList<>();
+        }
+
+        return result;
     }
 
     @Nullable
@@ -390,7 +554,10 @@ public class GisogdRfPublisher {
 
         String guid = inbox.getAsString(GUID.getName());
 
-        return new Document(fromString(guid), INBOX_MARKER, INBOX_MARKER, inbox.getContent());
+        return new Document((guid != null) ? java.util.UUID.fromString(guid) : null,
+                            INBOX_MARKER,
+                            INBOX_MARKER,
+                            inbox.getContent());
     }
 
     private List<String> getSchemasPublishedToGisogdRf(String targetProperty) {

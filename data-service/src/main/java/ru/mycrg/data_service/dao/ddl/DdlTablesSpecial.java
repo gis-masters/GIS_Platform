@@ -110,16 +110,16 @@ public class DdlTablesSpecial {
         }
     }
 
-    private boolean isGeometryExist(String createTableSql) {
-        return createTableSql.contains("shape public.geometry");
-    }
-
     public List<String> getAllColumnNames(String tableName) {
         String query = "SELECT column_name " +
                 "FROM INFORMATION_SCHEMA.COLUMNS " +
                 "WHERE TABLE_NAME = '" + tableName.toLowerCase() + "'";
 
         return jdbcTemplate.queryForList(query, String.class);
+    }
+
+    private boolean isGeometryExist(String createTableSql) {
+        return createTableSql.contains("shape public.geometry");
     }
 
     private String getExtensionTableQuery(String targetSchema, String extensionTable) {

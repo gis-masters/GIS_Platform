@@ -76,10 +76,6 @@ public class BaseDao {
         return Optional.ofNullable(records.get(0));
     }
 
-    public Optional<IRecord> findBy(ResourceQualifier qualifier) {
-        return findBy(qualifier, "", null);
-    }
-
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
                                     String ecqlFilter) {
         return findBy(qualifier, ecqlFilter, null);

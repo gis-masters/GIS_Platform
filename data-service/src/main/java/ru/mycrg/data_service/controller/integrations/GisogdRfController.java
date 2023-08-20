@@ -53,7 +53,7 @@ public class GisogdRfController {
     }
 
     private ResourceQualifier makeQualifier(String entityName, Long entityId) {
-        if (entityName.toLowerCase().contains(INBOX_MARKER)) {
+        if (entityName.equalsIgnoreCase(INBOX_MARKER)) {
             return new ResourceQualifier(TASK_QUALIFIER, entityId, TASK);
         } else if (itIsLibrary(entityName)) {
             return new ResourceQualifier(SYSTEM_SCHEMA_NAME, entityName, entityId, LIBRARY);
