@@ -20,6 +20,7 @@ public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
         dl.setTableName(rs.getString("table_name"));
         dl.setSchemaId(rs.getString("schema_id"));
         dl.setCreatedBy(rs.getString("created_by"));
+        dl.setVersioned(rs.getBoolean("versioned"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {

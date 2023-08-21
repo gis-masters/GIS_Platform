@@ -29,6 +29,7 @@ public class GisogdRfDao {
 
     public Optional<Long> findJoinedToDocumentLayerRecordId(String dataset,
                                                             String layer,
+                                                            String column,
                                                             String libraryQualifier,
                                                             Object libraryRecordId) {
         String query = "" +
@@ -42,7 +43,7 @@ public class GisogdRfDao {
                 "      jsonb_extract_path_text(elem :: jsonb, 'id') AS layerRecordId" +
                 "    FROM" +
                 "      " + dataset + "." + layer + " AS ttt," +
-                "      LATERAL jsonb_array_elements_text(file :: jsonb) AS elem" +
+                "      LATERAL jsonb_array_elements_text(" + column + " :: jsonb) AS elem" +
                 "  ) AS layer on dl.id :: int = layer.layerRecordId :: int " +
                 "WHERE dl.id = " + libraryRecordId + " LIMIT (1)";
 
@@ -57,6 +58,7 @@ public class GisogdRfDao {
 
     public Optional<Long> findJoinedToDocumentLayerRecordIdWithParents(String dataset,
                                                                        String layer,
+                                                                       String column,
                                                                        String libraryQualifier,
                                                                        Object libraryRecordId) {
         String query = "" +
@@ -66,7 +68,7 @@ public class GisogdRfDao {
                 "    * " +
                 "  FROM " +
                 "    " + dataset + "." + layer + ", " +
-                "    LATERAL jsonb_array_elements_text(file :: jsonb) AS elem " +
+                "    LATERAL jsonb_array_elements_text(" + column + " :: jsonb) AS elem " +
                 ") " +
                 "SELECT " +
                 "  map_place.objectId " +

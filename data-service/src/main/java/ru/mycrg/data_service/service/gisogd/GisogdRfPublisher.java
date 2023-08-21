@@ -34,8 +34,6 @@ import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -297,13 +295,21 @@ public class GisogdRfPublisher {
                       .filter(propertyDto -> URL.name().equalsIgnoreCase(propertyDto.getValueType()))
                       .filter(propertyDto -> propertyDto.getCalculatedValueWellKnownFormula() == null &&
                               propertyDto.getCalculatedValueFormula() == null)
-                      .flatMap(property -> fetchByTypeUrlDirectly(qualifier, property, parentContent).stream())
+                      .flatMap(property -> fetchByTypeUrlDirectly(property, parentContent).stream())
                       .collect(Collectors.toSet());
     }
 
-    private List<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier,
-                                                  SimplePropertyDto property,
+    private List<Document> fetchByTypeUrlDirectly(SimplePropertyDto property,
                                                   Map<String, Object> parentContent) {
+        return extractTableQualifiers(property, parentContent)
+                .stream()
+                .map(this::prepareDocument)
+                .collect(Collectors.toList());
+    }
+
+    private List<ResourceQualifier> extractTableQualifiers(SimplePropertyDto property,
+                                                           Map<String, Object> parentContent) {
+        List<ResourceQualifier> result = new ArrayList<>();
         Object value = null;
         try {
             value = parentContent.get(property.getName());
@@ -318,14 +324,25 @@ public class GisogdRfPublisher {
                         .getQueryParams();
 
                 List<String> features = queryParams.get("features");
-
-                log.debug("features: {}", features);
+                for (String feature: features) {
+                    Map<String, Map<String, List<Long>>> data =
+                            mapper.readValue(feature,
+                                             new TypeReference<Map<String, Map<String, List<Long>>>>() {
+                                             });
+                    data.forEach((schema, featureAsMap) -> {
+                        featureAsMap.forEach((tableName, ids) -> {
+                            for (Long id: ids) {
+                                result.add(new ResourceQualifier(schema, tableName, id, TABLE));
+                            }
+                        });
+                    });
+                }
             }
         } catch (IOException e) {
             log.error("Некорректно задан URL: [{}]", value, e);
         }
 
-        return new ArrayList<>();
+        return result;
     }
 
     /**
@@ -356,17 +373,24 @@ public class GisogdRfPublisher {
             includeParents = (boolean) formulaParams.get("includeParents");
         }
 
+        String columnName = (String) formulaParams.get("property");
+        if (columnName.isEmpty()) {
+            log.warn("Не корректно настроено поле: {}. Отсутствует 'property'", property.getName());
+
+            return result;
+        }
+
         List<String> layerComplexNames = (List<String>) formulaParams.get("layers");
         log.debug("In property: '{}' found layers: {}", property.getName(), layerComplexNames.size());
         if (layerComplexNames.isEmpty()) {
-            log.warn("Не корректно настроено поле: {}. Отсутствуют слои.", property.getName());
+            log.warn("Не корректно настроено поле: {}. Не указаны слои 'layers'", property.getName());
 
             return result;
         }
 
         boolean isTerritoryKey = "territorykey".equalsIgnoreCase(property.getName());
         if (isTerritoryKey) {
-            Optional<Document> oDocument = fetchTerritoryKey(qualifier, layerComplexNames, false);
+            Optional<Document> oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, false);
             if (oDocument.isPresent()) {
                 result.add(oDocument.get());
 
@@ -374,7 +398,7 @@ public class GisogdRfPublisher {
             } else {
                 log.debug("Не удалось найти territorykey [includeParents = false]");
 
-                oDocument = fetchTerritoryKey(qualifier, layerComplexNames, true);
+                oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, true);
                 if (oDocument.isPresent()) {
                     result.add(oDocument.get());
 
@@ -384,10 +408,13 @@ public class GisogdRfPublisher {
                 }
             }
         } else {
-            for (String complexName: layerComplexNames) {
-                Optional<ResourceQualifier> objectQualifier = findRecord(qualifier, complexName, includeParents);
+            for (String layerComplexName: layerComplexNames) {
+                Optional<ResourceQualifier> objectQualifier = findRecord(qualifier,
+                                                                         layerComplexName,
+                                                                         columnName,
+                                                                         includeParents);
                 if (objectQualifier.isEmpty()) {
-                    log.debug("Не удалось найти запись в слое: {}", complexName);
+                    log.debug("Не удалось найти запись в слое: {}", layerComplexName);
 
                     continue;
                 }
@@ -401,10 +428,14 @@ public class GisogdRfPublisher {
 
     private Optional<Document> fetchTerritoryKey(ResourceQualifier qualifier,
                                                  List<String> layerComplexNames,
+                                                 String columnName,
                                                  boolean includeParent) {
         ResourceQualifier territory = null;
-        for (String complexName: layerComplexNames) {
-            Optional<ResourceQualifier> objectQualifier = findRecord(qualifier, complexName, includeParent);
+        for (String layerComplexName: layerComplexNames) {
+            Optional<ResourceQualifier> objectQualifier = findRecord(qualifier,
+                                                                     layerComplexName,
+                                                                     columnName,
+                                                                     includeParent);
             if (objectQualifier.isPresent()) {
                 territory = objectQualifier.get();
 
@@ -448,6 +479,7 @@ public class GisogdRfPublisher {
 
     private Optional<ResourceQualifier> findRecord(ResourceQualifier qualifier,
                                                    String complexName,
+                                                   String columnName,
                                                    boolean includeParents) {
         log.debug("Fetch from layer: {}", complexName);
 
@@ -484,6 +516,7 @@ public class GisogdRfPublisher {
                 Optional<Long> oRecordId = gisogdRfDao
                         .findJoinedToDocumentLayerRecordIdWithParents(datasetIdentifier,
                                                                       layerName,
+                                                                      columnName,
                                                                       qualifier.getTableQualifier(),
                                                                       qualifier.getRecordId());
 
@@ -495,6 +528,7 @@ public class GisogdRfPublisher {
             } else {
                 Optional<Long> oRecordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
                                                                                          layerName,
+                                                                                         columnName,
                                                                                          qualifier.getTableQualifier(),
                                                                                          qualifier.getRecordId());
 

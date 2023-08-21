@@ -47,6 +47,8 @@ public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRec
                     if (timestamp != null) {
                         record.put(columnName, timestamp.toLocalDateTime()
                                                         .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+                    } else {
+                        record.put(columnName, null);
                     }
 
                     break;
