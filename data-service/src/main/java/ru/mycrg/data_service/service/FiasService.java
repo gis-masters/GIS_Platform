@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.FiasDao;
+import ru.mycrg.data_service.dao.detached.FiasDao;
 import ru.mycrg.data_service.dto.FullAddressDto;
 import ru.mycrg.data_service.dto.LocalityDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;

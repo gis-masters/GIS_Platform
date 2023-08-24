@@ -1,5 +1,6 @@
 package ru.mycrg.gisog_service_contract.dto;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -7,19 +8,29 @@ import java.util.UUID;
 public class Document {
 
     private UUID guid;
+    private String schema;
     private String name;
     private String contentType;
-    private Map<String, Object> content;
+    private Map<String, Object> content = new HashMap<>();
 
     public Document() {
         // Required
     }
 
-    public Document(UUID guid, String name, String contentType, Map<String, Object> content) {
+    public Document(UUID guid, String schema, String name, String contentType, Map<String, Object> content) {
         this.guid = guid;
+        this.schema = schema;
         this.name = name;
         this.contentType = contentType;
         this.content = content;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
     public UUID getGuid() {
@@ -69,5 +80,16 @@ public class Document {
     @Override
     public int hashCode() {
         return Objects.hash(guid, name);
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"guid\":" + (guid == null ? "null" : guid) + ", " +
+                "\"schema\":" + (schema == null ? "null" : "\"" + schema + "\"") + ", " +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
+                "\"content\":" + (content == null ? "null" : "\"" + content + "\"") +
+                "}";
     }
 }

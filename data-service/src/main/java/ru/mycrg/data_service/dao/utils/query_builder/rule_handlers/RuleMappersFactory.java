@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.query_builder.rule_handlers;
+package ru.mycrg.data_service.dao.utils.query_builder.rule_handlers;
 
 import org.opengis.referencing.FactoryException;
 import ru.mycrg.data_service.dto.styles.*;

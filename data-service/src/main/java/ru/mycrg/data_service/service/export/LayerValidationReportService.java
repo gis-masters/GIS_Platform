@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.ValidationResultDao;
+import ru.mycrg.data_service.dao.detached.ValidationResultDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;

@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.dao.query_builder.QueryBuilder.*;
+import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.*;
 import static ru.mycrg.data_service.validators.ComparisonRuleValidator.validate;
 
 @Service

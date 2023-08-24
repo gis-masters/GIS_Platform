@@ -11,9 +11,10 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_TO_DATA_Q
 
 public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
+    private Long orgId;
     private Long taskId;
-
     private Document parent;
+
     private Status status;
     private Map<String, String> content;
 
@@ -25,17 +26,24 @@ public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
         super(event.getId(), GISOGD_TO_DATA_QUEUE);
     }
 
-    public ResponseFromGisogdRfEvent(IMessageBusEvent event,
-                                     Long taskId,
-                                     Document parent,
+    public ResponseFromGisogdRfEvent(PublishToGisogdRfEvent event,
                                      Status status,
                                      Map<String, String> content) {
         super(event.getId(), GISOGD_TO_DATA_QUEUE);
 
-        this.taskId = taskId;
-        this.parent = parent;
+        this.orgId = event.getOrgId();
+        this.taskId = event.getTaskId();
+        this.parent = event.getParent();
         this.status = status;
         this.content = content;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
     }
 
     public Long getTaskId() {
@@ -68,5 +76,16 @@ public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
     public void setContent(Map<String, String> content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"orgId\":" + (orgId == null ? "null" : "\"" + orgId + "\"") + ", " +
+                "\"taskId\":" + (taskId == null ? "null" : "\"" + taskId + "\"") + ", " +
+                "\"parent\":" + (parent == null ? "null" : parent) + ", " +
+                "\"status\":" + (status == null ? "null" : status) + ", " +
+                "\"content\":" + (content == null ? "null" : "\"" + content + "\"") +
+                "}";
     }
 }

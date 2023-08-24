@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.detached;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.postgresql.util.PGobject;

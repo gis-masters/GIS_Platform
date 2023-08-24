@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.wellknown_formula_generator;
+package ru.mycrg.data_service.dao.utils.wellknown_formula_generator;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

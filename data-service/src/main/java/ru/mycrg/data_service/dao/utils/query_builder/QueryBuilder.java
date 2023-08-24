@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.query_builder;
+package ru.mycrg.data_service.dao.utils.query_builder;
 
 import com.healthmarketscience.sqlbuilder.*;
 import com.healthmarketscience.sqlbuilder.custom.postgresql.PgLimitClause;
@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.operation.TransformException;
 import org.springframework.lang.Nullable;
-import ru.mycrg.data_service.dao.query_builder.exceptions.QueryBuilderException;
-import ru.mycrg.data_service.dao.query_builder.rule_handlers.RuleMappersFactory;
+import ru.mycrg.data_service.dao.utils.query_builder.exceptions.QueryBuilderException;
+import ru.mycrg.data_service.dao.utils.query_builder.rule_handlers.RuleMappersFactory;
 import ru.mycrg.data_service.dto.styles.RuleFilter;
 import ru.mycrg.data_service.dto.styles.SpatialRuleFilter;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

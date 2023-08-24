@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.query_builder.exceptions;
+package ru.mycrg.data_service.dao.utils.query_builder.exceptions;
 
 public class QueryBuilderException extends RuntimeException {
 

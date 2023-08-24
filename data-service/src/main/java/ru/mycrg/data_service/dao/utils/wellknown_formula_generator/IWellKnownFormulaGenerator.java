@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.wellknown_formula_generator;
+package ru.mycrg.data_service.dao.utils.wellknown_formula_generator;
 
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;

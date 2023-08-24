@@ -65,7 +65,7 @@ public class JsonConverter {
     }
 
     @Nullable
-    private static String getJsonString(Object value) throws JsonProcessingException {
+    public static String getJsonString(Object value) throws JsonProcessingException {
         return mapper.writer()
                      .withDefaultPrettyPrinter()
                      .writeValueAsString(value);

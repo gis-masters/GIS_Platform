@@ -10,6 +10,7 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_GISOGD_Q
 
 public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
+    private Long orgId;
     private Long taskId;
 
     private Document parent;
@@ -19,15 +20,25 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
         // Required
     }
 
-    public PublishToGisogdRfEvent(Long taskId,
+    public PublishToGisogdRfEvent(Long orgId,
+                                  Long taskId,
                                   Document parent,
                                   List<Document> children) {
         super(UUID.randomUUID(), DATA_TO_GISOGD_QUEUE);
 
         this.taskId = taskId;
+        this.orgId = orgId;
 
         this.parent = parent;
         this.children = children;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
     }
 
     public Long getTaskId() {
@@ -52,5 +63,15 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
     public void setChildren(List<Document> children) {
         this.children = children;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"orgId\":" + (orgId == null ? "null" : "\"" + orgId + "\"") + ", " +
+                "\"taskId\":" + (taskId == null ? "null" : "\"" + taskId + "\"") + ", " +
+                "\"parent\":" + (parent == null ? "null" : parent) + ", " +
+                "\"children\":" + (children == null ? "null" : children) +
+                "}";
     }
 }

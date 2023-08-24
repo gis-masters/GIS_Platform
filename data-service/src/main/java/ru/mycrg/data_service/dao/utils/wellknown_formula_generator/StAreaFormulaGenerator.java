@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.wellknown_formula_generator;
+package ru.mycrg.data_service.dao.utils.wellknown_formula_generator;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -10,23 +10,23 @@ import java.util.Map;
 import static ru.mycrg.data_service_contract.enums.ValueType.GEOMETRY;
 
 @Component
-public class StLengthFormulaGenerator implements IWellKnownFormulaGenerator {
+public class StAreaFormulaGenerator implements IWellKnownFormulaGenerator {
 
     private final Map<String, List<String>> allowedFieldTypes;
 
-    public StLengthFormulaGenerator() {
+    public StAreaFormulaGenerator() {
         this.allowedFieldTypes = new HashMap<>();
         allowedFieldTypes.put("shape", List.of(GEOMETRY.name()));
     }
 
     @Override
     public String generate() {
-        return " GENERATED ALWAYS AS (public.st_length(shape)) STORED";
+        return " GENERATED ALWAYS AS (public.st_area(shape)) STORED";
     }
 
     @Override
     public String getType() {
-        return "st_length";
+        return "st_area";
     }
 
     @Override

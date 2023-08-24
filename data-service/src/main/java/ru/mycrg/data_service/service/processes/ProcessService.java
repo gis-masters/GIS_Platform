@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.ProcessDao;
+import ru.mycrg.data_service.dao.detached.ProcessDao;
 import ru.mycrg.data_service.dto.DetailsModel;
 import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.entity.Process;

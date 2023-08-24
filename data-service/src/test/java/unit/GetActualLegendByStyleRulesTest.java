@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static ru.mycrg.data_service.dao.query_builder.QueryBuilder.*;
+import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.*;
 import static ru.mycrg.data_service.dto.styles.ComparisonRuleOperator.IS_EQUAL_TO;
 
 public class GetActualLegendByStyleRulesTest {

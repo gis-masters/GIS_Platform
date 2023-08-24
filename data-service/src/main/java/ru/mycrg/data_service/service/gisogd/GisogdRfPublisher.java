@@ -106,9 +106,10 @@ public class GisogdRfPublisher {
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
         String guid = parentDoc.getAsString(GUID.getName());
         if (guid == null) {
-            log.debug("Отправка не может быть выполнена. В документе не найдено поле 'guid'.");
+            String msg = "Отправка не может быть выполнена. В документе не найдено поле 'guid'.";
+            log.debug(msg);
 
-            return;
+            throw new BadRequestException(msg);
         }
 
         Map<String, Object> parentContent = parentDoc.getContent();
@@ -131,8 +132,10 @@ public class GisogdRfPublisher {
         children.addAll(childrenByUrlDirectly);
 
         messageBus.produce(
-                new PublishToGisogdRfEvent(taskId,
+                new PublishToGisogdRfEvent(authenticationFacade.getOrganizationId(),
+                                           taskId,
                                            new Document(fromString(guid),
+                                                        qualifier.getSchema(),
                                                         qualifier.getTable(),
                                                         parentDoc.getAsString(CONTENT_TYPE_ID.getName()),
                                                         parentContent),
@@ -257,6 +260,7 @@ public class GisogdRfPublisher {
                                    String contentType = record.getAsString(CONTENT_TYPE_ID.getName());
 
                                    result.add(new Document((guid != null) ? fromString(guid) : null,
+                                                           SYSTEM_SCHEMA_NAME,
                                                            library,
                                                            contentType,
                                                            record.getContent()));
@@ -472,6 +476,7 @@ public class GisogdRfPublisher {
         content.put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
 
         return new Document((guid != null) ? fromString(guid) : null,
+                            recordQualifier.getSchema(),
                             recordQualifier.getTable(),
                             recordQualifier.getTable(),
                             content);
@@ -589,6 +594,7 @@ public class GisogdRfPublisher {
         String guid = inbox.getAsString(GUID.getName());
 
         return new Document((guid != null) ? java.util.UUID.fromString(guid) : null,
+                            SYSTEM_SCHEMA_NAME,
                             INBOX_MARKER,
                             INBOX_MARKER,
                             inbox.getContent());

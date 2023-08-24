@@ -6,10 +6,8 @@ import org.springframework.security.concurrent.DelegatingSecurityContextRunnable
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.TasksDetachedDao;
+import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 
 @Component
 public class TasksScheduler {
@@ -28,11 +26,9 @@ public class TasksScheduler {
         log.debug("close tasks by deadline: {}", DEADLINE_TIME);
 
         try {
-            String databaseName = getDefaultDatabaseName(1L);
-
             SecurityContext securityContext = SecurityContextHolder.getContext();
             DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
-                tasksDetachedDao.closeOldTasks(databaseName, DEADLINE_TIME);
+                tasksDetachedDao.closeOldTasks(1L, DEADLINE_TIME);
             }, securityContext);
             new Thread(wrappedRunnable).start();
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.detached;
 
 import com.healthmarketscience.sqlbuilder.*;
 import com.healthmarketscience.sqlbuilder.custom.postgresql.PgLimitClause;
