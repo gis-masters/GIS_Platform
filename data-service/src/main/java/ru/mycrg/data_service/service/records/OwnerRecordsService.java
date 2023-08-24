@@ -211,4 +211,9 @@ public class OwnerRecordsService implements IRecordsService {
     public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
         recordsDao.removeRecord(resourceQualifier, id);
     }
+
+    @Override
+    public void recoverRecord(ResourceQualifier resourceQualifier, String recoverPath) throws CrgDaoException {
+        recordsDao.recoverRecord(resourceQualifier, recoverPath);
+    }
 }

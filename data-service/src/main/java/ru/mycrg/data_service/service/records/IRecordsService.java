@@ -53,4 +53,6 @@ public interface IRecordsService {
 
     void deleteRecord(ResourceQualifier resourceQualifier,
                       Long id) throws CrgDaoException;
+
+    void recoverRecord(ResourceQualifier resourceQualifier, String recoverPath) throws CrgDaoException;
 }

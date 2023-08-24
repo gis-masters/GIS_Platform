@@ -263,6 +263,13 @@ public class UserRecordsService implements IRecordsService {
         ownerRecordsService.deleteRecord(rQualifier, id);
     }
 
+    @Override
+    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath) throws CrgDaoException {
+        throwIfRecoverNotAllowed(rQualifier);
+
+        ownerRecordsService.recoverRecord(rQualifier, recoverPath);
+    }
+
     private void throwIfCreateNotAllowed(ResourceQualifier lQualifier, IRecord record) {
         boolean libraryEditAllowed = true;
         boolean folderEditAllowed = true;
@@ -343,6 +350,14 @@ public class UserRecordsService implements IRecordsService {
     private void throwIfDeleteNotAllowed(ResourceQualifier rQualifier) {
         if (!resourceProtector.isEditAllowed(rQualifier)) {
             String msg = "Библиотека: '" + rQualifier.getQualifier() + "' не доступна для удаления.";
+
+            throw new ForbiddenException(msg);
+        }
+    }
+
+    private void throwIfRecoverNotAllowed(ResourceQualifier rQualifier) {
+        if (!resourceProtector.isOwner(rQualifier)) {
+            String msg = "Документ : '" + rQualifier.getQualifier() + "' не доступен для удаления.";
 
             throw new ForbiddenException(msg);
         }

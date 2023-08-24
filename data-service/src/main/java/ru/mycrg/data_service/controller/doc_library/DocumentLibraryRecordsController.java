@@ -19,10 +19,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.SchemaService;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.MoveRecordToNewParentRequest;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.*;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
@@ -185,6 +182,17 @@ public class DocumentLibraryRecordsController {
 
         mediator.execute(
                 new DeleteLibraryRecordRequest(qualifier, record, schema));
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping(path = "/document-libraries/{docLibId}/records/{recId}/recover")
+    public ResponseEntity<Object> recoverRecord(@PathVariable String docLibId,
+                                                @PathVariable Long recId,
+                                                @RequestParam(required = false) Long recoverFolderId) {
+        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        mediator.execute(new RecoverLibraryRecordRequest(rQualifier, recoverFolderId));
 
         return ResponseEntity.noContent().build();
     }

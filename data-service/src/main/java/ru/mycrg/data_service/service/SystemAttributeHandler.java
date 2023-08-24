@@ -141,7 +141,8 @@ public class SystemAttributeHandler {
                     !key.equals(PATH.getName()) &&
                     !key.equals(CREATED_AT.getName()) &&
                     !key.equals(LAST_MODIFIED.getName()) &&
-                    !key.equals(IS_FOLDER.getName())) {
+                    !key.equals(IS_FOLDER.getName()) &&
+                    !key.equals(IS_DELETED.getName())) {
                 initialProps.put(key, value);
             }
         });

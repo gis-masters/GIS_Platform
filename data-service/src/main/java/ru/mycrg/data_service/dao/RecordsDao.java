@@ -274,4 +274,21 @@ public class RecordsDao {
             throw new CrgDaoException(msg, e.getCause());
         }
     }
+
+    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath) throws CrgDaoException {
+        try {
+            String query = String.format("UPDATE %s SET is_deleted = false, path = '%s' WHERE id = %s",
+                                         rQualifier.getTableQualifier(), recoverPath, rQualifier.getRecordIdAsLong());
+
+            log.debug("Request to recover record: [{}]", query);
+
+            pJdbcTemplate.getJdbcTemplate().execute(query);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось выполнить восстановление документа: '%s' из: '%s'",
+                                       rQualifier.getRecordIdAsLong(), rQualifier.getTableQualifier());
+            log.debug(msg);
+
+            throw new CrgDaoException(msg, e.getCause());
+        }
+    }
 }
