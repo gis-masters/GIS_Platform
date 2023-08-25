@@ -357,7 +357,7 @@ public class UserRecordsService implements IRecordsService {
 
     private void throwIfRecoverNotAllowed(ResourceQualifier rQualifier) {
         if (!resourceProtector.isOwner(rQualifier)) {
-            String msg = "Документ : '" + rQualifier.getQualifier() + "' не доступен для удаления.";
+            String msg = "Документ : '" + rQualifier.getQualifier() + "' не доступен для восстановления.";
 
             throw new ForbiddenException(msg);
         }

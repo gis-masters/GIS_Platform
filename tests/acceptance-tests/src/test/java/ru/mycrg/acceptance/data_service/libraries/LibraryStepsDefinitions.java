@@ -41,6 +41,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     public static Integer currentDocumentId;
     public static Integer deletedDocumentId;
+    public static Integer currentFolderId;
     public static DefaultDocumentModel currentDocument;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
@@ -490,6 +491,20 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                     new RecordDto(folderName + i, null, folderContentType)));
     }
 
+    @When("В библиотеке документов по-умолчанию существует папка {string}")
+    public void createFolderInDefaultLibrary(String folderName) {
+        String folderContentType = "folder_v1";
+        currentFolderId = createRecordWithCheck(DEFAULT_LIBRARY,
+                                                new RecordDto(folderName, null, folderContentType));
+    }
+
+    @When("В текущей папке существует запись")
+    public void createRecordInCurrentFolder() {
+        String pathToFolder1 = "/root/" + currentFolderId;
+        currentDocumentId = createRecordWithCheck(DEFAULT_LIBRARY,
+                                                  new RecordDto("file_1", pathToFolder1, "doc_v3"));
+    }
+
     @When("Пользователь делает запрос на folder_1_1 запись в библиотеке")
     public void getCurrentRecordInLibrary() {
         authorizationBase.loginAsCurrentUser();
@@ -519,6 +534,15 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String actualValue = response.jsonPath().get(field).toString();
 
         assertEquals(actualValue, value);
+    }
+
+    @And("Удаленная запись восстановлена")
+    public void checkThatRemovedDocumentIsRecover() {
+        getRecordById(currentDocumentId);
+
+        boolean isDeleted = Boolean.parseBoolean(response.jsonPath().get("is_deleted").toString());
+
+        assertFalse(isDeleted);
     }
 
     @And("Удалённая запись возвращается в теле ответа")
@@ -611,6 +635,27 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkResponseValue("path", "/root/4/10/11/13");
     }
 
+    @When("Владелец организации отправляет запрос на восстановление документа в библиотеке по-умолчанию")
+    public void recoverCurrentRecordByOrgAdmin() {
+        authorizationBase.loginAsOwner();
+
+        recoverRecord(currentDocumentId, null, DEFAULT_LIBRARY);
+    }
+
+    @When("Пользователь отправляет запрос на восстановление документа в библиотеке по-умолчанию")
+    public void recoverCurrentRecord() {
+        authorizationBase.loginAsCurrentUser();
+
+        recoverRecord(currentDocumentId, null, DEFAULT_LIBRARY);
+    }
+
+    @When("Пользователь отправляет запрос на восстановление документа в текущей папке")
+    public void recoverCurrentRecordInCurrentFolder() {
+        authorizationBase.loginAsCurrentUser();
+
+        recoverRecord(currentDocumentId, currentFolderId, DEFAULT_LIBRARY);
+    }
+
     @When("Сообщение об ошибке соответствует ожидаемому: {string}")
     public void checkErrorMsg(String msg) {
         checkResponseValue("message", msg);
@@ -683,6 +728,16 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
+    private void recoverRecord(Integer recordId, Integer parentId, String libraryId) {
+        String url = Objects.isNull(parentId)
+                ? String.format("/%s/records/%d/recover", libraryId, recordId)
+                : String.format("/%s/records/%d/recover?recoverFolderId=%s", libraryId, recordId, parentId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        post(url);
     }
 
     private void moveRecord(Long recordId, Long parentId) {

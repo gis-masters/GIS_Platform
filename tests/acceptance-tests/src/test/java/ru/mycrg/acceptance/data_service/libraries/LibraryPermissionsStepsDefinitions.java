@@ -23,6 +23,7 @@ import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermissionId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentFolderId;
 
 public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -295,6 +296,22 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, folder11Id);
+        libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
+    }
+
+    @When("Текущему пользователю установлена роль {string}, для текущей записи")
+    public void setRoleForCurrentUserForCurrentDocument(String role) {
+        authorizationBase.loginAsOwner();
+
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, currentDocumentId);
+        libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
+    }
+
+    @When("Текущему пользователю установлена роль {string}, для текущей папки")
+    public void setRoleForCurrentUserForCurrentFolder(String role) {
+        authorizationBase.loginAsOwner();
+
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", DEFAULT_LIBRARY, currentFolderId);
         libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
     }
 

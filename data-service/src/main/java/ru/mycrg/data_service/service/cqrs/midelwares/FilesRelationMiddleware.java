@@ -10,9 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.auth_service_contract.events.request.FileDeletedEvent;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
-import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.ISchemable;
@@ -21,7 +19,6 @@ import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IUpdateFilesRelation;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -176,12 +173,12 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         }
     }
 
-    private void deleteFiles(Set<UUID> oldIds, Set<UUID> newIds) {
-        oldIds.stream()
-              .filter(oldId -> !newIds.contains(oldId))
-              .collect(Collectors.toSet())
-              .forEach(this::deleteFile);
-    }
+//    private void deleteFiles(Set<UUID> oldIds, Set<UUID> newIds) {
+//        oldIds.stream()
+//              .filter(oldId -> !newIds.contains(oldId))
+//              .collect(Collectors.toSet())
+//              .forEach(this::deleteFile);
+//    }
 
     private void transferFilesFromTempDirectory(Set<UUID> ids, ResourceQualifier lrQualifier, String type) {
         fileRepository.findAllByIdIn(ids).forEach(file -> {
@@ -202,29 +199,29 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         });
     }
 
-    private void deleteFile(UUID id) {
-        log.debug("Try to delete file by id: '{}'", id);
-
-        Optional<File> oFile = fileRepository.findById(id);
-        if (oFile.isPresent()) {
-            File file = oFile.get();
-            String path = file.getPath();
-
-            try {
-                fileStorageService.deleteIfExists(path);
-            } catch (StorageException e) {
-                log.error("Не удалось удалить файл с диска, по пути: '{}'", path);
-            }
-
-            fileRepository.delete(file);
-
-            messageBus.produce(new FileDeletedEvent(authenticationFacade.getLogin(),
-                                                    authenticationFacade.getAccessToken(),
-                                                    String.valueOf(id)));
-        } else {
-            log.info("Нечего удалять. Файл не найден по идентификатору: '{}'", id);
-        }
-    }
+//    private void deleteFile(UUID id) {
+//        log.debug("Try to delete file by id: '{}'", id);
+//
+//        Optional<File> oFile = fileRepository.findById(id);
+//        if (oFile.isPresent()) {
+//            File file = oFile.get();
+//            String path = file.getPath();
+//
+//            try {
+//                fileStorageService.deleteIfExists(path);
+//            } catch (StorageException e) {
+//                log.error("Не удалось удалить файл с диска, по пути: '{}'", path);
+//            }
+//
+//            fileRepository.delete(file);
+//
+//            messageBus.produce(new FileDeletedEvent(authenticationFacade.getLogin(),
+//                                                    authenticationFacade.getAccessToken(),
+//                                                    String.valueOf(id)));
+//        } else {
+//            log.info("Нечего удалять. Файл не найден по идентификатору: '{}'", id);
+//        }
+//    }
 
     private void updateFilesInfo(Set<UUID> ids, ResourceQualifier rQualifier) {
         log.debug("for update id: {}", ids);
@@ -244,19 +241,19 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         return fileFieldNames.stream().anyMatch(newRecord.getContent()::containsKey);
     }
 
-    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
-        try {
-            log.debug("DELETE CASE: {}", record.getId());
-
-            getFileFieldNames(schema)
-                    .stream()
-                    .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
-                    .collect(Collectors.toSet())
-                    .forEach(this::deleteFile);
-        } catch (Exception e) {
-            logError("Не удалось выполнить удаление файлов при удалении записи: " + record.getId(), e);
-        }
-    }
+//    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
+//        try {
+//            log.debug("DELETE CASE: {}", record.getId());
+//
+//            getFileFieldNames(schema)
+//                    .stream()
+//                    .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
+//                    .collect(Collectors.toSet())
+//                    .forEach(this::deleteFile);
+//        } catch (Exception e) {
+//            logError("Не удалось выполнить удаление файлов при удалении записи: " + record.getId(), e);
+//        }
+//    }
 
     private List<UUID> getFilesIdFromField(Map<String, Object> record, String fileFieldName) {
         Object payload = record.get(fileFieldName);
