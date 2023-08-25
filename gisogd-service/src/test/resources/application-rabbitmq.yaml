@@ -1,0 +1,20 @@
+spring:
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    exchanges:
+      exchange-receive-data:
+        name: exchange-receive-data
+    queues:
+      queue-receive-data:
+        name: queue-receive-data
+    bindings:
+      binding-receive-data:
+        exchange: exchange-receive-data
+        queue: queue-receive-data
+
+access-token:
+  username: arh_grad_rk@mail.ru
+  password: Fiorentina12
+  token-uri: http://10.10.10.58/api/oauth/token

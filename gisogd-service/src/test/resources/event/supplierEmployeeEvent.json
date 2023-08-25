@@ -1,0 +1,48 @@
+{
+  "id": "8c0a055c-8053-48bf-a4a4-22d32b943afe",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "f1c7101d-d539-472a-bf26-687775b8f0ec",
+    "name": "users_after_trigger",
+    "contentType": "Сотрудники организаций ОГД",
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "is_folder": false,
+      "position1": "Начальник отдела генерального плана и проектов планировок муниципального казенного учреждения \"Управление территориального планирования и градостроительной деятельности\"",
+      "content_type_id": "Сотрудники организаций ОГД",
+      "sur_name": "Дерюгина",
+      "middle_name": "Юрьевна",
+      "title": "Нелли Дерюгина Юрьевна",
+      "path": "/root/448",
+      "title_fio": "Нелли Дерюгина Юрьевна",
+      "name": "Нелли",
+      "supplier_data_connection": "[{\"id\":1,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_supplier\"}]",
+      "guid": "f1c7101d-d539-472a-bf26-687775b8f0ec",
+      "id": 444,
+      "last_modified": "2023-08-03 15:12:56",
+      "email": "deryugina_nelly@mail.ru"
+    }
+  },
+  "children": [
+    {
+      "guid": "64391931-e93e-4bfe-8ded-059091f4514b",
+      "name": "dl_data_supplier",
+      "contentType": "Карточка организации ОГД",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "path": "/root",
+        "organization_data_connection": "[{\"id\":3,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_organization\"}]",
+        "is_folder": false,
+        "content_type_id": "Карточка организации ОГД",
+        "created_at": "2023-08-09 06:41:50",
+        "guid": "64391931-e93e-4bfe-8ded-059091f4514b",
+        "id": 1,
+        "title": "ООО \"ГИСОГД\"",
+        "last_modified": "2023-08-09 06:41:50",
+        "created_by": "arh_grad_rk@mail.ru"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+FROM azul/zulu-openjdk-alpine:11-jre
+LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
+
+RUN apk --no-cache add curl
+
+COPY ./target/apm-agent.jar apm-agent.jar
+
+COPY ./target/gisogd-service.jar gisogd-service.jar
+
+ENV XMX_SIZE=1111m
+
+ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
+                                     -Delastic.apm.service_name=gisogd-service \
+                                     -Delastic.apm.server_urls=${APM_URL} \
+                                     -Delastic.apm.enable_log_correlation=true \
+                                     -Delastic.apm.application_packages=ru.mycrg.gisogd_service \
+                                     -jar gisogd-service.jar

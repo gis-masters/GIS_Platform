@@ -66,6 +66,7 @@
         <module>data-service</module>
         <module>integration-service</module>
         <module>audit-service</module>
+        <module>gisogd-service</module>
 
         <module>geo-wrapper</module>
 

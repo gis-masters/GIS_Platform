@@ -1,0 +1,104 @@
+{
+  "id": "c0a72fb6-a956-4321-865f-6fe6a5361f69",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "578e41b5-2b2c-4deb-bd3b-85413af831b9",
+    "name": "forest_district_100436_df4f",
+    "contentType": null,
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "note": null,
+      "area_doc": "1996728.11681015",
+      "file": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+      "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3882868.580333466,5586100.81817918],[3886761.716808614,5586010.274188032],[3886686.266947496,5585059.624729431],[3882747.861322566,5585029.451288108],[3882868.580333466,5586100.81817918]]]]}",
+      "name": "Тестовый объект",
+      "guid": "578e41b5-2b2c-4deb-bd3b-85413af831b9",
+      "ruleid": null,
+      "forestry": "[{\"url\":\"https://10.0.133.2/projects/789/map?basemap=19&layers=54641,54642,54643,54644&zoom=13.34&center=3886643,5587219&features=%7B%22dataset_a72886%22:%7B%22forestry_100436_2b98%22:%5B1%5D,%22forest_land_100436_f419%22:%5B1%5D%7D%7D\",\"text\":\"Объекты лесничества\"}]",
+      "objectid": "1",
+      "guid_forest_district": "08ade0b0-f990-495c-a64e-618608b34cd1"
+    }
+  },
+  "children": [
+    {
+      "guid": "58ec3e34-e622-4929-b544-285bfd3b866b",
+      "name": "dl_data_section16",
+      "contentType": "doc_16.01",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": "пример",
+        "guiddocpreviousversion": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "created_at": "2023-08-21 12:08:36",
+        "title": "Тест",
+        "type": null,
+        "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
+        "path": "/root/1363",
+        "file": "[{\"id\": \"f576953d-e4c1-470d-b9e1-cd9bea6771cf\", \"size\": 424, \"title\": \"terzone.prj\"}]",
+        "orgname": "Пример",
+        "organization_data_connection": null,
+        "doc_name": "Пример",
+        "inbox_data_key_data_connection": "[{\"id\":2,\"title\":\"ДжанкойЗемСтрой\",\"libraryTableName\":\"dl_data_inbox_data\"}]",
+        "id": 1376,
+        "docdate": "2023-08-21 00:00:00",
+        "last_modified": "2023-08-21 12:08:36",
+        "fias__id": 95252033,
+        "docstatus": "0С.1",
+        "docnum": "58",
+        "forestplot": null,
+        "is_folder": false,
+        "content_type_id": "doc_16.01",
+        "fias__oktmo": "35701000",
+        "created_by": "arh_grad_rk@mail.ru",
+        "size": null,
+        "is_public": false,
+        "regdate": "2023-08-21 00:00:00",
+        "supplier_data_connection": "[{\"id\":1,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_supplier\"}]",
+        "guid": "58ec3e34-e622-4929-b544-285bfd3b866b",
+        "regnum": "35701000-16-2023-4",
+        "territorykey": null,
+        "fias__address": "г.о. Симферополь",
+        "forestry": null
+      }
+    },
+    {
+      "guid": "d720bee3-6120-4fbf-b116-8adf5ac8d084",
+      "name": "forestry_100436_2b98",
+      "contentType": "forestry_100436_2b98",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": null,
+        "permitted_land_use_types": "[{\"id\":1,\"title\":\"Пример\",\"libraryTableName\":\"dl_data_permitted_land_use_types\"},{\"id\":3,\"title\":\"Пример 2\",\"libraryTableName\":\"dl_data_permitted_land_use_types\"}]",
+        "area_doc": "2264173.30272962",
+        "file": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3882853.495943014,5589601.623049179],[3887003.157004767,5589616.706515912],[3886897.527630913,5588545.339664638],[3882823.314996162,5588484.987001114],[3882853.495943014,5589601.623049179]]]]}",
+        "forest_regulation": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "name": "Тестовый пример",
+        "guid": "d720bee3-6120-4fbf-b116-8adf5ac8d084",
+        "ruleid": null,
+        "objectid": "1",
+        "guid_forestry": "e2ff7279-a942-4146-a381-15600fc4585a"
+      }
+    },
+    {
+      "guid": "487c7c0e-c702-45aa-883b-86044628f5a3",
+      "name": "forest_land_100436_f419",
+      "contentType": "forest_land_100436_f419",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": null,
+        "area_doc": "1695250.19577315",
+        "file": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3882823.3122125,5586719.494913653],[3882853.492704482,5587458.889053949],[3886822.077960302,5587700.317867765],[3886761.717839785,5586734.578655416],[3882823.3122125,5586719.494913653]]]]}",
+        "forest_develop_doc": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "guid": "487c7c0e-c702-45aa-883b-86044628f5a3",
+        "number1": "Тестовый пример",
+        "guid_forest_land": "6b125cda-6378-4046-aca2-fe6f53e9169c",
+        "ruleid": null,
+        "project_doc": "[{\"id\":1376,\"title\":\"Тест\",\"libraryTableName\":\"dl_data_section16\"}]",
+        "objectid": "1"
+      }
+    }
+  ]
+}

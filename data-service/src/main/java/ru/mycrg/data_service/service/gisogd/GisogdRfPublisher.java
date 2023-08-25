@@ -106,7 +106,7 @@ public class GisogdRfPublisher {
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
         String guid = parentDoc.getAsString(GUID.getName());
         if (guid == null) {
-            String msg = "Отправка не может быть выполнена. В документе не найдено поле 'guid'.";
+            String msg = "Отправка не может быть выполнена. В документе не найдено поле 'guid'";
             log.debug(msg);
 
             throw new BadRequestException(msg);

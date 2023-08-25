@@ -1,0 +1,68 @@
+{
+  "id": "c308fb7f-c388-4df6-972f-d4f1bfeae7f7",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "93d1e8be-9564-4a69-b5eb-65ea0c7a702a",
+    "name": "artland_789_a2d0",
+    "contentType": null,
+    "content": {
+      "area": "3500",
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "note": "Отсутствует",
+      "gisogdrf_publication_datetime": null,
+      "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3845848.508563654,5674558.874178453],[3843402.50103161,5658659.987177046],[3861855.872352243,5655915.120970639],[3861366.69204084,5674015.40115848],[3845848.508563654,5674558.874178453]]]]}",
+      "file": "[{\"id\":1372,\"title\":\"Тестовый документ 9 раздела\",\"libraryTableName\":\"dl_data_section9\"}]",
+      "waterobjectname": "Водохранилище",
+      "guid": "93d1e8be-9564-4a69-b5eb-65ea0c7a702a",
+      "ruleid": null,
+      "location_info": "с. Садовое 1",
+      "last_modified": null,
+      "objectid": "20",
+      "guid_art_land": "3827e0bf-7543-4d85-aba2-7a387a842dec"
+    }
+  },
+  "children": [
+    {
+      "guid": "2fbebdbd-b049-4912-811a-47a4de30929a",
+      "name": "dl_data_section9",
+      "contentType": "doc_9.01",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": "Отсутствуют",
+        "guiddocpreviousversion": "[{\"id\":1370,\"title\":\"Государственное автономное учреждение республики Крым «Научно-исследовательский институт архитектуры и градостроительства республики Крым»\",\"libraryTableName\":\"dl_data_section9\"}]",
+        "gisogdrf_publication_datetime": null,
+        "created_at": "2023-08-22 13:04:04",
+        "title": "Тестовый документ 9 раздела",
+        "type": null,
+        "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
+        "path": "/root/1363",
+        "file": "[{\"id\": \"be2026a3-da6e-43f8-93d1-25ae00dc1cfb\", \"size\": 2944, \"title\": \"coordinates.csv\"}]",
+        "orgname": "ООО \"Группа компаний Н.Э.К.С.\"",
+        "artland": null,
+        "organization_data_connection": null,
+        "inbox_data_key_data_connection": "[{\"id\":2,\"title\":\"ДжанкойЗемСтрой\",\"libraryTableName\":\"dl_data_inbox_data\"}]",
+        "id": 1372,
+        "docdate": "2023-08-04 00:00:00",
+        "last_modified": "2023-08-22 13:04:04",
+        "fias__id": 1434506,
+        "docstatus": "0C.1",
+        "docnum": "1369",
+        "is_folder": false,
+        "content_type_id": "doc_9.01",
+        "fias__oktmo": "35715000001",
+        "created_by": "arh_grad_rk@mail.ru",
+        "size": null,
+        "is_public": true,
+        "regdate": null,
+        "supplier_data_connection": "[{\"id\":1,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_supplier\"}]",
+        "guid": "2fbebdbd-b049-4912-811a-47a4de30929a",
+        "regnum": null,
+        "territorykey": null,
+        "fias__address": "г.о. Керчь, г Керчь",
+        "docname": "Данные"
+      }
+    }
+  ]
+}

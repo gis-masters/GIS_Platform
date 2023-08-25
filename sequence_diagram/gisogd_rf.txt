@@ -1,0 +1,27 @@
+frame Размещение данных на ГИСОГД РФ
+
+actor user
+participant data-service
+participant queue
+participant gisogd_rf-service
+participant GISOGD_RF
+
+user-#red:2>data-service:Разместить
+activate data-service #skyBlue
+data-service-#orange:2>data-service:created system task
+data-service-#blue:2>>queue:new event
+user <#red:2--data-service: HTTP response 202
+deactivate data-service
+
+queue-#blue:2>>gisogd_rf-service:catch event
+activate gisogd_rf-service #skyBlue
+gisogd_rf-service <-#orange:1>data-service:fetch document data
+gisogd_rf-service <-#orange:1>data-service:fetch files
+gisogd_rf-service-#orange:4>GISOGD_RF:DO JOB
+activate gisogd_rf-service #green
+queue <#blue:1-- gisogd_rf-service: update status
+data-service <#blue:1-- queue:update task
+deactivate gisogd_rf-service
+queue <#blue:2-- gisogd_rf-service: fail/succees/retry event
+data-service <#blue:1-- queue:update task
+deactivate gisogd_rf-service

@@ -1,0 +1,29 @@
+{
+  "id": "43cdf890-e563-4f50-bda4-141e73b212b3",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "d6d5f00e-a841-4660-ad29-70f8b9dbdaf1",
+    "name": "dl_data_planning_indicators",
+    "contentType": "Карточка организации для ГИСОГД",
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "object_type": "Рабочий",
+      "is_folder": false,
+      "content_type_id": "Карточка организации для ГИСОГД",
+      "created_at": "2023-08-09 08:35:45",
+      "infrastructure_type": "5A.1",
+      "title": "Пример",
+      "created_by": "arh_grad_rk@mail.ru",
+      "index_type": "0,5",
+      "path": "/root",
+      "unit": "м",
+      "guid": "d6d5f00e-a841-4660-ad29-70f8b9dbdaf1",
+      "id": 1,
+      "last_modified": "2023-08-09 08:35:45",
+      "value": "11"
+    }
+  },
+  "children": []
+}

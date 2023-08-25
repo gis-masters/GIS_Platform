@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          gisogdRfClient:
+            url: https://test.gisogd.gov.ru/api/rgmu/
+          crimeaClient:
+            url: http://10.10.10.58:8084
+
+access-token:
+  username: arh_grad_rk@mail.ru
+  password: Fiorentina12
+  token-uri: http://10.10.10.58/api/oauth/token
+
+
+logging:
+  level:
+    ru.crg.gisogd_service: DEBUG

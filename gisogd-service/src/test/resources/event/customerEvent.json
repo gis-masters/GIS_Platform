@@ -1,0 +1,83 @@
+{
+  "id": "8a6e17ec-0d55-4a87-97d7-00ff53758f97",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "6591740e-4de0-480e-a92e-acfa56801fc4",
+    "name": "dl_data_customer",
+    "contentType": "Карточка организации для ГИСОГД",
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "citizen": "[{\"id\":1,\"title\":\"Хадускин Евгений Викторович\",\"libraryTableName\":\"dl_data_citizen\"}]",
+      "individual": true,
+      "is_folder": false,
+      "content_type_id": "Карточка организации для ГИСОГД",
+      "created_at": "2023-08-09 06:29:30",
+      "title": "Образец",
+      "created_by": "arh_grad_rk@mail.ru",
+      "path": "/root",
+      "organization": "[{\"id\":3,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_organization\"}]",
+      "guid": "6591740e-4de0-480e-a92e-acfa56801fc4",
+      "id": 1,
+      "last_modified": "2023-08-09 06:29:30"
+    }
+  },
+  "children": [
+    {
+      "guid": "cba50a38-7b87-4a64-8915-9692d987db16",
+      "name": "dl_data_organization",
+      "contentType": "Карточка документа",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "gisogdrf_publication_datetime": "2023-08-01 13:39:10",
+        "created_at": "2023-08-04 13:39:10",
+        "description": "Информация предоставлена сотрудником компании",
+        "pay_account": "408202301000",
+        "title": "ООО \"ГИСОГД\"",
+        "type": null,
+        "okato": "4520880005000",
+        "actual_address": "Республика Крым, г. Симферополь, ул. Ленина, 17",
+        "path": "/root",
+        "bank": "РНКБ",
+        "legal_address": "Республика Крым, г. Симферополь, ул. Ленина, 17",
+        "id": 3,
+        "last_modified": "2023-08-04 13:39:10",
+        "email": "minstroy@mstroy.rk.gov.ru",
+        "correspondence_address": "295001, Республика Крым, г. Симферополь, ул. Ленина, 17",
+        "url_address": "https://mstroy.rk.gov.ru/",
+        "is_folder": false,
+        "director": "Мостовой Н.В.",
+        "content_type_id": "Карточка документа",
+        "inn": "864521395423",
+        "kpp": "784263542697",
+        "created_by": "arh_grad_rk@mail.ru",
+        "full_title": "Государственная информационная система обеспечения градостроительной деятельности",
+        "phone": "+7 (978) 791-00-91",
+        "contactinfo": "РК Крым, г. Симферополь, ул. Героев Сталинграда, 21",
+        "okved": "62.09",
+        "corr_account": "426530485000",
+        "regdate": "2016-06-06 00:00:00",
+        "guid": "cba50a38-7b87-4a64-8915-9692d987db16",
+        "orgn": "6005428071233"
+      }
+    },
+    {
+      "guid": "c4ffbdef-f353-43a9-9277-14e3d58731f6",
+      "name": "dl_data_citizen",
+      "contentType": "Карточка организации для ГИСОГД",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "path": "/root",
+        "is_folder": false,
+        "content_type_id": "Карточка организации для ГИСОГД",
+        "created_at": "2023-08-08 14:55:32",
+        "guid": "c4ffbdef-f353-43a9-9277-14e3d58731f6",
+        "id": 1,
+        "title": "Хадускин Евгений Викторович",
+        "created_by": "arh_grad_rk@mail.ru",
+        "last_modified": "2023-08-08 14:55:32"
+      }
+    }
+  ]
+}

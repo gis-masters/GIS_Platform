@@ -9,6 +9,7 @@
 # Maven
 log/
 target/
+.openapi-generator/
 
 # Eclipse
 **/*.project

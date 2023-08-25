@@ -1,0 +1,70 @@
+{
+  "id": "194a7b13-5b6d-4f9e-bb32-25539236a66f",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "taskId": -314,
+  "parent": {
+    "guid": "5a59823f-af61-4ae6-82e1-d6553e4c75c4",
+    "name": "easement_1627_bb27",
+    "contentType": null,
+    "content": {
+      "area": "1850.00000000",
+      "cadastralnum": "90:46:020202:1036",
+      "note": "Объект для примера",
+      "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[4346160.530753579,5921117.759045586],[4346060.275409925,5916806.963098123],[4347639.228181283,5915177.881579684],[4348391.112861066,5916907.211864024],[4349318.4378926,5919463.613127976],[4348441.24240268,5920867.129111828],[4346160.530753579,5921117.759045586]]]]}",
+      "purpose": "Публичный сервитут для проведения дренажных работ на земельном участке",
+      "easement_type": "13А.1",
+      "easement_plot_guid": "17811ebb-2798-4bcd-8aa0-0d024250866b",
+      "file": "[{\"id\":24279,\"title\":\"Тестовый сервитут\",\"libraryTableName\":\"dl_data_section13\"}]",
+      "guid": "5a59823f-af61-4ae6-82e1-d6553e4c75c4",
+      "location": "Россия, г. Александров, ул. Генерала Мельника",
+      "public_easement_type": "13С.10",
+      "ruleid": null,
+      "objectid": "12",
+      "egrn_num": "90/27/201862",
+      "status": "13B.1"
+    }
+  },
+  "children": [
+    {
+      "guid": "2f52933a-7b56-44d8-a338-19874a329036",
+      "name": "dl_data_section13",
+      "contentType": null,
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": null,
+        "guiddocpreviousversion": null,
+        "inbox_data_key": null,
+        "title": "root",
+        "type": null,
+        "path": null,
+        "namefrompd": null,
+        "file": null,
+        "orgname": null,
+        "organization_data_connection": null,
+        "coomon_guid": "4232f236-26f4-495f-b9ec-ea66a31ecf9b",
+        "inbox_data_key_data_connection": null,
+        "id": 1,
+        "fias__id": null,
+        "docstatus": null,
+        "docnum": null,
+        "is_folder": true,
+        "content_type_id": null,
+        "fias__oktmo": null,
+        "created_by": null,
+        "applicant": null,
+        "cad_num": null,
+        "size": null,
+        "is_public": false,
+        "guid": "2f52933a-7b56-44d8-a338-19874a329036",
+        "regnum": null,
+        "location": null,
+        "developer": null,
+        "territorykey": null,
+        "fias__address": null,
+        "constructiontype": null,
+        "relations": null
+      }
+    }
+  ]
+}

@@ -324,3 +324,23 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
+
+  gisogd-service:
+    container_name: crg-gisogd-service
+    image: ${DOCKER_CRG_HOST}/crg-gisogd-service:${CRG_GISOGD_SERVICE_TAG}
+    restart: always
+    environment:
+      APM_URL: ${APM_URL}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: ${CRG_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+    ports:
+      - "8088:8088"
+    volumes:
+      - /opt/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
