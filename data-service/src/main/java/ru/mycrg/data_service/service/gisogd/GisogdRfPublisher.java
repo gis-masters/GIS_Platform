@@ -33,7 +33,6 @@ import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -313,21 +312,32 @@ public class GisogdRfPublisher {
 
     private List<ResourceQualifier> extractTableQualifiers(SimplePropertyDto property,
                                                            Map<String, Object> parentContent) {
-        List<ResourceQualifier> result = new ArrayList<>();
         Object value = null;
+        List<TypeUrlData> urls = new ArrayList<>();
         try {
             value = parentContent.get(property.getName());
 
-            List<TypeUrlData> urls = mapper.readValue(value.toString(),
-                                                      new TypeReference<List<TypeUrlData>>() {
-                                                      });
+            urls = mapper.readValue(value.toString(),
+                                    new TypeReference<List<TypeUrlData>>() {
+                                    });
+        } catch (Exception e) {
+            log.error("Задано некорректное значение в поле: [{}]. Не соответствует типа TypeUrlData", value, e);
+        }
 
-            for (TypeUrlData url: urls) {
+        List<ResourceQualifier> result = new ArrayList<>();
+        for (TypeUrlData url: urls) {
+            try {
                 MultiValueMap<String, String> queryParams = UriComponentsBuilder
                         .fromUriString(URLDecoder.decode(String.valueOf(url.getUrl()), UTF_8)).build()
                         .getQueryParams();
 
                 List<String> features = queryParams.get("features");
+                if (features == null) {
+                    log.warn("В URL: [{}] не найдены features", value);
+
+                    break;
+                }
+
                 for (String feature: features) {
                     Map<String, Map<String, List<Long>>> data =
                             mapper.readValue(feature,
@@ -341,9 +351,9 @@ public class GisogdRfPublisher {
                         });
                     });
                 }
+            } catch (Exception e) {
+                log.error("Не удалось обработать URL: [{}]", value, e);
             }
-        } catch (IOException e) {
-            log.error("Некорректно задан URL: [{}]", value, e);
         }
 
         return result;
