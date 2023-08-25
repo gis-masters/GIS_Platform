@@ -7,7 +7,13 @@ import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
-import { DocumentLibrary, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './docLibrary.models';
+import {
+  DocumentLibrary,
+  DocumentVersion,
+  LibraryRecord,
+  LibraryRecordNew,
+  LibraryRecordRaw
+} from './docLibrary.models';
 
 @boundClass
 class DocLibraryClient extends Client {
@@ -35,6 +41,10 @@ class DocLibraryClient extends Client {
 
   getDocLibraryRecordUrl(libraryTableName: string, recordId: number): string {
     return `${this.getDocLibraryRecordsUrl(libraryTableName)}/${recordId}`;
+  }
+
+  getDocumentVersionsUrl(libraryTableName: string, recordId: number): string {
+    return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/versions`;
   }
 
   private getDocLibraryRecordsAsRegistryUrl(libraryTableName: string): string {
@@ -80,6 +90,14 @@ class DocLibraryClient extends Client {
     );
   }
 
+  async createLibrary(details: string, schemaId: string, versioned: boolean): Promise<void> {
+    await http.post(this.getDocLibrariesUrl(), {
+      details,
+      schemaId,
+      versioned
+    });
+  }
+
   async getLibrary(libraryTableName: string): Promise<DocumentLibrary> {
     return await http.get<DocumentLibrary>(this.getDocLibraryUrl(libraryTableName));
   }
@@ -102,6 +120,18 @@ class DocLibraryClient extends Client {
     const requestOptions = { params: preparePageOptions(pageOptions, true) };
 
     return http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
+  }
+
+  async getAllLibraryRecords(libraryTableName: string): Promise<{ content: LibraryRecord }[]> {
+    const url = this.getDocLibraryRecordsUrl(libraryTableName);
+
+    return http.getPagedOld<{ content: LibraryRecord }>(url);
+  }
+
+  async getDocumentVersions(libraryTableName: string, docId: number): Promise<[DocumentVersion]> {
+    const url = this.getDocumentVersionsUrl(libraryTableName, docId);
+
+    return http.get<[DocumentVersion]>(url, { cache: { disabled: true } });
   }
 
   async getLibraryRecordsAsRegistry(

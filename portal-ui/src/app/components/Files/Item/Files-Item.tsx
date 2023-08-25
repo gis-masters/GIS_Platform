@@ -95,9 +95,7 @@ export class FilesItem extends Component<FilesItemProps> {
           {!!status && <LookupStatus status={status} statusText={statusText} />}
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-            {showPlaceAction && (isGmlFile(item) || isDxfFile(item) || isTifFile(item)) && (
-              <FilesPlacement fileInfo={item} />
-            )}
+            {showPlaceAction && (isGmlFile(item) || isDxfFile(item)) && <FilesPlacement fileInfo={item} />}
             {!!this.connections?.length && <FilesConnections file={item} connections={this.connections} />}
             {editable && <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />}
           </LookupActions>

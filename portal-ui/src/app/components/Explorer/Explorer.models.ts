@@ -15,6 +15,7 @@ export type ExplorerRole =
   | 'DocumentsSelectDialog'
   | 'dm'
   | 'ConnectionsToProjectsWidget'
+  | 'DocumentVersions'
   | 'ConnectionsToProjectsWidget';
 
 export enum ExplorerItemType {
@@ -40,6 +41,8 @@ export enum ExplorerItemType {
   BASEMAPS_ROOT = 'br',
   SCHEMAS_ROOT = 'sr',
   TASKS_ROOT = 'tr',
+  DOCUMENT_VERSIONS_ROOT = 'dvr',
+  DOCUMENT_VERSION = 'dv',
   MESSAGES_REGISTRIES_ROOT = 'mrr',
   ROOT = 'r'
 }

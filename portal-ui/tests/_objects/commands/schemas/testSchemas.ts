@@ -14,6 +14,8 @@ import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
+import { withSimpleContentType } from './testSchemas/withSimpleContentType';
+import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
 
 const testSchemas: Schema[] = [
   allTypes,
@@ -25,6 +27,8 @@ const testSchemas: Schema[] = [
   readonly,
   testNotSorting,
   testSorting,
+  withSimpleContentType,
+  documentWithoutVersioned,
   withCalculatedArea,
   withDefinitionQuery,
   withInappropriateStyleName,

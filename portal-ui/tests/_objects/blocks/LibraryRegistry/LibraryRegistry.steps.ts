@@ -39,6 +39,8 @@ Then(
   async function (this: ScenarioScope) {
     const id = this.latestLibraryRecords[1]?.id;
 
+    await browser.pause(100); // баг waitUntil
+
     await browser.waitUntil(async () => isEqual([id], await libraryRegistryBlock.getVisibleDocumentsIds()), {
       timeout: 10_000
     });

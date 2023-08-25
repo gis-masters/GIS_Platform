@@ -4,7 +4,13 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 
-import { DocumentLibrary, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './docLibrary.models';
+import {
+  DocumentLibrary,
+  DocumentVersion,
+  LibraryRecord,
+  LibraryRecordNew,
+  LibraryRecordRaw
+} from './docLibrary.models';
 import { docLibraryClient } from './docLibrary.client';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[DocumentLibrary[], number]> {
@@ -40,6 +46,10 @@ export async function getLibraryRecords(
   const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryTableName, schemaId);
 
   return [libraryRecords, response.page.totalPages];
+}
+
+export async function getDocumentVersions(libraryTableName: string, id: number): Promise<[DocumentVersion]> {
+  return await docLibraryClient.getDocumentVersions(libraryTableName, id);
 }
 
 export async function getLibraryRecordsAsRegistry(

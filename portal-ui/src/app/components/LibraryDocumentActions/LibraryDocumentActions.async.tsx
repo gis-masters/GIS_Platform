@@ -100,13 +100,10 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
           <LibraryDocumentActionsRegister document={this.document || document} as={as} />
         )}
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
-
         {organizationSettings.SEDDialog && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
-
         {this.schema?.relations?.length > 0 && (
           <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
         )}
-
         {!isNew && canDelete && (
           <LibraryDocumentActionsDelete
             document={this.document || document}

@@ -1,22 +1,13 @@
+import { docLibraryClient } from '../../../../src/app/services/data/docLibrary/docLibrary.client';
 import { DocumentLibrary } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
-import { getLibraries } from '../../../../src/app/services/data/docLibrary/docLibrary.service';
-
-declare const window: {
-  getLibraries: typeof getLibraries;
-};
+import { requestAsAdmin } from '../requestAs';
 
 export async function getDocumentsLibraryByTitle(title: string): Promise<DocumentLibrary> {
-  const serializedLibraries = await browser.executeAsync<string, [string]>(async (title, callback) => {
-    const [foundLibraries] = await window.getLibraries({ page: 0, pageSize: 2, filter: { title } });
+  const response = await requestAsAdmin(docLibraryClient.getLibraries, { pageSize: 2, page: 0, filter: { title } });
 
-    callback(JSON.stringify(foundLibraries));
-  }, title);
-
-  const libraries = JSON.parse(serializedLibraries) as DocumentLibrary[];
-
-  if (libraries.length !== 1) {
+  if (response.content?.length !== 1) {
     throw new Error(`Ошибка получения библиотеки документов "${title}"`);
   }
 
-  return libraries[0];
+  return response.content[0];
 }

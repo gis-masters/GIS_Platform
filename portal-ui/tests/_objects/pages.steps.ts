@@ -152,6 +152,12 @@ When('я открываю страницу библиотек в управле�
   await dataManagementPage.openLibraryRootPage();
 });
 
+When('я открываю страницу библиотеки {string} в управлении данными', async (library: string) => {
+  const lib = await getDocumentsLibraryByTitle(library);
+
+  await dataManagementPage.openLibraryPage(lib.table_name);
+});
+
 Given('я на странице `Наборы данных` в управлении данными', async () => {
   await dataManagementPage.openDatasetRootPage();
 });

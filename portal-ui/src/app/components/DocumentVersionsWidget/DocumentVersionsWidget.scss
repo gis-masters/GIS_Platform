@@ -1,0 +1,12 @@
+body .DocumentVersionsWidget {
+  &-Button {
+    width: max-content;
+    margin: 10px 0 5px -6px;
+
+    color: var(--gray);
+  }
+
+  &-Explorer {
+    max-height: calc(100vh - 200px);
+  }
+}

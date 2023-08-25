@@ -1,13 +1,15 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
 
 import { Block } from '../../Block';
+import { FormBlock } from '../Form/Form.block';
 
-class ExplorerBlock extends Block {
+export class ExplorerBlock extends Block {
   selectors = {
     container: '.Explorer',
     item: '.Explorer-Item',
     title: '.Explorer-ItemTitle',
     loader: '.Explorer .Loading',
+    viewContentWidget: '.Explorer .ViewContentWidget',
     empty: '.Explorer-Empty',
     createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать слой"]',
     firstItemTitle: '.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary',
@@ -25,13 +27,32 @@ class ExplorerBlock extends Block {
     await sleep(500); // ждем анимации перехода
   }
 
-  async selectExplorerItem(datatable: string): Promise<void> {
-    const $item = await this.getExplorerItemByName(datatable);
+  async selectExplorerItem(item: string): Promise<void> {
+    const $item = await this.getExplorerItemByName(item);
     if (!$item) {
-      throw new Error(`Не найден элемент "${datatable}"`);
+      throw new Error(`Не найден элемент "${item}"`);
     }
 
     await $item.click();
+  }
+
+  async getContentWidgetFieldValue(field: string): Promise<string> {
+    const formBlock = new FormBlock(await this.$('viewContentWidget'));
+    const $field = await formBlock.getField(field);
+
+    return $field.$('.Form-View').getText();
+  }
+
+  async getExplorerItemsLength(): Promise<number> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    const $loader = await this.$('loader');
+    await $loader.waitForDisplayed({ reverse: true });
+
+    const $$explorerItems = await this.$$('item');
+
+    return $$explorerItems.length;
   }
 
   async addToProject(): Promise<void> {
@@ -66,12 +87,12 @@ class ExplorerBlock extends Block {
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
 
-  async testEmptiness() {
+  async testEmptiness(): Promise<void> {
     const $empty = await this.$('empty');
     await $empty.waitForDisplayed();
   }
 
-  async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element | undefined> {
+  async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element> {
     const $container = await this.$('container');
     await $container.waitForDisplayed();
 
@@ -87,7 +108,7 @@ class ExplorerBlock extends Block {
         return $explorerItem;
       }
     }
+
+    throw new Error('Не найдет элемент' + itemName);
   }
 }
-
-export const explorerBlock = new ExplorerBlock();

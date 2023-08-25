@@ -27,7 +27,9 @@ import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema'
 import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
 import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
+import { ExplorerAdapterTypeDocumentVersionsRoot } from './_type/Explorer-Adapter_type_documentVersionsRoot';
 import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistries';
+import { ExplorerAdapterTypeDocumentVersion } from './_type/Explorer-Adapter_type_documentVersion';
 import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
 import { ExplorerService } from '../Explorer.service';
 
@@ -50,6 +52,8 @@ const adapters: { [key in ExplorerItemType]: Adapter } = {
   [ExplorerItemType.MESSAGES_REGISTRY]: ExplorerAdapterTypeMessagesRegistry,
   [ExplorerItemType.SCHEMA]: ExplorerAdapterTypeSchema,
   [ExplorerItemType.SCHEMAS_ROOT]: ExplorerAdapterTypeSchemasRoot,
+  [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: ExplorerAdapterTypeDocumentVersionsRoot,
+  [ExplorerItemType.DOCUMENT_VERSION]: ExplorerAdapterTypeDocumentVersion,
   [ExplorerItemType.TASKS_ROOT]: ExplorerAdapterTypeTasksRoot
 };
 

@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
 import { createVectorTableDialogBlock } from '../CreateVectorTableDialog/CreateVectorTableDialog.block';
-import { explorerBlock } from '../Explorer/Explorer.block';
+import { ExplorerBlock } from '../Explorer/Explorer.block';
 import { schemasSelectDialogBlock } from '../SchemasSelectDialog/SchemasSelectDialog.block';
 
 class CreateVectorTableBlock extends Block {
@@ -10,6 +10,7 @@ class CreateVectorTableBlock extends Block {
 
   // мануальное создание векторной таблицы
   async createTable(tableName: string): Promise<void> {
+    const explorerBlock = new ExplorerBlock();
     await explorerBlock.clickCreateLayerBtn();
     await createVectorTableDialogBlock.waitForFormDialogDisplayed();
     await createVectorTableDialogBlock.setStringFieldValue('Наименование*', tableName);

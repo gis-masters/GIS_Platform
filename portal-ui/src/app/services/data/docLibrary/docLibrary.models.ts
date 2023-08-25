@@ -10,6 +10,7 @@ export interface DocumentLibrary extends Omit<DataEntity, 'identifier'> {
   table_name: string;
   schemaId: string;
   role: Role;
+  versioned: boolean;
 }
 
 export interface LibraryRecordRaw extends Record<string, unknown> {
@@ -32,6 +33,17 @@ export interface LibraryRecordRaw extends Record<string, unknown> {
 export interface LibraryRecord extends LibraryRecordRaw {
   libraryTableName: string;
   schemaId: string;
+}
+
+export interface DocumentVersion {
+  content: LibraryRecordRaw;
+  updatedBy: number;
+  updatedTime: string;
+}
+
+export interface DocumentVersionExtended extends DocumentVersion {
+  updatedByUser: string;
+  document: LibraryRecord;
 }
 
 export type LibraryRecordNew = Omit<LibraryRecord, 'id' | 'role'>;

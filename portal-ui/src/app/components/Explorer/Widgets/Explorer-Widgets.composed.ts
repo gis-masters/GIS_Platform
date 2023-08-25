@@ -9,6 +9,7 @@ import { withTypeLibrary } from './_type/Explorer-Widgets_type_library';
 import { withTypeSchema } from './_type/Explorer-Widgets_type_schema';
 import { withTypeTable } from './_type/Explorer-Widgets_type_table';
 import { withTypeProject } from './_type/Explorer-Widgets_type_project';
+import { withTypeDocumentVersion } from './_type/Explorer-Widgets_type_documentVersion';
 
 export const ExplorerWidgets = compose(
   withTypeBasemap,
@@ -18,5 +19,6 @@ export const ExplorerWidgets = compose(
   withTypeLibrary,
   withTypeSchema,
   withTypeTable,
+  withTypeDocumentVersion,
   withTypeProject
 )(ExplorerWidgetsBase) as typeof ExplorerWidgetsBase;

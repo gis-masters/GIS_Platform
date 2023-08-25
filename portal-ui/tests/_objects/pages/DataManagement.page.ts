@@ -20,6 +20,12 @@ class DataManagementPage extends Page {
     await browser.url(this.url + this.libraryRootUrl);
   }
 
+  async openLibraryPage(library: string) {
+    const libraryUrl = `?path_dm=%5B%22r%22,%22root%22,%22lr%22,%22libraryRoot%22,%22lib%22,%22${library}%22,%22none%22,%22none%22%5D&opts_dm=%5B0,10,%22title%22,%22asc%22,%7B%7D%5D`;
+
+    await browser.url(this.url + libraryUrl);
+  }
+
   async openDatasetRootPage() {
     await browser.url(this.url + this.datasetRootUrl);
   }
