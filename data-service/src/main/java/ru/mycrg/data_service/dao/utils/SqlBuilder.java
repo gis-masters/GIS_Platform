@@ -25,7 +25,8 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.StringUtil.join;
-import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.data_service_contract.enums.ValueType.CHOICE;
+import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 public class SqlBuilder {
 
@@ -191,6 +192,7 @@ public class SqlBuilder {
             case INT:
                 result = attrDescription.getName() + " integer";
                 break;
+            case USER_ID:
             case LONG:
                 result = attrDescription.getName() + " bigint";
                 break;
@@ -208,6 +210,7 @@ public class SqlBuilder {
             case DOUBLE:
                 result = attrDescription.getName() + " numeric(38,8)";
                 break;
+            case USER:
             case URL:
             case TEXT:
             case LOOKUP:

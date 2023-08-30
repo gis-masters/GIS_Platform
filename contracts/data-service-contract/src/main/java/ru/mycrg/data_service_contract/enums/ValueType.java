@@ -18,5 +18,6 @@ public enum ValueType {
     FILE,
     DOCUMENT,
     USER_ID,
+    USER,
     VERSIONS
 }
