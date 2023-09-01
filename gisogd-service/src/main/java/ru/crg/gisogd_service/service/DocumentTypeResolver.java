@@ -13,9 +13,11 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
+import org.reflections.util.ConfigurationBuilder;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
 import ru.crg.gisogd_service.exception.DocumentTypeResolveException;
 import ru.crg.gisogd_service.model.rf.RfGuid;
@@ -25,6 +27,7 @@ import ru.mycrg.gisog_service_contract.dto.Document;
  * Document type resolver.
  * @author Vladimir Nomokonov
  */
+@Slf4j
 @Component("documentTypeResolver")
 @AllArgsConstructor
 public class DocumentTypeResolver {
@@ -76,7 +79,7 @@ public class DocumentTypeResolver {
     @PostConstruct
     private void init() {
         List<Class<?>> badClasses = new ArrayList<>();
-        Reflections scanner = new Reflections(PACKAGE_FOR_SCAN);
+        Reflections scanner = new Reflections(new ConfigurationBuilder().forPackages(PACKAGE_FOR_SCAN));
         Set<Class<?>> crimeaClasses = scanner.getTypesAnnotatedWith(CrimeaRelationResolve.class);
         crimeaClasses.forEach(aClass -> {
             CrimeaRelationResolve resolveProps = aClass.getAnnotation(CrimeaRelationResolve.class);
@@ -92,7 +95,7 @@ public class DocumentTypeResolver {
                                                                                     : resolveProps.objectClass().getSimpleName());
             }
         });
-
+        log.info("Found GISOGD mixins handlers: " + rfObjectTypes.size());
         if (!badClasses.isEmpty()) {
             String classesName = badClasses.stream()
                                            .map(Class::getSimpleName)
@@ -105,7 +108,7 @@ public class DocumentTypeResolver {
         String name = document.getName();
         List<DocumentTypeRef> refsList = rfObjectTypes.keySet()
                                                       .stream()
-                                                      .filter(ref -> name.contains(ref.getName()))
+                                                      .filter(ref -> name.startsWith(ref.getName()))
                                                       .collect(Collectors.toList());
         if (refsList.isEmpty()) {
             throw new DocumentTypeResolveException(document);

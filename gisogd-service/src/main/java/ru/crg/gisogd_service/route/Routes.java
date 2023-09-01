@@ -1,10 +1,13 @@
 package ru.crg.gisogd_service.route;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
-import ru.crg.gisogd_service.exception.AggregateObjectException;
-import ru.crg.gisogd_service.exception.DocumentTypeResolveException;
 import ru.crg.gisogd_service.service.AggregateService;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
@@ -24,6 +25,7 @@ import ru.mycrg.gisog_service_contract.dto.Status;
 
 /**
  * Configure and adds routes from route templates.
+ *
  * @author Sergey Valiev
  */
 @Component
@@ -35,10 +37,10 @@ public class Routes extends RouteBuilder {
     public static final String CONVERT_TO_RF_OBJECT_ROUTE_ID = "convert-to-rf-object-route";
     public static final String RESPONSE_TO_QUEUE_ROUTE = "response-to-queue-route";
     public static final String PREPARE_RESPONSE_ROUTE = "prepare-response-route";
+    public static final String EVENT = "event";
     private static final String STATUS = "status";
     private static final String MESSAGE = "message";
     private static final String EXCEPTION_LOG_MESSAGE = "error sending an object:${body} to GISOG cause: ${exception.message} ";
-
 
     private final GisogdRfClient gisogdRfClient;
     private final RfObjectConverter rfObjectConverter;
@@ -54,9 +56,12 @@ public class Routes extends RouteBuilder {
     @Value("${spring.rabbitmq.queues.queue-send-data.name}")
     private String responseQueueName;
 
+    private final RabbitTemplate rabbitTemplate;
+
     @Override
     public void configure() {
         JacksonDataFormat jsonDataFormat = new JacksonDataFormat(ResponseFromGisogdRfEvent.class);
+        jsonDataFormat.setContentTypeHeader(true);
 
         onException(FeignException.InternalServerError.class)
                 .handled(true)
@@ -105,7 +110,7 @@ public class Routes extends RouteBuilder {
                 .setHeader("publishDate", simple("${body.parent.content[gisogdrf_publication_datetime]}"))
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "publish date: ${header.publishDate}")
                 .setHeader("document", simple("${body.parent}"))
-                .setHeader("event", simple("${body}"))
+                .setHeader(EVENT, simple("${body}"))
 
                 .setBody(exchange -> exchange.getIn().getHeader("document"))
                 .to("direct:convert-to-rf-object")
@@ -134,24 +139,26 @@ public class Routes extends RouteBuilder {
                 .routeId(PREPARE_RESPONSE_ROUTE)
                 .setBody(
                         exchange -> {
-                            PublishToGisogdRfEvent event = (PublishToGisogdRfEvent) exchange.getIn().getHeader("event");
-                            ResponseFromGisogdRfEvent response = new ResponseFromGisogdRfEvent();
-                            response.setTaskId(event.getTaskId());
-                            response.setParent(event.getParent());
-                            response.setStatus((Status) exchange.getIn().getHeader(STATUS));
-                            String message = (String) exchange.getIn().getHeader(MESSAGE);
+                            Message in = exchange.getIn();
+
+                            Map<String, String> content = new HashMap<>();
+                            String message = (String) in.getHeader(MESSAGE);
                             if (message != null) {
-                                response.setContent(Map.of(MESSAGE, message));
+                                content = Map.of(MESSAGE, message);
                             }
 
-                            return response;
+                            return new ResponseFromGisogdRfEvent((PublishToGisogdRfEvent) in.getHeader(EVENT),
+                                                                 (Status) in.getHeader(STATUS),
+                                                                 content);
                         }
                 );
 
         from("direct:responseToQueue")
                 .routeId(RESPONSE_TO_QUEUE_ROUTE)
-                .marshal(jsonDataFormat)
-                .to("spring-rabbitmq:default?routingKey=" + responseQueueName)
+                .removeHeaders("*")
+                .setHeader("__TypeId__", simple("${body.getClass().getName()}"))
+                .marshal().json()
+                .to("spring-rabbitmq:default?messagePropertiesConverter=#bean:propertiesConverter&routingKey=" + responseQueueName) //additionalHeaders=#rabbitEncoding
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "response to queue: ${body}");
     }
 }

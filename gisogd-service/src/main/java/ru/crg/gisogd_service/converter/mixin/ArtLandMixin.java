@@ -5,7 +5,7 @@ import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
 import ru.crg.gisogd_service.model.rf.ArtLand;
 
 /**
- * Модель данных из tasks InboxData.
+ * Модель данных из tasks artland.
  * @author Vladimir Nomokonov
  */
 @CrimeaRelationResolve(nameStartWith = "artland", objectClass = ArtLand.class)

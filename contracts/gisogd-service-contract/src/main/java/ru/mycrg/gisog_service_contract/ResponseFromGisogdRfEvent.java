@@ -2,14 +2,14 @@ package ru.mycrg.gisog_service_contract;
 
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.gisog_service_contract.dto.Status;
-import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
+import ru.mycrg.messagebus_contract.events.DefaultMessageBusResponseEvent;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.util.Map;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_TO_DATA_QUEUE;
 
-public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
+public class ResponseFromGisogdRfEvent extends DefaultMessageBusResponseEvent {
 
     private Long orgId;
     private Long taskId;
@@ -23,13 +23,13 @@ public class ResponseFromGisogdRfEvent extends DefaultMessageBusRequestEvent {
     }
 
     public ResponseFromGisogdRfEvent(IMessageBusEvent event) {
-        super(event.getId(), GISOGD_TO_DATA_QUEUE);
+        super(event, GISOGD_TO_DATA_QUEUE);
     }
 
     public ResponseFromGisogdRfEvent(PublishToGisogdRfEvent event,
                                      Status status,
                                      Map<String, String> content) {
-        super(event.getId(), GISOGD_TO_DATA_QUEUE);
+        super(event, GISOGD_TO_DATA_QUEUE);
 
         this.orgId = event.getOrgId();
         this.taskId = event.getTaskId();

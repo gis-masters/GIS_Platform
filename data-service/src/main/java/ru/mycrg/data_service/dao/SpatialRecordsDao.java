@@ -47,7 +47,8 @@ public class SpatialRecordsDao {
     }
 
     public String fetchGeometryAsGeoJson(ResourceQualifier qualifier, int srid) {
-        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape, %d)) FROM %s WHERE %s = %d",
+        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape::public.geometry, %d)) " +
+                                      "FROM %s WHERE %s = %d",
                               srid, qualifier.getTableQualifier(), PRIMARY_KEY, qualifier.getRecordIdAsLong());
 
         log.debug("fetch geometry as text: [{}]", query);

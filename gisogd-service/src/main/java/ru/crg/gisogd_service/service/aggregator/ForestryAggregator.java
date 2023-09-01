@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
-import ru.crg.gisogd_service.model.rf.ForestLand;
 import ru.crg.gisogd_service.model.rf.Forestry;
 import ru.crg.gisogd_service.service.EventRepositoryService;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
@@ -22,7 +21,7 @@ public class ForestryAggregator implements CrimeaAggregator<Forestry> {
     @Override
     public Forestry aggregate(Forestry crimeaObject, PublishToGisogdRfEvent event) throws JsonProcessingException {
         crimeaObject.setForestRegulation(repositoryService.findGuidByRef("forest_regulation", event));
-        crimeaObject.setPermittedUseType(repositoryService.findAllValuesByName("permitted_land_use_types", "permitted_land_use_type", event));
+        crimeaObject.setPermittedUseType(repositoryService.findAllValuesByName("dl_data_permitted_land_use_types", "permitted_land_use_type", event));
 
         return crimeaObject;
     }

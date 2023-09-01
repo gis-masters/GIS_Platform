@@ -1,5 +1,5 @@
 {
-  "id": "887f08a7-c334-4d3e-b7cf-69f13485eb5c",
+  "id": "d0c83e4c-d53c-456b-b112-9ebe46e16856",
   "exchange": "dataToGisogdQueue",
   "routingKey": null,
   "orgId": 1,
@@ -71,7 +71,7 @@
         "gisogdrf_response": null,
         "title": "Тестовый образец 7 раздела",
         "red_line": null,
-        "supplieremploey_data_connection": null,
+        "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
         "file": "[{\"id\": \"2f3b0089-54e1-440f-82e6-d642893882bf\", \"size\": 338, \"title\": \"wms (3)\"}]",
         "orgname": "ООО \"Ниогара\"",
         "organization_data_connection": null,

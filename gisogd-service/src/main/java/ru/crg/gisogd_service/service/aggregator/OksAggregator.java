@@ -23,7 +23,7 @@ public class OksAggregator implements CrimeaAggregator<OKS> {
         crimeaObject.setOkNOrganization(repositoryService.findGuidByRef("okn_organization", event));
         crimeaObject.setPurpose(repositoryService.findValueByName("data_oks_purpose", "code", event));
         crimeaObject.setPermittedLandUseTypes(
-                repositoryService.findAllValuesByName("permitted_land_use_types", "permitted_land_use_type", event));
+                repositoryService.findAllValuesByName("dl_data_permitted_land_use_types", "permitted_land_use_type", event));
 
         return crimeaObject;
     }

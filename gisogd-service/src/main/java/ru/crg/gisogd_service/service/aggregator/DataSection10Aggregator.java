@@ -9,7 +9,7 @@ import ru.crg.gisogd_service.service.EventRepositoryService;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 
 /**
- * DataSection16 aggregator
+ * DataSection10 aggregator
  * @author Vladimir Nomokonov
  */
 @Component

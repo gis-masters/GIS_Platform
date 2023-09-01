@@ -3,9 +3,10 @@ package ru.mycrg.data_service.queue.handlers;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.BaseTemplateDao;
+import ru.mycrg.data_service.dao.ParameterizedBaseDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
@@ -27,12 +28,9 @@ public class GisogdRfEventHandler implements IEventHandler {
     private final Logger log = LoggerFactory.getLogger(GisogdRfEventHandler.class);
 
     private final DatasourceFactory datasourceFactory;
-    private final BaseTemplateDao baseTemplateDao;
 
-    public GisogdRfEventHandler(DatasourceFactory datasourceFactory,
-                                BaseTemplateDao baseTemplateDao) {
+    public GisogdRfEventHandler(DatasourceFactory datasourceFactory) {
         this.datasourceFactory = datasourceFactory;
-        this.baseTemplateDao = baseTemplateDao;
     }
 
     @Override
@@ -52,37 +50,36 @@ public class GisogdRfEventHandler implements IEventHandler {
             String id = extractId(parent);
 
             String databaseName = getDefaultDatabaseName(event.getOrgId());
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+            NamedParameterJdbcTemplate jdbcTemplate =
+                    new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+            ParameterizedBaseDao parameterizedBaseDao = new ParameterizedBaseDao(jdbcTemplate);
 
             Status status = event.getStatus();
+            String idTemplate = parent.getContent().containsKey(ID) ? ID : PRIMARY_KEY;
             if (SUCCESS.equals(status)) {
                 String query = String.format("UPDATE %s.%s SET " +
-                                                     "last_modified = now(), " +
                                                      "gisogdrf_publication_datetime = now(), " +
                                                      "gisogdrf_response = null" +
-                                                     "  WHERE id = %s",
+                                                     "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
 
-                log.debug("Update publication date query: [{}]", query);
+                log.debug("Query [gisogd-rf SUCCESS response]: [{}]", query);
 
-                baseTemplateDao.execute(jdbcTemplate, query);
-
-                log.debug("Publication date was successfully updated");
+                parameterizedBaseDao.update(query, new MapSqlParameterSource());
             } else {
                 Map<String, String> response = event.getContent();
-                String responseAsString = getJsonString(response);
+                response.put("status", event.getStatus().name());
 
                 String query = String.format("UPDATE %s.%s SET " +
                                                      "last_modified = now(), " +
-                                                     "gisogdrf_response = '" + responseAsString + "' " +
-                                                     "  WHERE id = %s",
+                                                     "gisogdrf_response = :response " +
+                                                     "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
 
-                log.debug("Write gisogdrf response query: [{}]", query);
+                log.debug("Query [gisogd-rf FAIL response]: [{}]", query);
 
-                baseTemplateDao.execute(jdbcTemplate, query);
-
-                log.debug("Gisogdrf response successfully updated written");
+                parameterizedBaseDao.update(query,
+                                            new MapSqlParameterSource().addValue("response", getJsonString(response)));
             }
         } catch (Exception e) {
             log.error("Не удалось корректно обработать ResponseFromGisogdRfEvent. Причина: {}", e.getMessage());

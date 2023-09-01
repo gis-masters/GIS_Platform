@@ -20,13 +20,9 @@ public class LandPlotAggregator implements CrimeaAggregator<LandPlot> {
 
     @Override
     public LandPlot aggregate(LandPlot crimeaObject, PublishToGisogdRfEvent event) throws JsonProcessingException {
-        //Territory берет из объекта
-        //Так же и с LandPlot - есть колонка guid в ней храниться guid объекта territory.
-        // И есть landplot_plot_guid который хранит guid объекта LandPlot.
-        //
         crimeaObject.setEasement(repositoryService.findValueByName("easement", "easement_plot_guid", event));
         crimeaObject.setPermittedLandUseTypes(
-                repositoryService.findAllValuesByName("permitted_land_use_types", "permitted_land_use_type", event));
+                repositoryService.findAllValuesByName("dl_data_permitted_land_use_types", "permitted_land_use_type", event));
 
         return crimeaObject;
     }

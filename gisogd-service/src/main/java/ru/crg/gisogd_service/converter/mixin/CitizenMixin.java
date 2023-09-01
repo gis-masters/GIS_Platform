@@ -5,7 +5,7 @@ import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
 import ru.crg.gisogd_service.model.rf.Citizen;
 
 /**
- * Модель данных Document - Citizen.
+ * Модель данных Document - dl_data_citizen.
  * @author Vladimir Nomokonov
  */
 @CrimeaRelationResolve(nameStartWith = "dl_data_citizen", objectClass = Citizen.class)

@@ -1,0 +1,28 @@
+package ru.crg.gisogd_service.service.aggregator;
+
+import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.AllArgsConstructor;
+import ru.crg.gisogd_service.model.rf.FormedLand;
+import ru.crg.gisogd_service.service.EventRepositoryService;
+import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
+
+/**
+ * FormedLand aggregator
+ * @author Vladimir Nomokonov
+ */
+@Component
+@AllArgsConstructor
+public class FormedLandAggregator implements CrimeaAggregator<FormedLand> {
+
+    private final EventRepositoryService repositoryService;
+
+    @Override
+    public FormedLand aggregate(FormedLand crimeaObject, PublishToGisogdRfEvent event) throws JsonProcessingException {
+        crimeaObject.setPermittedUseType(repositoryService.findAllValuesByName("dl_data_permitted_land_use_types", "permitted_land_use_type", event));
+        crimeaObject.setEasement(repositoryService.findValueByName("easement", "easement_plot_guid", event));
+
+        return crimeaObject;
+    }
+}

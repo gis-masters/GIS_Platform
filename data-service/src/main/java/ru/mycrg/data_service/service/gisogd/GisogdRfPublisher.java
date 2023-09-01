@@ -105,7 +105,8 @@ public class GisogdRfPublisher {
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
         String guid = parentDoc.getAsString(GUID.getName());
         if (guid == null) {
-            String msg = "Отправка не может быть выполнена. В документе не найдено поле 'guid'";
+            String msg = String.format("Отправка не может быть выполнена. В документе [%s] не найдено поле 'guid'",
+                                       qualifier.getQualifier());
             log.debug(msg);
 
             throw new BadRequestException(msg);
@@ -183,36 +184,40 @@ public class GisogdRfPublisher {
     private void publishBySchema(Long taskId, String schemaId) {
         log.debug("Publish by schema: {}", schemaId);
 
-        // Библиотеки
-        List<ResourceQualifier> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
-        log.debug("Found {} libraries created by schema", libraryQualifiers.size());
-        for (ResourceQualifier lQualifier: libraryQualifiers) {
-            List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(lQualifier);
-            log.debug("From library: {} publish: {} documents", lQualifier.getQualifier(), documents.size());
+        try {
+            // Библиотеки
+            List<ResourceQualifier> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
+            log.debug("Found {} libraries created by schema", libraryQualifiers.size());
+            for (ResourceQualifier lQualifier: libraryQualifiers) {
+                List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(lQualifier);
+                log.debug("From library: {} publish: {} documents", lQualifier.getQualifier(), documents.size());
 
-            for (IRecord record: documents) {
-                publish(taskId,
-                        new ResourceQualifier(lQualifier.getSchema(),
-                                              lQualifier.getTable(),
-                                              record.getId(),
-                                              LIBRARY_RECORD));
+                for (IRecord record: documents) {
+                    publish(taskId,
+                            new ResourceQualifier(lQualifier.getSchema(),
+                                                  lQualifier.getTable(),
+                                                  record.getId(),
+                                                  LIBRARY_RECORD));
+                }
             }
-        }
 
-        // Слои
-        List<ResourceQualifier> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
-        log.debug("Found {} layers created by schema", layerQualifiers.size());
-        for (ResourceQualifier lQualifier: layerQualifiers) {
-            List<IRecord> records = gisogdRfDao.getRecordsForPublishing(lQualifier);
-            log.debug("From layer: {} publish: {} records", lQualifier.getQualifier(), records.size());
+            // Слои
+            List<ResourceQualifier> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
+            log.debug("Found {} layers created by schema", layerQualifiers.size());
+            for (ResourceQualifier lQualifier: layerQualifiers) {
+                List<IRecord> records = gisogdRfDao.getRecordsForPublishing(lQualifier);
+                log.debug("From layer: {} publish: {} records", lQualifier.getQualifier(), records.size());
 
-            for (IRecord record: records) {
-                publish(taskId,
-                        new ResourceQualifier(lQualifier.getSchema(),
-                                              lQualifier.getTable(),
-                                              record.getId(),
-                                              FEATURE));
+                for (IRecord record: records) {
+                    publish(taskId,
+                            new ResourceQualifier(lQualifier.getSchema(),
+                                                  lQualifier.getTable(),
+                                                  record.getId(),
+                                                  FEATURE));
+                }
             }
+        } catch (Exception e) {
+            log.error("Не удалось начать публикацию по схеме: [{}]. По причине: {}", schemaId, e.getMessage(), e);
         }
     }
 

@@ -79,7 +79,7 @@ public class EventRepositoryService {
     private Stream<String> getOneValueStream(String libraryTableName, String searchKey, PublishToGisogdRfEvent event) {
 
         return event.getChildren().stream()
-                    .filter(d -> d.getName().contains(libraryTableName))
+                    .filter(d -> d.getName().startsWith(libraryTableName))
                     .map(Document::getContent)
                     .map(c -> (String) c.get(searchKey));
     }

@@ -1,0 +1,63 @@
+{
+  "id": "d2d36aef-9c45-4335-b62a-25a8c02d0079",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "orgId": 1,
+  "taskId": -314,
+  "parent": {
+    "guid": "c5760916-2e04-4052-b710-1b825df1bf41",
+    "schema": "data",
+    "name": "dl_data_tech_plan",
+    "contentType": "Карточка документа",
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "gisogdrf_publication_datetime": null,
+      "is_folder": false,
+      "content_type_id": "Карточка документа",
+      "created_at": "2023-08-30 07:01:32",
+      "gisogdrf_response": null,
+      "title": "Тестовый документ",
+      "cadastre_engineer_certificate_organization": "СРО \"Кад инженеры\"",
+      "created_by": "arh_grad_rk@mail.ru",
+      "cadastre_engineer_certificate_date": "2023-07-31 00:00:00",
+      "snils_cadaster_engineer": "123345565886",
+      "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
+      "path": "/root",
+      "cadastre_engineer_certificate_number": "130-52/668",
+      "cadastre_engineer_full_name": "Углев Олег Витальевич",
+      "issue_date": "2023-08-03 00:00:00",
+      "cadastre_engineer_registry_date": "2023-08-06 00:00:00",
+      "guid": "c5760916-2e04-4052-b710-1b825df1bf41",
+      "id": 2,
+      "last_modified": "2023-08-30 07:01:32"
+    }
+  },
+  "children": [
+    {
+      "guid": "153ebb0c-d1db-4793-9e3a-1b3218dd6c57",
+      "schema": "data",
+      "name": "users_after_trigger",
+      "contentType": "Сотрудники организаций ОГД",
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "gisogdrf_publication_datetime": null,
+        "is_folder": false,
+        "position1": "---",
+        "content_type_id": "Сотрудники организаций ОГД",
+        "created_at": null,
+        "gisogdrf_response": null,
+        "sur_name": "ГИСОГД",
+        "middle_name": "---",
+        "title": "ГИСОГД ГИСОГД ---",
+        "path": "/root/448",
+        "title_fio": "ГИСОГД ГИСОГД ---",
+        "name": "ГИСОГД",
+        "supplier_data_connection": null,
+        "guid": "153ebb0c-d1db-4793-9e3a-1b3218dd6c57",
+        "id": 131,
+        "last_modified": "2022-12-06 13:13:24",
+        "email": "arh_grad_rk@mail.ru"
+      }
+    }
+  ]
+}

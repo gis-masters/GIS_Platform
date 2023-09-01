@@ -16,6 +16,6 @@ public class DefaultEventHandler implements IEventHandler {
 
     @Override
     public void handle(IMessageBusEvent event) {
-        log.error("No any handlers for event: {}", event);
+        log.error("No any handlers for event: [{}] as class: [{}]", event, event.getClass());
     }
 }
