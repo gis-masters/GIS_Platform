@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +21,9 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
+import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 
 @Transactional
 @Repository
@@ -175,15 +172,6 @@ public class BaseDao {
             log.debug(msg);
 
             throw new DataServiceException(msg, e.getCause());
-        }
-    }
-
-    @NotNull
-    private static String getIdField(ResourceQualifier qualifier) {
-        if (TABLE.equals(qualifier.getType())) {
-            return PRIMARY_KEY;
-        } else {
-            return ID;
         }
     }
 }
