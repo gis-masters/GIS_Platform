@@ -15,6 +15,8 @@ import ru.mycrg.acceptance.data_service.dto.RecordDto;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 
 import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public static Integer deletedDocumentId;
     public static Integer currentFolderId;
     public static DefaultDocumentModel currentDocument;
+    public static LocalDateTime currentRecordLastModified;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
     private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
@@ -265,6 +268,37 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String newTitle = response.jsonPath().get("title");
 
         assertEquals("new title", newTitle);
+    }
+
+    @Then("Поле 'last_modified' заполнилось датой создания")
+    public void checkLastModifiedField() {
+        getCurrentDocument();
+
+        String lastModified = response.jsonPath().get("last_modified");
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
+                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        assertEquals(LocalDateTime.now().getDayOfMonth(), lastModifiedDate.getDayOfMonth());
+    }
+
+    @Then("Поле 'last_modified' изменилось")
+    public void checkLastModifiedFieldWasChanged() {
+        getCurrentDocument();
+
+        String lastModified = response.jsonPath().get("last_modified");
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
+                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        assertEquals(-1, currentRecordLastModified.compareTo(lastModifiedDate));
+    }
+
+    @Given("В текущей записи хранится текущее время в поле 'last_modified'")
+    public void checkLastModifiedFieldInNewRecord() {
+        getCurrentDocument();
+
+        String lastModified = response.jsonPath().get("last_modified");
+        currentRecordLastModified = LocalDateTime.parse(lastModified,
+                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @And("Запись успешно создана")

@@ -111,12 +111,14 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
                         .clearSystemAttributes()
                         .prepareFilesAsJsonb()
                         .updateVersionsField(oldRecordState.getContent())
+                        .updateModifiedTime()
                         .build();
             } else {
                 modifiedProps = systemAttributeHandler
                         .init(schema, content)
                         .clearSystemAttributes()
                         .prepareFilesAsJsonb()
+                        .updateModifiedTime()
                         .build();
             }
 

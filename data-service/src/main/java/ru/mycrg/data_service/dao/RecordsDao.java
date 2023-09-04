@@ -16,6 +16,7 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -260,8 +261,8 @@ public class RecordsDao {
 
     public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
         try {
-            String query = String.format("UPDATE %s SET is_deleted = true WHERE id = %s",
-                                         rQualifier.getTableQualifier(), id);
+            String query = String.format("UPDATE %s SET is_deleted = true, last_modified ='%s' WHERE id = %s",
+                                         rQualifier.getTableQualifier(), DateTimeUtil.now(), id);
 
             log.debug("Request to delete record: [{}]", query);
 
@@ -277,8 +278,9 @@ public class RecordsDao {
 
     public void recoverRecord(ResourceQualifier rQualifier, String recoverPath) throws CrgDaoException {
         try {
-            String query = String.format("UPDATE %s SET is_deleted = false, path = '%s' WHERE id = %s",
-                                         rQualifier.getTableQualifier(), recoverPath, rQualifier.getRecordIdAsLong());
+            String query = String.format(
+                    "UPDATE %s SET is_deleted = false, path = '%s', last_modified ='%s' WHERE id = %s",
+                    rQualifier.getTableQualifier(), recoverPath, DateTimeUtil.now(), rQualifier.getRecordIdAsLong());
 
             log.debug("Request to recover record: [{}]", query);
 
