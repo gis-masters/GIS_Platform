@@ -1,10 +1,8 @@
 import React, { FC, lazy, Suspense } from 'react';
 
-import { TasksJournalProps } from './TasksJournal.async';
-
 const MessagesRegistryAsync = lazy(() => import('./TasksJournal.async'));
 
-export const TasksJournal: FC<TasksJournalProps> = props => (
+export const TasksJournal: FC = props => (
   <Suspense>
     <MessagesRegistryAsync {...props} />
   </Suspense>

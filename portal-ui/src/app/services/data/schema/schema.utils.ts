@@ -104,6 +104,27 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   return resultSchema;
 }
 
+export function mergeContentTypes(schema: Schema, contentTypeIds: string[]): ContentType {
+  const properties: Partial<PropertySchema>[] = [];
+
+  for (const contentType of schema.contentTypes) {
+    if (contentTypeIds.includes(contentType.id)) {
+      const contentTypeProps = contentType.properties.filter(
+        prop => !properties.some(({ name }) => name === prop.name)
+      );
+
+      properties.push(...contentTypeProps);
+    }
+  }
+
+  return {
+    properties,
+    id: 'merged__' + contentTypeIds.join('__'),
+    title: `Объединённый тип: "${contentTypeIds.join('", "')}"`,
+    type: schema.contentTypes[0].type
+  };
+}
+
 function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schema {
   const clonedSchema = cloneDeep(schema);
 
@@ -272,6 +293,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.USER;
     }
 
+    if (oldField.valueType === ValueType.USER_ID) {
+      field.propertyType = PropertyType.USER_ID;
+    }
+
     if (oldField.valueType === ValueType.GEOMETRY) {
       field.propertyType = PropertyType.GEOMETRY;
     }
@@ -362,6 +387,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.USER) {
       field.valueType = ValueType.USER;
+    }
+
+    if (newField.propertyType === PropertyType.USER_ID) {
+      field.valueType = ValueType.USER_ID;
     }
 
     if (newField.propertyType === PropertyType.GEOMETRY) {

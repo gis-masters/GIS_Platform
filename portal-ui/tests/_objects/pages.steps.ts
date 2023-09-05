@@ -11,6 +11,7 @@ import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
 import { Schema } from '../../src/app/services/data/schema/schema.models';
+import { tasksJournalPage } from './pages/TasksJournal.page';
 import { OrgAdminPage } from './pages/OrgAdmin';
 
 function findPage(title: string): Page {
@@ -154,8 +155,11 @@ When('я открываю страницу библиотек в управле�
 
 When('я открываю страницу библиотеки {string} в управлении данными', async (library: string) => {
   const lib = await getDocumentsLibraryByTitle(library);
-
   await dataManagementPage.openLibraryPage(lib.table_name);
+});
+
+When('я открываю страницу управления данными', async () => {
+  await dataManagementPage.open();
 });
 
 Given('я на странице `Наборы данных` в управлении данными', async () => {
@@ -201,8 +205,13 @@ Given('я на странице табличного представления 
   await libraryRegistryPage.open();
 });
 
-// org Admin
+// tasks
 
+Given('я на странице журнала задач', async () => {
+  await tasksJournalPage.open();
+});
+
+// org Admin
 Given('я нахожусь во вкладке `Пользователи` на странице управлении организацией', async () => {
   await new OrgAdminPage().open();
 });

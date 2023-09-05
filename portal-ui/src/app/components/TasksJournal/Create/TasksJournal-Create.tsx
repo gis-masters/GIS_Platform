@@ -1,56 +1,82 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
-import { PlaylistAdd, PlaylistAddOutlined } from '@mui/icons-material';
+import { ListItemIcon, MenuItem } from '@mui/material';
+import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { Task, taskSchema } from '../../../services/data/task/task.models';
+import { ContentType, Schema } from '../../../services/data/schema/schema.models';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { usersService } from '../../../services/auth/users/users.service';
 import { createTask } from '../../../services/data/task/task.service';
+import { Task } from '../../../services/data/task/task.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 const cnTasksJournalCreate = cn('TasksJournal', 'Create');
+const cnTasksJournalCreateDialog = cn('TasksJournal', 'CreateDialog');
+
+export interface TasksJournalCreateProps {
+  schema: Schema;
+  contentType: ContentType;
+}
 
 @observer
-export class TasksJournalCreate extends Component {
+export class TasksJournalCreate extends Component<TasksJournalCreateProps> {
   @observable private dialogOpen = false;
-  @observable private loading = false;
 
-  constructor(props: Record<string, never>) {
+  constructor(props: TasksJournalCreateProps) {
     super(props);
     makeObservable(this);
   }
 
   render() {
+    const { contentType } = this.props;
+
     return (
       <>
-        <Tooltip title='Создать задачу'>
-          <IconButton className={cnTasksJournalCreate()} onClick={this.openDialog}>
-            {this.dialogOpen ? <PlaylistAdd /> : <PlaylistAddOutlined />}
-          </IconButton>
-        </Tooltip>
+        <MenuItem onClick={this.openDialog} className={cnTasksJournalCreate()}>
+          <ListItemIcon>
+            <PlaylistAdd />
+          </ListItemIcon>
+          {contentType.title}
+        </MenuItem>
 
         <FormDialog<Task>
+          className={cnTasksJournalCreateDialog()}
           title='Создание новой задачи'
           actionFunction={this.create}
           onClose={this.closeDialog}
           open={this.dialogOpen}
-          schema={taskSchema}
-          actionButtonProps={{ children: 'Создать', loading: this.loading }}
+          value={{ content_type_id: contentType.id }}
+          schema={this.preparedSchema}
+          actionButtonProps={{ children: 'Создать' }}
         />
       </>
     );
   }
 
+  @computed
+  private get preparedSchema(): Schema {
+    const { contentType, schema } = this.props;
+
+    return applyContentType(schema, contentType.id);
+  }
+
   @boundMethod
   private async create(formValue: Task) {
-    this.setLoading(true);
+    if (formValue.assigned_to) {
+      const user = await usersService.getUser(formValue.assigned_to);
+
+      if (user.bossId) {
+        formValue.owner_id = user.bossId;
+      } else {
+        throw new Error('У данного исполнителя не указан начальник');
+      }
+    }
 
     await createTask(formValue);
     this.closeDialog();
-
-    this.setLoading(false);
   }
 
   @action.bound
@@ -61,10 +87,5 @@ export class TasksJournalCreate extends Component {
   @action.bound
   private closeDialog() {
     this.dialogOpen = false;
-  }
-
-  @action
-  private setLoading(loading: boolean) {
-    this.loading = loading;
   }
 }

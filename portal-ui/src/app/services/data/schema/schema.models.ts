@@ -83,6 +83,7 @@ export interface ContentType {
   styleName?: string;
   properties: Partial<PropertySchema>[];
   childOnly?: boolean;
+  readOnly?: boolean;
   children?: { library?: string; contentType: string }[];
   printTemplates?: string[];
   relations?: Relation[];
@@ -197,10 +198,12 @@ export interface PropertySchemaUrl extends BasePropertySchema {
 export interface PropertySchemaUser extends BasePropertySchema {
   propertyType: PropertyType.USER;
   multiple?: boolean;
+  onlySubordinates?: boolean;
 }
 
 export interface PropertySchemaUserId extends BasePropertySchema {
   propertyType: PropertyType.USER_ID;
+  onlySubordinates?: boolean;
 }
 
 export interface PropertySchemaLookup extends BasePropertySchema {

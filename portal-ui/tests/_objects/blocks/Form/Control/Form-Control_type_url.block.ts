@@ -17,11 +17,8 @@ class FormControlTypeUrlBlock extends Block {
   async clickFirstUrlLink(title: string): Promise<void> {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
-    if (!$field) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
-
     const $urlLink = await $field.$('.UrlsList .UrlsList-Item:first-child .PseudoLink');
+
     await $urlLink.click();
   }
 }

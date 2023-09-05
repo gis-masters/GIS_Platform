@@ -50,6 +50,7 @@ export class FormBlock extends Block {
   }
 
   async getField(fieldName: string): Promise<WebdriverIO.Element> {
+    await this.waitForVisible();
     const $$fields = await this.$$('formFields');
 
     for (const $field of $$fields) {

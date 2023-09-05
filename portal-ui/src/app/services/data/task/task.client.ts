@@ -24,6 +24,10 @@ class TasksClient extends Client {
     return this.getDataUrl() + `/task-log/${id}`;
   }
 
+  private getAllTasksDeletionUrl(): string {
+    return this.getTasksUrl() + '/all';
+  }
+
   private getTaskUrl(id: number): string {
     return `${this.getTasksUrl()}/${id}`;
   }
@@ -56,8 +60,12 @@ class TasksClient extends Client {
     return await http.getPagedOld<Task>(this.getTaskByIdsUrl(), { params });
   }
 
-  async createTask(task: Task): Promise<void> {
+  async createTask(task: Task): Promise<Task> {
     return await http.post(this.getTasksUrl(), task);
+  }
+
+  async deleteAllTask(): Promise<void> {
+    return await http.delete(this.getAllTasksDeletionUrl());
   }
 
   async updateTask(id: number, patch: Partial<Task>): Promise<void> {

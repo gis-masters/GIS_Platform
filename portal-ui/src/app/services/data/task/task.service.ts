@@ -2,6 +2,8 @@ import { communicationService } from '../../communication.service';
 import { PageOptions } from '../../models';
 
 import { Task, TaskHistory, TaskStatus } from './task.models';
+import { schemaService } from '../schema/schema.service';
+import { Schema } from '../schema/schema.models';
 import { taskClient } from './task.client';
 
 export async function createTask(task: Task): Promise<void> {
@@ -11,6 +13,10 @@ export async function createTask(task: Task): Promise<void> {
 
 export async function getTask(id: number): Promise<Task> {
   return await taskClient.getTask(id);
+}
+
+export async function getTaskSchema(): Promise<Schema> {
+  return await schemaService.getSchema('tasks_schema_v1');
 }
 
 export async function getTaskHistory(id: number): Promise<TaskHistory[]> {

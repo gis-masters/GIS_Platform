@@ -31,6 +31,18 @@ class UsersAddDialogBlock extends Block {
 
     const $saveBtn = await this.$('saveBtn');
     await $saveBtn.click();
+    await $saveBtn.waitForDisplayed({ reverse: true });
+  }
+
+  async findUser(userName: string): Promise<void> {
+    const $tableContainer = await this.$('tableContainer');
+    await $tableContainer.waitForDisplayed();
+
+    const $userRow = await this.findUserRow(userName);
+
+    if (!$userRow) {
+      throw new Error(`Не найден пользователь "${userName}"`);
+    }
   }
 
   async findUserRow(userName: string): Promise<WebdriverIO.Element | undefined> {

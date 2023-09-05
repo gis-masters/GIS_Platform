@@ -13,6 +13,7 @@ import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { usersService } from '../../../services/auth/users/users.service';
 import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
+import { currentUser } from '../../../stores/CurrentUser.store';
 
 const cnUsersAdd = cn('Users', 'Add');
 const cnUsersAddDialog = cn('Users', 'AddDialog');
@@ -20,6 +21,7 @@ const cnUsersAddDialog = cn('Users', 'AddDialog');
 interface UsersAddProps {
   filled: boolean;
   multiple: boolean;
+  onlySubordinates: boolean;
   value: MinimizedCrgUser[];
   onChange(selectedItems: MinimizedCrgUser[]): void;
 }
@@ -64,23 +66,30 @@ export class UsersAdd extends Component<UsersAddProps> {
     );
   }
 
+  @boundMethod
   private async getUsers(pageOptions: PageOptions): Promise<[MinimizedCrgUser[], number]> {
-    const users = await usersService.getUsers(pageOptions);
+    if (this.props.onlySubordinates) {
+      pageOptions.filter = { ...pageOptions.filter, boss_id: currentUser.id };
+    }
 
-    return [
-      users[0]
-        .map(user => {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            surname: user.surname,
-            middleName: user.middleName || ''
-          };
-        })
-        .filter(notFalsyFilter),
-      users[1]
-    ];
+    const [users, totalPages] = await usersService.getUsers(pageOptions);
+    const usersArr: MinimizedCrgUser[] = users
+      .map(user => {
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          surname: user.surname,
+          middleName: user.middleName || ''
+        };
+      })
+      .filter(notFalsyFilter);
+
+    if (this.props.onlySubordinates) {
+      usersArr.unshift(currentUser);
+    }
+
+    return [usersArr, totalPages];
   }
 
   @action.bound

@@ -7,12 +7,14 @@ import { cn } from '@bem-react/classname';
 import { TaskJournalHistoryDialog } from '../../TaskJournalHistoryDialog/TaskJournalHistoryDialog';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { Task } from '../../../services/data/task/task.models';
 
 const cnTasksJournalActionsHistory = cn('TasksJournalActions', 'History');
 
 interface TasksJournalActionsHistoryProps {
   task: Task;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 
@@ -26,7 +28,7 @@ export class TasksJournalActionsHistory extends Component<TasksJournalActionsHis
   }
 
   render() {
-    const { as, task } = this.props;
+    const { as, task, schema } = this.props;
 
     return (
       <>
@@ -38,7 +40,12 @@ export class TasksJournalActionsHistory extends Component<TasksJournalActionsHis
           onClick={this.openDialog}
         />
 
-        <TaskJournalHistoryDialog task={task} closeDialog={this.closeDialog} dialogOpen={this.dialogOpen} />
+        <TaskJournalHistoryDialog
+          schema={schema}
+          task={task}
+          closeDialog={this.closeDialog}
+          dialogOpen={this.dialogOpen}
+        />
       </>
     );
   }

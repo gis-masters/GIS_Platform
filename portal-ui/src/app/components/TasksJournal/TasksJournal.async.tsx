@@ -1,79 +1,74 @@
 import React, { Component, ReactElement } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Subject } from 'rxjs';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { HomeOutlined } from '@mui/icons-material';
+import { HomeOutlined, PlaylistAdd } from '@mui/icons-material';
 import { cloneDeep } from 'lodash';
 
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filterObjects';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getTaskSchema, getTasks } from '../../services/data/task/task.service';
 import { registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { communicationService } from '../../services/communication.service';
+import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
 import { TasksJournalSettings } from './Settings/TasksJournal-Settings';
 import { calculateValues } from '../../services/formValidation.service';
-import { Task, taskSchema } from '../../services/data/task/task.models';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
-import { getTasks } from '../../services/data/task/task.service';
+import { Schema } from '../../services/data/schema/schema.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { PageOptions, ValueOf } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
+import { Task } from '../../services/data/task/task.models';
+import { convertToComplexField } from '../Form/Form.utils';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { sleep } from '../../services/util/sleep';
 import { Registry } from '../Registry/Registry';
 import { XTableProps } from '../XTable/XTable';
+import { Loading } from '../Loading/Loading';
 
+import { TasksJournalCreateButton } from './CreateButton/TasksJournal-CreateButton';
 import { TasksJournalActions } from '../TasksJournalActions/TasksJournalActions';
 import { TaskStatusIcon } from '../TaskStatusIcon/TaskStatusIcon';
-import { TasksJournalCreate } from './Create/TasksJournal-Create';
-import { convertToComplexField } from '../Form/Form.utils';
 
 import '!style-loader!css-loader!sass-loader!./TasksJournal.scss';
 
 const cnTasksJournal = cn('TasksJournal');
 
-export interface TasksJournalProps {
-  id: string;
-  onSelect?: (items: LibraryRecord[]) => void;
-}
-
 @observer
-export default class TasksJournal extends Component<TasksJournalProps> {
+export default class TasksJournal extends Component {
   @observable private hiddenFields: string[] = [];
-  private defaultSort: SortParams<Task> = { field: 'ownerId', asc: true };
+  @observable private schema: Schema;
+  @observable private primalSchema: Schema;
+  private defaultSort: SortParams<Task> = { field: 'id', asc: true };
   private defaultFilter: FilterQuery = registryDefaultFilter;
-  private unsubscribe$: Subject<void> = new Subject<void>();
   private tableInvoke: XTableProps<Task>['invoke'] = {};
 
-  constructor(props: TasksJournalProps) {
+  constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
   }
 
   async componentDidMount() {
+    await this.fetchSchema();
     communicationService.taskUpdated.on(async () => {
       if (this.tableInvoke && this.tableInvoke.reload) {
         await this.tableInvoke.reload();
       }
     });
 
-    await this.restoreSettings();
+    this.restoreSettings();
   }
 
   componentWillUnmount() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
     communicationService.off(this);
   }
 
   render() {
     return (
       <div className={cnTasksJournal()}>
-        {organizationSettings.taskManagement && (
+        {organizationSettings.taskManagement && this.schema ? (
           <>
             <Breadcrumbs
               items={[
@@ -94,21 +89,28 @@ export default class TasksJournal extends Component<TasksJournalProps> {
               filtersAlwaysEnabled
               showFiltersPanel
               urlChangeEnabled
+              onPageOptionsChange={this.updateSchema}
               defaultFilter={this.defaultFilter}
               invoke={this.tableInvoke}
               headerActions={
                 <>
                   <TasksJournalSettings
-                    properties={taskSchema?.properties || []}
+                    properties={this.schema?.properties || []}
                     hiddenFields={this.hiddenFields}
                     onChangeHiddenFields={this.setHiddenFields}
                   />
 
-                  <TasksJournalCreate />
+                  <TasksJournalCreateButton
+                    icon={<PlaylistAdd />}
+                    schema={this.primalSchema}
+                    contentTypes={this.primalSchema.contentTypes}
+                  />
                 </>
               }
             />
           </>
+        ) : (
+          <Loading visible={!!(organizationSettings.taskManagement && this.schema)} />
         )}
 
         {!organizationSettings.taskManagement && <EmptyListView text={'Доступ запрещён'} />}
@@ -127,7 +129,7 @@ export default class TasksJournal extends Component<TasksJournalProps> {
 
     const cols: XTableColumn<Task>[] = [
       actions,
-      ...getXTableColumnsFromSchema<Task>(taskSchema, [
+      ...getXTableColumnsFromSchema<Task>(this.schema, [
         {
           field: 'id',
           hidden: false,
@@ -138,6 +140,10 @@ export default class TasksJournal extends Component<TasksJournalProps> {
           hidden: false,
           cellProps: { className: cnTasksJournal('CellStatus') },
           BeforeCellContent: this.renderTableRoleSelect
+        },
+        {
+          field: 'content_type_id',
+          hidden: false
         }
       ])
     ].map(
@@ -155,8 +161,9 @@ export default class TasksJournal extends Component<TasksJournalProps> {
     return <TaskStatusIcon status={rowData.status} />;
   }
 
+  @boundMethod
   private renderActions({ rowData }: { rowData: Task }): ReactElement {
-    return <TasksJournalActions className={cnTasksJournal('Actions')} task={rowData} as='menu' />;
+    return <TasksJournalActions schema={this.schema} className={cnTasksJournal('Actions')} task={rowData} as='menu' />;
   }
 
   @boundMethod
@@ -181,7 +188,7 @@ export default class TasksJournal extends Component<TasksJournalProps> {
 
     return [
       tasks.map(task => {
-        const properties = taskSchema.properties;
+        const properties = this.primalSchema.properties;
         const taskCalculated = calculateValues<Task>(task, properties) as Task & Record<string, ValueOf<Task>>;
         for (const property of properties) {
           taskCalculated[property.name] = convertToComplexField(property, task) as ValueOf<Task>;
@@ -194,25 +201,77 @@ export default class TasksJournal extends Component<TasksJournalProps> {
   }
 
   private getStorageKey(): string {
-    return `registrySettings_${currentUser.id}_tasks-journal_${this.props.id}`;
+    return `tasksJournalSettings_${currentUser.id}`;
   }
 
   private storeSettings() {
-    localStorage.setItem(this.getStorageKey(), JSON.stringify({ hiddenFields: this.hiddenFields || [] }));
+    localStorage.setItem(
+      this.getStorageKey(),
+      JSON.stringify({
+        hiddenFields: this.hiddenFields || [],
+        content_type_id: this.schema.appliedContentType || null
+      })
+    );
   }
 
-  private async restoreSettings() {
-    await sleep(0);
-    const settings = JSON.parse(localStorage.getItem(this.getStorageKey()) || '{}') as { hiddenFields?: string[] };
+  private restoreSettings() {
+    const settings = JSON.parse(localStorage.getItem(this.getStorageKey()) || '{}') as {
+      hiddenFields?: string[];
+      content_type_id?: string;
+    };
 
     if (settings.hiddenFields) {
       this.setHiddenFields(settings.hiddenFields);
     }
+
+    if (settings.content_type_id) {
+      this.setSchema(applyContentType(this.primalSchema, settings.content_type_id));
+    }
+  }
+
+  @boundMethod
+  private updateSchema(pageOptions: PageOptions) {
+    const { filter } = pageOptions;
+
+    const contentTypeId = getFieldFilterValue(filter, 'content_type_id') as FilterQuery;
+    if (Object.keys(filter).length === 0 || !contentTypeId) {
+      this.setSchema(this.primalSchema);
+
+      return;
+    }
+
+    if (Array.isArray(contentTypeId.$in) && contentTypeId.$in.length === 1) {
+      this.setSchema(applyContentType(this.primalSchema, String(contentTypeId.$in[0])));
+    } else {
+      const newContentType = mergeContentTypes(this.primalSchema, contentTypeId.$in as string[]);
+      const newSchema = cloneDeep(this.primalSchema);
+
+      newSchema.contentTypes.push(newContentType);
+
+      this.setSchema(applyContentType(newSchema, newContentType.id));
+    }
+
+    this.storeSettings();
   }
 
   @action.bound
   private setHiddenFields(hiddenFields: string[]) {
     this.hiddenFields = hiddenFields;
     this.storeSettings();
+  }
+
+  private async fetchSchema() {
+    this.setPrimalSchema(await getTaskSchema());
+    this.setSchema(await getTaskSchema());
+  }
+
+  @action.bound
+  private setSchema(schema: Schema) {
+    this.schema = schema;
+  }
+
+  @action.bound
+  private setPrimalSchema(primalSchema: Schema) {
+    this.primalSchema = primalSchema;
   }
 }

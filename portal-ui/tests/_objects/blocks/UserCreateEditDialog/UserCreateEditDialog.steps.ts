@@ -3,6 +3,7 @@ import { When } from '@wdio/cucumber-framework';
 import { formControlTypeUserIdBlock } from '../Form/Control/Form-Control_type_userId.block';
 import { formControlTypeUserBlock } from '../Form/Control/Form-Control_type_user.block';
 import { userCreateEditDialogBlock } from './UserCreateEditDialog.block';
+import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { formContentBlock } from '../Form/Form-Content.block';
 
 When(
@@ -13,6 +14,8 @@ When(
     await formContentBlock.waitForVisible();
     await formControlTypeUserIdBlock.clearSelectedUser(title);
     await formControlTypeUserBlock.clickAddUserBtn(title);
+
+    await usersAddDialogBlock.waitForVisible();
   }
 );
 

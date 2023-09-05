@@ -8,7 +8,8 @@ import {
   convertNewToOldProperties,
   convertNewToOldSchema,
   convertOldToNewProperties,
-  convertOldToNewSchema
+  convertOldToNewSchema,
+  mergeContentTypes
 } from './schema.utils';
 
 const schemaWithViews: Schema = {
@@ -346,6 +347,21 @@ describe('утилита применения типа документа applyC
     const schemaWithAppliedContentType1 = applyContentType(schemaWithContentTypesAndRelations, 'doc1');
 
     expect(schemaWithAppliedContentType1.relations).toStrictEqual(contentTypeRelations);
+  });
+});
+
+describe('утилита конвертации нескольких контент типов в один  mergeContentTypes', () => {
+  test('в итоговом контент типе содержатся поля из всех переданных контент типов', () => {
+    const newContentType = mergeContentTypes(schemaWithContentTypes, ['doc1', 'doc2']);
+    expect(newContentType).toStrictEqual({
+      id: 'merged__doc1__doc2',
+      title: 'Объединённый тип: "doc1", "doc2"',
+      type: 'DOCUMENT',
+      properties: [
+        { name: 'title', required: true },
+        { name: 'area', title: 'Площадь, кв.м', required: true }
+      ]
+    });
   });
 });
 

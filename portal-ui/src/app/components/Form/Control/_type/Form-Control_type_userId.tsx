@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
+import { PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
 import { CrgUser, MinimizedCrgUser } from '../../../../services/auth/users/users.models';
-import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { usersService } from '../../../../services/auth/users/users.service';
 import { Users } from '../../../Users/Users';
 
@@ -34,11 +34,17 @@ class FormControlTypeUserId extends Component<FormControlProps> {
   }
 
   render() {
-    const { className, inSet, errors, fullWidthForOldForm } = this.props;
+    const { className, inSet, errors, fullWidthForOldForm, property } = this.props;
+    const { onlySubordinates } = property as PropertySchemaUser;
 
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
-        <Users value={this.user ? [this.user] : []} editable onChange={this.handleChange} />
+        <Users
+          onlySubordinates={onlySubordinates}
+          value={this.user ? [this.user] : []}
+          editable
+          onChange={this.handleChange}
+        />
         <FormErrors errors={errors} />
       </div>
     );

@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -21,6 +23,8 @@ import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
 public class SchemaService {
+
+    private final Logger log = LoggerFactory.getLogger(SchemaService.class);
 
     private final DataSchemaRepository schemaRepository;
     private final OrgSettingsKeeper orgSettingsKeeper;
@@ -119,6 +123,8 @@ public class SchemaService {
         props.forEach((key, value) -> {
             if (isPropertyExist(schema, key)) {
                 result.put(key, value);
+            } else {
+                log.warn("Параметр: [{}] был исключен при создании, поле не описано в схеме!", key);
             }
         });
 

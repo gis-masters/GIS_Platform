@@ -5,19 +5,23 @@ import { CreateOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Task, taskSchema } from '../../../services/data/task/task.models';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { updateTask } from '../../../services/data/task/task.service';
+import { Schema } from '../../../services/data/schema/schema.models';
+import { Task } from '../../../services/data/task/task.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { getPatch } from '../../../services/util/patch';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 const cnTasksJournalActionsEdit = cn('TasksJournalActions', 'Edit');
+const cnTasksJournalActionsEditDialog = cn('TasksJournalActions', 'EditDialog');
 
 interface TasksJournalActionsEditProps {
   task: Task;
+  schema: Schema;
   as: ActionsItemVariant;
 }
 
@@ -32,7 +36,7 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
   }
 
   render() {
-    const { as, task } = this.props;
+    const { as, task, schema } = this.props;
 
     return (
       <>
@@ -45,12 +49,13 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
         />
 
         <FormDialog<Task>
+          className={cnTasksJournalActionsEditDialog()}
           title='Редактирование задачи'
           actionFunction={this.edit}
           onClose={this.closeDialog}
           value={task}
           open={this.openDialog}
-          schema={taskSchema}
+          schema={applyContentType(schema, task.content_type_id)}
           actionButtonProps={{ children: 'Сохранить', loading: this.loading }}
         />
       </>

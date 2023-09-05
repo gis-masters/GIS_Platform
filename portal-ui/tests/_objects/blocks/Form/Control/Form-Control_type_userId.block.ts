@@ -12,7 +12,7 @@ class FormControlTypeUserIdBlock extends Block {
 
     const $deleteUserBtn = await $field.$('.Lookup-Delete');
 
-    if (await $deleteUserBtn.isClickable()) {
+    if (await $deleteUserBtn.isExisting()) {
       await $deleteUserBtn.click();
     }
   }

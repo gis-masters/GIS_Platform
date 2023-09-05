@@ -16,13 +16,14 @@ const cnUsers = cn('Users');
 export interface UsersProps {
   value: MinimizedCrgUser[];
   multiple?: boolean;
+  onlySubordinates?: boolean;
   editable?: boolean;
   onChange?(value: MinimizedCrgUser[]): void;
 }
 
 export default class Users extends Component<UsersProps> {
   render() {
-    const { value, multiple = false, editable = false } = this.props;
+    const { value, multiple = false, editable = false, onlySubordinates = false } = this.props;
     const numerous = value.length > 1;
     const clearedValue = value.filter(notFalsyFilter);
 
@@ -45,7 +46,13 @@ export default class Users extends Component<UsersProps> {
           </LookupList>
         )}
         {editable && (
-          <UsersAdd multiple={multiple} filled={Boolean(value.length)} onChange={this.addHandler} value={value} />
+          <UsersAdd
+            onlySubordinates={onlySubordinates}
+            multiple={multiple}
+            filled={Boolean(value.length)}
+            onChange={this.addHandler}
+            value={value}
+          />
         )}
       </Lookup>
     );

@@ -13,11 +13,11 @@ export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItem
   const { filter, col } = props;
   const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
   const from =
-    col.type === PropertyType.DATETIME
+    col.type === PropertyType.DATETIME && filterValue?.$gte
       ? formatDate(filterValue?.$gte as string, col.settings?.format)
       : filterValue?.$gte;
   const to =
-    col.type === PropertyType.DATETIME
+    col.type === PropertyType.DATETIME && filterValue?.$lte
       ? formatDate(filterValue?.$lte as string, col.settings?.format)
       : filterValue?.$lte;
 

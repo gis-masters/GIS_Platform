@@ -23,6 +23,7 @@ export interface RegistryProps<T> {
   filtersAlwaysEnabled?: boolean;
   showFiltersPanel?: boolean;
   onSelect?: (items: T[]) => void;
+  onPageOptionsChange?: (pageOptions: PageOptions) => void;
   setPageOptions?: (pageOptions: PageOptions) => void;
   getData(pageOptions: PageOptions): Promise<[T[], number]>;
   headerActions?: ReactNode;
@@ -96,6 +97,10 @@ export class Registry<T> extends Component<RegistryProps<T>> {
   private handleTablePageOptionsChange(pageOptions: PageOptions) {
     if (this.props.setPageOptions) {
       this.props.setPageOptions(pageOptions);
+    }
+
+    if (this.props.onPageOptionsChange) {
+      this.props.onPageOptionsChange(pageOptions);
     }
 
     const { sort, sortOrder: sortDir, filter } = pageOptions;

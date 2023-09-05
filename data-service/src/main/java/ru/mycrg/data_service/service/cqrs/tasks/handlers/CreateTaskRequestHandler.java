@@ -23,6 +23,7 @@ import ru.mycrg.mediator.IRequestHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CREATED;
@@ -60,12 +61,16 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
             if (ownerAsString == null) {
                 throw new BadRequestException("Отсутствует обязательное поле: owner_id");
             }
-
-            Long ownerId = Long.valueOf(ownerAsString);
             UserDetails userDetails = authenticationFacade.getUserDetails();
             List<Long> directMinions = userDetails.getDirectMinions();
-            if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
-                throw new BadRequestException("Задачу можно назначить только на своего непосредственного подчиненного");
+
+            String assignedAsString = record.getAsString("assigned_to");
+            if (Objects.nonNull(assignedAsString)) {
+                Long assignedTo = Long.valueOf(assignedAsString);
+                if (!userDetails.getUserId().equals(assignedTo) && !directMinions.contains(assignedTo)) {
+                    throw new BadRequestException(
+                            "Задачу можно назначить только на своего непосредственного подчиненного");
+                }
             }
 
             Map<String, Object> props = record.getContent();
@@ -76,7 +81,7 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
 
             IRecord newTask = recordsDao.addRecord(qualifier, record, schema);
 
-            taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask);
+            taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask.getContent());
 
             return newTask;
         } catch (CrgDaoException e) {

@@ -15,6 +15,7 @@ import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 const cnTasksJournalActionsStatus = cn('TasksJournalActions', 'Status');
+const cnTasksJournalActionsStatusDialog = cn('TasksJournalActions', 'StatusDialog');
 
 interface TasksJournalActionsStatusProps {
   task: Task;
@@ -45,6 +46,7 @@ export class TasksJournalActionsStatus extends Component<TasksJournalActionsStat
         />
 
         <FormDialog<Task>
+          className={cnTasksJournalActionsStatusDialog()}
           title='Изменение статуса задачи'
           actionFunction={this.edit}
           onClose={this.closeDialog}

@@ -9,6 +9,7 @@ import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
 import { LibraryRecord } from '../../src/app/services/data/docLibrary/docLibrary.models';
 import { FilterQuery } from '../../src/app/services/util/filterObjects';
 import { FileInfo } from '../../src/app/services/data/files/files.models';
+import { Task } from '../../src/app/services/data/task/task.models';
 
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;
@@ -19,6 +20,7 @@ export class ScenarioScope extends World {
   private _latestLibraryRecords?: LibraryRecord[];
   private _latestFolder?: LibraryRecord;
   private _latestUploadedFile?: FileInfo;
+  private _latestTask?: Task;
   private layers: CrgLayer[] = [];
   private vectorTables: VectorTable[] = [];
 
@@ -114,6 +116,14 @@ export class ScenarioScope extends World {
 
   set latestUploadedFile(file: FileInfo) {
     this._latestUploadedFile = file;
+  }
+
+  get latestTask(): Task {
+    return this.getEntityOrThrow<Task>(this._latestTask, 'задача');
+  }
+
+  set latestTask(task: Task) {
+    this._latestTask = task;
   }
 
   private getEntityOrThrow<T>(obj: T | undefined, entity: string): T {

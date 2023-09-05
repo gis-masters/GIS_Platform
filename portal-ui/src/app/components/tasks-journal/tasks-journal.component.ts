@@ -31,9 +31,7 @@ export class TasksJournalComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(TasksJournalWithRegistry, {
-      id: 'tasksJournalPage'
-    });
+    const reactElement = createElement(TasksJournalWithRegistry);
 
     this.root?.render(reactElement);
   }

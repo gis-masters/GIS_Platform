@@ -165,6 +165,12 @@ export interface OldPropertyDocumentSchema extends OldBasePropertySchema {
 export interface OldPropertyUserSchema extends OldBasePropertySchema {
   valueType: ValueType.USER;
   multiple?: boolean;
+  onlySubordinates?: boolean;
+}
+
+export interface OldPropertyUserIdSchema extends OldBasePropertySchema {
+  valueType: ValueType.USER_ID;
+  onlySubordinates?: boolean;
 }
 
 export interface OldPropertySchemaCustom extends OldBasePropertySchema {
@@ -190,6 +196,7 @@ export type OldPropertySchema =
   | OldPropertyFiasSchema
   | OldPropertyFileSchema
   | OldPropertyUserSchema
+  | OldPropertyUserIdSchema
   | OldPropertyDocumentSchema;
 
 export enum Updateability {

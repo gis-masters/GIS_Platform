@@ -16,7 +16,8 @@ export type ExplorerRole =
   | 'dm'
   | 'ConnectionsToProjectsWidget'
   | 'DocumentVersions'
-  | 'ConnectionsToProjectsWidget';
+  | 'ConnectionsToProjectsWidget'
+  | 'taskJournalHistory';
 
 export enum ExplorerItemType {
   NONE = 'none',
@@ -43,6 +44,8 @@ export enum ExplorerItemType {
   TASKS_ROOT = 'tr',
   DOCUMENT_VERSIONS_ROOT = 'dvr',
   DOCUMENT_VERSION = 'dv',
+  TASK_HISTORY_ROOT = 'thr',
+  TASK_HISTORY = 'th',
   MESSAGES_REGISTRIES_ROOT = 'mrr',
   ROOT = 'r'
 }
