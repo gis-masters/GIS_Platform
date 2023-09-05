@@ -1,0 +1,34 @@
+{
+  "id": "0f8d49d1-4074-481a-b5bc-fe6109f30e51",
+  "exchange": "dataToGisogdQueue",
+  "routingKey": null,
+  "orgId": 1,
+  "taskId": -314,
+  "parent": {
+    "guid": "0dfaa71b-a4b9-4870-8692-42a4ecaa01d1",
+    "schema": "data",
+    "name": "territory",
+    "contentType": "какая-то геометрия не меняй меня или сломаешь поле guid 686",
+    "content": {
+      "gisogdrf_sync_status": "Не синхронизирован",
+      "name_from_layer": "landplot_1627_2d2b",
+      "gisogdrf_publication_datetime": null,
+      "shape": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3964089.321398798,5652601.943232903],[3964119.775490385,5652608.596682095],[3964137.29697053,5652533.307235224],[3964106.616063795,5652526.369923014],[3964101.264793562,5652550.101049293],[3964098.673369502,5652561.390835203],[3964092.378894725,5652589.572463618],[3964089.321398798,5652601.943232903]]]]}",
+      "last_modified_from_layers": null,
+      "is_folder": false,
+      "content_type_id": "какая-то геометрия не меняй меня или сломаешь поле guid 686",
+      "created_at": null,
+      "gisogdrf_response": null,
+      "title": "0dfaa71b-a4b9-4870-8692-42a4ecaa01d1",
+      "created_by": null,
+      "path": "/root/2",
+      "is_deleted": false,
+      "versions": null,
+      "shape_as_text": "{\"type\":\"MultiPolygon\",\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:3857\"}},\"coordinates\":[[[[3964089.321398798,5652601.943232903],[3964119.775490385,5652608.596682095],[3964137.29697053,5652533.307235224],[3964106.616063795,5652526.369923014],[3964101.264793562,5652550.101049293],[3964098.673369502,5652561.390835203],[3964092.378894725,5652589.572463618],[3964089.321398798,5652601.943232903]]]]}",
+      "guid": "0dfaa71b-a4b9-4870-8692-42a4ecaa01d1",
+      "id": "94",
+      "last_modified": null
+    }
+  },
+  "children": []
+}

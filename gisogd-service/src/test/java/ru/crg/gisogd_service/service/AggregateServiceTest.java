@@ -77,6 +77,7 @@ import ru.crg.gisogd_service.model.rf.SupplierEmployee;
 import ru.crg.gisogd_service.model.rf.TechPlan;
 import ru.crg.gisogd_service.model.rf.TelecomNetwork;
 import ru.crg.gisogd_service.model.rf.TerZone;
+import ru.crg.gisogd_service.model.rf.Territory;
 import ru.crg.gisogd_service.model.rf.TownPlanningRegulations;
 import ru.crg.gisogd_service.model.rf.UDRIZS;
 import ru.crg.gisogd_service.model.rf.UGE;
@@ -890,6 +891,15 @@ class AggregateServiceTest {
         USZIZS enrich = getEnrichedObject(eventData);
         assertEquals("7d500b3a-3a48-47b6-988c-4162576239be", enrich.getGuid());
         assertEquals("fd80adbc-82ef-4806-9e40-b283347ea123", enrich.getDataSection13());
+    }
+
+    @Test
+    @SneakyThrows
+    void territoryAggregateTest() {
+        Resource eventData = new ClassPathResource("event/territoryEvent.json");
+        Territory enrich = getEnrichedObject(eventData);
+        assertEquals("0dfaa71b-a4b9-4870-8692-42a4ecaa01d1", enrich.getGuid());
+        assertTrue(enrich.getLocation().contains("MultiPolygon"));
     }
 
     @SneakyThrows
