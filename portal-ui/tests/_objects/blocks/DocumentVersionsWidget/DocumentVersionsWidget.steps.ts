@@ -85,6 +85,13 @@ When(
   }
 );
 
+When(
+  'в диалоговом окне `Восстановление версии документа` у последней версии документа я нажимаю кнопку `Восстановить версию документа`',
+  async () => {
+    await documentVersionsWidgetBlock.restoreLastDocumentVersion();
+  }
+);
+
 When('я закрываю диалоговое окно `Восстановление версии документа`', async () => {
   await documentVersionsWidgetBlock.clickCloseDialogBtn();
 });

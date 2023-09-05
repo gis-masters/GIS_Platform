@@ -14,6 +14,23 @@ export const withSimpleContentType: Schema = {
       id: 'doc_v1',
       title: 'Тип 1',
       type: 'DOCUMENT'
+    },
+    {
+      properties: [
+        {
+          name: 'title',
+          title: 'Название',
+          required: true
+        },
+        {
+          name: 'some_files',
+          title: 'Поле FILE',
+          propertyType: PropertyType.FILE
+        }
+      ],
+      id: 'doc_v2',
+      title: 'Тип 2',
+      type: 'DOCUMENT'
     }
   ],
   properties: [
@@ -62,6 +79,11 @@ export const withSimpleContentType: Schema = {
       title: 'Признак раздела',
       hidden: true,
       propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'some_files',
+      title: 'Поле FILE',
+      propertyType: PropertyType.FILE
     }
   ]
 };

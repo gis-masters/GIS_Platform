@@ -26,6 +26,15 @@ Given(
 );
 
 Given(
+  'из созданного документа удалены все файлы для поля {string}',
+  async function (this: ScenarioScope, field: string) {
+    await updateLibraryRecord(this.latestLibraryRecords[0].libraryTableName, this.latestLibraryRecords[0].id, {
+      [field]: []
+    });
+  }
+);
+
+Given(
   'загруженный тестовый файл размещен в созданном документе тестовой библиотеки',
   async function (this: ScenarioScope) {
     await updateLibraryRecord(this.latestLibraryRecords[0].libraryTableName, this.latestLibraryRecords[0].id, {

@@ -133,7 +133,6 @@ class ProjectsService {
     const layers = await this.getLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
     const layersPermissions = await Promise.all(layers.map(async layer => await isReadAllowed(layer)));
-
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
     const groups = await this.getGroups(project.id);
 

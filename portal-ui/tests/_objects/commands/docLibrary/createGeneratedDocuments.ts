@@ -12,7 +12,6 @@ export async function createGeneratedDocuments(
   user: TestUser
 ): Promise<LibraryRecord[]> {
   const schema = await getSchema(library.schemaId);
-
   const schemasWithContentTypes: Schema[] =
     schema.contentTypes
       ?.map(({ id }) => applyContentType(schema, id))

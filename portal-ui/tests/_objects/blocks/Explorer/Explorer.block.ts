@@ -12,7 +12,7 @@ export class ExplorerBlock extends Block {
     viewContentWidget: '.Explorer .ViewContentWidget',
     empty: '.Explorer-Empty',
     createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать слой"]',
-    firstItemTitle: '.Explorer-List .Explorer-Item:first-child .MuiListItemText-primary',
+    firstItem: '.Explorer-List .Explorer-Item:first-child',
     secondItemTitle: '.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary',
     connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'
   };
@@ -34,6 +34,13 @@ export class ExplorerBlock extends Block {
     }
 
     await $item.click();
+  }
+
+  async selectFirstExplorerItem(): Promise<void> {
+    const $firstItem = await this.$('firstItem');
+    await $firstItem.waitForDisplayed();
+
+    await $firstItem.click();
   }
 
   async getContentWidgetFieldValue(field: string): Promise<string> {

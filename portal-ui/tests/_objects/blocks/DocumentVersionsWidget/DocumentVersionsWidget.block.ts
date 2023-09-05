@@ -34,6 +34,14 @@ class DocumentVersionsWidgetBlock extends Block {
     await libraryDocumentVersionsActionsDialogBlock.clickAcceptRestoreBtn();
   }
 
+  async restoreLastDocumentVersion(): Promise<void> {
+    const $explorerBlock = new ExplorerBlock(await this.$('container'));
+    await $explorerBlock.waitForLoading();
+    await $explorerBlock.selectFirstExplorerItem();
+
+    await this.clickRestoreDocumentVersionBtn();
+  }
+
   async documentVersionBtnExist(): Promise<boolean> {
     const $documentVersionBtn = await this.$('documentVersionBtn');
 

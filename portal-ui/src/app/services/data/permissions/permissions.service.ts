@@ -24,6 +24,7 @@ import {
   tableRolesPermissionPoints
 } from './permissions.models';
 import { permissionsClient } from './permissions.client';
+import { getLibraryRecordFiles } from '../files/files.util';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);
@@ -123,7 +124,7 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
   if (layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
   } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
-    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
+    return await isRasterReadAllowed(layer);
   }
 
   return false;
@@ -158,7 +159,7 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
   if (layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
   } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
-    return await isRasterReadAllowed(layer.libraryId, layer.recordId);
+    return await isRasterReadAllowed(layer);
   }
 
   return false;
@@ -181,9 +182,15 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
   return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
 }
 
-export async function isRasterReadAllowed(libraryTableName: string, recordId: number): Promise<boolean> {
+export async function isRasterReadAllowed(layer: CrgLayer): Promise<boolean> {
   try {
-    const raster = await getLibraryRecord(libraryTableName, recordId);
+    const raster = await getLibraryRecord(layer.libraryId, layer.recordId);
+    const files = getLibraryRecordFiles(raster);
+    const datasource = files?.filter(file => layer.tableName.includes(file.id));
+
+    if (!datasource?.length) {
+      return false;
+    }
 
     return Boolean(raster.role);
   } catch {
