@@ -8,6 +8,7 @@ export const withTypeError = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'error' },
   () =>
-    ({ className, colorized }) =>
+    ({ className, colorized }) => (
       <ErrorOutlined className={cnLayerIcon(null, [className])} htmlColor={colorized ? '#dc3545' : ''} />
+    )
 );

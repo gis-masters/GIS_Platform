@@ -103,7 +103,7 @@ export class Environment implements EnvironmentData {
 
     if (typeof browser === 'object') {
       baseUrl = browser.options.baseUrl;
-    } else if (typeof window === undefined) {
+    } else if (typeof window === 'undefined') {
       throw new TypeError('Unknown environment');
     } else {
       baseUrl = window.location.origin;

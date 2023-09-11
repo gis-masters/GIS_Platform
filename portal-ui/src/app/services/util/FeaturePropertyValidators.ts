@@ -263,7 +263,7 @@ export class FeaturePropertyValidators {
     }
 
     const result = enumerations.find(item => {
-      return item.value.toString() === currentValue.toString();
+      return String(item.value) === String(currentValue);
     });
 
     return result !== undefined;

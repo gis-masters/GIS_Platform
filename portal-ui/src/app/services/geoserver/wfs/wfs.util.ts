@@ -136,7 +136,7 @@ export function isGeometryValid(geometry: WfsGeometry): boolean {
 function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
   return geometry.type === GeometryType.MULTI_POLYGON
     ? (geometry as WfsMultiPolygonGeometry).coordinates.some(polygon =>
-        polygon.some(loop => !isEqual(loop[0], loop[loop.length - 1]))
+        polygon.some(loop => !isEqual(loop[0], loop.at(-1)))
       )
     : false;
 }

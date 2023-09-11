@@ -2,30 +2,34 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { projectFormBlock } from './ProjectsForm.block';
 
-When(/^ввожу в поле ввода названия проекта "(.*)"$/, async (title: string) => {
+When('ввожу в поле ввода названия проекта {string}', async (title: string) => {
   await projectFormBlock.setInputValue(title);
 });
 
-Then(/^значение поля ввода "(.*)"/, async (title: string) => {
+Then('значение поля ввода {string}', async (title: string) => {
   await projectFormBlock.testInputValue(title);
 });
 
-Then(/^фокус находится в текстовом поле формы создания проекта$/, async () => {
+Then('фокус находится в текстовом поле формы создания проекта', async () => {
   await projectFormBlock.inputIsFocused();
 });
 
-Then(/^на форме появляются ошибки$/, async () => {
+Then('на форме появляются ошибки', async () => {
   await projectFormBlock.waitForErrors();
 });
 
-Then(/^на форме отсутствуют ошибки$/, async () => {
+Then('на форме отсутствуют ошибки', async () => {
   await projectFormBlock.errorsAreEmpty();
 });
 
-When(/^нажимаю кнопку `Создать`$/, async () => {
+When('нажимаю кнопку `Создать`', async () => {
   await projectFormBlock.submit();
 });
 
-When(/^нажимаю кнопку `Отмена`$/, async () => {
+When('нажимаю кнопку `Отмена`', async () => {
   await projectFormBlock.cancel();
+});
+
+Then('блок ProjectsForm вариант {string} выглядит как положено', async (variant: string) => {
+  await projectFormBlock.assertSelfie(variant);
 });

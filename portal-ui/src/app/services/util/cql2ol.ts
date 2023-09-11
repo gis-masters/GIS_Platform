@@ -206,10 +206,7 @@ function buildAst(tokens: TokenInfo[]) {
       case Token.BETWEEN:
       case Token.IS_NULL:
       case Token.LOGICAL: {
-        while (
-          operatorStack.length > 0 &&
-          precedence[operatorStack[operatorStack.length - 1].type] <= precedence[tok.type]
-        ) {
+        while (operatorStack.length > 0 && precedence[operatorStack.at(-1).type] <= precedence[tok.type]) {
           postfix.push(operatorStack.pop());
         }
 
@@ -224,12 +221,12 @@ function buildAst(tokens: TokenInfo[]) {
         break;
       }
       case Token.RPAREN: {
-        while (operatorStack.length > 0 && operatorStack[operatorStack.length - 1].type !== Token.LPAREN) {
+        while (operatorStack.length > 0 && operatorStack.at(-1).type !== Token.LPAREN) {
           postfix.push(operatorStack.pop());
         }
         operatorStack.pop(); // toss out the LPAREN
 
-        if (operatorStack.length > 0 && operatorStack[operatorStack.length - 1].type === Token.SPATIAL) {
+        if (operatorStack.length > 0 && operatorStack.at(-1).type === Token.SPATIAL) {
           postfix.push(operatorStack.pop());
         }
         break;
@@ -311,7 +308,7 @@ function buildAst(tokens: TokenInfo[]) {
       case Token.VALUE: {
         match = tok.text.match(/^'(.*)'$/);
 
-        return match ? match[1].replace(/''/g, "'") : Number(tok.text);
+        return match ? match[1].replaceAll("''", "'") : Number(tok.text);
       }
       case Token.SPATIAL: {
         // eslint-disable-next-line sonarjs/no-nested-switch

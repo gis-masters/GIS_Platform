@@ -38,7 +38,7 @@ export class ExplorerToolbarActions extends Component<ExplorerToolbarActionsProp
       },
       async () => {
         const { store, service, full } = this.props;
-        this.setToolbarActions(await getToolbarActions(store.path[store.path.length - 2], store, service, full));
+        this.setToolbarActions(await getToolbarActions(store.path.at(-2), store, service, full));
       },
       {
         fireImmediately: true

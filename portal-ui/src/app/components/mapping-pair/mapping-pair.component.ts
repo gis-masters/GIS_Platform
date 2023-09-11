@@ -82,7 +82,7 @@ export class MappingPairComponent implements OnInit, OnChanges {
   typeToString(type: string): string {
     const splitType = type.split('.');
 
-    return GeoUtil.getAliasForBaseType(splitType[splitType.length - 1]);
+    return GeoUtil.getAliasForBaseType(splitType.at(-1));
   }
 
   compareFn(c1: { name?: unknown }, c2?: { name?: unknown }): boolean {

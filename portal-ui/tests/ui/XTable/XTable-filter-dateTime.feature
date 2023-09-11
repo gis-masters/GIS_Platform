@@ -3,11 +3,11 @@ Feature: xTable Filter Type DateTime
     Given я на странице "xtable-cols--type-date-time" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
-    Then блок "XTableFilterTypeDateTime" вариант "plain" выглядит как положено
+    Then блок xTableFilterTypeDateTime вариант "plain" выглядит как положено
 
   Scenario: При введённом значении фильтр выглядит как положено
     When в таблице xTable я ввожу в поле фильтра типа dateTime "10102020" и "12122020"
-    Then блок "XTableFilterTypeDateTime" вариант "filled" выглядит как положено
+    Then блок xTableFilterTypeDateTime вариант "filled" выглядит как положено
 
   Scenario: Если ввести значение в фильтр `от`, то таблица показывает только элементы, значение которых подходит под введённое ограничение
     When в таблице xTable я ввожу в поле фильтра типа dateTime "10102017" и ""

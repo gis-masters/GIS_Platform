@@ -6,4 +6,4 @@ Feature: xTable Multiple Filters
   Scenario: При нескольких активных фильтрах значения в колонках имеют жёлтую подсветку
     When  в таблице xtable я ввожу в поле фильтра "Название" типа string значение "Ст"
     When  в таблице xtable я ввожу в поле фильтра "Материал" типа string значение "oo"
-    Then  блок "XTable" вариант "multiple-highlights" выглядит как положено
+    Then  блок xTable вариант "multiple-highlights" выглядит как положено

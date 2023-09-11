@@ -35,7 +35,11 @@ export class RegisterComponent implements OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private fb: UntypedFormBuilder, private router: Router, private logger: NGXLogger) {}
+  constructor(
+    private fb: UntypedFormBuilder,
+    private router: Router,
+    private logger: NGXLogger
+  ) {}
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();

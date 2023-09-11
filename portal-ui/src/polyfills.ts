@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-(window as any).global = window;
+window.global = window;
 
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.

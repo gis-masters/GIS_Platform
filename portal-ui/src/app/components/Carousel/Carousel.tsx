@@ -60,9 +60,7 @@ export class Carousel extends Component<CarouselProps> {
                 loading='Загрузка pdf'
                 onLoadSuccess={this.onDocumentLoad}
               >
-                {this.pages?.map((_, index) => (
-                  <Page key={index} pageNumber={index + 1} />
-                ))}
+                {this.pages?.map((_, index) => <Page key={index} pageNumber={index + 1} />)}
               </Document>
             ) : (
               <>

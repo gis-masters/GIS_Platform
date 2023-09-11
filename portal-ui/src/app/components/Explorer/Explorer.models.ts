@@ -16,7 +16,6 @@ export type ExplorerRole =
   | 'dm'
   | 'ConnectionsToProjectsWidget'
   | 'DocumentVersions'
-  | 'ConnectionsToProjectsWidget'
   | 'taskJournalHistory';
 
 export enum ExplorerItemType {

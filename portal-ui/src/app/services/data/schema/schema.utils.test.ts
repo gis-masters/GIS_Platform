@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable sonarjs/no-duplicate-string */
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { OldPropertySchema, OldSchema, ValueType } from './schemaOld.models';

@@ -29,16 +29,31 @@
     .ol-scale-text {
       white-space: nowrap;
 
-      text-shadow: 1px 1px 2px #fff, -1px 1px 2px #fff, 1px -1px 2px #fff, -1px -1px 2px #fff, 2px 0 2px #fff,
-        0 2px 2px #fff, -2px 0 2px #fff, 0 -2px 2px #fff;
+      text-shadow:
+        1px 1px 2px #fff,
+        -1px 1px 2px #fff,
+        1px -1px 2px #fff,
+        -1px -1px 2px #fff,
+        2px 0 2px #fff,
+        0 2px 2px #fff,
+        -2px 0 2px #fff,
+        0 -2px 2px #fff;
     }
 
     .ol-scale-text {
-      font: 16px/1.3 Verdana, Geneva, Tahoma, sans-serif;
+      font:
+        16px/1.3 Verdana,
+        Geneva,
+        Tahoma,
+        sans-serif;
     }
 
     .ol-scale-step-text {
-      font: 14px/1.3 Verdana, Geneva, Tahoma, sans-serif;
+      font:
+        14px/1.3 Verdana,
+        Geneva,
+        Tahoma,
+        sans-serif;
     }
 
     .ol-rotate {

@@ -1,9 +1,17 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
+import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { formControlTypeUrlBlock } from './Control/Form-Control_type_url.block';
 import { formControlTypeUserBlock } from './Control/Form-Control_type_user.block';
 import { formControlTypeFileBlock } from './Control/Form-Control_type_file.block';
-import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
+import { formControlTypeChoiceBlock } from './Control/Form-Control_type_choice.block';
+import { formControlTypeStringBlock } from './Control/Form-Control_type_string.block';
+import { formControlTypeDocumentBlock } from './Control/Form-Control_type_document.block';
+import { formViewTypeDocumentBlock } from './View/Form-View_type_document.block';
+import { formViewTypeChoiceBlock } from './View/Form-View_type_choice.block';
+import { formViewTypeStringBlock } from './View/Form-View_type_string.block';
+import { formViewTypeUserBlock } from './View/Form-View_type_user.block';
+import { formContentBlock } from './Form-Content.block';
 
 When('в форме в поле {string} типа url я нажимаю на кнопку добавления нового url', async (title: string) => {
   await formControlTypeUrlBlock.clickAddUrlBtn(title);
@@ -26,4 +34,40 @@ When('в поле файла у прикрепленного файла {string}
 
 When('в поле файл у прикрепленного файла {string} нет кнопки `Разместить в проекте`', async (title: string) => {
   await expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeFalsy();
+});
+
+Then('блок FormContent вариант {string} выглядит как положено', async (variant: string) => {
+  await formContentBlock.assertSelfie(variant);
+});
+
+Then('блок FormControlTypeChoice вариант {string} выглядит как положено', async (variant: string) => {
+  await formControlTypeChoiceBlock.assertSelfie(variant);
+});
+
+Then('блок FormViewTypeChoice вариант {string} выглядит как положено', async (variant: string) => {
+  await formViewTypeChoiceBlock.assertSelfie(variant);
+});
+
+Then('блок FormControlTypeDocument вариант {string} выглядит как положено', async (variant: string) => {
+  await formControlTypeDocumentBlock.assertSelfie(variant);
+});
+
+Then('блок FormViewTypeDocument вариант {string} выглядит как положено', async (variant: string) => {
+  await formViewTypeDocumentBlock.assertSelfie(variant);
+});
+
+Then('блок FormControlTypeString вариант {string} выглядит как положено', async (variant: string) => {
+  await formControlTypeStringBlock.assertSelfie(variant);
+});
+
+Then('блок FormViewTypeString вариант {string} выглядит как положено', async (variant: string) => {
+  await formViewTypeStringBlock.assertSelfie(variant);
+});
+
+Then('блок FormControlTypeUser вариант {string} выглядит как положено', async (variant: string) => {
+  await formControlTypeUserBlock.assertSelfie(variant);
+});
+
+Then('блок FormViewTypeUser вариант {string} выглядит как положено', async (variant: string) => {
+  await formViewTypeUserBlock.assertSelfie(variant);
 });

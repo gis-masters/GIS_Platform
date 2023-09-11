@@ -5,12 +5,12 @@ Feature: xTable Filter Type String
 
   Scenario: При пустом значении и выключенном строгом поиске фильтр выглядит неактивным (вид по-умолчанию)
     Then в таблице xTable кнопка переключения режимов фильтра типа string не имеет жёлтой подсветки
-    And блок "XTableFilterTypeString" вариант "plain" выглядит как положено
+    And блок xTableFilterTypeString вариант "plain" выглядит как положено
 
   Scenario: При введённом значении фильтр выглядит активным
     When в таблице xTable я ввожу в поле фильтра типа string "фильтр"
     Then в таблице xTable кнопка переключения режимов фильтра типа string имеет жёлтую подсветку
-    And блок "XTableFilterTypeString" вариант "not-strict-highlight" выглядит как положено
+    And блок xTableFilterTypeString вариант "not-strict-highlight" выглядит как положено
 
   Scenario: При включенном строгом режиме и пустом значении фильтр выглядит активным
     When в таблице xTable я переключаю режим фильтрации в поле фильтра типа string

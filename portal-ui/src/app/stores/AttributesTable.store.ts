@@ -87,6 +87,6 @@ class AttributesTableStore {
 export const attributesTableStore = AttributesTableStore.instance;
 
 // for autotests
-if (typeof window !== undefined) {
+if (typeof window !== 'undefined') {
   Object.assign(window, { attributesTableStore });
 }

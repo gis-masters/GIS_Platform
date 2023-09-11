@@ -56,7 +56,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   totalElements = 0;
   defaultPageSize = 25;
 
-  expandedElement: any;
+  expandedElement: unknown;
 
   updatingAllowed = false;
 

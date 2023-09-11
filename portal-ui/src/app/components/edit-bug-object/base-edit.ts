@@ -40,7 +40,7 @@ export class BaseEdit {
     return result;
   }
 
-  validateCustomRules(featureProperties: { [key: string]: any }): void {
+  validateCustomRules(featureProperties: { [key: string]: unknown }): void {
     if (!this.featureDescription) {
       return;
     }

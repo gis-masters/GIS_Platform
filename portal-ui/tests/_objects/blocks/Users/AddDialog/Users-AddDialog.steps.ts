@@ -1,4 +1,4 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
 
 import { getTestUser } from '../../../commands/auth/testUsers';
@@ -12,4 +12,8 @@ When('в диалоговом окне выбора пользователя д�
   const users = data.raw();
 
   await Promise.all(users.map(async user => await usersAddDialogBlock.findUser(getTestUser(user[0]).firstName)));
+});
+
+Then('блок UsersAddDialog вариант {string} выглядит как положено', async (variant: string) => {
+  await usersAddDialogBlock.assertSelfie(variant);
 });

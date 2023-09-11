@@ -68,8 +68,8 @@ class XTableFilterTypeId extends Component<XTableFilterProps> {
   private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
-    this.setCurrentInput(e.target.value.replace(/[^\d ,]/g, ''));
-    const value: number[] = this.currentInput.replace(/\D+/g, ',').split(',').filter(notFalsyFilter).map(Number);
+    this.setCurrentInput(e.target.value.replaceAll(/[^\d ,]/g, ''));
+    const value: number[] = this.currentInput.replaceAll(/\D+/g, ',').split(',').filter(notFalsyFilter).map(Number);
 
     onBeforeFilterChange();
 

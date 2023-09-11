@@ -11,7 +11,7 @@ import { LayersTreeItem } from '../Item/LayersTree-Item';
 const cnLayersTreeInner = cn('LayersTree', 'Inner');
 
 interface LayersTreeInnerProps {
-  innerRef: (element: HTMLElement) => any;
+  innerRef: (element: HTMLElement) => unknown;
   droppableProvidedProps: DroppableProvidedProps;
   editMode: boolean;
   placeholder: ReactNode;

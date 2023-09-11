@@ -28,7 +28,10 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private logger: NGXLogger, private importData: ImportDataHolderService) {
+  constructor(
+    private logger: NGXLogger,
+    private importData: ImportDataHolderService
+  ) {
     this.importData.metrics$.subscribe((metrics: InputDataMetrics) => (this.metrics = metrics));
   }
 

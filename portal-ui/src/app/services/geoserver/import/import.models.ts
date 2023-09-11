@@ -55,7 +55,7 @@ export interface TaskItem {
   href: string;
   progress: string;
   state: string;
-  dataStore: any;
+  dataStore: unknown;
   updateMode: string;
 
   data: {
@@ -73,7 +73,7 @@ export interface TaskItem {
     href: string;
   };
 
-  transforms: any;
+  transforms: unknown;
   transformChain: {
     type: string;
   };

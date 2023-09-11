@@ -1,13 +1,14 @@
 Feature: xTable Filter Type Choice
+
   Background:
     Given я на странице "xtable-cols--type-choice" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
-    Then блок "XTableFilterTypeChoice" вариант "plain" выглядит как положено
+    Then блок xTableFilterTypeChoice вариант "plain" выглядит как положено
 
   Scenario: При введённом значении фильтр выглядит как положено
     When в таблице xTable я выбираю в поле фильтра типа choice первую опцию
-    Then блок "XTableFilterTypeChoice" вариант "filled" выглядит как положено
+    Then блок xTableFilterTypeChoice вариант "filled" выглядит как положено
 
   Scenario: Если выбрать опцию из списка, то таблица показывает только элементы, значение которых подходит под выбранную опцию
     When в таблице xTable я выбираю в поле фильтра типа choice вторую опцию
@@ -17,4 +18,4 @@ Feature: xTable Filter Type Choice
     When в таблице xTable я выбираю в поле фильтра типа choice вторую опцию
     And в таблице xTable я повторно выбираю в поле фильтра типа choice вторую опцию
     Then в таблице xTable с фильтром типа choice отображаются все элементы
-    And блок "XTableFilterTypeChoice" вариант "focused" выглядит как положено
+    And блок xTableFilterTypeChoice вариант "focused" выглядит как положено

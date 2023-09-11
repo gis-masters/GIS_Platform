@@ -1,1 +1,1 @@
-export const notFalsyFilter = Boolean as any as <T>(x: T | false | null | undefined) => x is T;
+export const notFalsyFilter = Boolean as unknown as <T>(x: T | false | null | undefined) => x is T;

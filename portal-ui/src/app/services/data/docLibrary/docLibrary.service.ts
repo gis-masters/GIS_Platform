@@ -183,7 +183,7 @@ export async function sendToSed(libraryTableName: string, recordId: number): Pro
 }
 
 // for autotests
-if (typeof window !== undefined) {
+if (typeof window !== 'undefined') {
   Object.assign(window, {
     getLibraries,
     setLibraryPermission,

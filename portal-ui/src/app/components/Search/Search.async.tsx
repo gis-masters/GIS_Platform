@@ -98,7 +98,7 @@ export default class Search extends Component {
 
     this.setLoading(true);
     if (this.kadNumRegex.test(this.searchValue)) {
-      await this.getKadItems(this.searchValue.replace(/[\sa-zа-яё]/gi, ''));
+      await this.getKadItems(this.searchValue.replaceAll(/[\sa-zа-яё]/gi, ''));
       this.setSearchResult(null);
     } else {
       this.setSearchResult(await geocodeService.search(this.searchValue));

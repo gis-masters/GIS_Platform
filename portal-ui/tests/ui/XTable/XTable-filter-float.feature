@@ -3,11 +3,11 @@ Feature: xTable Filter Type Float
     Given я на странице "xtable-cols--type-float" библиотеки блоков
 
   Scenario: При пустом значении фильтр выглядит неактивным (вид по-умолчанию)
-    Then блок "XTableFilterTypeFloat" вариант "plain" выглядит как положено
+    Then блок xTableFilterTypeFloat вариант "plain" выглядит как положено
 
   Scenario: При введённом значении фильтр выглядит как положено
     When в таблице xTable я ввожу в поле фильтра типа float "100" и "200"
-    Then блок "XTableFilterTypeFloat" вариант "filled" выглядит как положено
+    Then блок xTableFilterTypeFloat вариант "filled" выглядит как положено
 
   Scenario: Если ввести значение в фильтр `от`, то таблица показывает только элементы, значение которых подходит под введённое ограничение
     When в таблице xTable я ввожу в поле фильтра типа float "110.01" и ""

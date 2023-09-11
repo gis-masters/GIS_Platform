@@ -28,7 +28,7 @@ export class HelpPart {
         const response = await fetch(item.contentUrl);
         const content = await response.text();
         const folder = item.contentUrl.split('/').slice(0, -1).join('/');
-        const contentWithCorrectImg = content.replace(/(<img\ssrc=["']?)([^ "']+)/gi, `$1${folder}/$2`);
+        const contentWithCorrectImg = content.replaceAll(/(<img\ssrc=["']?)([^ "']+)/gi, `$1${folder}/$2`);
         store.setItemContent(contentWithCorrectImg, item);
       }
     });

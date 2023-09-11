@@ -1,7 +1,5 @@
 import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
 
-export const blocksRegistry: Record<string, Block> = {};
-
 interface Selectors {
   [key: string]: string;
   container: string;
@@ -19,9 +17,6 @@ export abstract class Block<S extends Selectors = Selectors> {
   constructor(parent: string | WebdriverIO.Element = '', container?: WebdriverIO.Element) {
     this.container = container;
     this.parent = parent;
-    if (!parent && !container) {
-      blocksRegistry[this.constructor.name.replace(/Block$/, '')] = this;
-    }
   }
 
   protected async $(key: keyof this['selectors']): Promise<WebdriverIO.Element> {

@@ -29,7 +29,9 @@ export interface ComparableLayersPair {
   providedIn: 'root'
 })
 export class ImportDataHolderService {
+  // eslint-disable-next-line unicorn/prefer-event-target
   metrics$ = new EventEmitter<InputDataMetrics>();
+  // eslint-disable-next-line unicorn/prefer-event-target
   comparableLayers$ = new EventEmitter<ComparableLayersPair[]>();
 
   private _comparableLayers: ComparableLayersPair[] = [];

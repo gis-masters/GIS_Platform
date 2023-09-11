@@ -20,7 +20,7 @@ export function cqlBuild(query: FilterQuery = {}): string {
     .join(' AND ');
 }
 
-function quoteStrings(value: unknown): string | unknown {
+function quoteStrings(value: unknown): unknown {
   return typeof value === 'string' ? `'${String(value)}'` : value;
 }
 

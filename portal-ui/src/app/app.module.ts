@@ -10,8 +10,6 @@ configure({ enforceActions: 'observed' }); // don't allow state modifications ou
 import { MaterialModule } from './material.module';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 
-import { NgxMaskModule } from 'ngx-mask';
-import { FileUploadModule } from 'ng2-file-upload';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -145,7 +143,6 @@ import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.
     AppRoutingModule,
     MaterialModule,
     BrowserModule,
-    FileUploadModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
@@ -155,7 +152,6 @@ import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.
       level: NgxLoggerLevel.DEBUG,
       serverLogLevel: NgxLoggerLevel.WARN
     }),
-    NgxMaskModule.forRoot(),
     LoadingModule
   ],
   providers: [

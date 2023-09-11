@@ -42,6 +42,7 @@ const FormViewWithRegistry = withRegistry(registry)(FormView);
 export class FormControlComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
   @Input() property?: OldPropertySchema;
   @Input() updatingAllowed?: boolean;
+  // eslint-disable-next-line unicorn/prefer-event-target
   @Output() inputModelChange = new EventEmitter<string>();
   @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
 

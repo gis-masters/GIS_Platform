@@ -127,9 +127,9 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   private save() {
     const { coordinates, mustBeClosed, onChange, geometryType } = this.props;
     let newCoordinates: CoordinateEdited[] = this.text
-      .replace(/,/g, '.')
+      .replaceAll(',', '.')
       .split('\n')
-      .map(row => row.trim().replace(/\s+/g, ' '))
+      .map(row => row.trim().replaceAll(/\s+/g, ' '))
       .filter(notFalsyFilter)
       .map(row => {
         const rowArr = row.split(/\s/);
@@ -163,7 +163,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       }
     }
 
-    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
+    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates.at(-1))) {
       newCoordinates.push(newCoordinates[0]);
     }
 

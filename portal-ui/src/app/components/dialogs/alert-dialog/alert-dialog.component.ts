@@ -7,7 +7,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./alert-dialog.component.scss']
 })
 export class AlertDialogComponent {
-  constructor(public dialogRef: MatDialogRef<AlertDialogData>, @Inject(MAT_DIALOG_DATA) public data: AlertDialogData) {}
+  constructor(
+    public dialogRef: MatDialogRef<AlertDialogData>,
+    @Inject(MAT_DIALOG_DATA) public data: AlertDialogData
+  ) {}
 
   close(): void {
     this.dialogRef.close();

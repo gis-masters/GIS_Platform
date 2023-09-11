@@ -34,14 +34,14 @@ export class ExplorerStore {
   get selectedItem(): ExplorerItemData {
     const { path } = this;
 
-    return path[path.length - 1];
+    return path.at(-1);
   }
 
   @computed
   get openedItem(): ExplorerItemData {
     const { path } = this;
 
-    return path.length > 1 ? path[path.length - 2] : path[0];
+    return path.length > 1 ? path.at(-2) : path[0];
   }
 
   @computed

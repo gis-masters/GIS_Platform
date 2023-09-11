@@ -290,7 +290,7 @@ export default class Explorer extends Component<ExplorerProps> {
     const action = Object.keys(keyActions).find(key => keyActions[key].includes(e.key));
 
     if (action === KeyAction.BACK && path.length >= 3) {
-      void this.openItem(path[path.length - 3], path.length - 3);
+      void this.openItem(path.at(-3), path.length - 3);
     }
 
     if (action === KeyAction.PAGE_PREV && page > 0) {
@@ -320,7 +320,7 @@ export default class Explorer extends Component<ExplorerProps> {
       return;
     }
 
-    if (this.store.path[this.store.path.length - 1] === this.store.path[this.store.path.length - 2]) {
+    if (this.store.path.at(-1) === this.store.path.at(-2)) {
       return;
     }
 

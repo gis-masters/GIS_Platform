@@ -20,7 +20,10 @@
       inset: 0;
 
       content: 'file_upload';
-      transition: background-color 0.3s, backdrop-filter 0.3s, color 0.3s;
+      transition:
+        background-color 0.3s,
+        backdrop-filter 0.3s,
+        color 0.3s;
       text-align: center;
 
       color: rgb(255 255 255 / 0%);

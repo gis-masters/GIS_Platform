@@ -59,6 +59,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   render() {
     const { open, type } = this.props;
 
+    /* eslint-disable @typescript-eslint/no-explicit-any -- FIXME не удаётся вывести тип для xTable */
     return (
       <Dialog
         className={cnPermissionsAddDialog()}
@@ -103,6 +104,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
       CellContent: this.renderCheckbox
     };
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   @computed
   private get tableProps(): PermissionsXTablePropsSet {

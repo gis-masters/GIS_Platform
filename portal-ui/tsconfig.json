@@ -17,7 +17,7 @@
     "jsx": "react",
     "skipLibCheck": true,
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "esnext.array", "dom"],
+    "lib": ["es2021", "esnext.array", "dom"],
     "paths": {
       "txml/txml": ["node_modules/txml/dist/txml"]
     },

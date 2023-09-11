@@ -78,6 +78,5 @@ export const withTypeVector = withBemMod<LayerIconTypeVectorProps, LayerIconProp
   cnLayerIcon(),
   { type: 'vector' },
   () =>
-    ({ className, ...props }) =>
-      <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
+    ({ className, ...props }) => <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
 );

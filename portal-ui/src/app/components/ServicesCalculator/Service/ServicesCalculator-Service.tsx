@@ -31,9 +31,7 @@ export class ServicesCalculatorService extends Component<ServicesCalculatorServi
         <CardContent>
           <ServicesCalculatorServiceDescription serviceDescription={service.service} />
           <ServicesCalculatorServiceDetails service={service} />
-          {service.additions?.map((addition, index) => (
-            <ServicesCalculatorAdditions addition={addition} key={index} />
-          ))}
+          {service.additions?.map((addition, index) => <ServicesCalculatorAdditions addition={addition} key={index} />)}
         </CardContent>
         <ServicesCalculatorDelete clickHandler={this.delete} />
       </Card>

@@ -10,7 +10,10 @@ import { projectsService } from './gis/projects/projects.service';
   providedIn: 'root'
 })
 export class WorkflowGuardService implements CanActivate {
-  constructor(private logger: NGXLogger, private router: Router) {}
+  constructor(
+    private logger: NGXLogger,
+    private router: Router
+  ) {}
 
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {

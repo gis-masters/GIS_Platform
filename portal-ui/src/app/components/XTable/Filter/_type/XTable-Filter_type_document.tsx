@@ -37,7 +37,7 @@ class XTableFilterTypeDocument extends Component<XTableFilterProps> {
     const { filterQuery, field } = this.props;
     const value = getFieldFilterValue(filterQuery, field);
 
-    return (((value as FilterQuery)?.$ilike as string) || '').replace(/^%|%$/g, '');
+    return (((value as FilterQuery)?.$ilike as string) || '').replaceAll(/^%|%$/g, '');
   }
 
   @action.bound

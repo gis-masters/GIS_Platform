@@ -92,7 +92,7 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
   private get isLastGroupEmpty(): boolean {
     const { geometryPart } = this.props;
 
-    return !geometryPart[geometryPart.length - 1].some(coordinate => coordinate.some(Boolean));
+    return !geometryPart.at(-1).some(coordinate => coordinate.some(Boolean));
   }
 
   @action.bound
@@ -124,7 +124,7 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     const { geometryPart } = this.props;
 
     if (this.isLastGroupEmpty) {
-      geometryPart[geometryPart.length - 1].splice(0, geometryPart[0].length, ...newGroup);
+      geometryPart.at(-1).splice(0, geometryPart[0].length, ...newGroup);
     } else {
       geometryPart.push(newGroup);
     }

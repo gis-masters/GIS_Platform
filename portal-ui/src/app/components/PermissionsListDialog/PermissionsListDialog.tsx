@@ -59,6 +59,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   render() {
     const { principalId, principalType, principalName, open } = this.props;
 
+    /* eslint-disable @typescript-eslint/no-explicit-any -- FIXME не удаётся вывести тип для xTable */
     return (
       <Dialog
         onClose={this.close}
@@ -121,6 +122,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         </DialogActions>
       </Dialog>
     );
+    /* eslint-enable @typescript-eslint/no-explicit-any */
   }
 
   @computed

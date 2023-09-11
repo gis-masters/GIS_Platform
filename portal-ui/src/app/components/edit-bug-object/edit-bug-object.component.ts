@@ -22,6 +22,7 @@ import { Toast } from '../Toast/Toast';
 })
 export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
   @Input() data: ObjectDto[];
+  // eslint-disable-next-line unicorn/prefer-event-target
   @Output() closeMe = new EventEmitter<boolean>();
 
   wfsFeature: WfsFeature;
@@ -30,7 +31,10 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private object: ObjectDto;
 
-  constructor(private formBuilder: UntypedFormBuilder, private logger: NGXLogger) {
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private logger: NGXLogger
+  ) {
     super();
   }
 

@@ -24,7 +24,7 @@ export const Highlight: FC<HighlightProps> = ({ enabled, word, children }) => {
     !(word instanceof RegExp) &&
     typeof word.$ilike === 'string'
   ) {
-    actualWord = word.$ilike.replace(/^%|%$/g, '');
+    actualWord = word.$ilike.replaceAll(/^%|%$/g, '');
   } else {
     actualWord = word instanceof RegExp ? word : String(word);
   }

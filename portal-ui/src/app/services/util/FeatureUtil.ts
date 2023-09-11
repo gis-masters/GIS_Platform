@@ -14,7 +14,7 @@ export class FeatureUtil {
   // feature = Point, LineString, Polygon, Curve
   static isFeatureGeometryCompatible(layerGeometryTypeName: string, featureDescription: OldSchema): boolean {
     const split = layerGeometryTypeName.split('.');
-    const layerGeometryName = split[split.length - 1];
+    const layerGeometryName = split.at(-1);
 
     const allowedGeometry: string[] = this.fillAllowedGeometry(new CrgRootGeometry(), layerGeometryName);
     const featureGeometry = this.getFeatureGeometry(featureDescription);

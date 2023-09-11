@@ -2,12 +2,9 @@
 
 <script src="register.component.ts"></script>
 <div class="container">
-
   <crg-header></crg-header>
 
-  <form [formGroup]="registrationForm"
-        novalidate
-        (ngSubmit)="onSubmit()">
+  <form [formGroup]="registrationForm" novalidate (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-header>
         <mat-card-title>Данные об организации</mat-card-title>
@@ -17,8 +14,7 @@
         <div class="row">
           <div class="col-9">
             <mat-form-field class="full-width">
-              <input matInput placeholder="Наименование" formControlName="company"
-                     minlength="5" maxlength="400">
+              <input matInput placeholder="Наименование" formControlName="company" minlength="5" maxlength="400" />
               <mat-error *ngIf="registrationForm.controls['company'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
@@ -29,8 +25,14 @@
           </div>
           <div class="col-3">
             <mat-form-field class="full-width">
-              <input type="tel" matInput placeholder="Контактный телефон" formControlName="contactPhone"
-                     prefix="+7" mask="(000) 000-00-00" minlength="10">
+              <input
+                type="tel"
+                matInput
+                placeholder="Контактный телефон"
+                formControlName="contactPhone"
+                prefix="+7"
+                minlength="10"
+              />
               <mat-icon matSuffix>phone</mat-icon>
               <mat-error *ngIf="registrationForm.controls['contactPhone'].hasError('required')">
                 Обязательное для заполнения поле
@@ -51,8 +53,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field class="full-width">
-              <input matInput placeholder="Фамилия" formControlName="lastName"
-                     maxlength="100">
+              <input matInput placeholder="Фамилия" formControlName="lastName" maxlength="100" />
               <mat-error *ngIf="registrationForm.controls['lastName'].hasError('maxlength')">
                 Поле должно содержать не более 100 символов
               </mat-error>
@@ -60,8 +61,7 @@
           </div>
           <div class="col">
             <mat-form-field class="full-width">
-              <input matInput placeholder="Имя" formControlName="firstName"
-                     maxlength="50">
+              <input matInput placeholder="Имя" formControlName="firstName" maxlength="50" />
               <mat-error *ngIf="registrationForm.controls['firstName'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
@@ -72,7 +72,7 @@
           </div>
           <div class="col">
             <mat-form-field class="full-width">
-              <input type="email" matInput placeholder="E-mail" formControlName="email">
+              <input type="email" matInput placeholder="E-mail" formControlName="email" />
               <mat-icon matSuffix>mail</mat-icon>
               <mat-error *ngIf="registrationForm.controls['email'].hasError('required')">
                 Обязательное для заполнения поле
@@ -87,7 +87,7 @@
         <div class="row">
           <div class="col">
             <mat-form-field class="full-width">
-              <input type="password" matInput placeholder="Пароль" formControlName="password">
+              <input type="password" matInput placeholder="Пароль" formControlName="password" />
               <mat-error *ngIf="registrationForm.controls['password'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
@@ -98,7 +98,7 @@
           </div>
           <div class="col">
             <mat-form-field class="full-width">
-              <input type="password" matInput placeholder="Подтверждение пароля" formControlName="password_">
+              <input type="password" matInput placeholder="Подтверждение пароля" formControlName="password_" />
               <mat-error *ngIf="registrationForm.controls['password_'].hasError('required')">
                 Обязательное для заполнения поле
               </mat-error>
@@ -110,15 +110,13 @@
         </div>
 
         <div class="row justify-content-center text-danger">
-          <div *ngIf="!!errorMsg">{{errorMsg}}</div>
+          <div *ngIf="!!errorMsg">{{ errorMsg }}</div>
         </div>
       </mat-card-content>
 
       <mat-card-actions>
         <div class="row m-0">
-          <button mat-raised-button color="primary" type="submit">
-            Зарегистрироваться
-          </button>
+          <button mat-raised-button color="primary" type="submit">Зарегистрироваться</button>
           <div class="linkLogin align-self-end">
             <span>Уже есть учетная запись?</span>
             <a class="float-right ml-lg-3" routerLink="/">ВОЙТИ</a>
@@ -127,5 +125,4 @@
       </mat-card-actions>
     </mat-card>
   </form>
-
 </div>

@@ -3,11 +3,11 @@ Feature: xTable Filter Type Bool
     Given я на странице "xtable-cols--type-bool" библиотеки блоков
 
   Scenario: При не выбранном значении фильтр выглядит неактивным (вид по-умолчанию)
-    Then блок "XTableFilterTypeBool" вариант "plain" выглядит как положено
+    Then блок xTableFilterTypeBool вариант "plain" выглядит как положено
 
   Scenario: При выбранном значении фильтр выглядит как положено
     When в таблице xTable c фильтром типа bool я нажимаю да
-    Then блок "XTableFilterTypeBool" вариант "filled" выглядит как положено
+    Then блок xTableFilterTypeBool вариант "filled" выглядит как положено
 
   Scenario: При выбранном значении `да` отображаются только элементы, значение которых подходит под введённое ограничение
     When в таблице xTable c фильтром типа bool я нажимаю да

@@ -10,7 +10,7 @@ export interface Process {
   title: string;
   status: ProcessStatus;
   type: ProcessType;
-  extra: any;
+  extra: unknown;
   message?: string;
   details: ProcessTasks | ImportShapeProcess;
 }

@@ -20,7 +20,7 @@ export class ScaleLine extends BaseScaleLine {
     /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     /* eslint-disable @typescript-eslint/no-unsafe-call */
     // @ts-ignore
-    return super.createScaleBar(width, scale, suffix).replace(/,(\d{3})/g, ' $1');
+    return super.createScaleBar(width, scale, suffix).replaceAll(/,(\d{3})/g, ' $1');
     /* eslint-enable @typescript-eslint/no-unsafe-return */
     /* eslint-enable @typescript-eslint/no-unsafe-member-access */
     /* eslint-enable @typescript-eslint/no-unsafe-call */

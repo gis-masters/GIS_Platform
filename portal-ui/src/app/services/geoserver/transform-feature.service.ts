@@ -133,8 +133,8 @@ export class TransformFeatureService {
 
     const payload = this.xs
       .serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
-      .replace(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
-      .replace(/<Name>geometry<\/Name>/g, '<Name>shape</Name>');
+      .replaceAll(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
+      .replaceAll('<Name>geometry</Name>', '<Name>shape</Name>');
 
     return http.post(getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }

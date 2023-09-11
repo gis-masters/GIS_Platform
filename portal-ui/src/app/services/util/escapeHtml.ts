@@ -8,7 +8,7 @@ const htmlEscapes: Record<string, string> = {
 };
 
 export function escapeHtml(str: string): string {
-  return str.replace(/["&'/<>]/g, match => {
+  return str.replaceAll(/["&'/<>]/g, match => {
     return htmlEscapes[match];
   });
 }

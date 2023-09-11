@@ -74,7 +74,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   editGeometryStore = new EditFeatureGeometryStore();
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
-  constructor(private formBuilder: UntypedFormBuilder, private dialog: MatDialog) {
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private dialog: MatDialog
+  ) {
     super();
   }
 

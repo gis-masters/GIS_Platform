@@ -14,6 +14,10 @@ When('в таблице xTable я ввожу в поле фильтра типа
   await xTableFilterTypeStringBlock.setValue(title);
 });
 
+Then('блок xTableFilterTypeString вариант {string} выглядит как положено', async (variant: string) => {
+  await xTableFilterTypeStringBlock.assertSelfie(variant);
+});
+
 Then('в таблице xTable кнопка переключения режимов фильтра типа string имеет жёлтую подсветку', async () => {
   await expect(await xTableFilterTypeStringBlock.isFilterActive()).toBeTruthy();
 });

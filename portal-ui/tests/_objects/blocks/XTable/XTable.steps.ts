@@ -20,6 +20,10 @@ Then('таблица xTable не содержит записей', async () => {
   await expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
 });
 
+Then('блок xTable вариант {string} выглядит как положено', async (variant: string) => {
+  await xTableBlock.assertSelfie(variant);
+});
+
 // фильтр document
 
 When(

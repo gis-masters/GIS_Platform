@@ -99,6 +99,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       reader.onloadend = () => {
         this.doImport(reader.result as string);
       };
+      // eslint-disable-next-line unicorn/prefer-blob-reading-methods -- FIXME разобраться с blob.text()
       reader.readAsText(e.target.files[0]);
     }
   }
@@ -120,7 +121,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       })
       .filter((point: CoordinateEdited) => point[0] && point[1]);
 
-    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates[newCoordinates.length - 1])) {
+    if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates.at(-1))) {
       newCoordinates.push(newCoordinates[0]);
     }
 

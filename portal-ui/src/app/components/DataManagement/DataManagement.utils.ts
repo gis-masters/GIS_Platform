@@ -41,7 +41,7 @@ export function getRegistryUrlWithPath(
 }
 
 export function getIdsFromPath(path: string): number[] {
-  return (path || '').replace(/%/g, '').split('/').map(Number).filter(notFalsyFilter);
+  return (path || '').replaceAll('%', '').split('/').map(Number).filter(notFalsyFilter);
 }
 
 export function getPathFilter(pathIds: number[]): FilterQuery {

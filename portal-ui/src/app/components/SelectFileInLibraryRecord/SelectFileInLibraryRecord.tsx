@@ -87,8 +87,8 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
   private handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.FILE && !this.testForDisabled(item)) {
       this.select(
-        path[path.length - 1].payload as FileInfo,
-        path[path.length - 2].payload as LibraryRecord,
+        path.at(-1).payload as FileInfo,
+        path.at(-2).payload as LibraryRecord,
         path[1].payload as DocumentLibrary
       );
     } else {

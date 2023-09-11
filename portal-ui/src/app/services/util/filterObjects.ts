@@ -29,9 +29,9 @@ export function prepareLike(query: FilterQuery): FilterQuery {
 
   for (const [key, value] of Object.entries(query)) {
     if (key === '$like' && typeof value === 'string') {
-      newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replace(/%/g, '.*').replace(/\\./g, '.')}$`);
+      newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replaceAll('%', '.*').replaceAll(/\\./g, '.')}$`);
     } else if (key === '$ilike' && typeof value === 'string') {
-      newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replace(/%/g, '.*').replace(/\\./g, '.')}$`, 'i');
+      newQuery.$regex = new RegExp(`^${escapeStringRegexp(value).replaceAll('%', '.*').replaceAll(/\\./g, '.')}$`, 'i');
     } else if (typeof value === 'object' && key !== '$regex' && !Array.isArray(value) && value !== null) {
       newQuery[key] = prepareLike(value as FilterQuery);
     } else if (Array.isArray(value) && ['$and', '$or'].includes(key)) {
