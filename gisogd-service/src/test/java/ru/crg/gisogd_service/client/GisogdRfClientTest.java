@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.crg.gisogd_service.model.rf.Classifiers;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @AllArgsConstructor(onConstructor_ = {@Autowired})
 @SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
@@ -23,5 +22,13 @@ class GisogdRfClientTest {
         assertNotNull(classifiersContainer);
         assertNotNull(classifiersContainer.getClassifierList());
         assertFalse(classifiersContainer.getClassifierList().isEmpty());
+    }
+
+    @Test
+    void testDocumentsList() {
+        assertDoesNotThrow(() -> gisogdRfClient.getRequestedDocuments(null, null));
+        assertDoesNotThrow(() -> gisogdRfClient.getRequestedDocuments(null, 2));
+        assertDoesNotThrow(() -> gisogdRfClient.getRequestedDocuments(100, null));
+        assertDoesNotThrow(() -> gisogdRfClient.getRequestedDocuments(100, 3));
     }
 }

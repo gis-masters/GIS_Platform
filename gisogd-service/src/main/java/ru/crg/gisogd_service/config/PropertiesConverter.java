@@ -1,11 +1,12 @@
 package ru.crg.gisogd_service.config;
 
-import java.util.Map;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.component.springrabbit.MessagePropertiesConverter;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Description.
@@ -25,6 +26,6 @@ public class PropertiesConverter implements MessagePropertiesConverter {
 
     @Override
     public Map<String, Object> fromMessageProperties(MessageProperties messageProperties, Exchange exchange) {
-        return null;
+        return Collections.emptyMap();
     }
 }

@@ -80,6 +80,11 @@
             <version>${camel.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-cron-starter</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-rabbitmq</artifactId>
             <version>${camel.version}</version>
@@ -277,7 +282,8 @@
                         </goals>
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/swagger-api/api-rf-test.json</inputSpec>
-                            <templateDirectory>${project.basedir}/src/main/resources/swagger-api/template</templateDirectory>
+                            <templateDirectory>${project.basedir}/src/main/resources/swagger-api/template
+                            </templateDirectory>
                             <generatorName>java</generatorName>
                             <configHelp>${view.gen.config.help}</configHelp>
                             <modelPackage>ru.crg.gisogd_service.model.rf</modelPackage>

@@ -8,8 +8,6 @@ import lombok.Data;
  */
 @Data
 public class ReferenceField {
-
     private Long id;
     private String libraryTableName;
-
 }

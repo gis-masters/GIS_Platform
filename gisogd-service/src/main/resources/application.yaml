@@ -25,11 +25,19 @@ spring:
     oauth2:
       client:
         registration:
+          dataServiceClient:
+            client-id: arh_grad_rk@mail.ru
+            client-secret: Fiorentina12
+            authorization-grant-type: password
+            provider: dataServiceClient
           gisogdRfClient:
             client-id: preprodkrym
             client-secret: TBKJFJJ3MQH0JFIDJFX7K7WWROIP96H76IEMU8FPAV7S87ISPX7AR5LOK
             authorization-grant-type: client_credentials
+            provider: gisogdRfClient
         provider:
+          dataServiceClient:
+            token-uri: http://10.10.10.58/api/oauth/token
           gisogdRfClient:
             token-uri: https://test-id.gisogd.gov.ru/oidc/connect/token
 
@@ -39,11 +47,14 @@ spring:
         config:
           gisogdRfClient:
             url: https://test.gisogd.gov.ru/api/rgmu/
-          crimeaClient:
-            url: http://data-service:8084
+            loggerLevel: full
+
+          dataServiceClient:
+            url: http://10.10.10.58:8084
+            loggerLevel: full
+
       oauth2:
         enabled: true
-        clientRegistrationId: gisogdRfClient
 
 logging:
   level:

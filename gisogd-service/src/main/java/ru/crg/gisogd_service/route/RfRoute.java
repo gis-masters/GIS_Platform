@@ -1,15 +1,22 @@
 package ru.crg.gisogd_service.route;
 
-import feign.FeignException;
-import feign.RetryableException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import feign.FeignException;
+import feign.RetryableException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
 import ru.crg.gisogd_service.service.AggregateService;
@@ -19,27 +26,25 @@ import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Status;
 
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 /**
  * Configure and adds routes from route templates.
+ *
  * @author Sergey Valiev
  */
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class Routes extends RouteBuilder {
+public class RfRoute extends RouteBuilder {
 
     public static final String MAIN_ROUTE_ID = "crimea-to-rf-data-transfer-route";
     public static final String CONVERT_TO_RF_OBJECT_ROUTE_ID = "convert-to-rf-object-route";
-    public static final String RESPONSE_TO_QUEUE_ROUTE = "response-to-queue-route";
-    public static final String PREPARE_RESPONSE_ROUTE = "prepare-response-route";
+    public static final String RESPONSE_TO_QUEUE_ROUTE_ID = "response-to-queue-route";
+    public static final String PREPARE_RESPONSE_ROUTE_ID = "prepare-response-route";
     public static final String EVENT = "event";
     private static final String STATUS = "status";
     private static final String MESSAGE = "message";
+    private static final String EXCEPTION_LOG_MESSAGE =
+            "error sending an object: ${body} to GISOG cause: ${exception.message} ";
 
     private static final Map<Class<? extends Throwable>, Status> ERRORS_RESPONSE_STATUS =
             Map.of(
@@ -66,14 +71,18 @@ public class Routes extends RouteBuilder {
 
         //кол-во и задержка м/у попытками отправить при ошибках соединения
         onException(RetryableException.class)
-                .redeliveryDelay(2000)
-                .maximumRedeliveries(2);
+                .redeliveryDelay(500)
+                .maximumRedeliveries(3)
+                .useExponentialBackOff()
+                .backOffMultiplier(3);
         //кол-во и задержка м/у попытками отправить при т.н. "мигающих" ошибках
         onException(FeignException.BadGateway.class,
                     FeignException.ServiceUnavailable.class,
                     FeignException.GatewayTimeout.class)
-                .redeliveryDelay(2000)
-                .maximumRedeliveries(5);
+                .redeliveryDelay(500)
+                .maximumRedeliveries(3)
+                .useExponentialBackOff()
+                .backOffMultiplier(3);
 
         from("direct:convert-to-rf-object")
                 .routeId(CONVERT_TO_RF_OBJECT_ROUTE_ID)
@@ -129,7 +138,7 @@ public class Routes extends RouteBuilder {
                 .setHeader(STATUS, constant(Status.SUCCESS));
 
         from("direct:prepare-response")
-                .routeId(PREPARE_RESPONSE_ROUTE)
+                .routeId(PREPARE_RESPONSE_ROUTE_ID)
                 .setBody(
                         exchange -> {
                             Message in = exchange.getIn();
@@ -145,7 +154,7 @@ public class Routes extends RouteBuilder {
                 );
 
         from("direct:responseToQueue")
-                .routeId(RESPONSE_TO_QUEUE_ROUTE)
+                .routeId(RESPONSE_TO_QUEUE_ROUTE_ID)
                 .removeHeaders("*")
                 .setHeader("__TypeId__", simple("${body.getClass().getName()}"))
                 .marshal().json()

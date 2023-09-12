@@ -23,6 +23,8 @@ import ru.crg.gisogd_service.model.rf.DataSection10;
 import ru.crg.gisogd_service.model.rf.DataSection11;
 import ru.crg.gisogd_service.model.rf.DataSection12;
 import ru.crg.gisogd_service.model.rf.DataSection13;
+import ru.crg.gisogd_service.model.rf.DataSection14;
+import ru.crg.gisogd_service.model.rf.DataSection15;
 import ru.crg.gisogd_service.model.rf.DataSection16;
 import ru.crg.gisogd_service.model.rf.DataSection17;
 import ru.crg.gisogd_service.model.rf.DataSection18;
@@ -67,8 +69,12 @@ import ru.crg.gisogd_service.model.rf.Pipeline;
 import ru.crg.gisogd_service.model.rf.PlanningIndicators;
 import ru.crg.gisogd_service.model.rf.PowerLines;
 import ru.crg.gisogd_service.model.rf.ProjectDeveloper;
+import ru.crg.gisogd_service.model.rf.ProtectedNaturalAreas;
 import ru.crg.gisogd_service.model.rf.PublicTerritoryBorders;
 import ru.crg.gisogd_service.model.rf.RSOKS;
+import ru.crg.gisogd_service.model.rf.RSOKSPart;
+import ru.crg.gisogd_service.model.rf.RVEOKS;
+import ru.crg.gisogd_service.model.rf.RVEOKSPart;
 import ru.crg.gisogd_service.model.rf.RedLine;
 import ru.crg.gisogd_service.model.rf.RfGuid;
 import ru.crg.gisogd_service.model.rf.SpecialZone;
@@ -900,6 +906,88 @@ class AggregateServiceTest {
         Territory enrich = getEnrichedObject(eventData);
         assertEquals("0dfaa71b-a4b9-4870-8692-42a4ecaa01d1", enrich.getGuid());
         assertTrue(enrich.getLocation().contains("MultiPolygon"));
+    }
+
+    @Test
+    @SneakyThrows
+    void rveoksAggregateTest() {
+        Resource eventData = new ClassPathResource("event/rveoksEvent.json");
+        RVEOKS enrich = getEnrichedObject(eventData);
+        assertEquals("af727d1d-9830-4464-a1fd-9bfd40357248", enrich.getGuid());
+        assertEquals("fd80adbc-82ef-4806-9e40-b283347ea123", enrich.getDataSection13());
+        assertEquals("0c682142-68f8-44fe-a33c-b6f8c4f2e4ae", enrich.getRSOKS());
+        assertEquals("c5760916-2e04-4052-b710-1b825df1bf41", enrich.getTechPlan().get(0));
+    }
+
+    @Test
+    @SneakyThrows
+    void rsoksPartAggregateTest() {
+        Resource eventData = new ClassPathResource("event/rsoksPartEvent.json");
+        RSOKSPart enrich = getEnrichedObject(eventData);
+        assertEquals("b25e2de5-a968-4274-8266-2295e7094ca4", enrich.getGuid());
+        assertEquals("14b6a960-e1fa-4c2e-b14d-68ffdb1c3f6e",  enrich.getOKS());
+        assertEquals("0c682142-68f8-44fe-a33c-b6f8c4f2e4ae", enrich.getRSOKS());
+        assertEquals("16.1.7.10",  enrich.getOkSPurpose());
+        assertEquals("91e7a810-19a6-4fde-8d31-222b339dda67",  enrich.getElevatorsNonProd());
+        assertEquals("d1bc675f-ecd2-4c5b-93ce-5845f19d34bd",  enrich.getEscalatorsNonProd());
+        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c", enrich.getWheelchairLiftsNonProd());
+        assertEquals("6cdef4ac-5e40-47e9-8e2c-ace38cc50b22",  enrich.getEscalators());
+        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c",  enrich.getWheelchairLifts());
+    }
+
+    @Test
+    @SneakyThrows
+    void rveoksPartAggregateTest() {
+        Resource eventData = new ClassPathResource("event/rveoksPartEvent.json");
+        RVEOKSPart enrich = getEnrichedObject(eventData);
+        assertEquals("7d860af7-be8c-4f95-bcaf-ceb3b8639dff", enrich.getGuid());
+        assertEquals("14b6a960-e1fa-4c2e-b14d-68ffdb1c3f6e", enrich.getOKS());
+        assertEquals("af727d1d-9830-4464-a1fd-9bfd40357248", enrich.getRVEOKS());
+        assertEquals("64391931-e93e-4bfe-8ded-059091f4514b", enrich.getOrgName());
+        assertEquals("153ebb0c-d1db-4793-9e3a-1b3218dd6c57", enrich.getSupplierEmployee());
+        assertEquals("6591740e-4de0-480e-a92e-acfa56801fc4", enrich.getCustomer());
+        assertEquals("7bff3a6d-16a6-4f4f-b157-6c5eec0aac49", enrich.getLandPlot());
+        assertEquals("c5760916-2e04-4052-b710-1b825df1bf41", enrich.getTechPlan());
+        assertEquals("91e7a810-19a6-4fde-8d31-222b339dda67", enrich.getElevatorsNonProd());
+        assertEquals("6cdef4ac-5e40-47e9-8e2c-ace38cc50b22", enrich.getEscalatorsNonProd());
+        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c", enrich.getWheelchairLiftsNonProd());
+        assertEquals("6cdef4ac-5e40-47e9-8e2c-ace38cc50b22", enrich.getEscalators());
+        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c", enrich.getWheelchairLifts());
+    }
+
+    @Test
+    @SneakyThrows
+    void protectedNaturalAreasAggregateTest() {
+        Resource eventData = new ClassPathResource("event/protectedNaturalAreasEvent.json");
+        ProtectedNaturalAreas enrich = getEnrichedObject(eventData);
+        assertEquals("4d851b95-91af-4c4c-807c-164b7a0e0145", enrich.getGuid());
+    }
+
+    @Test
+    @SneakyThrows
+    void dataSection14AggregateTest() {
+        Resource eventData = new ClassPathResource("event/dataSection14Event.json");
+        DataSection14 enrich = getEnrichedObject(eventData);
+        assertEquals("6d5098a6-489b-458c-996a-14a58b13b138", enrich.getGuid());
+        assertEquals("64391931-e93e-4bfe-8ded-059091f4514b", enrich.getOrgName());
+        assertEquals("a2195d83-775e-4949-88f6-c9469bcd84b9", enrich.getInboxDataKey());
+        assertEquals("c3528c0f-08f0-40c4-8f64-018cc09278dc", enrich.getTerritoryKey());
+        assertEquals("153ebb0c-d1db-4793-9e3a-1b3218dd6c57", enrich.getSupplierEmployee());
+        assertEquals("5e6d1fc6-a66c-41e7-8eb1-1b96bb13e636", enrich.getGuidDocPreviousVersion().get(0));
+    }
+
+    @Test
+    @SneakyThrows
+    void dataSection15AggregateTest() {
+        Resource eventData = new ClassPathResource("event/dataSection15Event.json");
+        DataSection15 enrich = getEnrichedObject(eventData);
+        assertEquals("f6d5bc44-a6c1-43b5-a17e-7e28a6860e77", enrich.getGuid());
+        assertEquals("64391931-e93e-4bfe-8ded-059091f4514b", enrich.getOrgName());
+        assertEquals("13f0def9-d6ef-4123-a4f7-6bdb35228d03", enrich.getInboxDataKey());
+        assertEquals("5758fa80-bc69-4bde-a3d2-c1d6853ff4a9", enrich.getTerritoryKey());
+        assertEquals("153ebb0c-d1db-4793-9e3a-1b3218dd6c57", enrich.getSupplierEmployee());
+        assertEquals("1d418885-b6bd-4e9b-9dd9-cb08710788cd", enrich.getGuidDocPreviousVersion().get(0));
+        assertEquals("4d851b95-91af-4c4c-807c-164b7a0e0145", enrich.getProtectedNaturalAreas().get(0));
     }
 
     @SneakyThrows

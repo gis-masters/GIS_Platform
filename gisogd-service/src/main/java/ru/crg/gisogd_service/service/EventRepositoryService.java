@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -59,6 +60,7 @@ public class EventRepositoryService {
     public String findValueByName(String libraryTableName, String searchKey, PublishToGisogdRfEvent event) {
 
         return getOneValueStream(libraryTableName, searchKey, event)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
     }

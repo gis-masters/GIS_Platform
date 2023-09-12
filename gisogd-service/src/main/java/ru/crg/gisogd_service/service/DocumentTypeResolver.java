@@ -35,6 +35,7 @@ public class DocumentTypeResolver {
     public static final String PACKAGE_FOR_SCAN = "ru.crg.gisogd_service.converter.mixin";
     private static final String BAD_CLASSES_MESSAGE = "The following classes do not have a nameStartWith relationship defined: %s";
     private final Map<DocumentTypeRef, Pair<Class<? extends RfGuid>, Class<?>>> rfObjectTypes = new HashMap<>();
+    private final Map<String, String> docLibIsToClassName = new HashMap<>();
     private final Map<Class<?>, String> gisogdEndpoints = new HashMap<>();
 
     /**
@@ -76,6 +77,16 @@ public class DocumentTypeResolver {
                        .orElse(oClass.getSimpleName());
     }
 
+    /**
+     * Find docLibId by className
+     * @param className
+     * @return
+     */
+    public String getDoclibIdByClassName(String className) {
+        return Optional.ofNullable(docLibIsToClassName.get(className))
+                .orElseThrow(() -> new DocumentTypeResolveException(className));
+    }
+
     @PostConstruct
     private void init() {
         List<Class<?>> badClasses = new ArrayList<>();
@@ -87,6 +98,7 @@ public class DocumentTypeResolver {
                 if (StringUtils.isNotBlank(resolveProps.nameStartWith())) {
                     rfObjectTypes.put(new DocumentTypeRef(resolveProps.nameStartWith(), resolveProps.contentType()),
                                       Pair.of(resolveProps.objectClass(), aClass));
+                    docLibIsToClassName.put(resolveProps.objectClass().getSimpleName(), resolveProps.nameStartWith());
                 } else {
                     badClasses.add(aClass);
                 }

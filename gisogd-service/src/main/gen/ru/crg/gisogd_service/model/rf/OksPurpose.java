@@ -7,7 +7,7 @@ import lombok.Data;
  * @author Vladimir Nomokonov
  */
 @Data
-public class OksPurpose implements RfGuid{
+public class OksPurpose implements RfGuid {
 
     private String code;
     private String title;
