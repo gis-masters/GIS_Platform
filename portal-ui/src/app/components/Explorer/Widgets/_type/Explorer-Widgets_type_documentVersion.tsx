@@ -47,6 +47,7 @@ class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps>
               schema={this.schema}
               data={(item.payload as DocumentVersionExtended).content}
               title='Карточка документа'
+              formRole='viewVersion'
             />
           </ExplorerInfoDescItem>
         )}

@@ -89,6 +89,15 @@ export class LibraryDocumentVersionsActionsRestore extends Component<LibraryDocu
     delete document.libraryTableName;
     delete document.schemaId;
 
+    if (!Object.keys(document).length) {
+      Toast.info('Документ уже соответствует выбранной версии');
+
+      this.setLoading(false);
+      this.closeDialog();
+
+      return;
+    }
+
     try {
       await updateLibraryRecord(this.props.document, document);
     } catch (error) {

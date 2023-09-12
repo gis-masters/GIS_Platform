@@ -27,7 +27,7 @@ import '!style-loader!css-loader!sass-loader!./Form.scss';
 
 const cnForm = cn('Form');
 
-export type FormRole = 'viewDocument';
+export type FormRole = 'viewDocument' | 'viewVersion';
 
 export interface FormProps<T>
   extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
