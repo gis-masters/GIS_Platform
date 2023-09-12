@@ -46,8 +46,8 @@ public class GisogdRfController {
 
     @PostMapping("/publish")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> publish() {
-        Long taskId = gisogdRfPublisher.fullPublication();
+    public ResponseEntity<Object> publish(@RequestParam(defaultValue = "100") Long limit) {
+        Long taskId = gisogdRfPublisher.fullPublication(limit);
 
         return ResponseEntity.status(CREATED).body(taskId);
     }

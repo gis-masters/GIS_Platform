@@ -2,7 +2,6 @@ package ru.mycrg.data_service.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.entity.IRecord;
@@ -17,9 +16,6 @@ import java.util.stream.Collectors;
 public class GisogdRfDao {
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfDao.class);
-
-    @Value("${crg-options.integration.gisogd-rf-publication-limit}")
-    private String publicationLimit;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -93,7 +89,7 @@ public class GisogdRfDao {
                 : Optional.ofNullable(ids.get(0));
     }
 
-    public List<IRecord> getDocumentsForPublishing(ResourceQualifier qualifier) {
+    public List<IRecord> getDocumentsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
         String query = "SELECT * FROM " + qualifier.getQualifier() +
                 "  WHERE " +
                 "    is_folder = false AND " +
@@ -107,7 +103,7 @@ public class GisogdRfDao {
                            .collect(Collectors.toList());
     }
 
-    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier) {
+    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
         String query = "SELECT * FROM " + qualifier.getQualifier() +
                 " WHERE gisogdrf_publication_datetime ISNULL OR gisogdrf_publication_datetime < last_modified" +
                 " ORDER BY last_modified" +

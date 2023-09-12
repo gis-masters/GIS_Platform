@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,5 +70,18 @@ public class JsonConverter {
         return mapper.writer()
                      .withDefaultPrettyPrinter()
                      .writeValueAsString(value);
+    }
+
+    @NotNull
+    public static String asJsonString(Object value) {
+        try {
+            return mapper.writer()
+                         .withDefaultPrettyPrinter()
+                         .writeValueAsString(value);
+        } catch (Exception e) {
+            log.error("Не удалось конвертировать объект: [{}] в JSON строку", value);
+
+            return "FAIL";
+        }
     }
 }

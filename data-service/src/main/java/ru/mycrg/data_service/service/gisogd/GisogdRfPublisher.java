@@ -46,7 +46,7 @@ import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
 import static ru.mycrg.data_service_contract.enums.TaskType.SYSTEM;
@@ -118,28 +118,28 @@ public class GisogdRfPublisher {
             parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
         }
 
-        Document inbox = fetchInbox(qualifier, parentDoc);
-        Set<Document> childrenByUrlFormula = fetchByUrlAsFormula(qualifier);
-        Set<Document> childrenByUrlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent);
-        List<Document> childDocuments = fetchByTypeDocument(qualifier, parentDoc);
+        List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
+        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier);
+        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent);
 
-        List<Document> children = new ArrayList<>(childDocuments);
-        if (inbox != null) {
-            children.add(inbox);
-        }
+        List<Document> children = new ArrayList<>(documents);
+        children.addAll(urlAsFormula);
+        children.addAll(urlDirectly);
 
-        children.addAll(childrenByUrlFormula);
-        children.addAll(childrenByUrlDirectly);
+        PublishToGisogdRfEvent event = new PublishToGisogdRfEvent(
+                authenticationFacade.getOrganizationId(),
+                taskId,
+                new Document(fromString(guid),
+                             qualifier.getSchema(),
+                             qualifier.getTable(),
+                             parentDoc.getAsString(
+                                     CONTENT_TYPE_ID.getName()),
+                             parentContent),
+                children);
 
-        messageBus.produce(
-                new PublishToGisogdRfEvent(authenticationFacade.getOrganizationId(),
-                                           taskId,
-                                           new Document(fromString(guid),
-                                                        qualifier.getSchema(),
-                                                        qualifier.getTable(),
-                                                        parentDoc.getAsString(CONTENT_TYPE_ID.getName()),
-                                                        parentContent),
-                                           children));
+        log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
+
+        messageBus.produce(event);
     }
 
     /**
@@ -159,7 +159,7 @@ public class GisogdRfPublisher {
      *
      * @return Идентификатор начатой системной задачи.
      */
-    public Long fullPublication() {
+    public Long fullPublication(Long limit) {
         List<String> schemas = getSchemasPublishedToGisogdRf(TARGET_COLUMN);
         if (schemas.isEmpty()) {
             String msg = format(
@@ -173,15 +173,16 @@ public class GisogdRfPublisher {
         IRecord record = createSystemTask();
         Long taskId = record.getId();
 
-        log.debug("Start full publication to GISOGD RF. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
+        log.debug("Start full publication to GISOGD RF. With LIMIT: [{}] Task: [{}] at: [{}]",
+                  limit, taskId, DateTimeUtil.nowAsString());
         log.debug("Found {} schemas prepared to publish", schemas.size());
-        schemas.forEach(schemaId -> publishBySchema(taskId, schemaId));
+        schemas.forEach(schemaId -> publishBySchema(taskId, schemaId, limit));
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
 
         return taskId;
     }
 
-    private void publishBySchema(Long taskId, String schemaId) {
+    private void publishBySchema(Long taskId, String schemaId, Long limit) {
         log.debug("Publish by schema: {}", schemaId);
 
         try {
@@ -189,7 +190,7 @@ public class GisogdRfPublisher {
             List<ResourceQualifier> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
             log.debug("Found {} libraries created by schema", libraryQualifiers.size());
             for (ResourceQualifier lQualifier: libraryQualifiers) {
-                List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(lQualifier);
+                List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(lQualifier, limit);
                 log.debug("From library: {} publish: {} documents", lQualifier.getQualifier(), documents.size());
 
                 for (IRecord record: documents) {
@@ -197,7 +198,7 @@ public class GisogdRfPublisher {
                             new ResourceQualifier(lQualifier.getSchema(),
                                                   lQualifier.getTable(),
                                                   record.getId(),
-                                                  LIBRARY_RECORD));
+                                                  LIBRARY));
                 }
             }
 
@@ -205,7 +206,7 @@ public class GisogdRfPublisher {
             List<ResourceQualifier> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
             log.debug("Found {} layers created by schema", layerQualifiers.size());
             for (ResourceQualifier lQualifier: layerQualifiers) {
-                List<IRecord> records = gisogdRfDao.getRecordsForPublishing(lQualifier);
+                List<IRecord> records = gisogdRfDao.getRecordsForPublishing(lQualifier, limit);
                 log.debug("From layer: {} publish: {} records", lQualifier.getQualifier(), records.size());
 
                 for (IRecord record: records) {
