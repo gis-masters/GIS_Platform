@@ -41,14 +41,15 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
-import static ru.mycrg.data_service.util.JsonConverter.*;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
+import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.SYSTEM;
 import static ru.mycrg.data_service_contract.enums.ValueType.DOCUMENT;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
@@ -117,6 +118,7 @@ public class GisogdRfPublisher {
             String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, 3857);
             parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
         }
+        removeFields(parentContent);
 
         List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
         Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier);
@@ -125,6 +127,7 @@ public class GisogdRfPublisher {
         List<Document> children = new ArrayList<>(documents);
         children.addAll(urlAsFormula);
         children.addAll(urlDirectly);
+        children.forEach(child -> removeFields(child.getContent()));
 
         PublishToGisogdRfEvent event = new PublishToGisogdRfEvent(
                 authenticationFacade.getOrganizationId(),
@@ -180,6 +183,15 @@ public class GisogdRfPublisher {
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
 
         return taskId;
+    }
+
+    private void removeFields(Map<String, Object> documentContent) {
+        Arrays.asList(VERSIONS.getName(), GISOGFRF_RESPONSE)
+              .forEach(field -> {
+                  if (documentContent.containsKey(field)) {
+                      documentContent.remove(field, documentContent.get(field));
+                  }
+              });
     }
 
     private void publishBySchema(Long taskId, String schemaId, Long limit) {

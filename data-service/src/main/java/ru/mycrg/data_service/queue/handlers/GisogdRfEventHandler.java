@@ -17,8 +17,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
-import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.util.JsonConverter.getJsonString;
 import static ru.mycrg.gisog_service_contract.dto.Status.SUCCESS;
 
@@ -59,7 +58,7 @@ public class GisogdRfEventHandler implements IEventHandler {
             if (SUCCESS.equals(status)) {
                 String query = String.format("UPDATE %s.%s SET " +
                                                      "gisogdrf_publication_datetime = now(), " +
-                                                     "gisogdrf_response = null" +
+                                                     GISOGFRF_RESPONSE + " = null" +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
 
@@ -72,7 +71,7 @@ public class GisogdRfEventHandler implements IEventHandler {
 
                 String query = String.format("UPDATE %s.%s SET " +
                                                      "last_modified = now(), " +
-                                                     "gisogdrf_response = :response " +
+                                                     GISOGFRF_RESPONSE + " = :response " +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
 

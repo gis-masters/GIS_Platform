@@ -31,4 +31,6 @@ public class DaoProperties {
     public static final String NOT_IMPORT = "NotImport";
 
     public static final String DEFAULT_GEOMETRY_COLUMN_NAME = "shape";
+
+    public static final String GISOGFRF_RESPONSE = "gisogdrf_response";
 }
