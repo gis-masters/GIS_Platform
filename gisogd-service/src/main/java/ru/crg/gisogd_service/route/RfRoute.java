@@ -16,7 +16,6 @@ import feign.FeignException;
 import feign.RetryableException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
 import ru.crg.gisogd_service.service.AggregateService;
@@ -28,7 +27,6 @@ import ru.mycrg.gisog_service_contract.dto.Status;
 
 /**
  * Configure and adds routes from route templates.
- *
  * @author Sergey Valiev
  */
 @Component
@@ -99,8 +97,8 @@ public class RfRoute extends RouteBuilder {
                                             .orElse(Status.GISOGD_FAILED);
                     exchange.getIn().setHeader(STATUS, status);
                     exchange.getIn().setHeader(MESSAGE, Status.BAD_REQUEST.equals(status)
-                            ? getFeignExceptionMessage((FeignException) exception)
-                            : exception.getMessage());
+                                                        ? getFeignExceptionMessage((FeignException) exception)
+                                                        : exception.getMessage());
                 })
                 .doFinally()
                 /**/.to("direct:prepare-response")
@@ -112,6 +110,7 @@ public class RfRoute extends RouteBuilder {
                 .convertBodyTo(PublishToGisogdRfEvent.class)
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "event: ${body}")
                 .setHeader("publishDate", simple("${body.parent.content[gisogdrf_publication_datetime]}"))
+                .setHeader("isDeleted", simple("${body.parent.content[is_deleted]}"))
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "publish date: ${header.publishDate}")
                 .setHeader("document", simple("${body.parent}"))
                 .setHeader(EVENT, simple("${body}"))
@@ -119,10 +118,6 @@ public class RfRoute extends RouteBuilder {
                 .setBody(exchange -> exchange.getIn().getHeader("document"))
                 .to("direct:convert-to-rf-object")
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "document: ${body}")
-
-                .bean(enrichService)
-                .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "enriched document: ${body}")
-
                 .setBody(exchange -> {
                     Object body = exchange.getIn().getBody();
                     exchange.getIn().setHeader("endpoint", documentTypeResolver.getEndpointByType(body.getClass()));
@@ -130,12 +125,28 @@ public class RfRoute extends RouteBuilder {
                 })
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "detected endpoint: ${header.endpoint}")
                 .choice()
+                /**/.when(header("isDeleted").isEqualTo(true))
+                /**//**/.to("direct:delete-endpoint")
+                /**/.otherwise()
+                /**//**/.to("direct:send-data-endpoint")
+                .end()
+                .setHeader(STATUS, constant(Status.SUCCESS))
+                .log(LoggingLevel.INFO, "Status.SUCCESS");
+
+        from("direct:send-data-endpoint")
+                .bean(enrichService)
+                .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "enriched document: ${body}")
+                .choice()
                 /**/.when(simple("${header.publishDate} == null"))
                 /**//**/.bean(gisogdRfClient, "postData")
                 /**/.otherwise()
                 /**//**/.bean(gisogdRfClient, "putData")
-                .end()
-                .setHeader(STATUS, constant(Status.SUCCESS));
+                .end();
+
+        from("direct:delete-endpoint")
+                .setBody(simple("${body.getGuid()}"))
+                .bean(gisogdRfClient, "deleteData")
+                .log(LoggingLevel.INFO, "Send 'Delete' action for object ${header.endpoint} with guid ${body}");
 
         from("direct:prepare-response")
                 .routeId(PREPARE_RESPONSE_ROUTE_ID)
@@ -159,7 +170,7 @@ public class RfRoute extends RouteBuilder {
                 .setHeader("__TypeId__", simple("${body.getClass().getName()}"))
                 .marshal().json()
                 .to("spring-rabbitmq:default?messagePropertiesConverter=#bean:propertiesConverter&routingKey="
-                            + responseQueueName)
+                    + responseQueueName)
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "response to queue: ${body}");
     }
 

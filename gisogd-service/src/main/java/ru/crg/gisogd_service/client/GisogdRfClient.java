@@ -27,6 +27,9 @@ public interface GisogdRfClient {
     @PutMapping(value = "/{endpoint}")
     <T> void putData(@Header("endpoint") @PathVariable String endpoint, @Body T obj);
 
+    @DeleteMapping(value = "/{endpoint}/{guid}")
+    void deleteData(@Header("endpoint") @PathVariable String endpoint, @Body @PathVariable String guid);
+
     @GetMapping(value = "/DocumentsList")
     DocumentPagedModel getRequestedDocuments(
             @Header("pageSize") @RequestParam(value = "PageSize", required = false) Integer pageSize,
