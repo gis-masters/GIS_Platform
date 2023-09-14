@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.USZIZS;
 
 /**
@@ -17,6 +18,7 @@ public class UszizsMixin {
     @JsonProperty("guid")
     private String guid;
     @JsonProperty("dataSection13_fake")
+    @ReverseMapping("dl_data_section13_data_connection")
     private String dataSection13;
     @JsonProperty("is_approved")
     private Boolean isApproved;

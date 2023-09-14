@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.WaterSupplyNetwork;
 
 /**
@@ -41,7 +42,7 @@ public class WaterSupplyNetworkMixin {
     private String completionYear;
     @JsonProperty("reconstruction_year")
     private String reconstructionYear;
-    @JsonProperty("datasource_fake")
+    @ReverseMapping("file")
     private String dataSource;
     @JsonProperty("object_grade")
     private String objectGrade;

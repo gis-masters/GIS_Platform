@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.OKS;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class OksMixin {
     private String postalCode;
     @JsonProperty("location_info")
     private String locationInfo;
-    @JsonProperty("right")
+    @JsonProperty("right_1")
     private String right;
     @JsonProperty("right_number")
     private String rightNumber;
@@ -50,7 +51,7 @@ public class OksMixin {
     private String type;
     @JsonProperty("oks_status")
     private String okSStatus;
-    @JsonProperty("permitted_land_use_types_fake")
+    @ReverseMapping("permitted_land_use_types")
     private List<String> permittedLandUseTypes;
     @JsonProperty("power")
     private Double power;
@@ -60,6 +61,7 @@ public class OksMixin {
     private Boolean isOKN;
     @JsonProperty("okn_reg_number")
     private String okNRegNumber;
+    @JsonProperty("okn_organization")
     private String okNOrganization;
     @JsonProperty("completion_year")
     private Integer completionYear;

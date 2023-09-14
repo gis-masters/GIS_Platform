@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.UtilityConnectionPoint;
 
 /**
@@ -17,7 +18,7 @@ public class UtilityConnectionPointMixin {
     private String propertyClass;
     @JsonProperty("object_name")
     private String objectName;
-    @JsonProperty("datasource_fake")
+    @ReverseMapping("file")
     private String dataSource;
 
 }

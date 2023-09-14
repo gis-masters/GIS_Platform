@@ -1,7 +1,10 @@
 package ru.crg.gisogd_service.converter.mixin;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.PermittedLandUseTypes;
 
 /**
@@ -17,8 +20,8 @@ public class PermittedLandUseTypesMixin {
     private String permittedLandUseSpecies;
     @JsonProperty("permitted_land_use_type")
     private String permittedLandUseType;
-    //@JsonProperty("permitted_use_parameters")
-    //private List<String> permittedUseParameters;
+    @ReverseMapping("permitted_use_parameters")
+    private List<String> permittedUseParameters;
     @JsonProperty("use_restrictions")
     private String useRestrictions;
 }

@@ -13,10 +13,10 @@ public class GpzuInfoP6Mixin {
 
     @JsonProperty("guid")
     private String guid;
-    @JsonProperty("gpzu_fake")
+    @JsonProperty("dl_data_gpzu_data_connection")
     private String GPZU;
     @JsonProperty("title")
     private String title;
-    @JsonProperty("border_fake")
+    @JsonProperty("territorykey")
     private String border;
 }

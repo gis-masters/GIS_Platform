@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.Forestry;
 
 /**
@@ -19,9 +20,9 @@ public class ForestryMixin {
     private String name;
     @JsonProperty("area_doc")
     private Double area;
-    @JsonProperty("forestRegulation")
+    @JsonProperty("forest_regulation")
     private String forestRegulation;
-    @JsonProperty("permittedUseType")
+    @ReverseMapping("permitted_land_use_types")
     private List<String> permittedUseType;
 
 }

@@ -17,9 +17,9 @@ public class ForestLandMixin {
     private String number;
     @JsonProperty("area_doc")
     private Double area;
-    @JsonProperty("projectDoc")
+    @JsonProperty("project_doc")
     private String projectDoc;
-    @JsonProperty("forestDevelopDoc")
+    @JsonProperty("forest_develop_doc")
     private String forestDevelopDoc;
 
 }

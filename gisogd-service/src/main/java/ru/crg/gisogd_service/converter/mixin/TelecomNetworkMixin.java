@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.TelecomNetwork;
 
 /**
@@ -39,7 +40,7 @@ public class TelecomNetworkMixin {
     private Double zoneSize;
     @JsonProperty("comm_line_type")
     private String commLineType;
-    @JsonProperty("datasource_fake")
+    @ReverseMapping(skipcheck = true, value = "datasource_fake")
     private String dataSource;
     @JsonProperty("object_grade")
     private String objectGrade;

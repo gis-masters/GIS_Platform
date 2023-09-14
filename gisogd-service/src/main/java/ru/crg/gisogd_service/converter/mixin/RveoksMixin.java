@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.RVEOKS;
 
 /**
@@ -15,7 +16,7 @@ public class RveoksMixin {
 
     @JsonProperty("guid")
     private String guid;
-    @JsonProperty("datasection13_fake")
+    @JsonProperty("dl_data_section13_data_connection")
     private String dataSection13;
     @JsonProperty("address_assignment_doc")
     private String addressAssignmentDoc;
@@ -55,8 +56,8 @@ public class RveoksMixin {
     private String techPlanTitle;
     @JsonProperty("full_name_cadastre_engineer")
     private String fullNameCadastreEngineer;
-    @JsonProperty("rsoks_fake")
+    @JsonProperty("dl_data_rsoks_data_connection")
     private String RSOKS;
-    @JsonProperty("techPlan_fake")
+    @ReverseMapping("dl_data_tech_plan_data_connection")
     private List<String> techPlan;
 }

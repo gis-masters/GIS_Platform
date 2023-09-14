@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.converter.Reference2ADeserializer;
 import ru.crg.gisogd_service.model.rf.DataSection7;
 
@@ -31,7 +32,7 @@ public class DataSection7Mixin {
     @JsonProperty("docdate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate docDate;
-    @JsonProperty("guiddocpreviousversion_fake")
+    @ReverseMapping("guiddocpreviousversion")
     private List<String> guidDocPreviousVersion;
     @JsonProperty("orgname")
     private String orgName;
@@ -51,19 +52,19 @@ public class DataSection7Mixin {
     private LocalDate changeDate;
     @JsonProperty("note")
     private String note;
-    @JsonProperty("elementPlanningStructure_fake")
+    @ReverseMapping("element_planning_structure")
     private List<String> elementPlanningStructure;
-    @JsonProperty("publicTerritoryBorders_fake")
+    @ReverseMapping("public_territory_borders")
     private List<String> publicTerritoryBorders;
-    @JsonProperty("constructionZonesBorders_fake")
+    @ReverseMapping(value = "constructionZonesBorders", skipcheck = true)
     private List<String> constructionZonesBorders;
-    @JsonProperty("redLine_fake")
+    @ReverseMapping("red_line_line")
     private List<String> redLine;
-    @JsonProperty("formedLand_fake")
+    @ReverseMapping("formed_land")
     private List<String> formedLand;
-    @JsonProperty("indentLine_fake")
+    @ReverseMapping("indent_line")
     private List<String> indentLine;
-    @JsonProperty("easement_fake")
+    @ReverseMapping(value = "easement", skipcheck = true)
     private List<String> easement;
 
 }

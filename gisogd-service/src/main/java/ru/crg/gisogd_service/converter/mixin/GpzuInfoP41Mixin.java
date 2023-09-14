@@ -13,7 +13,7 @@ public class GpzuInfoP41Mixin {
 
     @JsonProperty("guid")
     private String guid;
-    @JsonProperty("gpzu_fake")
+    @JsonProperty("dl_data_gpzu_data_connection")
     private String GPZU;
     @JsonProperty("communal_object")
     private String communalObject;

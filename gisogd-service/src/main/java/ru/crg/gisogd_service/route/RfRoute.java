@@ -23,6 +23,7 @@ import ru.crg.gisogd_service.service.BadRequestErrorsResolver;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
+import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.gisog_service_contract.dto.Status;
 
 /**
@@ -50,6 +51,7 @@ public class RfRoute extends RouteBuilder {
                     , FeignException.BadRequest.class, Status.BAD_REQUEST
                     , RetryableException.class, Status.SERVICE_UNAVAILABLE
             );
+    private static final String DOCUMENT = "document";
 
     private final GisogdRfClient gisogdRfClient;
     private final RfObjectConverter rfObjectConverter;
@@ -112,10 +114,10 @@ public class RfRoute extends RouteBuilder {
                 .setHeader("publishDate", simple("${body.parent.content[gisogdrf_publication_datetime]}"))
                 .setHeader("isDeleted", simple("${body.parent.content[is_deleted]}"))
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "publish date: ${header.publishDate}")
-                .setHeader("document", simple("${body.parent}"))
+                .setHeader(DOCUMENT, simple("${body.parent}"))
                 .setHeader(EVENT, simple("${body}"))
 
-                .setBody(exchange -> exchange.getIn().getHeader("document"))
+                .setBody(exchange -> exchange.getIn().getHeader(DOCUMENT))
                 .to("direct:convert-to-rf-object")
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "document: ${body}")
                 .setBody(exchange -> {
@@ -156,7 +158,8 @@ public class RfRoute extends RouteBuilder {
                             Map<String, String> content = new HashMap<>();
                             String message = (String) in.getHeader(MESSAGE);
                             Status status = (Status) in.getHeader(STATUS);
-                            content = errorsResolver.badRequestErrorsResolve(message);
+                            Document document = in.getHeader(DOCUMENT, Document.class);
+                            content = errorsResolver.badRequestErrorsResolve(message, document);
 
                             return new ResponseFromGisogdRfEvent((PublishToGisogdRfEvent) in.getHeader(EVENT),
                                                                  status,

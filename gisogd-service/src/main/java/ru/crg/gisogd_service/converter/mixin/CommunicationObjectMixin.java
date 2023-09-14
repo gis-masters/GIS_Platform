@@ -12,7 +12,7 @@ import ru.crg.gisogd_service.model.rf.CommunicationObject;
 @CrimeaRelationResolve(nameStartWith = "communication_object", objectClass = CommunicationObject.class)
 public class CommunicationObjectMixin {
 
-    @JsonProperty("guid_communication_object_point")
+    @JsonProperty("guid_communication_object")
     @JsonAlias({"guid_communication_object_point", "guid_communication_object"})
     private String guid;
     @JsonProperty("class")
@@ -53,6 +53,6 @@ public class CommunicationObjectMixin {
     private String completionYear;
     @JsonProperty("reconstruction_year")
     private String reconstructionYear;
-    @JsonProperty("datasource_fake")
+    @JsonProperty("file")
     private String dataSource;
 }

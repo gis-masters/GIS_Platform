@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.FormedLand;
 
 /**
@@ -27,7 +28,7 @@ public class FormedLandMixin {
     private String locationInfo;
     @JsonProperty("area")
     private Double area;
-    @JsonProperty("permittedUseType_fake")
+    @ReverseMapping("permitted_land_use_type")
     private List<String> permittedUseType;
     @JsonProperty("easement")
     private String easement;

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.converter.Reference2ADeserializer;
 import ru.crg.gisogd_service.model.rf.DataSection15;
 
@@ -31,11 +32,11 @@ public class DataSection15Mixin {
     @JsonProperty("docdate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate docDate;
-    @JsonProperty("guid_doc_previous_version_fake")
+    @ReverseMapping("guiddocpreviousversion")
     private List<String> guidDocPreviousVersion;
-    @JsonProperty("org_name")
+    @JsonProperty("orgname")
     private String orgName;
-    @JsonProperty("territory_key")
+    @JsonProperty("territorykey")
     private String territoryKey;
     @JsonProperty("inbox_data_key_data_connection")
     private String inboxDataKey;
@@ -51,6 +52,6 @@ public class DataSection15Mixin {
     private LocalDate changeDate;
     @JsonProperty("note")
     private String note;
-    @JsonProperty("protectedNaturalAreas_fake")
+    @ReverseMapping("protectednaturalareas")
     private List<String> protectedNaturalAreas;
 }

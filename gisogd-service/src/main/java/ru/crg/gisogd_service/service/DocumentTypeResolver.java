@@ -1,6 +1,7 @@
 package ru.crg.gisogd_service.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,15 @@ public class DocumentTypeResolver {
      */
     public String getDoclibIdByClassName(String className) {
         return Optional.ofNullable(docLibIsToClassName.get(className))
-                .orElseThrow(() -> new DocumentTypeResolveException(className));
+                       .orElseThrow(() -> new DocumentTypeResolveException(className));
+    }
+
+    /**
+     * Return gidogd to crimea objects map
+     * @return
+     */
+    public Map<DocumentTypeRef, Pair<Class<? extends RfGuid>, Class<?>>> getMapRfObjects() {
+        return Collections.unmodifiableMap(rfObjectTypes);
     }
 
     @PostConstruct
@@ -117,7 +126,13 @@ public class DocumentTypeResolver {
     }
 
     private DocumentTypeRef getDocumentTypeRef(Document document) {
+        if (document == null) {
+            throw new DocumentTypeResolveException(document);
+        }
         String name = document.getName();
+        if (StringUtils.isBlank(name)) {
+            throw new DocumentTypeResolveException(document);
+        }
         List<DocumentTypeRef> refsList = rfObjectTypes.keySet()
                                                       .stream()
                                                       .filter(ref -> name.startsWith(ref.getName()))

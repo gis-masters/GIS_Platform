@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.Prikaz;
 import ru.crg.gisogd_service.model.rf.RSOKSPart;
 
@@ -18,10 +19,10 @@ public class RsoksPartMixin {
     @JsonProperty("decree")
     private Prikaz decree;
 
-    @JsonProperty("oks_fake")
+    @ReverseMapping("oks")
     private String OKS;
 
-    @JsonProperty("rsoks_fake")
+    @ReverseMapping("dl_data_rsoks_data_connection")
     private String RSOKS;
 
     @JsonProperty("oks_project_info")
@@ -117,10 +118,10 @@ public class RsoksPartMixin {
     @JsonProperty("number_floor_non_prod_fac_fa")
     private Integer numberFloorNonProdFacFa;
 
-    @JsonProperty("number_floor_underground_non_prod_fac_pr")
+    @ReverseMapping(value = "number_floor_underground_non_prod_fac_pr", skipcheck = true)
     private Integer numberFloorUndergroundNonProdFacPr;
 
-    @JsonProperty("number_floor_underground_non_prod_fac_fa")
+    @ReverseMapping(value = "number_floor_underground_non_prod_fac_fa", skipcheck = true)
     private Integer numberFloorUndergroundNonProdFacFa;
 
     @JsonProperty("eng_systems_non_prod_fac_pr")
@@ -303,7 +304,7 @@ public class RsoksPartMixin {
     @JsonProperty("oks_type_fa")
     private String okSTypeFa;
 
-    @JsonProperty("oks_purpose_fake")
+    @ReverseMapping("oks_purpose")
     private String okSPurpose;
 
     @JsonProperty("power_pr")
@@ -489,7 +490,7 @@ public class RsoksPartMixin {
     @JsonProperty("number_buildings_fa")
     private String numberBuildingsFa;
 
-    @JsonProperty("elevators_non_prod_fake")
+    @ReverseMapping("elevators_non_prod_data_connection")
     private String elevatorsNonProd;
 
     @JsonProperty("elevators_non_prod_fac_pr")
@@ -498,7 +499,7 @@ public class RsoksPartMixin {
     @JsonProperty("elevators_non_prod_fac_fa")
     private String elevatorsNonProdFacFa;
 
-    @JsonProperty("escalators_non_prod_fake")
+    @ReverseMapping("escalators_non_prod_data_connection")
     private String escalatorsNonProd;
 
     @JsonProperty("escalators_non_prod_fac_pr")
@@ -507,7 +508,7 @@ public class RsoksPartMixin {
     @JsonProperty("escalators_non_prod_fac_fa")
     private String escalatorsNonProdFacFa;
 
-    @JsonProperty("wheelchair_lifts_non_prod_fake")
+    @ReverseMapping("wheelchair_lifts_non_prod_data_connection")
     private String wheelchairLiftsNonProd;
 
     @JsonProperty("wheelchair_lifts_non_prod_fac_pr")
@@ -522,7 +523,7 @@ public class RsoksPartMixin {
     @JsonProperty("elevators_fa")
     private Double elevatorsFa;
 
-    @JsonProperty("escalators_fake")
+    @ReverseMapping("escalators_data_connection")
     private String escalators;
 
     @JsonProperty("escalators_pr")
@@ -531,7 +532,7 @@ public class RsoksPartMixin {
     @JsonProperty("escalators_fa")
     private Double escalatorsFa;
 
-    @JsonProperty("wheelchair_lifts_fake")
+    @ReverseMapping("wheelchair_lifts_data_connection")
     private String wheelchairLifts;
 
     @JsonProperty("wheelchair_lifts_pr")

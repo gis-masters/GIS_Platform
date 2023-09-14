@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.LandPlot;
 
 /**
@@ -25,7 +26,7 @@ public class LandPlotMixin {
     private String locationInfo;
     @JsonProperty("easement")
     private String easement;
-    @JsonProperty("location")
+    @JsonProperty("shape")
     private String location;
     @JsonProperty("guid")
     private String territory;
@@ -41,7 +42,7 @@ public class LandPlotMixin {
     private String right;
     @JsonProperty("right_number")
     private String rightNumber;
-
+    @ReverseMapping("permitted_land_use_type")
     private List<String> permittedLandUseTypes;
     @JsonProperty("urban_development_potential")
     private String urbanDevelopmentPotential;

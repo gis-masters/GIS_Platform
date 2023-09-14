@@ -16,7 +16,7 @@ public class UdrizsMixin {
 
     @JsonProperty("guid")
     private String guid;
-    @JsonProperty("dataSection13_fake")
+    @JsonProperty("dl_data_section13_data_connection")
     private String dataSection13;
     @JsonProperty("is_approved")
     private Boolean isApproved;

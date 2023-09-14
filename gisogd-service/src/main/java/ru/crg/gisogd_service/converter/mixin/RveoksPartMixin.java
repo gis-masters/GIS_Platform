@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.Prikaz;
 import ru.crg.gisogd_service.model.rf.RVEOKSPart;
 
@@ -18,10 +19,10 @@ public class RveoksPartMixin {
     @JsonProperty("decree")
     private Prikaz decree;
 
-    @JsonProperty("oks_fake")
+    @ReverseMapping(value = "oks", skipcheck = true)
     private String OKS;
 
-    @JsonProperty("rveoks_fake")
+    @JsonProperty("dl_data_rveoks_data_connection")
     private String RVEOKS;
 
     @JsonProperty("docdata")
@@ -30,16 +31,16 @@ public class RveoksPartMixin {
     @JsonProperty("docnum")
     private String docNum;
 
-    @JsonProperty("orgname_fake")
+    @JsonProperty("supplier_data_connection")
     private String orgName;
 
-    @JsonProperty("SupplierEmployee_fake")
+    @JsonProperty("supplieremploey_data_connection")
     private String supplierEmployee;
 
     @JsonProperty("change_date")
     private String changeData;
 
-    @JsonProperty("Customer")
+    @JsonProperty("customer_data_connection")
     private String customer;
 
     @JsonProperty("name_from_pd")
@@ -48,7 +49,7 @@ public class RveoksPartMixin {
     @JsonProperty("construction_type")
     private String constructionType;
 
-    @JsonProperty("LandPlot_fake")
+    @ReverseMapping(value = "landPlot", skipcheck = true)
     private String landPlot;
 
     @JsonProperty("building_area_fa")
@@ -99,7 +100,7 @@ public class RveoksPartMixin {
     @JsonProperty("other_indicators_fa")
     private String otherIndicatorsFa;
 
-    @JsonProperty("TechPlan_fake")
+    @JsonProperty("tech_plan_data_connection")
     private String techPlan;
 
     @JsonProperty("issuedate")
@@ -156,7 +157,7 @@ public class RveoksPartMixin {
     @JsonProperty("number_buildings_fa")
     private String numberBuildingsFa;
 
-    @JsonProperty("elevators_non_prod_fake")
+    @JsonProperty("elevators_non_prod_data_connection")
     private String elevatorsNonProd;
 
     @JsonProperty("elevators_non_prod_fac_pr")
@@ -165,7 +166,7 @@ public class RveoksPartMixin {
     @JsonProperty("elevators_non_prod_fac_fa")
     private String elevatorsNonProdFacFa;
 
-    @JsonProperty("escalators_non_prod_fake")
+    @JsonProperty("escalators_non_prod_data_connection")
     private String escalatorsNonProd;
 
     @JsonProperty("escalators_non_prod_fac_pr")
@@ -174,7 +175,7 @@ public class RveoksPartMixin {
     @JsonProperty("escalators_non_prod_fac_fa")
     private String escalatorsNonProdFacFa;
 
-    @JsonProperty("wheelchair_lifts_non_prod_fake")
+    @JsonProperty("wheelchair_lifts_non_prod_data_connection")
     private String wheelchairLiftsNonProd;
 
     @JsonProperty("wheelchair_lifts_non_prod_fac_pr")
@@ -189,7 +190,7 @@ public class RveoksPartMixin {
     @JsonProperty("elevators_fa")
     private Double elevatorsFa;
 
-    @JsonProperty("escalators_fake")
+    @JsonProperty("escalators_data_connection")
     private String escalators;
 
     @JsonProperty("escalators_pr")
@@ -198,7 +199,7 @@ public class RveoksPartMixin {
     @JsonProperty("escalators_fa")
     private Double escalatorsFa;
 
-    @JsonProperty("wheelchair_lifts_fake")
+    @JsonProperty("wheelchair_lifts_data_connection")
     private String wheelchairLifts;
 
     @JsonProperty("wheelchair_lifts_pr")
@@ -255,10 +256,12 @@ public class RveoksPartMixin {
     @JsonProperty("number_floor_non_prod_fac_fa")
     private Integer numberFloorNonProdFacFa;
 
-    @JsonProperty("number_floor_underground_non_prod_fac_pr")
+    //TODO нет информации по этому ключу, но он есть в swagger
+    @ReverseMapping(value = "number_floor_underground_non_prod_fac_pr", skipcheck = true)
     private Integer numberFloorUndergroundNonProdFacPr;
 
-    @JsonProperty("number_floor_underground_non_prod_fac_fa")
+    //TODO нет информации по этому ключу, но он есть в swagger
+    @ReverseMapping(value = "number_floor_underground_non_prod_fac_fa", skipcheck = true)
     private Integer numberFloorUndergroundNonProdFacFa;
 
     @JsonProperty("eng_systems_non_prod_fac_pr")

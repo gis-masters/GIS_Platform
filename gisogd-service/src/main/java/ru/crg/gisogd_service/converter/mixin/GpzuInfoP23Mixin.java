@@ -2,6 +2,7 @@ package ru.crg.gisogd_service.converter.mixin;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.GPZUInfoP23;
 
 /**
@@ -13,7 +14,7 @@ public class GpzuInfoP23Mixin {
 
     @JsonProperty("guid")
     private String guid;
-    @JsonProperty("gpzu_fake")
+    @JsonProperty("dl_data_gpzu_data_connection")
     private String GPZU;
     @JsonProperty("limit_length")
     private Double limitLength;
@@ -27,7 +28,7 @@ public class GpzuInfoP23Mixin {
     private Double limitHeight;
     @JsonProperty("limit_building_area")
     private Double limitBuildingArea;
-    @JsonProperty("project_requisites")
+    @JsonProperty("arch_requirements")
     private String archRequirements;
     @JsonProperty("limit_living_area")
     private Double limitLivingArea;

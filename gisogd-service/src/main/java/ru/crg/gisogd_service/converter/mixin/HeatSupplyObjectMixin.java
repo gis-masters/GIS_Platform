@@ -3,6 +3,7 @@ package ru.crg.gisogd_service.converter.mixin;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.model.rf.HeatSupplyObject;
 
 /**
@@ -12,7 +13,7 @@ import ru.crg.gisogd_service.model.rf.HeatSupplyObject;
 @CrimeaRelationResolve(nameStartWith = "heat_supply_object", objectClass = HeatSupplyObject.class)
 public class HeatSupplyObjectMixin {
 
-    @JsonProperty("guid_heat_supply_object_point")
+    @JsonProperty("guid_heat_supply_object")
     @JsonAlias({"guid_heat_supply_object_point", "guid_heat_supply_object"})
     private String guid;
     @JsonProperty("class")
@@ -47,7 +48,7 @@ public class HeatSupplyObjectMixin {
     private Double spZSize;
     @JsonProperty("zone_size")
     private Double zoneSize;
-    @JsonProperty("datasource_fake")
+    @ReverseMapping("file")
     private String dataSource;
     @JsonProperty("object_grade")
     private String objectGrade;

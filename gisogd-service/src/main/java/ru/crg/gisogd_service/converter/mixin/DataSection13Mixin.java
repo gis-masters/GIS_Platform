@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
+import ru.crg.gisogd_service.annotation.ReverseMapping;
 import ru.crg.gisogd_service.converter.Reference2ADeserializer;
 import ru.crg.gisogd_service.model.rf.DataSection13;
 import ru.crg.gisogd_service.model.rf.ServiceStatus;
@@ -32,7 +33,7 @@ public class DataSection13Mixin {
     @JsonProperty("docdate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate docDate;
-    @JsonProperty("guiddocpreviousversion_fake")
+    @ReverseMapping("guiddocpreviousversion")
     private List<String> guidDocPreviousVersion;
     @JsonProperty("orgname")
     private String orgName;
@@ -52,7 +53,7 @@ public class DataSection13Mixin {
     private LocalDate changeDate;
     @JsonProperty("constructiontype")
     private String constructionType;
-    @JsonProperty("serviceStatus")
+    @JsonProperty("service_status")
     private ServiceStatus serviceStatus;
     @JsonProperty("namefrompd")
     private String nameFromPD;
@@ -63,20 +64,20 @@ public class DataSection13Mixin {
     private LocalDate validUntil;
     @JsonProperty("termination_reason")
     private String terminationReason;
-    @JsonProperty("egrz_date")
+    @JsonProperty("egrzdate")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate egRZDate;
     @JsonProperty("note")
     private String note;
-    @JsonProperty("landplot")
+    @ReverseMapping(value = "landplot", skipcheck = true)
     private List<String> landPlot;
-    @JsonProperty("oks")
+    @ReverseMapping(value = "oks", skipcheck = true)
     private List<String> oks;
-    @JsonProperty("easement")
+    @ReverseMapping(value = "easement", skipcheck = true)
     private List<String> easement;
     @JsonProperty("location")
     private String location;
-    @JsonProperty("description")
+    @ReverseMapping(value = "description", skipcheck = true)
     private String description;
 }
 
