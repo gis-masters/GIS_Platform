@@ -100,6 +100,11 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schema.getName());
     }
 
+    @When("Создана таблица по схеме, не имеющей автозаполняемые поля 'дату создания, модификации и создателя'")
+    public void initTableBuSchemaWithoutAutoCompletedField() {
+        initTable();
+    }
+
     @When("Существует другая таблица")
     public void initAnotherTable() {
         anotherTableName = generateString("STRING_5");

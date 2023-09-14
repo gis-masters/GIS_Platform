@@ -1,5 +1,6 @@
 import { PropertyType, Schema } from '../../../../../src/app/services/data/schema/schema.models';
 import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
+import { systemProperties } from './_systemProperties';
 
 export const withoutViews: Schema = {
   name: 'withoutViews',
@@ -44,7 +45,8 @@ export const withoutViews: Schema = {
       hidden: true,
       required: true,
       propertyType: PropertyType.STRING
-    }
+    },
+    ...systemProperties
   ],
   geometryType: GeometryType.MULTI_POLYGON
 };

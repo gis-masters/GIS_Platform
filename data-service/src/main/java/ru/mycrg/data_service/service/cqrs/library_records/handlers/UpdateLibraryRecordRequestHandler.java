@@ -26,6 +26,7 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -100,8 +101,9 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
             log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), newRecord);
 
             Map<String, Object> content = newRecord.getContent();
+            List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(recordQualifier.getTable());
             throwIfNotMatchTableColumns(content.keySet(),
-                                        ddlTablesSpecial.getAllColumnNames(recordQualifier.getTable()));
+                                        allColumnNames);
 
             Map<String, Object> modifiedProps;
             LibraryModel libraryInfo = (LibraryModel) librariesService.getInfo(recordQualifier.getTable());
@@ -111,14 +113,14 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
                         .clearSystemAttributes()
                         .prepareFilesAsJsonb()
                         .updateVersionsField(oldRecordState.getContent())
-                        .updateModifiedTime()
+                        .updateLastModifiedAndUpdatedBy(allColumnNames)
                         .build();
             } else {
                 modifiedProps = systemAttributeHandler
                         .init(schema, content)
                         .clearSystemAttributes()
                         .prepareFilesAsJsonb()
-                        .updateModifiedTime()
+                        .updateLastModifiedAndUpdatedBy(allColumnNames)
                         .build();
             }
 

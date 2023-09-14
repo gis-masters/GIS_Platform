@@ -259,10 +259,13 @@ public class RecordsDao {
         return baseDao.getTotal(tableQualifier, ecqlFilter);
     }
 
-    public void removeRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
+    public void removeRecord(ResourceQualifier rQualifier, Long id, String login) throws CrgDaoException {
         try {
-            String query = String.format("UPDATE %s SET is_deleted = true, last_modified ='%s' WHERE id = %s",
-                                         rQualifier.getTableQualifier(), DateTimeUtil.now(), id);
+            String query = String.format("UPDATE %s SET is_deleted = true, updated_by ='%s', " +
+                                                 "last_modified ='%s' WHERE id = %s",
+                                         rQualifier.getTableQualifier(),
+                                         login,
+                                         DateTimeUtil.now(), id);
 
             log.debug("Request to delete record: [{}]", query);
 
@@ -276,11 +279,15 @@ public class RecordsDao {
         }
     }
 
-    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath) throws CrgDaoException {
+    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath, String login) throws CrgDaoException {
         try {
             String query = String.format(
-                    "UPDATE %s SET is_deleted = false, path = '%s', last_modified ='%s' WHERE id = %s",
-                    rQualifier.getTableQualifier(), recoverPath, DateTimeUtil.now(), rQualifier.getRecordIdAsLong());
+                    "UPDATE %s SET is_deleted = false, path = '%s', updated_by ='%s', last_modified ='%s' WHERE id = %s",
+                    rQualifier.getTableQualifier(),
+                    recoverPath,
+                    login,
+                    DateTimeUtil.now(),
+                    rQualifier.getRecordIdAsLong());
 
             log.debug("Request to recover record: [{}]", query);
 

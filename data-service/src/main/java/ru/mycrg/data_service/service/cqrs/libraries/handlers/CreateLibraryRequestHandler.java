@@ -14,9 +14,16 @@ import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryReques
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryProtector;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.IRequestHandler;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_DELETED;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 
 @Component
 public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibraryRequest, LibraryModel> {
@@ -63,12 +70,36 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         libraryRepository.save(library);
 
-        ddlLibrary.create(library.getTableName(), schema.getProperties());
+        List<SimplePropertyDto> schemaProperties = schema.getProperties();
+        generateSystemAttributes(schemaProperties);
+
+        ddlLibrary.create(library.getTableName(), schemaProperties);
 
         LibraryModel libraryModel = new LibraryModel(library);
         request.setLibraryModel(libraryModel);
 
         return libraryModel;
+    }
+
+    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
+        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
+                                                          .collect(Collectors.toList());
+        if (!schemaPropertyName.contains(VERSIONS.getName())) {
+            SimplePropertyDto versions = new SimplePropertyDto();
+            versions.setName(VERSIONS.getName());
+            versions.setValueType(ValueType.VERSIONS);
+
+            schemaProperties.add(versions);
+        }
+
+        if (!schemaPropertyName.contains(IS_DELETED.getName())) {
+            SimplePropertyDto isDeleted = new SimplePropertyDto();
+            isDeleted.setName(IS_DELETED.getName());
+            isDeleted.setValueType(ValueType.BOOLEAN);
+            isDeleted.setDefaultValue(false);
+
+            schemaProperties.add(isDeleted);
+        }
     }
 
     private void validationSchema(SchemaDto schema) {

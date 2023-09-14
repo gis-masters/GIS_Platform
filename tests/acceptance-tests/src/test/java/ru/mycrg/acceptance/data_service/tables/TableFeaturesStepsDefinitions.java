@@ -1,9 +1,11 @@
 package ru.mycrg.acceptance.data_service.tables;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Assert;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FeaturesCopyModel;
@@ -11,6 +13,8 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +26,9 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
@@ -32,6 +38,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     public static Integer currentFeatureId;
     public static List<Integer> featureIds = new ArrayList<>();
+    public static LocalDateTime currentRecordLastModified;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -197,9 +204,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление существующей записи")
     public void updateFeatureInCurrentTable() {
+        authorizationBase.loginAsCurrentUser();
+
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "new title");
-        properties.put("created_at", "2022-11-10 00:00:00");
+
+        updateFeature(new GeoJsonModel(properties));
+    }
+
+    @When("Администратор делает запрос на обновление существующей записи")
+    public void updateFeatureInCurrentTableByAdmin() {
+        authorizationBase.loginAsOwner();
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("title", "new title");
 
         updateFeature(new GeoJsonModel(properties));
     }
@@ -365,6 +383,87 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
             assertEquals(0, count);
         }
+    }
+
+    @When("В созданной таблице присутствуют поля 'дата создания, модификации и создатель'")
+    public void checkTableHasModifiedFields() {
+        createSomeFeatureInCurrentTable();
+        getFeature(currentFeatureId);
+
+        ArrayList<HashMap<String, Object>> propertiesList = response.jsonPath().get("properties");
+        HashMap<String, Object> properties = propertiesList.get(0);
+
+        Object createdAt = properties.get("created_at");
+        Assert.assertNotNull(createdAt);
+        Object createdBy = properties.get("created_by");
+        Assert.assertNotNull(createdBy);
+
+        Object lastModified = properties.get("last_modified");
+        Assert.assertNotNull(lastModified);
+
+        Object updatedBy = properties.get("updated_by");
+        Assert.assertNotNull(updatedBy);
+    }
+
+    @Then("Поле 'created_at' и 'last_modified' заполнилось датой создания")
+    public void checkCreatedAtAndLastModifiedField() {
+        getFeature(currentFeatureId);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
+
+        String createdAt = String.valueOf(properties.get("created_at"));
+        String lastModified = String.valueOf(properties.get("last_modified"));
+        LocalDateTime createdAtDate = LocalDateTime.parse(createdAt,
+                                                          DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
+                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        assertEquals(LocalDateTime.now().getDayOfMonth(), createdAtDate.getDayOfMonth());
+        assertEquals(LocalDateTime.now().getDayOfMonth(), lastModifiedDate.getDayOfMonth());
+    }
+
+    @Then("Поле 'created_by' и 'updated_by' заполнилось логином создателя")
+    public void checkCreatedByyAndUpdatedByField() {
+        getFeature(currentFeatureId);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
+
+        String createdBy = String.valueOf(properties.get("created_by"));
+        String updatedBy = String.valueOf(properties.get("updated_by"));
+
+        assertEquals(orgDto.getOwner().getEmail(), createdBy);
+        assertEquals(orgDto.getOwner().getEmail(), updatedBy);
+    }
+
+    @Given("В текущей записи таблицы хранится текущее время в поле 'last_modified'")
+    public void checkLastModifiedFieldInNewRecord() {
+        getFeature(currentFeatureId);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
+
+        String lastModified = String.valueOf(properties.get("last_modified"));
+        currentRecordLastModified = LocalDateTime.parse(lastModified,
+                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    @Then("Поле 'last_modified' обновилось")
+    public void checkLastModifiedFieldWasChanged() {
+        getFeature(currentFeatureId);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
+
+        String lastModified = String.valueOf(properties.get("last_modified"));
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
+                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        assertEquals(-1, currentRecordLastModified.compareTo(lastModifiedDate));
+    }
+
+    @Then("Поле 'updated_by' заполнилось логином редактора")
+    public void checkUpdatedByFieldWasChanged() {
+        getFeature(currentFeatureId);
+        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
+
+        String updatedBy = String.valueOf(properties.get("updated_by"));
+
+        assertEquals(userDto.getEmail(), updatedBy);
     }
 
     private void createFeature(GeoJsonModel geoJsonModel) {

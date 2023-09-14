@@ -1,5 +1,6 @@
 import { PropertyType, Schema } from '../../../../../src/app/services/data/schema/schema.models';
 import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
+import { systemProperties } from './_systemProperties';
 
 export const allTypes: Schema = {
   name: 'allTypes',
@@ -76,6 +77,12 @@ export const allTypes: Schema = {
       propertyType: PropertyType.STRING
     },
     {
+      name: 'ruleid',
+      title: 'ruleid',
+      hidden: true,
+      propertyType: PropertyType.STRING
+    },
+    {
       name: 'field_fias__id',
       title: 'Поле FIAS id',
       hidden: true,
@@ -95,6 +102,7 @@ export const allTypes: Schema = {
       name: 'shape',
       title: 'Поле GEOMETRY',
       propertyType: PropertyType.GEOMETRY
-    }
+    },
+    ...systemProperties
   ]
 };

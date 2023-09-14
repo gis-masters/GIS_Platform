@@ -29,6 +29,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
@@ -290,6 +291,15 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                              DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         assertEquals(-1, currentRecordLastModified.compareTo(lastModifiedDate));
+    }
+
+    @Then("Поле 'updated_by' изменилось")
+    public void checkUpdatedByWasChanged() {
+        getCurrentDocument();
+
+        String updatedBy = response.jsonPath().get("updated_by");
+
+        assertEquals(userDto.getEmail(), updatedBy);
     }
 
     @Given("В текущей записи хранится текущее время в поле 'last_modified'")

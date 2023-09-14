@@ -164,21 +164,42 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler fillCreator() {
-        if (attributeDefined(CREATED_AT)) {
+    public SystemAttributeHandler fillCreatorAndCreationDate(List<String> allColumns) {
+        if (allColumns.contains(CREATED_AT.getName())) {
             result.put(CREATED_AT.getName(), DateTimeUtil.now());
+        } else {
+            log.warn(String.format("There is no column %s in database ", CREATED_AT.getName()));
         }
 
-        if (attributeDefined(CREATED_BY)) {
+        if (allColumns.contains(CREATED_BY.getName())) {
             result.put(CREATED_BY.getName(), authenticationFacade.getLogin());
+        } else {
+            log.warn(String.format("There is no column %s in database ", CREATED_BY.getName()));
         }
 
         return this;
     }
 
-    public SystemAttributeHandler updateModifiedTime() {
-        if (attributeDefined(LAST_MODIFIED)) {
+    public SystemAttributeHandler updateLastModifiedAndUpdatedBy(List<String> allColumns) {
+        if (allColumns.contains(LAST_MODIFIED.getName())) {
             result.put(LAST_MODIFIED.getName(), DateTimeUtil.now());
+        } else {
+            log.warn(String.format("There is no column %s in database ", LAST_MODIFIED.getName()));
+        }
+        if (allColumns.contains(UPDATED_BY.getName())) {
+            result.put(UPDATED_BY.getName(), authenticationFacade.getLogin());
+        } else {
+            log.warn(String.format("There is no column %s in database ", UPDATED_BY.getName()));
+        }
+
+        return this;
+    }
+
+    public SystemAttributeHandler fillIsDeletedFieldByFalse(List<String> allColumns) {
+        if (allColumns.contains(IS_DELETED.getName())) {
+            result.put(IS_DELETED.getName(), false);
+        } else {
+            log.warn(String.format("There is no column %s in database ", IS_DELETED.getName()));
         }
 
         return this;

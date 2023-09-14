@@ -21,15 +21,18 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.IRequestHandler;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
+import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
@@ -122,7 +125,10 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
 
         try {
-            ddlTablesSpecial.create(datasetId, dto, schema.getProperties());
+            List<SimplePropertyDto> schemaProperties = schema.getProperties();
+            generateSystemAttributes(schemaProperties);
+
+            ddlTablesSpecial.create(datasetId, dto, schemaProperties);
         } catch (BadSqlGrammarException e) {
             String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
                                        dto.getName(), schema.getName(), e.getMessage());
@@ -159,6 +165,18 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
         return new TableModel(newEntity, OWNER.name());
+    }
+
+    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
+        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
+                                                          .collect(Collectors.toList());
+        if (!schemaPropertyName.contains(RULE_ID)) {
+            SimplePropertyDto ruleId = new SimplePropertyDto();
+            ruleId.setName(RULE_ID);
+            ruleId.setValueType(ValueType.STRING);
+
+            schemaProperties.add(ruleId);
+        }
     }
 
     private String buildTableName(String sTableName, long datasetId, String nameFromDto) {

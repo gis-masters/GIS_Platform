@@ -10,6 +10,8 @@ import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.mappers.SchemaMapper;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.util.SchemaUtil.isPropertyExist;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
@@ -90,9 +93,15 @@ public class SchemaService {
     }
 
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
-        return schemaRepository.findByName(name).stream()
-                               .findFirst()
-                               .map(SchemaMapper::mapToDto);
+        Optional<SchemaDto> schemaDtoOpt = schemaRepository.findByName(name).stream()
+                                                           .findFirst()
+                                                           .map(SchemaMapper::mapToDto);
+        if (schemaDtoOpt.isPresent()) {
+            List<SimplePropertyDto> properties = schemaDtoOpt.get().getProperties();
+            generateSystemAttributes(properties);
+        }
+
+        return schemaDtoOpt;
     }
 
     public boolean isSchemaExist(String name) {
@@ -144,6 +153,42 @@ public class SchemaService {
         });
 
         return isReglamentExist.get();
+    }
+
+    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
+        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
+                                                          .collect(Collectors.toList());
+
+        if (!schemaPropertyName.contains(CREATED_BY.getName())) {
+            SimplePropertyDto createdBy = new SimplePropertyDto();
+            createdBy.setName(CREATED_BY.getName());
+            createdBy.setValueType(ValueType.STRING);
+
+            schemaProperties.add(createdBy);
+        }
+        if (!schemaPropertyName.contains(CREATED_AT.getName())) {
+            SimplePropertyDto createdAt = new SimplePropertyDto();
+            createdAt.setName(CREATED_AT.getName());
+            createdAt.setValueType(ValueType.DATETIME);
+
+            schemaProperties.add(createdAt);
+        }
+
+        if (!schemaPropertyName.contains(UPDATED_BY.getName())) {
+            SimplePropertyDto updatedBy = new SimplePropertyDto();
+            updatedBy.setName(UPDATED_BY.getName());
+            updatedBy.setValueType(ValueType.STRING);
+
+            schemaProperties.add(updatedBy);
+        }
+
+        if (!schemaPropertyName.contains(LAST_MODIFIED.getName())) {
+            SimplePropertyDto lastModified = new SimplePropertyDto();
+            lastModified.setName(LAST_MODIFIED.getName());
+            lastModified.setValueType(ValueType.DATETIME);
+
+            schemaProperties.add(lastModified);
+        }
     }
 
     private boolean isSchemaForPrikaz10(Schema schema) {

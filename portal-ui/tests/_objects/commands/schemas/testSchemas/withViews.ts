@@ -1,5 +1,6 @@
 import { PropertyType, Schema } from '../../../../../src/app/services/data/schema/schema.models';
 import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
+import { systemProperties } from './_systemProperties';
 
 export const withViews: Schema = {
   name: 'withViews',
@@ -55,7 +56,8 @@ export const withViews: Schema = {
       hidden: true,
       required: true,
       propertyType: PropertyType.STRING
-    }
+    },
+    ...systemProperties
   ],
   views: [
     {

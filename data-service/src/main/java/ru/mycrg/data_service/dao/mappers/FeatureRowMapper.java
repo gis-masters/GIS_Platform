@@ -8,9 +8,12 @@ import ru.mycrg.geo_json.Feature;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import static java.sql.Types.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 
 public class FeatureRowMapper extends BySchemaRowMapper implements RowMapper<Feature> {
@@ -38,6 +41,16 @@ public class FeatureRowMapper extends BySchemaRowMapper implements RowMapper<Fea
                     break;
                 case INTEGER:
                     properties.put(columnName, rs.getInt(i));
+                    break;
+                case TIMESTAMP:
+                    Timestamp timestamp = rs.getTimestamp(i);
+                    if (timestamp != null) {
+                        properties.put(columnName, timestamp.toLocalDateTime()
+                                                        .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+                    } else {
+                        properties.put(columnName, null);
+                    }
+
                     break;
                 case OTHER:
                     if (rs.getObject(i) != null && schema != null) {

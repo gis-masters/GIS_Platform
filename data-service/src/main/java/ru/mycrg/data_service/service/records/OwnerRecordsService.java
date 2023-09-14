@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -49,19 +50,22 @@ public class OwnerRecordsService implements IRecordsService {
     private final PermissionsService permissionsService;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
+    private final IAuthenticationFacade authenticationFacade;
 
     public OwnerRecordsService(CustomRuleCalculator customRuleCalculator,
                                DdlTablesSpecial ddlTablesSpecial,
                                RecordsDao recordsDao,
                                PermissionsService permissionsService,
                                DocumentLibraryService librariesService,
-                               SystemAttributeHandler systemAttributeHandler) {
+                               SystemAttributeHandler systemAttributeHandler,
+                               IAuthenticationFacade authenticationFacade) {
         this.customRuleCalculator = customRuleCalculator;
         this.ddlTablesSpecial = ddlTablesSpecial;
         this.recordsDao = recordsDao;
         this.librariesService = librariesService;
         this.permissionsService = permissionsService;
         this.systemAttributeHandler = systemAttributeHandler;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -148,7 +152,8 @@ public class OwnerRecordsService implements IRecordsService {
             log.debug("try create record: {}", record);
 
             Map<String, Object> props = record.getContent();
-            throwIfNotMatchTableColumns(props.keySet(), ddlTablesSpecial.getAllColumnNames(lQualifier.getTable()));
+            List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(lQualifier.getTable());
+            throwIfNotMatchTableColumns(props.keySet(), allColumnNames);
 
             Map<String, Object> modifiedProps = systemAttributeHandler
                     .init(schema, props)
@@ -156,8 +161,9 @@ public class OwnerRecordsService implements IRecordsService {
                     .fillByContentType()
                     .addDefaultPath()
                     .prepareFilesAsJsonb()
-                    .fillCreator()
-                    .updateModifiedTime()
+                    .fillCreatorAndCreationDate(allColumnNames)
+                    .updateLastModifiedAndUpdatedBy(allColumnNames)
+                    .fillIsDeletedFieldByFalse(allColumnNames)
                     .build();
 
             modifiedProps.putAll(customRuleCalculator.culculate(schema, modifiedProps));
@@ -209,11 +215,11 @@ public class OwnerRecordsService implements IRecordsService {
 
     @Override
     public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
-        recordsDao.removeRecord(resourceQualifier, id);
+        recordsDao.removeRecord(resourceQualifier, id, authenticationFacade.getLogin());
     }
 
     @Override
     public void recoverRecord(ResourceQualifier resourceQualifier, String recoverPath) throws CrgDaoException {
-        recordsDao.recoverRecord(resourceQualifier, recoverPath);
+        recordsDao.recoverRecord(resourceQualifier, recoverPath, authenticationFacade.getLogin());
     }
 }

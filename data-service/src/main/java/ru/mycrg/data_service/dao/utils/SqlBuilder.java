@@ -16,6 +16,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -222,11 +223,19 @@ public class SqlBuilder {
             case DATETIME:
                 result = attrDescription.getName() + " timestamp";
                 break;
+            case VERSIONS:
             case FILE:
                 result = attrDescription.getName() + " jsonb";
                 break;
             case BOOLEAN:
-                result = attrDescription.getName() + " boolean";
+                Object defaultValue = attrDescription.getDefaultValue();
+                if (Objects.isNull(defaultValue)) {
+                    result = attrDescription.getName() + " boolean";
+                    break;
+                }
+
+                boolean parseBoolean = Boolean.parseBoolean(defaultValue.toString());
+                result = attrDescription.getName() + " boolean default " + parseBoolean;
                 break;
             case UUID:
                 result = attrDescription.getName() + " uuid";

@@ -11,12 +11,14 @@ import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.generatePropertySqlString;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Repository
 public class DdlTablesSpecial {
@@ -42,15 +44,6 @@ public class DdlTablesSpecial {
         addAdditionalFields(schemaProperties, dto.getAdditionalFields());
 
         StringBuilder propertiesBuilder = new StringBuilder();
-
-        // Добавляем ruleid если его нет в схеме. Типа он обязательно должен быть.
-        Optional<SimplePropertyDto> oRuleId = schemaProperties
-                .stream()
-                .filter(simplePropertyDto -> simplePropertyDto.getName().equalsIgnoreCase(RULE_ID))
-                .findFirst();
-        if (oRuleId.isEmpty()) {
-            propertiesBuilder.append(" ,ruleid character varying(255)");
-        }
 
         for (SimplePropertyDto property: schemaProperties) {
             String formulaName = property.getCalculatedValueWellKnownFormula();
