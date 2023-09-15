@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.cqrs.midelwares;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -32,7 +33,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
@@ -96,11 +96,9 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                                 updateFilesRelation.getNewRecord(),
                                 updateFilesRelation.getOldRecord());
         } else if (request instanceof IDeleteFilesRelation) {
-            IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
+            // IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
             // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты
-
-//            deleteRelatedFiles(deleteFilesRelation.getSchema(),
-//                               deleteFilesRelation.getRecord());
+            // deleteRelatedFiles(deleteFilesRelation.getSchema(), deleteFilesRelation.getRecord());
         } else {
             log.warn("Unknown request type");
         }
@@ -109,26 +107,26 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
     }
 
     private void relateFilesByCreation(SchemaDto schema,
-                                       ResourceQualifier rQualifier,
+                                       ResourceQualifier qualifier,
                                        IRecord newRecord) {
         try {
-            Set<UUID> ids = getFileFieldNames(schema)
-                    .stream()
-                    .flatMap(fileFieldName -> getFilesIdFromField(newRecord.getContent(), fileFieldName).stream())
-                    .collect(Collectors.toSet());
-
-            if (!ids.isEmpty()) {
-                FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
-                                                                                   rQualifier.getTable(),
+            getFileFieldNames(schema).forEach(fieldName -> {
+                FileResourceQualifier fileResQualifier = new FileResourceQualifier(qualifier.getSchema(),
+                                                                                   qualifier.getTable(),
                                                                                    newRecord.getId());
                 JsonNode jsonNode = toJsonNode(fileResQualifier);
 
-                ResourceQualifier lrQualifier = new ResourceQualifier(rQualifier, newRecord.getId());
-                String type = lrQualifier.getType().name();
+                ResourceQualifier rQualifier = new ResourceQualifier(qualifier, newRecord.getId());
+                rQualifier.setFieldName(fieldName);
+                String type = rQualifier.getType().name();
+
+                List<FileDescription> descriptions = getFilesDescription(newRecord.getContent(), fieldName);
+                Set<UUID> ids = descriptions.stream().map(FileDescription::getId).collect(Collectors.toSet());
+
                 fileRepository.setQualifier(type, jsonNode, ids);
 
-                transferFilesFromTempDirectory(ids, lrQualifier, type);
-            }
+                transferFilesFromTempDirectory(descriptions, rQualifier, type);
+            });
         } catch (Exception e) {
             logError("Не удалось выполнить привязку файлов к сущности при создании", e);
         }
@@ -152,10 +150,10 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
             log.debug("UPDATE NEEDED");
             fileFieldNames.stream()
                           .filter(fileFieldName -> isFieldEdited(newContent, fileFieldName))
-                          .forEach(fileFieldName -> {
-                              log.debug("Handle field: {}", fileFieldName);
-                              Set<UUID> oldIds = new HashSet<>(getFilesIdFromField(oldContent, fileFieldName));
-                              Set<UUID> newIds = new HashSet<>(getFilesIdFromField(newContent, fileFieldName));
+                          .forEach(fieldName -> {
+                              log.debug("Handle field: {}", fieldName);
+                              Set<UUID> oldIds = new HashSet<>(getFilesIdFromField(oldContent, fieldName));
+                              Set<UUID> newIds = new HashSet<>(getFilesIdFromField(newContent, fieldName));
 
                               log.debug("old ids: {}", oldIds);
                               log.debug("new ids: {}", newIds);
@@ -163,7 +161,14 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                               Set<UUID> some = new HashSet<>(newIds);
                               some.removeAll(oldIds);
 
-                              updateFilesInfo(some, qualifier);
+                              Set<FileDescription> descriptions = getFilesDescription(newContent, fieldName)
+                                      .stream()
+                                      .filter(file -> some.contains(file.getId()))
+                                      .collect(Collectors.toSet());
+
+                              qualifier.setFieldName(fieldName);
+
+                              updateFilesInfo(descriptions, qualifier);
 
                               // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты
                               // deleteFiles(oldIds, newIds);
@@ -173,31 +178,132 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         }
     }
 
-//    private void deleteFiles(Set<UUID> oldIds, Set<UUID> newIds) {
-//        oldIds.stream()
-//              .filter(oldId -> !newIds.contains(oldId))
-//              .collect(Collectors.toSet())
-//              .forEach(this::deleteFile);
-//    }
+    private void transferFilesFromTempDirectory(List<FileDescription> files,
+                                                ResourceQualifier qualifier,
+                                                String type) {
+        Set<UUID> ids = files.stream().map(FileDescription::getId).collect(Collectors.toSet());
 
-    private void transferFilesFromTempDirectory(Set<UUID> ids, ResourceQualifier lrQualifier, String type) {
         fileRepository.findAllByIdIn(ids).forEach(file -> {
-            String currentFileName = FilenameUtils.getName(file.getPath());
-            String resultFileName = nonNull(lrQualifier.getRecordIdAsLong())
-                    ? join(lrQualifier.getRecordIdAsLong().toString(), currentFileName)
-                    : currentFileName;
+            Optional<FileDescription> description = files
+                    .stream()
+                    .filter(fileDescription -> fileDescription.getId().equals(file.getId()))
+                    .findFirst();
+
+            String fileName = description.get().getTitle();
+            String template = makeFileName(qualifier, FilenameUtils.removeExtension(fileName));
+            String resultFileName = template + "." + FileNameUtils.getExtension(fileName).toLowerCase();
 
             Path targetPath = fileStoragePath.resolve(
                     String.format("%s/%s/%s/%s",
                                   getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
                                   type.toLowerCase(),
-                                  lrQualifier.getTable(),
+                                  qualifier.getTable(),
                                   resultFileName));
 
             fileStorageService.moveFile(Path.of(file.getPath()), targetPath);
             fileRepository.setPathById(targetPath.toString(), file.getId());
         });
     }
+
+    private String makeFileName(ResourceQualifier qualifier, String title) {
+        String recordId = "undefinedRecordId";
+        if (qualifier.getRecordId() == null) {
+            log.warn("Не установлен recordId у квалификатора ресурса: [{}]", qualifier);
+        } else {
+            recordId = qualifier.getRecordId().toString();
+        }
+
+        String fieldName = "undefinedFieldName";
+        if (qualifier.getFieldName() == null) {
+            log.warn("Не установлено fieldName у квалификатора ресурса: [{}]", qualifier.getQualifier());
+        } else {
+            fieldName = qualifier.getFieldName();
+        }
+
+        // Немного обезопасит от одинаковых хеш кодов для коротких строк, например "Aa" = "BB"
+        int hashCode = (title.hashCode() + String.valueOf(
+                new StringBuilder(title).reverse().toString().hashCode())).hashCode();
+
+        return join(recordId, fieldName, String.valueOf(hashCode > 0 ? hashCode : hashCode * -1));
+    }
+
+    private void updateFilesInfo(Set<FileDescription> files, ResourceQualifier qualifier) {
+        log.debug("files for update: {}", files);
+
+        FileResourceQualifier fileResQualifier = new FileResourceQualifier(qualifier.getSchema(),
+                                                                           qualifier.getTable(),
+                                                                           qualifier.getRecordIdAsLong());
+        JsonNode jsonNode = toJsonNode(fileResQualifier);
+
+        String type = qualifier.getType().name();
+        Set<UUID> ids = files.stream().map(FileDescription::getId).collect(Collectors.toSet());
+
+        fileRepository.setQualifier(type, jsonNode, ids);
+
+        transferFilesFromTempDirectory(new ArrayList<>(files), qualifier, type);
+    }
+
+    private boolean isChangeNeeded(IRecord newRecord, List<String> fileFieldNames) {
+        return fileFieldNames.stream().anyMatch(newRecord.getContent()::containsKey);
+    }
+
+    private List<UUID> getFilesIdFromField(Map<String, Object> record, String fileFieldName) {
+        return getFilesDescription(record, fileFieldName)
+                .stream()
+                .map(FileDescription::getId)
+                .collect(Collectors.toList());
+    }
+
+    private List<FileDescription> getFilesDescription(Map<String, Object> record, String fieldName) {
+        Object payload = record.get(fieldName);
+        if (payload != null) {
+            try {
+                return mapper.readValue(payload.toString(),
+                                        new TypeReference<List<FileDescription>>() {
+                                        });
+            } catch (IOException e) {
+                String msg = "Содержимое поля типа FILE имеет не корректное тело: " + payload;
+                logError(msg, e);
+
+                return new ArrayList<>();
+            }
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    private boolean isFieldEdited(Map<String, Object> record, String fileFieldName) {
+        return record.get(fileFieldName) != null;
+    }
+
+    @NotNull
+    private List<String> getFileFieldNames(SchemaDto schema) {
+        return schema.getProperties().stream()
+                     .filter(property -> property.getValueTypeAsEnum().equals(FILE))
+                     .map(SimplePropertyDto::getName)
+                     .collect(Collectors.toList());
+    }
+
+//    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
+//        try {
+//            log.debug("DELETE CASE: {}", record.getId());
+//
+//            getFileFieldNames(schema)
+//                    .stream()
+//                    .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
+//                    .collect(Collectors.toSet())
+//                    .forEach(this::deleteFile);
+//        } catch (Exception e) {
+//            logError("Не удалось выполнить удаление файлов при удалении записи: " + record.getId(), e);
+//        }
+//    }
+
+//    private void deleteFiles(Set<UUID> oldIds, Set<UUID> newIds) {
+//        oldIds.stream()
+//              .filter(oldId -> !newIds.contains(oldId))
+//              .collect(Collectors.toSet())
+//              .forEach(this::deleteFile);
+//    }
 
 //    private void deleteFile(UUID id) {
 //        log.debug("Try to delete file by id: '{}'", id);
@@ -222,69 +328,4 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
 //            log.info("Нечего удалять. Файл не найден по идентификатору: '{}'", id);
 //        }
 //    }
-
-    private void updateFilesInfo(Set<UUID> ids, ResourceQualifier rQualifier) {
-        log.debug("for update id: {}", ids);
-
-        FileResourceQualifier fileResQualifier = new FileResourceQualifier(rQualifier.getSchema(),
-                                                                           rQualifier.getTable(),
-                                                                           rQualifier.getRecordIdAsLong());
-        JsonNode jsonNode = toJsonNode(fileResQualifier);
-
-        String type = rQualifier.getType().name();
-        fileRepository.setQualifier(type, jsonNode, ids);
-
-        transferFilesFromTempDirectory(ids, rQualifier, type);
-    }
-
-    private boolean isChangeNeeded(IRecord newRecord, List<String> fileFieldNames) {
-        return fileFieldNames.stream().anyMatch(newRecord.getContent()::containsKey);
-    }
-
-//    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
-//        try {
-//            log.debug("DELETE CASE: {}", record.getId());
-//
-//            getFileFieldNames(schema)
-//                    .stream()
-//                    .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
-//                    .collect(Collectors.toSet())
-//                    .forEach(this::deleteFile);
-//        } catch (Exception e) {
-//            logError("Не удалось выполнить удаление файлов при удалении записи: " + record.getId(), e);
-//        }
-//    }
-
-    private List<UUID> getFilesIdFromField(Map<String, Object> record, String fileFieldName) {
-        Object payload = record.get(fileFieldName);
-        if (payload != null) {
-            try {
-                List<FileDescription> descriptions = mapper.readValue(payload.toString(),
-                                                                      new TypeReference<List<FileDescription>>() {
-                                                                      });
-                return descriptions.stream()
-                                   .map(FileDescription::getId)
-                                   .collect(Collectors.toList());
-            } catch (IOException e) {
-                String msg = "Содержимое поля типа FILE имеет не корректное тело: " + payload;
-                logError(msg, e);
-
-                return new ArrayList<>();
-            }
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    private boolean isFieldEdited(Map<String, Object> record, String fileFieldName) {
-        return record.get(fileFieldName) != null;
-    }
-
-    @NotNull
-    private List<String> getFileFieldNames(SchemaDto schema) {
-        return schema.getProperties().stream()
-                     .filter(property -> property.getValueTypeAsEnum().equals(FILE))
-                     .map(SimplePropertyDto::getName)
-                     .collect(Collectors.toList());
-    }
 }

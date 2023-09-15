@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.fiz.gis_layer;
+package ru.mycrg.integration_service.bpmn.publication.dxf.gis_layer;
 
 import java.io.Serializable;
 
@@ -32,6 +32,23 @@ public class DxfLayer implements Serializable {
         this.recordId = recordId;
 
         this.schemaId = schemaId;
+        this.styleName = styleName;
+        this.dataStoreName = dataStoreName;
+    }
+
+    public DxfLayer(Long projectId, String tableName, String title, String libraryId, Long recordId, String styleName,
+                    String dataStoreName) {
+        this.type = "shp";
+        this.mode = "gis-service";
+        this.enabled = true;
+
+        this.projectId = projectId;
+
+        this.tableName = tableName;
+        this.title = title;
+        this.libraryId = libraryId;
+        this.recordId = recordId;
+
         this.styleName = styleName;
         this.dataStoreName = dataStoreName;
     }

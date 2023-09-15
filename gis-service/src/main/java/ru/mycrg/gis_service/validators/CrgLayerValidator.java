@@ -48,6 +48,9 @@ public class CrgLayerValidator implements Validator {
             case "vector":
                 validateAsVector(errors, dto);
                 break;
+            case "shp":
+                validateAsShp(errors, dto);
+                break;
             case "vectorFromFile":
                 validateAsVectorFromFile(errors, dto);
                 break;
@@ -104,6 +107,20 @@ public class CrgLayerValidator implements Validator {
 
         if (dto.getSchemaId() == null) {
             errors.rejectValue("schemaId", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getStyleName() == null) {
+            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+    }
+
+    private void validateAsShp(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getTitle() == null) {
+            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getTableName() == null) {
+            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
         }
 
         if (dto.getStyleName() == null) {

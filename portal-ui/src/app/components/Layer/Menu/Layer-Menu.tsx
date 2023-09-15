@@ -33,7 +33,6 @@ import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.mode
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
-import { schemaService } from '../../../services/data/schema/schema.service';
 import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { services } from '../../../services/services';
 import {
@@ -59,6 +58,7 @@ import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
 import { ContentType, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { getViewChoiceOptions } from '../../Form/Form.utils';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 
@@ -138,7 +138,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
-          {!editMode && this.isVectorLayer && (
+          {!editMode && (this.isVectorLayer || this.isVectorFromFileLayer) && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -337,8 +337,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @computed
   private get isVectorFromFileLayer(): boolean {
     const { entity, isGroup } = this.props;
+    const { type } = entity as CrgLayer;
 
-    return !isGroup && (entity as CrgLayer).type === CrgLayerType.VECTOR_FROM_FILE;
+    return !isGroup && (type === CrgLayerType.VECTOR_FROM_FILE || type === CrgLayerType.SHP);
   }
 
   @computed
@@ -433,8 +434,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   private async fetchGeometryType() {
     if (this.isVectorLayer) {
-      const { schemaId } = this.props.entity as CrgVectorLayer;
-      const schema = await schemaService.getSchema(schemaId);
+      const schema = await getLayerSchema(this.props.entity as CrgVectorLayer);
 
       this.setViews(schema.views);
       this.setGeometryType(schema.geometryType);

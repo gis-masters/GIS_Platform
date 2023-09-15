@@ -1,38 +1,43 @@
 import { cloneDeep } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
+import { Attribute } from '@fiz/geoserver-types/Attribute';
 
 import {
-  OldSchema,
-  OldPropertySchema,
   OldContentType,
-  ValueType,
-  OldPropertySchemaDouble,
-  OldPropertySchemaDatetime,
+  OldPropertySchema,
   OldPropertySchemaChoice,
+  OldPropertySchemaDatetime,
+  OldPropertySchemaDouble,
+  OldPropertySchemaSet,
   OldPropertySchemaUrl,
-  OldPropertySchemaSet
+  OldSchema,
+  ValueType
 } from './schemaOld.models';
 import {
-  PropertyType,
+  ContentType,
   PropertySchema,
   PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertySchemaFloat,
-  PropertySchemaUrl,
-  Schema,
-  ContentType,
-  ValueFormula,
-  Relation,
+  PropertySchemaGeometry,
+  PropertySchemaInt,
   PropertySchemaSet,
-  SimpleSchema
+  PropertySchemaString,
+  PropertySchemaUrl,
+  PropertyType,
+  Relation,
+  Schema,
+  SimpleSchema,
+  ValueFormula
 } from './schema.models';
 import { LibraryRecord } from '../docLibrary/docLibrary.models';
 import { DocumentInfo } from '../../../components/Documents/Documents';
 import { formatDate } from '../../util/date.util';
 import { FileInfo } from '../files/files.models';
-import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 import { FilterQuery } from '../../util/filterObjects';
+import { services } from '../../services';
 
 export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   const view = schema.views?.find(cType => cType.id === viewId);
@@ -607,6 +612,80 @@ export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
       }))
     }))
   };
+}
+
+export function convertGeoserverProperties(attributes: Attribute[] = []): PropertySchema[] {
+  return attributes.map(attribute => {
+    switch (attribute.binding) {
+      case 'java.lang.String': {
+        return {
+          name: attribute.name,
+          title: attribute.name,
+          propertyType: PropertyType.STRING,
+          maxLength: attribute.length
+        } as PropertySchemaString;
+      }
+      case 'java.lang.bigInteger':
+      case 'java.lang.Integer': {
+        return {
+          name: attribute.name,
+          title: attribute.name,
+          propertyType: PropertyType.INT
+        } as PropertySchemaInt;
+      }
+      case 'java.lang.Double': {
+        return {
+          name: attribute.name,
+          title: attribute.name,
+          propertyType: PropertyType.FLOAT
+        } as PropertySchemaFloat;
+      }
+      default: {
+        services.logger.error('Unsupported attribute type: ', attribute.binding);
+      }
+    }
+
+    if (attribute.binding.includes('org.locationtech.jts.geom')) {
+      return {
+        name: attribute.name,
+        title: 'Геометрия',
+        propertyType: PropertyType.GEOMETRY
+      } as PropertySchemaGeometry;
+    }
+  });
+}
+
+export function getGeometryType(attributes: Attribute[] = []): GeometryType {
+  const geometryAttribute = attributes.find(attribute => attribute.binding.includes('org.locationtech.jts.geom'));
+  if (geometryAttribute) {
+    if (geometryAttribute.binding.includes(GeometryType.LINE_STRING)) {
+      return GeometryType.LINE_STRING;
+    } else if (geometryAttribute.binding.includes(GeometryType.MULTI_POLYGON)) {
+      return GeometryType.MULTI_POLYGON;
+    } else if (geometryAttribute.binding.includes(GeometryType.POLYGON)) {
+      return GeometryType.POLYGON;
+    } else if (geometryAttribute.binding.includes(GeometryType.MULTI_POINT)) {
+      return GeometryType.MULTI_POINT;
+    } else if (geometryAttribute.binding.includes(GeometryType.POINT)) {
+      return GeometryType.POINT;
+    } else if (geometryAttribute.binding.includes(GeometryType.LINEAR_RING)) {
+      return GeometryType.LINEAR_RING;
+    } else if (geometryAttribute.binding.includes(GeometryType.GEOMETRY_COLLECTION)) {
+      return GeometryType.GEOMETRY_COLLECTION;
+    } else if (geometryAttribute.binding.includes(GeometryType.CIRCLE)) {
+      return GeometryType.CIRCLE;
+    } else if (geometryAttribute.binding.includes(GeometryType.MULTI_LINE_STRING)) {
+      return GeometryType.MULTI_LINE_STRING;
+    }
+
+    services.logger.error('Unsupported geometry type: ', geometryAttribute.binding, attributes);
+
+    return GeometryType.MULTI_POLYGON;
+  }
+
+  services.logger.error('Not any attributes with geometry: ', geometryAttribute.binding);
+
+  return GeometryType.MULTI_POLYGON;
 }
 
 function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {

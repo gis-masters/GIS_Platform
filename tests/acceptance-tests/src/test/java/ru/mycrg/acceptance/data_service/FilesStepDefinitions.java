@@ -1,18 +1,18 @@
 package ru.mycrg.acceptance.data_service;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
+import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
@@ -30,6 +30,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public static UUID secondFileId;
     public static UUID currentFileId;
     public static String currentFilePath;
+    public static List<FileDescriptionModel> currentFiles = new ArrayList<>();
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -220,16 +221,26 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует файл {string}")
     public void createFile(String fileName) {
-        File testFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
-        if (!testFile.exists()) {
-            throw new IllegalStateException("Not exist test resource: " + fileName);
-        }
+        File testFile = getFile(fileName);
 
         List<UUID> ids = createFiles(new File[]{testFile});
         currentFileId = ids.get(0);
 
         getFile(currentFileId);
         currentFilePath = jsonPath.getString("path");
+    }
+
+    @Given("Существуют файлы")
+    public void createFiles(DataTable dataTable) {
+        dataTable.asList()
+                 .forEach(fileName -> {
+                     File file = getFile(fileName);
+                     List<UUID> ids = createFiles(new File[]{file});
+
+                     getFile(ids.get(0));
+
+                     currentFiles.add(new FileDescriptionModel(ids.get(0), 314314L, fileName));
+                 });
     }
 
     @Given("Файл доступен")
@@ -308,5 +319,14 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         } catch (Exception e) {
             return new ArrayList<>();
         }
+    }
+
+    @NotNull
+    private static File getFile(String fileName) {
+        File testFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
+        if (!testFile.exists()) {
+            throw new IllegalStateException("Not exist test resource: " + fileName);
+        }
+        return testFile;
     }
 }

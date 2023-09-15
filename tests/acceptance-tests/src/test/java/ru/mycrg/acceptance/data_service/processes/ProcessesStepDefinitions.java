@@ -4,6 +4,7 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 
 import java.io.File;
 import java.time.LocalTime;
@@ -12,6 +13,7 @@ import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
@@ -49,12 +51,42 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь публикует DXF")
     public void tryPlacementDxfAsProcess() {
-        DxfPlacementModel dxfPlacementModel = new DxfPlacementModel();
-        dxfPlacementModel.setFileId(currentFileId);
-        dxfPlacementModel.setWsUiId("Fiat lux");
-        dxfPlacementModel.setProjectId(Long.valueOf(projectId));
+        DxfPlacementModel placementModel = new DxfPlacementModel();
+        placementModel.setFileId(currentFileId);
+        placementModel.setWsUiId("Fiat lux");
+        placementModel.setProjectId(Long.valueOf(projectId));
 
-        placeFile(dxfPlacementModel);
+        placeFile(placementModel);
+    }
+
+    @When("Пользователь публикует SHP")
+    public void tryPlacementShpAsProcess() {
+        DxfPlacementModel placementModel = new DxfPlacementModel();
+        placementModel.setWsUiId("Fiat lux");
+        placementModel.setProjectId(Long.valueOf(projectId));
+        placementModel.setFileId(getFile(".shp").getId());
+
+        placeFile(placementModel);
+    }
+
+    @When("Пользователь публикует TAB")
+    public void tryPlacementTabAsProcess() {
+        DxfPlacementModel placementModel = new DxfPlacementModel();
+        placementModel.setWsUiId("Fiat lux");
+        placementModel.setProjectId(Long.valueOf(projectId));
+        placementModel.setFileId(getFile(".tab").getId());
+
+        placeFile(placementModel);
+    }
+
+    @When("Пользователь публикует MID")
+    public void tryPlacementMidAsProcess() {
+        DxfPlacementModel placementModel = new DxfPlacementModel();
+        placementModel.setWsUiId("Fiat lux");
+        placementModel.setProjectId(Long.valueOf(projectId));
+        placementModel.setFileId(getFile(".mid").getId());
+
+        placeFile(placementModel);
     }
 
     @When("Пользователь импортирует геометрию из shape файла в существующий слой")
@@ -80,6 +112,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
     }
+
     @When("администратор импортирует геометрию из shape файла, имеющую \"EPSG:7829\" в существующий слой")
     public void tryImportGeometryShapeWithEPSG_7829AsProcessAsAdmin() {
         authorizationBase.loginAsOwner();
@@ -95,6 +128,11 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("процесс завершается успешно")
     public void waitUntilCurrentProcessIsDone() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "DONE");
+    }
+
+    @When("процесс завершается со статусом {string}")
+    public void waitUntilCurrentProcessIsDone(String status) {
+        waitUntilProcessCompleteWithStatus(currentProcessId, status);
     }
 
     @When("Процесс завершается с ошибкой")
@@ -181,5 +219,13 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         multiPart("processModelJson", gson.toJson(processableModel))
                 .when().
                         post("/file");
+    }
+
+    private static FileDescriptionModel getFile(String extension) {
+        return currentFiles
+                .stream()
+                .filter(file -> file.getTitle().contains(extension))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Нет файла с расширением " + extension));
     }
 }

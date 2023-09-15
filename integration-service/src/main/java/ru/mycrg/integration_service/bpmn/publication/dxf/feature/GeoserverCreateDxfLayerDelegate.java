@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.fiz.geoserver_feature;
+package ru.mycrg.integration_service.bpmn.publication.dxf.feature;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -6,11 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 import ru.mycrg.data_service_contract.queue.request.PlaceDxfFileEvent;
 import ru.mycrg.geoserver_client.contracts.featuretypes.FeatureTypeModel;
 import ru.mycrg.geoserver_client.services.feature_types.FeatureTypeService;
-import ru.mycrg.integration_service.bpmn.fiz.gis_layer.DxfLayer;
+import ru.mycrg.integration_service.bpmn.publication.dxf.gis_layer.DxfLayer;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
@@ -23,7 +22,6 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         log.debug("execute geoserverCreateDxfLayerDelegate");
 
-        StopWatch watch = new StopWatch();
         try {
             String token = (String) execution.getVariable(TOKEN_VAR_NAME);
             CreateFeatureDto dto = (CreateFeatureDto) execution.getVariable("CreateFeatureDto");
@@ -41,12 +39,9 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
                                              event.getStyleName(),
                                              event.getWorkspaceName());
 
-            watch.start("create FeatureTypeService");
-            log.debug("before");
             var response = new FeatureTypeService(token).create(dto.getWorkspaceName(),
                                                                 dto.getStoreName(),
                                                                 featureType);
-            log.debug("after");
             if (response.isSuccessful()) {
                 log.debug("Successfully created DXF feature with params: [{}]", dto);
 
@@ -55,7 +50,7 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
             } else {
                 String body = (String) response.getBody();
                 if (body.contains("already exists")) {
-                    log.debug("Store: '{}' already exist", dto.getWorkspaceName());
+                    log.debug("Feature: '{}' already exist", dto.getWorkspaceName());
 
                     execution.setVariable(IS_CREATED_VAR_NAME, true);
                     execution.setVariable("DxfLayer", dxfLayer);
@@ -73,9 +68,6 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
 
             execution.setVariable(IS_CREATED_VAR_NAME, false);
             execution.setVariable(FAIL_REASON, baseFailMsg());
-        } finally {
-            watch.stop();
-            log.debug("End: {}", watch.prettyPrint());
         }
     }
 

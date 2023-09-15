@@ -4,15 +4,27 @@ public class FeatureTypeModel {
 
     private final String name;
     private final String nativeName;
-    private final String srs;
     private final boolean enabled;
 
-    public FeatureTypeModel(String name, String srs, boolean enabled) {
-        this.name = name;
-        this.srs = srs;
-        this.enabled = enabled;
+    private String srs;
 
-        this.nativeName = "entities";
+    public FeatureTypeModel(String name, String srs, boolean enabled) {
+        this(name, "entities", enabled, srs);
+    }
+
+    public FeatureTypeModel(String name, String nativeName) {
+        this(name, nativeName, true, null);
+    }
+
+    public FeatureTypeModel(String name, boolean enabled) {
+        this(name, "entities", enabled, null);
+    }
+
+    public FeatureTypeModel(String name, String nativeName, boolean enabled, String srs) {
+        this.name = name;
+        this.nativeName = nativeName;
+        this.enabled = enabled;
+        this.srs = srs;
     }
 
     public String getName() {

@@ -455,6 +455,18 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
+    @Given("Существует запись в библиотеке c прикреплёнными файлами")
+    public void createRecordWithFilesOnDefaultLibrary() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", "File placing");
+        data.put("content_type_id", "doc_v4");
+        data.put("some_files", currentFiles);
+
+        createDocument(gson.toJson(data), DEFAULT_LIBRARY);
+
+        currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
     @Given("Существует запись в библиотеке на основе растрового файла из БД {string}")
     public void createLibraryDefaultRecord(String title) {
         String body = "{" +

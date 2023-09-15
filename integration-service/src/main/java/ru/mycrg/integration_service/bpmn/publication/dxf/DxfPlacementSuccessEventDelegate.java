@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.fiz;
+package ru.mycrg.integration_service.bpmn.publication.dxf;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;

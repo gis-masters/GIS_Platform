@@ -159,7 +159,8 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get vectorFromFileLayers(): CrgVectorLayer[] {
-    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE) || []) as CrgVectorLayer[];
+    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE || l.type === CrgLayerType.SHP) ||
+      []) as CrgVectorLayer[];
   }
 
   @computed

@@ -20,6 +20,8 @@ public class ResourceQualifier {
     private final ResourceType type;
     private final Map<ResourceType, String> resourceTables = new EnumMap<>(ResourceType.class);
 
+    private String fieldName;
+
     public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
         this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
     }
@@ -89,6 +91,14 @@ public class ResourceQualifier {
         return type;
     }
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
     @NotNull
     public String getTableQualifier() {
         return schema + SEPARATOR.charAt(1) + table;
@@ -102,7 +112,16 @@ public class ResourceQualifier {
             if (recordId == null) {
                 return schema + SEPARATOR.charAt(1) + table;
             } else {
-                return schema + SEPARATOR.charAt(1) + table + SEPARATOR.charAt(1) + recordId;
+                if (fieldName == null) {
+                    return schema + SEPARATOR.charAt(1) +
+                            table + SEPARATOR.charAt(1) +
+                            recordId;
+                } else {
+                    return schema + SEPARATOR.charAt(1) +
+                            table + SEPARATOR.charAt(1) +
+                            recordId + SEPARATOR.charAt(1) +
+                            fieldName;
+                }
             }
         }
     }

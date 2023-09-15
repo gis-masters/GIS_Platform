@@ -5,20 +5,20 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable, computed } from 'mobx';
 
+import { XTableInvoke } from '../../XTable/XTable';
+import { PageOptions } from '../../../services/models';
+import { XTableColumn } from '../../XTable/XTable.models';
+import { convertToComplexField } from '../../Form/Form.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { FilterBySelection, mapStore } from '../../../stores/Map.store';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
-import { schemaService } from '../../../services/data/schema/schema.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { calculateValues } from '../../../services/formValidation.service';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { applyView } from '../../../services/data/schema/schema.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { PageOptions } from '../../../services/models';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
-import { convertToComplexField } from '../../Form/Form.utils';
-import { XTableColumn } from '../../XTable/XTable.models';
-import { XTableInvoke } from '../../XTable/XTable';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
@@ -194,7 +194,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     const operationId = Symbol();
     this.fetchingSchemaOperationId = operationId;
 
-    const schema = await schemaService.getSchema(this.props.layer.schemaId);
+    const schema = await getLayerSchema(this.props.layer);
     if (this.fetchingSchemaOperationId === operationId) {
       this.setSchema(schema);
     }

@@ -1,0 +1,20 @@
+!table
+!version 300
+!charset Neutral
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 13
+    gml_id Char (254) ;
+    GLOBALID Char (38) ;
+    CLASSID Integer (10) ;
+    FZ_INGSTP Integer (10) ;
+    AREA Float ;
+    OTHER Integer (10) ;
+    EVENT_TIME Integer (10) ;
+    STATUS Integer (10) ;
+    REG_STATUS Integer (10) ;
+    FZ_ODSTP Integer (10) ;
+    FZ_TRSTP Integer (10) ;
+    FZ_MFSTP Integer (10) ;
+    FZ_ORECSTP Integer (10) ;

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.queue.request.PlaceDxfFileEvent;
 import ru.mycrg.data_service_contract.queue.response.DxfPlacedFailedEvent;
-import ru.mycrg.integration_service.bpmn.fiz.geosever_store.CreateGeoserverStoreDto;
+import ru.mycrg.integration_service.bpmn.publication.dxf.store.CreateGeoserverStoreDto;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;

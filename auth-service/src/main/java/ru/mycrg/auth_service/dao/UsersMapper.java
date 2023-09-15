@@ -31,6 +31,7 @@ public class UsersMapper implements RowMapper<User> {
         user.setDepartment(rs.getString("department"));
         user.setGeoserverLogin(rs.getString("geoserver_login"));
         user.setBossId(rs.getInt("boss_id"));
+        user.setEnabled(rs.getBoolean("enabled"));
 
         return user;
     }

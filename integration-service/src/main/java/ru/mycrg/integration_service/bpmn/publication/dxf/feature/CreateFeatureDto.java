@@ -1,17 +1,25 @@
-package ru.mycrg.integration_service.bpmn.fiz.geosever_store;
+package ru.mycrg.integration_service.bpmn.publication.dxf.feature;
 
 import java.io.Serializable;
 
-public class CreateGeoserverStoreDto implements Serializable {
+public class CreateFeatureDto implements Serializable {
 
+    private String featureName;
     private String workspaceName;
     private String storeName;
-    private String pathToFile;
 
-    public CreateGeoserverStoreDto(String workspaceName, String storeName, String pathToFile) {
+    public CreateFeatureDto(String featureName, String workspaceName, String storeName) {
+        this.featureName = featureName;
         this.workspaceName = workspaceName;
         this.storeName = storeName;
-        this.pathToFile = pathToFile;
+    }
+
+    public String getFeatureName() {
+        return featureName;
+    }
+
+    public void setFeatureName(String featureName) {
+        this.featureName = featureName;
     }
 
     public String getWorkspaceName() {
@@ -30,20 +38,12 @@ public class CreateGeoserverStoreDto implements Serializable {
         this.storeName = storeName;
     }
 
-    public String getPathToFile() {
-        return pathToFile;
-    }
-
-    public void setPathToFile(String pathToFile) {
-        this.pathToFile = pathToFile;
-    }
-
     @Override
     public String toString() {
         return "{" +
+                "\"featureName\":" + (featureName == null ? "null" : "\"" + featureName + "\"") + ", " +
                 "\"workspaceName\":" + (workspaceName == null ? "null" : "\"" + workspaceName + "\"") + ", " +
-                "\"storeName\":" + (storeName == null ? "null" : "\"" + storeName + "\"") + ", " +
-                "\"pathToFile\":" + (pathToFile == null ? "null" : "\"" + pathToFile + "\"") +
+                "\"storeName\":" + (storeName == null ? "null" : "\"" + storeName + "\"") +
                 "}";
     }
 }

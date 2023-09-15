@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 import { CrgLayersGroup, CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { TreeItemPayload } from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema/schema.service';
 
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
@@ -23,6 +22,7 @@ import { LayerLegend } from './Legend/Layer-Legend';
 import { LayerInnards } from './Innards/Layer-Innards';
 import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
@@ -147,14 +147,15 @@ export class Layer extends Component<LayerProps> {
       return;
     }
 
-    const { schemaId, type } = data as CrgVectorLayer;
-
+    const { type } = data as CrgVectorLayer;
     if (type === CrgLayerType.VECTOR || type === CrgLayerType.VECTOR_FROM_FILE) {
       try {
-        await schemaService.getSchema(schemaId);
+        await getLayerSchema(data as CrgVectorLayer);
       } catch {
         this.addError('Не найдена схема для слоя.');
       }
+    } else if (type === CrgLayerType.SHP) {
+      await getLayerSchema(data as CrgVectorLayer);
     }
   }
 
