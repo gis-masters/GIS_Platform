@@ -306,6 +306,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.GEOMETRY;
     }
 
+    if (oldField.valueType === ValueType.UUID) {
+      field.propertyType = PropertyType.UUID;
+    }
+
     delete (field as Partial<OldPropertySchema>).valueType;
 
     return field as PropertySchema;
@@ -400,6 +404,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.GEOMETRY) {
       field.valueType = ValueType.GEOMETRY;
+    }
+
+    if (newField.propertyType === PropertyType.UUID) {
+      field.valueType = ValueType.UUID;
     }
 
     delete (field as Partial<PropertySchema>).propertyType;

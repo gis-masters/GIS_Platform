@@ -256,6 +256,10 @@ export interface PropertySchemaGeometry extends BasePropertySchema {
   propertyType: PropertyType.GEOMETRY;
 }
 
+export interface PropertySchemaUuid extends BasePropertySchema {
+  propertyType: PropertyType.UUID;
+}
+
 export type PropertySchema =
   | PropertySchemaString
   | PropertySchemaInt
@@ -273,4 +277,5 @@ export type PropertySchema =
   | PropertySchemaUser
   | PropertySchemaUserId
   | PropertySchemaCustom
-  | PropertySchemaGeometry;
+  | PropertySchemaGeometry
+  | PropertySchemaUuid;

@@ -139,6 +139,10 @@ export interface OldPropertySchemaSet extends OldBasePropertySchema {
   defaultValue?: Record<string, unknown>;
 }
 
+export interface OldPropertySchemaUuid extends OldBasePropertySchema {
+  valueType: ValueType.UUID;
+}
+
 export interface OldPropertySchemaUrl extends OldBasePropertySchema {
   valueType: ValueType.URL;
   displayMode?: 'in_popup' | 'newTab';
@@ -193,6 +197,7 @@ export type OldPropertySchema =
   | OldPropertySchemaOther
   | OldPropertySchemaUrl
   | OldPropertySchemaCustom
+  | OldPropertySchemaUuid
   | OldPropertyFiasSchema
   | OldPropertyFileSchema
   | OldPropertyUserSchema
