@@ -1,6 +1,16 @@
 import { LibraryRecord } from '../docLibrary/docLibrary.models';
 
-import { FileInfo } from './files.models';
+import {
+  allShapeFilesTypes,
+  allTabFilesTypes,
+  FileInfo,
+  FileType,
+  midMifRequiredFilesTypes,
+  optionalShapeFilesTypes,
+  optionalTabFilesTypes,
+  shapeRequiredFilesTypes,
+  tabRequiredFilesTypes
+} from './files.models';
 
 export function getFileExtension(name = ''): string {
   const pos = name.lastIndexOf('.');
@@ -109,4 +119,102 @@ function isFileInfo(object: Partial<FileInfo>): boolean {
     object.title &&
     typeof object.title === 'string'
   );
+}
+
+export function getMissingCompoundFileTypes(files: FileInfo[]): FileType[] {
+  const filesTypes = new Set(files.map(fileInfo => normalizeExtension(getFileExtension(fileInfo.title))));
+  let missingTypes: FileType[] = [];
+  const fileExtension = normalizeExtension(getFileExtension(files[0].title)) as FileType;
+
+  if (shapeRequiredFilesTypes.includes(fileExtension)) {
+    missingTypes = shapeRequiredFilesTypes
+      .map(type => {
+        if (!filesTypes.has(type)) {
+          return type;
+        }
+      })
+      .filter(Boolean);
+  } else if (tabRequiredFilesTypes.includes(fileExtension)) {
+    missingTypes = tabRequiredFilesTypes
+      .map(type => {
+        if (!filesTypes.has(type)) {
+          return type;
+        }
+      })
+      .filter(Boolean);
+  } else if (midMifRequiredFilesTypes.includes(fileExtension)) {
+    missingTypes = midMifRequiredFilesTypes
+      .map(type => {
+        if (!filesTypes.has(type)) {
+          return type;
+        }
+      })
+      .filter(Boolean);
+  }
+
+  return missingTypes;
+}
+
+export function isFilePartOfCompoundShapeTypeFile(file: FileInfo): boolean {
+  return allShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+}
+
+export function isFilePartOfOptionalCompoundShapeTypeFile(file: FileInfo): boolean {
+  return optionalShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+}
+
+export function getCompoundShapeTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {
+  const allCompoundFiles = files.filter(item => {
+    if (getFileBaseName(item.title) === getFileBaseName(file.title) && isFilePartOfCompoundShapeTypeFile(item)) {
+      return item;
+    }
+  });
+
+  return getUniqueFiles(allCompoundFiles);
+}
+
+export function isFilePartOfCompoundTabTypeFile(file: FileInfo): boolean {
+  return allTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+}
+
+export function isFilePartOfOptionalCompoundTabTypeFile(file: FileInfo): boolean {
+  return optionalTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+}
+
+export function getCompoundTabTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {
+  const allCompoundFiles = files.filter(item => {
+    if (getFileBaseName(item.title) === getFileBaseName(file.title) && isFilePartOfCompoundTabTypeFile(item)) {
+      return item;
+    }
+  });
+
+  return getUniqueFiles(allCompoundFiles);
+}
+
+export function isFilePartOfCompoundMidTypeFile(file: FileInfo): boolean {
+  return midMifRequiredFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+}
+
+export function getCompoundMidTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {
+  return files.filter(item => {
+    if (getFileBaseName(item.title) === getFileBaseName(file.title) && isFilePartOfCompoundMidTypeFile(item)) {
+      return item;
+    }
+  });
+}
+
+function getUniqueFiles(arr: FileInfo[]): FileInfo[] {
+  let i = 0;
+  let current: FileInfo;
+  const length = arr.length;
+  const unique: FileInfo[] = [];
+
+  for (; i < length; i++) {
+    current = arr[i];
+    if (!unique.some(item => item.title === current.title)) {
+      unique.push(current);
+    }
+  }
+
+  return unique;
 }

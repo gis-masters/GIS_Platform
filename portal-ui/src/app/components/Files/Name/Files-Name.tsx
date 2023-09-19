@@ -5,9 +5,10 @@ import { Tooltip } from '@mui/material';
 import { saveAs } from 'file-saver';
 import { boundMethod } from 'autobind-decorator';
 
-import { getReadableFileSize } from '../../../services/data/files/files.util';
+import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
 import { filesClient } from '../../../services/data/files/files.client';
-import { FileInfo } from '../../../services/data/files/files.models';
+import { compoundFileFullType, FileInfo } from '../../../services/data/files/files.models';
+import { LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { Link } from '../../Link/Link';
 
@@ -24,31 +25,36 @@ interface FilesNameProps {
   baseName: string;
   ext: string;
   disabled: boolean;
+  status: LookupStatusType | undefined;
   file: File | undefined;
   numerous: boolean;
+  mainCompletedCompoundFile?: boolean;
 }
 
 @observer
 export class FilesName extends Component<FilesNameProps> {
   render() {
-    const { item, baseName, ext, disabled, numerous } = this.props;
+    const { item, baseName, ext, mainCompletedCompoundFile, status, numerous } = this.props;
+    const disabled = ['loading', 'new', 'error', 'notAvailable'].includes(status);
 
     return (
       <Tooltip
         title={
-          disabled ? (
-            <>Невозможно скачать файл</>
-          ) : (
+          (mainCompletedCompoundFile && (
+            <>Набор связанных файлов {compoundFileFullType[getFileExtension(item.title)]}</>
+          )) ||
+          (status === 'notAvailable' && <>Отсутствует обязательный файл для публикации набора связных файлов</>) || (
             <>
               Скачать <b>{item.title}</b> ({getReadableFileSize(item.size)})
             </>
-          )
+          ) ||
+          (disabled && <>Невозможно скачать файл</>)
         }
         enterDelay={800}
       >
         <LookupName numerous={numerous} className={cnFilesName()}>
           <Link
-            className={cnFilesNameLink()}
+            className={cnFilesNameLink({ main: mainCompletedCompoundFile })}
             disabled={disabled}
             href={filesClient.getFileDownloadUrl(item.id)}
             download={item.title}

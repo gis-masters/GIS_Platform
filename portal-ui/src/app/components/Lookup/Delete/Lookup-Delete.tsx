@@ -10,13 +10,14 @@ const cnLookupDelete = cn('Lookup', 'Delete');
 
 interface LookupDeleteProps<T> {
   item: T;
+  tooltip?: string;
   onDelete(item: T): void;
 }
 
 export class LookupDelete<T> extends Component<LookupDeleteProps<T>> {
   render() {
     return (
-      <Tooltip title='Удалить'>
+      <Tooltip title={this.props.tooltip || 'Удалить'}>
         <IconButton className={cnLookupDelete()} onClick={this.deleteHandler} size='small'>
           <DeleteOutline fontSize='small' />
         </IconButton>

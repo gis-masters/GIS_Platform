@@ -29,6 +29,7 @@ import { FilesIcon } from '../Icon/Files-Icon';
 import { FilesPreview } from '../Preview/Files-Preview';
 import { FilesConnections } from '../Connections/Files-Connections';
 import { FilesPlacement } from '../Placement/Files-Placement';
+import { FilesDownloadCompoundFile } from '../DownloadCompoundFile/Files-DownloadCompoundFile';
 
 const cnFilesItem = cn('Files', 'Item');
 
@@ -41,7 +42,8 @@ interface FilesItemProps {
   numerous: boolean;
   multiple: boolean;
   showPlaceAction?: boolean;
-  onDelete(item: FileInfo): void;
+  showMainCompoundFileActions?: boolean;
+  onDelete(item: FileInfo[]): void;
   onPreview(item: FileInfo): void;
 }
 
@@ -81,7 +83,18 @@ export class FilesItem extends Component<FilesItemProps> {
   }
 
   render() {
-    const { item, editable, status, file, statusText, numerous, multiple, showPlaceAction, onPreview } = this.props;
+    const {
+      item,
+      editable,
+      status,
+      file,
+      statusText,
+      numerous,
+      multiple,
+      showMainCompoundFileActions,
+      showPlaceAction,
+      onPreview
+    } = this.props;
     const ext = getFileExtension(item.title);
     const baseName = getFileBaseName(item.title);
     const disabled = ['loading', 'new', 'error'].includes(status);
@@ -90,16 +103,38 @@ export class FilesItem extends Component<FilesItemProps> {
       <>
         <LookupItem className={cnFilesItem({ numerous })}>
           <FilesIcon ext={ext} color={status === 'error' ? 'error' : 'action'} />
-          <FilesName item={item} baseName={baseName} ext={ext} disabled={disabled} file={file} numerous={numerous} />
+          <FilesName
+            mainCompletedCompoundFile={showMainCompoundFileActions}
+            item={item}
+            baseName={baseName}
+            ext={ext}
+            disabled={disabled}
+            status={status}
+            file={file}
+            numerous={numerous}
+          />
           {(numerous || multiple) && <LookupNameGap />}
           {!!status && <LookupStatus status={status} statusText={statusText} />}
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-            {showPlaceAction && (isGmlFile(item) || isDxfFile(item)) && <FilesPlacement fileInfo={item} />}
-            {showPlaceAction && !!this.connections?.length && (
+            {showMainCompoundFileActions && showPlaceAction && <FilesDownloadCompoundFile item={item} />}
+
+            {((showMainCompoundFileActions && showPlaceAction) ||
+              (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isDxfFile(item)))) && (
+              <FilesPlacement fileInfo={item} />
+            )}
+
+            {!!this.connections?.length && showPlaceAction && (
               <FilesConnections file={item} connections={this.connections} />
             )}
-            {editable && <LookupDelete item={item} onDelete={this.deleteButtonClickHandler} />}
+
+            {((showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable)) && (
+              <LookupDelete
+                tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : null}
+                item={item}
+                onDelete={this.deleteButtonClickHandler}
+              />
+            )}
           </LookupActions>
         </LookupItem>
 
@@ -125,13 +160,13 @@ export class FilesItem extends Component<FilesItemProps> {
     if (this.connections.length) {
       this.openDeleteDialog();
     } else {
-      this.props.onDelete(item);
+      this.props.onDelete([item]);
     }
   }
 
   @boundMethod
   private deleteHandler() {
-    this.props.onDelete(this.props.item);
+    this.props.onDelete([this.props.item]);
   }
 
   private async fetchConnections() {

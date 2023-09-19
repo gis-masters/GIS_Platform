@@ -5,7 +5,15 @@ import { CheckOutlined, LockOutlined, ReportGmailerrorredOutlined } from '@mui/i
 
 import '!style-loader!css-loader!sass-loader!./Lookup-Status.scss';
 
-export type LookupStatusType = 'loading' | 'success' | 'successFadeOut' | 'error' | 'forbidden' | 'new' | 'normal';
+export type LookupStatusType =
+  | 'loading'
+  | 'success'
+  | 'successFadeOut'
+  | 'error'
+  | 'forbidden'
+  | 'new'
+  | 'normal'
+  | 'notAvailable';
 
 const cnLookupStatus = cn('Lookup', 'Status');
 

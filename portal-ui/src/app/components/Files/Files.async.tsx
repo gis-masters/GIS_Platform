@@ -6,23 +6,37 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 import { v4 as uuid } from 'uuid';
+import { pluralize } from 'numeralize-ru';
 
-import { currentUser } from '../../stores/CurrentUser.store';
+import { FileInfo } from '../../services/data/files/files.models';
+import {
+  getFileBaseName,
+  isFilePartOfCompoundMidTypeFile,
+  isFilePartOfCompoundShapeTypeFile,
+  isFilePartOfCompoundTabTypeFile,
+  isPreviewAllowed,
+  getCompoundMidTypeFiles,
+  getCompoundShapeTypeFiles,
+  getCompoundTabTypeFiles,
+  isFilePartOfOptionalCompoundShapeTypeFile,
+  isFilePartOfOptionalCompoundTabTypeFile
+} from '../../services/data/files/files.util';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
-import { isPreviewAllowed } from '../../services/data/files/files.util';
 import { createFile } from '../../services/data/files/files.service';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { FileInfo } from '../../services/data/files/files.models';
-import { environment } from '../../services/environment';
-import { sleep } from '../../services/util/sleep';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { environment } from '../../services/environment';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
+import { sleep } from '../../services/util/sleep';
 import { Lookup } from '../Lookup/Lookup';
 
-import { FilesItem } from './Item/Files-Item';
+import { FilesCompoundItem } from './CompoundItem/Files-CompoundItem';
 import { Carousel } from '../Carousel/Carousel';
+import { FilesItem } from './Item/Files-Item';
+import { Toast } from '../Toast/Toast';
 
 const cnFiles = cn('Files');
 
@@ -34,7 +48,7 @@ export interface FilesProps {
   onChange?(value: FileInfo[]): void;
 }
 
-interface NewbieFile {
+export interface NewbieFile {
   id: string;
   file: File;
   status: LookupStatusType;
@@ -61,12 +75,15 @@ export default class Files extends Component<FilesProps> {
     const { multiple } = property;
     const numerous = value.length > 1;
 
+    const [singularFiles, compoundFiles] = this.separateCompoundFiles(value);
+    const compoundFileKeys = Object.keys(compoundFiles);
+
     return (
       <>
         <Lookup className={cnFiles()}>
           {!!value.length && (
             <LookupList multiple={multiple} numerous={numerous} editable={editable}>
-              {value.map((item, i) => {
+              {singularFiles.map((item, i) => {
                 const newbie = this.getNewbie(item.id);
 
                 return (
@@ -85,8 +102,23 @@ export default class Files extends Component<FilesProps> {
                   />
                 );
               })}
+
+              {compoundFileKeys.map(key => {
+                return (
+                  <FilesCompoundItem
+                    key={key}
+                    files={compoundFiles[key]}
+                    showPlaceAction={showPlaceAction}
+                    onDelete={this.deleteHandler}
+                    onPreview={this.previewHandler}
+                    getNewbie={this.getNewbie}
+                    editable={editable}
+                  />
+                );
+              })}
             </LookupList>
           )}
+
           {editable && value.length < this.max && (
             <LookupAdd filled={Boolean(value.length)}>
               <FileInput
@@ -122,19 +154,24 @@ export default class Files extends Component<FilesProps> {
   }
 
   @boundMethod
-  private deleteHandler(deletingItem: FileInfo) {
+  private deleteHandler(deletingItem: FileInfo[]) {
     this.delete(deletingItem);
   }
 
-  private delete(deletingItem: FileInfo) {
+  private delete(deletingItem: FileInfo[]) {
     const { onChange, value } = this.props;
-    onChange(value.filter(({ id }) => id !== deletingItem.id));
-    this.delNewbie(deletingItem.id);
-    this.uploadPool = this.uploadPool.filter(({ id }) => id !== deletingItem.id);
+    const deletingItemsId = deletingItem.map(({ id }) => id);
 
-    if (this.uploadingNow?.id === deletingItem.id) {
-      this.uploadingNow = null;
-      void this.upload();
+    onChange(value.filter(({ id }) => !deletingItemsId.includes(id)));
+
+    for (const id of deletingItemsId) {
+      this.delNewbie(id);
+      this.uploadPool = this.uploadPool.filter(({ id }) => id !== id);
+
+      if (this.uploadingNow?.id === id) {
+        this.uploadingNow = null;
+        void this.upload();
+      }
     }
   }
 
@@ -169,9 +206,17 @@ export default class Files extends Component<FilesProps> {
 
     const newFileItems: FileInfo[] = [];
     const max = Math.min(this.max - value.length, selectedFiles.length);
-
+    const [, compoundFiles] = this.separateCompoundFiles(value);
+    const compoundFilesDuplicates: string[] = [];
     for (let i = 0; i < max; i++) {
       const file = selectedFiles.item(i);
+
+      if (compoundFiles[getFileBaseName(file.name)]?.some(item => item.title === file.name)) {
+        compoundFilesDuplicates.push(file.name);
+
+        continue;
+      }
+
       const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
       newFileItems.push(newItem);
       this.addNewbie({ id: newItem.id, status: 'new', statusText: 'Ожидает загрузки', file });
@@ -181,6 +226,14 @@ export default class Files extends Component<FilesProps> {
     onChange(newValue);
     this.uploadPool.push(...newFileItems);
     void this.upload();
+
+    if (compoundFilesDuplicates.length) {
+      Toast.warn(
+        `${pluralize(compoundFilesDuplicates.length, 'Файл', 'Файлы', 'Файлы')}: ${compoundFilesDuplicates.join(
+          ', '
+        )} уже ${pluralize(compoundFilesDuplicates.length, 'добавлен', 'добавлены', 'добавлены')} в набор`
+      );
+    }
   }
 
   private async upload() {
@@ -263,6 +316,7 @@ export default class Files extends Component<FilesProps> {
     this.newbies.push(newbie);
   }
 
+  @boundMethod
   private getNewbie(id: string): NewbieFile | undefined {
     return this.newbies.find(newbie => newbie.id === id);
   }
@@ -292,6 +346,46 @@ export default class Files extends Component<FilesProps> {
     const index = this.newbies.findIndex(newbie => newbie.id === id);
     if (index !== -1) {
       this.newbies.splice(index, 1);
+    }
+  }
+
+  @boundMethod
+  private separateCompoundFiles(files: FileInfo[]): [FileInfo[], Record<string, FileInfo[]>] {
+    const singularFiles: FileInfo[] = [];
+    const compoundFiles: Record<string, FileInfo[]> = {};
+
+    for (const file of files) {
+      if (
+        !compoundFiles[getFileBaseName(file.title)] &&
+        (isFilePartOfOptionalCompoundShapeTypeFile(file) || isFilePartOfOptionalCompoundTabTypeFile(file))
+      ) {
+        singularFiles.push(file);
+      } else if (isFilePartOfCompoundShapeTypeFile(file)) {
+        this.setCompoundFiles(compoundFiles, files, file, getCompoundShapeTypeFiles);
+      } else if (isFilePartOfCompoundTabTypeFile(file)) {
+        this.setCompoundFiles(compoundFiles, files, file, getCompoundTabTypeFiles);
+      } else if (isFilePartOfCompoundMidTypeFile(file)) {
+        this.setCompoundFiles(compoundFiles, files, file, getCompoundMidTypeFiles);
+      } else {
+        singularFiles.push(file);
+      }
+    }
+
+    return [singularFiles.filter(file => !compoundFiles[getFileBaseName(file.title)]), compoundFiles];
+  }
+
+  private setCompoundFiles(
+    compoundFiles: Record<string, FileInfo[]>,
+    files: FileInfo[],
+    file: FileInfo,
+    getFiles: (file: FileInfo, files: FileInfo[]) => FileInfo[]
+  ) {
+    if (!compoundFiles[getFileBaseName(file.title)]) {
+      const allCompoundFiles = getFiles(file, files);
+
+      if (allCompoundFiles.length) {
+        compoundFiles[getFileBaseName(file.title)] = allCompoundFiles;
+      }
     }
   }
 }
