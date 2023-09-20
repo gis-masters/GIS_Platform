@@ -51,8 +51,10 @@ public interface IRecordsService {
                       IRecord payload,
                       SchemaDto schema);
 
-    void deleteRecord(ResourceQualifier resourceQualifier,
-                      Long id) throws CrgDaoException;
+    void deleteRecord(ResourceQualifier qualifier,
+                      SchemaDto schema) throws CrgDaoException;
 
-    void recoverRecord(ResourceQualifier resourceQualifier, String recoverPath) throws CrgDaoException;
+    void recoverRecord(ResourceQualifier qualifier,
+                       SchemaDto schema,
+                       String recoverPath) throws CrgDaoException;
 }

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.records;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -25,10 +26,7 @@ import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
@@ -163,7 +161,7 @@ public class OwnerRecordsService implements IRecordsService {
                     .prepareFilesAsJsonb()
                     .fillCreatorAndCreationDate(allColumnNames)
                     .updateLastModifiedAndUpdatedBy(allColumnNames)
-                    .fillIsDeletedFieldByFalse(allColumnNames)
+                    .fillIsDeleted(allColumnNames, false)
                     .build();
 
             modifiedProps.putAll(customRuleCalculator.culculate(schema, modifiedProps));
@@ -214,12 +212,31 @@ public class OwnerRecordsService implements IRecordsService {
     }
 
     @Override
-    public void deleteRecord(ResourceQualifier resourceQualifier, Long id) throws CrgDaoException {
-        recordsDao.removeRecord(resourceQualifier, id, authenticationFacade.getLogin());
+    public void deleteRecord(@NotNull ResourceQualifier qualifier, @NotNull SchemaDto schema) throws CrgDaoException {
+        List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
+
+        Map<String, Object> data = systemAttributeHandler
+                .init(schema, new HashMap<>())
+                .updateLastModifiedAndUpdatedBy(allColumnNames)
+                .fillIsDeleted(allColumnNames, true)
+                .build();
+
+        recordsDao.updateRecordById(qualifier, data, schema);
     }
 
     @Override
-    public void recoverRecord(ResourceQualifier resourceQualifier, String recoverPath) throws CrgDaoException {
-        recordsDao.recoverRecord(resourceQualifier, recoverPath, authenticationFacade.getLogin());
+    public void recoverRecord(@NotNull ResourceQualifier qualifier,
+                              @NotNull SchemaDto schema,
+                              @NotNull String recoverPath) throws CrgDaoException {
+        List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
+
+        Map<String, Object> data = systemAttributeHandler
+                .init(schema, new HashMap<>())
+                .updateLastModifiedAndUpdatedBy(allColumnNames)
+                .fillIsDeleted(allColumnNames, false)
+                .build();
+        data.put(PATH.getName(), recoverPath);
+
+        recordsDao.updateRecordById(qualifier, data, schema);
     }
 }

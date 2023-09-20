@@ -195,9 +195,9 @@ public class SystemAttributeHandler {
         return this;
     }
 
-    public SystemAttributeHandler fillIsDeletedFieldByFalse(List<String> allColumns) {
+    public SystemAttributeHandler fillIsDeleted(List<String> allColumns, boolean isDeleted) {
         if (allColumns.contains(IS_DELETED.getName())) {
-            result.put(IS_DELETED.getName(), false);
+            result.put(IS_DELETED.getName(), isDeleted);
         } else {
             log.warn(String.format("There is no column %s in database ", IS_DELETED.getName()));
         }

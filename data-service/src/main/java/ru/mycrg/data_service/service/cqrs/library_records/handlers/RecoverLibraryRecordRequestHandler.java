@@ -8,11 +8,13 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.RecoverLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
@@ -27,13 +29,16 @@ public class RecoverLibraryRecordRequestHandler implements IRequestHandler<Recov
 
     private final RecordServiceFactory recordServiceFactory;
     private final IMasterResourceProtector resourceProtector;
+    private final DocumentLibraryService librariesService;
     private final SchemableRecordsDao recordsDao;
 
     public RecoverLibraryRecordRequestHandler(RecordServiceFactory recordServiceFactory,
                                               MasterResourceProtector resourceProtector,
+                                              DocumentLibraryService librariesService,
                                               SchemableRecordsDao recordsDao) {
         this.recordServiceFactory = recordServiceFactory;
         this.resourceProtector = resourceProtector;
+        this.librariesService = librariesService;
         this.recordsDao = recordsDao;
     }
 
@@ -73,8 +78,9 @@ public class RecoverLibraryRecordRequestHandler implements IRequestHandler<Recov
             recoverPath = parentPath + "/" + parentQualifier.getRecordIdAsLong();
         }
 
+        SchemaDto schema = librariesService.getSchema(rQualifier.getTable());
         try {
-            recordServiceFactory.get().recoverRecord(rQualifier, recoverPath);
+            recordServiceFactory.get().recoverRecord(rQualifier, schema, recoverPath);
         } catch (CrgDaoException e) {
             throw new DataServiceException("Не удалось восстановить документ ", e.getCause());
         }

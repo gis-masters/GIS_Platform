@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.cqrs.library_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
@@ -21,11 +20,10 @@ public class DeleteLibraryRecordRequestHandler implements IRequestHandler<Delete
 
     @Override
     public Voidy handle(DeleteLibraryRecordRequest request) {
-        ResourceQualifier rQualifier = request.getQualifier();
-        IRecord record = request.getRecord();
+        ResourceQualifier qualifier = request.getQualifier();
 
         try {
-            recordServiceFactory.get().deleteRecord(rQualifier, record.getId());
+            recordServiceFactory.get().deleteRecord(qualifier, request.getSchema());
         } catch (CrgDaoException e) {
             throw new DataServiceException("Не удалось удалить упоминание о файле", e.getCause());
         }

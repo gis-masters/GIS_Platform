@@ -16,7 +16,6 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -257,47 +256,5 @@ public class RecordsDao {
 
     public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {
         return baseDao.getTotal(tableQualifier, ecqlFilter);
-    }
-
-    public void removeRecord(ResourceQualifier rQualifier, Long id, String login) throws CrgDaoException {
-        try {
-            String query = String.format("UPDATE %s SET is_deleted = true, updated_by ='%s', " +
-                                                 "last_modified ='%s' WHERE id = %s",
-                                         rQualifier.getTableQualifier(),
-                                         login,
-                                         DateTimeUtil.now(), id);
-
-            log.debug("Request to delete record: [{}]", query);
-
-            pJdbcTemplate.getJdbcTemplate().execute(query);
-        } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить удаление документа: '%s' из: '%s'",
-                                       id, rQualifier.getTableQualifier());
-            log.debug(msg);
-
-            throw new CrgDaoException(msg, e.getCause());
-        }
-    }
-
-    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath, String login) throws CrgDaoException {
-        try {
-            String query = String.format(
-                    "UPDATE %s SET is_deleted = false, path = '%s', updated_by ='%s', last_modified ='%s' WHERE id = %s",
-                    rQualifier.getTableQualifier(),
-                    recoverPath,
-                    login,
-                    DateTimeUtil.now(),
-                    rQualifier.getRecordIdAsLong());
-
-            log.debug("Request to recover record: [{}]", query);
-
-            pJdbcTemplate.getJdbcTemplate().execute(query);
-        } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить восстановление документа: '%s' из: '%s'",
-                                       rQualifier.getRecordIdAsLong(), rQualifier.getTableQualifier());
-            log.debug(msg);
-
-            throw new CrgDaoException(msg, e.getCause());
-        }
     }
 }

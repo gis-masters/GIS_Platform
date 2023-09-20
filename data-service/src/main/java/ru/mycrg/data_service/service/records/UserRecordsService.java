@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.records;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -257,17 +258,17 @@ public class UserRecordsService implements IRecordsService {
     }
 
     @Override
-    public void deleteRecord(ResourceQualifier rQualifier, Long id) throws CrgDaoException {
-        throwIfDeleteNotAllowed(rQualifier);
+    public void deleteRecord(@NotNull ResourceQualifier qualifier, @NotNull SchemaDto schema) throws CrgDaoException {
+        throwIfDeleteNotAllowed(qualifier);
 
-        ownerRecordsService.deleteRecord(rQualifier, id);
+        ownerRecordsService.deleteRecord(qualifier, schema);
     }
 
     @Override
-    public void recoverRecord(ResourceQualifier rQualifier, String recoverPath) throws CrgDaoException {
-        throwIfRecoverNotAllowed(rQualifier);
+    public void recoverRecord(ResourceQualifier qualifier, SchemaDto schema, String recoverPath) throws CrgDaoException {
+        throwIfRecoverNotAllowed(qualifier);
 
-        ownerRecordsService.recoverRecord(rQualifier, recoverPath);
+        ownerRecordsService.recoverRecord(qualifier, schema, recoverPath);
     }
 
     private void throwIfCreateNotAllowed(ResourceQualifier lQualifier, IRecord record) {
