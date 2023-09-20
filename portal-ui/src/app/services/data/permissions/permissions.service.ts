@@ -188,7 +188,7 @@ export async function isRasterReadAllowed(layer: CrgLayer): Promise<boolean> {
     const files = getLibraryRecordFiles(raster);
     const datasource = files?.filter(file => layer.tableName.includes(file.id));
 
-    if (!datasource?.length) {
+    if (layer.tableName.slice(0, 7) === 'dl_data' && !datasource?.length) {
       return false;
     }
 
