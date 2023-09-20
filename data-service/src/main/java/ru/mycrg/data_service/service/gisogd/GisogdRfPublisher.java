@@ -179,7 +179,17 @@ public class GisogdRfPublisher {
         log.debug("Start full publication to GISOGD RF. With LIMIT: [{}] Task: [{}] at: [{}]",
                   limit, taskId, DateTimeUtil.nowAsString());
         log.debug("Found {} schemas prepared to publish", schemas.size());
-        schemas.forEach(schemaId -> publishBySchema(taskId, schemaId, limit));
+
+        List<GisogdData> allGisogdDataBySchema = new ArrayList<>();
+        schemas.forEach(schemaId -> allGisogdDataBySchema.addAll(getGisogdDataBySchemaId(schemaId)));
+
+        allGisogdDataBySchema.sort(Comparator.comparing(GisogdData::getPublishOrder));
+
+        log.debug("Gisogd Data sortded by order: {}", allGisogdDataBySchema);
+
+        allGisogdDataBySchema
+                .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit));
+
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
 
         return taskId;
@@ -194,43 +204,61 @@ public class GisogdRfPublisher {
               });
     }
 
-    private void publishBySchema(Long taskId, String schemaId, Long limit) {
-        log.debug("Publish by schema: {}", schemaId);
+    private List<GisogdData> getGisogdDataBySchemaId(String schemaId) {
+        List<GisogdData> gisogdData = new ArrayList<>();
 
         try {
-            // Библиотеки
-            List<ResourceQualifier> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
+            List<GisogdData> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
             log.debug("Found {} libraries created by schema", libraryQualifiers.size());
-            for (ResourceQualifier lQualifier: libraryQualifiers) {
-                List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(lQualifier, limit);
-                log.debug("From library: {} publish: {} documents", lQualifier.getQualifier(), documents.size());
+            gisogdData.addAll(libraryQualifiers);
+            List<GisogdData> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
+            log.debug("Found {} layers created by schema", layerQualifiers.size());
+            gisogdData.addAll(layerQualifiers);
+        } catch (Exception e) {
+            log.error("Не удалось начать публикацию по схеме: [{}]. По причине: {}", schemaId, e.getMessage(), e);
+        }
+        gisogdData.forEach(data -> {
+            if (Objects.isNull(data.getPublishOrder())) {
+                data.setPublishOrder(Integer.MAX_VALUE);
+            }
+        });
+
+        return gisogdData;
+    }
+
+    private void publish(ResourceQualifier qualifier, Long taskId, Long limit) {
+        log.debug("Publish by qualifier: {}", qualifier.getQualifier());
+        try {
+            // Библиотеки
+            if (qualifier.getType().equals(LIBRARY)) {
+                List<IRecord> documents = gisogdRfDao.getDocumentsForPublishing(qualifier, limit);
+                log.debug("From library: {} publish: {} documents", qualifier.getQualifier(), documents.size());
 
                 for (IRecord record: documents) {
                     publish(taskId,
-                            new ResourceQualifier(lQualifier.getSchema(),
-                                                  lQualifier.getTable(),
+                            new ResourceQualifier(qualifier.getSchema(),
+                                                  qualifier.getTable(),
                                                   record.getId(),
-                                                  LIBRARY));
+                                                  LIBRARY_RECORD));
                 }
-            }
-
-            // Слои
-            List<ResourceQualifier> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
-            log.debug("Found {} layers created by schema", layerQualifiers.size());
-            for (ResourceQualifier lQualifier: layerQualifiers) {
-                List<IRecord> records = gisogdRfDao.getRecordsForPublishing(lQualifier, limit);
-                log.debug("From layer: {} publish: {} records", lQualifier.getQualifier(), records.size());
+            } else if (qualifier.getType().equals(TABLE)) {
+                // Слои
+                List<IRecord> records = gisogdRfDao.getRecordsForPublishing(qualifier, limit);
+                log.debug("From layer: {} publish: {} records", qualifier.getQualifier(), records.size());
 
                 for (IRecord record: records) {
                     publish(taskId,
-                            new ResourceQualifier(lQualifier.getSchema(),
-                                                  lQualifier.getTable(),
+                            new ResourceQualifier(qualifier.getSchema(),
+                                                  qualifier.getTable(),
                                                   record.getId(),
                                                   FEATURE));
                 }
+            } else {
+                log.error("Передан неподдерживаемый тип qualifier: {}", qualifier.getType());
             }
         } catch (Exception e) {
-            log.error("Не удалось начать публикацию по схеме: [{}]. По причине: {}", schemaId, e.getMessage(), e);
+            log.error("Не удалось начать публикацию qualifier: [{}]. По причине: {}",
+                      qualifier.getResourceTable(), e.getMessage(), e);
         }
     }
 

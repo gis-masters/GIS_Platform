@@ -18,6 +18,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
+import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.ContentType;
@@ -132,9 +133,11 @@ public class DocumentLibraryService {
                             .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
     }
 
-    public List<ResourceQualifier> getLibrariesCreatedBySchema(String schemaId) {
+    public List<GisogdData> getLibrariesCreatedBySchema(String schemaId) {
         return libraryRepository.findBySchemaId(schemaId).stream()
-                                .map(dl -> new ResourceQualifier(SYSTEM_SCHEMA_NAME, dl.getTableName(), LIBRARY))
+                                .map(dl -> new GisogdData(
+                                        new ResourceQualifier(SYSTEM_SCHEMA_NAME, dl.getTableName(), LIBRARY),
+                                        dl.getGisogdRfPublicationOrder()))
                                 .collect(Collectors.toList());
     }
 

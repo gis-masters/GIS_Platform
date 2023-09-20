@@ -47,6 +47,9 @@ public class DocumentLibrary {
     @Column
     private boolean versioned;
 
+    @Column(name = "gisogd_rf_publication_order")
+    private Integer gisogdRfPublicationOrder;
+
     public DocumentLibrary() {
         // Framework required
     }
@@ -144,5 +147,13 @@ public class DocumentLibrary {
 
     public void setVersioned(boolean versioned) {
         this.versioned = versioned;
+    }
+
+    public Integer getGisogdRfPublicationOrder() {
+        return gisogdRfPublicationOrder;
+    }
+
+    public void setGisogdRfPublicationOrder(Integer gisogdRfPublicationOrder) {
+        this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
     }
 }

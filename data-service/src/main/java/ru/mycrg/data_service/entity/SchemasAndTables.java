@@ -76,6 +76,9 @@ public class SchemasAndTables {
     @Column(name = "fias__id")
     private Long fiasId;
 
+    @Column(name = "gisogd_rf_publication_order")
+    private Integer gisogdRfPublicationOrder;
+
     public SchemasAndTables() {
         // Required by framework
     }
@@ -260,5 +263,13 @@ public class SchemasAndTables {
 
     public void setFiasId(Long fiasId) {
         this.fiasId = fiasId;
+    }
+
+    public Integer getGisogdRfPublicationOrder() {
+        return gisogdRfPublicationOrder;
+    }
+
+    public void setGisogdRfPublicationOrder(Integer gisogdRfPublicationOrder) {
+        this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
     }
 }

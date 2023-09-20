@@ -19,6 +19,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.gisogd.GisogdData;
 
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class TableService {
         this.systemAttributeHandler = systemAttributeHandler;
     }
 
-    public List<ResourceQualifier> getTablesCreatedBySchema(String schemaId) {
+    public List<GisogdData> getTablesCreatedBySchema(String schemaId) {
         return schemasAndTablesRepository.findBySchemaId(schemaId).stream()
                                          .map(buildFullQualifier())
                                          .filter(Objects::nonNull)
@@ -174,7 +175,7 @@ public class TableService {
     }
 
     @NotNull
-    private Function<SchemasAndTables, ResourceQualifier> buildFullQualifier() {
+    private Function<SchemasAndTables, GisogdData> buildFullQualifier() {
         return table -> {
             Optional<Long> oParentId = systemAttributeHandler.getLastIdFromPath(table.getPath());
             if (oParentId.isPresent()) {
@@ -187,7 +188,8 @@ public class TableService {
                     return null;
                 }
 
-                return new ResourceQualifier("", table.getIdentifier(), TABLE);
+                return new GisogdData(new ResourceQualifier("", table.getIdentifier(), TABLE),
+                                      parent.get().getGisogdRfPublicationOrder());
             }
 
             return null;
