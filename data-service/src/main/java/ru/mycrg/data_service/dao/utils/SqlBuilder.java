@@ -17,7 +17,6 @@ import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -25,9 +24,8 @@ import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+import static ru.mycrg.data_service.util.SchemaUtil.*;
 import static ru.mycrg.data_service.util.StringUtil.join;
-import static ru.mycrg.data_service_contract.enums.ValueType.CHOICE;
-import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 public class SqlBuilder {
 
@@ -287,7 +285,7 @@ public class SqlBuilder {
             List<SimplePropertyDto> filteredProps = targetProps
                     .stream()
                     .filter(equalByName(sourceName))
-                    .filter(notCalculatedProperty())
+                    .filter(notGeneratedProperty())
                     .filter(compatibleByType(sourceValueType))
                     .collect(Collectors.toList());
 
@@ -301,36 +299,6 @@ public class SqlBuilder {
         sourceColumns = new StringBuilder(sourceColumns.substring(0, sourceColumns.length() - 2));
 
         return targetColumns + sourceColumns.toString();
-    }
-
-    @NotNull
-    private static Predicate<SimplePropertyDto> equalByName(String sourceName) {
-        return targetProperty -> targetProperty.getName().equalsIgnoreCase(sourceName);
-    }
-
-    @NotNull
-    private static Predicate<SimplePropertyDto> notCalculatedProperty() {
-        return prop -> {
-            String formula = prop.getCalculatedValueWellKnownFormula();
-
-            return isNull(formula) || formula.isEmpty();
-        };
-    }
-
-    @NotNull
-    private static Predicate<SimplePropertyDto> compatibleByType(ValueType sourceValueType) {
-        return prop -> {
-            ValueType targetType = prop.getValueTypeAsEnum();
-            if (targetType.equals(STRING)) {
-                return true;
-            }
-
-            if (sourceValueType.equals(STRING) && targetType.equals(CHOICE)) {
-                return true;
-            }
-
-            return targetType.equals(sourceValueType);
-        };
     }
 
     private static String getProperty(String property) {
