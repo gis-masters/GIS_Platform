@@ -47,6 +47,10 @@ class DocLibraryClient extends Client {
     return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/versions`;
   }
 
+  getDocumentRecoverUrl(libraryTableName: string, recordId: number, recoverFolderId: number): string {
+    return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/recover?recoverFolderId=${recoverFolderId}`;
+  }
+
   private getDocLibraryRecordsAsRegistryUrl(libraryTableName: string): string {
     return `${this.getDocLibraryRecordsUrl(libraryTableName)}/as_registry`;
   }
@@ -196,6 +200,10 @@ class DocLibraryClient extends Client {
 
   async updateLibraryRecord(libraryTableName: string, recordId: number, patch: Partial<LibraryRecord>): Promise<void> {
     return http.patch(this.getDocLibraryRecordUrl(libraryTableName, recordId), patch);
+  }
+
+  async recoverLibraryRecord(libraryTableName: string, recordId: number, recoverFolderId?: number): Promise<void> {
+    return http.post(this.getDocumentRecoverUrl(libraryTableName, recordId, recoverFolderId));
   }
 
   async moveLibraryRecord(libraryTableName: string, recordId: number, newParentId?: number): Promise<void> {

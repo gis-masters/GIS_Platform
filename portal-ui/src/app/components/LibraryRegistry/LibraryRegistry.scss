@@ -23,4 +23,15 @@ body .LibraryRegistry {
   .MuiTableRow-hover:hover .LibraryRegistry-Actions {
     opacity: 1;
   }
+
+  &-BreadcrumbsTextTitle {
+    display: flex;
+    align-items: center;
+  }
+
+  &-BreadcrumbsTextTitleIcon.MuiSvgIcon-root {
+    margin-right: 8px;
+
+    font-size: 24px;
+  }
 }

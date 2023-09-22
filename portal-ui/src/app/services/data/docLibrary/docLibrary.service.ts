@@ -137,6 +137,11 @@ export async function updateLibraryRecord(record: LibraryRecord, patch: Partial<
   communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
+export async function recoverLibraryRecord(record: LibraryRecord, recoverFolderId?: number): Promise<void> {
+  await docLibraryClient.recoverLibraryRecord(record.libraryTableName, record.id, recoverFolderId);
+  communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
+}
+
 export async function moveLibraryRecord(record: LibraryRecord, newParentId?: number): Promise<void> {
   await docLibraryClient.moveLibraryRecord(record.libraryTableName, record.id, newParentId);
   communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });

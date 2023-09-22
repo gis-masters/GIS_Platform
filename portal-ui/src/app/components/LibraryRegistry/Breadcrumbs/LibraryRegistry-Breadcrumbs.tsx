@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FolderOutlined, HomeOutlined, LocalLibraryOutlined } from '@mui/icons-material';
@@ -28,6 +28,7 @@ interface LibraryRegistryBreadcrumbsProps extends IClassNameProps {
   path: number[];
   filter: FilterQuery;
   fromHome?: boolean;
+  additionalItem?: ReactNode;
   size?: BreadcrumbsProps['size'];
   onItemClick(path: number[]): void;
   menuButtonOnly?: boolean;
@@ -69,7 +70,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
 
   @computed
   private get items(): BreadcrumbsItemData<number[]>[] {
-    const { filter, library, fromHome, onItemClick } = this.props;
+    const { filter, library, fromHome, additionalItem, onItemClick } = this.props;
     const items: BreadcrumbsItemData<number[]>[] = [];
 
     if (fromHome) {
@@ -122,6 +123,13 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
           };
         })
       );
+    }
+
+    if (additionalItem) {
+      items.push({
+        title: additionalItem,
+        itemType: 'none'
+      });
     }
 
     return items;

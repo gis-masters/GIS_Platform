@@ -6,15 +6,16 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { route } from '../../stores/Route.store';
-import { services } from '../../services/services';
-import { communicationService } from '../../services/communication.service';
+import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
 import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
+import { communicationService } from '../../services/communication.service';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { services } from '../../services/services';
 import { TextBadge } from '../TextBadge/TextBadge';
+import { route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
 import { Link } from '../Link/Link';
 
@@ -53,16 +54,29 @@ export class LibraryDocumentPageContainer extends Component {
           <>
             <h1 className={cnLibraryDocumentPageContainer('Title')}>
               <TypeIcon color='primary' className={cnLibraryDocumentPageContainer('TypeIcon')} />
-              {this.document.title}
+              {this.document.is_deleted ? (
+                <span className={cnLibraryDocumentPageContainer('TitleDeleted')}>Документ удален </span>
+              ) : (
+                this.document.title
+              )}
               {this.document.id && <TextBadge id={this.document.id} className={cnLibraryDocumentPageContainer('Id')} />}
             </h1>
             <LibraryDocument document={this.document} />
-            <LibraryDocumentActions
-              className={cnLibraryDocumentPageContainer('Actions')}
-              document={this.document}
-              as='button'
-              hideOpen
-            />
+            {this.document.is_deleted ? (
+              <LibraryDeletedDocumentActions
+                className={cnLibraryDocumentPageContainer('Actions')}
+                hideOpen
+                document={this.document}
+                as='button'
+              />
+            ) : (
+              <LibraryDocumentActions
+                className={cnLibraryDocumentPageContainer('Actions')}
+                document={this.document}
+                as='button'
+                hideOpen
+              />
+            )}
           </>
         )}
 

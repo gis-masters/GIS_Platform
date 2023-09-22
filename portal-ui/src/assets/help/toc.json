@@ -410,6 +410,12 @@
           },
 
           {
+            "id": "recoverDelete",
+            "title": "Корзина",
+            "contentUrl": "/assets/help/5dataManagement/14recoverDelete/14recoverDelete.html"
+          },
+
+          {
             "id": "moveDocument",
             "title": "Перемещение документов",
             "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"

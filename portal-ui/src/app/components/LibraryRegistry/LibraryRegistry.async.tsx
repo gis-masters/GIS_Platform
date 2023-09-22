@@ -23,18 +23,20 @@ import {
 } from '../../services/util/filterObjects';
 import { PageOptions } from '../../services/models';
 import { SortParams } from '../../services/util/sortObjects';
+import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
+import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
+import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/docLibrary/docLibrary.service';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
-import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
-import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
-import { XTableProps } from '../XTable/XTable';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
+import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { DeletedDocuments } from '../Icons/DeletedDocuments';
 import { convertToComplexField } from '../Form/Form.utils';
 import { DocumentInfo } from '../Documents/Documents';
 import { Registry } from '../Registry/Registry';
+import { XTableProps } from '../XTable/XTable';
 import { Loading } from '../Loading/Loading';
 
 import { getBreadcrumbsPathFromFilter } from './LibraryRegistry.util';
@@ -42,6 +44,7 @@ import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
 import { LibraryRegistrySettings } from './Settings/LibraryRegistry-Settings';
 import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
 import { LibraryRegistryPathFilterPanelItem } from './PathFilterPanelItem/LibraryRegistry-PathFilterPanelItem';
+import { LibraryDeletedDocumentsSwitch } from '../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 
@@ -103,6 +106,14 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
                 filter={this.tablePageOptions?.filter}
                 library={this.library}
                 path={this.breadcrumbsPath}
+                additionalItem={
+                  this.showDeletedDocuments && (
+                    <div className={cnLibraryRegistry('BreadcrumbsTextTitle')}>
+                      <DeletedDocuments className={cnLibraryRegistry('BreadcrumbsTextTitleIcon')} color='inherit' />
+                      Корзина
+                    </div>
+                  )
+                }
                 onItemClick={this.handleBreadcrumbsItemClick}
                 fromHome
               />
@@ -123,19 +134,31 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
               setPageOptions={this.setPageOptions}
               headerActions={
                 <>
-                  <LibraryRegistryExport
-                    tablePageOptions={this.tablePageOptions}
-                    properties={this.properties}
+                  {!this.showDeletedDocuments && (
+                    <>
+                      <LibraryRegistryExport
+                        tablePageOptions={this.tablePageOptions}
+                        properties={this.properties}
+                        library={this.library}
+                        schema={this.schema}
+                        cols={this.cols}
+                      />
+                      <LibraryRegistrySettings
+                        properties={this.properties}
+                        hiddenFields={this.hiddenFields}
+                        onChangeHiddenFields={this.setHiddenFields}
+                      />
+                    </>
+                  )}
+                  <LibraryDeletedDocumentsSwitch
                     library={this.library}
-                    schema={this.schema}
-                    cols={this.cols}
+                    showDeletedDocuments={this.showDeletedDocuments}
+                    path={this.breadcrumbsPath}
                   />
-                  <LibraryRegistrySettings
-                    properties={this.properties}
-                    hiddenFields={this.hiddenFields}
-                    onChangeHiddenFields={this.setHiddenFields}
-                  />
-                  <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
+
+                  {!this.showDeletedDocuments && (
+                    <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
+                  )}
                 </>
               }
             />
@@ -180,6 +203,11 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
         {
           field: 'id',
           type: XTableExtraColumnType.ID
+        },
+        {
+          field: 'is_deleted',
+          hidden: true,
+          type: PropertyType.BOOL
         },
         {
           field: 'path',
@@ -234,19 +262,35 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     return Boolean(this.library && this.schema);
   }
 
+  @computed
+  private get showDeletedDocuments() {
+    if (this.tablePageOptions?.filter) {
+      return !!getFieldFilterValue(this.tablePageOptions?.filter, 'is_deleted');
+    }
+
+    return false;
+  }
+
   @action.bound
   private handleBreadcrumbsItemClick(path: number[]) {
     const filter = { ...this.tablePageOptions?.filter };
 
     removeFieldFilter(filter, 'path');
+    removeFieldFilter(filter, 'is_deleted');
+
     if (path.length) {
       addFilterPart(filter, getPathFilter(path));
     }
     this.tableInvoke.setFilter(filter);
   }
 
+  @boundMethod
   private renderActions({ rowData }: { rowData: LibraryRecord }): ReactElement {
-    return <LibraryDocumentActions className={cnLibraryRegistry('Actions')} document={rowData} as='menu' />;
+    return this.showDeletedDocuments ? (
+      <LibraryDeletedDocumentActions className={cnLibraryRegistry('Actions')} document={rowData} as='menu' />
+    ) : (
+      <LibraryDocumentActions className={cnLibraryRegistry('Actions')} document={rowData} as='menu' />
+    );
   }
 
   @boundMethod
@@ -285,6 +329,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     const filterById = getFieldFilterValue(pageOptions.filter, 'id') as { $in: number[] } | undefined;
     if (filterById) {
       const modifiedFilter = cloneDeep(pageOptions.filter);
+
       modifyFieldFilterValue(modifiedFilter, 'id');
       pageOptions = {
         ...pageOptions,

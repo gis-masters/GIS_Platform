@@ -11,4 +11,8 @@
   &-Document {
     max-height: calc(100vh - 200px);
   }
+
+  &-TitleDeleted {
+    color: var(--error);
+  }
 }

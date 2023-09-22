@@ -3,8 +3,9 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { LibraryDeletedDocumentsSwitch } from '../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
 import { Explorer } from '../Explorer/Explorer';
 
@@ -33,6 +34,9 @@ export class DataManagement extends Component {
           explorerRole='dm'
           libraryViewSwitch={
             this.library && <LibraryViewSwitch to='registry' library={this.library} path={this.path} />
+          }
+          deletedDocumentsSwitch={
+            this.library && <LibraryDeletedDocumentsSwitch library={this.library} path={this.path} />
           }
           onOpen={this.handleOpenItem}
         />

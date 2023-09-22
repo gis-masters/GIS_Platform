@@ -2,6 +2,8 @@ import { cloneDeep } from 'lodash';
 
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { FilterQuery, addFilterPart } from '../../services/util/filterObjects';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { LibraryRecord } from 'src/app/services/data/docLibrary/docLibrary.models';
 
 export const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
 
@@ -42,6 +44,21 @@ export function getRegistryUrlWithPath(
 
 export function getIdsFromPath(path: string): number[] {
   return (path || '').replaceAll('%', '').split('/').map(Number).filter(notFalsyFilter);
+}
+
+export function getIdsFromFullPath(item: ExplorerItemData, path: ExplorerItemData[]): number[] {
+  let pathIds: number[] = [];
+  if (item.type === ExplorerItemType.LIBRARY) {
+    pathIds = [];
+  } else if (item.type === ExplorerItemType.FOLDER) {
+    pathIds = path
+      .filter(({ type }) => type === ExplorerItemType.FOLDER)
+      .map(({ payload }) => (payload as LibraryRecord).id);
+  } else {
+    pathIds = [];
+  }
+
+  return pathIds;
 }
 
 export function getPathFilter(pathIds: number[]): FilterQuery {

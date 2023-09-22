@@ -68,6 +68,7 @@ export interface ExplorerProps extends IClassNameProps {
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
   libraryViewSwitch?: ReactNode;
+  deletedDocumentsSwitch?: ReactNode;
   customFilters?: CustomFilters;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
@@ -231,7 +232,15 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, libraryViewSwitch, className, disabledTester } = this.props;
+    const {
+      withInfoPanel,
+      fixedHeight,
+      withoutTitle,
+      libraryViewSwitch,
+      deletedDocumentsSwitch,
+      className,
+      disabledTester
+    } = this.props;
 
     return (
       <div
@@ -248,6 +257,7 @@ export default class Explorer extends Component<ExplorerProps> {
           onChange={this.service.refreshItems}
           full={withInfoPanel}
           libraryViewSwitch={libraryViewSwitch}
+          deletedDocumentsSwitch={deletedDocumentsSwitch}
         />
         {withInfoPanel && <ExplorerInfo store={this.store} />}
         <ExplorerPagination store={this.store} onChange={this.service.paginate} />

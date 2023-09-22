@@ -19,10 +19,18 @@ interface ExplorerToolbarProps {
   service: ExplorerService;
   onChange: () => void;
   libraryViewSwitch: ReactNode;
+  deletedDocumentsSwitch: ReactNode;
   full: boolean;
 }
 
-export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange, full, libraryViewSwitch }) => {
+export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
+  store,
+  service,
+  onChange,
+  full,
+  libraryViewSwitch,
+  deletedDocumentsSwitch
+}) => {
   return (
     <div className={cnExplorerToolbar()}>
       <ExplorerFilter store={store} onChange={onChange} service={service} />
@@ -30,6 +38,7 @@ export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onCh
       <ExplorerPageSize store={store} onChange={onChange} />
       <ToolbarDivider />
       <ExplorerToolbarActions service={service} store={store} full={full} />
+      {deletedDocumentsSwitch}
       {libraryViewSwitch}
     </div>
   );

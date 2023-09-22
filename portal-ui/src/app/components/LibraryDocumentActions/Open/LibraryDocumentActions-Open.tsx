@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
+import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -15,6 +15,7 @@ const cnLibraryDocumentActionsOpen = cn('LibraryDocumentActions', 'Open');
 interface LibraryDocumentActionsOpenProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
+  deletedDocument?: boolean;
 }
 
 @observer
@@ -27,7 +28,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
   }
 
   render() {
-    const { as, document } = this.props;
+    const { as, document, deletedDocument } = this.props;
 
     return (
       <>
@@ -40,7 +41,12 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
           onClick={this.openDialog}
         />
 
-        <LibraryDocumentDialog document={document} open={this.dialogOpen} onClose={this.closeDialog} />
+        <LibraryDocumentDialog
+          deletedDocument={deletedDocument}
+          document={document}
+          open={this.dialogOpen}
+          onClose={this.closeDialog}
+        />
       </>
     );
   }
