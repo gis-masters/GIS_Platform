@@ -60,3 +60,7 @@ export function getLayerByFeatureInCurrentProject(
 export function generateNextLayerId(): number {
   return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
 }
+
+export function isVectorFromFile(type: CrgLayerType): boolean {
+  return type === CrgLayerType.DXF || type === CrgLayerType.SHP;
+}

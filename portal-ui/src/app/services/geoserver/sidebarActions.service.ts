@@ -6,12 +6,13 @@ import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
 import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/layers/layers.models';
 
 import { getFeatureType } from './featuretypes.service';
+import { isVectorFromFile } from '../gis/layers/layers.utils';
 import { getProjection, olProjection, transform } from './projections.service';
 
 export async function focusToLayer(entity: CrgLayer): Promise<void> {
   try {
     const { nativeBoundingBox, srs } =
-      entity.type === CrgLayerType.VECTOR || entity.type === CrgLayerType.VECTOR_FROM_FILE
+      entity.type === CrgLayerType.VECTOR || isVectorFromFile(entity.type)
         ? await getFeatureType(entity as CrgVectorLayer)
         : await getLayerCoverage(entity);
 

@@ -8,10 +8,15 @@ import { Toast } from '../../../components/Toast/Toast';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 import { layersClient } from './layers.client';
 import { Schema } from '../../data/schema/schema.models';
-import { convertGeoserverProperties, getGeometryType } from '../../data/schema/schema.utils';
+import {
+  convertGeoserverPropertiesToSchemaProperties,
+  getGeometryTypeFromGeoserverAttributes
+} from '../../data/schema/schema.utils';
 import { getFeatureType } from '../../geoserver/featuretypes.service';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { schemaService } from '../../data/schema/schema.service';
+import { isVectorFromFile } from './layers.utils';
+import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 
 export async function deleteLayer(layerId: number, project: CrgProject = currentProject): Promise<void> {
   await layersClient.deleteLayer(layerId, project.id);
@@ -67,13 +72,18 @@ export async function getLayerSchema(layer: CrgVectorLayer): Promise<Schema> {
   const type = layer.type;
   if (type === CrgLayerType.VECTOR) {
     return await schemaService.getSchema(layer.schemaId);
-  } else if (type === CrgLayerType.VECTOR_FROM_FILE || type === CrgLayerType.SHP) {
+  } else if (isVectorFromFile(type)) {
     const featureType: FeatureType = await getFeatureType(layer);
 
-    const properties = convertGeoserverProperties(featureType.attributes.attribute);
-    const geometryType = getGeometryType(featureType.attributes.attribute);
+    const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);
+    const geometryType = getGeometryTypeFromGeoserverAttributes(featureType.attributes.attribute);
+    if (!supportedGeometryTypes.includes(geometryType)) {
+      throw new Error(`Geometry type: ${geometryType} is not supported`);
+    }
 
-    return { name: 'shp_schema', properties, geometryType } as Schema;
+    const template = `shp_schema_${layer.id}`;
+
+    return { name: template, title: template, properties, geometryType: geometryType as SupportedGeometryType };
   }
 }
 

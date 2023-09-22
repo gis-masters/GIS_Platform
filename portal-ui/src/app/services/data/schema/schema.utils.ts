@@ -622,8 +622,16 @@ export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
   };
 }
 
-export function convertGeoserverProperties(attributes: Attribute[] = []): PropertySchema[] {
+export function convertGeoserverPropertiesToSchemaProperties(attributes: Attribute[] = []): PropertySchema[] {
   return attributes.map(attribute => {
+    if (attribute.binding.includes('org.locationtech.jts.geom')) {
+      return {
+        name: attribute.name,
+        title: 'Геометрия',
+        propertyType: PropertyType.GEOMETRY
+      } as PropertySchemaGeometry;
+    }
+
     switch (attribute.binding) {
       case 'java.lang.String': {
         return {
@@ -633,7 +641,8 @@ export function convertGeoserverProperties(attributes: Attribute[] = []): Proper
           maxLength: attribute.length
         } as PropertySchemaString;
       }
-      case 'java.lang.bigInteger':
+      case 'java.math.BigInteger':
+      case 'java.lang.Long':
       case 'java.lang.Integer': {
         return {
           name: attribute.name,
@@ -649,21 +658,20 @@ export function convertGeoserverProperties(attributes: Attribute[] = []): Proper
         } as PropertySchemaFloat;
       }
       default: {
-        services.logger.error('Unsupported attribute type: ', attribute.binding);
-      }
-    }
+        services.logger.warn(`Unsupported attribute type: '${attribute.binding}' Handled as String`);
 
-    if (attribute.binding.includes('org.locationtech.jts.geom')) {
-      return {
-        name: attribute.name,
-        title: 'Геометрия',
-        propertyType: PropertyType.GEOMETRY
-      } as PropertySchemaGeometry;
+        return {
+          name: attribute.name,
+          title: attribute.name,
+          propertyType: PropertyType.STRING,
+          maxLength: attribute.length
+        } as PropertySchemaString;
+      }
     }
   });
 }
 
-export function getGeometryType(attributes: Attribute[] = []): GeometryType {
+export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] = []): GeometryType {
   const geometryAttribute = attributes.find(attribute => attribute.binding.includes('org.locationtech.jts.geom'));
   if (geometryAttribute) {
     if (geometryAttribute.binding.includes(GeometryType.LINE_STRING)) {
@@ -686,14 +694,15 @@ export function getGeometryType(attributes: Attribute[] = []): GeometryType {
       return GeometryType.MULTI_LINE_STRING;
     }
 
-    services.logger.error('Unsupported geometry type: ', geometryAttribute.binding, attributes);
+    services.logger.error('Unknown geometry type: ', geometryAttribute.binding, attributes);
 
-    return GeometryType.MULTI_POLYGON;
+    throw new Error('Unknown geometry type');
+  } else {
+    const message = 'Not any attributes with geometry';
+    services.logger.error(message);
+
+    throw new Error(message);
   }
-
-  services.logger.error('Not any attributes with geometry: ', geometryAttribute.binding);
-
-  return GeometryType.MULTI_POLYGON;
 }
 
 function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {

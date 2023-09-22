@@ -87,7 +87,7 @@ public class DxfLayerHandler implements ILayerHandler {
 
     @Override
     public String getType() {
-        return "vectorFromFile";
+        return "dxf";
     }
 
     private void associateStyle(Layer layer) {

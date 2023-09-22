@@ -14,17 +14,17 @@ Feature: Размещение файлов
     And   В проекте создан векторный слой на основе DXF файла
     And   DXF файл скачивается
 
-#  Scenario: SHP файл размещается в проекте как векторный слой на основе SHP файла
-#    Given Существует проект "для размещения SHP"
-#    Given Существуют файлы
-#      | HeritageArea.cpg |
-#      | HeritageArea.dbf |
-#      | HeritageArea.prj |
-#      | HeritageArea.shp |
-#      | HeritageArea.shx |
-#    Given Существует запись в библиотеке c прикреплёнными файлами
-#    When  Пользователь публикует SHP
-#    Then  процесс завершается успешно
+  Scenario: SHP файл размещается в проекте как векторный слой на основе SHP файла
+    Given Существует проект "для размещения SHP"
+    Given Существуют файлы
+      | HeritageArea.cpg |
+      | HeritageArea.dbf |
+      | HeritageArea.prj |
+      | HeritageArea.shp |
+      | HeritageArea.shx |
+    Given Существует запись в библиотеке c прикреплёнными файлами
+    When  Пользователь публикует SHP
+    Then  процесс завершается успешно
 
 #  Scenario: MID файл размещается в проекте как слой на основе MID файла
 #    Given Существует проект "для размещения MID"

@@ -17,8 +17,6 @@ import { Mime } from '../../services/util/Mime';
 export class ProgressItemComponent implements OnDestroy {
   @Input() event: IEvent;
 
-  openResultDialog = false;
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private logger: NGXLogger) {}
@@ -42,6 +40,7 @@ export class ProgressItemComponent implements OnDestroy {
           this.event.payload.type === ProcessType.VALIDATION_REPORT ||
           this.event.payload.type === ProcessType.IMPORT_GML ||
           this.event.payload.type === ProcessType.IMPORT_DXF ||
+          this.event.payload.type === ProcessType.IMPORT_SHP ||
           this.event.payload.type === ProcessType.IMPORT_RASTER
         ) {
           const layerName = this.event.payload.payload.description;
@@ -64,17 +63,6 @@ export class ProgressItemComponent implements OnDestroy {
 
   inProgress(): boolean {
     return this.event.payload?.payload?.status === ProcessStatus.PENDING;
-  }
-
-  isProgress(): boolean {
-    if (this.event.payload.payload.progress) {
-      return false;
-    }
-
-    return (
-      this.event.payload.payload.status === ProcessStatus.PENDING ||
-      this.event.payload.payload.status === ProcessStatus.TASK_DONE
-    );
   }
 
   closeNotice(): void {
@@ -104,6 +92,7 @@ export class ProgressItemComponent implements OnDestroy {
     return (
       type !== ProcessType.IMPORT_GML &&
       type !== ProcessType.IMPORT_DXF &&
+      type !== ProcessType.IMPORT_SHP &&
       type !== ProcessType.IMPORT_RASTER &&
       payload.payload.status === ProcessStatus.DONE
     );

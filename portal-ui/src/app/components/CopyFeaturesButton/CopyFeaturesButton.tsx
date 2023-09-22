@@ -11,6 +11,7 @@ import { ContentCopyOutlined } from '@mui/icons-material';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { copyFeaturesBetweenLayers, createFeature } from '../../services/data/vectorData/vectorData.service';
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
@@ -77,7 +78,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
 
       if (layer.type === CrgLayerType.VECTOR) {
         await copyFeaturesBetweenLayers(layer, selectedLayer, features);
-      } else if (layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+      } else if (features[0] != null && isVectorFromFile(layer.type)) {
         await createFeature(selectedLayer.dataset, selectedLayer.tableName, features[0]);
       } else {
         throw new Error('Ошибка копирования объектов: неподдерживаемый тип слоя ' + layer.type);

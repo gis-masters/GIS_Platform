@@ -19,7 +19,7 @@ public class DxfLayer implements Serializable {
 
     public DxfLayer(Long projectId, String tableName, String title, String nativeCRS, String libraryId, Long recordId,
                     String schemaId, String styleName, String dataStoreName) {
-        this.type = "vectorFromFile";
+        this.type = "dxf";
         this.mode = "gis-service";
         this.enabled = true;
 

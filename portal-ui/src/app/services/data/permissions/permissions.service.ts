@@ -4,8 +4,8 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { CrgProject } from '../../gis/projects/projects.models';
-import { getLibrary, getLibraryRecord } from '../docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../docLibrary/docLibrary.service';
+import { LibraryRecord } from '../docLibrary/docLibrary.models';
 import { getVectorTable } from '../vectorData/vectorData.service';
 import { VectorTable } from '../vectorData/vectorData.models';
 import { schemaService } from '../schema/schema.service';
@@ -25,6 +25,7 @@ import {
 } from './permissions.models';
 import { permissionsClient } from './permissions.client';
 import { getLibraryRecordFiles } from '../files/files.util';
+import { isVectorFromFile } from '../../gis/layers/layers.utils';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);
@@ -123,7 +124,7 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
 
   if (layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
-  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+  } else if (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type)) {
     return await isRasterReadAllowed(layer);
   }
 
@@ -136,29 +137,27 @@ export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<bool
   return checkIsUpdateAllowed(libraryRecord.role);
 }
 
-export async function isLibraryUpdateAllowed(library: DocumentLibrary): Promise<boolean> {
-  const documentLibrary = library.role ? library : await getLibrary(library.table_name);
-
-  return checkIsUpdateAllowed(documentLibrary.role);
-}
-
 function checkIsUpdateAllowed(role: Role) {
   return currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR;
 }
 
 export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
-  const schema: Schema = await schemaService.getSchema(layer.schemaId);
-  if (!schema) {
-    return false;
-  }
-
-  if (schema.readOnly) {
-    return false;
-  }
-
   if (layer.type === CrgLayerType.VECTOR) {
+    if (!layer.schemaId) {
+      return false;
+    }
+
+    const schema: Schema = await schemaService.getSchema(layer.schemaId);
+    if (!schema) {
+      return false;
+    }
+
+    if (schema.readOnly) {
+      return false;
+    }
+
     return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
-  } else if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+  } else if (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type)) {
     return await isRasterReadAllowed(layer);
   }
 
@@ -204,10 +203,6 @@ export function isLayersManagementAllowed(project: CrgProject = currentProject):
 
 export function isTableExportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
   return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.EXPORT);
-}
-
-export function isTableDeletionAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
-  return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.DELETE);
 }
 
 async function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {

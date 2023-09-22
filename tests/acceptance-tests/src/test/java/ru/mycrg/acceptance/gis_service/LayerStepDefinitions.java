@@ -451,7 +451,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntityByFilter("title", "best");
 
         assertEquals("best", response.jsonPath().getList("title").get(0));
-        assertEquals("vectorFromFile", response.jsonPath().getList("type").get(0));
+        assertEquals("dxf", response.jsonPath().getList("type").get(0));
     }
 
     @Then("Параметр transparent color по умолчанию чёрный")

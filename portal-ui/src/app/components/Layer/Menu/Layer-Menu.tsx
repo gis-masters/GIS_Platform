@@ -59,6 +59,7 @@ import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
 import { ContentType, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { getViewChoiceOptions } from '../../Form/Form.utils';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 
@@ -339,7 +340,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, isGroup } = this.props;
     const { type } = entity as CrgLayer;
 
-    return !isGroup && (type === CrgLayerType.VECTOR_FROM_FILE || type === CrgLayerType.SHP);
+    return !isGroup && isVectorFromFile(type);
   }
 
   @computed
@@ -561,7 +562,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const layer = this.props.entity as CrgLayer;
     currentProject.deleteLayer(layer);
 
-    if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.VECTOR_FROM_FILE) {
+    if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
       communicationService.layerUpdated.emit({ type: 'delete', data: layer as CrgVectorLayer });
     }
   }

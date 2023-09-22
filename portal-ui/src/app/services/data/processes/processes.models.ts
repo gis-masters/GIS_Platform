@@ -35,6 +35,7 @@ export enum ProcessType {
   IMPORT = 'IMPORT',
   IMPORT_GML = 'IMPORT_GML',
   IMPORT_DXF = 'IMPORT_DXF',
+  IMPORT_SHP = 'IMPORT_SHP',
   IMPORT_RASTER = 'IMPORT_RASTER',
   IMPORT_GEOMETRY = 'IMPORT_GEOMETRY',
   VALIDATION = 'VALIDATION',
@@ -91,9 +92,4 @@ export interface ProcessResponse {
 export interface ProcessableModel {
   type: ProcessType;
   payload: GmlPlacementModel | DfxPlacementModel | ImportFeaturesFromShapeFileModel;
-}
-
-export interface ShapeProcessableModel {
-  file: File;
-  processModelJson: ProcessableModel;
 }

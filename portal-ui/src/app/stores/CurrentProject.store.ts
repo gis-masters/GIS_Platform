@@ -2,8 +2,9 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { Role } from '../services/data/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
+import { Role } from '../services/data/permissions/permissions.models';
+import { isVectorFromFile } from '../services/gis/layers/layers.utils';
 import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
 import {
   CrgLayer,
@@ -137,9 +138,11 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get visibleVectorLayers(): TreeItem<CrgLayer>[] {
-    return this.visibleOnMapLayers.filter(
-      item => item.payload.type === CrgLayerType.VECTOR || item.payload.type === CrgLayerType.VECTOR_FROM_FILE
-    );
+    return this.visibleOnMapLayers.filter(item => {
+      const { type } = item.payload;
+
+      return type === CrgLayerType.VECTOR || isVectorFromFile(type);
+    });
   }
 
   @computed
@@ -159,8 +162,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get vectorFromFileLayers(): CrgVectorLayer[] {
-    return (this.layers?.filter(l => l.type === CrgLayerType.VECTOR_FROM_FILE || l.type === CrgLayerType.SHP) ||
-      []) as CrgVectorLayer[];
+    return (this.layers?.filter(l => isVectorFromFile(l.type)) || []) as CrgVectorLayer[];
   }
 
   @computed

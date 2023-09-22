@@ -6,7 +6,6 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
-import { schemaService } from '../../data/schema/schema.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { filterFeatures } from '../../util/filterObjects';
 import { olProjection } from '../projections.service';
@@ -21,6 +20,7 @@ import { WFS } from '../../ol/WFS';
 import { WfsFeature, WfsFeatureCollection } from './wfs.models';
 import { generateWfsSortParam } from './wfs.util';
 import { wfsClient } from './wfs.client';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
   return {
@@ -162,7 +162,7 @@ export async function makeXmlPolygonIntersect(
 ): Promise<string> {
   const tableName = complexName.split(':')[1];
   const layer = currentProject.getLayerByTableName(tableName);
-  const baseSchema = await schemaService.getSchema(layer.schemaId);
+  const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);
   const cqlFilter: string = cqlConcat(cqlBuild(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);

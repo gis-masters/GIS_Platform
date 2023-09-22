@@ -51,8 +51,8 @@ public class CrgLayerValidator implements Validator {
             case "shp":
                 validateAsShp(errors, dto);
                 break;
-            case "vectorFromFile":
-                validateAsVectorFromFile(errors, dto);
+            case "dxf":
+                validateAsDxf(errors, dto);
                 break;
             case "raster":
                 validateAsRaster(errors, dto);
@@ -92,7 +92,7 @@ public class CrgLayerValidator implements Validator {
         }
     }
 
-    private void validateAsVectorFromFile(@NotNull Errors errors, LayerCreateDto dto) {
+    private void validateAsDxf(@NotNull Errors errors, LayerCreateDto dto) {
         if (dto.getTitle() == null) {
             errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
         }

@@ -22,7 +22,7 @@ import { LayerLegend } from './Legend/Layer-Legend';
 import { LayerInnards } from './Innards/Layer-Innards';
 import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
@@ -73,7 +73,8 @@ export class Layer extends Component<LayerProps> {
     const { title, enabled, transparency } = data;
     const { expanded } = data as CrgLayersGroup;
     const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
-    const isVectorLayer = (data as CrgLayer).type === CrgLayerType.VECTOR;
+    const type = (data as CrgLayer).type;
+    const isVectorLayer = type === CrgLayerType.VECTOR || type === CrgLayerType.SHP;
     const hiddenByZoomTooltipText = hiddenByZoom
       ? `${out ? 'Уменьшите' : 'Увеличьте'} карту, чтобы увидеть объекты`
       : '';
@@ -147,15 +148,13 @@ export class Layer extends Component<LayerProps> {
       return;
     }
 
-    const { type } = data as CrgVectorLayer;
-    if (type === CrgLayerType.VECTOR || type === CrgLayerType.VECTOR_FROM_FILE) {
+    const { type, schemaId } = data as CrgVectorLayer;
+    if (type === CrgLayerType.VECTOR || type === CrgLayerType.DXF) {
       try {
-        await getLayerSchema(data as CrgVectorLayer);
+        return await schemaService.getSchema(schemaId);
       } catch {
-        this.addError('Не найдена схема для слоя.');
+        this.addError('Не найдена схема для слоя: ' + data.title);
       }
-    } else if (type === CrgLayerType.SHP) {
-      await getLayerSchema(data as CrgVectorLayer);
     }
   }
 
@@ -168,8 +167,12 @@ export class Layer extends Component<LayerProps> {
       group.expanded = !group.expanded;
     } else {
       const { type } = data as CrgLayer;
+
       if (
-        (type !== CrgLayerType.VECTOR && type !== CrgLayerType.EXTERNAL && type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
+        (type !== CrgLayerType.SHP &&
+          type !== CrgLayerType.VECTOR &&
+          type !== CrgLayerType.EXTERNAL &&
+          type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
         editMode
       ) {
         return;

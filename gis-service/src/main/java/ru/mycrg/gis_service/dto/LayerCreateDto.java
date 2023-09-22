@@ -11,8 +11,8 @@ import javax.validation.constraints.Pattern;
 public class LayerCreateDto {
 
     @NotBlank
-    @Pattern(regexp = "^(vector|raster|external|external_geoserver|vectorFromFile|shp)$",
-             message = "Допустимые значения поля type: vector/raster/external/external_geoserver/vectorFromFile/shp")
+    @Pattern(regexp = "^(vector|raster|external|external_geoserver|dxf|shp)$",
+             message = "Допустимые значения поля type: vector/raster/external/external_geoserver/dxf/shp")
     private String type;
 
     @Length(min = 2, max = 255)

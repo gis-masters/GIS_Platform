@@ -75,6 +75,7 @@ class EventService {
       msg.type === 'VALIDATION_REPORT' ||
       msg.type === 'IMPORT_GML' ||
       msg.type === 'IMPORT_DXF' ||
+      msg.type === 'IMPORT_SHP' ||
       msg.type === 'IMPORT_RASTER'
     ) {
       return true;
@@ -124,7 +125,7 @@ class EventService {
     events.forEach(event => {
       const { type, payload } = event.payload;
       if (
-        (type === 'IMPORT_GML' || type === 'IMPORT_DXF' || type === 'IMPORT_RASTER') &&
+        (type === 'IMPORT_GML' || type === 'IMPORT_DXF' || type === 'IMPORT_SHP' || type === 'IMPORT_RASTER') &&
         (payload.status === 'DONE' || payload.status === 'ERROR')
       ) {
         const importGml = payload as WsImportModel;

@@ -20,11 +20,12 @@ import {
 } from './styles.models';
 import { stylesClient } from './styles.client';
 import { cqlConcat } from '../../util/cqlConcat';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
 export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
-  const schema = await schemaService.getSchemaForVectorLayer(layer);
+  const schema = await getLayerSchema(layer);
   const styleName = layer.styleName || schema.styleName;
 
   if (!styleName) {

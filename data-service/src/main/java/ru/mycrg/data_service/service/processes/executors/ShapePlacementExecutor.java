@@ -24,6 +24,7 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.PlaceShapeFileEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 import static org.springframework.util.StringUtils.stripFilenameExtension;
@@ -111,7 +112,12 @@ public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePla
         this.wsMsgId = UUID.randomUUID();
 
         try {
-            this.payload = mapper.convertValue(data, FilePlacementPayloadModel.class);
+            HashMap<?, ?> parsed = mapper.convertValue(data, HashMap.class);
+
+            this.payload = new FilePlacementPayloadModel();
+            this.payload.setWsUiId(String.valueOf(parsed.get("wsUiId")));
+            this.payload.setProjectId(Long.valueOf(parsed.get("projectId").toString()));
+            this.payload.setFileId(UUID.fromString(parsed.get("fileId").toString()));
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель Shape импорта: %s", data);
             log.error(msg, e.getCause());
