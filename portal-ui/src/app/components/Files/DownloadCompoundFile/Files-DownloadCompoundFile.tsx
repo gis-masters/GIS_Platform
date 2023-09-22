@@ -20,7 +20,7 @@ export class FilesDownloadCompoundFile extends Component<FilesDownloadCompoundFi
     return (
       <Tooltip title='Скачать набор файлов архивом'>
         <IconButton
-          href={filesClient.getFileDownloadUrl(item.id)}
+          href={filesClient.getZipDownloadUrl(item.id)}
           download={item.title}
           className={cnFilesDownloadCompoundFile()}
           size='small'

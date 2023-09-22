@@ -29,5 +29,9 @@ public interface FileRepository extends PagingAndSortingRepository<File, UUID> {
     void setPathById(@Param("path") String path,
                      @Param("fileId") UUID fileId);
 
+    @Query("SELECT f.path FROM File f WHERE f.path LIKE %:fileBasePath%")
+    @RestResource(exported = false)
+    List<String> getFilePathsByPathBase(@Param("fileBasePath") String fileBasePath);
+
     List<File> findAllByIdIn(Set<UUID> fileIds);
 }

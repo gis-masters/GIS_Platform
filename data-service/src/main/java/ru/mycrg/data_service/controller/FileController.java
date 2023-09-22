@@ -1,6 +1,9 @@
 package ru.mycrg.data_service.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
@@ -29,9 +32,18 @@ import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageExcep
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.mediator.Mediator;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
@@ -50,6 +62,8 @@ public class FileController extends BaseController {
     private final IAuthenticationFacade authenticationFacade;
     private final IMasterResourceProtector resourceProtector;
     private final OrgSettingsKeeper orgSettingsKeeper;
+
+    private final Logger log = LoggerFactory.getLogger(FileController.class);
 
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
@@ -129,6 +143,70 @@ public class FileController extends BaseController {
             logError(msg, e);
 
             throw new DataServiceException(msg, e.getCause());
+        }
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/download/zip")
+    public void downloadZip(@PathVariable UUID id, HttpServletResponse response) {
+        orgSettingsKeeper.throwIfDownloadFileNotAllowed();
+
+        File file = fileRepository.findById(id)
+                                  .orElseThrow(() -> new NotFoundException(id));
+
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        String fileBaseTitle = FilenameUtils.getBaseName(file.getTitle());
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", String.format("attachment;filename=%s.zip", fileBaseTitle));
+
+        try (ServletOutputStream sos = response.getOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(sos)) {
+            String filePathBase = FilenameUtils.removeExtension(file.getPath());
+
+            fileRepository.getFilePathsByPathBase(filePathBase)
+                          .stream().map(Paths::get)
+                          .forEach(path -> makeZipArchive(path, zos, fileBaseTitle));
+        } catch (Exception ex) {
+            String msg = String.format("Не удалось создать zip архив. Причина: %s", ex.getMessage());
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        }
+    }
+
+    private void makeZipArchive(Path path, ZipOutputStream zos, String fileName) {
+        try {
+            // Создание новой записи ZIP и добавление её в поток
+            String fileNameWithExtension =
+                    String.format("%s.%s", fileName, FilenameUtils.getExtension(path.getFileName().toString()));
+            ZipEntry zipEntry = new ZipEntry(fileNameWithExtension);
+
+            // Чтение файла и запись его в ZIP-архив
+            try (InputStream fis = Files.newInputStream(path)) {
+                zos.putNextEntry(zipEntry);
+
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = fis.read(buffer)) >= 0) {
+                    zos.write(buffer, 0, length);
+                }
+            } catch (NoSuchFileException ex) {
+                String msg = String.format("Не удалось добавить файл %s в архив. Файл не найден по пути: %s",
+                                           path.getFileName(),
+                                           ex.getMessage());
+                log.error(msg);
+            }
+            // Закрытие текущей записи ZIP
+            zos.closeEntry();
+        } catch (Exception e) {
+            String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
+                                       path.getFileName(),
+                                       e.getMessage());
+
+            throw new DataServiceException(msg);
         }
     }
 

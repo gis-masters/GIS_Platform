@@ -72,6 +72,7 @@ public class FileStorageService {
         } catch (AccessDeniedException e) {
             String msg = "Нет доступа на сохранение файла, по пути: " + targetLocation;
             logError(msg, e);
+
             throw new DataServiceException(msg, e);
         } catch (Exception e) {
             String msg = "Не удалось сохранить файл, по пути: " + targetLocation;

@@ -29,6 +29,10 @@ class FilesClient extends Client {
     return `${this.getFileUrl(id)}/download`;
   }
 
+  getZipDownloadUrl(id: string): string {
+    return `${this.getFileUrl(id)}/download/zip`;
+  }
+
   async createFile(file: File): Promise<FileInfo[]> {
     const formData = new FormData();
     formData.append('files', file);
