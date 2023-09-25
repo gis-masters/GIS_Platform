@@ -7,7 +7,16 @@ class OrgAdminBlock extends Block {
   };
 
   async waitForLoadingDisappear() {
+    await this.waitForVisible();
+
     const $loading = await this.$('loading');
+
+    try {
+      await $loading.waitForDisplayed({ timeout: 1000 });
+    } catch {
+      // ignore
+    }
+
     await $loading.waitForDisplayed({ reverse: true });
   }
 }

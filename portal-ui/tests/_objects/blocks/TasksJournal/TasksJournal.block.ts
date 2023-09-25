@@ -32,6 +32,7 @@ export class TasksJournalBlock extends Block {
     } catch {
       // ignore
     }
+    await $loading.waitForDisplayed({ reverse: true });
 
     const $taskRow = await this.$('taskRow');
     const $$taskCells = await $taskRow.$$('.MuiTableCell-root');
