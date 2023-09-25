@@ -22,8 +22,11 @@ import { services } from '../../services';
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
   const { tableName, schemaId } = layer;
   const schema = await schemaService.getSchema(schemaId);
-
   const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
+
+  if (!schema.geometryType) {
+    throw new Error(`Не задан тип геометрии для схемы ${schemaId}`);
+  }
 
   return {
     type: 'Feature',
@@ -76,6 +79,8 @@ export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdit
       ]
     };
   }
+
+  throw new Error(`Неподдерживаемый тип геометрии: ${type}`);
 }
 
 export function isLinear(...geometryTypes: GeometryType[]): boolean {
@@ -107,11 +112,11 @@ export function selectLabelForGeometryType(
     return ifPolygonal;
   } else if (isLinear(geometryType)) {
     return ifLinear;
-  } else if (isPoint(geometryType)) {
+  } else if (isPoint(geometryType) && ifPointOrOther) {
     return ifPointOrOther;
   }
 
-  return ifOther || ifPointOrOther;
+  return ifOther || ifPointOrOther || '';
 }
 
 export function generateWfsSortParam(pageOptions: PageOptions): string {
@@ -154,15 +159,15 @@ export function transformDimension(dimension: number | string): number {
 }
 
 export function getFeatureExtent(feature: WfsFeature): Extent {
-  const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(feature, true);
+  const olFeature: Feature<SimpleGeometry> | undefined = wfsFeatureToFeature(feature, true);
+  const extent: Extent | undefined = olFeature?.getGeometry()?.getExtent();
 
-  if (!olFeature) {
+  if (!olFeature || !extent) {
     services.logger.warn('Incorrect feature: ', feature);
-
-    return;
+    throw new Error('Incorrect feature');
   }
 
-  return olFeature.getGeometry().getExtent();
+  return extent;
 }
 
 export function mergeExtents(extents: Extent[]): Extent {

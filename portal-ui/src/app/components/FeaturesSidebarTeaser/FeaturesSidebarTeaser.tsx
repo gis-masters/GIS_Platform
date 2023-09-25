@@ -18,7 +18,7 @@ const cnFeaturesSidebarTeaser = cn('FeaturesSidebarTeaser');
 
 @observer
 export class FeaturesSidebarTeaser extends Component {
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
   private testingFeatureUpdateabilityOperationId?: symbol;
   @observable private featureIsUpdatable = false;
 
@@ -38,7 +38,7 @@ export class FeaturesSidebarTeaser extends Component {
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

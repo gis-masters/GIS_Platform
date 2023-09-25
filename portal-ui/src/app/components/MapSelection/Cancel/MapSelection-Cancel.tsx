@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, observable } from 'mobx';
 
-import { mapStore } from '../../stores/Map.store';
-import { IconButton } from '../IconButton/IconButton';
-import { mapService } from '../../services/map/map.service';
-import { RectangleSelectionCancel } from '../Icons/RectangleSelectionCancel';
+import { mapStore } from '../../../stores/Map.store';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { RectangleSelectionCancel } from '../../Icons/RectangleSelectionCancel';
+import { IconButton } from '../../IconButton/IconButton';
 
-const cnCancelSelection = cn('CancelSelection');
+const cnMapSelectionCancel = cn('MapSelection', 'Cancel');
 
 @observer
-export class CancelSelection extends Component {
+export class MapSelectionCancel extends Component {
   @observable private timer = 0;
   @observable private escKeyPressed = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   componentDidMount() {
     document.addEventListener('keydown', this.keydownHandler);
@@ -30,10 +35,10 @@ export class CancelSelection extends Component {
   render() {
     return (
       Boolean(mapStore.selectedFeatures.length) && (
-        <Tooltip title='Очистка выделенных на карте объектов (Esc+Esc)'>
+        <Tooltip title='Снять выделение (Esc, Esc)'>
           <IconButton
             disabled={!mapStore.selectedFeatures.length}
-            className={cnCancelSelection()}
+            className={cnMapSelectionCancel()}
             onClick={this.clearSelectedFeatures}
             size='small'
           >
@@ -78,11 +83,6 @@ export class CancelSelection extends Component {
 
   @boundMethod
   private clearSelectedFeatures(): void {
-    mapStore.setSelectedFeatures([]);
-    mapService.highlightFeatures([]);
-
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 50);
+    mapSelectionService.selectFeatures([]);
   }
 }

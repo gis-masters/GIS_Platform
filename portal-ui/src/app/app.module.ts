@@ -74,6 +74,7 @@ import { SystemManagementComponent } from './components/system-management/system
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
 import { MessagesRegistryComponent } from './components/messages-registry/messages-registry.component';
 import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
+import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +137,8 @@ import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.
     SystemManagementComponent,
     EditFeatureActionsComponent,
     MessagesRegistryComponent,
-    TasksJournalComponent
+    TasksJournalComponent,
+    UtilityDialogsRootComponent
   ],
   imports: [
     HttpClientModule,

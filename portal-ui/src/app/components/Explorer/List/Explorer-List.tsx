@@ -35,7 +35,7 @@ interface ExplorerListProps {
 export class ExplorerList extends Component<ExplorerListProps> {
   private thisRef = createRef<HTMLUListElement>();
   private selectedItemRef = createRef<HTMLDivElement>();
-  private selectedItemReactionDisposer: IReactionDisposer;
+  private selectedItemReactionDisposer?: IReactionDisposer;
 
   constructor(props: ExplorerListProps) {
     super(props);
@@ -60,9 +60,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
   }
 
   componentWillUnmount() {
-    if (this.selectedItemReactionDisposer) {
-      this.selectedItemReactionDisposer();
-    }
+    this.selectedItemReactionDisposer?.();
   }
 
   render() {

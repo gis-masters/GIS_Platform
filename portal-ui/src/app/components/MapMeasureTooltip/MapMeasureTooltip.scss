@@ -5,8 +5,8 @@
 body .MapMeasureTooltip {
   position: relative;
 
-  padding: calc(4px * var(--MapMeasureTooltipResize)) calc(6px * var(--MapMeasureTooltipResize))
-    calc(4px * var(--MapMeasureTooltipResize)) calc(8px * var(--MapMeasureTooltipResize));
+  padding: calc(5px * var(--MapMeasureTooltipResize)) calc(6px * var(--MapMeasureTooltipResize))
+    calc(3px * var(--MapMeasureTooltipResize)) calc(8px * var(--MapMeasureTooltipResize));
 
   transition: opacity 0.3s;
   white-space: nowrap;
@@ -53,6 +53,7 @@ body .MapMeasureTooltip {
   }
 
   &-Clear {
+    margin-top: -1px;
     margin-left: 5px;
 
     vertical-align: top;

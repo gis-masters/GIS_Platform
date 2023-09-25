@@ -3,7 +3,7 @@ import { Block } from '../../Block';
 class MapToolbarBlock extends Block {
   selectors = {
     container: '.MapToolbar',
-    cancelSelection: '.MapToolbar .CancelSelection'
+    cancelSelection: '.MapToolbar .MapSelection-Cancel'
   };
 
   async isCancelSelectionBtnExist(): Promise<boolean> {

@@ -19,6 +19,12 @@ export interface DataChangeEventDetail<T> {
   data: T;
 }
 
+export interface UtilityDialogCloseEventDetail {
+  id: string;
+  answer?: boolean;
+  value?: string;
+}
+
 class CommunicationService {
   private static _instance: CommunicationService;
 
@@ -36,6 +42,7 @@ class CommunicationService {
   beforeMapDestroy = new Emitter();
   drawOff = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();
+  utilityDialogClosed = new Emitter<UtilityDialogCloseEventDetail>();
 
   basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();
   datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();

@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
 import { cloneDeep, isNumber } from 'lodash';
 
-import { MapSelectionTypes, mapStore } from '../../stores/Map.store';
+import { mapStore } from '../../stores/Map.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
@@ -39,6 +39,7 @@ import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { formatDate } from '../../services/util/date.util';
 import { BaseEdit } from '../edit-bug-object/base-edit';

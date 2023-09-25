@@ -17,7 +17,7 @@ const cnFeaturesListSidebar = cn('FeaturesListSidebar');
 
 @observer
 export default class FeaturesListSidebar extends Component {
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
 
   componentDidMount() {
     communicationService.featuresUpdated.on(this.close, this);
@@ -35,7 +35,7 @@ export default class FeaturesListSidebar extends Component {
 
   componentWillUnmount() {
     communicationService.off(this);
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

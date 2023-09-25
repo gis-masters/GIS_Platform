@@ -36,9 +36,7 @@ class XTableFilterTypeId extends Component<XTableFilterProps> {
   }
 
   componentWillUnmount() {
-    if (this.reactionDisposer) {
-      this.reactionDisposer();
-    }
+    this.reactionDisposer?.();
   }
 
   render() {

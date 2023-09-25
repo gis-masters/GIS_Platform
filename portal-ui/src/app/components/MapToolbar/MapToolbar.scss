@@ -8,6 +8,6 @@
   align-items: stretch;
   gap: 10px;
 
-  width: 465px;
+  width: calc(520px + calc(var(--MapToolbarLeftButtons) * 38px));
   max-width: calc(100% - 55px);
 }

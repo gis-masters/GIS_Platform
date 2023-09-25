@@ -23,7 +23,7 @@ interface LayersTreeProps {
 export class LayersTree extends Component<LayersTreeProps> {
   @observable combineEnabled = false;
   @observable highlightedGroupId?: number;
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
 
   constructor(props: LayersTreeProps) {
     super(props);
@@ -44,7 +44,7 @@ export class LayersTree extends Component<LayersTreeProps> {
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

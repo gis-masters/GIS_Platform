@@ -25,7 +25,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { route } from '../../stores/Route.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
-import { FilterBySelection, mapStore } from '../../stores/Map.store';
+import { mapStore } from '../../stores/Map.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { CrgExternalLayer, CrgLayer } from '../gis/layers/layers.models';
@@ -54,6 +54,7 @@ import { Mime } from '../util/Mime';
 import { schemaService } from '../data/schema/schema.service';
 import { applyView } from '../data/schema/schema.utils';
 import { cqlConcat } from '../util/cqlConcat';
+import { FilterBySelection } from './map.models';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -97,7 +98,24 @@ class MapService {
   modificationDisabled = new Emitter();
   modificationDone = new Emitter<Geometry>();
 
-  map?: Map;
+  private _map?: Map;
+
+  get map(): Map {
+    if (!this._map) {
+      throw new Error('Map is not initialized');
+    }
+
+    return this._map;
+  }
+
+  set map(map: Map) {
+    this._map = map;
+  }
+
+  get mapInited(): boolean {
+    return !!this._map;
+  }
+
   view?: View;
   scaleLine?: ScaleLine;
   draftSource?: VectorSource<SimpleGeometry>;
@@ -125,6 +143,7 @@ class MapService {
   // ZIndex чернового слоя который используется для подсвечивания объектов
   readonly DRAFT_LAYER_ZINDEX = 10_000;
   readonly MEASURE_LAYER_ZINDEX = 10_100;
+  readonly LABELS_LAYER_ZINDEX = 10_150;
   readonly MARKERS_LAYER_ZINDEX = 10_200;
 
   // Default view options
@@ -153,6 +172,18 @@ class MapService {
     this.debouncedZoomEvent = debounce(() => this.zoomChanged.emit(this.view?.getZoom()), 100);
 
     this.isTiledWms = Boolean(localStorage.getItem('tiledWms'));
+  }
+
+  async waitForMap(): Promise<void> {
+    return new Promise(resolve => {
+      if (this.mapInited) {
+        resolve();
+      } else {
+        this.mapCreate.once(() => {
+          resolve();
+        });
+      }
+    });
   }
 
   createMap(): void {
@@ -255,7 +286,7 @@ class MapService {
     communicationService.beforeMapDestroy.emit();
     this.drawOff();
     this.map.unset('target');
-    delete this.map;
+    delete this._map;
     delete this.view;
   }
 
@@ -314,10 +345,6 @@ class MapService {
   }
 
   addExternalLayer(layer: CrgExternalLayer, zIndex: number) {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить addExternalLayers. Карта не создана');
-    }
-
     const layerOnMap = this.getLayerByName(layer.tableName);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
@@ -348,10 +375,6 @@ class MapService {
   }
 
   async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить addLayers. Карта не создана');
-    }
-
     const { tableName, complexName, styleName, schemaId, view } = layer;
 
     if (!tableName || !complexName) {
@@ -450,11 +473,7 @@ class MapService {
 
   // Очистить карту от всех слоёв.
   clearMap() {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить clearMap. Карта не создана');
-    }
-
-    this.getUserLayers().forEach(layer => this.map?.removeLayer(layer));
+    this.getUserLayers().forEach(layer => this.map.removeLayer(layer));
   }
 
   /**
@@ -498,10 +517,6 @@ class MapService {
   }
 
   private getSystemLayer(name: string): BaseLayer | undefined {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить getSystemLayer. Карта не создана');
-    }
-
     return this.map
       .getLayers()
       .getArray()
@@ -544,10 +559,6 @@ class MapService {
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number], minResolution?: number) {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить fitToBbox. Карта не создана');
-    }
-
     // constrainResolution Ломает view на слоях с геометрией Point
     this.map.getView().fit(bbox, { padding, minResolution });
   }
@@ -596,8 +607,8 @@ class MapService {
   }
 
   enableDraftModification() {
-    if (!this.draftSourceModify || !this.map) {
-      throw new Error('Невозможно выполнить enableDraftModification. Карта не создана');
+    if (!this.draftSourceModify) {
+      throw new Error('Невозможно выполнить enableDraftModification');
     }
 
     this.isModifying = true;
@@ -608,8 +619,8 @@ class MapService {
   }
 
   disableDraftModification() {
-    if (!this.draftSourceModify || !this.map) {
-      throw new Error('Невозможно выполнить disableDraftModification. Карта не создана');
+    if (!this.draftSourceModify) {
+      throw new Error('Невозможно выполнить disableDraftModification');
     }
 
     this.isModifying = false;
@@ -626,10 +637,6 @@ class MapService {
   }
 
   draw(geometryType: GeometryType, handler: (e: DrawEvent) => void) {
-    if (!this.map) {
-      throw new Error('Невозможно выполнить draw. Карта не создана');
-    }
-
     this.drawOff();
     document.body.classList.add('global-crosshair-cursor');
 
@@ -650,8 +657,8 @@ class MapService {
 
   drawOff() {
     document.body.classList.remove('global-crosshair-cursor');
-    if (this.draftSourceDraw) {
-      this.draftSourceDraw.un('drawend', this.drawHandler);
+    if (this.draftSourceDraw && this.drawHandler) {
+      this.draftSourceDraw.un(['drawend'], this.drawHandler);
       this.map.removeInteraction(this.draftSourceDraw);
       delete this.draftSourceDraw;
     }
@@ -674,6 +681,11 @@ class MapService {
   private positionToExtent(extent: Extent, pointMode?: boolean) {
     if (pointMode) {
       const size = this.map.getSize();
+
+      if (!size) {
+        throw new Error('Невозможно выполнить positionToExtent. Размер карты не определен');
+      }
+
       this.map.getView().centerOn(extent, size, [size[0] / 2, size[1] / 2]);
     } else {
       this.fitToBbox(extent, [50, 50, 50, 50]);
@@ -733,7 +745,7 @@ class MapService {
    */
   private getUserLayers(): (ImageLayer<ImageSource> | TileLayer<TileSource>)[] {
     return this.map
-      ?.getLayers()
+      .getLayers()
       .getArray()
       .filter(layer => this.isUserLayer(layer)) as (ImageLayer<ImageSource> | TileLayer<TileSource>)[];
   }

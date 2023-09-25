@@ -131,6 +131,10 @@ export function mergeContentTypes(schema: Schema, contentTypeIds: string[]): Con
 }
 
 function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schema {
+  if (schema.appliedView || schema.appliedContentType) {
+    throw new Error('К схеме уже применен тип или представление');
+  }
+
   const clonedSchema = cloneDeep(schema);
 
   if (type) {

@@ -5,20 +5,21 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable, computed } from 'mobx';
 
-import { XTableInvoke } from '../../XTable/XTable';
-import { PageOptions } from '../../../services/models';
-import { XTableColumn } from '../../XTable/XTable.models';
-import { convertToComplexField } from '../../Form/Form.utils';
+import { mapStore } from '../../../stores/Map.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { FilterBySelection, mapStore } from '../../../stores/Map.store';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { calculateValues } from '../../../services/formValidation.service';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { applyView } from '../../../services/data/schema/schema.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { FilterBySelection } from '../../../services/map/map.models';
+import { XTableColumn } from '../../XTable/XTable.models';
+import { PageOptions } from '../../../services/models';
 import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { convertToComplexField } from '../../Form/Form.utils';
+import { XTableInvoke } from '../../XTable/XTable';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';

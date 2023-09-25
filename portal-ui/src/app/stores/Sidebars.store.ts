@@ -37,8 +37,6 @@ const defaultValues: Partial<Sidebars> = {
 };
 
 class Sidebars {
-  private static _instance: Sidebars;
-
   @observable leftOpen: boolean;
   @observable featuresSidebarOpen: boolean;
   @observable editOpen: boolean;
@@ -54,12 +52,15 @@ class Sidebars {
   @observable bugReportOpen: boolean;
   @observable infoOpen: boolean;
 
+  private static _instance: Sidebars;
+
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   private constructor() {
     makeObservable(this);
+
     this.reset();
 
     reaction(

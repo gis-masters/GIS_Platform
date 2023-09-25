@@ -28,7 +28,7 @@ interface PrintMapDialogPreviewProps {
 
 @observer
 export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps> {
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
   private needUpdatePreviewImageAfterUpdate = false;
   private updatingPreviewImage = false;
   private previewRef = createRef<HTMLImageElement>();
@@ -65,7 +65,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

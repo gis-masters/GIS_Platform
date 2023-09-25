@@ -22,7 +22,7 @@ export class ExplorerToolbarActions extends Component<ExplorerToolbarActionsProp
   @observable private counter = 0;
 
   private toolbarActions: ReactNode;
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
 
   constructor(props: ExplorerToolbarActionsProps) {
     super(props);
@@ -47,7 +47,7 @@ export class ExplorerToolbarActions extends Component<ExplorerToolbarActionsProp
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

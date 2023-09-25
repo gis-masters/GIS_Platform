@@ -265,6 +265,11 @@
         ]
       },
       {
+        "id": "labels",
+        "title": "Аннотации на карте",
+        "contentUrl": "/assets/help/map/mapTools/labels/labels.html"
+      },
+      {
         "id": "edit-object1",
         "title": "Управление данными",
         "children": [
@@ -346,7 +351,7 @@
 
           {
             "id": "11layerInDataset",
-            "title": "Создание пустого векторого слоя",
+            "title": "Создание пустого векторного слоя",
             "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
           },
 

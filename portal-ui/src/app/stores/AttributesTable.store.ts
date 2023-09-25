@@ -4,12 +4,6 @@ import { Pages, route } from './Route.store';
 import { CrgLayer, CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FilterQuery } from '../services/util/filterObjects';
 
-export enum FilterBySelection {
-  ONLY_SELECTED = 'selected',
-  ONLY_NOT_SELECTED = 'notSelected',
-  DISABLED = 'disabled'
-}
-
 const defaultValues: Partial<AttributesTableStore> = {};
 
 class AttributesTableStore {

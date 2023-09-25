@@ -16,7 +16,6 @@ export abstract class Page extends Block {
   }
 
   async testUrl(): Promise<void> {
-    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-unsafe-call -- типы врут
     await expect(browser).toHaveUrlContaining(this.url);
   }
 

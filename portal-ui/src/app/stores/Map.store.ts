@@ -1,69 +1,51 @@
 import { action, computed, observable, reaction, makeObservable } from 'mobx';
 import { cloneDeep } from 'lodash';
+import { Feature } from 'ol';
 import sift from 'sift';
 
 import { route, Pages } from './Route.store';
-import { flags } from '../services/feature-flags';
 import { attributesTableStore } from './AttributesTable.store';
-import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
-import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
-import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
 import { getFieldFilterValue, modifyFieldFilterValue, prepareLike } from '../services/util/filterObjects';
-
-export enum MapSelectionTypes {
-  ADD,
-  REMOVE,
-  REPLACE
-}
-
-export enum MapMode {
-  DEFAULT,
-  SELECTION,
-  MEASURE,
-  DRAW,
-  PICK
-}
-
-export enum MapAction {
-  MOVE,
-  PROKOL,
-  SELECT_WITH_MODIFICATORS,
-  SELECT,
-  MEASUREMENT,
-  DRAW,
-  PICK
-}
-
-export enum FilterBySelection {
-  ONLY_SELECTED = 'selected',
-  ONLY_NOT_SELECTED = 'notSelected',
-  DISABLED = 'disabled'
-}
+import { FilterBySelection, LabelType, MapAction, MapMode } from '../services/map/map.models';
+import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
+import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
+import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
+import { flags } from '../services/feature-flags';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
 
 const actionsInModes = {
   [MapMode.DEFAULT]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT_WITH_MODIFICATORS],
   [MapMode.SELECTION]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT, MapAction.SELECT_WITH_MODIFICATORS],
   [MapMode.MEASURE]: [MapAction.MOVE, MapAction.MEASUREMENT],
   [MapMode.DRAW]: [MapAction.MOVE, MapAction.DRAW],
-  [MapMode.PICK]: [MapAction.MOVE, MapAction.PICK]
+  [MapMode.PICK]: [MapAction.MOVE, MapAction.PICK],
+  [MapMode.ADDING_LABEL]: [MapAction.MOVE, MapAction.ADD_LABEL]
 };
 
 const defaultValues: Partial<MapStore> = {
   selectionActive: false,
   mode: MapMode.DEFAULT,
   unitsOfAreaMeasurement: UnitsOfAreaMeasurement.HECTARE,
-  selectedFeatures: []
+  selectedFeatures: [],
+  labelsVisible: false,
+  labels: observable.array([], { deep: false })
 };
 
 class MapStore {
   @observable private loadingCount = 0;
+
   measureItems: MeasureItem[] = observable.array([], { deep: false });
-  @observable measureMode?: MeasureMode;
+  @observable measureMode: MeasureMode | null = null;
+  @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement = UnitsOfAreaMeasurement.HECTARE;
+
   @observable mode: MapMode;
+
   @observable selectionActive: boolean;
-  @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement;
-  @observable selectedFeatures?: WfsFeature[];
+  @observable selectedFeatures: WfsFeature[] = [];
+
+  @observable labelsVisible = false;
+  @observable currentLabelType?: LabelType;
+  labels: Feature[] = observable.array([], { deep: false });
 
   private _selectingFeaturesLimit = 500;
 
@@ -156,7 +138,7 @@ class MapStore {
   }
 
   @action
-  setMeasureMode(measureMode: MeasureMode) {
+  setMeasureMode(measureMode: MeasureMode | null) {
     this.measureMode = measureMode;
   }
 
@@ -190,14 +172,25 @@ class MapStore {
     }
   }
 
+  // use only in map-selection.service.ts
   @action
   setSelectedFeatures(features: WfsFeature[]) {
     this.selectedFeatures = features;
   }
 
   @action
-  dropSelectedFeatures() {
-    this.selectedFeatures = [];
+  setLabelsVisibility(status: boolean) {
+    this.labelsVisible = status;
+  }
+
+  @action
+  setCurrentLabelType(type?: LabelType) {
+    this.currentLabelType = type;
+  }
+
+  @action
+  setLabels(labels: Feature[]) {
+    this.labels.splice(0, this.labels.length, ...labels);
   }
 
   @action

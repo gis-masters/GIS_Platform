@@ -3,11 +3,12 @@ import { MultiPolygon } from 'ol/geom';
 import { intersects, and } from 'ol/format/filter';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { filterFeatures } from '../../util/filterObjects';
+import { MapSelectionTypes } from '../../map/map.models';
 import { olProjection } from '../projections.service';
 import { cqlConcat } from '../../util/cqlConcat';
 import { cqlBuild } from '../../util/cqlBuild';

@@ -6,12 +6,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
+import { mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { removeFieldFilter } from '../../../services/util/filterObjects';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { MapSelectionTypes } from '../../../services/map/map.models';
 import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 import { PageOptions } from '../../../services/models';
 
@@ -29,7 +30,7 @@ interface AttributesCheckMasterProps {
 @observer
 export class AttributesCheckMaster extends Component<AttributesCheckMasterProps> {
   @observable private allSelected = false;
-  private reactionDisposer: IReactionDisposer;
+  private reactionDisposer?: IReactionDisposer;
   private testSelectionAllnessOperationId: symbol;
   private selectingAllOperationId: symbol;
 
@@ -52,7 +53,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   }
 
   componentWillUnmount() {
-    this.reactionDisposer();
+    this.reactionDisposer?.();
   }
 
   render() {

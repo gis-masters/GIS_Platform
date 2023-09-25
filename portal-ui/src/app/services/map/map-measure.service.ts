@@ -16,11 +16,12 @@ import { unByKey } from 'ol/Observable';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { EventsKey } from 'ol/events';
 
-import { MapMode, mapStore } from '../../stores/Map.store';
-import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
-import { communicationService } from '../communication.service';
-import { GeometryType } from '../geoserver/wfs/wfs.models';
+import { mapStore } from '../../stores/Map.store';
+import { MapMode } from './map.models';
 import { mapService } from './map.service';
+import { GeometryType } from '../geoserver/wfs/wfs.models';
+import { communicationService } from '../communication.service';
+import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
 
 export type MeasureMode = 'area' | 'length';
@@ -37,13 +38,13 @@ class MapMeasureService {
   private static _instance: MapMeasureService;
 
   private source = new VectorSource();
-  private sourceDraw?: Draw;
-  private featureGeometryChangeListeners: EventsKey | EventsKey[];
+  private draw?: Draw;
+  private featureGeometryChangeListenersKeys?: EventsKey | EventsKey[];
   private sketchItem?: MeasureItem;
   private markFillColor = 'rgba(255, 255, 255, 0.5)';
-  private helpTooltipElement: HTMLDivElement;
-  private helpTooltip: Overlay;
-  private helpMsg: string;
+  private helpTooltipElement?: HTMLDivElement;
+  private helpTooltip?: Overlay;
+  private helpMsg?: string;
 
   private layer = new VectorLayer({
     source: this.source,
@@ -71,8 +72,12 @@ class MapMeasureService {
   }
 
   private constructor() {
-    if (mapService.map) {
-      this.addMapEventsListeners();
+    try {
+      if (mapService.map) {
+        this.addMapEventsListeners();
+      }
+    } catch {
+      // do nothing
     }
 
     mapService.mapCreate.on((): void => {
@@ -105,12 +110,12 @@ class MapMeasureService {
       this.init();
     }
 
-    this.sourceDraw = this.getSourceDraw(mode);
+    this.draw = this.getDraw(mode);
 
-    this.sourceDraw.on('drawstart', this.measureDrawStartHandler);
-    this.sourceDraw.on('drawend', this.drawEndHandler);
+    this.draw.on('drawstart', this.measureDrawStartHandler);
+    this.draw.on('drawend', this.drawEndHandler);
 
-    mapService.map.addInteraction(this.sourceDraw);
+    mapService.map.addInteraction(this.draw);
   }
 
   private init() {
@@ -119,15 +124,15 @@ class MapMeasureService {
     mapService.map.addInteraction(modify);
 
     modify.on('modifystart', (e: ModifyEvent) => {
-      this.featureGeometryChangeListeners = this.featureGeometryChangeListeners || [];
-      if (!Array.isArray(this.featureGeometryChangeListeners)) {
-        this.featureGeometryChangeListeners = [this.featureGeometryChangeListeners];
+      this.featureGeometryChangeListenersKeys = this.featureGeometryChangeListenersKeys || [];
+      if (!Array.isArray(this.featureGeometryChangeListenersKeys)) {
+        this.featureGeometryChangeListenersKeys = [this.featureGeometryChangeListenersKeys];
       }
       // eslint-disable-next-line no-unused-expressions -- @FIXME хз, что тут происходит
       [
-        ...this.featureGeometryChangeListeners,
+        ...this.featureGeometryChangeListenersKeys,
         ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {
-          return feature.getGeometry().on('change', (e: BaseEvent) => {
+          return feature.getGeometry()?.on('change', (e: BaseEvent) => {
             const modifyingItem = mapStore.measureItems.find(item => item.feature === feature);
             this.featureGeometryChangeHandler(e, modifyingItem);
           });
@@ -139,9 +144,9 @@ class MapMeasureService {
   @boundMethod
   private measureDrawStartHandler(e: DrawEvent) {
     this.sketchItem = this.createItem(e.feature);
-    this.featureGeometryChangeListeners = (e.feature as Feature<SimpleGeometry>)
+    this.featureGeometryChangeListenersKeys = (e.feature as Feature<SimpleGeometry>)
       .getGeometry()
-      .on('change', this.featureGeometryChangeHandler);
+      ?.on('change', this.featureGeometryChangeHandler);
   }
 
   @boundMethod
@@ -167,7 +172,7 @@ class MapMeasureService {
     this.sketchItem.tooltipOverlay.setOffset([0, -6]);
     this.renderTooltip(this.sketchItem, false);
     mapStore.addMeasureItem(this.sketchItem);
-    unByKey(this.featureGeometryChangeListeners);
+    unByKey(this.featureGeometryChangeListenersKeys);
     delete this.sketchItem;
   }
 
@@ -191,14 +196,14 @@ class MapMeasureService {
   }
 
   measureOff() {
-    if (this.sourceDraw) {
-      this.sourceDraw.un('drawend', this.drawEndHandler);
-      unByKey(this.featureGeometryChangeListeners);
+    if (this.draw) {
+      this.draw.un('drawend', this.drawEndHandler);
+      unByKey(this.featureGeometryChangeListenersKeys);
       if (this.sketchItem) {
         this.clearItem(this.sketchItem);
       }
-      mapService.map.removeInteraction(this.sourceDraw);
-      delete this.sourceDraw;
+      mapService.map.removeInteraction(this.draw);
+      delete this.draw;
       mapStore.setMeasureMode(null);
     }
   }
@@ -230,7 +235,7 @@ class MapMeasureService {
     return connected;
   }
 
-  private getSourceDraw(mode: MeasureMode): Draw {
+  private getDraw(mode: MeasureMode): Draw {
     return new Draw({
       source: this.source,
       type: mode === 'length' ? GeometryType.LINE_STRING : GeometryType.POLYGON,
@@ -239,14 +244,14 @@ class MapMeasureService {
           color: this.markFillColor
         }),
         stroke: new Stroke({
-          color: 'rgba(0, 0, 0, 0.5)',
+          color: '#ffcc33',
           lineDash: [10, 10],
           width: 2
         }),
         image: new CircleStyle({
           radius: 5,
           stroke: new Stroke({
-            color: 'rgba(0, 0, 0, 0.7)'
+            color: '#ffcc33'
           }),
           fill: new Fill({
             color: this.markFillColor

@@ -4,8 +4,9 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { FilterBySelection, MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { mapStore } from '../../../stores/Map.store';
 import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
+import { FilterBySelection, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { communicationService } from '../../../services/communication.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
@@ -88,7 +89,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   componentWillUnmount(): void {
     communicationService.off(this);
-    this.selectionReactionDisposer();
+    this.selectionReactionDisposer?.();
   }
 
   render() {

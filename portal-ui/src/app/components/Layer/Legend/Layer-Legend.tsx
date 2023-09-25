@@ -56,9 +56,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
   }
 
   componentWillUnmount() {
-    if (this.reactionDisposer) {
-      this.reactionDisposer();
-    }
+    this.reactionDisposer?.();
     Emitter.scopeOff(this);
   }
 

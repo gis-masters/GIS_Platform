@@ -7,8 +7,8 @@ import { cloneDeep } from 'lodash';
 import '!style-loader!css-loader!ol/ol.css';
 
 import { route } from '../../stores/Route.store';
+import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
-import { MapMode, mapStore } from '../../stores/Map.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -19,6 +19,7 @@ import { mapSelectionService } from '../../services/map/map-selection.service';
 import { fetchBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { mapService } from '../../services/map/map.service';
+import { MapMode } from '../../services/map/map.models';
 import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
@@ -71,6 +72,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         cloneDeep(attributesTableStore.filterDisabled)
       ],
       async () => {
+        if (!mapService.mapInited) {
+          return;
+        }
+
         mapService.hideUserLayers();
 
         for (let i = 0; i < currentProject.visibleOnMapLayers.length; i++) {
@@ -153,9 +158,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     mapSelectionService.selectFeatures([]);
     projectsService.clearCurrent();
     printSettings.reset();
-    if (this.reactionDisposer) {
-      this.reactionDisposer();
-    }
+    this.reactionDisposer?.();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);

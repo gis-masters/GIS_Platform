@@ -5,10 +5,10 @@ import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { FilterBySelection } from '../../../stores/Map.store';
-import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
-import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
+import { FilterBySelection } from '../../../services/map/map.models';
+import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckFilter.scss';
 

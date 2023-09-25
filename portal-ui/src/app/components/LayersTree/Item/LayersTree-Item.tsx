@@ -3,11 +3,12 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { MapSelectionTypes, mapStore } from '../../../stores/Map.store';
+import { mapStore } from '../../../stores/Map.store';
+import { MapSelectionTypes } from '../../../services/map/map.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { TreeItem } from '../../../services/gis/projects/projects.models';
-import { projectsService } from '../../../services/gis/projects/projects.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { CrgLayer, CrgLayerType } from '../../../services/gis/layers/layers.models';
 import { Layer } from '../../Layer/Layer';
 

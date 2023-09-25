@@ -97,8 +97,8 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
   private fetchingOperationId: symbol;
   private tableRef: RefObject<HTMLDivElement> = createRef();
-  private pageOptionsReactionDisposer: IReactionDisposer;
-  private pagedDataReactionDisposer: IReactionDisposer;
+  private pageOptionsReactionDisposer?: IReactionDisposer;
+  private pagedDataReactionDisposer?: IReactionDisposer;
 
   constructor(props: XTableProps<T>) {
     super(props);
@@ -157,8 +157,8 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   }
 
   componentWillUnmount() {
-    this.pageOptionsReactionDisposer();
-    this.pagedDataReactionDisposer();
+    this.pageOptionsReactionDisposer?.();
+    this.pagedDataReactionDisposer?.();
   }
 
   render() {

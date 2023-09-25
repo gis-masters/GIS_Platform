@@ -18,6 +18,29 @@ export enum UnitsOfLengthMeasurement {
 }
 
 /**
+ * Из OpenLayer фичи {@link Feature} формируем {@link WfsFeature}
+ */
+export function featureToWfsFeature(olFeature: Feature): WfsFeature {
+  const { geometry: trash, ...properties } = olFeature.getProperties();
+  const geometry = olFeature.getGeometry();
+
+  if (!(geometry instanceof SimpleGeometry)) {
+    throw new TypeError('Geometry is not SimpleGeometry');
+  }
+
+  return {
+    type: 'Feature',
+    id: String(olFeature.getId()),
+    geometry: {
+      type: geometry.getType() as GeometryType,
+      coordinates: geometry.getCoordinates()
+    },
+    geometry_name: 'geometry',
+    properties
+  };
+}
+
+/**
  * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
  */
 export function wfsFeatureToFeature(
@@ -36,15 +59,20 @@ export function wfsFeatureToFeature(
     return;
   }
 
-  return new Feature<SimpleGeometry>({
+  const olFeature = new Feature<SimpleGeometry>({
     geometry: wfsGeometryToGeometry(wfsFeature.geometry)
   });
+
+  olFeature.setId(wfsFeature.id);
+  olFeature.setProperties(wfsFeature.properties);
+
+  return olFeature;
 }
 
 /**
- * Из {@link WfsGeometry} формируем OpenLayer {@link Geometry}
+ * Из {@link WfsGeometry} формируем OpenLayer {@link SimpleGeometry}
  */
-export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry | undefined {
+export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry {
   if (!wfsGeometry) {
     throw new Error('Некорректная геометрия');
   }

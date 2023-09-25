@@ -102,9 +102,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   componentWillUnmount() {
-    if (this.valueReactionDisposer) {
-      this.valueReactionDisposer();
-    }
+    this.valueReactionDisposer?.();
   }
 
   render() {
