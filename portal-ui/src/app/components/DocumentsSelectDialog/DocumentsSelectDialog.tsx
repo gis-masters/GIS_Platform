@@ -190,6 +190,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @action.bound
   private toggleRegisterView() {
+    this.select(null);
     this.libraryView = !this.libraryView;
   }
 

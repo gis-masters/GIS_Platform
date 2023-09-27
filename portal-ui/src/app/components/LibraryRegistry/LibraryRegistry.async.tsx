@@ -296,13 +296,14 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @boundMethod
   private renderCheck({ rowData }: { rowData: LibraryRecord }): ReactElement {
     const { addedDocuments, checkedLibraryDocuments } = this.props;
+
     const checked =
-      checkedLibraryDocuments.some(item => item.id === rowData.id) ||
-      addedDocuments.some(item => item.id === rowData.id);
+      checkedLibraryDocuments?.some(item => item.id === rowData.id) ||
+      addedDocuments?.some(item => item.id === rowData.id);
 
     return (
       <Checkbox
-        disabled={addedDocuments.some(item => item.id === rowData.id)}
+        disabled={addedDocuments?.some(item => item.id === rowData.id)}
         defaultChecked={checked}
         value={rowData.id}
         onChange={this.changeHandler}
@@ -417,6 +418,10 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @action.bound
   private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const selectedRecord = this.libraryDocuments.find(item => item.id === Number(e.target.value));
+
+    if (!selectedRecord) {
+      throw new Error('Нет выбранных документов');
+    }
 
     this.props.onSelect(
       checked
