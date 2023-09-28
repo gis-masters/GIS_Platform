@@ -103,6 +103,23 @@ export const allTypes: Schema = {
       title: 'Поле GEOMETRY',
       propertyType: PropertyType.GEOMETRY
     },
+    {
+      name: 'field_uuid',
+      title: 'Поле UUID',
+      hidden: true,
+      propertyType: PropertyType.UUID
+    },
+    {
+      name: 'field_user_id',
+      title: 'Поле USER_ID',
+      propertyType: PropertyType.USER_ID
+    },
+    {
+      name: 'field_user',
+      title: 'Поле USER',
+      multiple: true,
+      propertyType: PropertyType.USER
+    },
     ...systemProperties
   ]
 };

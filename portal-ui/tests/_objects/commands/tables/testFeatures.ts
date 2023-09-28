@@ -14,6 +14,8 @@ import { forOtherFiltering } from './testFeatures/forOtherFiltering';
 import { forOtherFiltering2 } from './testFeatures/forOtherFiltering2';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
+import { getTestUser } from '../auth/testUsers';
+import { getUserByEmail } from '../auth/getUserByEmail';
 
 const KEY = 'тестовые данные';
 
@@ -67,7 +69,17 @@ function generateByTemplate(template: string, schema: Schema | undefined): NewWf
   return features;
 }
 
-export function getTestFeatures(key: string, schema?: Schema): NewWfsFeature[] {
+async function setUserFieldsData(feature: NewWfsFeature[]): Promise<NewWfsFeature[]> {
+  const user1 = await getUserByEmail(getTestUser('Администратор организации').email);
+  const user2 = await getUserByEmail(getTestUser('Джинни').email);
+
+  feature[0].properties.field_user_id = user1.id;
+  feature[0].properties.field_user = `[{"id":${user1.id},"email":"hermione@admin1","name":"Hermione","surname":"Granger","middleName":""},{"id":${user2.id},"email":"ginny@user1","name":"Ginny","surname":"Weasley","middleName":"Molly"}]`;
+
+  return feature;
+}
+
+export async function getTestFeatures(key: string, schema?: Schema): Promise<NewWfsFeature[]> {
   switch (key) {
     case 'для тестирования прокола':
     case 'данные для тестирования сортировки': {
@@ -77,10 +89,10 @@ export function getTestFeatures(key: string, schema?: Schema): NewWfsFeature[] {
       return forFiltering;
     }
     case 'тестирование формы объекта': {
-      return forForm;
+      return setUserFieldsData(forForm);
     }
     case 'тестирование формы объекта 2': {
-      return forForm2;
+      return setUserFieldsData(forForm2);
     }
     case 'тестирование прокола': {
       return forProkol;

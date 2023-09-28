@@ -10,6 +10,7 @@ import { withTypeString } from './_type/XTable-Filter_type_string';
 import { XTableFilterBase, XTableFilterProps } from './XTable-Filter.base';
 import { withTypeDocument } from './_type/XTable-Filter_type_document';
 import { withTypeUserId } from './_type/XTable-Filter_type_userId';
+import { withTypeUser } from './_type/XTable-Filter_type_user';
 
 export const XTableFilter = compose(
   withTypeBool as HOC<XTableFilterProps>,
@@ -20,5 +21,6 @@ export const XTableFilter = compose(
   withTypeInteger as HOC<XTableFilterProps>,
   withTypeDocument as HOC<XTableFilterProps>,
   withTypeUserId as HOC<XTableFilterProps>,
+  withTypeUser as HOC<XTableFilterProps>,
   withTypeString as HOC<XTableFilterProps>
 )(XTableFilterBase) as typeof XTableFilterBase;

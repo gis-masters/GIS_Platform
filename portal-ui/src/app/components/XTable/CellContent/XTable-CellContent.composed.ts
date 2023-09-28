@@ -9,6 +9,7 @@ import { withTypeFias } from './_type/XTable-CellContent_type_fias';
 import { withTypeUrl } from './_type/XTable-CellContent_type_url';
 import { withTypeFloat } from './_type/XTable-CellContent_type_float';
 import { withTypeUserId } from './_type/XTable-CellContent_type_userId';
+import { withTypeUser } from './_type/XTable-CellContent_type_user';
 import { XTableCellContentBase as Presenter } from './XTable-CellContent.base';
 
 export const XTableCellContent = compose(
@@ -20,5 +21,6 @@ export const XTableCellContent = compose(
   withTypeFile,
   withTypeFias,
   withTypeUserId,
+  withTypeUser,
   withTypeUrl
 )(Presenter) as typeof Presenter;

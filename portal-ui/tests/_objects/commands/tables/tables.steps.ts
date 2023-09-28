@@ -63,7 +63,7 @@ Given(
 );
 
 Given('таблица наполнена данными {string}', async function (this: ScenarioScope, key: string) {
-  this.latestFeatures = getTestFeatures(key, this.latestSchema);
+  this.latestFeatures = await getTestFeatures(key, this.latestSchema);
   for (const feature of this.latestFeatures) {
     await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
   }
