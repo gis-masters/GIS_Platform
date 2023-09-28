@@ -35,6 +35,7 @@ public class RecordRowMapper extends BySchemaRowMapper implements RowMapper<IRec
                 case BIT:
                     record.put(columnName, rs.getBoolean(i));
                     break;
+                case INTEGER:
                 case BIGINT:
                     if (isNull(rs.getObject(i))) {
                         record.put(columnName, null);

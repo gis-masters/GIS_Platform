@@ -8,12 +8,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ParameterizedBaseDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.gisog_service_contract.dto.Status;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
@@ -55,9 +57,10 @@ public class GisogdRfEventHandler implements IEventHandler {
 
             Status status = event.getStatus();
             String idTemplate = parent.getContent().containsKey(ID) ? ID : PRIMARY_KEY;
+            LocalDateTime currentDatetime = DateTimeUtil.now();
             if (SUCCESS.equals(status)) {
                 String query = String.format("UPDATE %s.%s SET " +
-                                                     "gisogdrf_publication_datetime = now(), " +
+                                                     "gisogdrf_publication_datetime = '" + currentDatetime + "', " +
                                                      GISOGFRF_RESPONSE + " = null" +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
@@ -70,7 +73,7 @@ public class GisogdRfEventHandler implements IEventHandler {
                 response.put("status", event.getStatus().name());
 
                 String query = String.format("UPDATE %s.%s SET " +
-                                                     "last_modified = now(), " +
+                                                     "last_modified = '" + currentDatetime + "', " +
                                                      GISOGFRF_RESPONSE + " = :response " +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
