@@ -26,6 +26,7 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
@@ -511,6 +512,15 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         getRecordByEcqlFilterAndRecordId("", recordId);
     }
 
+    @Then("В табличном виде пользователю доступно {int} объектов")
+    public void checkAllowedItemsInTableViewForCurrentUser(Integer expected) {
+        authorizationBase.loginAsCurrentUser();
+
+        getRecordsAsRegistry("", DEFAULT_LIBRARY);
+
+        response.then().body("page.totalElements", equalTo(expected));
+    }
+
     @When("Пользователь делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsSortedByCurrentUser(String sortingFactor, String sortingDirection) {
         authorizationBase.loginAsCurrentUser();
@@ -525,17 +535,16 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Пользователь делает запрос на получение удалённых записей из библиотеки по-умолчанию")
     public void getAllRemovedRecordsFromDefaultLibrary() {
-        String ecqlFilter = "(is_deleted+=+'true')";
-        getRecordsAsRegistry(ecqlFilter, DEFAULT_LIBRARY);
+        getRecordsAsRegistry("(is_deleted+=+'true')", DEFAULT_LIBRARY);
     }
 
     @When("Пользователь делает запрос в реестре с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsInRegisterSortedByCurrentUser(String sortingFactor, String sortingDirection) {
-        String filter = "((is_folder+IN('false')+OR+is_folder+IS+null))";
-
         authorizationBase.loginAsCurrentUser();
 
-        getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter);
+        getAllRecordsInRegisterSortedWithFilter(sortingFactor,
+                                                sortingDirection,
+                                                "((is_folder+IN('false')+OR+is_folder+IS+null))");
     }
 
     @When("В библиотеке документов по-умолчанию существует {string} папки")

@@ -107,24 +107,29 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public Page<IRecord> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
-        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
-        List<IRecord> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier, schema);
         Set<String> ids = new HashSet<>();
-        Set<String> paths = new HashSet<>();
+        Set<String> pathsToChildren = new HashSet<>();
+        Set<String> pathsToMyParent = new HashSet<>();
+        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+
+        List<IRecord> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier, schema);
         allowedDirectly.forEach(record -> {
-            String id = String.valueOf(record.getContent().get(ID.getName()));
+            String id = String.valueOf(record.getAsString(ID.getName()));
             ids.add(id);
 
-            String pathToMeAndChildren = MessageFormat.format("{0}/{1}/%", record.getContent().get(PATH.getName()), id);
-            paths.add(pathToMeAndChildren);
+            String path = record.getAsString(PATH.getName());
+            pathsToChildren.add(MessageFormat.format("{0}/{1}/%", path, id));
+            pathsToMyParent.add(MessageFormat.format("{0}/{1}", path, id));
         });
 
         ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
                 ? ecqlFilter
                 : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
-        List<IRecord> allAllowedRecords = recordsDao.findAllowed(lQualifier, ids, paths, ecqlFilter, schema, pageable);
-        long total = recordsDao.getTotalAllowed(lQualifier, ids, paths, ecqlFilter);
+        List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, ids, pathsToChildren,
+                                                                            pathsToMyParent, ecqlFilter, schema,
+                                                                            pageable);
+        long total = recordsDao.getTotalAllowedForRegistry(lQualifier, ids, pathsToChildren, pathsToMyParent, ecqlFilter);
 
         return new PageImpl<>(allAllowedRecords, pageable, total);
     }

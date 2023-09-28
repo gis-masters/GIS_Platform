@@ -48,22 +48,19 @@ public class OwnerRecordsService implements IRecordsService {
     private final PermissionsService permissionsService;
     private final DocumentLibraryService librariesService;
     private final SystemAttributeHandler systemAttributeHandler;
-    private final IAuthenticationFacade authenticationFacade;
 
     public OwnerRecordsService(CustomRuleCalculator customRuleCalculator,
                                DdlTablesSpecial ddlTablesSpecial,
                                RecordsDao recordsDao,
                                PermissionsService permissionsService,
                                DocumentLibraryService librariesService,
-                               SystemAttributeHandler systemAttributeHandler,
-                               IAuthenticationFacade authenticationFacade) {
+                               SystemAttributeHandler systemAttributeHandler) {
         this.customRuleCalculator = customRuleCalculator;
         this.ddlTablesSpecial = ddlTablesSpecial;
         this.recordsDao = recordsDao;
         this.librariesService = librariesService;
         this.permissionsService = permissionsService;
         this.systemAttributeHandler = systemAttributeHandler;
-        this.authenticationFacade = authenticationFacade;
     }
 
     @Override

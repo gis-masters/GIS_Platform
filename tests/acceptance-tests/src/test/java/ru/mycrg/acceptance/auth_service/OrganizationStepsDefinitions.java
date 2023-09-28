@@ -435,7 +435,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             orgDto = entry.getValue();
 
             System.out.println("Выбрана организация с id: " + orgId);
-            System.out.println("Org dto: [" + orgDto + "]");
+            System.out.println("Org owner: [" + orgDto.getOwner().getEmail() + "]");
         } else {
             List<String> data = new ArrayList<>();
             data.add("ООО FizИКоровы");

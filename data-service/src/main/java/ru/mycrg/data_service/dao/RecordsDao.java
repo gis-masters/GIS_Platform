@@ -191,12 +191,13 @@ public class RecordsDao {
                                    ));
     }
 
-    public List<IRecord> findAllowed(ResourceQualifier tableQualifier,
-                                     Set<String> ids,
-                                     Set<String> paths,
-                                     String ecqlFilter,
-                                     SchemaDto schema,
-                                     Pageable pageable) {
+    public List<IRecord> findAllowedForRegistry(ResourceQualifier tableQualifier,
+                                                Set<String> ids,
+                                                Set<String> pathsToChildren,
+                                                Set<String> pathsToMyParent,
+                                                String ecqlFilter,
+                                                SchemaDto schema,
+                                                Pageable pageable) {
         String ecqlFiltersSection = buildWhereSection(ecqlFilter);
         if (!ecqlFiltersSection.isBlank()) {
             ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
@@ -211,7 +212,8 @@ public class RecordsDao {
                 "   (" +
                 "     (" +
                 "       id IN (" + joinAndQuoteMark(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(paths) + " ])" +
+                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(pathsToChildren) + " ])" +
+                "       OR path IN (" + joinAndQuoteMark(pathsToMyParent) + ")" +
                 "     )" +
                 " " + ecqlFiltersSection +
                 "   )" +
@@ -226,10 +228,11 @@ public class RecordsDao {
                                    ));
     }
 
-    public Long getTotalAllowed(ResourceQualifier tableQualifier,
-                                Set<String> ids,
-                                Set<String> paths,
-                                String ecqlFilter) {
+    public Long getTotalAllowedForRegistry(ResourceQualifier tableQualifier,
+                                           Set<String> ids,
+                                           Set<String> pathsToChildren,
+                                           Set<String> pathsToMyParent,
+                                           String ecqlFilter) {
         String ecqlFiltersSection = buildWhereSection(ecqlFilter);
         if (!ecqlFiltersSection.isBlank()) {
             ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
@@ -244,7 +247,8 @@ public class RecordsDao {
                 "   (" +
                 "     (" +
                 "       id IN (" + joinAndQuoteMark(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(paths) + " ])" +
+                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(pathsToChildren) + " ])" +
+                "       OR path IN (" + joinAndQuoteMark(pathsToMyParent) + ")" +
                 "     )" +
                 " " + ecqlFiltersSection +
                 "   )";
