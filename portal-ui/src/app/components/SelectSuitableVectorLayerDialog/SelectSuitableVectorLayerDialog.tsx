@@ -5,7 +5,7 @@ import { action, observable, makeObservable } from 'mobx';
 
 import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema/schema.service';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
@@ -86,9 +86,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   }
 
   private async fetchAvailableForCopyingLayers() {
-    const schemas = await Promise.all(
-      currentProject.vectorLayers.map(({ schemaId }) => schemaService.getSchema(schemaId))
-    );
+    const schemas = await Promise.all(currentProject.vectorLayers.map(layer => getLayerSchema(layer)));
 
     const { currentLayer, features } = this.props;
     const layersUpdatePermissions: boolean[] = [];

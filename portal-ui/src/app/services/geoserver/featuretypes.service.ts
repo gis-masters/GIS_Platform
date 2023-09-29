@@ -2,7 +2,7 @@ import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
 import { http } from '../api/http.service';
 import { getGeoserverFeatureTypeInfoUrl } from '../api/server-urls.service';
-import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
+import { CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 
 export async function getFeatureType({
   complexName,
@@ -10,7 +10,7 @@ export async function getFeatureType({
   dataStoreName,
   tableName,
   type
-}: CrgVectorLayer): Promise<FeatureType> {
+}: CrgLayer): Promise<FeatureType> {
   const workspace = complexName.split(':')[0];
   const url = getGeoserverFeatureTypeInfoUrl(
     workspace,

@@ -47,6 +47,7 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 
 export interface Properties {
   [key: string]: unknown;
@@ -109,10 +110,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           this.layer.view
         );
 
-        const schema = changeSchemaNamesCaseByFeature(
-          await schemaService.getSchema(this.layer.schemaId),
-          this.features[0]
-        );
+        const schema = changeSchemaNamesCaseByFeature(await getLayerSchema(this.layer), this.features[0]);
         const newSchema = applyView(schema, this.layer.view);
 
         this.features = this.features.map(feature => ({

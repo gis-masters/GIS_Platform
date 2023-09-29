@@ -13,12 +13,12 @@ import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { calculateValues } from '../../../services/formValidation.service';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { applyView } from '../../../services/data/schema/schema.utils';
+import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { FilterBySelection } from '../../../services/map/map.models';
+import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableColumn } from '../../XTable/XTable.models';
 import { PageOptions } from '../../../services/models';
-import { getXTableColumnsFromSchemaWithLowerCaseKeys } from '../../XTable/XTable.utils';
-import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableInvoke } from '../../XTable/XTable';
 
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
@@ -145,7 +145,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
         cellProps: { padding: 'checkbox' }
       },
       { field: 'cutId', title: 'ID', minWidth: 50 },
-      ...(getXTableColumnsFromSchemaWithLowerCaseKeys(this.schema) as XTableColumn<Partial<AttributesTableRecord>>[])
+      ...getXTableColumnsFromSchema(this.schema)
     ] as XTableColumn<AttributesTableRecord>[];
   }
 

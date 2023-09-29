@@ -1,22 +1,22 @@
 import { AxiosError } from 'axios';
+import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { services } from '../../services';
 import { CrgProject } from '../projects/projects.models';
 import { Toast } from '../../../components/Toast/Toast';
 
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 import { layersClient } from './layers.client';
+import { isVectorFromFile } from './layers.utils';
 import { Schema } from '../../data/schema/schema.models';
 import {
   convertGeoserverPropertiesToSchemaProperties,
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
-import { getFeatureType } from '../../geoserver/featuretypes.service';
-import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { schemaService } from '../../data/schema/schema.service';
-import { isVectorFromFile } from './layers.utils';
+import { getFeatureType } from '../../geoserver/featuretypes.service';
 import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
 
 export async function deleteLayer(layerId: number, project: CrgProject = currentProject): Promise<void> {
   await layersClient.deleteLayer(layerId, project.id);
@@ -68,22 +68,22 @@ export function alertLayerOperationError(
   services.logger.error(message, e);
 }
 
-export async function getLayerSchema(layer: CrgVectorLayer): Promise<Schema> {
+export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
   const type = layer.type;
   if (type === CrgLayerType.VECTOR) {
     return await schemaService.getSchema(layer.schemaId);
   } else if (isVectorFromFile(type)) {
     const featureType: FeatureType = await getFeatureType(layer);
-
     const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);
     const geometryType = getGeometryTypeFromGeoserverAttributes(featureType.attributes.attribute);
+    const template = `schema_template_${layer.id}_${layer.id}`;
     if (!supportedGeometryTypes.includes(geometryType)) {
-      throw new Error(`Geometry type: ${geometryType} is not supported`);
+      services.logger.warn(`Geometry type: ${geometryType} is not supported`);
+
+      return { name: template, title: template, properties, geometryType: geometryType as SupportedGeometryType };
     }
 
-    const template = `shp_schema_${layer.id}`;
-
-    return { name: template, title: template, properties, geometryType: geometryType as SupportedGeometryType };
+    return { name: template, title: template, properties };
   }
 }
 

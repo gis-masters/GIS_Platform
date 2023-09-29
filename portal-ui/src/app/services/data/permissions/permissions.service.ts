@@ -26,6 +26,7 @@ import {
 import { permissionsClient } from './permissions.client';
 import { getLibraryRecordFiles } from '../files/files.util';
 import { isVectorFromFile } from '../../gis/layers/layers.utils';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);
@@ -147,7 +148,7 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
       return false;
     }
 
-    const schema: Schema = await schemaService.getSchema(layer.schemaId);
+    const schema: Schema = await getLayerSchema(layer);
     if (!schema) {
       return false;
     }

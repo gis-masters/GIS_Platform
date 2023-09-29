@@ -24,14 +24,22 @@ import { wfsClient } from './wfs.client';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
-  return {
-    service: 'wfs',
-    request: 'GetFeature',
-    outputFormat: Mime.JSON,
-    exceptions: Mime.JSON,
-    typeName: layer.complexName,
-    srsName: layer.nativeCRS
-  };
+  return layer.nativeCRS
+    ? {
+        service: 'wfs',
+        request: 'GetFeature',
+        outputFormat: Mime.JSON,
+        exceptions: Mime.JSON,
+        typeName: layer.complexName,
+        srsName: layer.nativeCRS
+      }
+    : {
+        service: 'wfs',
+        request: 'GetFeature',
+        outputFormat: Mime.JSON,
+        exceptions: Mime.JSON,
+        typeName: layer.complexName
+      };
 }
 
 const MAX_PAGE_SIZE = 10_000;

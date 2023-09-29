@@ -23,6 +23,8 @@ import { LayerInnards } from './Innards/Layer-Innards';
 import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
 import { schemaService } from '../../services/data/schema/schema.service';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
@@ -149,12 +151,14 @@ export class Layer extends Component<LayerProps> {
     }
 
     const { type, schemaId } = data as CrgVectorLayer;
-    if (type === CrgLayerType.VECTOR || type === CrgLayerType.DXF) {
+    if (type === CrgLayerType.VECTOR) {
       try {
         return await schemaService.getSchema(schemaId);
       } catch {
         this.addError('Не найдена схема для слоя: ' + data.title);
       }
+    } else if (isVectorFromFile(type)) {
+      return await getLayerSchema(data as CrgVectorLayer);
     }
   }
 

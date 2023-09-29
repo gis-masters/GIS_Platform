@@ -5,8 +5,9 @@ import { BugObject } from '../validation/validation.models';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { Toast } from '../../../components/Toast/Toast';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
-import { ImportLayerItem } from '../../geoserver/import/import.models';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 import { communicationService } from '../../communication.service';
+import { ImportLayerItem } from '../../geoserver/import/import.models';
 
 import { Schema } from './schema.models';
 import { schemaClient } from './schema.client';
@@ -52,7 +53,7 @@ class SchemaService {
   }
 
   async getSchemaForVectorLayer(layer: CrgVectorLayer): Promise<Schema> {
-    return applyView(await this.getSchema(layer.schemaId), layer.view);
+    return applyView(await getLayerSchema(layer), layer.view);
   }
 
   async getAllOldSchemas(): Promise<OldSchema[]> {

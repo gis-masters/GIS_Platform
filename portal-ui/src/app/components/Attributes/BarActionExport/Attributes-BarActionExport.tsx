@@ -7,9 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { schemaService } from '../../../services/data/schema/schema.service';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
@@ -76,7 +76,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
 
   private async prepareFeatures(records: AttributesTableRecord[]): Promise<unknown[][]> {
     const { layer, cols } = this.props;
-    const schema = applyView(await schemaService.getSchema(layer.schemaId), layer.view);
+    const schema = applyView(await getLayerSchema(layer), layer.view);
     const properties: PropertySchema[] = [
       { name: 'cutId', title: 'ID', propertyType: PropertyType.INT },
       ...cols

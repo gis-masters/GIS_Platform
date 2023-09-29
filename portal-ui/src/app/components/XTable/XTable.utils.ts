@@ -33,7 +33,7 @@ const sortableTypes = new Set([
 const smallPaddingTypes = new Set([PropertyType.FILE, PropertyType.DOCUMENT, PropertyType.URL]);
 
 export function getXTableColumnsFromSchema<T>(schema: Schema, overrides?: XTableColumn<T>[]): XTableColumn<T>[] {
-  return _getXTableColumnsFromSchema(schema, false, overrides);
+  return _getXTableColumnsFromSchema(schema, overrides);
 }
 
 export function defaultRowIdGetter<
@@ -42,28 +42,15 @@ export function defaultRowIdGetter<
   return data?.id || data?.identifier || data?.table_name || data?.name;
 }
 
-export function getXTableColumnsFromSchemaWithLowerCaseKeys(
-  schema: Schema,
-  overrides?: XTableColumn<Record<string, unknown>>[]
-): XTableColumn<Record<string, unknown>>[] {
-  return _getXTableColumnsFromSchema(schema, true, overrides);
-}
-
-function _getXTableColumnsFromSchema<T>(
-  schema: Schema,
-  keysToLowerCase: boolean,
-  overrides: XTableColumn<T>[] = []
-): XTableColumn<T>[] {
+function _getXTableColumnsFromSchema<T>(schema: Schema, overrides: XTableColumn<T>[] = []): XTableColumn<T>[] {
   const allowedProperties = schema.properties.filter(property => property.propertyType !== PropertyType.LOOKUP);
 
   return allowedProperties.map(property => {
     const relations = getFieldRelations(property.name, schema);
-    const override = overrides.find(({ field }) =>
-      keysToLowerCase ? property.name.toLowerCase() === String(field).toLowerCase() : property.name === field
-    );
+    const override = overrides.find(({ field }) => property.name === field);
 
     return {
-      field: keysToLowerCase ? property.name.toLowerCase() : property.name,
+      field: property.name,
       title: property.title || property.name,
       description: property.description,
       type: property.propertyType,

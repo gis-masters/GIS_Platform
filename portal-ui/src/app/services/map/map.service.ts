@@ -51,10 +51,10 @@ import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjec
 import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
 import { Schema } from '../data/schema/schema.models';
 import { Mime } from '../util/Mime';
-import { schemaService } from '../data/schema/schema.service';
 import { applyView } from '../data/schema/schema.utils';
 import { cqlConcat } from '../util/cqlConcat';
 import { FilterBySelection } from './map.models';
+import { getLayerSchema } from '../gis/layers/layers.service';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -392,7 +392,7 @@ class MapService {
     modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
 
     if (schemaId) {
-      const { definitionQuery }: Schema = applyView(await schemaService.getSchema(schemaId), view);
+      const { definitionQuery }: Schema = applyView(await getLayerSchema(layer), view);
       if (definitionQuery) {
         params.CQL_FILTER = definitionQuery;
       }

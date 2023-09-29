@@ -13,7 +13,7 @@ import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
-import { schemaService } from '../../services/data/schema/schema.service';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
@@ -141,7 +141,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   private async loadSchema(): Promise<void> {
     if (!this.props.errorData && this.layer && this.layer.schemaId) {
-      this.setRawSchema(await schemaService.getSchema(this.layer?.schemaId));
+      this.setRawSchema(await getLayerSchema(this.layer));
     }
   }
 

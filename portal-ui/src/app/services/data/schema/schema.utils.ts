@@ -698,9 +698,7 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
       return GeometryType.MULTI_LINE_STRING;
     }
 
-    services.logger.error('Unknown geometry type: ', geometryAttribute.binding, attributes);
-
-    throw new Error('Unknown geometry type');
+    services.logger.warn('Unknown geometry type: ', geometryAttribute.binding, attributes);
   } else {
     const message = 'Not any attributes with geometry';
     services.logger.error(message);

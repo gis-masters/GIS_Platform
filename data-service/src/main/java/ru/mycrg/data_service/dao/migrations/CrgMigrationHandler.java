@@ -66,7 +66,6 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection,
                                              ctx.getResource("classpath:sql/M15__updateSchemasAndTables_V2.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M16__updateBaseMaps.sql"));
-                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M17__addDxfSchema.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M18__fixSchemas.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M19__addReestrSchemas.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M20__addTaskAndLog.sql"));
@@ -76,6 +75,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M24__addColumnDeletedToLibraries.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M25__tasks2.sql"));
                 ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M26__addGisogdPublicationOrder.sql"));
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/M27__lowercaseAllPropNames.sql"));
             }
 
             tempDataSource.close();
