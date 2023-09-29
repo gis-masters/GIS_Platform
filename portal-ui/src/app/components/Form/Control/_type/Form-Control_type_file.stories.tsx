@@ -1,10 +1,10 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
+import { organizationSettings, OrgSettings } from '../../../../stores/OrganizationSettings.store';
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { Form } from '../../Form';
-import { organizationSettings, OrgSettings } from '../../../../stores/OrganizationSettings.store';
 
 export default {
   title: 'Form/Field/file',
@@ -31,6 +31,15 @@ const fileFieldsMultiple: PropertySchema[] = [
     name: 'files',
     multiple: true,
     title: 'dxf'
+  }
+];
+
+const compoundFileFieldsMultiple: PropertySchema[] = [
+  {
+    propertyType: PropertyType.FILE,
+    name: 'files',
+    multiple: true,
+    title: 'compound'
   }
 ];
 
@@ -63,10 +72,33 @@ const multipleFilesData: FileInfo[] = [
     size: 666
   }
 ];
+
+const completedCompoundFilesData: FileInfo[] = [
+  { id: 'someId1', title: 'shapeCompound.shp', size: 666 },
+  { id: 'someId2', title: 'shapeCompound.shx', size: 666 },
+  { id: 'someId3', title: 'shapeCompound.dbf', size: 666 },
+  { id: 'someId4', title: 'shapeCompound.prj', size: 666 },
+  { id: 'someId5', title: 'shapeCompound.sbn', size: 666 },
+  { id: 'someId6', title: 'shapeCompound.sbx', size: 666 },
+  { id: 'someId7', title: 'shapeCompound.fbn', size: 666 },
+  { id: 'someId8', title: 'shapeCompound.fbx', size: 666 },
+  { id: 'someId9', title: 'shapeCompound.ain', size: 666 },
+  { id: 'someId10', title: 'shapeCompound.ixs', size: 666 },
+  { id: 'someId11', title: 'shapeCompound.mxs', size: 666 },
+  { id: 'someId12', title: 'shapeCompound.atx', size: 666 },
+  { id: 'someId13', title: 'shapeCompound.xml', size: 666 }
+];
+
+const notCompletedCompoundFilesData: FileInfo[] = [
+  { id: 'someId1', title: 'shapeCompound.shp', size: 666 },
+  { id: 'someId2', title: 'shapeCompound.shx', size: 666 }
+];
 const valueSingle: TestData = { certificate: singleFileData };
 const valueMultiple2: TestData = { files: multipleFilesData2 };
 const valueMultiple: TestData = { photos: multipleFilesData };
 const valueMultipleScroll: TestData = { photos: [...multipleFilesData, ...multipleFilesData] };
+const completedCompoundValue: TestData = { files: completedCompoundFilesData };
+const notCompletedCompoundFilesDataValue: TestData = { files: notCompletedCompoundFilesData };
 
 const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
 
@@ -188,6 +220,38 @@ export const MultipleViewEmpty = Template.bind({});
 MultipleViewEmpty.args = {
   schema: { properties: fieldsMultiple },
   value: { photos: [] },
+  readonly: true,
+  auto: true
+};
+
+export const MultipleCompoundEditable = Template.bind({});
+MultipleCompoundEditable.args = {
+  schema: { properties: compoundFileFieldsMultiple },
+  value: completedCompoundValue,
+  auto: true
+};
+
+export const MultipleCompoundView = Template.bind({});
+MultipleCompoundView.args = {
+  schema: { properties: compoundFileFieldsMultiple },
+  value: completedCompoundValue,
+  formRole: 'viewDocument',
+  readonly: true,
+  auto: true
+};
+
+export const MultipleNotCompletedCompoundEditable = Template.bind({});
+MultipleNotCompletedCompoundEditable.args = {
+  schema: { properties: compoundFileFieldsMultiple },
+  value: notCompletedCompoundFilesDataValue,
+  auto: true
+};
+
+export const MultipleNotCompletedCompoundView = Template.bind({});
+MultipleNotCompletedCompoundView.args = {
+  schema: { properties: compoundFileFieldsMultiple },
+  value: notCompletedCompoundFilesDataValue,
+  formRole: 'viewDocument',
   readonly: true,
   auto: true
 };

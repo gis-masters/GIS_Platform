@@ -12,6 +12,7 @@ import { formViewTypeChoiceBlock } from './View/Form-View_type_choice.block';
 import { formViewTypeStringBlock } from './View/Form-View_type_string.block';
 import { formViewTypeUserBlock } from './View/Form-View_type_user.block';
 import { formContentBlock } from './Form-Content.block';
+import { formViewTypeFileBlock } from './View/Form-View_type_file.block';
 
 When('в форме в поле {string} типа url я нажимаю на кнопку добавления нового url', async (title: string) => {
   await formControlTypeUrlBlock.clickAddUrlBtn(title);
@@ -60,6 +61,10 @@ Then('блок FormControlTypeString вариант {string} выглядит к
   await formControlTypeStringBlock.assertSelfie(variant);
 });
 
+Then('блок FormControlTypeFile вариант {string} выглядит как положено', async (variant: string) => {
+  await formControlTypeFileBlock.assertSelfie(variant);
+});
+
 Then('блок FormViewTypeString вариант {string} выглядит как положено', async (variant: string) => {
   await formViewTypeStringBlock.assertSelfie(variant);
 });
@@ -70,4 +75,20 @@ Then('блок FormControlTypeUser вариант {string} выглядит ка
 
 Then('блок FormViewTypeUser вариант {string} выглядит как положено', async (variant: string) => {
   await formViewTypeUserBlock.assertSelfie(variant);
+});
+
+Then('блок FormViewTypeFile вариант {string} выглядит как положено', async (variant: string) => {
+  await formViewTypeFileBlock.assertSelfie(variant);
+});
+
+Then('в поле файл у набора файлов есть единственная кнопка `Удалить набор`', async () => {
+  await expect(await formControlTypeFileBlock.isCompoundFileHaveSingleDeleteBtn()).toBeTruthy();
+});
+
+Then('в поле файл у набора файлов есть единственная кнопка `Скачать набор файлов архивом`', async () => {
+  await expect(await formViewTypeFileBlock.isCompoundFileHaveSingleDownloadBtn()).toBeTruthy();
+});
+
+Then('в поле файл у набора файлов есть единственная кнопка `Разместить в проекте`', async () => {
+  await expect(await formViewTypeFileBlock.isCompoundFileHaveSingleFilesPlacementBtn()).toBeTruthy();
 });

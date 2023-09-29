@@ -16,6 +16,7 @@ import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
+const cnLibraryDocumentActionsEditDialog = cn('LibraryDocumentActions', 'EditDialog');
 
 interface LibraryDocumentActionsEditProps {
   document: LibraryRecord;
@@ -47,6 +48,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
 
         <FormDialog
           open={this.dialogOpen}
+          className={cnLibraryDocumentActionsEditDialog()}
           schema={{ ...schema, properties: this.fieldsWithoutBinary }}
           value={document}
           actionFunction={this.updateDocument}

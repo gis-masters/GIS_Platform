@@ -377,6 +377,11 @@
             "title": "Карточка документа",
             "contentUrl": "/assets/help/5dataManagement/4documentCard/04documentCard.html"
           },
+          {
+            "id": "compoundFile",
+            "title": "Набор связанных файлов",
+            "contentUrl": "/assets/help/5dataManagement/15compoundFile/15compoundFile.html"
+          },
 
           {
             "id": "registry",

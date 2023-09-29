@@ -14,6 +14,33 @@ class FormControlTypeFileBlock extends Block {
     return await $addUserBtn.isExisting();
   }
 
+  async isCompoundFileHaveSingleDeleteBtn(): Promise<boolean> {
+    const $lookupList = await this.$('lookupList');
+    await $lookupList.waitForDisplayed();
+
+    const $$delete = await $lookupList.$$('.Lookup-Delete');
+
+    return $$delete.length === 1;
+  }
+
+  async isCompoundFileHaveSingleDownloadBtn(): Promise<boolean> {
+    const $lookupList = await this.$('lookupList');
+    await $lookupList.waitForDisplayed();
+
+    const $$delete = await $lookupList.$$('.Lookup-DownloadCompoundFile');
+
+    return $$delete.length === 1;
+  }
+
+  async isCompoundFileHaveSingleFilesPlacementBtn(): Promise<boolean> {
+    const $lookupList = await this.$('lookupList');
+    await $lookupList.waitForDisplayed();
+
+    const $$delete = await $lookupList.$$('.Files-Placement');
+
+    return $$delete.length === 1;
+  }
+
   async findFileItem(title: string): Promise<WebdriverIO.Element> {
     const $lookupList = await this.$('lookupList');
     await $lookupList.waitForDisplayed();

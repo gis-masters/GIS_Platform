@@ -1,4 +1,4 @@
-import { Given } from '@wdio/cucumber-framework';
+import { Given, When } from '@wdio/cucumber-framework';
 
 import {
   PrincipalType,
@@ -19,6 +19,9 @@ import { moveLibraryRecord } from './moveLibraryRecord';
 import { createLibrary } from './createLibrary';
 import { deleteAllLibraryRecordInLibrary } from './deleteLibraryRecords';
 import { createLibraryRecordAsAdmin } from './createLibraryRecordAs';
+import { updateLibraryRecord } from './updateLibraryRecord';
+import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
+import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
 
 Given(
   'в библиотеке документов {string} существует минимум {int} документов, доступных пользователю {user}',
@@ -154,3 +157,36 @@ Given(
     await setDocLibraryPermissionAsAdmin(permission, library);
   }
 );
+
+Given(
+  'в созданной библиотеке у созданного документа я изменяю поле {string} на {string}',
+  async function (this: ScenarioScope, field: string, value: string) {
+    if (this.latestSchema.tableName) {
+      await updateLibraryRecord(this.latestSchema.tableName, this.latestLibraryRecords[0].id, {
+        [field]: value
+      });
+
+      this.latestLibraryRecords[0].title = value;
+    }
+  }
+);
+
+When(
+  'в библиотеке документов у созданного документа я нажимаю на кнопку `Версии документа`',
+  async function (this: ScenarioScope) {
+    const explorerBlock = new ExplorerBlock();
+    if (this.latestLibraryRecords[0].title) {
+      await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
+      await documentVersionsWidgetBlock.clickDocumentVersionBtn();
+    } else {
+      throw new Error('Нет документов в библиотеке');
+    }
+  }
+);
+
+When('в библиотеке документов у созданного документа поле {string} пустое', async function (field: string) {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.waitForExist();
+
+  await expect(await explorerBlock.getContentWidgetFieldValue(field)).toEqual('—');
+});

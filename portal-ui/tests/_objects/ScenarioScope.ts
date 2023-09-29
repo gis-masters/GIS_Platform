@@ -21,6 +21,7 @@ export class ScenarioScope extends World {
   private _latestFolder?: LibraryRecord;
   private _latestUploadedFile?: FileInfo;
   private _latestTask?: Task;
+  private _latestUploadedFiles?: FileInfo[];
   private layers: CrgLayer[] = [];
   private vectorTables: VectorTable[] = [];
 
@@ -124,6 +125,14 @@ export class ScenarioScope extends World {
 
   set latestTask(task: Task) {
     this._latestTask = task;
+  }
+
+  get latestUploadedFiles(): FileInfo[] {
+    return this.getEntityOrThrow<FileInfo[]>(this._latestUploadedFiles, 'файлы');
+  }
+
+  set latestUploadedFiles(files: FileInfo[]) {
+    this._latestUploadedFiles = files;
   }
 
   private getEntityOrThrow<T>(obj: T | undefined, entity: string): T {

@@ -197,6 +197,17 @@ Given(
   }
 );
 
+Given(
+  'я на странице управление данными и в библиотеке выбран созданный документ',
+  async function (this: ScenarioScope) {
+    const { latestLibraryRecords } = this;
+    const url = `/data-management?path_dm=%5B"r","root","lr","libraryRoot","lib","${latestLibraryRecords[0].libraryTableName}",
+                "doc","${latestLibraryRecords[0].id}"%5D&opts_dm=%5B0,10,"created_at","desc",%7B%7D%5D`;
+
+    await browser.url(url);
+  }
+);
+
 // library registry
 
 Given('я на странице табличного представления библиотеки документов {string}', async (libraryTitle: string) => {

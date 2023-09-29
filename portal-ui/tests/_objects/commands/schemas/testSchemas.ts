@@ -16,6 +16,7 @@ import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { withSimpleContentType } from './testSchemas/withSimpleContentType';
 import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
+import { withFile } from './testSchemas/withFiles';
 
 const testSchemas: Schema[] = [
   allTypes,
@@ -33,6 +34,7 @@ const testSchemas: Schema[] = [
   withDefinitionQuery,
   withInappropriateStyleName,
   withoutViews,
+  withFile,
   withViews
 ];
 
