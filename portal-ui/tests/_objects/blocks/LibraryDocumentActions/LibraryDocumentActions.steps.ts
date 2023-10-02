@@ -6,7 +6,7 @@ import { libraryDocumentActionsEditDialogBlock } from './EditDialog/LibraryDocum
 When(
   'в библиотеке документов в окне редактирования созданного документа я нажимаю кнопку `Удалить набор файлов` в поле {string}',
   async function (field: string) {
-    await libraryDocumentActionsBlock.clickEdit();
+    await libraryDocumentActionsBlock.clickEditButton();
     await libraryDocumentActionsEditDialogBlock.clickDeleteFilesInField(field);
   }
 );
@@ -17,3 +17,7 @@ When(
     await libraryDocumentActionsEditDialogBlock.clickSave();
   }
 );
+
+When('в созданной библиотеке я открываю окно редактирования созданного документа', async function () {
+  await libraryDocumentActionsBlock.clickEditButton();
+});

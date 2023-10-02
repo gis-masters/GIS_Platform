@@ -49,6 +49,19 @@ export class FormBlock extends Block {
     return await $tableField.$('.Form-Control_type_custom');
   }
 
+  async lookupFieldValues(title: string): Promise<string[]> {
+    const $field = await this.getField(title);
+    const $$items = await $field.$$('.Lookup-Item');
+
+    const itemsValues: string[] = [];
+
+    for (const $item of $$items) {
+      itemsValues.push(await $item.getText());
+    }
+
+    return itemsValues;
+  }
+
   async getField(fieldName: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
     const $$fields = await this.$$('formFields');

@@ -5,6 +5,13 @@ import { ScenarioScope } from '../../ScenarioScope';
 import { libraryRegistryBlock } from './LibraryRegistry.block';
 
 When(
+  'в окне выбора документа я выбираю документ с значением {string} в колонке {string}',
+  async function (value: string, field: string) {
+    await libraryRegistryBlock.selectRowItem(value, field);
+  }
+);
+
+When(
   'в реестре документов в поле фильтра по id я ввожу идентификатор существующего документа',
   async function (this: ScenarioScope) {
     const id = this.latestLibraryRecords[1]?.id;

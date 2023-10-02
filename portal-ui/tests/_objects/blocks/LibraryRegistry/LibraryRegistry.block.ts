@@ -16,6 +16,14 @@ class LibraryRegistryBlock extends Block {
   async setIdFilter(value: string): Promise<void> {
     await xTableFilterTypeIdBlock.setValue(value);
   }
+
+  async selectRowItem(value: string, field: string): Promise<void> {
+    await xTableBlock.waitForLoading();
+    const $documentRow = await xTableBlock.getRowByFieldValue(value, field);
+
+    const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input');
+    await $xTableDocumentRowSelect.click();
+  }
 }
 
 export const libraryRegistryBlock = new LibraryRegistryBlock();

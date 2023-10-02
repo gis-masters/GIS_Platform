@@ -13,9 +13,10 @@ import { allTypesReadonly } from './testSchemas/allTypesReadonly';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
-import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { withSimpleContentType } from './testSchemas/withSimpleContentType';
 import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
+import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
+import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { withFile } from './testSchemas/withFiles';
 
 const testSchemas: Schema[] = [
@@ -32,6 +33,7 @@ const testSchemas: Schema[] = [
   documentWithoutVersioned,
   withCalculatedArea,
   withDefinitionQuery,
+  documentWithDocumentField,
   withInappropriateStyleName,
   withoutViews,
   withFile,

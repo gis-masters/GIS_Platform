@@ -47,8 +47,8 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
         />
 
         <FormDialog
-          open={this.dialogOpen}
           className={cnLibraryDocumentActionsEditDialog()}
+          open={this.dialogOpen}
           schema={{ ...schema, properties: this.fieldsWithoutBinary }}
           value={document}
           actionFunction={this.updateDocument}

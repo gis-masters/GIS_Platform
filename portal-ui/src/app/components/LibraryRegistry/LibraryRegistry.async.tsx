@@ -128,6 +128,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
               secondarySortField='id'
               filtersAlwaysEnabled
               showFiltersPanel
+              inDialog={this.props.inDialog}
               urlChangeEnabled
               defaultFilter={this.defaultFilter}
               invoke={this.tableInvoke}
@@ -347,6 +348,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       this.schema.name,
       pageOptions
     );
+
     if (this.props.inDialog) {
       this.setLibraryDocuments(documents);
     }

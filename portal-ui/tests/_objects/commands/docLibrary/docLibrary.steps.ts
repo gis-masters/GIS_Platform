@@ -60,7 +60,7 @@ Given(
 );
 
 Given(
-  'в библиотеке документов {string} существует документ с контент типом {string} c единственным полем `Название` равным {string}, доступный пользователю {user}',
+  'в библиотеке документов {string} существует документ с контент типом {string} c полем `Название` равным {string}, доступный пользователю {user}',
   async function (this: ScenarioScope, libraryTitle: string, contentType: string, fieldValue: string, user: TestUser) {
     await authenticateAs(user);
 

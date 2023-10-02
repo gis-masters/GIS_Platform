@@ -447,7 +447,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
         this.colsSettings = JSON.parse(
           localStorage.getItem(this.getColsSettingsStorageKey(id)) || '{}'
         ) as XTableColsSettings<T>;
-      } catch {}
+      } catch {
+        // do nothing
+      }
     }
   }
 

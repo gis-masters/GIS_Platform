@@ -6,9 +6,10 @@ class LibraryDocumentActionsBlock extends Block {
     edit: '.LibraryDocumentActions-Edit'
   };
 
-  async clickEdit() {
+  async clickEditButton(): Promise<void> {
     const $edit = await this.$('edit');
     await $edit.waitForClickable();
+
     await $edit.click();
   }
 }

@@ -16,6 +16,7 @@ export class XTableBlock extends Block {
     head: '.XTable-Head',
     headCell: '.XTable-HeadCell',
     colTitle: '.XTable-HeadCellTitle',
+    rows: '.XTable-Row',
     firstColCellContent: '.XTable .XTable-Cell:first-child .XTable-CellContent',
     secondColCellContent: '.XTable-Row .XTable-Cell:nth-child(2) .XTable-CellContent'
   };
@@ -198,6 +199,23 @@ export class XTableBlock extends Block {
     const $container = await this.$('container');
 
     return $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`);
+  }
+
+  async getRowByFieldValue(value: string, field: string): Promise<WebdriverIO.Element> {
+    const headerTitles = await extractText(await this.$$('colTitle'));
+    const index = headerTitles.indexOf(field);
+    const $$rows = await this.$$('rows');
+
+    for (const $row of $$rows) {
+      const $cell = await $row.$(`td:nth-child(${index + 1})`);
+      const cellValue = await $cell.getText();
+
+      if (cellValue === value) {
+        return $row;
+      }
+    }
+
+    throw new Error(`Элемент с значением ${value} в поле ${field} не найден`);
   }
 }
 
