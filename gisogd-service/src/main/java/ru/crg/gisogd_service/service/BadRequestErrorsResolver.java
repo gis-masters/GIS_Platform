@@ -3,6 +3,7 @@ package ru.crg.gisogd_service.service;
 import static java.util.stream.Collectors.toMap;
 
 import java.lang.annotation.Annotation;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.annotation.ReverseMapping;
@@ -96,5 +98,12 @@ public class BadRequestErrorsResolver {
                      .map(a -> ((JsonProperty) a).value())
                      .findFirst()
                      .orElse(defaultValue);
+    }
+
+    public String getFeignExceptionMessage(FeignException feignException) {
+        return feignException.responseBody()
+                             .map(ByteBuffer::array)
+                             .map(String::new)
+                             .orElse(null);
     }
 }

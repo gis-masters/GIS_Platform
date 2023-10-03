@@ -1,5 +1,6 @@
 package ru.crg.gisogd_service.route;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.camel.*;
@@ -10,26 +11,27 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import ru.crg.gisogd_service.client.DataServiceClient;
 import ru.crg.gisogd_service.client.GisogdRfClient;
-import ru.crg.gisogd_service.model.crimea.common.FileRef;
 import ru.crg.gisogd_service.model.rf.Document;
 import ru.crg.gisogd_service.model.rf.DocumentPagedModel;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
-import ru.crg.gisogd_service.service.RecordsRepositoryService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static ru.crg.gisogd_service.route.DocumentRoute.*;
@@ -44,20 +46,22 @@ import static ru.crg.gisogd_service.route.DocumentRoute.*;
 class DocumentRouteTest {
 
     private final CamelContext camelContext;
+    private final ObjectMapper objectMapper;
 
     @Produce
     private ProducerTemplate producerTemplate;
-    @EndpointInject("mock:direct:send-document")
-    private MockEndpoint mockSendDocumentEndpoint;
+    @EndpointInject("mock:direct:get-document-from-crimea")
+    private MockEndpoint mockGetDocumentFromCrimeaEndpoint;
 
     @MockBean
     private DocumentTypeResolver resolver;
     @MockBean
     private DataServiceClient dataServiceClient;
     @MockBean
-    private RecordsRepositoryService recordsRepositoryService;
-    @MockBean
     private GisogdRfClient gisogdRfClient;
+
+    @Value("classpath:doclibs/dl_data_section1-guid-doc1.json")
+    Resource dlDataSectionDoc;
 
     private static final String FILE_NAME = "fileName";
     private static final byte[] FILE_CONTENT = "fileContent".getBytes(StandardCharsets.UTF_8);
@@ -68,28 +72,32 @@ class DocumentRouteTest {
     void start() {
         when(resolver.getDoclibIdByClassName(any())).thenReturn("docLibId");
         when(dataServiceClient.getDocByLibIdAndGuid(any(), any())).thenReturn(emptyMap());
-        when(recordsRepositoryService.findFilesRef(any())).thenAnswer(invocation -> {
-            FileRef fileRef = new FileRef();
-            fileRef.setId(UUID.randomUUID().toString());
-            fileRef.setSize(1L);
-            fileRef.setTitle("Title");
-            return List.of(fileRef);
+        when(dataServiceClient.downloadFile(any())).thenReturn(MULTIPART_FILE.getBytes());
+        when(dataServiceClient.createLibraryRecord(any())).thenAnswer(invocation -> {
+            assertNotNull(invocation.getArgument(0));
+            return Map.of("id", 0);
         });
-        when(dataServiceClient.downloadFile(any())).thenReturn(MULTIPART_FILE);
-        doAnswer(invocation -> null).when(gisogdRfClient).sendDocument(any(), any(), any());
+        doAnswer(invocation -> {
+            assertNotNull(invocation.getArgument(0));
+            assertNotNull(invocation.getArgument(1));
+            return null;
+        }).when(dataServiceClient).updateLibraryRecord(anyInt(), any());
+
+        doAnswer(invocation -> null).when(gisogdRfClient).sendDocument(any());
 
         camelContext.getRouteController().startRoute(GET_REQUESTED_DOCUMENTS_ROUTE_ID);
+        camelContext.getRouteController().startRoute(GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID);
         camelContext.getRouteController().startRoute(SEND_DOCUMENT_ROUTE_ID);
     }
 
     @AfterEach
     void end() {
-        mockSendDocumentEndpoint.reset();
+        mockGetDocumentFromCrimeaEndpoint.reset();
     }
 
     @Test
     @SneakyThrows
-    void sendDocumentRouteTest() {
+    void getDocumentsFromCrimeaAndSendDocumentToRfRouteTest() {
         String guid = UUID.randomUUID().toString();
         String propertyClass = "propertyClass";
 
@@ -98,14 +106,35 @@ class DocumentRouteTest {
             assertEquals(guid, invocation.getArguments()[1]);
             assertEquals(MULTIPART_FILE, invocation.getArguments()[2]);
             return null;
-        }).when(gisogdRfClient).sendDocument(any(), any(), any());
+        }).when(gisogdRfClient).sendDocument(any());
+
+        when(dataServiceClient.getDocByLibIdAndGuid(any(), any())).thenReturn(
+                objectMapper.readValue(dlDataSectionDoc.getInputStream(), Map.class));
 
         Document document = new Document().guid(guid).propertyClass(propertyClass);
-        mockSendDocumentEndpoint.expectedMessageCount(1);
-        assertDoesNotThrow(() -> producerTemplate.sendBody("direct:send-document", document));
-        mockSendDocumentEndpoint.assertIsSatisfied();
+        mockGetDocumentFromCrimeaEndpoint.expectedMessageCount(1);
+        assertDoesNotThrow(() -> producerTemplate.sendBodyAndHeader(
+                "direct:get-document-from-crimea", document,
+                "rootFolderRecId", 0));
+        mockGetDocumentFromCrimeaEndpoint.assertIsSatisfied();
 
-        assertEquals(document, mockSendDocumentEndpoint.getExchanges().get(0).getIn().getBody(Document.class));
+        assertEquals(document, mockGetDocumentFromCrimeaEndpoint.getExchanges().get(0).getIn().getBody(Document.class));
+    }
+
+    @Test
+    @SneakyThrows
+    void getDocumentsFromCrimeaAndSendDocumentToRfEmptyFileRefsRouteTest() {
+        String guid = UUID.randomUUID().toString();
+        String propertyClass = "propertyClass";
+
+        Document document = new Document().guid(guid).propertyClass(propertyClass);
+        mockGetDocumentFromCrimeaEndpoint.expectedMessageCount(1);
+        assertDoesNotThrow(() -> producerTemplate.sendBodyAndHeader(
+                "direct:get-document-from-crimea", document,
+                "rootFolderRecId", 0));
+        mockGetDocumentFromCrimeaEndpoint.assertIsSatisfied();
+
+        assertEquals(document, mockGetDocumentFromCrimeaEndpoint.getExchanges().get(0).getIn().getBody(Document.class));
     }
 
     @Test
@@ -129,7 +158,6 @@ class DocumentRouteTest {
             while (iteration++ < itemCount) {
                 model.addItemsItem(new Document().guid(UUID.randomUUID().toString()).propertyClass("propertyClass"));
             }
-
             return model;
         });
         Exchange exchange = producerTemplate.request("direct:get-requested-documents", null);

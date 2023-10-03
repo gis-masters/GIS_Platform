@@ -152,6 +152,10 @@
       "description": "Task Log Controller"
     },
     {
+      "name": "test-controller",
+      "description": "Test Controller"
+    },
+    {
       "name": "validation-controller",
       "description": "Validation Controller"
     }
@@ -2340,6 +2344,67 @@
         "deprecated": false
       }
     },
+    "/document-libraries/{docLibId}/records/{recId}/recover": {
+      "post": {
+        "tags": [
+          "document-library-records-controller"
+        ],
+        "summary": "recoverRecord",
+        "operationId": "recoverRecordUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "docLibId",
+            "in": "path",
+            "description": "docLibId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "recId",
+            "in": "path",
+            "description": "recId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "recoverFolderId",
+            "in": "query",
+            "description": "recoverFolderId",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/document-libraries/{docLibId}/records/{recId}/register": {
       "post": {
         "tags": [
@@ -2595,6 +2660,56 @@
           },
           "403": {
             "description": "Forbidden"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/document-libraries/{docLibId}/records/{recId}/versions": {
+      "get": {
+        "tags": [
+          "document-library-records-controller"
+        ],
+        "summary": "getVersionsByRecordId",
+        "operationId": "getVersionsByRecordIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "docLibId",
+            "in": "path",
+            "description": "docLibId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "recId",
+            "in": "path",
+            "description": "recId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DocumentVersioningDto"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "deprecated": false
@@ -3456,7 +3571,99 @@
         "deprecated": false
       }
     },
-    "/gisogd_rf/send": {
+    "/fiz-fiz": {
+      "get": {
+        "tags": [
+          "test-controller"
+        ],
+        "summary": "test",
+        "operationId": "testUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "description": "status",
+            "required": false,
+            "type": "string",
+            "default": "SUCCESS",
+            "enum": [
+              "BAD_REQUEST",
+              "INTERNAL_SERVER_ERROR",
+              "SERVICE_UNAVAILABLE",
+              "GISOGD_FAILED",
+              "SUCCESS"
+            ]
+          },
+          {
+            "name": "taskId",
+            "in": "query",
+            "description": "taskId",
+            "required": false,
+            "type": "integer",
+            "default": 1,
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/gisogd-rf/publish": {
+      "post": {
+        "tags": [
+          "gisogd-rf-controller"
+        ],
+        "summary": "publish",
+        "operationId": "publishUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/gisogd-rf/send": {
       "post": {
         "tags": [
           "gisogd-rf-controller"
@@ -3471,16 +3678,17 @@
         ],
         "parameters": [
           {
-            "name": "contentTypeId",
+            "name": "entityId",
             "in": "query",
-            "description": "contentTypeId",
-            "required": false,
-            "type": "string"
+            "description": "entityId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
           },
           {
-            "name": "libraryId",
+            "name": "entityName",
             "in": "query",
-            "description": "libraryId",
+            "description": "entityName",
             "required": true,
             "type": "string"
           }
@@ -5502,11 +5710,11 @@
         "parameters": [
           {
             "in": "body",
-            "name": "taskCreateDto",
-            "description": "taskCreateDto",
+            "name": "body",
+            "description": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TaskCreateDto"
+              "type": "object"
             }
           }
         ],
@@ -5528,6 +5736,36 @@
           },
           "404": {
             "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/tasks/all": {
+      "delete": {
+        "tags": [
+          "task-controller"
+        ],
+        "summary": "deleteAllTasks",
+        "operationId": "deleteAllTasksUsingDELETE",
+        "produces": [
+          "*/*"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "deprecated": false
@@ -5557,7 +5795,7 @@
           "200": {
             "description": "OK",
             "schema": {
-              "$ref": "#/definitions/Task"
+              "type": "object"
             }
           },
           "401": {
@@ -5595,11 +5833,11 @@
           },
           {
             "in": "body",
-            "name": "taskUpdateDto",
-            "description": "taskUpdateDto",
+            "name": "payload",
+            "description": "payload",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/TaskUpdateDto"
+              "type": "object"
             }
           }
         ],
@@ -6101,6 +6339,23 @@
         }
       },
       "title": "DatabaseCreateDto"
+    },
+    "DocumentVersioningDto": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "object"
+        },
+        "updatedBy": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updatedTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "DocumentVersioningDto"
     },
     "ElseRuleFilter": {
       "title": "ElseRuleFilter",
@@ -6901,6 +7156,9 @@
         },
         "schemaId": {
           "type": "string"
+        },
+        "versioned": {
+          "type": "boolean"
         }
       },
       "title": "LibraryCreateDto"
@@ -7843,6 +8101,12 @@
         "tableName": {
           "type": "string"
         },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "title": {
           "type": "string"
         },
@@ -8012,6 +8276,9 @@
           "type": "string"
         },
         "objectIdentityOnUi": {
+          "type": "boolean"
+        },
+        "onlySubordinates": {
           "type": "boolean"
         },
         "pattern": {
@@ -8261,112 +8528,6 @@
         }
       },
       "title": "TargetAttribute"
-    },
-    "Task": {
-      "type": "object",
-      "properties": {
-        "assignedTo": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "createdBy": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "description": {
-          "type": "string"
-        },
-        "dueDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "lastModified": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "ownerId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "CREATED",
-            "CANCELED",
-            "DONE",
-            "IN_PROGRESS"
-          ]
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "ASSIGNABLE",
-            "SYSTEM",
-            "CUSTOM"
-          ]
-        },
-        "updatedBy": {
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "title": "Task"
-    },
-    "TaskCreateDto": {
-      "type": "object",
-      "properties": {
-        "assignedTo": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "description": {
-          "type": "string"
-        },
-        "dueDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "ownerId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "TaskCreateDto"
-    },
-    "TaskUpdateDto": {
-      "type": "object",
-      "properties": {
-        "assignedTo": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "description": {
-          "type": "string"
-        },
-        "dueDate": {
-          "type": "string",
-          "format": "date"
-        },
-        "ownerId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "type": {
-          "type": "string"
-        }
-      },
-      "title": "TaskUpdateDto"
     },
     "URI": {
       "type": "object",

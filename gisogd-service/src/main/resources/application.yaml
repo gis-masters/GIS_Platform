@@ -56,6 +56,10 @@ spring:
       oauth2:
         enabled: true
 
+feign:
+  okhttp:
+    enabled: true
+
 logging:
   level:
     ru.mycrg: DEBUG

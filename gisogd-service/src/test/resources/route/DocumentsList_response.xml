@@ -1,0 +1,20 @@
+<PagedModelOfDocument>
+    <PageSize>500</PageSize>
+    <CurrentPage>1</CurrentPage>
+    <TotalItems>1</TotalItems>
+    <TotalPages>1</TotalPages>
+    <Items>
+        <Document>
+            <Guid>f98e83a1-010c-41f9-953e-b9b121afd3e7</Guid>
+            <Class>DataSection13</Class>
+        </Document>
+        <Document>
+            <Guid>e63d40c0-eba2-4a26-9993-10e19becc02f</Guid>
+            <Class>DataSection13</Class>
+        </Document>
+        <Document>
+            <Guid>2bd85322-27ad-4286-a6d5-3ef7cd5403f2</Guid>
+            <Class>DataSection13</Class>
+        </Document>
+    </Items>
+</PagedModelOfDocument>

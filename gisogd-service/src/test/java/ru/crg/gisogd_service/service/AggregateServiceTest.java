@@ -1,104 +1,22 @@
 package ru.crg.gisogd_service.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
-import ru.crg.gisogd_service.model.rf.ArtLand;
-import ru.crg.gisogd_service.model.rf.Citizen;
-import ru.crg.gisogd_service.model.rf.CommunicationObject;
-import ru.crg.gisogd_service.model.rf.ConstructionZonesBorders;
-import ru.crg.gisogd_service.model.rf.Customer;
-import ru.crg.gisogd_service.model.rf.DataSection1;
-import ru.crg.gisogd_service.model.rf.DataSection10;
-import ru.crg.gisogd_service.model.rf.DataSection11;
-import ru.crg.gisogd_service.model.rf.DataSection12;
-import ru.crg.gisogd_service.model.rf.DataSection13;
-import ru.crg.gisogd_service.model.rf.DataSection14;
-import ru.crg.gisogd_service.model.rf.DataSection15;
-import ru.crg.gisogd_service.model.rf.DataSection16;
-import ru.crg.gisogd_service.model.rf.DataSection17;
-import ru.crg.gisogd_service.model.rf.DataSection18;
-import ru.crg.gisogd_service.model.rf.DataSection2;
-import ru.crg.gisogd_service.model.rf.DataSection3;
-import ru.crg.gisogd_service.model.rf.DataSection4;
-import ru.crg.gisogd_service.model.rf.DataSection5;
-import ru.crg.gisogd_service.model.rf.DataSection6;
-import ru.crg.gisogd_service.model.rf.DataSection7;
-import ru.crg.gisogd_service.model.rf.DataSection8;
-import ru.crg.gisogd_service.model.rf.DataSection9;
-import ru.crg.gisogd_service.model.rf.Easement;
-import ru.crg.gisogd_service.model.rf.ElectricPowerObject;
-import ru.crg.gisogd_service.model.rf.ElementPlanningStructure;
-import ru.crg.gisogd_service.model.rf.Escalators;
-import ru.crg.gisogd_service.model.rf.ForestDistrict;
-import ru.crg.gisogd_service.model.rf.ForestLand;
-import ru.crg.gisogd_service.model.rf.ForestQuarter;
-import ru.crg.gisogd_service.model.rf.Forestry;
-import ru.crg.gisogd_service.model.rf.FormedLand;
-import ru.crg.gisogd_service.model.rf.GPZU;
-import ru.crg.gisogd_service.model.rf.GPZUInfoP23;
-import ru.crg.gisogd_service.model.rf.GPZUInfoP24;
-import ru.crg.gisogd_service.model.rf.GPZUInfoP25;
-import ru.crg.gisogd_service.model.rf.GPZUInfoP41;
-import ru.crg.gisogd_service.model.rf.GPZUInfoP6;
-import ru.crg.gisogd_service.model.rf.GasPipeline;
-import ru.crg.gisogd_service.model.rf.GasSupplyObject;
-import ru.crg.gisogd_service.model.rf.HeatSupplyNetwork;
-import ru.crg.gisogd_service.model.rf.HeatSupplyObject;
-import ru.crg.gisogd_service.model.rf.InboxData;
-import ru.crg.gisogd_service.model.rf.IndentLine;
-import ru.crg.gisogd_service.model.rf.LandPlot;
-import ru.crg.gisogd_service.model.rf.Lifts;
-import ru.crg.gisogd_service.model.rf.LiquidPipeline;
-import ru.crg.gisogd_service.model.rf.OKS;
-import ru.crg.gisogd_service.model.rf.OilSupplyObject;
-import ru.crg.gisogd_service.model.rf.Organization;
-import ru.crg.gisogd_service.model.rf.PermittedLandUseTypes;
-import ru.crg.gisogd_service.model.rf.PermittedUseParameters;
-import ru.crg.gisogd_service.model.rf.Pipeline;
-import ru.crg.gisogd_service.model.rf.PlanningIndicators;
-import ru.crg.gisogd_service.model.rf.PowerLines;
-import ru.crg.gisogd_service.model.rf.ProjectDeveloper;
-import ru.crg.gisogd_service.model.rf.ProtectedNaturalAreas;
-import ru.crg.gisogd_service.model.rf.PublicTerritoryBorders;
-import ru.crg.gisogd_service.model.rf.RSOKS;
-import ru.crg.gisogd_service.model.rf.RSOKSPart;
-import ru.crg.gisogd_service.model.rf.RVEOKS;
-import ru.crg.gisogd_service.model.rf.RVEOKSPart;
-import ru.crg.gisogd_service.model.rf.RedLine;
-import ru.crg.gisogd_service.model.rf.RfGuid;
-import ru.crg.gisogd_service.model.rf.SpecialZone;
-import ru.crg.gisogd_service.model.rf.Supplier;
-import ru.crg.gisogd_service.model.rf.SupplierEmployee;
-import ru.crg.gisogd_service.model.rf.TechPlan;
-import ru.crg.gisogd_service.model.rf.TelecomNetwork;
-import ru.crg.gisogd_service.model.rf.TerZone;
-import ru.crg.gisogd_service.model.rf.Territory;
-import ru.crg.gisogd_service.model.rf.TownPlanningRegulations;
-import ru.crg.gisogd_service.model.rf.UDRIZS;
-import ru.crg.gisogd_service.model.rf.UGE;
-import ru.crg.gisogd_service.model.rf.USZIZS;
-import ru.crg.gisogd_service.model.rf.UtilityConnectionPoint;
-import ru.crg.gisogd_service.model.rf.WaterDisposalNetwork;
-import ru.crg.gisogd_service.model.rf.WaterDisposalObject;
-import ru.crg.gisogd_service.model.rf.WaterSupplyNetwork;
-import ru.crg.gisogd_service.model.rf.WaterSupplyObject;
-import ru.crg.gisogd_service.model.rf.WheelchairLifts;
-import ru.crg.gisogd_service.model.rf.WorkType;
+import ru.crg.gisogd_service.model.rf.*;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
- * Description.
+ * Aggregate service tests.
  * @author Vladimir Nomokonov
  */
 @SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
@@ -925,14 +843,14 @@ class AggregateServiceTest {
         Resource eventData = new ClassPathResource("event/RSOKSPartEvent.json");
         RSOKSPart enrich = getEnrichedObject(eventData);
         assertEquals("b25e2de5-a968-4274-8266-2295e7094ca4", enrich.getGuid());
-        assertEquals("14b6a960-e1fa-4c2e-b14d-68ffdb1c3f6e",  enrich.getOKS());
+        assertEquals("14b6a960-e1fa-4c2e-b14d-68ffdb1c3f6e", enrich.getOKS());
         assertEquals("0c682142-68f8-44fe-a33c-b6f8c4f2e4ae", enrich.getRSOKS());
-        assertEquals("16.1.7.10",  enrich.getOkSPurpose());
-        assertEquals("91e7a810-19a6-4fde-8d31-222b339dda67",  enrich.getElevatorsNonProd());
-        assertEquals("d1bc675f-ecd2-4c5b-93ce-5845f19d34bd",  enrich.getEscalatorsNonProd());
+        assertEquals("16.1.7.10", enrich.getOkSPurpose());
+        assertEquals("91e7a810-19a6-4fde-8d31-222b339dda67", enrich.getElevatorsNonProd());
+        assertEquals("d1bc675f-ecd2-4c5b-93ce-5845f19d34bd", enrich.getEscalatorsNonProd());
         assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c", enrich.getWheelchairLiftsNonProd());
-        assertEquals("6cdef4ac-5e40-47e9-8e2c-ace38cc50b22",  enrich.getEscalators());
-        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c",  enrich.getWheelchairLifts());
+        assertEquals("6cdef4ac-5e40-47e9-8e2c-ace38cc50b22", enrich.getEscalators());
+        assertEquals("fb94e9c4-4c4a-4435-affe-a44b2876e45c", enrich.getWheelchairLifts());
     }
 
     @Test

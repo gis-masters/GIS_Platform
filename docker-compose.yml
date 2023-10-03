@@ -37,7 +37,7 @@ services:
     image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1" ]
       interval: 10s
       timeout: 30s
       retries: 6
@@ -340,6 +340,7 @@ services:
       SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GISOGDRFCLIENT_CLIENT-SECRET: ${GISOGDRF_SECRET}
       SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_GISOGDRFCLIENT_TOKEN-URI: ${GISOGDRF_TOKEN_URI}
       SPRING_CLOUD_OPENFEIGN_CLIENT_CONFIG_GISOGDRFCLIENT_URL: ${GISOGDRF_URL}
+      CAMEL_GET-REQUESTED-DOCUMENTS_SCHEDULE: ${GISOGD_GET_DOCUMENTS_LIST_CRON}
 
     ports:
       - "8088:8088"

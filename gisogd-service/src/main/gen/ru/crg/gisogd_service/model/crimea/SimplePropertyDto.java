@@ -61,6 +61,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   SimplePropertyDto.JSON_PROPERTY_MULTIPLE,
   SimplePropertyDto.JSON_PROPERTY_NAME,
   SimplePropertyDto.JSON_PROPERTY_OBJECT_IDENTITY_ON_UI,
+  SimplePropertyDto.JSON_PROPERTY_ONLY_SUBORDINATES,
   SimplePropertyDto.JSON_PROPERTY_PATTERN,
   SimplePropertyDto.JSON_PROPERTY_PATTERN_DESCRIPTION,
   SimplePropertyDto.JSON_PROPERTY_READ_ONLY,
@@ -244,6 +245,9 @@ public class SimplePropertyDto {
 
   public static final String JSON_PROPERTY_OBJECT_IDENTITY_ON_UI = "objectIdentityOnUi";
   private Boolean objectIdentityOnUi;
+
+  public static final String JSON_PROPERTY_ONLY_SUBORDINATES = "onlySubordinates";
+  private Boolean onlySubordinates;
 
   public static final String JSON_PROPERTY_PATTERN = "pattern";
   private String pattern;
@@ -1157,6 +1161,32 @@ public class SimplePropertyDto {
   }
 
 
+  public SimplePropertyDto onlySubordinates(Boolean onlySubordinates) {
+    
+    this.onlySubordinates = onlySubordinates;
+    return this;
+  }
+
+   /**
+   * Get onlySubordinates
+   * @return onlySubordinates
+  **/
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_ONLY_SUBORDINATES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getOnlySubordinates() {
+    return onlySubordinates;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_ONLY_SUBORDINATES)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setOnlySubordinates(Boolean onlySubordinates) {
+    this.onlySubordinates = onlySubordinates;
+  }
+
+
   public SimplePropertyDto pattern(String pattern) {
     
     this.pattern = pattern;
@@ -1560,6 +1590,7 @@ public class SimplePropertyDto {
         Objects.equals(this.multiple, simplePropertyDto.multiple) &&
         Objects.equals(this.name, simplePropertyDto.name) &&
         Objects.equals(this.objectIdentityOnUi, simplePropertyDto.objectIdentityOnUi) &&
+        Objects.equals(this.onlySubordinates, simplePropertyDto.onlySubordinates) &&
         Objects.equals(this.pattern, simplePropertyDto.pattern) &&
         Objects.equals(this.patternDescription, simplePropertyDto.patternDescription) &&
         Objects.equals(this.readOnly, simplePropertyDto.readOnly) &&
@@ -1578,7 +1609,7 @@ public class SimplePropertyDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(accept, allowedValues, asTitle, calculatedValueFormula, calculatedValueWellKnownFormula, choice, dateFormat, defaultValue, defaultValueWellKnownFormula, description, display, displayMode, enumerations, folderId, foreignKeyType, fractionDigits, hidden, length, libraries, library, maxDocuments, maxFiles, maxInclusive, maxLength, maxSize, minInclusive, minLength, minWidth, multiple, name, objectIdentityOnUi, pattern, patternDescription, readOnly, required, resourcePath, searchMode, sequenceNumber, title, totalDigits, updateability, validationFormula, valueFormulaParams, valueType, whiteSpace);
+    return Objects.hash(accept, allowedValues, asTitle, calculatedValueFormula, calculatedValueWellKnownFormula, choice, dateFormat, defaultValue, defaultValueWellKnownFormula, description, display, displayMode, enumerations, folderId, foreignKeyType, fractionDigits, hidden, length, libraries, library, maxDocuments, maxFiles, maxInclusive, maxLength, maxSize, minInclusive, minLength, minWidth, multiple, name, objectIdentityOnUi, onlySubordinates, pattern, patternDescription, readOnly, required, resourcePath, searchMode, sequenceNumber, title, totalDigits, updateability, validationFormula, valueFormulaParams, valueType, whiteSpace);
   }
 
   @Override
@@ -1616,6 +1647,7 @@ public class SimplePropertyDto {
     sb.append("    multiple: ").append(toIndentedString(multiple)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    objectIdentityOnUi: ").append(toIndentedString(objectIdentityOnUi)).append("\n");
+    sb.append("    onlySubordinates: ").append(toIndentedString(onlySubordinates)).append("\n");
     sb.append("    pattern: ").append(toIndentedString(pattern)).append("\n");
     sb.append("    patternDescription: ").append(toIndentedString(patternDescription)).append("\n");
     sb.append("    readOnly: ").append(toIndentedString(readOnly)).append("\n");

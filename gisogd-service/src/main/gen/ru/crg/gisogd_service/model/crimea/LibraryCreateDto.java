@@ -28,7 +28,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonPropertyOrder({
   LibraryCreateDto.JSON_PROPERTY_DETAILS,
-  LibraryCreateDto.JSON_PROPERTY_SCHEMA_ID
+  LibraryCreateDto.JSON_PROPERTY_SCHEMA_ID,
+  LibraryCreateDto.JSON_PROPERTY_VERSIONED
 })
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen")
 public class LibraryCreateDto {
@@ -37,6 +38,9 @@ public class LibraryCreateDto {
 
   public static final String JSON_PROPERTY_SCHEMA_ID = "schemaId";
   private String schemaId;
+
+  public static final String JSON_PROPERTY_VERSIONED = "versioned";
+  private Boolean versioned;
 
   public LibraryCreateDto() {
   }
@@ -92,6 +96,32 @@ public class LibraryCreateDto {
     this.schemaId = schemaId;
   }
 
+
+  public LibraryCreateDto versioned(Boolean versioned) {
+    
+    this.versioned = versioned;
+    return this;
+  }
+
+   /**
+   * Get versioned
+   * @return versioned
+  **/
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_VERSIONED)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public Boolean getVersioned() {
+    return versioned;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_VERSIONED)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setVersioned(Boolean versioned) {
+    this.versioned = versioned;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -102,12 +132,13 @@ public class LibraryCreateDto {
     }
     LibraryCreateDto libraryCreateDto = (LibraryCreateDto) o;
     return Objects.equals(this.details, libraryCreateDto.details) &&
-        Objects.equals(this.schemaId, libraryCreateDto.schemaId);
+        Objects.equals(this.schemaId, libraryCreateDto.schemaId) &&
+        Objects.equals(this.versioned, libraryCreateDto.versioned);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(details, schemaId);
+    return Objects.hash(details, schemaId, versioned);
   }
 
   @Override
@@ -116,6 +147,7 @@ public class LibraryCreateDto {
     sb.append("class LibraryCreateDto {\n");
     sb.append("    details: ").append(toIndentedString(details)).append("\n");
     sb.append("    schemaId: ").append(toIndentedString(schemaId)).append("\n");
+    sb.append("    versioned: ").append(toIndentedString(versioned)).append("\n");
     sb.append("}");
     return sb.toString();
   }

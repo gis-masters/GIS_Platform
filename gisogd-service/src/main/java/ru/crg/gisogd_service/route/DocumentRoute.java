@@ -1,47 +1,71 @@
 package ru.crg.gisogd_service.route;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.crg.gisogd_service.client.DataServiceClient;
 import ru.crg.gisogd_service.client.GisogdRfClient;
+import ru.crg.gisogd_service.model.crimea.common.FileRef;
 import ru.crg.gisogd_service.model.rf.Document;
 import ru.crg.gisogd_service.model.rf.DocumentPagedModel;
+import ru.crg.gisogd_service.service.BadRequestErrorsResolver;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
-import ru.crg.gisogd_service.service.RecordsRepositoryService;
+import ru.crg.gisogd_service.service.LibraryRecordService;
+import ru.mycrg.gisog_service_contract.dto.Status;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toMap;
 import static org.apache.camel.Exchange.LOOP_INDEX;
+import static ru.crg.gisogd_service.route.RfRoute.ERRORS_RESPONSE_STATUS;
 
 /**
  * DocumentsFiles processing routes.
  * @author Vladimir Nomokonov
  */
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class DocumentRoute extends RouteBuilder {
 
     public static final String GET_REQUESTED_DOCUMENTS_ROUTE_ID = "get-requested-documents-route";
+    public static final String GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID = "get-document-from-crimea-route";
     public static final String SEND_DOCUMENT_ROUTE_ID = "send-document-route";
     public static final int MAX_ITEMS = 500;
 
     private final DataServiceClient dataServiceClient;
     private final DocumentTypeResolver resolver;
-    private final RecordsRepositoryService recordsRepositoryService;
     private final GisogdRfClient gisogdRfClient;
+    private final LibraryRecordService libraryRecordService;
+    private final ObjectMapper objectMapper;
+    private final BadRequestErrorsResolver errorsResolver;
+
+    @Value("${camel.get-requested-documents.schedule:0 0 * * * ?}")
+    private String schedule;
 
     @Override
     public void configure() {
-        from("cron:get-requested-documents?schedule=0 0 * * * ?")
+        log.info("active schedule: {}", schedule);
+        from("cron:get-requested-documents?schedule=" + schedule)
                 .to("direct:get-requested-documents");
 
         from("direct:get-requested-documents")
                 .id(GET_REQUESTED_DOCUMENTS_ROUTE_ID)
+
+                .process(exchange -> exchange.getIn().setHeader(
+                        "rootFolderRecId",
+                        libraryRecordService.createRootFolder()
+                ))
+
                 .setHeader("pageSize", () -> MAX_ITEMS)
                 .log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID, "page size: ${headers.pageSize}")
 
@@ -70,35 +94,185 @@ public class DocumentRoute extends RouteBuilder {
                 .log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID,
                      "document guids: ${headers.documentGuids.size()}")
 
+                .process(exchange -> libraryRecordService.updateRecord(
+                        exchange.getIn().getHeader("rootFolderRecId", Integer.class),
+                        Map.of("get_documents_list", exchange.getIn().getHeader("documentGuids", String.class))
+                ))
+
                 .split(header("documentGuids")).parallelProcessing()
-                /**/.to("direct:send-document")
+                /**/.to("direct:get-document-from-crimea")
                 .end()
+
+                .process(exchange -> libraryRecordService.commitLibraryRecord(
+                        exchange.getIn().getHeader("rootFolderRecId", Integer.class)
+                ))
 
                 .log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID,
                      "documents were sent");
 
-        from("direct:send-document")
-                .id(SEND_DOCUMENT_ROUTE_ID)
-                .log(LoggingLevel.DEBUG, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID, "document: ${body}")
+        from("direct:get-document-from-crimea")
+                .id(GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID)
+                .log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "document: ${body}")
 
                 .setHeader("docClass", simple("${body.getPropertyClass()}"))
                 .setHeader("docGuid", simple("${body.getGuid()}"))
+
+                .process(exchange -> exchange.getIn().setHeader(
+                        "subFolderRecId",
+                        libraryRecordService.createSubFolder(
+                                exchange.getIn().getHeader("rootFolderRecId", Integer.class),
+                                Map.of("guid", exchange.getIn().getHeader("docGuid", String.class)))
+                ))
+
                 .process(exchange -> {
                     Document doc = exchange.getIn().getBody(Document.class);
                     exchange.getIn().setHeader("docLibId", resolver.getDoclibIdByClassName(doc.getPropertyClass()));
                     exchange.getIn().setHeader("filterByGuid", "guid = '" + doc.getGuid() + "'");
                 })
+
                 .bean(dataServiceClient, "getDocByLibIdAndGuid")
-                .log(LoggingLevel.DEBUG, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID, "crimea document: ${body}")
+                .log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "crimea document: ${body}")
 
-                .bean(recordsRepositoryService, "findFilesRef")
-                .log(LoggingLevel.DEBUG, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID, "fileRefs: ${body}")
+                .setBody(exchange -> {
+                    Map<String, Object> body = exchange.getIn().getBody(Map.class);
+                    Map<String, Object> embedded = (Map<String, Object>) body.get("_embedded");
+                    if (embedded == null) {
+                        return null;
+                    }
 
-                .setBody(simple("${body.get(0)}"))
+                    List<Map<String, Object>> records = (List<Map<String, Object>>) embedded.get("records");
+                    Map<String, Object> content = (Map<String, Object>) records.get(0).get("content");
+
+                    exchange.getIn().setHeader("objectId", content.get("id"));
+                    exchange.getIn().setHeader("docGuid", content.get("guid"));
+                    exchange.getIn().setHeader("subFolderTitle", content.get("title"));
+
+                    List<Map<String, Object>> filesMap = (List<Map<String, Object>>) content.get("files");
+                    if (filesMap == null) {
+                        filesMap = (List<Map<String, Object>>) content.get("file");
+                    }
+                    List<FileRef> result = null;
+                    if (filesMap != null) {
+                        result = objectMapper.convertValue(filesMap, new TypeReference<>() {
+
+                        });
+                        result = result.isEmpty() ? null : result;
+                    }
+                    return result;
+                })
+
+                .process(exchange -> {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("title", exchange.getIn().getBody() == null
+                            ? "Документ библиотеки не найден"
+                            : exchange.getIn().getHeader("subFolderTitle", String.class));
+                    data.put("library_name", exchange.getIn().getHeader("docLibId", String.class));
+                    data.put("guid", exchange.getIn().getHeader("docGuid", String.class));
+                    data.put("object_id", exchange.getIn().getHeader("objectId", Integer.class));
+
+                    libraryRecordService.updateRecord(
+                            exchange.getIn().getHeader("subFolderRecId", Integer.class),
+                            data);
+                })
+
+                .choice()
+                /**/.when(body().isNull())
+                /**//**/.log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "nothing to send")
+                /**/.endChoice()
+
+                /**/.otherwise()
+                /**//**/.log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "fileRefs: ${body}")
+
+                /**//**/.split(body())
+                /**//**//**/.to("direct:send-document")
+                /**//**/.end()
+                /**/.endChoice()
+                .end()
+
+                .process(exchange -> libraryRecordService.commitLibraryRecord(
+                        exchange.getIn().getHeader("subFolderRecId", Integer.class)
+                ));
+
+        from("direct:send-document")
+                .id(SEND_DOCUMENT_ROUTE_ID)
+
+                .process(exchange -> {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("title", exchange.getIn().getBody(FileRef.class).getTitle());
+                    data.put("file_id", exchange.getIn().getBody(FileRef.class).getId());
+                    data.put("library_name", exchange.getIn().getHeader("docLibId", String.class));
+                    data.put("object_id", exchange.getIn().getHeader("objectId", Integer.class));
+
+                    exchange.getIn().setHeader(
+                            "documentRecId",
+                            libraryRecordService.createDocument(
+                                    exchange.getIn().getHeader("rootFolderRecId", Integer.class),
+                                    exchange.getIn().getHeader("subFolderRecId", Integer.class),
+                                    data));
+                })
+
                 .setHeader("fileGuid", simple("${body.getId()}"))
-                .log(LoggingLevel.DEBUG, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID, "fileGuid: ${header.fileGuid}")
+                .log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "fileGuid: ${header.fileGuid}")
 
-                .bean(dataServiceClient, "downloadFile")
-                .bean(gisogdRfClient, "sendDocument");
+                .doTry()
+                /**/.bean(dataServiceClient, "downloadFile")
+                .doCatch(Exception.class)
+                /**/.process(exchange -> {
+                    Throwable exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    libraryRecordService.updateRecord(
+                            exchange.getIn().getHeader("documentRecId", Integer.class),
+                            Map.of("title",
+                                   exception instanceof FeignException.NotFound
+                                           ? "Нет файла для отправки" : "Файл недоступен",
+                                   "gisogdrf_sync_status",
+                                   exception instanceof FeignException.NotFound
+                                           ? Status.NOT_FOUND : Status.GISOGD_FAILED));
+                    exchange.getIn().setBody(null);
+                })
+                /**/.log(LoggingLevel.ERROR, log, SEND_DOCUMENT_ROUTE_ID,
+                         "message: ${exception.message}\nstacktrace: ${exception.stacktrace}")
+                /**/.stop()
+                .end()
+
+                .doTry()
+                /**/.setBody(
+                        exchange -> {
+                            String aClass = exchange.getIn().getHeader("docClass", String.class);
+                            String guid = exchange.getIn().getHeader("docGuid", String.class);
+                            return Map.of("Class", aClass,
+                                          "Guid", guid,
+                                          "File", exchange.getIn().getBody()
+                            );
+                        }
+                )
+                /**/.bean(gisogdRfClient, "sendDocument")
+                /**/.process(exchange -> libraryRecordService.updateRecord(
+                        exchange.getIn().getHeader("documentRecId", Integer.class),
+                        Map.of("gisogdrf_sync_status", Status.SUCCESS)))
+                .doCatch(Exception.class)
+                /**/.process(exchange -> {
+                    Throwable exception = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Throwable.class);
+                    String message = exception.getMessage();
+                    if (exception instanceof FeignException) {
+                        message = errorsResolver.getFeignExceptionMessage((FeignException) exception);
+                        if (message.contains("ArrayOfString")) {
+                            List<String> data = new XmlMapper().readValue(message, List.class);
+                            Map<String, String> content = IntStream.range(0, data.size())
+                                                                   .boxed()
+                                                                   .collect(toMap(i -> "parent" + i, data::get));
+                            message = objectMapper.writeValueAsString(content);
+                        }
+                    }
+                    libraryRecordService.updateRecord(
+                            exchange.getIn().getHeader("documentRecId", Integer.class),
+                            Map.of("gisogdrf_response", message,
+                                   "gisogdrf_sync_status", Optional.ofNullable(ERRORS_RESPONSE_STATUS.get(exception.getClass()))
+                                                                   .orElse(Status.GISOGD_FAILED)
+                            ));
+                })
+                .end()
+
+                .process(exchange -> libraryRecordService.commitLibraryRecord(
+                        exchange.getIn().getHeader("documentRecId", Integer.class)));
     }
 }

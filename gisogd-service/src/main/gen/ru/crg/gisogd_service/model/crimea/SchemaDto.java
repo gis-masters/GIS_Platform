@@ -46,6 +46,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
   SchemaDto.JSON_PROPERTY_RELATIONS,
   SchemaDto.JSON_PROPERTY_STYLE_NAME,
   SchemaDto.JSON_PROPERTY_TABLE_NAME,
+  SchemaDto.JSON_PROPERTY_TAGS,
   SchemaDto.JSON_PROPERTY_TITLE,
   SchemaDto.JSON_PROPERTY_TYPE,
   SchemaDto.JSON_PROPERTY_VIEWS
@@ -146,6 +147,9 @@ public class SchemaDto {
 
   public static final String JSON_PROPERTY_TABLE_NAME = "tableName";
   private String tableName;
+
+  public static final String JSON_PROPERTY_TAGS = "tags";
+  private List<String> tags;
 
   public static final String JSON_PROPERTY_TITLE = "title";
   private String title;
@@ -555,6 +559,40 @@ public class SchemaDto {
   }
 
 
+  public SchemaDto tags(List<String> tags) {
+    
+    this.tags = tags;
+    return this;
+  }
+
+  public SchemaDto addTagsItem(String tagsItem) {
+    if (this.tags == null) {
+      this.tags = new ArrayList<>();
+    }
+    this.tags.add(tagsItem);
+    return this;
+  }
+
+   /**
+   * Get tags
+   * @return tags
+  **/
+  @javax.annotation.Nullable
+  @JsonProperty(JSON_PROPERTY_TAGS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public List<String> getTags() {
+    return tags;
+  }
+
+
+  @JsonProperty(JSON_PROPERTY_TAGS)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+  public void setTags(List<String> tags) {
+    this.tags = tags;
+  }
+
+
   public SchemaDto title(String title) {
     
     this.title = title;
@@ -663,6 +701,7 @@ public class SchemaDto {
         Objects.equals(this.relations, schemaDto.relations) &&
         Objects.equals(this.styleName, schemaDto.styleName) &&
         Objects.equals(this.tableName, schemaDto.tableName) &&
+        Objects.equals(this.tags, schemaDto.tags) &&
         Objects.equals(this.title, schemaDto.title) &&
         Objects.equals(this.type, schemaDto.type) &&
         Objects.equals(this.views, schemaDto.views);
@@ -670,7 +709,7 @@ public class SchemaDto {
 
   @Override
   public int hashCode() {
-    return Objects.hash(calcFiledFunction, contentTypes, customRuleFunction, definitionQuery, description, geometryType, name, originName, printTemplates, properties, readOnly, relations, styleName, tableName, title, type, views);
+    return Objects.hash(calcFiledFunction, contentTypes, customRuleFunction, definitionQuery, description, geometryType, name, originName, printTemplates, properties, readOnly, relations, styleName, tableName, tags, title, type, views);
   }
 
   @Override
@@ -691,6 +730,7 @@ public class SchemaDto {
     sb.append("    relations: ").append(toIndentedString(relations)).append("\n");
     sb.append("    styleName: ").append(toIndentedString(styleName)).append("\n");
     sb.append("    tableName: ").append(toIndentedString(tableName)).append("\n");
+    sb.append("    tags: ").append(toIndentedString(tags)).append("\n");
     sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    views: ").append(toIndentedString(views)).append("\n");

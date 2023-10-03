@@ -1,21 +1,15 @@
 package ru.crg.gisogd_service.route;
 
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
+import feign.FeignException;
+import feign.RetryableException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import feign.FeignException;
-import feign.RetryableException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
 import ru.crg.gisogd_service.service.AggregateService;
@@ -25,6 +19,9 @@ import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.gisog_service_contract.dto.Status;
+
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Configure and adds routes from route templates.
@@ -42,10 +39,8 @@ public class RfRoute extends RouteBuilder {
     public static final String EVENT = "event";
     private static final String STATUS = "status";
     private static final String MESSAGE = "message";
-    private static final String EXCEPTION_LOG_MESSAGE =
-            "error sending an object: ${body} to GISOG cause: ${exception.message} ";
 
-    private static final Map<Class<? extends Throwable>, Status> ERRORS_RESPONSE_STATUS =
+    public static final Map<Class<? extends Throwable>, Status> ERRORS_RESPONSE_STATUS =
             Map.of(
                     FeignException.InternalServerError.class, Status.INTERNAL_SERVER_ERROR
                     , FeignException.BadRequest.class, Status.BAD_REQUEST
@@ -99,8 +94,8 @@ public class RfRoute extends RouteBuilder {
                                             .orElse(Status.GISOGD_FAILED);
                     exchange.getIn().setHeader(STATUS, status);
                     exchange.getIn().setHeader(MESSAGE, Status.BAD_REQUEST.equals(status)
-                                                        ? getFeignExceptionMessage((FeignException) exception)
-                                                        : exception.getMessage());
+                            ? errorsResolver.getFeignExceptionMessage((FeignException) exception)
+                            : exception.getMessage());
                 })
                 .doFinally()
                 /**/.to("direct:prepare-response")
@@ -155,11 +150,10 @@ public class RfRoute extends RouteBuilder {
                 .setBody(
                         exchange -> {
                             Message in = exchange.getIn();
-                            Map<String, String> content = new HashMap<>();
                             String message = (String) in.getHeader(MESSAGE);
                             Status status = (Status) in.getHeader(STATUS);
                             Document document = in.getHeader(DOCUMENT, Document.class);
-                            content = errorsResolver.badRequestErrorsResolve(message, document);
+                            Map<String, String> content = errorsResolver.badRequestErrorsResolve(message, document);
 
                             return new ResponseFromGisogdRfEvent((PublishToGisogdRfEvent) in.getHeader(EVENT),
                                                                  status,
@@ -173,14 +167,8 @@ public class RfRoute extends RouteBuilder {
                 .setHeader("__TypeId__", simple("${body.getClass().getName()}"))
                 .marshal().json()
                 .to("spring-rabbitmq:default?messagePropertiesConverter=#bean:propertiesConverter&routingKey="
-                    + responseQueueName)
+                            + responseQueueName)
                 .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "response to queue: ${body}");
     }
 
-    private String getFeignExceptionMessage(FeignException feignException) {
-        return feignException.responseBody()
-                             .map(ByteBuffer::array)
-                             .map(String::new)
-                             .orElse(null);
-    }
 }

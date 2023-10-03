@@ -1,11 +1,21 @@
 package ru.crg.gisogd_service.client;
 
-import feign.Headers;
+import java.util.Map;
+
 import org.apache.camel.Body;
 import org.apache.camel.Header;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import feign.Param;
 import ru.crg.gisogd_service.config.GisogdFeignConfig;
 import ru.crg.gisogd_service.model.rf.AuditResponse;
 import ru.crg.gisogd_service.model.rf.Classifiers;
@@ -36,9 +46,11 @@ public interface GisogdRfClient {
             @Header("page") @RequestParam(value = "Page", required = false) Integer page
     );
 
-    @PostMapping("/DocumentsFiles")
-    @Headers("Content-Type: multipart/form-data")
-    void sendDocument(@Header("docClass") @RequestHeader("Class") String docClass,
-                      @Header("docGuid") @RequestHeader("Guid") String docGuid,
-                      @Body MultipartFile file);
+    @PostMapping(value = "/DocumentsFiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    void sendDocument( @Body @RequestBody Map<String, ?> body);
+//
+//
+//            @Header("docClass") @Param("Class") String docClass,
+//                      @Header("docGuid") @Param("Guid") String docGuid,
+//                      @Body @Param("File") byte[] file);
 }

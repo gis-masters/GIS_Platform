@@ -1,12 +1,21 @@
 package ru.crg.gisogd_service.config;
 
-import feign.Logger;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.security.OAuth2AccessTokenInterceptor;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.*;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -17,8 +26,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import feign.Logger;
+import feign.codec.Encoder;
+import feign.form.spring.SpringFormEncoder;
 
 /**
  * Feign client config.
@@ -83,5 +93,10 @@ public class DataServiceFeignConfig {
             return accessToken;
         }
         throw new RuntimeException(String.format("Can`t get access token for username: %s", username));
+    }
+
+    @Bean
+    public Encoder encoder(ObjectFactory<HttpMessageConverters> converters) {
+        return new SpringFormEncoder(new SpringEncoder(converters));
     }
 }
