@@ -6,8 +6,8 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getAllLibraryRecordsAsRegistry } from '../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { PropertySchema, Schema } from '../../../services/data/schema/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
@@ -20,7 +20,7 @@ import { FileIcon } from '../../FileIcon/FileIcon';
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 
 interface LibraryRegistryExportProps {
-  library: DocumentLibrary;
+  library: Library;
   schema: Schema;
   tablePageOptions: PageOptions;
   cols: XTableColumn<LibraryRecord>[];

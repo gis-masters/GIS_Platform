@@ -5,7 +5,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';

@@ -1,6 +1,6 @@
-import { LibraryRecord } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { requestAsAdmin } from '../requestAs';
-import { docLibraryClient } from '../../../../src/app/services/data/docLibrary/docLibrary.client';
+import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 
 export async function moveLibraryRecord(
   libraryTableName: string,
@@ -8,6 +8,6 @@ export async function moveLibraryRecord(
   target: LibraryRecord
 ): Promise<void> {
   if (target.path && target.id && record.id) {
-    await requestAsAdmin(docLibraryClient.moveLibraryRecord, libraryTableName, record.id, target.id);
+    await requestAsAdmin(libraryClient.moveLibraryRecord, libraryTableName, record.id, target.id);
   }
 }

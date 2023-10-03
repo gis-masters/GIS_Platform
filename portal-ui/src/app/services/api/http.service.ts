@@ -46,7 +46,7 @@ class Http {
     this.axios.defaults.withCredentials = true;
 
     this.axios.interceptors.request.use(config => {
-      config.url = replaceUrl(config.url);
+      config.url = replaceUrl(config.url || '');
 
       return config;
     });
@@ -135,7 +135,7 @@ class Http {
     objectRecognizer: (o: T) => boolean,
     config: RequestConfigWithCache = {},
     withOldPageableResponse: boolean
-  ): Promise<[T[], number /* totalPages */, number /* pageNumber */]> | undefined {
+  ): Promise<[T[], number /* totalPages */, number /* pageNumber */] | undefined> {
     const optimisticConfig = { ...config, params: { ...config.params, ...pageParams } };
     // поначалу попытаемся найти объект на указанной странице
     const optimisticResponse = withOldPageableResponse
@@ -203,7 +203,7 @@ class Http {
 
     const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
     const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
-    const fromCache = this.cache.match(cacheKey, { disabled: true, clear: true, ...cacheConfig });
+    const fromCache = this.cache.match(cacheKey, cacheConfig);
     let promise: Promise<AxiosResponse<T>>;
 
     if (fromCache) {

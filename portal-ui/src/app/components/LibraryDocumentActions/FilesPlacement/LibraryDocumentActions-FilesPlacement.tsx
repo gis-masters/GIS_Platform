@@ -7,7 +7,7 @@ import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 

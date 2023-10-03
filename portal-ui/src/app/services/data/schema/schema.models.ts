@@ -221,6 +221,7 @@ export interface PropertySchemaCustom extends BasePropertySchema {
   ControlComponent: ComponentType<FormControlProps>;
   ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
+  [key: string]: unknown;
 }
 
 export interface PropertySchemaFias extends BasePropertySchema {

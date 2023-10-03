@@ -5,7 +5,7 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { CommonDiRegistry } from '../../services/di-registry';
 import { TextBadge } from '../TextBadge/TextBadge';
 

@@ -41,6 +41,7 @@ public class SchemaDto {
     private List<ContentType> views = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
+    private List<SchemaChild> children = new ArrayList<>();
 
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
@@ -192,5 +193,13 @@ public class SchemaDto {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<SchemaChild> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<SchemaChild> children) {
+        this.children = children;
     }
 }

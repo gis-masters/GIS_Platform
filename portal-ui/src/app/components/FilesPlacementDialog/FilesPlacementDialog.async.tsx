@@ -27,7 +27,7 @@ import { placeFiles } from '../../services/data/file-placement/file-placement.se
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { viewedProjections } from '../../services/geoserver/projections.service';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';

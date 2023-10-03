@@ -1,13 +1,9 @@
-import {
-  DocumentLibrary,
-  LibraryRecord,
-  LibraryRecordNew
-} from '../../../../src/app/services/data/docLibrary/docLibrary.models';
-import { docLibraryClient } from '../../../../src/app/services/data/docLibrary/docLibrary.client';
+import { Library, LibraryRecord, LibraryRecordNew } from '../../../../src/app/services/data/library/library.models';
+import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 import { requestAsAdmin } from '../requestAs';
 
 export async function createFolder(
-  library: DocumentLibrary,
+  library: Library,
   title: string,
   contentTypeId: string,
   path = '/root'
@@ -18,5 +14,5 @@ export async function createFolder(
     path
   };
 
-  return await requestAsAdmin(docLibraryClient.createLibraryRecord, record, library.table_name);
+  return await requestAsAdmin(libraryClient.createLibraryRecord, record, library.table_name);
 }

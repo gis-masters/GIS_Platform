@@ -6,8 +6,8 @@ import { TableView } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { getLibraryFolderExplorerUrl, getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
-import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { Library } from '../../services/data/library/library.models';
 import { IconButton } from '../IconButton/IconButton';
 import { ExplorerView } from '../Icons/ExplorerView';
 
@@ -15,7 +15,7 @@ const cnLibraryViewSwitch = cn('LibraryViewSwitch');
 
 interface LibraryViewSwitchProps {
   to: 'registry' | 'explorer';
-  library: DocumentLibrary;
+  library: Library;
   path: number[];
 }
 

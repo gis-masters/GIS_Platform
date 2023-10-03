@@ -71,7 +71,7 @@ interface XTablePropsAsync<T> extends XTablePropsBase<T> {
   getData(pageOptions: PageOptions): Promise<[T[], number]>;
 }
 
-export type XTableInvoke = XTableProps<unknown>['invoke'];
+export type XTableInvoke = Required<XTableProps<unknown>>['invoke'];
 
 export type XTableProps<T> = XTablePropsSync<T> | XTablePropsAsync<T>;
 

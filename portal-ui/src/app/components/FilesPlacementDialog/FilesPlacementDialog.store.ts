@@ -1,6 +1,6 @@
 import { action, computed, observable, makeObservable } from 'mobx';
 
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { FileInfo } from '../../services/data/files/files.models';
 

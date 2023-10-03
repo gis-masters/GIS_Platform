@@ -6,7 +6,7 @@ import { NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
 import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../src/app/services/gis/projects/projects.models';
 import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
-import { LibraryRecord } from '../../src/app/services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../src/app/services/data/library/library.models';
 import { FilterQuery } from '../../src/app/services/util/filterObjects';
 import { FileInfo } from '../../src/app/services/data/files/files.models';
 import { Task } from '../../src/app/services/data/task/task.models';

@@ -1,5 +1,5 @@
-import { getLibraryRecords } from '../../../../src/app/services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
+import { getLibraryRecords } from '../../../../src/app/services/data/library/library.service';
+import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { PageOptions } from '../../../../src/app/services/models';
 import { TestUser } from '../auth/testUsers';
 import { authenticateAs } from '../auth/authenticate';

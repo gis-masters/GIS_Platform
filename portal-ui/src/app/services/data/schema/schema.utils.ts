@@ -30,7 +30,7 @@ import {
   SimpleSchema,
   ValueFormula
 } from './schema.models';
-import { LibraryRecord } from '../docLibrary/docLibrary.models';
+import { LibraryRecord } from '../library/library.models';
 import { DocumentInfo } from '../../../components/Documents/Documents';
 import { formatDate } from '../../util/date.util';
 import { FileInfo } from '../files/files.models';

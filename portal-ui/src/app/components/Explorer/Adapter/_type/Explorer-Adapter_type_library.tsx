@@ -7,12 +7,8 @@ import {
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
-} from '../../../../services/data/docLibrary/docLibrary.service';
-import {
-  ContentTypeTypes,
-  DocumentLibrary,
-  LibraryRecord
-} from '../../../../services/data/docLibrary/docLibrary.models';
+} from '../../../../services/data/library/library.service';
+import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import { Link } from '../../../Link/Link';
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/data/permissions/permissions.models';
@@ -32,21 +28,21 @@ import { ExplorerService } from '../../Explorer.service';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.LIBRARY]: DocumentLibrary;
+    [ExplorerItemType.LIBRARY]: Library;
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<Library, LibraryRecord>>()
 export class ExplorerAdapterTypeLibrary {
-  static getId(item: ExplorerItemData<DocumentLibrary>): string {
+  static getId(item: ExplorerItemData<Library>): string {
     return item.payload.table_name;
   }
 
-  static getTitle(item: ExplorerItemData<DocumentLibrary>): string {
+  static getTitle(item: ExplorerItemData<Library>): string {
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<DocumentLibrary>): ReactNode {
+  static getDescription(item: ExplorerItemData<Library>): ReactNode {
     const { details, createdAt, schemaId } = item.payload;
 
     return (
@@ -72,7 +68,7 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getMeta(item: ExplorerItemData<DocumentLibrary>): string {
+  static getMeta(item: ExplorerItemData<Library>): string {
     return String(item.payload.table_name);
   }
 
@@ -85,7 +81,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildren(
-    explorerItem: ExplorerItemData<DocumentLibrary>,
+    explorerItem: ExplorerItemData<Library>,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
@@ -97,14 +93,14 @@ export class ExplorerAdapterTypeLibrary {
       explorerItem.payload.schemaId,
       {
         ...options,
-        filter: service.mergeCustomFilter(filter, explorerItem, store)
+        filter: service.mergeCustomFilter(filter || {}, explorerItem, store)
       }
     );
 
     const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
 
     libraryRecords.forEach(record => {
-      const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
+      const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
 
       result.push({
         type:
@@ -132,12 +128,12 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildById(
-    item: ExplorerItemData<DocumentLibrary>,
+    item: ExplorerItemData<Library>,
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.table_name, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
-    const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+    const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
     return {
       type:
@@ -149,19 +145,19 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<DocumentLibrary>,
+    item: ExplorerItemData<Library>,
     { filter, page, ...options }: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
     const response = await getLibraryRecordsWithParticularOne(
       item.payload.table_name,
       item.payload.schemaId,
       Number(id),
       {
         ...options,
-        filter: service.mergeCustomFilter(filter, item, store),
+        filter: service.mergeCustomFilter(filter || {}, item, store),
         page
       }
     );
@@ -175,7 +171,7 @@ export class ExplorerAdapterTypeLibrary {
 
     return [
       records.map(payload => {
-        const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+        const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
         return {
           type:
@@ -207,7 +203,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getToolbarActions(
-    item: ExplorerItemData<DocumentLibrary>,
+    item: ExplorerItemData<Library>,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean

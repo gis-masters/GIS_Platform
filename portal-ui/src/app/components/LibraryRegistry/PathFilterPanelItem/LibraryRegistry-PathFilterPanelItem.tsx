@@ -5,13 +5,13 @@ import { cn } from '@bem-react/classname';
 
 import { XTableFilterPanelItemContentProps } from '../../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 import { getBreadcrumbsPathFromFilter } from '../LibraryRegistry.util';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
-import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
 
 const cnLibraryRegistryPathFilterPanelItem = cn('LibraryRegistry', 'PathFilterPanelItem');
 
 interface LibraryRegistryPathFilterPanelItemProps extends XTableFilterPanelItemContentProps<LibraryRecord> {
-  library?: DocumentLibrary;
+  library?: Library;
 }
 
 @observer

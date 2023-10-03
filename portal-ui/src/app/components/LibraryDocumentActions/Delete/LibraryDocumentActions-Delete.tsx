@@ -21,8 +21,8 @@ import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { FileConnection } from '../../../services/data/files/files.models';
 import { getFileConnections } from '../../../services/data/files/files.service';
 import { getLibraryRecordFiles } from '../../../services/data/files/files.util';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
-import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord } from '../../../services/data/library/library.models';
+import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/library/library.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { Button } from '../../Button/Button';
 

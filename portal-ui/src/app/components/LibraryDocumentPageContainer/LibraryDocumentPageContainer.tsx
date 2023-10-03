@@ -8,8 +8,8 @@ import { AxiosError } from 'axios';
 
 import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { communicationService } from '../../services/communication.service';
 import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
 import { EmptyListView } from '../EmptyListView/EmptyListView';

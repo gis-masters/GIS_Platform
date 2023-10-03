@@ -5,8 +5,8 @@ import { AssignmentOutlined, FolderOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';

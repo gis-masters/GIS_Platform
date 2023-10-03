@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../data/library/library.models';
 import { schemaService } from '../data/schema/schema.service';
 import { Schema } from '../data/schema/schema.models';
 import { featureExtractRejectionTemplate } from './templates/featureExtractRejection';

@@ -8,7 +8,7 @@ import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@
 import { isTifFile } from '../../services/data/files/files.util';
 import { FileInfo } from '../../services/data/files/files.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
@@ -23,7 +23,7 @@ const cnSelectFileInLibraryRecord = cn('SelectFileInLibraryRecord');
 export class SelectFileInLibraryRecord extends Component<FormControlProps> {
   @observable private dialogOpen = false;
   @observable private selectedLibraryRecord?: LibraryRecord;
-  @observable private selectedLibrary?: DocumentLibrary;
+  @observable private selectedLibrary?: Library;
   @observable private selectedFile?: FileInfo;
 
   constructor(props: FormControlProps) {
@@ -72,39 +72,41 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
   private get breadcrumbsItems(): BreadcrumbsItemData[] {
     const { fieldValue = {} } = this.props;
 
-    if (fieldValue) {
-      const { libraryRecord, library, file } = fieldValue as Datasource;
-
-      return [
-        { title: library.title, subtitle: library.table_name },
-        { title: libraryRecord.title, subtitle: libraryRecord.id },
-        { title: file.title, subtitle: file.id }
-      ];
+    if (!fieldValue) {
+      return [];
     }
+
+    const { libraryRecord, library, file } = fieldValue as Datasource;
+
+    if (!libraryRecord || !library || !file) {
+      return [];
+    }
+
+    return [
+      { title: library.title, subtitle: library.table_name },
+      { title: libraryRecord.title, subtitle: libraryRecord.id },
+      { title: file.title, subtitle: file.id }
+    ];
   }
 
   @boundMethod
-  private handleSelect(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+  private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.FILE && !this.testForDisabled(item)) {
-      this.select(
-        path.at(-1).payload as FileInfo,
-        path.at(-2).payload as LibraryRecord,
-        path[1].payload as DocumentLibrary
-      );
+      this.select(path.at(-1)?.payload as FileInfo, path.at(-2)?.payload as LibraryRecord, path[1].payload as Library);
     } else {
-      this.select(null, null, null);
+      this.select();
     }
   }
 
   @action
-  private select(file: FileInfo, libraryRecord: LibraryRecord, library: DocumentLibrary) {
+  private select(file?: FileInfo, libraryRecord?: LibraryRecord, library?: Library) {
     this.selectedLibraryRecord = libraryRecord;
     this.selectedLibrary = library;
     this.selectedFile = file;
   }
 
   @boundMethod
-  private handleOpen(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+  private handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.FILE) {
       this.handleSelect(item, path);
       this.submitDialog();
@@ -126,13 +128,13 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
     const { property } = this.props;
 
     this.closeDialog();
-    this.props.onChange({
+    this.props.onChange?.({
       value: { libraryRecord: this.selectedLibraryRecord, library: this.selectedLibrary, file: this.selectedFile },
       propertyName: property.name
     });
 
-    this.selectedLibraryRecord = null;
-    this.selectedLibrary = null;
+    this.selectedLibraryRecord = undefined;
+    this.selectedLibrary = undefined;
   }
 
   @boundMethod

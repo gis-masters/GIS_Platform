@@ -17,7 +17,8 @@ export type ExplorerRole =
   | 'ConnectionsToProjectsWidget'
   | 'DocumentVersions'
   | 'DeletedDocuments'
-  | 'taskJournalHistory';
+  | 'taskJournalHistory'
+  | '';
 
 export enum ExplorerItemType {
   NONE = 'none',
@@ -96,44 +97,50 @@ export const keyActions: { [key in KeyAction]: string[] } = {
 
 export const pageSizeVariants = [5, 10, 20, 50, 100];
 
-export interface Adapter {
-  getId: (item: ExplorerItemData) => string;
-  getTitle: (item: ExplorerItemData) => ReactNode;
-  getMeta: (item: ExplorerItemData) => string;
-  getDescription?: (item: ExplorerItemData) => ReactNode;
-  getIcon?: (item: ExplorerItemData) => ReactNode;
-  isFolder: (item: ExplorerItemData, store: ExplorerStore) => boolean;
-  customOpenActionIcon?: (item: ExplorerItemData) => ReactNode;
-  customOpenAction?: (item: ExplorerItemData) => void;
+export interface Adapter<
+  T = ExplorerItemPayloads[keyof ExplorerItemPayloads],
+  C = ExplorerItemPayloads[keyof ExplorerItemPayloads]
+> {
+  getId: (item: ExplorerItemData<T>) => string;
+  getTitle: (item: ExplorerItemData<T>) => ReactNode;
+  getMeta: (item: ExplorerItemData<T>) => string;
+  getDescription?: (item: ExplorerItemData<T>) => ReactNode;
+  getIcon?: (item: ExplorerItemData<T>) => ReactNode;
+  isFolder: (item: ExplorerItemData<T>, store: ExplorerStore) => boolean;
+  customOpenActionIcon?: (item: ExplorerItemData<T>) => ReactNode;
+  customOpenAction?: (item: ExplorerItemData<T>) => void;
   getChildren?: (
-    item: ExplorerItemData,
+    item: ExplorerItemData<T>,
     pageOptions: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ) => [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
+  ) => [ExplorerItemData<C>[], number] | Promise<[ExplorerItemData<C>[], number]>;
   getChildrenWithParticularOne?: (
-    item: ExplorerItemData,
+    item: ExplorerItemData<T>,
     pageOptions: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ) => [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number]> | undefined;
+  ) =>
+    | [ExplorerItemData<C>[], number, number]
+    | Promise<[ExplorerItemData<C>[], number, number] | undefined>
+    | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
   getChildById?: (
-    item: ExplorerItemData,
+    item: ExplorerItemData<T>,
     id: string,
     type: ExplorerItemType
-  ) => ExplorerItemData | Promise<ExplorerItemData> | undefined;
-  getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
-  getChildrenSortDefaultOrder?: (item: ExplorerItemData) => SortOrder;
-  getChildrenFilterField?: (item: ExplorerItemData) => string;
-  getChildrenFilterLabel?: (item: ExplorerItemData) => string;
+  ) => ExplorerItemData<C> | Promise<ExplorerItemData<C>> | undefined;
+  getChildrenSortDefaultValue?: (item: ExplorerItemData<T>) => string;
+  getChildrenSortDefaultOrder?: (item: ExplorerItemData<T>) => SortOrder;
+  getChildrenFilterField?: (item: ExplorerItemData<T>) => string;
+  getChildrenFilterLabel?: (item: ExplorerItemData<T>) => string;
   getToolbarActions?: (
-    item: ExplorerItemData,
+    item: ExplorerItemData<T>,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
   ) => Promise<ReactNode> | ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData) => Emitter<DataChangeEventDetail<unknown>>[];
-  getActions?: (item: ExplorerItemData) => ReactNode;
+  getRefreshEmitters?: (item: ExplorerItemData<T>) => Emitter<DataChangeEventDetail<unknown>>[];
+  getActions?: (item: ExplorerItemData<T>) => ReactNode;
 }

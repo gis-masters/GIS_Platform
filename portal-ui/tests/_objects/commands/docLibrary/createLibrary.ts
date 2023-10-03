@@ -1,4 +1,4 @@
-import { docLibraryClient } from '../../../../src/app/services/data/docLibrary/docLibrary.client';
+import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
 import { requestAsAdmin } from '../requestAs';
@@ -7,6 +7,6 @@ export async function createLibrary(schema: Schema, title: string, versioned: bo
   try {
     await getDocumentsLibraryByTitle(title);
   } catch {
-    await requestAsAdmin(docLibraryClient.createLibrary, title, schema.name, versioned);
+    await requestAsAdmin(libraryClient.createLibrary, title, schema.name, versioned);
   }
 }

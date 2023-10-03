@@ -17,8 +17,8 @@ import { getDefaultValues } from '../../Form/Form.utils';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { ContentType, Schema } from '../../../services/data/schema/schema.models';
 import { cleanCalculatedValues } from '../../../services/formValidation.service';
-import { createLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { createLibraryRecord } from '../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { DocHome } from '../../Icons/DocHome';
 
@@ -29,7 +29,7 @@ export const cnCreateLibraryRecordItem = cn('CreateLibraryRecord', 'Item');
 export interface CreateLibraryRecordItemProps extends IClassNameProps {
   contentType: ContentType;
   schema: Schema;
-  library: DocumentLibrary;
+  library: Library;
   parent?: LibraryRecord;
   ButtonComponent?: ComponentType<CreateLibraryRecordItemSingleButtonProps>;
   single?: boolean;
@@ -112,7 +112,10 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
       const createdRecord = await createLibraryRecord(newRecord, library.table_name, schema.name);
       onCreate(createdRecord, contentType.type === 'FOLDER');
       this.closeDialog();
-    } catch {}
+    } catch (error) {
+      this.setLoading(false);
+      throw error;
+    }
 
     this.setLoading(false);
   }

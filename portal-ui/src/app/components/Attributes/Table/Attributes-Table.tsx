@@ -36,7 +36,7 @@ export interface AttributesTableRecord extends Record<string, unknown> {
 
 interface AttributesTableProps {
   layer: CrgVectorLayer;
-  schema: Schema;
+  schema?: Schema;
   cols: XTableColumn<AttributesTableRecord>[];
   onPageOptionsChange(pageOptions: PageOptions): void;
   getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]>;
@@ -62,6 +62,10 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
     communicationService.featuresUpdated.on(this.reloadTable, this);
 
+    if (!invoke) {
+      throw new Error('Invoke is required');
+    }
+
     invoke.setPageSize = this.forwardInvoke('setPageSize');
     invoke.setFilter = this.forwardInvoke('setFilter');
     invoke.paginate = this.forwardInvoke('paginate');
@@ -81,7 +85,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
   async componentDidUpdate(prevProps: AttributesTableProps) {
     const { layer } = this.props;
 
-    if (layer?.id !== prevProps.layer?.id && this.tableInvoke.reset) {
+    if (layer?.id !== prevProps.layer?.id && this.tableInvoke?.reset && this.tableInvoke?.reload) {
       this.tableInvoke.reset({ filter: attributesTableStore.getLayerFilter(layer) });
       await this.tableInvoke.reload();
     }
@@ -119,7 +123,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   @computed
   private get filterBySelectionEnabled(): boolean {
-    return getFieldFilterValue(this.pageOptions.filter, FILTER_BY_SELECTION) !== FilterBySelection.DISABLED;
+    return getFieldFilterValue(this.pageOptions?.filter || {}, FILTER_BY_SELECTION) !== FilterBySelection.DISABLED;
   }
 
   private rowIdGetter({ cutId }: AttributesTableRecord) {
@@ -130,9 +134,9 @@ export class AttributesTable extends Component<AttributesTableProps> {
     return this.callInvoke.bind(this, key) as XTableInvoke[K];
   }
 
-  private callInvoke(key: keyof XTableInvoke, ...args: Parameters<XTableInvoke[keyof XTableInvoke]>) {
-    if (this.tableInvoke[key]) {
-      return this.tableInvoke[key](...(args as [number & FilterQuery & SortParams<unknown>]));
+  private callInvoke(key: keyof XTableInvoke, ...args: Parameters<Required<XTableInvoke>[keyof XTableInvoke]>) {
+    if (this.tableInvoke?.[key]) {
+      return this.tableInvoke?.[key]?.(...(args as [number & FilterQuery & SortParams<unknown>]));
     }
   }
 
@@ -142,7 +146,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
     // this.pageOptions может быть совсем пустым только при инициализации
     if (!this.pageOptions && attributesTableStore.filter[layer.tableName]) {
-      this.tableInvoke.setFilter(attributesTableStore.filter[layer.tableName]);
+      this.tableInvoke?.setFilter?.(attributesTableStore.filter[layer.tableName]);
     } else {
       onPageOptionsChange(pageOptions);
       attributesTableStore.updateFilter(layer, Object.keys(pageOptions.filter).length ? pageOptions.filter : undefined);
@@ -164,7 +168,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   @boundMethod
   private async reloadTable() {
-    if (this.tableInvoke.reload) {
+    if (this.tableInvoke?.reload) {
       await this.tableInvoke.reload();
     }
   }

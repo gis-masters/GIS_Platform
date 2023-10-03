@@ -4,7 +4,7 @@ import { LocalLibrary } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
-import { DocumentLibrary } from '../../services/data/docLibrary/docLibrary.models';
+import { Library } from '../../services/data/library/library.models';
 import { DeletedDocuments } from '../Icons/DeletedDocuments';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -12,7 +12,7 @@ const cnLibraryDeletedDocumentsSwitch = cn('LibraryDeletedDocumentsSwitch');
 
 interface LibraryDeletedDocumentsSwitchProps {
   path: number[];
-  library: DocumentLibrary;
+  library: Library;
   showDeletedDocuments?: boolean;
 }
 

@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { DocumentVersionExtended } from '../../../../services/data/docLibrary/docLibrary.models';
+import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { communicationService } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';

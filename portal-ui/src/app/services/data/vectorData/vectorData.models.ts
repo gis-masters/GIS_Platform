@@ -183,6 +183,7 @@ export const emptyVectorTableSchema: SimpleSchema = {
       title: 'Схема',
       required: true,
       propertyType: PropertyType.CUSTOM,
+      onlyWithGeometry: true,
       ControlComponent: SchemasSelect
     },
     ...vectorTableSchemaBase.properties

@@ -46,7 +46,7 @@ export const withSimpleContentType: Schema = {
     },
     {
       name: 'path',
-      title: 'Полный путь, отражающий иерархию обьектов',
+      title: 'Полный путь, отражающий иерархию объектов',
       hidden: true,
       propertyType: PropertyType.STRING
     },
@@ -72,7 +72,7 @@ export const withSimpleContentType: Schema = {
       name: 'content_type_id',
       title: 'Идентификатор контент типа',
       hidden: true,
-      propertyType: PropertyType.DATETIME
+      propertyType: PropertyType.STRING
     },
     {
       name: 'is_folder',

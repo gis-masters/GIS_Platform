@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { schemaService } from '../../services/data/schema/schema.service';
 import { ContentType, Schema } from '../../services/data/schema/schema.models';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 
 import { CreateLibraryRecordButton } from './Button/CreateLibraryRecord-Button';
 import { CreateLibraryRecordItem } from './Item/CreateLibraryRecord-Item.composed';
@@ -16,7 +16,7 @@ import '!style-loader!css-loader!sass-loader!./CreateLibraryRecord.scss';
 const cnCreateLibraryRecord = cn('CreateLibraryRecord');
 
 interface CreateLibraryRecordProps {
-  library: DocumentLibrary;
+  library: Library;
   parent?: LibraryRecord;
   onCreate(record: LibraryRecord, isFolder: boolean): void;
 }

@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { applyContentType } from '../../services/data/schema/schema.utils';

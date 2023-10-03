@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { ContentType, Schema } from '../../../services/data/schema/schema.models';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 
@@ -13,7 +13,7 @@ interface CreateLibraryRecordButtonProps {
   icon: ReactNode;
   contentTypes: ContentType[];
   schema: Schema;
-  library: DocumentLibrary;
+  library: Library;
   parent: LibraryRecord | undefined;
   onCreate(record: LibraryRecord, isFolder: boolean): void;
 }

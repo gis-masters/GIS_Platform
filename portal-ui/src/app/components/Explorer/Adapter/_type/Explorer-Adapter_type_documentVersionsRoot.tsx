@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
 import { reverse } from 'lodash';
 
-import { DocumentVersionExtended, LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
-import { getDocumentVersions } from '../../../../services/data/docLibrary/docLibrary.service';
+import { DocumentVersionExtended, LibraryRecord } from '../../../../services/data/library/library.models';
+import { getDocumentVersions } from '../../../../services/data/library/library.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { usersService } from '../../../../services/auth/users/users.service';
 import { PageOptions } from '../../../../services/models';

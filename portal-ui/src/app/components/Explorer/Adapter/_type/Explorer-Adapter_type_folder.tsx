@@ -16,12 +16,8 @@ import {
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
-} from '../../../../services/data/docLibrary/docLibrary.service';
-import {
-  ContentTypeTypes,
-  DocumentLibrary,
-  LibraryRecord
-} from '../../../../services/data/docLibrary/docLibrary.models';
+} from '../../../../services/data/library/library.service';
+import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -225,7 +221,7 @@ export class ExplorerAdapterTypeFolder {
       full &&
       createEnabled && (
         <CreateLibraryRecord
-          library={store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as DocumentLibrary}
+          library={store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library}
           parent={currentItem}
           onCreate={createHandler}
         />

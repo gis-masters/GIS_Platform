@@ -8,8 +8,8 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { recoverLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { recoverLibraryRecord } from '../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { ExplorerItemData, ExplorerItemType, emptyItem } from '../Explorer/Explorer.models';
 import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { CommonDiRegistry } from '../../services/di-registry';
@@ -26,7 +26,7 @@ interface LibraryDeletedDocumentRestoreDialogProps {
   open: boolean;
   onClose: () => void;
   parentFolderPath?: ExplorerItemData[];
-  currentLibrary?: DocumentLibrary;
+  currentLibrary?: Library;
 }
 
 @observer
@@ -117,7 +117,10 @@ export class LibraryDeletedDocumentRestoreDialog extends Component<LibraryDelete
     this.setLoading(true);
 
     try {
-      await recoverLibraryRecord(this.props.document, this.selectedFolder?.is_folder ? this.selectedFolder.id : null);
+      await recoverLibraryRecord(
+        this.props.document,
+        this.selectedFolder?.is_folder ? this.selectedFolder.id : undefined
+      );
     } catch (error) {
       const err = error as AxiosError<{ message?: string[] }>;
 

@@ -55,7 +55,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @observable private _schema?: Schema;
   @observable featuresMatched = 0;
   @observable featuresTotal = 0;
-  private fetchingSchemaOperationId: symbol;
+  private fetchingSchemaOperationId?: symbol;
 
   constructor(props: AttributesBarProps) {
     super(props);
@@ -171,7 +171,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     );
 
     const tableRecords: AttributesTableRecord[] = features.map(feature => {
-      const featureCalcProperties = calculateValues(feature.properties, this.schema.properties);
+      const featureCalcProperties = calculateValues(feature.properties, this.schema?.properties || []);
       const properties = this.schema?.properties || [];
 
       for (const property of properties) {

@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { DownloadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
-import { docLibraryClient } from '../../../services/data/docLibrary/docLibrary.client';
+import { LibraryRecord } from '../../../services/data/library/library.models';
+import { libraryClient } from '../../../services/data/library/library.client';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -21,7 +21,7 @@ export const LibraryDocumentActionsDownload: FC<LibraryDocumentActionsDownloadPr
     className={cnLibraryDocumentActionsDownload()}
     title='Скачать'
     as={as}
-    url={`${docLibraryClient.getDocLibraryRecordUrl(document.libraryTableName, document.id)}/inner_path/download`}
+    url={`${libraryClient.getDocLibraryRecordUrl(document.libraryTableName, document.id)}/inner_path/download`}
     download
     icon={<DownloadOutlined />}
   />

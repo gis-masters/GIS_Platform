@@ -11,8 +11,8 @@ import { Schema } from '../../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../../services/di-registry';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { getLibrary, moveLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getLibrary, moveLibraryRecord } from '../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { isRecordUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
@@ -30,7 +30,7 @@ interface LibraryDocumentActionsFilesPlacementProps {
 export class LibraryDocumentActionsMove extends Component<LibraryDocumentActionsFilesPlacementProps> {
   @observable private documentMoveDialogOpen = false;
   @observable private disabled = true;
-  @observable private currentLibrary?: DocumentLibrary;
+  @observable private currentLibrary?: Library;
   @observable private selectedFolder?: LibraryRecord;
 
   constructor(props: LibraryDocumentActionsFilesPlacementProps) {
@@ -135,7 +135,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   @action.bound
-  private setCurrentLibrary(currentLibrary: DocumentLibrary) {
+  private setCurrentLibrary(currentLibrary: Library) {
     this.currentLibrary = currentLibrary;
   }
 

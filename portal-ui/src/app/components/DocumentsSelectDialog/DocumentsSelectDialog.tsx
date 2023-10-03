@@ -9,8 +9,8 @@ import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
 import { CommonDiRegistry } from '../../services/di-registry';
-import { getLibrary } from '../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibrary } from '../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
 import { Button } from '../Button/Button';
@@ -34,9 +34,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   @observable private selectedDocuments?: LibraryRecord[] = [];
   @observable private libraryView = false;
   @observable private error = false;
-  @observable private limitingLibrary?: DocumentLibrary;
+  @observable private limitingLibrary?: Library;
   @observable private selectedItem?: ExplorerItemData[];
-  private limitingLibraryRequest?: Promise<DocumentLibrary>;
+  private limitingLibraryRequest?: Promise<Library>;
 
   constructor(props: DocumentsSelectDialogProps) {
     super(props);
@@ -72,7 +72,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         )}
 
         <DialogContent>
-          {this.libraryView ? (
+          {this.libraryView && this.selectedItem?.[1] ? (
             <RegistryConsumer id='common'>
               {({ LibraryRegistry }: CommonDiRegistry) => (
                 <LibraryRegistry
@@ -80,7 +80,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                   onSelect={this.handleMultipleSelect}
                   checkedLibraryDocuments={this.selectedDocuments || []}
                   libraryTableName={
-                    this.limitingLibrary?.table_name || (this.selectedItem[1].payload as DocumentLibrary).table_name
+                    this.limitingLibrary?.table_name || (this.selectedItem?.[1].payload as Library).table_name
                   }
                   addedDocuments={addedDocuments}
                   inDialog
@@ -98,9 +98,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                     onSelect={this.handleSelect}
                     onOpen={this.handleOpen}
                     customFilters={
-                      librariesTableNames.length > 1
+                      (librariesTableNames?.length || 0) > 1
                         ? {
-                          [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames } }
+                          [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames || [] } }
                         }
                         : undefined
                     }
@@ -114,8 +114,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         <DialogActions>
           {this.error && (
             <div className={cnDocumentsSelectDialog('Error')}>
-              Превышено максимальное число выбираемых файлов: {this.selectedDocuments?.length + addedDocuments.length}{' '}
-              из {maxDocuments}
+              Превышено максимальное число выбираемых файлов:{' '}
+              {(this.selectedDocuments || []).length + addedDocuments.length} из {maxDocuments}
             </div>
           )}
           <Button color='primary' disabled={!this.selectedDocuments || this.error} onClick={this.submitDialog}>
@@ -129,7 +129,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get ready(): boolean {
-    return !!this.limitingLibrary || this.props.librariesTableNames.length !== 1;
+    return !!this.limitingLibrary || this.props.librariesTableNames?.length !== 1;
   }
 
   @computed
@@ -140,12 +140,12 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   }
 
   @boundMethod
-  private handleSelect(item: ExplorerItemData<LibraryRecord>) {
+  private handleSelect(item: ExplorerItemData) {
     if (
       (item.type === ExplorerItemType.DOCUMENT || item.type === ExplorerItemType.FOLDER) &&
-      !this.testForDisabled(item)
+      !this.testForDisabled(item as ExplorerItemData<LibraryRecord>)
     ) {
-      this.select([item.payload]);
+      this.select([item.payload as LibraryRecord]);
     } else {
       this.select();
     }
@@ -156,7 +156,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
     this.select(items);
     const { maxDocuments, addedDocuments } = this.props;
 
-    if (maxDocuments && this.selectedDocuments.length + addedDocuments.length > maxDocuments) {
+    if (maxDocuments && (this.selectedDocuments?.length || 0) + addedDocuments.length > maxDocuments) {
       this.setError(true);
     } else {
       this.setError(false);
@@ -164,7 +164,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   }
 
   @boundMethod
-  private handleOpen(item: ExplorerItemData<LibraryRecord>, path: ExplorerItemData[]) {
+  private handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
     this.setSelectedItem(path);
 
     if (item.type === ExplorerItemType.DOCUMENT) {
@@ -175,7 +175,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get showRegistryBtn(): boolean {
-    return this.selectedItem?.some(item => item.type === ExplorerItemType.LIBRARY);
+    return Boolean(this.selectedItem?.some(item => item.type === ExplorerItemType.LIBRARY));
   }
 
   @action
@@ -204,9 +204,9 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
     this.props.onClose();
 
     this.props.onChange(
-      this.selectedDocuments.map(({ id, title, libraryTableName }) => {
+      this.selectedDocuments?.map(({ id, title, libraryTableName }) => {
         return { id, title, libraryTableName };
-      })
+      }) || []
     );
 
     this.selectedDocuments = [];
@@ -215,7 +215,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   @boundMethod
   private closeDialog() {
     this.props.onClose();
-    this.select(null);
+    this.select();
   }
 
   @boundMethod
@@ -235,7 +235,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   private async handleDialogOpen() {
     const { librariesTableNames } = this.props;
 
-    if (!this.limitingLibraryRequest && librariesTableNames.length === 1) {
+    if (!this.limitingLibraryRequest && librariesTableNames?.length === 1) {
       try {
         this.limitingLibraryRequest = getLibrary(librariesTableNames[0]);
         this.setLimitingLibrary(await this.limitingLibraryRequest);
@@ -247,13 +247,13 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
       }
     }
 
-    if (!librariesTableNames.length) {
+    if (!librariesTableNames?.length) {
       this.setLimitingLibrary();
     }
   }
 
   @action
-  private setLimitingLibrary(library?: DocumentLibrary) {
+  private setLimitingLibrary(library?: Library) {
     this.limitingLibrary = library;
   }
 }

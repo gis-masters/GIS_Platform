@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../docLibrary/docLibrary.models';
+import { LibraryRecord } from '../library/library.models';
 
 import {
   allShapeFilesTypes,

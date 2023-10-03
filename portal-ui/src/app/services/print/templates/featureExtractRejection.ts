@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../../data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../data/library/library.models';
 import { PrintTemplate } from '../print.service';
 
 function print(document: LibraryRecord): string {

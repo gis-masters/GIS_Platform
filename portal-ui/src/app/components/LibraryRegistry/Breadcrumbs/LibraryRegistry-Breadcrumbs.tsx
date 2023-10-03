@@ -12,10 +12,10 @@ import {
   getRegistryUrlWithFilter
 } from '../../DataManagement/DataManagement.utils';
 import { FilterQuery } from '../../../services/util/filterObjects';
-import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { Breadcrumbs, BreadcrumbsProps, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
-import { Library } from '../../Icons/Library';
+import { Library as LibraryIcon } from '../../Icons/Library';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry-Breadcrumbs.scss';
 import '!style-loader!css-loader!sass-loader!../BreadcrumbsIcon/LibraryRegistry-BreadcrumbsIcon.scss';
@@ -24,7 +24,7 @@ const cnLibraryRegistryBreadcrumbs = cn('LibraryRegistry', 'Breadcrumbs');
 const cnLibraryRegistryBreadcrumbsIcon = cn('LibraryRegistry', 'BreadcrumbsIcon');
 
 interface LibraryRegistryBreadcrumbsProps extends IClassNameProps {
-  library: DocumentLibrary;
+  library: Library;
   path: number[];
   filter: FilterQuery;
   fromHome?: boolean;
@@ -82,7 +82,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
         {
           title: (
             <>
-              <Library color='primary' fontSize='small' className={cnLibraryRegistryBreadcrumbsIcon()} />
+              <LibraryIcon color='primary' fontSize='small' className={cnLibraryRegistryBreadcrumbsIcon()} />
               Библиотеки документов
             </>
           ),

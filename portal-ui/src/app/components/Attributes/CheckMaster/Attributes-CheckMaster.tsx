@@ -22,7 +22,7 @@ const cnAttributesCheckMaster = cn('Attributes', 'CheckMaster');
 
 interface AttributesCheckMasterProps {
   layer: CrgVectorLayer;
-  pageOptions: PageOptions;
+  pageOptions?: PageOptions;
   featuresMatched: number;
   definitionQuery: string | undefined;
 }
@@ -31,8 +31,8 @@ interface AttributesCheckMasterProps {
 export class AttributesCheckMaster extends Component<AttributesCheckMasterProps> {
   @observable private allSelected = false;
   private reactionDisposer?: IReactionDisposer;
-  private testSelectionAllnessOperationId: symbol;
-  private selectingAllOperationId: symbol;
+  private testSelectionAllnessOperationId?: symbol;
+  private selectingAllOperationId?: symbol;
 
   constructor(props: AttributesCheckMasterProps) {
     super(props);
@@ -126,7 +126,9 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
     const { layer, pageOptions, definitionQuery } = this.props;
     const options = { ...cloneDeep(pageOptions), page: 0, pageSize: mapStore.selectingFeaturesLimit };
 
-    removeFieldFilter(options.filter, FILTER_BY_SELECTION);
+    if (options.filter) {
+      removeFieldFilter(options.filter, FILTER_BY_SELECTION);
+    }
 
     const [features] = await getFeatures(layer, options, definitionQuery);
 

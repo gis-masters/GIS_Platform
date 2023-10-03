@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../../data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../data/library/library.models';
 import { Schema } from '../../data/schema/schema.models';
 import { PrintTemplate } from '../print.service';
 

@@ -1,5 +1,5 @@
 import { CrgLayerType, CrgRasterLayer } from '../../../../src/app/services/gis/layers/layers.models';
-import { LibraryRecord } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
 import { getFileBaseName } from '../../../../src/app/services/data/files/files.util';

@@ -20,7 +20,7 @@ export class ExplorerStore {
   @observable loading = false;
   @observable restoringFromUrl = false;
 
-  constructor(explorerRole: ExplorerRole) {
+  constructor(explorerRole: ExplorerRole = '') {
     makeObservable(this);
     this.explorerRole = explorerRole;
     this.pageSizeStorageKey = 'ExplorerPageSize' + explorerRole;

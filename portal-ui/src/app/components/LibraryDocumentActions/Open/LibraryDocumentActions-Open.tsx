@@ -5,7 +5,7 @@ import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';

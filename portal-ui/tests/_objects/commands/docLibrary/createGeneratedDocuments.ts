@@ -1,6 +1,6 @@
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { applyContentType } from '../../../../src/app/services/data/schema/schema.utils';
-import { DocumentLibrary, LibraryRecord } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { getSchema } from '../schemas/getSchema';
 import { generateObjectBySchema, supportedTypesForGeneration } from '../../utils/generateObjectBySchema';
 import { createLibraryRecordAs } from './createLibraryRecordAs';
@@ -8,7 +8,7 @@ import { TestUser } from '../auth/testUsers';
 
 export async function createGeneratedDocuments(
   docsNumber: number,
-  library: DocumentLibrary,
+  library: Library,
   user: TestUser
 ): Promise<LibraryRecord[]> {
   const schema = await getSchema(library.schemaId);

@@ -27,7 +27,7 @@ const cnAttributesBarActionExport = cn('Attributes', 'BarActionExport');
 interface AttributesBarActionExportProps {
   layer: CrgVectorLayer;
   cols: XTableColumn<AttributesTableRecord>[];
-  pageOptions: PageOptions;
+  pageOptions?: PageOptions;
   featuresTotal: number;
   getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]>;
 }

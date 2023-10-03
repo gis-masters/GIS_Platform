@@ -1,7 +1,7 @@
 import { CrgProject } from './gis/projects/projects.models';
 import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
 import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
-import { LibraryRecord } from './data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from './data/library/library.models';
 import { Basemap } from './data/basemaps/basemaps.models';
 import { WfsFeature } from './geoserver/wfs/wfs.models';
 import { FileInfo } from './data/files/files.models';
@@ -48,6 +48,7 @@ class CommunicationService {
   datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();
   featuresUpdated = new Emitter<DataChangeEventDetail<WfsFeature | null>>();
   fileConnectionsUpdated = new Emitter<DataChangeEventDetail<FileInfo[]>>();
+  libraryUpdated = new Emitter<DataChangeEventDetail<Library>>();
   libraryRecordUpdated = new Emitter<DataChangeEventDetail<LibraryRecord>>();
   permissionsUpdated = new Emitter();
   projectUpdated = new Emitter<DataChangeEventDetail<CrgProject>>();

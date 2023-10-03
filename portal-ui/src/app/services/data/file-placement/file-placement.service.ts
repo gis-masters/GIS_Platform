@@ -4,7 +4,7 @@ import { CrgLayersGroup, CrgLayerType, CrgRasterLayer } from '../../gis/layers/l
 import { CrgProject } from '../../gis/projects/projects.models';
 import { createFileProcess, createProcess } from '../processes/processes.service';
 import { ProcessResponse, ProcessType } from '../processes/processes.models';
-import { LibraryRecord } from '../docLibrary/docLibrary.models';
+import { LibraryRecord } from '../library/library.models';
 import { createRasterLayer } from '../../gis/layers/layers.service';
 import { projectsService } from '../../gis/projects/projects.service';
 import { getFileBaseName } from '../files/files.util';

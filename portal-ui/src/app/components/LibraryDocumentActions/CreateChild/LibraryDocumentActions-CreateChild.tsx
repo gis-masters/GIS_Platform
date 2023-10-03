@@ -6,8 +6,8 @@ import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { createLibraryRecord, getLibrary } from '../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { createLibraryRecord, getLibrary } from '../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { sleep } from '../../../services/util/sleep';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { Schema } from '../../../services/data/schema/schema.models';
@@ -24,7 +24,7 @@ const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'Create
 interface ChildData {
   document: LibraryRecord;
   schema: Schema;
-  library: DocumentLibrary;
+  library: Library;
   contentType: string;
   onClick?(): void;
 }
@@ -172,7 +172,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
     this.setCreatedDocument();
   }
 
-  private handleChildClick(library: DocumentLibrary, schema: Schema, contentType: string) {
+  private handleChildClick(library: Library, schema: Schema, contentType: string) {
     const { document } = this.props;
     this.setCurrentChild({ document, library, schema, contentType });
     this.openFormDialog();

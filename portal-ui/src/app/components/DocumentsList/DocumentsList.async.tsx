@@ -10,8 +10,8 @@ import { services } from '../../services/services';
 import { EditedField } from '../../services/data/schema/schemaOld.models';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { createLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { createLibraryRecord } from '../../services/data/library/library.service';
+import { LibraryRecord } from '../../services/data/library/library.models';
 
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 

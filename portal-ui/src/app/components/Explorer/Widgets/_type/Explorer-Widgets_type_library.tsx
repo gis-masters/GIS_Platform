@@ -4,19 +4,19 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getLibrary } from '../../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary } from '../../../../services/data/docLibrary/docLibrary.models';
+import { getLibrary } from '../../../../services/data/library/library.service';
+import { Library } from '../../../../services/data/library/library.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { getId } from '../../Adapter/Explorer-Adapter';
-import { docLibraryClient } from '../../../../services/data/docLibrary/docLibrary.client';
+import { libraryClient } from '../../../../services/data/library/library.client';
 
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
-  @observable private currentLibrary?: DocumentLibrary;
+  @observable private currentLibrary?: Library;
   private operationId: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
@@ -37,14 +37,14 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
 
   render() {
     const { className, item } = this.props;
-    const { payload } = item as ExplorerItemData<DocumentLibrary>;
+    const { payload } = item as ExplorerItemData<Library>;
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
         {this.currentLibrary && (
           <>
             <PermissionsWidget
-              url={docLibraryClient.getDocumentLibraryRoleAssignmentUrl(payload.table_name)}
+              url={libraryClient.getDocumentLibraryRoleAssignmentUrl(payload.table_name)}
               title={this.currentLibrary.title}
               itemEntityType={ExplorerItemEntityTypeTitle.LIBRARY}
               disabled={!(currentUser.isAdmin || this.currentLibrary.role === Role.OWNER)}
@@ -57,7 +57,7 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<DocumentLibrary>;
+    const { payload } = item as ExplorerItemData<Library>;
 
     const operationId = Symbol();
     this.operationId = operationId;
@@ -70,7 +70,7 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
   }
 
   @action
-  private setCurrentLibrary(library: DocumentLibrary) {
+  private setCurrentLibrary(library: Library) {
     this.currentLibrary = library;
   }
 }

@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { printDocument, printTemplates } from '../../../services/print/print.service';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { Button } from '../../Button/Button';
 

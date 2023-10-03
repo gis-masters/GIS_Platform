@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 
-import { DocumentLibrary, LibraryRecord, LibraryRecordNew } from '../../services/data/docLibrary/docLibrary.models';
-import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { Library, LibraryRecord, LibraryRecordNew } from '../../services/data/library/library.models';
+import { getLibrary, getLibraryRecord } from '../../services/data/library/library.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { LibraryDocumentDialog } from '../LibraryDocumentDialog/LibraryDocumentDialog';
 import { communicationService } from '../../services/communication.service';
@@ -41,7 +41,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   @observable private documentDialogOpen = false;
   @observable private featureFields: PropertySchema[] = [];
   @observable private document?: LibraryRecord | LibraryRecordNew;
-  @observable private library?: DocumentLibrary;
+  @observable private library?: Library;
 
   constructor(props: FeatureExtractProps) {
     super(props);
@@ -201,7 +201,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
   }
 
   @action
-  private setLibrary(library: DocumentLibrary) {
+  private setLibrary(library: Library) {
     this.library = library;
   }
 

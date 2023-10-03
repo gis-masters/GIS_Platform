@@ -3,9 +3,8 @@ import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { PropertySchemaCustom, PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable.models';
@@ -19,8 +18,7 @@ const cnSchemasSelectDialog = cn('SchemasSelect', 'Dialog');
 @observer
 export class SchemasSelect extends Component<FormControlProps> {
   @observable private dialogOpen = false;
-  @observable private allSchemas?: Schema[];
-  @observable private disabledItems?: Schema[];
+  @observable private schemas?: Schema[];
   @observable private selectedSchema?: string;
 
   private cols: XTableColumn<Schema>[] = [
@@ -80,8 +78,7 @@ export class SchemasSelect extends Component<FormControlProps> {
   }
 
   async componentDidMount() {
-    this.setAllSchemas(await schemaService.getAllSchemas());
-    this.setDisabledItems();
+    this.setSchemas(await schemaService.getAllSchemas());
   }
 
   render() {
@@ -89,14 +86,13 @@ export class SchemasSelect extends Component<FormControlProps> {
       <>
         <div className={cnSchemasSelect()}>{this.selectedSchema}</div>
         <Button onClick={this.openDialog}>Выбрать схему</Button>
-        {this.allSchemas && (
+        {this.schemas && (
           <ChooseXTableDialog<Schema>
             className={cnSchemasSelectDialog()}
             title='Выберите схему'
-            data={this.allSchemas}
+            data={this.schemas}
             cols={this.cols}
             open={this.dialogOpen}
-            disabledItems={this.disabledItems}
             onClose={this.closeDialog}
             onSelect={this.select}
             single
@@ -133,29 +129,14 @@ export class SchemasSelect extends Component<FormControlProps> {
   }
 
   @action.bound
-  private setAllSchemas(allSchemas: Schema[]) {
-    this.allSchemas = allSchemas
-      .map(schema => {
-        if (schema.geometryType) {
-          return schema;
-        }
-      })
-      .filter(notFalsyFilter);
+  private setSchemas(allSchemas: Schema[]) {
+    const property = this.props.property as PropertySchemaCustom;
+    const onlyWithGeometry = Boolean(property.onlyWithGeometry);
+    this.schemas = onlyWithGeometry ? allSchemas.filter(({ geometryType }) => geometryType) : allSchemas;
   }
 
   @action.bound
   private setSelectedSchema(selectedSchema: string) {
     this.selectedSchema = selectedSchema;
-  }
-
-  @action.bound
-  private setDisabledItems() {
-    this.disabledItems = this.allSchemas
-      ?.map(schema => {
-        if (!schema.geometryType) {
-          return schema;
-        }
-      })
-      .filter(notFalsyFilter);
   }
 }

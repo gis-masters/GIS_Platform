@@ -16,7 +16,7 @@ public class ContentType {
     private String styleName;
     private String definitionQuery;
 
-    private List<Object> children = new ArrayList<>();
+    private List<SchemaChild> children = new ArrayList<>();
     private List<Object> attributes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
@@ -73,11 +73,11 @@ public class ContentType {
         this.relations = relations;
     }
 
-    public List<Object> getChildren() {
+    public List<SchemaChild> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Object> children) {
+    public void setChildren(List<SchemaChild> children) {
         this.children = children;
     }
 

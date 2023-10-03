@@ -4,17 +4,11 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 
-import {
-  DocumentLibrary,
-  DocumentVersion,
-  LibraryRecord,
-  LibraryRecordNew,
-  LibraryRecordRaw
-} from './docLibrary.models';
-import { docLibraryClient } from './docLibrary.client';
+import { Library, DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
+import { libraryClient } from './library.client';
 
-export async function getLibraries(pageOptions: PageOptions): Promise<[DocumentLibrary[], number]> {
-  const response = await docLibraryClient.getLibraries(pageOptions);
+export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {
+  const response = await libraryClient.getLibraries(pageOptions);
 
   return [response.content || [], response.page.totalPages];
 }
@@ -22,17 +16,25 @@ export async function getLibraries(pageOptions: PageOptions): Promise<[DocumentL
 export async function getLibrariesWithParticularOne(
   libraryTableName: string,
   pageOptions: PageOptions
-): Promise<[DocumentLibrary[], number, number] | undefined> {
-  return await docLibraryClient.getLibrariesWithParticularOne(libraryTableName, pageOptions);
+): Promise<[Library[], number, number] | undefined> {
+  return await libraryClient.getLibrariesWithParticularOne(libraryTableName, pageOptions);
 }
 
-export async function getLibrary(libraryTableName: string): Promise<DocumentLibrary> {
-  return await docLibraryClient.getLibrary(libraryTableName);
+export async function getLibrary(libraryTableName: string): Promise<Library> {
+  return await libraryClient.getLibrary(libraryTableName);
+}
+
+export async function createLibrary(details: string, schemaId: string, versioned: boolean): Promise<Library> {
+  const result = await libraryClient.createLibrary(details, schemaId, versioned);
+
+  communicationService.libraryUpdated.emit({ type: 'create', data: result });
+
+  return result;
 }
 
 export async function getLibraryRecord(libraryTableName: string, recordId: number): Promise<LibraryRecord> {
   const { schemaId } = await getLibrary(libraryTableName);
-  const response = await docLibraryClient.getLibraryRecord(libraryTableName, recordId);
+  const response = await libraryClient.getLibraryRecord(libraryTableName, recordId);
 
   return { ...response, libraryTableName, schemaId };
 }
@@ -42,14 +44,14 @@ export async function getLibraryRecords(
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
-  const response = await docLibraryClient.getLibraryRecords(libraryTableName, pageOptions);
+  const response = await libraryClient.getLibraryRecords(libraryTableName, pageOptions);
   const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryTableName, schemaId);
 
   return [libraryRecords, response.page.totalPages];
 }
 
 export async function getDocumentVersions(libraryTableName: string, id: number): Promise<[DocumentVersion]> {
-  return await docLibraryClient.getDocumentVersions(libraryTableName, id);
+  return await libraryClient.getDocumentVersions(libraryTableName, id);
 }
 
 export async function getLibraryRecordsAsRegistry(
@@ -57,7 +59,7 @@ export async function getLibraryRecordsAsRegistry(
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
-  const response = await docLibraryClient.getLibraryRecordsAsRegistry(libraryTableName, pageOptions);
+  const response = await libraryClient.getLibraryRecordsAsRegistry(libraryTableName, pageOptions);
   const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryTableName, schemaId);
 
   return [libraryRecords, response.page.totalPages];
@@ -68,7 +70,7 @@ export async function getAllLibraryRecordsAsRegistry(
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<LibraryRecord[]> {
-  const response = await docLibraryClient.getAllLibraryRecordsAsRegistry(libraryTableName, pageOptions);
+  const response = await libraryClient.getAllLibraryRecordsAsRegistry(libraryTableName, pageOptions);
 
   return enrichLibraryRecordsResponse(response, libraryTableName, schemaId);
 }
@@ -93,18 +95,13 @@ export async function getLibraryRecordsWithParticularOne(
   id: number,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number, number] | undefined> {
-  const response = await docLibraryClient.getLibraryRecordsWithParticularOne(libraryTableName, id, pageOptions);
+  const response = await libraryClient.getLibraryRecordsWithParticularOne(libraryTableName, id, pageOptions);
 
   if (response) {
     const [content, totalPages, page] = response;
 
-    const records = content.map(item => {
-      return item.content;
-    });
-
-    records.forEach(record => {
-      record.libraryTableName = libraryTableName;
-      record.schemaId = schemaId;
+    const records: LibraryRecord[] = content.map(item => {
+      return { schemaId, libraryTableName, ...item.content };
     });
 
     return [records, totalPages, page];
@@ -116,7 +113,7 @@ export async function createLibraryRecord(
   libraryTableName: string,
   schemaId: string
 ): Promise<LibraryRecord> {
-  const record = await docLibraryClient.createLibraryRecord(data, libraryTableName);
+  const record = await libraryClient.createLibraryRecord(data, libraryTableName);
   const result = { schemaId, libraryTableName, ...record };
   communicationService.libraryRecordUpdated.emit({ type: 'create', data: result });
 
@@ -124,35 +121,35 @@ export async function createLibraryRecord(
 }
 
 export async function registerDocument(libraryTableName: string, recordId: number): Promise<void> {
-  await docLibraryClient.registerDocument(libraryTableName, recordId);
+  await libraryClient.registerDocument(libraryTableName, recordId);
 }
 
 export async function deleteLibraryRecord(record: LibraryRecord): Promise<void> {
-  await docLibraryClient.deleteLibraryRecord(record.id, record.libraryTableName);
+  await libraryClient.deleteLibraryRecord(record.id, record.libraryTableName);
   communicationService.libraryRecordUpdated.emit({ type: 'delete', data: record });
 }
 
 export async function updateLibraryRecord(record: LibraryRecord, patch: Partial<LibraryRecord>): Promise<void> {
-  await docLibraryClient.updateLibraryRecord(record.libraryTableName, record.id, patch);
+  await libraryClient.updateLibraryRecord(record.libraryTableName, record.id, patch);
   communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
 export async function recoverLibraryRecord(record: LibraryRecord, recoverFolderId?: number): Promise<void> {
-  await docLibraryClient.recoverLibraryRecord(record.libraryTableName, record.id, recoverFolderId);
+  await libraryClient.recoverLibraryRecord(record.libraryTableName, record.id, recoverFolderId);
   communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
 export async function moveLibraryRecord(record: LibraryRecord, newParentId?: number): Promise<void> {
-  await docLibraryClient.moveLibraryRecord(record.libraryTableName, record.id, newParentId);
+  await libraryClient.moveLibraryRecord(record.libraryTableName, record.id, newParentId);
   communicationService.libraryRecordUpdated.emit({ type: 'update', data: record });
 }
 
 export async function getDocumentPermissions(item: LibraryRecord): Promise<RoleAssignmentBody[]> {
-  return await docLibraryClient.getDocumentPermissions(item.libraryTableName, item.id);
+  return await libraryClient.getDocumentPermissions(item.libraryTableName, item.id);
 }
 
 export async function setDocumentPermission(item: LibraryRecord, payload: RoleAssignmentBody): Promise<void> {
-  const url = docLibraryClient.getDocumentLibraryRecordRoleAssignmentUrl(item.libraryTableName, item.id);
+  const url = libraryClient.getDocumentLibraryRecordRoleAssignmentUrl(item.libraryTableName, item.id);
 
   const permissions = await getDocumentPermissions(item);
 
@@ -165,12 +162,12 @@ export async function setDocumentPermission(item: LibraryRecord, payload: RoleAs
   await addEntityPermission(payload, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
 }
 
-export async function getLibraryPermissions(library: DocumentLibrary): Promise<RoleAssignmentBody[]> {
-  return await docLibraryClient.getLibraryPermissions(library.table_name);
+export async function getLibraryPermissions(library: Library): Promise<RoleAssignmentBody[]> {
+  return await libraryClient.getLibraryPermissions(library.table_name);
 }
 
-export async function setLibraryPermission(library: DocumentLibrary, payload: RoleAssignmentBody): Promise<void> {
-  const url = docLibraryClient.getDocumentLibraryRoleAssignmentUrl(library.table_name);
+export async function setLibraryPermission(library: Library, payload: RoleAssignmentBody): Promise<void> {
+  const url = libraryClient.getDocumentLibraryRoleAssignmentUrl(library.table_name);
 
   const permissions = await getLibraryPermissions(library);
 
@@ -184,7 +181,7 @@ export async function setLibraryPermission(library: DocumentLibrary, payload: Ro
 }
 
 export async function sendToSed(libraryTableName: string, recordId: number): Promise<void> {
-  await docLibraryClient.sendToSed(libraryTableName, recordId);
+  await libraryClient.sendToSed(libraryTableName, recordId);
 }
 
 // for autotests

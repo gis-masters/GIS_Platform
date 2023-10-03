@@ -1,5 +1,5 @@
-import { docLibraryClient } from '../../../../src/app/services/data/docLibrary/docLibrary.client';
-import { LibraryRecord } from '../../../../src/app/services/data/docLibrary/docLibrary.models';
+import { libraryClient } from '../../../../src/app/services/data/library/library.client';
+import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function updateLibraryRecord(
@@ -7,5 +7,5 @@ export async function updateLibraryRecord(
   recordId: number,
   patch: Partial<LibraryRecord>
 ): Promise<void> {
-  await requestAsAdmin(docLibraryClient.updateLibraryRecord, libraryTableName, recordId, patch);
+  await requestAsAdmin(libraryClient.updateLibraryRecord, libraryTableName, recordId, patch);
 }

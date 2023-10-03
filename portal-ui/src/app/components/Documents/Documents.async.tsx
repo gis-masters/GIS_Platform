@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { PropertySchemaDocument } from '../../services/data/schema/schema.models';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
 

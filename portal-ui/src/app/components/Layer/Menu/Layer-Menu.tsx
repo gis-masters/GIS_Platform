@@ -28,8 +28,8 @@ import {
   crgLayerSchema
 } from '../../../services/gis/layers/layers.models';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
-import { getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';

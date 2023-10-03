@@ -13,8 +13,8 @@ import {
   rasterLayerDefaults,
   vectorLayerDefaults
 } from '../../services/gis/layers/layers.utils';
-import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { ContentType, PropertySchema, PropertyType, ValueFormula } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
@@ -49,7 +49,7 @@ export interface Datasource {
   dataset?: Dataset;
   vectorTable?: VectorTable;
   libraryRecord?: LibraryRecord;
-  library?: DocumentLibrary;
+  library?: Library;
   file?: FileInfo;
 }
 
@@ -347,7 +347,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       const { libraryRecord, file } = this.formValue.datasource;
 
       try {
-        if (!libraryRecord || !file) {
+        if (!libraryRecord || !file || !library) {
           throw new Error('Не указаны обязательные параметры');
         }
 

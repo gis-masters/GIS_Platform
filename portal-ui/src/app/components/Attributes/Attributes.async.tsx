@@ -96,7 +96,7 @@ export default class Attributes extends Component<IClassNameProps> {
             onTabMinimize={this.minimizeBar}
             currentLayer={this.currentLayer}
           />
-          {this.tablePageOptions?.totalPages > 1 && (
+          {this.tablePageOptions?.totalPages && this.tablePageOptions?.totalPages > 1 && (
             <AttributesPagination pageOptions={this.tablePageOptions} onChange={this.handlePagination} />
           )}
         </AttributesFooter>
@@ -155,7 +155,9 @@ export default class Attributes extends Component<IClassNameProps> {
 
   @boundMethod
   private closeBar() {
-    this.closeTab(this.currentLayer);
+    if (this.currentLayer) {
+      this.closeTab(this.currentLayer);
+    }
   }
 
   @action.bound
@@ -175,7 +177,7 @@ export default class Attributes extends Component<IClassNameProps> {
 
   @boundMethod
   private handlePagination(page: number) {
-    if (this.tableInvoke.paginate) {
+    if (this.tableInvoke?.paginate) {
       this.tableInvoke.paginate(page);
     }
   }

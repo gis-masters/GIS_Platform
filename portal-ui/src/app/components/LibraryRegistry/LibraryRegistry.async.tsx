@@ -26,8 +26,8 @@ import { SortParams } from '../../services/util/sortObjects';
 import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
-import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
+import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
@@ -62,7 +62,7 @@ export interface LibraryRegistryProps {
 
 @observer
 export default class LibraryRegistry extends Component<LibraryRegistryProps> {
-  @observable private library?: DocumentLibrary;
+  @observable private library?: Library;
   @observable private schema?: Schema;
   @observable private hiddenFields: string[] = [];
   @observable private tablePageOptions?: PageOptions;
@@ -313,7 +313,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action
-  private setLibrary(library: DocumentLibrary) {
+  private setLibrary(library: Library) {
     this.library = library;
   }
 

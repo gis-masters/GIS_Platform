@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { getLibraryRecord } from '../../../../services/data/docLibrary/docLibrary.service';
-import { DocumentLibrary, LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
+import { getLibraryRecord } from '../../../../services/data/library/library.service';
+import { Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
@@ -15,7 +15,7 @@ import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
-import { docLibraryClient } from '../../../../services/data/docLibrary/docLibrary.client';
+import { libraryClient } from '../../../../services/data/library/library.client';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
@@ -75,7 +75,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
             )}
 
             <PermissionsWidget
-              url={docLibraryClient.getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id)}
+              url={libraryClient.getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id)}
               title={this.currentRecord.title}
               itemEntityType={
                 type === ExplorerItemType.DOCUMENT
@@ -107,7 +107,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
   @computed
   private get isLibraryVersioned(): boolean {
-    const lib = this.props.store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as DocumentLibrary;
+    const lib = this.props.store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library;
 
     return lib.versioned;
   }

@@ -3,7 +3,7 @@ import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { LibraryRecord } from '../../../../services/data/docLibrary/docLibrary.models';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { CommonDiRegistry } from '../../../../services/di-registry';

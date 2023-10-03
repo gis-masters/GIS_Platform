@@ -7,8 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { updateLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
-import { LibraryRecord, LibraryRecordRaw } from '../../../services/data/docLibrary/docLibrary.models';
+import { updateLibraryRecord } from '../../../services/data/library/library.service';
+import { LibraryRecord, LibraryRecordRaw } from '../../../services/data/library/library.models';
 import { getPatch } from '../../../services/util/patch';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';

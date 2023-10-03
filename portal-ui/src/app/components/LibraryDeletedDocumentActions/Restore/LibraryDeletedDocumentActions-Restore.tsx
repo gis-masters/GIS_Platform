@@ -6,9 +6,9 @@ import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { getLibrary, getLibraryRecord } from '../../../services/data/docLibrary/docLibrary.service';
+import { getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryDeletedDocumentRestoreDialog } from '../../LibraryDeletedDocumentRestoreDialog/LibraryDeletedDocumentRestoreDialog';
-import { DocumentLibrary, LibraryRecord } from '../../../services/data/docLibrary/docLibrary.models';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -26,7 +26,7 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
   @observable private loading = false;
   @observable private dialogOpen = false;
   @observable private documentRestoreDialogOpen = false;
-  @observable private currentLibrary?: DocumentLibrary;
+  @observable private currentLibrary?: Library;
   @observable private parentFolderPath?: ExplorerItemData[];
 
   constructor(props: LibraryDeletedDocumentActionsRestoreProps) {
@@ -105,7 +105,7 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
   }
 
   @action.bound
-  private setCurrentLibrary(currentLibrary: DocumentLibrary) {
+  private setCurrentLibrary(currentLibrary: Library) {
     this.currentLibrary = currentLibrary;
   }
 

@@ -7,19 +7,13 @@ import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
-import {
-  DocumentLibrary,
-  DocumentVersion,
-  LibraryRecord,
-  LibraryRecordNew,
-  LibraryRecordRaw
-} from './docLibrary.models';
+import { Library, DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
 
 @boundClass
-class DocLibraryClient extends Client {
-  private static _instance: DocLibraryClient;
+class LibraryClient extends Client {
+  private static _instance: LibraryClient;
 
-  static get instance(): DocLibraryClient {
+  static get instance(): LibraryClient {
     return this._instance || (this._instance = new this());
   }
 
@@ -47,8 +41,10 @@ class DocLibraryClient extends Client {
     return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/versions`;
   }
 
-  getDocumentRecoverUrl(libraryTableName: string, recordId: number, recoverFolderId: number): string {
-    return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/recover?recoverFolderId=${recoverFolderId}`;
+  getDocumentRecoverUrl(libraryTableName: string, recordId: number, recoverFolderId?: number): string {
+    return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/recover?recoverFolderId=${
+      recoverFolderId || ''
+    }`;
   }
 
   private getDocLibraryRecordsAsRegistryUrl(libraryTableName: string): string {
@@ -75,35 +71,31 @@ class DocLibraryClient extends Client {
     return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/integration`;
   }
 
-  async getLibraries(pageOptions: PageOptions): Promise<PageableResources<DocumentLibrary>> {
+  async getLibraries(pageOptions: PageOptions): Promise<PageableResources<Library>> {
     const params = preparePageOptions(pageOptions, true);
 
-    return await http.get<PageableResources<DocumentLibrary>>(this.getDocLibrariesUrl(), { params });
+    return await http.get<PageableResources<Library>>(this.getDocLibrariesUrl(), { params });
   }
 
   async getLibrariesWithParticularOne(
     libraryTableName: string,
     pageOptions: PageOptions
-  ): Promise<[DocumentLibrary[], number, number]> {
-    return await http.getPageWithObject<DocumentLibrary>(
+  ): Promise<[Library[], number, number] | undefined> {
+    return await http.getPageWithObject<Library>(
       this.getDocLibrariesUrl(),
       preparePageOptions(pageOptions, true),
-      (item: DocumentLibrary) => item.table_name === libraryTableName,
+      (item: Library) => item.table_name === libraryTableName,
       {},
       false
     );
   }
 
-  async createLibrary(details: string, schemaId: string, versioned: boolean): Promise<void> {
-    await http.post(this.getDocLibrariesUrl(), {
-      details,
-      schemaId,
-      versioned
-    });
+  async createLibrary(details: string, schemaId: string, versioned: boolean): Promise<Library> {
+    return await http.post<Library>(this.getDocLibrariesUrl(), { details, schemaId, versioned });
   }
 
-  async getLibrary(libraryTableName: string): Promise<DocumentLibrary> {
-    return await http.get<DocumentLibrary>(this.getDocLibraryUrl(libraryTableName));
+  async getLibrary(libraryTableName: string): Promise<Library> {
+    return await http.get<Library>(this.getDocLibraryUrl(libraryTableName));
   }
 
   async getLibraryPermissions(libraryTableName: string): Promise<RoleAssignmentBody[]> {
@@ -153,7 +145,7 @@ class DocLibraryClient extends Client {
     pageOptions: PageOptions
   ): Promise<{ content: LibraryRecordRaw }[]> {
     const url = this.getDocLibraryRecordsAsRegistryUrl(libraryTableName);
-    const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: null }, true) };
+    const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: 0 }, true) };
 
     return http.getPagedOld<{ content: LibraryRecordRaw }>(url, requestOptions);
   }
@@ -162,10 +154,10 @@ class DocLibraryClient extends Client {
     libraryTableName: string,
     id: number,
     pageOptions: PageOptions
-  ): Promise<[{ content: LibraryRecord }[], number, number]> {
-    const objectRecognizer = (item: { content: LibraryRecord }) => Number(item.content.id) === Number(id);
+  ): Promise<[{ content: LibraryRecordRaw }[], number, number] | undefined> {
+    const objectRecognizer = (item: { content: LibraryRecordRaw }) => Number(item.content.id) === Number(id);
 
-    return http.getPageWithObject<{ content: LibraryRecord }>(
+    return http.getPageWithObject<{ content: LibraryRecordRaw }>(
       this.getDocLibraryRecordsUrl(libraryTableName),
       preparePageOptions(pageOptions, true),
       objectRecognizer,
@@ -174,7 +166,7 @@ class DocLibraryClient extends Client {
     );
   }
 
-  async createLibraryRecord(data: LibraryRecordNew, libraryTableName: string): Promise<LibraryRecord> {
+  async createLibraryRecord(data: LibraryRecordNew, libraryTableName: string): Promise<LibraryRecordRaw> {
     return http.post<LibraryRecord>(this.getDocLibraryRecordsUrl(libraryTableName), this.prepareFormData(data));
   }
 
@@ -225,4 +217,4 @@ class DocLibraryClient extends Client {
   }
 }
 
-export const docLibraryClient = DocLibraryClient.instance;
+export const libraryClient = LibraryClient.instance;

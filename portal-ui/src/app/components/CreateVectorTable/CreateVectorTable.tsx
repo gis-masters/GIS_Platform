@@ -12,7 +12,6 @@ import {
   VectorTable
 } from '../../services/data/vectorData/vectorData.models';
 import { createVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 import { CreateVectorTableButton } from './Button/CreateVectorTable-Button';
@@ -41,7 +40,7 @@ export class CreateVectorTable extends Component<CreateVectorTableProps> {
         <FormDialog<Partial<VectorTable>>
           className={cnCreateVectorTableDialog()}
           open={this.dialogOpen}
-          schema={emptyVectorTableSchema as unknown as Schema}
+          schema={emptyVectorTableSchema}
           actionFunction={this.create}
           actionButtonProps={{
             startIcon: <SaveOutlined className={cnCreateVectorTableDialogYes()} />,

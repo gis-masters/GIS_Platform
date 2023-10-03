@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
 
 import { LibraryDocumentVersionsActions } from '../../../LibraryDocumentVersionsActions/LibraryDocumentVersionsActions';
-import { DocumentVersionExtended } from '../../../../services/data/docLibrary/docLibrary.models';
+import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
 

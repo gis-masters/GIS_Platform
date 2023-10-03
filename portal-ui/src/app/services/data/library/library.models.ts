@@ -1,17 +1,44 @@
+import { SchemasSelect } from '../../../components/SchemasSelect/SchemasSelect';
 import { Role } from '../permissions/permissions.models';
+import { PropertyType, SimpleSchema } from '../schema/schema.models';
 import { DataEntity, DataEntityType } from '../vectorData/vectorData.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
 }
 
-export interface DocumentLibrary extends Omit<DataEntity, 'identifier'> {
+export interface Library extends Omit<DataEntity, 'identifier'> {
   type: DataEntityType.LIBRARY;
   table_name: string;
   schemaId: string;
   role: Role;
   versioned: boolean;
 }
+
+export type LibraryNew = Pick<Library, 'schemaId' | 'details' | 'versioned'>;
+
+export const librarySchema: SimpleSchema = {
+  properties: [
+    {
+      name: 'schemaId',
+      title: 'Схема',
+      required: true,
+      propertyType: PropertyType.CUSTOM,
+      onlyWithGeometry: false,
+      ControlComponent: SchemasSelect
+    },
+    {
+      name: 'details',
+      title: 'Описание',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'versioned',
+      title: 'Версионирование',
+      propertyType: PropertyType.BOOL
+    }
+  ]
+};
 
 export interface LibraryRecordRaw extends Record<string, unknown> {
   id: number;

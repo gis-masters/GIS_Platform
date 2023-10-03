@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { action, makeObservable, observable } from 'mobx';
 import { IClassNameProps } from '@bem-react/core';
 
-import { LibraryRecord, LibraryRecordRaw } from '../../services/data/docLibrary/docLibrary.models';
-import { getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { LibraryRecord, LibraryRecordRaw } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 

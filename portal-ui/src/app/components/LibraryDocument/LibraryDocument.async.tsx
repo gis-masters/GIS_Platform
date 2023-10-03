@@ -15,10 +15,10 @@ import { Role } from '../../services/data/permissions/permissions.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { applyContentType } from '../../services/data/schema/schema.utils';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { LibraryRecord } from '../../services/data/docLibrary/docLibrary.models';
-import { docLibraryClient } from '../../services/data/docLibrary/docLibrary.client';
+import { LibraryRecord } from '../../services/data/library/library.models';
+import { libraryClient } from '../../services/data/library/library.client';
 import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
-import { getLibrary, getLibraryRecord } from '../../services/data/docLibrary/docLibrary.service';
+import { getLibrary, getLibraryRecord } from '../../services/data/library/library.service';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
@@ -82,7 +82,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
         </div>
 
         <PermissionsWidget
-          url={docLibraryClient.getDocumentLibraryRecordRoleAssignmentUrl(document.libraryTableName, document.id)}
+          url={libraryClient.getDocumentLibraryRecordRoleAssignmentUrl(document.libraryTableName, document.id)}
           title={document.title}
           itemEntityType={ExplorerItemEntityTypeTitle.DOCUMENT}
           disabled={!(currentUser.isAdmin || document.role === Role.OWNER)}
