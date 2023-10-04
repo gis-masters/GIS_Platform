@@ -1,15 +1,27 @@
 <div [class]="cn()">
-  <div id="fiz-openLayer-map" [class]="cn('map', { default: isDefaultActive, selection: isSelectionActive })">
+  <div
+    id="fiz-openLayer-map"
+    [class]="
+      cn('map', { default: isDefaultActive, selection: isSelectionActive })
+    "
+  >
     <crg-map-toolbar></crg-map-toolbar>
     <crg-features-sidebar-teaser></crg-features-sidebar-teaser>
     <crg-basemaps-select></crg-basemaps-select>
   </div>
 
-  <crg-layers-sidebar [class]="cn('bar', { dir: 'left' })"> </crg-layers-sidebar>
+  <crg-layers-sidebar [class]="cn('bar', { dir: 'left' })">
+  </crg-layers-sidebar>
 
-  <crg-edit-features-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isEditSidebarActive">
+  <crg-edit-features-sidebar
+    [class]="cn('bar', { dir: 'right' })"
+    *ngIf="isEditSidebarActive"
+  >
   </crg-edit-features-sidebar>
-  <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isFeaturesSidebarActive">
+  <crg-features-list-sidebar
+    [class]="cn('bar', { dir: 'right' })"
+    *ngIf="isFeaturesSidebarActive"
+  >
   </crg-features-list-sidebar>
   <crg-report-sidebar
     [class]="cn('bar', { dir: 'right' })"
@@ -18,5 +30,5 @@
   >
   </crg-report-sidebar>
 
-  <crg-attributes [class]="cn('bar', { dir: 'bottom' })"></crg-attributes>
+  <crg-attributes-ng [class]="cn('bar', { dir: 'bottom' })"></crg-attributes-ng>
 </div>

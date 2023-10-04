@@ -9,11 +9,12 @@ import { Footer } from '../Footer/Footer';
 const FooterWithRegistry = withRegistry(registry)(Footer);
 
 @Component({
-  selector: 'crg-footer',
-  template: '<div class="footer" #react></div>'
+  selector: 'crg-footer-ng',
+  template: '<div class="footer-ng" #react></div>'
 })
-export class FooterComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+export class FooterNgComponent implements OnInit, OnDestroy, OnChanges {
+  @ViewChild('react', { read: ElementRef, static: true })
+  ref: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnInit() {

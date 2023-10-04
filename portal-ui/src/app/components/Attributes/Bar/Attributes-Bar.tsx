@@ -7,7 +7,10 @@ import { action, observable, makeObservable, computed } from 'mobx';
 
 import { mapStore } from '../../../stores/Map.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import {
+  getFieldFilterValue,
+  modifyFieldFilterValue
+} from '../../../services/util/filterObjects';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { calculateValues } from '../../../services/formValidation.service';
@@ -34,7 +37,12 @@ import { AttributesCheckMaster } from '../CheckMaster/Attributes-CheckMaster';
 import { AttributesCheckFilter } from '../CheckFilter/Attributes-CheckFilter';
 import { AttributesFiltersEnabler } from '../FiltersEnabler/Attributes-FiltersEnabler';
 import { AttributesBarRightActions } from '../BarRightActions/Attributes-BarRightActions';
-import { AttributesTable, AttributesTableRecord, FILTER_BY_SELECTION } from '../Table/Attributes-Table';
+import {
+  AttributesTable,
+  AttributesTableRecord,
+  FILTER_BY_SELECTION
+} from '../Table/Attributes-Table';
+import { AttributesResize } from '../Resize/Attributes-Resize';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
 
@@ -53,13 +61,21 @@ interface AttributesBarProps {
 export class AttributesBar extends Component<AttributesBarProps> {
   @observable private pageOptions?: PageOptions;
   @observable private _schema?: Schema;
-  @observable featuresMatched = 0;
-  @observable featuresTotal = 0;
+  @observable private featuresMatched = 0;
+  @observable private featuresTotal = 0;
+  @observable private height = this.getHeight();
+
   private fetchingSchemaOperationId?: symbol;
 
   constructor(props: AttributesBarProps) {
     super(props);
     makeObservable(this);
+  }
+
+  private getHeight(): number {
+    const height = localStorage.getItem('atr-size');
+
+    return Number(height) || 400;
   }
 
   async componentDidMount() {
@@ -76,10 +92,18 @@ export class AttributesBar extends Component<AttributesBarProps> {
     const { layer, tableInvoke, onMinimize, onClose } = this.props;
 
     return (
-      <div className={cnAttributesBar()}>
+      <div className={cnAttributesBar()} style={{ height: this.height }}>
         <AttributesBarHead>
+          <AttributesResize
+            initialHeight={this.height}
+            onResize={this.resize}
+          />
           <AttributesBarTitle>{layer.title}</AttributesBarTitle>
-          <AttributesCounter layer={layer} featuresMatched={this.featuresMatched} featuresTotal={this.featuresTotal} />
+          <AttributesCounter
+            layer={layer}
+            featuresMatched={this.featuresMatched}
+            featuresTotal={this.featuresTotal}
+          />
           <AttributesFiltersEnabler layer={layer} />
           <AttributesBarHeadGap />
           <AttributesBarActions
@@ -109,7 +133,9 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @computed
   private get schema(): Schema | undefined {
     if (this._schema) {
-      const currentLayer = currentProject.vectorLayers.find(item => item.id === this.props.layer.id);
+      const currentLayer = currentProject.vectorLayers.find(
+        item => item.id === this.props.layer.id
+      );
 
       return applyView(this._schema, currentLayer?.view);
     }
@@ -135,13 +161,19 @@ export class AttributesBar extends Component<AttributesBarProps> {
           />
         ),
         CustomFilterComponent: AttributesCheckFilter,
-        filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
+        filterable:
+          !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
         CellContent: AttributesRowHead,
         cellContentProps: { style: { overflow: 'visible' } },
         align: 'left',
         width: 74,
         minWidth: 74,
-        headerCellProps: { padding: 'checkbox', size: 'small', align: 'center', className: cnAttributesCheckCell() },
+        headerCellProps: {
+          padding: 'checkbox',
+          size: 'small',
+          align: 'center',
+          className: cnAttributesCheckCell()
+        },
         cellProps: { padding: 'checkbox' }
       },
       { field: 'cutId', title: 'ID', minWidth: 50 },
@@ -150,7 +182,9 @@ export class AttributesBar extends Component<AttributesBarProps> {
   }
 
   @boundMethod
-  private async getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]> {
+  private async getData(
+    pageOptions: PageOptions
+  ): Promise<[AttributesTableRecord[], number]> {
     const { layer } = this.props;
 
     const filter = cloneDeep(pageOptions.filter || {});
@@ -159,23 +193,29 @@ export class AttributesBar extends Component<AttributesBarProps> {
 
     const featureIds =
       filterBySelection && filterBySelection !== FilterBySelection.DISABLED
-        ? mapStore.selectedFeaturesByTableName[layer.tableName]?.map(({ id }) => id)
+        ? mapStore.selectedFeaturesByTableName[layer.tableName]?.map(
+            ({ id }) => id
+          )
         : [];
 
-    const [features, totalPages, featuresMatched, featuresTotal] = await getFeatures(
-      layer,
-      { ...pageOptions, filter },
-      this.schema?.definitionQuery,
-      featureIds,
-      filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
-    );
+    const [features, totalPages, featuresMatched, featuresTotal] =
+      await getFeatures(
+        layer,
+        { ...pageOptions, filter },
+        this.schema?.definitionQuery,
+        featureIds,
+        filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
+      );
 
     const tableRecords: AttributesTableRecord[] = features.map(feature => {
       const featureCalcProperties = calculateValues(feature.properties, this.schema?.properties || []);
       const properties = this.schema?.properties || [];
 
       for (const property of properties) {
-        featureCalcProperties[property.name] = convertToComplexField(property, featureCalcProperties);
+        featureCalcProperties[property.name] = convertToComplexField(
+          property,
+          featureCalcProperties
+        );
       }
 
       return {
@@ -214,6 +254,14 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @action
   private setSchema(schema: Schema) {
     this._schema = schema;
+  }
+
+  @action.bound
+  private resize(height: number) {
+    if (height > 700 || height <= 150) {
+      return;
+    }
+    this.height = height;
   }
 
   @action.bound

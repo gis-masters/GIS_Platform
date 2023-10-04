@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '../../material.module';
 
-import { LoadingComponent } from './loading.component';
+import { LoadingNgComponent } from './loading-ng.component';
 
 @NgModule({
-  declarations: [LoadingComponent],
-  exports: [LoadingComponent],
+  declarations: [LoadingNgComponent],
+  exports: [LoadingNgComponent],
   imports: [MaterialModule, CommonModule]
 })
-export class LoadingModule {}
+export class LoadingNgModule {}

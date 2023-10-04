@@ -9,13 +9,14 @@ import { Attributes } from '../Attributes/Attributes';
 const AttributesWithRegistry = withRegistry(registry)(Attributes);
 
 @Component({
-  selector: 'crg-attributes',
-  template: '<div class="attributes" #react></div>',
-  styleUrls: ['./attributes.component.scss']
+  selector: 'crg-attributes-ng',
+  template: '<div class="attributes-ng" #react></div>',
+  styleUrls: ['./attributes-ng.component.scss']
 })
-export class AttributesComponent implements OnInit, OnDestroy {
+export class AttributesNgComponent implements OnInit, OnDestroy {
   @Input() class: string;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  @ViewChild('react', { read: ElementRef, static: true })
+  ref: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnChanges() {
@@ -23,7 +24,9 @@ export class AttributesComponent implements OnInit, OnDestroy {
   }
 
   private renderReactElement() {
-    const reactElement = createElement(AttributesWithRegistry, { className: this.class });
+    const reactElement = createElement(AttributesWithRegistry, {
+      className: this.class
+    });
 
     this.root?.render(reactElement);
   }

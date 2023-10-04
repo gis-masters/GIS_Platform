@@ -1,5 +1,0 @@
-<div class="loading" [ngClass]="{'loading_no-backdrop': noBackdrop}">
-  <div *ngIf="hasPercents" class="loading__percents">{{percents}}%</div>
-  <mat-spinner *ngIf="!hasPercents"></mat-spinner>
-  <mat-progress-spinner *ngIf="hasPercents" [value]="percents"></mat-progress-spinner>
-</div>

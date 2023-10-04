@@ -1,9 +1,20 @@
 <div class="header">
-  <crg-logo></crg-logo>
+  <crg-logo-ng></crg-logo-ng>
 
   <div *ngIf="envPlatform === 'conv'" class="header__buttons">
-    <button class="header__button header__button_type_how" mat-raised-button (click)="how()">Как это работает?</button>
-    <button *ngIf="envRegistration" class="header__button header__button_type_reg" mat-raised-button (click)="register()">
+    <button
+      class="header__button header__button_type_how"
+      mat-raised-button
+      (click)="how()"
+    >
+      Как это работает?
+    </button>
+    <button
+      *ngIf="envRegistration"
+      class="header__button header__button_type_reg"
+      mat-raised-button
+      (click)="register()"
+    >
       Зарегистрироваться
     </button>
   </div>

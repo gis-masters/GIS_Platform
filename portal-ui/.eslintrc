@@ -88,7 +88,7 @@
     // Best practices
     "block-scoped-var": 2,
     "complexity": [0, 11],
-    "curly": [2, "multi-line"],
+    "curly": [2, "all"],
     "eqeqeq": [2, "always", { "null": "ignore" }],
     "no-else-return": 2,
     "no-extra-bind": 2,
@@ -149,7 +149,10 @@
     ],
     "space-in-parens": 2,
     "no-console": [2, { "allow": ["assert", "error", "warn"] }],
-    "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "strict" }],
+    "key-spacing": [
+      2,
+      { "beforeColon": false, "afterColon": true, "mode": "strict" }
+    ],
     "space-infix-ops": 2,
     "newline-before-return": "error",
 
@@ -168,7 +171,10 @@
     "react/jsx-no-literals": 0,
     "react/jsx-no-undef": 2,
     "react/jsx-sort-props": 0,
-    "react/jsx-tag-spacing": [2, { "beforeClosing": "never", "beforeSelfClosing": "always" }],
+    "react/jsx-tag-spacing": [
+      2,
+      { "beforeClosing": "never", "beforeSelfClosing": "always" }
+    ],
     "react/jsx-uses-react": 2,
     "react/jsx-uses-vars": 2,
     "react/no-find-dom-node": 2,
@@ -209,8 +215,14 @@
       }
     ],
     "@typescript-eslint/unbound-method": "off",
-    "@typescript-eslint/no-misused-promises": ["error", { "checksConditionals": false, "checksVoidReturn": false }],
-    "@typescript-eslint/no-empty-function": ["error", { "allow": ["private-constructors"] }],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      { "checksConditionals": false, "checksVoidReturn": false }
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "error",
+      { "allow": ["private-constructors"] }
+    ],
     "@typescript-eslint/no-unsafe-enum-comparison": "off",
 
     // https://reactjs.org/docs/hooks-rules.html

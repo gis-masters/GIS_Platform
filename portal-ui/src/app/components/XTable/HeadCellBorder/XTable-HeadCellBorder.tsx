@@ -18,8 +18,8 @@ interface XTableHeadCellBorderProps {
 @observer
 export class XTableHeadCellBorder extends Component<XTableHeadCellBorderProps> {
   @observable private dragging = false;
-  private startX: number;
-  private lastX: number;
+  private startX?: number;
+  private lastX?: number;
 
   constructor(props: XTableHeadCellBorderProps) {
     super(props);

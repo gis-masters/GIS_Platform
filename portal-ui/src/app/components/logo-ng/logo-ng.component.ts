@@ -9,12 +9,13 @@ import { Logo } from '../Logo/Logo';
 const LogoWithRegistry = withRegistry(registry)(Logo);
 
 @Component({
-  selector: 'crg-logo',
-  template: '<div class="logo" #react></div>',
-  styleUrls: ['./logo.component.scss']
+  selector: 'crg-logo-ng',
+  template: '<div class="logo-ng" #react></div>',
+  styleUrls: ['./logo-ng.component.scss']
 })
-export class LogoComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+export class LogoNgComponent implements OnInit, OnChanges, OnDestroy {
+  @ViewChild('react', { read: ElementRef, static: true })
+  ref: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnInit() {

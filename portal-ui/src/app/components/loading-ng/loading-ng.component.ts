@@ -2,10 +2,10 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'crg-loading',
-  templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.scss']
+  templateUrl: './loading-ng.component.html',
+  styleUrls: ['./loading-ng.component.scss']
 })
-export class LoadingComponent {
+export class LoadingNgComponent {
   @Input() percents: string;
   @Input() noBackdrop: boolean;
 

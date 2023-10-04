@@ -14,7 +14,8 @@ const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('reactToastContainer', { read: ElementRef, static: true }) refToastContainer: ElementRef<HTMLDivElement>;
+  @ViewChild('reactToastContainer', { read: ElementRef, static: true })
+  refToastContainer: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnInit() {
@@ -41,8 +42,10 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
       columnNumber?: number,
       error?: Error
     ) {
-      // eslint-disable-next-line prefer-rest-params
-      if (oldOnError) Reflect.apply(oldOnError, this, arguments);
+      if (oldOnError) {
+        // eslint-disable-next-line prefer-rest-params
+        Reflect.apply(oldOnError, this, arguments);
+      }
 
       Toast.error({
         source,

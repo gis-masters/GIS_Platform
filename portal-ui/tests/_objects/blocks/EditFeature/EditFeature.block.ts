@@ -5,6 +5,7 @@ import { hasClass } from '../../utils/hasClass';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { extractValues } from '../../commands/extractText';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
+import { isEqual } from 'lodash';
 
 class EditFeatureBlock extends Block {
   selectors = {
@@ -32,11 +33,16 @@ class EditFeatureBlock extends Block {
   async checkObjectAttributeFields(title: string): Promise<void> {
     const $editFeatureLoader = await this.$('editFeatureLoading');
     await $editFeatureLoader.waitForDisplayed({ reverse: true });
-
     await this.waitForEditFeatureForm();
 
-    const values = await this.getFormFieldsLabels();
-    await expect(values).toEqual([title]);
+    await browser.waitUntil(
+      async () => {
+        return isEqual(await this.getFormFieldsLabels(), [title]);
+      },
+      {
+        timeout: 1000
+      }
+    );
   }
 
   async getFormFieldsLabels(): Promise<string[]> {

@@ -9,12 +9,13 @@ import { Projects } from '../Projects/Projects';
 const ProjectsWithRegistry = withRegistry(registry)(Projects);
 
 @Component({
-  selector: 'crg-projects',
-  template: '<div class="projects" #react></div>',
-  styleUrls: ['./projects.component.scss']
+  selector: 'crg-projects-ng',
+  template: '<div class="projects-ng" #react></div>',
+  styleUrls: ['./projects-ng.component.scss']
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  @ViewChild('react', { read: ElementRef, static: true })
+  ref: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnInit() {

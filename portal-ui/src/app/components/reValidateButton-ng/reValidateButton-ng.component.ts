@@ -9,11 +9,12 @@ import { ReValidateButton } from '../ReValidateButton/ReValidateButton';
 const ReValidateButtonWithRegistry = withRegistry(registry)(ReValidateButton);
 
 @Component({
-  selector: 're-validate-button',
+  selector: 're-validate-button-ng',
   template: '<div #react></div>'
 })
-export class ReValidateButtonComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+export class ReValidateButtonNgComponent implements OnInit, OnDestroy, OnChanges {
+  @ViewChild('react', { read: ElementRef, static: true })
+  ref: ElementRef<HTMLDivElement>;
   private root: Root;
 
   ngOnInit() {
