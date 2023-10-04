@@ -42,6 +42,12 @@ Then('открылась страница {string}', async (title: string) => {
   await page.testUrl();
 });
 
+When('я жду открытия страницы {string}', async (title: string) => {
+  const page = findPage(title);
+  await page.waitForVisible();
+  await page.testUrl();
+});
+
 When(
   'я перехожу на страницу {string} с гостевыми логином-паролем пользователя {user}',
   async (pageTitle: string, user: TestUser) => {
@@ -224,5 +230,9 @@ Given('я на странице журнала задач', async () => {
 
 // org Admin
 Given('я нахожусь во вкладке `Пользователи` на странице управлении организацией', async () => {
+  await new OrgAdminPage().open();
+});
+
+When('я перехожу во вкладку `Пользователи` на странице управлении организацией', async () => {
   await new OrgAdminPage().open();
 });
