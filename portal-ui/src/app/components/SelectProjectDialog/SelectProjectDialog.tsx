@@ -16,6 +16,7 @@ interface SelectProjectDialogProps extends IClassNameProps {
   projects?: CrgProject[];
   open: boolean;
   actionButtonLabel: string;
+  loading?: boolean;
   additionalAction?: ReactNode;
   onClose(): void;
   onSelect(items: CrgProject[]): void;
@@ -33,6 +34,7 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
       projects = this.projects,
       actionButtonLabel,
       className,
+      loading,
       additionalAction,
       onSelect,
       onClose
@@ -56,6 +58,7 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
         open={open}
         onClose={onClose}
         onSelect={onSelect}
+        loading={loading}
         single
         additionalAction={additionalAction}
         actionButtonProps={{

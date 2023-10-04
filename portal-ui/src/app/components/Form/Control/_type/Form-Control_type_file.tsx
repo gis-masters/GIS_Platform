@@ -4,6 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { Files } from '../../../Files/Files';
 
@@ -13,7 +14,7 @@ import { FormErrors } from '../../Errors/Form-Errors';
 @observer
 class FormControlTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, formRole, errors, fieldValue, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, formRole, errors, fieldValue, formValue, fullWidthForOldForm } = this.props;
     let value = (fieldValue || []) as FileInfo[];
 
     try {
@@ -28,6 +29,7 @@ class FormControlTypeFile extends Component<FormControlProps> {
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <Files
           showPlaceAction={formRole === 'viewDocument'}
+          document={formRole === 'viewDocument' ? (formValue as LibraryRecord) : undefined}
           value={value}
           property={property as PropertySchemaFile}
           editable

@@ -21,7 +21,7 @@ const cnFilesCompoundItem = cn('Files', 'CompoundItem');
 
 interface FilesCompoundItemProps {
   files: FileInfo[];
-  editable: boolean;
+  editable?: boolean;
   showPlaceAction?: boolean;
   onDelete(item: FileInfo[]): void;
   onPreview(item: FileInfo): void;
@@ -65,8 +65,8 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
               key={`${item.id}_${i}`}
               editable={false}
               status={'notAvailable'}
-              file={null}
-              statusText={null}
+              file={undefined}
+              statusText={undefined}
               numerous
               multiple
             />
@@ -83,21 +83,22 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
     const compoundMainFilesValues = Object.values(CompoundMainFiles);
 
     if (files.length > 1) {
-      const index = files.indexOf(
-        files.find(({ title }) =>
-          compoundMainFilesValues.includes(normalizeExtension(getFileExtension(title)) as CompoundMainFiles)
-        ),
-        0
+      const compoundFiles: FileInfo | undefined = files.find(({ title }) =>
+        compoundMainFilesValues.includes(normalizeExtension(getFileExtension(title)) as CompoundMainFiles)
       );
 
-      files.unshift(...files.splice(index, 1));
+      if (compoundFiles) {
+        const index = files.indexOf(compoundFiles, 0);
+
+        files.unshift(...files.splice(index, 1));
+      }
     }
 
     return files;
   }
 
   @computed
-  private get missingCompoundFiles(): FileInfo[] {
+  private get missingCompoundFiles(): FileInfo[] | undefined {
     const missingFiles = getMissingCompoundFileTypes(this.props.files);
 
     if (missingFiles.length) {

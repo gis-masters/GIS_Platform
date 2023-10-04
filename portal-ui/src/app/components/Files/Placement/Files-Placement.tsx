@@ -9,12 +9,14 @@ import { LayerAdd } from '../../Icons/LayerAdd';
 import { IconButton } from '../../IconButton/IconButton';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { FileInfo } from '../../../services/data/files/files.models';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { ProjectPlacementDialog } from '../../ProjectPlacementDialog/ProjectPlacementDialog';
 
 const cnFilesPlacement = cn('Files', 'Placement');
 
 interface PlacementProps {
   fileInfo: FileInfo;
+  document?: LibraryRecord;
 }
 
 @observer
@@ -27,7 +29,7 @@ export class FilesPlacement extends Component<PlacementProps> {
   }
 
   render() {
-    const { fileInfo } = this.props;
+    const { fileInfo, document } = this.props;
 
     return (
       <>
@@ -37,7 +39,7 @@ export class FilesPlacement extends Component<PlacementProps> {
           </IconButton>
         </Tooltip>
 
-        <ProjectPlacementDialog fileInfo={fileInfo} open={this.dialogOpen} onClose={this.onClose} />
+        <ProjectPlacementDialog document={document} fileInfo={fileInfo} open={this.dialogOpen} onClose={this.onClose} />
       </>
     );
   }

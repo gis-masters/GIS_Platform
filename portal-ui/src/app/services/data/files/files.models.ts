@@ -89,7 +89,7 @@ export const optionalTabFilesTypes: Partial<FileType>[] = [FileType.IND];
 
 export const midMifRequiredFilesTypes: Partial<FileType>[] = [FileType.MID, FileType.MIF];
 
-export const compoundFileFullType = {
+export const compoundFileFullType: Record<string, string> = {
   shp: 'Shapefile',
   tab: 'MapInfo TAB',
   mid: 'MapInfo MID'

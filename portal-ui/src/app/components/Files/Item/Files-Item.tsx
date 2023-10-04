@@ -18,6 +18,7 @@ import { FileConnection, FileInfo } from '../../../services/data/files/files.mod
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
@@ -35,12 +36,13 @@ const cnFilesItem = cn('Files', 'Item');
 
 interface FilesItemProps {
   item: FileInfo;
-  editable: boolean;
   status: LookupStatusType | undefined;
   file: File | undefined;
   statusText: string | undefined;
   numerous: boolean;
-  multiple: boolean;
+  editable?: boolean;
+  multiple?: boolean;
+  document?: LibraryRecord;
   showPlaceAction?: boolean;
   showMainCompoundFileActions?: boolean;
   onDelete(item: FileInfo[]): void;
@@ -52,7 +54,7 @@ export class FilesItem extends Component<FilesItemProps> {
   @observable private connections: FileConnection[] = [];
   @observable private currentFileId?: string;
   @observable private deleteDialogOpen = false;
-  private operationId: symbol;
+  private operationId: symbol | undefined;
 
   constructor(props: FilesItemProps) {
     super(props);
@@ -91,13 +93,14 @@ export class FilesItem extends Component<FilesItemProps> {
       statusText,
       numerous,
       multiple,
+      document,
       showMainCompoundFileActions,
       showPlaceAction,
       onPreview
     } = this.props;
     const ext = getFileExtension(item.title);
     const baseName = getFileBaseName(item.title);
-    const disabled = ['loading', 'new', 'error'].includes(status);
+    const disabled = status ? ['loading', 'new', 'error'].includes(status) : undefined;
 
     return (
       <>
@@ -119,18 +122,20 @@ export class FilesItem extends Component<FilesItemProps> {
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
             {showMainCompoundFileActions && showPlaceAction && <FilesDownloadCompoundFile item={item} />}
 
-            {((showMainCompoundFileActions && showPlaceAction) ||
-              (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isDxfFile(item)))) && (
-              <FilesPlacement fileInfo={item} />
-            )}
-
             {!!this.connections?.length && showPlaceAction && (
               <FilesConnections file={item} connections={this.connections} />
             )}
 
+            {((showMainCompoundFileActions && showPlaceAction) ||
+              (!showMainCompoundFileActions &&
+                showPlaceAction &&
+                (isGmlFile(item) || isDxfFile(item) || isTifFile(item)))) && (
+              <FilesPlacement document={document} fileInfo={item} />
+            )}
+
             {((showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable)) && (
               <LookupDelete
-                tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : null}
+                tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : undefined}
                 item={item}
                 onDelete={this.deleteButtonClickHandler}
               />
@@ -157,7 +162,7 @@ export class FilesItem extends Component<FilesItemProps> {
 
   @boundMethod
   private deleteButtonClickHandler(item: FileInfo) {
-    if (this.connections.length) {
+    if (this.connections?.length) {
       this.openDeleteDialog();
     } else {
       this.props.onDelete([item]);
@@ -183,7 +188,7 @@ export class FilesItem extends Component<FilesItemProps> {
 
   @action
   private dropConnections() {
-    this.connections = null;
+    this.connections = [];
   }
 
   @action

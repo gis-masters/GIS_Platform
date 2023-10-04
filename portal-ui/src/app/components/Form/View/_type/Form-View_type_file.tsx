@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { Files } from '../../../Files/Files';
 
@@ -14,7 +15,7 @@ import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 @observer
 class FormViewTypeFile extends Component<FormControlProps> {
   render() {
-    const { className, inSet, property, errors, fieldValue, formRole, fullWidthForOldForm } = this.props;
+    const { className, inSet, property, errors, fieldValue, formRole, formValue, fullWidthForOldForm } = this.props;
     let value = (fieldValue || []) as FileInfo[];
 
     try {
@@ -31,6 +32,7 @@ class FormViewTypeFile extends Component<FormControlProps> {
           <Files
             showPlaceAction={formRole === 'viewDocument'}
             value={value}
+            document={formRole === 'viewDocument' ? (formValue as LibraryRecord) : undefined}
             property={property as PropertySchemaFile}
           />
         ) : (

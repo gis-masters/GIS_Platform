@@ -35,6 +35,11 @@ Then('появляется уведомление {string}', async (msg: string)
   await expect(await toastBlock.getTitle()).toEqual(msg);
 });
 
+When('я жду появления уведомления {string}', async (msg: string) => {
+  await toastBlock.waitForVisible();
+  await expect(await toastBlock.getTitle()).toEqual(msg);
+});
+
 Then('блок Toast вариант {string} выглядит как положено', async (variant: string) => {
   await toastBlock.assertSelfie(variant);
 });

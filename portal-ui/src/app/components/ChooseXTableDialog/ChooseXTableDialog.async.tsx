@@ -25,6 +25,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
   data: T[];
+  loading?: boolean;
   selectedItems?: T[];
   disabledItems?: T[];
   cols: XTableColumn<T>[];
@@ -66,6 +67,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       secondarySortField,
       actionButtonProps = {},
       single,
+      loading,
       additionalAction,
       selectedItems,
       cols,
@@ -105,6 +107,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
                 disabled={!this.selected.length}
                 onClick={this.submit}
                 color='primary'
+                loading={loading}
                 {...actionButtonProps}
                 className={cnChooseXTableDialog('Submit', [actionButtonProps.className])}
               >

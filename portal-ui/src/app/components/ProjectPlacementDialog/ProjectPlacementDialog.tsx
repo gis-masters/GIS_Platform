@@ -8,14 +8,16 @@ import { action, observable, makeObservable } from 'mobx';
 import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { sidebars } from '../../stores/Sidebars.store';
-import { isDxfFile } from '../../services/data/files/files.util';
 import { FileInfo } from '../../services/data/files/files.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
-import { placeDxf, placeGml } from '../../services/data/file-placement/file-placement.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { isDxfFile, isTifFile } from '../../services/data/files/files.util';
+import { communicationService } from '../../services/communication.service';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { defaultProjection } from '../../services/geoserver/projections.service';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { placeDxf, placeFile, placeGml } from '../../services/data/file-placement/file-placement.service';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
 
@@ -24,6 +26,7 @@ const cnProjectPlacementDialog = cn('ProjectPlacementDialog');
 interface ProjectPlacementDialogProps {
   fileInfo: FileInfo;
   open: boolean;
+  document?: LibraryRecord;
   onClose(): void;
 }
 
@@ -48,8 +51,9 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         onClose={onClose}
         onSelect={this.onProjectSelected}
         actionButtonLabel='Разместить в выбранном проекте'
+        loading={this.addFormBusy}
         additionalAction={
-          isDxfFile(fileInfo) ? (
+          isDxfFile(fileInfo) || isTifFile(fileInfo) ? (
             <SelectProjection
               className={cnProjectPlacementDialog('SelectProjection')}
               value={this.selectedCrs}
@@ -72,7 +76,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   private async onProjectSelected([project]: CrgProject[]) {
     const { fileInfo } = this.props;
 
-    await this.place(fileInfo, project.id);
+    await this.place(fileInfo, project);
   }
 
   @action.bound
@@ -85,31 +89,57 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     this.addFormBusy = busy;
   }
 
-  private async place(fileInfo: FileInfo, projectId: number) {
+  private async place(fileInfo: FileInfo, project: CrgProject) {
     if (this.addFormBusy) {
       return;
     }
 
     this.setFormBusy(true);
 
-    try {
-      await (isDxfFile(this.props.fileInfo)
-        ? placeDxf(fileInfo, projectId, this.selectedCrs)
-        : placeGml(fileInfo, projectId, this.invertedCoordinates));
+    if (isTifFile(this.props.fileInfo)) {
+      if (this.props.document) {
+        try {
+          await placeFile(this.props.fileInfo, { crs: this.selectedCrs, mode: 'full' }, project, this.props.document);
+          communicationService.fileConnectionsUpdated.emit({ type: 'update', data: [this.props.fileInfo] });
+
+          Toast.success(`Файл ${this.props.fileInfo.title} успешно размещен в проекте`);
+        } catch (error) {
+          Toast.error('Не удалось подключить слой');
+          services.logger.error('Не удалось подключить слой: ', (error as AxiosError).message);
+
+          return;
+        } finally {
+          this.setFormBusy(false);
+        }
+      } else {
+        Toast.error({
+          message: 'Не удалось подключить слой',
+          details: 'Не найден документ содержащий файл для подключения'
+        });
+      }
 
       this.props.onClose();
-      sidebars.openInfo();
-    } catch (error) {
-      const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-      if (err.response?.status === 400) {
-        const message = err.response?.data?.message;
-        services.logger.error(message, error);
-        Toast.error({ message, details: (error as Error).message });
-      } else {
-        throw error;
-      }
-    } finally {
       this.setFormBusy(false);
+    } else {
+      try {
+        await (isDxfFile(this.props.fileInfo)
+          ? placeDxf(fileInfo, project.id, this.selectedCrs)
+          : placeGml(fileInfo, project.id, this.invertedCoordinates));
+
+        this.props.onClose();
+        sidebars.openInfo();
+      } catch (error) {
+        const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
+        if (err.response?.status === 400) {
+          const message = err.response?.data?.message;
+          services.logger.error(message, error);
+          Toast.error({ message, details: (error as Error).message });
+        } else {
+          throw error;
+        }
+      } finally {
+        this.setFormBusy(false);
+      }
     }
   }
 }

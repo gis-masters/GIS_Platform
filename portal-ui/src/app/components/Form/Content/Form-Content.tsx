@@ -85,6 +85,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   property={propertySchema}
                   formRole={formRole}
                   type={propertySchema.propertyType}
+                  formValue={formValue}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   errors={propertyErrors}
                 />

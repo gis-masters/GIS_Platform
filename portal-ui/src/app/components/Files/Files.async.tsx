@@ -22,6 +22,7 @@ import {
   isFilePartOfOptionalCompoundTabTypeFile
 } from '../../services/data/files/files.util';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { createFile } from '../../services/data/files/files.service';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
@@ -43,6 +44,7 @@ const cnFiles = cn('Files');
 export interface FilesProps {
   value: FileInfo[];
   property: PropertySchemaFile;
+  document?: LibraryRecord;
   editable?: boolean;
   showPlaceAction?: boolean;
   onChange?(value: FileInfo[]): void;
@@ -71,7 +73,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   render() {
-    const { value, property, editable, showPlaceAction } = this.props;
+    const { value, property, editable, document, showPlaceAction } = this.props;
     const { multiple } = property;
     const numerous = value.length > 1;
 
@@ -95,6 +97,7 @@ export default class Files extends Component<FilesProps> {
                     editable={editable}
                     showPlaceAction={showPlaceAction}
                     status={newbie?.status}
+                    document={document}
                     file={newbie?.file}
                     statusText={newbie?.statusText}
                     numerous={numerous}
@@ -162,7 +165,9 @@ export default class Files extends Component<FilesProps> {
     const { onChange, value } = this.props;
     const deletingItemsId = deletingItem.map(({ id }) => id);
 
-    onChange(value.filter(({ id }) => !deletingItemsId.includes(id)));
+    if (onChange) {
+      onChange(value.filter(({ id }) => !deletingItemsId.includes(id)));
+    }
 
     for (const id of deletingItemsId) {
       this.delNewbie(id);
@@ -187,7 +192,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   @computed
-  private get allImages(): FileInfo[] {
+  private get allImages(): FileInfo[] | undefined {
     const { value } = this.props;
     if (value.length) {
       return value
@@ -205,25 +210,29 @@ export default class Files extends Component<FilesProps> {
     const { onChange, value } = this.props;
 
     const newFileItems: FileInfo[] = [];
-    const max = Math.min(this.max - value.length, selectedFiles.length);
+    const max = Math.min(this.max - value.length, selectedFiles?.length || 0);
     const [, compoundFiles] = this.separateCompoundFiles(value);
     const compoundFilesDuplicates: string[] = [];
     for (let i = 0; i < max; i++) {
-      const file = selectedFiles.item(i);
+      const file = selectedFiles?.item(i);
+      if (file) {
+        if (compoundFiles[getFileBaseName(file.name)]?.some(item => item.title === file.name)) {
+          compoundFilesDuplicates.push(file.name);
 
-      if (compoundFiles[getFileBaseName(file.name)]?.some(item => item.title === file.name)) {
-        compoundFilesDuplicates.push(file.name);
+          continue;
+        }
 
-        continue;
+        const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
+        newFileItems.push(newItem);
+        this.addNewbie({ id: newItem.id, status: 'new', statusText: 'Ожидает загрузки', file });
       }
-
-      const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
-      newFileItems.push(newItem);
-      this.addNewbie({ id: newItem.id, status: 'new', statusText: 'Ожидает загрузки', file });
     }
 
     const newValue = [...value, ...newFileItems];
-    onChange(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+
     this.uploadPool.push(...newFileItems);
     void this.upload();
 
@@ -265,10 +274,13 @@ export default class Files extends Component<FilesProps> {
     this.editNewbie(fileInfo.id, { status: 'loading', statusText: 'Загружается' });
 
     try {
-      const newFileInfo = await createFile(this.getNewbie(fileInfo.id).file);
-      this.updateItem(fileInfo.id, { id: newFileInfo.id, notLoaded: false });
-      this.editNewbie(fileInfo.id, { id: newFileInfo.id });
-      void this.showSuccess(newFileInfo.id);
+      const file = this.getNewbie(fileInfo.id)?.file;
+      if (file) {
+        const newFileInfo = await createFile(file);
+        this.updateItem(fileInfo.id, { id: newFileInfo.id, notLoaded: false });
+        this.editNewbie(fileInfo.id, { id: newFileInfo.id });
+        void this.showSuccess(newFileInfo.id);
+      }
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       this.editNewbie(fileInfo.id, {
@@ -292,7 +304,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   private updateItem(id: string, patch: Partial<FileInfo>) {
-    const { value } = this.props;
+    const { value, onChange } = this.props;
     const itemIndex = value.findIndex(item => item.id === id);
 
     if (itemIndex === -1) {
@@ -308,7 +320,9 @@ export default class Files extends Component<FilesProps> {
     }
     const newValue = [...value];
     newValue.splice(itemIndex, 1, newItem);
-    this.props.onChange(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
   }
 
   @action

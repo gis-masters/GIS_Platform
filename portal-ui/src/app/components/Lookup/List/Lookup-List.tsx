@@ -8,9 +8,9 @@ import '!style-loader!css-loader!sass-loader!./Lookup-List.scss';
 const cnLookupList = cn('Lookup', 'List');
 
 interface LookupListProps extends ChildrenProps {
-  multiple: boolean;
   numerous: boolean;
-  editable: boolean;
+  multiple?: boolean;
+  editable?: boolean;
 }
 
 export const LookupList: FC<LookupListProps> = ({ multiple, numerous, editable, children }) => (

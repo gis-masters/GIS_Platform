@@ -24,7 +24,7 @@ interface FilesNameProps {
   item: FileInfo;
   baseName: string;
   ext: string;
-  disabled: boolean;
+  disabled?: boolean;
   status: LookupStatusType | undefined;
   file: File | undefined;
   numerous: boolean;
@@ -35,7 +35,7 @@ interface FilesNameProps {
 export class FilesName extends Component<FilesNameProps> {
   render() {
     const { item, baseName, ext, mainCompletedCompoundFile, status, numerous } = this.props;
-    const disabled = ['loading', 'new', 'error', 'notAvailable'].includes(status);
+    const disabled = status ? ['loading', 'new', 'error', 'notAvailable'].includes(status) : undefined;
 
     return (
       <Tooltip
