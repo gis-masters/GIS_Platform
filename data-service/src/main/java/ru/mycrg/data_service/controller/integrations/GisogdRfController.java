@@ -37,17 +37,19 @@ public class GisogdRfController {
     @PostMapping("/send")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> send(@RequestParam String entityName,
-                                       @RequestParam Long entityId) {
+                                       @RequestParam Long entityId,
+                                       @RequestParam(defaultValue = "4326", required = false) Integer srid) {
         long taskId = -314L;
-        gisogdRfPublisher.publish(taskId, makeQualifier(entityName, entityId));
+        gisogdRfPublisher.publish(taskId, makeQualifier(entityName, entityId), srid);
 
         return ResponseEntity.status(CREATED).body(taskId);
     }
 
     @PostMapping("/publish")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> publish(@RequestParam(defaultValue = "100") Long limit) {
-        Long taskId = gisogdRfPublisher.fullPublication(limit);
+    public ResponseEntity<Object> publish(@RequestParam(defaultValue = "100") Long limit,
+                                          @RequestParam(defaultValue = "4326", required = false) Integer srid) {
+        Long taskId = gisogdRfPublisher.fullPublication(limit, srid);
 
         return ResponseEntity.status(CREATED).body(taskId);
     }

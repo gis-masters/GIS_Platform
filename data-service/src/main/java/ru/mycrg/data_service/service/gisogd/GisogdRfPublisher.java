@@ -98,7 +98,7 @@ public class GisogdRfPublisher {
         this.dlService = dlService;
     }
 
-    public void publish(long taskId, ResourceQualifier qualifier) {
+    public void publish(long taskId, ResourceQualifier qualifier, int srid) {
         log.debug("Try publish: {}", qualifier);
 
         IRecord parentDoc = baseDao
@@ -115,14 +115,14 @@ public class GisogdRfPublisher {
 
         Map<String, Object> parentContent = parentDoc.getContent();
         if (parentContent.containsKey(DEFAULT_GEOMETRY_COLUMN_NAME)) {
-            String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, 3857);
+            String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, srid);
             parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
         }
         removeFields(parentContent);
 
         List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
-        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier);
-        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent);
+        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier, srid);
+        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent, srid);
 
         List<Document> children = new ArrayList<>(documents);
         children.addAll(urlAsFormula);
@@ -162,7 +162,7 @@ public class GisogdRfPublisher {
      *
      * @return Идентификатор начатой системной задачи.
      */
-    public Long fullPublication(Long limit) {
+    public Long fullPublication(Long limit, int srid) {
         List<String> schemas = getSchemasPublishedToGisogdRf(TARGET_COLUMN);
         if (schemas.isEmpty()) {
             String msg = format(
@@ -188,7 +188,7 @@ public class GisogdRfPublisher {
         log.debug("Gisogd Data sortded by order: {}", allGisogdDataBySchema);
 
         allGisogdDataBySchema
-                .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit));
+                .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit, srid));
 
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
 
@@ -226,7 +226,7 @@ public class GisogdRfPublisher {
         return gisogdData;
     }
 
-    private void publish(ResourceQualifier qualifier, Long taskId, Long limit) {
+    private void publish(ResourceQualifier qualifier, Long taskId, Long limit, int srid) {
         log.debug("Publish by qualifier: {}", qualifier.getQualifier());
         try {
             // Библиотеки
@@ -239,7 +239,8 @@ public class GisogdRfPublisher {
                             new ResourceQualifier(qualifier.getSchema(),
                                                   qualifier.getTable(),
                                                   record.getId(),
-                                                  LIBRARY_RECORD));
+                                                  LIBRARY_RECORD),
+                            srid);
                 }
             } else if (qualifier.getType().equals(TABLE)) {
                 // Слои
@@ -251,7 +252,8 @@ public class GisogdRfPublisher {
                             new ResourceQualifier(qualifier.getSchema(),
                                                   qualifier.getTable(),
                                                   record.getId(),
-                                                  FEATURE));
+                                                  FEATURE),
+                            srid);
                 }
             } else {
                 log.error("Передан неподдерживаемый тип qualifier: {}", qualifier.getType());
@@ -329,7 +331,9 @@ public class GisogdRfPublisher {
     }
 
     @NotNull
-    private Set<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier, Map<String, Object> parentContent) {
+    private Set<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier,
+                                                 Map<String, Object> parentContent,
+                                                 int srid) {
         log.debug("Собираем объекты по связям типа URL связанными напрямую. для: {}", qualifier.getQualifier());
 
         Optional<SchemaDto> oSchema = schemaExtractor.get(qualifier);
@@ -344,15 +348,16 @@ public class GisogdRfPublisher {
                       .filter(propertyDto -> URL.name().equalsIgnoreCase(propertyDto.getValueType()))
                       .filter(propertyDto -> propertyDto.getCalculatedValueWellKnownFormula() == null &&
                               propertyDto.getCalculatedValueFormula() == null)
-                      .flatMap(property -> fetchByTypeUrlDirectly(property, parentContent).stream())
+                      .flatMap(property -> fetchByTypeUrlDirectly(property, parentContent, srid).stream())
                       .collect(Collectors.toSet());
     }
 
     private List<Document> fetchByTypeUrlDirectly(SimplePropertyDto property,
-                                                  Map<String, Object> parentContent) {
+                                                  Map<String, Object> parentContent,
+                                                  int srid) {
         return extractTableQualifiers(property, parentContent)
                 .stream()
-                .map(this::prepareDocument)
+                .map(recordQualifier -> prepareDocument(recordQualifier, srid))
                 .collect(Collectors.toList());
     }
 
@@ -410,21 +415,22 @@ public class GisogdRfPublisher {
      * <p>
      *
      * @param qualifier библиотека документов.
+     * @param srid
      *
      * @return Квалификатор объекта слоя
      */
     @NotNull
-    private Set<Document> fetchByUrlAsFormula(ResourceQualifier qualifier) {
+    private Set<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, int srid) {
         log.debug("Собираем объекты по связям типа URL c формулой 'linkToFeaturesMentioningThisDocument' для: {}",
                   qualifier.getQualifier());
 
         return getPropsByFormula(qualifier, "linkToFeaturesMentioningThisDocument")
                 .stream()
-                .flatMap(property -> fetchByUrlAsFormula(qualifier, property).stream())
+                .flatMap(property -> fetchByUrlAsFormula(qualifier, property, srid).stream())
                 .collect(Collectors.toSet());
     }
 
-    private List<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, SimplePropertyDto property) {
+    private List<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, SimplePropertyDto property, int srid) {
         List<Document> result = new ArrayList<>();
 
         Map<String, Object> formulaParams = (Map<String, Object>) property.getValueFormulaParams();
@@ -450,7 +456,7 @@ public class GisogdRfPublisher {
 
         boolean isTerritoryKey = "territorykey".equalsIgnoreCase(property.getName());
         if (isTerritoryKey) {
-            Optional<Document> oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, false);
+            Optional<Document> oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, false, srid);
             if (oDocument.isPresent()) {
                 result.add(oDocument.get());
 
@@ -458,7 +464,7 @@ public class GisogdRfPublisher {
             } else {
                 log.debug("Не удалось найти territorykey [includeParents = false]");
 
-                oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, true);
+                oDocument = fetchTerritoryKey(qualifier, layerComplexNames, columnName, true, srid);
                 if (oDocument.isPresent()) {
                     result.add(oDocument.get());
 
@@ -479,7 +485,7 @@ public class GisogdRfPublisher {
                     continue;
                 }
 
-                result.add(prepareDocument(objectQualifier.get()));
+                result.add(prepareDocument(objectQualifier.get(), srid));
             }
         }
 
@@ -489,7 +495,7 @@ public class GisogdRfPublisher {
     private Optional<Document> fetchTerritoryKey(ResourceQualifier qualifier,
                                                  List<String> layerComplexNames,
                                                  String columnName,
-                                                 boolean includeParent) {
+                                                 boolean includeParent, int srid) {
         ResourceQualifier territory = null;
         for (String layerComplexName: layerComplexNames) {
             Optional<ResourceQualifier> objectQualifier = findRecord(qualifier,
@@ -504,7 +510,7 @@ public class GisogdRfPublisher {
         }
 
         if (territory != null) {
-            Document territoryKey = prepareDocument(territory);
+            Document territoryKey = prepareDocument(territory, srid);
             territoryKey.setName("territorykey");
             territoryKey.setContentType("territorykey");
 
@@ -515,7 +521,7 @@ public class GisogdRfPublisher {
     }
 
     @NotNull
-    private Document prepareDocument(ResourceQualifier recordQualifier) {
+    private Document prepareDocument(ResourceQualifier recordQualifier, int srid) {
         log.debug("Founded record: '{}'", recordQualifier.getQualifier());
 
         Optional<IRecord> oLayerRecord = baseDao.findBy(recordQualifier,
@@ -525,8 +531,8 @@ public class GisogdRfPublisher {
         }
         IRecord record = oLayerRecord.get();
 
-        // вытащим геометрию в формате WGS-84 (3857)
-        String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(recordQualifier, 3857);
+        // вытащим геометрию
+        String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(recordQualifier, srid);
         String guid = record.getAsString(GUID.getName());
         Map<String, Object> content = record.getContent();
         content.put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
