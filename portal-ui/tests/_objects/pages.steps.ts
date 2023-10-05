@@ -222,6 +222,13 @@ Given('я на странице табличного представления 
   await libraryRegistryPage.open();
 });
 
+Given('я на странице корзины удаленных документов библиотеки {string}', async (libraryTitle: string) => {
+  const { table_name } = await getDocumentsLibraryByTitle(libraryTitle);
+  const libraryRegistryPage = new LibraryRegistryPage(table_name);
+
+  await libraryRegistryPage.openDeletedLibraryRegistryPage();
+});
+
 // tasks
 
 Given('я на странице журнала задач', async () => {

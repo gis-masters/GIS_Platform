@@ -10,12 +10,15 @@ export const withSimpleContentType: Schema = {
   geometryType: GeometryType.MULTI_POLYGON,
   contentTypes: [
     {
-      properties: [{ name: 'title', title: 'Название', required: true, maxLength: 100 }],
       id: 'doc_v1',
       title: 'Тип 1',
-      type: 'DOCUMENT'
+      type: 'DOCUMENT',
+      properties: [{ name: 'title', title: 'Название', required: true, maxLength: 100 }]
     },
     {
+      id: 'doc_v2',
+      title: 'Тип 2',
+      type: 'DOCUMENT',
       properties: [
         {
           name: 'title',
@@ -27,10 +30,17 @@ export const withSimpleContentType: Schema = {
           title: 'Поле FILE',
           propertyType: PropertyType.FILE
         }
-      ],
-      id: 'doc_v2',
-      title: 'Тип 2',
-      type: 'DOCUMENT'
+      ]
+    },
+    {
+      id: 'folder_v1',
+      type: 'FOLDER',
+      title: 'Папка',
+      properties: [
+        {
+          name: 'title'
+        }
+      ]
     }
   ],
   properties: [

@@ -54,7 +54,7 @@ export class LibraryDeletedDocumentRestoreDialog extends Component<LibraryDelete
     const { parentFolderPath, open, onClose } = this.props;
 
     return (
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open} onClose={onClose} className={cnLibraryDeletedDocumentRestoreDialog()}>
         <DialogTitle>
           Выберите папку для восстановления документа
           <div className={cnLibraryDeletedDocumentRestoreDialog('Subtitle')}>

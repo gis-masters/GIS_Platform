@@ -12,6 +12,29 @@ When(
 );
 
 When(
+  'на странице табличного представления библиотеки документов я удаляю документ с значением {string} в колонке {string}',
+  async function (value: string, field: string) {
+    await libraryRegistryBlock.deleteDocument(value, field);
+  }
+);
+
+When(
+  'в корзине удалённых документов у документа с значением {string} в колонке {string} я нажимаю кнопку {string}',
+  async function (value: string, field: string, action: string) {
+    await libraryRegistryBlock.restoreDocument(value, field, action);
+  }
+);
+
+Then(
+  'в корзине удалённых документов находится документ с значением {string} в поле {string}',
+  async function (field: string, value: string) {
+    const document = await libraryRegistryBlock.isDocumentExist(field, value);
+
+    await expect(document).toBeTruthy();
+  }
+);
+
+When(
   'в реестре документов в поле фильтра по id я ввожу идентификатор существующего документа',
   async function (this: ScenarioScope) {
     const id = this.latestLibraryRecords[1]?.id;

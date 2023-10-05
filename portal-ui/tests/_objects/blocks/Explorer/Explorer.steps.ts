@@ -21,6 +21,11 @@ When('я открываю созданный набор данных', async fun
   await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
+When('в созданной библиотеке документов я захожу в папку {string}', async (folder: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.openExplorerItem(folder);
+});
+
 When('в наборах данных я выбираю векторную таблицу {string}', async (datatable: string) => {
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.openExplorerItem(datatable);

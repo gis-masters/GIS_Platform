@@ -3,7 +3,8 @@ import { Block } from '../../Block';
 class LibraryDocumentActionsBlock extends Block {
   selectors = {
     container: '.LibraryDocumentActions',
-    edit: '.LibraryDocumentActions-Edit'
+    edit: '.LibraryDocumentActions-Edit',
+    delete: '.LibraryDocumentActions-Delete'
   };
 
   async clickEditButton(): Promise<void> {
@@ -11,6 +12,13 @@ class LibraryDocumentActionsBlock extends Block {
     await $edit.waitForClickable();
 
     await $edit.click();
+  }
+
+  async clickDeleteButton(): Promise<void> {
+    const $delete = await this.$('delete');
+    await $delete.waitForClickable();
+
+    await $delete.click();
   }
 }
 

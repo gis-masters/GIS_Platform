@@ -21,3 +21,7 @@ When(
 When('в созданной библиотеке я открываю окно редактирования созданного документа', async function () {
   await libraryDocumentActionsBlock.clickEditButton();
 });
+
+When('в созданной библиотеке у выбранного документа я нажимаю кнопку `Удалить`', async function () {
+  await libraryDocumentActionsBlock.clickDeleteButton();
+});

@@ -22,6 +22,7 @@ import { createLibraryRecordAsAdmin } from './createLibraryRecordAs';
 import { updateLibraryRecord } from './updateLibraryRecord';
 import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
 import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
+import { deleteLibraryRecord } from './deleteLibraryRecord';
 
 Given(
   'в библиотеке документов {string} существует минимум {int} документов, доступных пользователю {user}',
@@ -170,6 +171,12 @@ Given(
     }
   }
 );
+
+Given('в созданной библиотеке удален созданный документ', async function (this: ScenarioScope) {
+  if (this.latestSchema.tableName) {
+    await deleteLibraryRecord(this.latestSchema.tableName, this.latestLibraryRecords[0].id);
+  }
+});
 
 When(
   'в библиотеке документов у созданного документа я нажимаю на кнопку `Версии документа`',

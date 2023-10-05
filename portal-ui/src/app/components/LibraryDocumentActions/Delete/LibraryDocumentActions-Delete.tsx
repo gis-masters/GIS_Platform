@@ -30,6 +30,7 @@ import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 
 const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
+const cnLibraryDocumentActionsDeleteDialog = cn('LibraryDocumentActions', 'DeleteDialog');
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;
@@ -73,7 +74,7 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
         />
 
         {this.busy || Boolean(this.deleteAllowed) ? (
-          <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
+          <Dialog open={this.dialogOpen} onClose={this.closeDialog} className={cnLibraryDocumentActionsDeleteDialog()}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent className='scroll'>
               <DialogContentText>Вы действительно хотите удалить "{document.title}"?</DialogContentText>
