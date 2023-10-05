@@ -22,7 +22,7 @@ const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  schema: Schema;
+  schema?: Schema;
   as: ActionsItemVariant;
 }
 
@@ -102,24 +102,28 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
 
   @computed
   private get path(): ExplorerItemData[] | undefined {
+    if (!this.currentLibrary) {
+      return;
+    }
+
     return [{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, emptyItem];
   }
 
   @boundMethod
-  private async handleSelect(item: ExplorerItemData<LibraryRecord>) {
-    this.setSelectedFolder(item.payload);
+  private async handleSelect(item: ExplorerItemData) {
+    this.setSelectedFolder(item.payload as LibraryRecord);
     if (this.selectedFolder?.is_folder) {
       this.setDisabled(!(await isRecordUpdateAllowed(this.selectedFolder)));
     }
 
-    if (!this.selectedFolder?.is_folder && !this.selectedFolder.loading) {
+    if (!this.selectedFolder?.is_folder && !this.selectedFolder?.loading) {
       this.setDisabled(true);
     }
   }
 
   @boundMethod
   private async submitFolderSelection() {
-    await moveLibraryRecord(this.props.document, this.selectedFolder?.is_folder ? this.selectedFolder.id : null);
+    await moveLibraryRecord(this.props.document, this.selectedFolder?.is_folder ? this.selectedFolder.id : undefined);
 
     this.closeDocumentMoveDialog();
   }

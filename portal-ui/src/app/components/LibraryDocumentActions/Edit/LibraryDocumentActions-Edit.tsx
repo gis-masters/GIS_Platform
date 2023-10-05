@@ -20,7 +20,7 @@ const cnLibraryDocumentActionsEditDialog = cn('LibraryDocumentActions', 'EditDia
 
 interface LibraryDocumentActionsEditProps {
   document: LibraryRecord;
-  schema: Schema;
+  schema?: Schema;
   as: ActionsItemVariant;
 }
 

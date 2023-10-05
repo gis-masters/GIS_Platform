@@ -16,7 +16,7 @@ const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Edit');
 interface LibraryDocumentActionsSaveProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
-  onSave(created: LibraryRecord): void;
+  onSave?(created: LibraryRecord): void;
 }
 
 @observer

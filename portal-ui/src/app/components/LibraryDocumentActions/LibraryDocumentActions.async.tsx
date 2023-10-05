@@ -68,7 +68,8 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
 
   render() {
     const { as, document, className, hideOpen, forDialog, onDialogClose, onSave } = this.props;
-    const canEdit = [Role.CONTRIBUTOR, Role.OWNER].includes(this.document?.role) || currentUser.isAdmin;
+    const canEdit =
+      (this.document?.role && [Role.CONTRIBUTOR, Role.OWNER].includes(this.document.role)) || currentUser.isAdmin;
     const isFolder = this.schema?.contentTypes?.some(
       ({ id, type }) => this.document?.content_type_id === id && type === 'FOLDER'
     );
@@ -101,7 +102,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
         )}
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
         {organizationSettings.SEDDialog && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
-        {this.schema?.relations?.length > 0 && (
+        {this.schema?.relations?.length && this.schema.relations.length > 0 && (
           <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
         )}
         {!isNew && canDelete && (
@@ -124,7 +125,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
 
     document = document.role ? document : await getLibraryRecord(document.libraryTableName, document.id);
 
-    const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id);
+    const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id || '');
 
     if (this.operationId === operationId) {
       this.setData(document, schema);

@@ -33,7 +33,7 @@ const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;
-  schema: Schema;
+  schema?: Schema;
   as: ActionsItemVariant;
   onDelete?(): void;
 }

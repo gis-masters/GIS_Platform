@@ -6,14 +6,15 @@ import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { createLibraryRecord, getLibrary } from '../../../services/data/library/library.service';
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { sleep } from '../../../services/util/sleep';
-import { getDefaultValues } from '../../Form/Form.utils';
-import { Schema } from '../../../services/data/schema/schema.models';
-import { schemaService } from '../../../services/data/schema/schema.service';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { Schema } from '../../../services/data/schema/schema.models';
+import { getDefaultValues } from '../../Form/Form.utils';
+import { sleep } from '../../../services/util/sleep';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -32,7 +33,7 @@ interface ChildData {
 interface LibraryDocumentActionsCreateChildProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
-  schema: Schema;
+  schema?: Schema;
 }
 
 @observer
@@ -40,7 +41,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   @observable private childrenData: ChildData[] = [];
   @observable private currentChild?: ChildData;
   @observable private dialogOpen = false;
-  private operationId: symbol;
+  private operationId?: symbol;
   @observable private createdDocument?: LibraryRecord;
   @observable private createdDocumentDialogOpen = false;
 
@@ -51,12 +52,35 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
 
   async componentDidMount() {
     await this.init();
+
+    communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
+      const { data, type } = e.detail;
+      const { libraryTableName, id } = data;
+
+      if (this.createdDocument?.id !== id || libraryTableName !== this.createdDocument.libraryTableName) {
+        return;
+      }
+
+      if (type === 'delete') {
+        this.closeCreatedDocumentDialog();
+
+        return;
+      }
+
+      if (type === 'update') {
+        this.setCreatedDocument(await getLibraryRecord(libraryTableName, id));
+      }
+    }, this);
   }
 
   async componentDidUpdate(prevProps: LibraryDocumentActionsCreateChildProps) {
     if (this.props.document.id !== prevProps.document.id) {
       await this.init();
     }
+  }
+
+  componentWillUnmount() {
+    communicationService.libraryRecordUpdated.scopeOff(this);
   }
 
   render() {
@@ -80,13 +104,15 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
           ))}
         />
 
-        <FormDialog
-          open={this.dialogOpen}
-          onClose={this.formDialogCloseHandler}
-          schema={this.currentChild?.schema}
-          value={{ content_type_id: this.currentChild?.contentType, ...getDefaultValues(properties, document) }}
-          actionFunction={this.createDocument}
-        />
+        {this.currentChild && (
+          <FormDialog
+            open={this.dialogOpen}
+            onClose={this.formDialogCloseHandler}
+            schema={this.currentChild.schema}
+            value={{ content_type_id: this.currentChild?.contentType, ...getDefaultValues(properties, document) }}
+            actionFunction={this.createDocument}
+          />
+        )}
 
         {this.createdDocument && (
           <LibraryDocumentDialog
@@ -110,7 +136,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
     this.operationId = operationId;
     const childrenData: ChildData[] = [];
 
-    for (const { library: libraryTableName = document.libraryTableName, contentType } of schema.children) {
+    for (const { library: libraryTableName = document.libraryTableName, contentType } of schema?.children || []) {
       const library = await getLibrary(libraryTableName);
       const schema = applyContentType(await schemaService.getSchema(library.schemaId), contentType);
 
@@ -180,6 +206,9 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
 
   @boundMethod
   private async createDocument(value: LibraryRecord) {
+    if (!this.currentChild) {
+      throw new Error('Current child is not defined');
+    }
     const { library, schema } = this.currentChild;
     this.setCreatedDocument(await createLibraryRecord(value, library.table_name, schema.name));
     this.openCreatedDocumentDialog();

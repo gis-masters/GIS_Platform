@@ -15,7 +15,7 @@ const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'Fil
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  schema: Schema;
+  schema?: Schema;
   as: ActionsItemVariant;
 }
 
@@ -41,7 +41,9 @@ export class LibraryDocumentActionsFilesPlacement extends Component<LibraryDocum
           as={as}
         />
 
-        <FilesPlacementDialog document={document} schema={schema} open={this.dialogOpen} onClose={this.closeDialog} />
+        {schema && (
+          <FilesPlacementDialog document={document} schema={schema} open={this.dialogOpen} onClose={this.closeDialog} />
+        )}
       </>
     );
   }

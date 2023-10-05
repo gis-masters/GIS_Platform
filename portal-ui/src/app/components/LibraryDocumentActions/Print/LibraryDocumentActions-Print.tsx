@@ -19,7 +19,7 @@ const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActions', 'Print');
 
 interface LibraryDocumentActionsPrintProps {
   document: LibraryRecord;
-  schema: Schema;
+  schema?: Schema;
   as: ActionsItemVariant;
 }
 
@@ -74,13 +74,15 @@ export class LibraryDocumentActionsPrint extends Component<LibraryDocumentAction
   private get printTemplates(): TemplateData[] {
     const { schema } = this.props;
 
-    return schema.printTemplates
-      .map(templateName => ({
-        name: templateName,
-        title: printTemplates.find(({ name }) => name === templateName)?.title,
-        print: this.print.bind(this, templateName)
-      }))
-      .filter(({ title }) => title);
+    return (
+      schema?.printTemplates
+        ?.map(templateName => ({
+          name: templateName,
+          title: printTemplates.find(({ name }) => name === templateName)?.title || '',
+          print: this.print.bind(this, templateName)
+        }))
+        .filter(({ title }) => title) || []
+    );
   }
 
   private async print(templateName: string) {
@@ -101,7 +103,7 @@ export class LibraryDocumentActionsPrint extends Component<LibraryDocumentAction
   private async handlePrintButtonClick() {
     const { schema } = this.props;
 
-    if (schema.printTemplates.length === 1) {
+    if (schema?.printTemplates?.length === 1) {
       await this.print(schema.printTemplates[0]);
     } else {
       this.openSelectTemplateDialog();
