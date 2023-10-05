@@ -183,11 +183,15 @@ public class GisogdRfPublisher {
         List<GisogdData> allGisogdDataBySchema = new ArrayList<>();
         schemas.forEach(schemaId -> allGisogdDataBySchema.addAll(getGisogdDataBySchemaId(schemaId)));
 
-        allGisogdDataBySchema.sort(Comparator.comparing(GisogdData::getPublishOrder));
+        List<GisogdData> gisogdDataWithPositiveOrderSorted = allGisogdDataBySchema
+                .stream()
+                .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
+                .sorted(Comparator.comparing(GisogdData::getPublishOrder))
+                .collect(Collectors.toList());
 
-        log.debug("Gisogd Data sortded by order: {}", allGisogdDataBySchema);
+        log.debug("Gisogd Data sortded by order: {}", gisogdDataWithPositiveOrderSorted);
 
-        allGisogdDataBySchema
+        gisogdDataWithPositiveOrderSorted
                 .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit, srid));
 
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
