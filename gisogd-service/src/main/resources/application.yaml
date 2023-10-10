@@ -8,18 +8,29 @@ spring:
     host: localhost
     exchanges:
       exchange-receive-data:
-        name: dataToGisogdQueue
+        name: gisogdPublicationQueue
       exchange-send-data:
-        name: gisogdToDataQueue
+        name: gisogdPublicationResponseQueue
+      exchange-receive-audit-data:
+        name: gisogdAuditQueue
+      exchange-send-audit-response-data:
+        name: gisogdAuditResponseQueue
     queues:
       queue-receive-data:
-        name: dataToGisogdQueue
+        name: gisogdPublicationQueue
       queue-send-data:
-        name: gisogdToDataQueue
+        name: gisogdPublicationResponseQueue
+      queue-receive-audit-data:
+        name: gisogdAuditQueue
+      queue-send-audit-response-data:
+        name: gisogdAuditResponseQueue
     bindings:
       binding-receive-data:
         exchange: exchange-receive-data
         queue: queue-receive-data
+      binding-receive-audit-data:
+        exchange: exchange-receive-audit-data
+        queue: queue-receive-audit-data
 
   security:
     oauth2:

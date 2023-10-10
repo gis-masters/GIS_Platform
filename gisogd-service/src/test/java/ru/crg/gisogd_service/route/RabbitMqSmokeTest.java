@@ -28,8 +28,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static ru.crg.gisogd_service.route.RfRoute.CONVERT_TO_RF_OBJECT_ROUTE_ID;
 import static ru.crg.gisogd_service.route.RfRoute.MAIN_ROUTE_ID;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_GISOGD_QUEUE;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_TO_DATA_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_PUBLICATION_RESPONSE_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_PUBLICATION_QUEUE;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
@@ -59,8 +59,8 @@ class RabbitMqSmokeTest {
         portBindings.add("15672:15672");
         rabbitMQContainer.setPortBindings(portBindings);
         rabbitMQContainer
-                .withQueue(DATA_TO_GISOGD_QUEUE)
-                .withQueue(GISOGD_TO_DATA_QUEUE);
+                .withQueue(GISOGD_PUBLICATION_RESPONSE_QUEUE)
+                .withQueue(GISOGD_PUBLICATION_QUEUE);
         rabbitMQContainer.start();
 
         doAnswer(invocation -> {

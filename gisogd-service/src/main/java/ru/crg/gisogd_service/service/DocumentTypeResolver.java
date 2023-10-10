@@ -1,40 +1,33 @@
 package ru.crg.gisogd_service.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
 import ru.crg.gisogd_service.exception.DocumentTypeResolveException;
 import ru.crg.gisogd_service.model.rf.RfGuid;
 import ru.mycrg.gisog_service_contract.dto.Document;
+
+import javax.annotation.PostConstruct;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Document type resolver.
  * @author Vladimir Nomokonov
  */
 @Slf4j
-@Component("documentTypeResolver")
+@Component
 @AllArgsConstructor
 public class DocumentTypeResolver {
 
     public static final String PACKAGE_FOR_SCAN = "ru.crg.gisogd_service.converter.mixin";
-    private static final String BAD_CLASSES_MESSAGE = "The following classes do not have a nameStartWith relationship defined: %s";
+    private static final String BAD_CLASSES_MESSAGE =
+            "The following classes do not have a nameStartWith relationship defined: %s";
     private final Map<DocumentTypeRef, Pair<Class<? extends RfGuid>, Class<?>>> rfObjectTypes = new HashMap<>();
     private final Map<String, String> docLibIsToClassName = new HashMap<>();
     private final Map<Class<?>, String> gisogdEndpoints = new HashMap<>();
@@ -80,8 +73,8 @@ public class DocumentTypeResolver {
 
     /**
      * Find docLibId by className
-     * @param className
-     * @return
+     * @param className className
+     * @return docLibId
      */
     public String getDoclibIdByClassName(String className) {
         return Optional.ofNullable(docLibIsToClassName.get(className))
@@ -90,7 +83,7 @@ public class DocumentTypeResolver {
 
     /**
      * Return gidogd to crimea objects map
-     * @return
+     * @return gidogd to crimea objects map
      */
     public Map<DocumentTypeRef, Pair<Class<? extends RfGuid>, Class<?>>> getMapRfObjects() {
         return Collections.unmodifiableMap(rfObjectTypes);
@@ -113,7 +106,7 @@ public class DocumentTypeResolver {
                 }
                 gisogdEndpoints.put(resolveProps.objectClass(),
                                     StringUtils.isNotBlank(resolveProps.endpoint()) ? resolveProps.endpoint()
-                                                                                    : resolveProps.objectClass().getSimpleName());
+                                            : resolveProps.objectClass().getSimpleName());
             }
         });
         log.info("Found GISOGD mixins handlers: " + rfObjectTypes.size());

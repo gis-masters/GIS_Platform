@@ -64,8 +64,6 @@ public class MessageBusProperties {
     public static final String INTEGRATION_TO_DATA_QUEUE = "IntegrationToDataQueue";
     public static final String DATA_TO_GEO_WRAPPER_QUEUE = "dataToGeoWrapperQueue";
     public static final String GEO_WRAPPER_TO_DATA_QUEUE = "GeoWrapperToDataQueue";
-    public static final String DATA_TO_GISOGD_QUEUE = "dataToGisogdQueue";
-    public static final String GISOGD_TO_DATA_QUEUE = "gisogdToDataQueue";
 
     // Auth publish/subscribe
     public static final String AUTH_TO_DATA_QUEUE = "authToDataQueue";
@@ -73,4 +71,11 @@ public class MessageBusProperties {
     public static final String AUTH_TO_INTEGRATION_QUEUE = "authToIntegrationQueue";
     public static final String ORG_SETTINGS_FANOUT = "orgSettingsFanout";
     public static final String ORG_SETTINGS_KEY = "orgSettingsFanoutKey";
+
+    // GisogdRf
+    public static final String GISOGD_PUBLICATION_QUEUE = "gisogdPublicationQueue";
+    public static final String GISOGD_PUBLICATION_RESPONSE_QUEUE = "gisogdPublicationResponseQueue";
+
+    public static final String GISOGD_AUDIT_QUEUE = "gisogdAuditQueue";
+    public static final String GISOGD_AUDIT_RESPONSE_QUEUE = "gisogdAuditResponseQueue";
 }

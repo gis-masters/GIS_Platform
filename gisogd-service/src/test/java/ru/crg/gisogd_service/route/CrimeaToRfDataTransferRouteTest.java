@@ -1,18 +1,11 @@
 package ru.crg.gisogd_service.route;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
-import static ru.crg.gisogd_service.route.RfRoute.CONVERT_TO_RF_OBJECT_ROUTE_ID;
-import static ru.crg.gisogd_service.route.RfRoute.MAIN_ROUTE_ID;
-import static ru.crg.gisogd_service.route.RfRoute.PREPARE_RESPONSE_ROUTE_ID;
-import static ru.crg.gisogd_service.route.RfRoute.RESPONSE_TO_QUEUE_ROUTE_ID;
-
-import java.util.HashMap;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
+import feign.Request;
+import feign.RequestTemplate;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Produce;
@@ -29,19 +22,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.FeignException;
-import feign.Request;
-import feign.RequestTemplate;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.model.rf.Customer;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Status;
+
+import java.util.HashMap;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static ru.crg.gisogd_service.route.RfRoute.*;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 @SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
@@ -143,7 +137,7 @@ class CrimeaToRfDataTransferRouteTest {
 
         Resource resourceFile = new ClassPathResource("event/dataSection1Event.json");
         PublishToGisogdRfEvent event = objectMapper.readValue(resourceFile.getFile(), PublishToGisogdRfEvent.class);
-       producerTemplate.sendBody(event);
+        producerTemplate.sendBody(event);
 
         mockEndpoint.assertIsSatisfied();
         mockEndpoint.expectedMessageCount(1);

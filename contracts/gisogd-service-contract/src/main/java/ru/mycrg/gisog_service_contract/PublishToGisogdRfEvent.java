@@ -6,7 +6,7 @@ import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 import java.util.List;
 import java.util.UUID;
 
-import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_GISOGD_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.GISOGD_PUBLICATION_QUEUE;
 
 public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
 
@@ -24,7 +24,7 @@ public class PublishToGisogdRfEvent extends DefaultMessageBusRequestEvent {
                                   Long taskId,
                                   Document parent,
                                   List<Document> children) {
-        super(UUID.randomUUID(), DATA_TO_GISOGD_QUEUE);
+        super(UUID.randomUUID(), GISOGD_PUBLICATION_QUEUE);
 
         this.taskId = taskId;
         this.orgId = orgId;

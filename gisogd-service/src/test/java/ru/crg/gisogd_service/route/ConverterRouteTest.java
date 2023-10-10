@@ -91,6 +91,5 @@ class ConverterRouteTest {
 
         InboxData inboxData = (InboxData) result;
         assertEquals(inboxData.getGuid(), guid);
-
     }
 }

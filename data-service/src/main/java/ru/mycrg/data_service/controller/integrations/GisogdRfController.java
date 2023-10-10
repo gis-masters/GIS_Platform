@@ -54,6 +54,17 @@ public class GisogdRfController {
         return ResponseEntity.status(CREATED).body(taskId);
     }
 
+    @PostMapping("/audit")
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> audit(@RequestParam String entityName,
+                                        @RequestParam Long entityId) {
+        ResourceQualifier qualifier = makeQualifier(entityName, entityId);
+
+        gisogdRfPublisher.audit(qualifier);
+
+        return ResponseEntity.status(CREATED).body(qualifier);
+    }
+
     private ResourceQualifier makeQualifier(String entityName, Long entityId) {
         if (entityName.equalsIgnoreCase(INBOX_MARKER)) {
             return new ResourceQualifier(TASK_QUALIFIER, entityId, TASK);

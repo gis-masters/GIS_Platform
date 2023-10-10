@@ -37,7 +37,7 @@ import static ru.crg.gisogd_service.route.DocumentRoute.*;
 @CamelSpringBootTest
 @ActiveProfiles(value = "doclist")
 @Disabled
-class DocumentsListTest {
+class DocumentRouteLibraryTest {
 
     private final CamelContext camelContext;
     private final ObjectMapper objectMapper;

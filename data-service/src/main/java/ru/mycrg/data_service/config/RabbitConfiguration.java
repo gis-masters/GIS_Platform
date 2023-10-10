@@ -68,8 +68,11 @@ public class RabbitConfiguration {
     @Bean public Queue dataToGeoWrapperQueue() { return new Queue(DATA_TO_GEO_WRAPPER_QUEUE);}
     @Bean public Queue geoWrapperToDataQueue() { return new Queue(GEO_WRAPPER_TO_DATA_QUEUE);}
 
-    @Bean public Queue dataToGisogdQueue() { return new Queue(DATA_TO_GISOGD_QUEUE);}
-    @Bean public Queue gisogdToDataQueue() { return new Queue(GISOGD_TO_DATA_QUEUE);}
+    @Bean public Queue gisogdPublicationQueue() { return new Queue(GISOGD_PUBLICATION_QUEUE);}
+    @Bean public Queue gisogdPublicationResponseQueue() { return new Queue(GISOGD_PUBLICATION_RESPONSE_QUEUE);}
+
+    @Bean public Queue gisogdAuditQueue() { return new Queue(GISOGD_AUDIT_QUEUE);}
+    @Bean public Queue gisogdAuditResponseQueue() { return new Queue(GISOGD_AUDIT_RESPONSE_QUEUE);}
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {

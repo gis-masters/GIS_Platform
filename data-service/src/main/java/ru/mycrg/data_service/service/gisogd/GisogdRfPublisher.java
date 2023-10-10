@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.gisogd;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.dto.TypeUrlData;
+import ru.mycrg.gisog_service_contract.AuditGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.mediator.Mediator;
@@ -197,6 +197,32 @@ public class GisogdRfPublisher {
         log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
 
         return taskId;
+    }
+
+    public void audit(ResourceQualifier qualifier) {
+        IRecord parent = baseDao
+                .findById(qualifier)
+                .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
+        String guid = parent.getAsString(GUID.getName());
+        if (guid == null) {
+            String msg = String.format("В документе [%s] не найдено поле 'guid'", qualifier.getQualifier());
+            log.debug(msg);
+
+            throw new BadRequestException(msg);
+        }
+
+        AuditGisogdRfEvent event = new AuditGisogdRfEvent(
+                authenticationFacade.getOrganizationId(),
+                new Document(fromString(guid),
+                             qualifier.getSchema(),
+                             qualifier.getTable(),
+                             parent.getAsString(CONTENT_TYPE_ID.getName()),
+                             parent.getContent())
+        );
+
+        log.debug("Publish audit event: [{}]", asJsonString(event));
+
+        messageBus.produce(event);
     }
 
     private void removeFields(Map<String, Object> documentContent) {
@@ -641,29 +667,6 @@ public class GisogdRfPublisher {
         }
 
         return result;
-    }
-
-    @Nullable
-    private Document fetchInbox(ResourceQualifier qualifier, IRecord record) {
-        String inboxGuid = record.getAsString("inbox_data_key");
-        if (inboxGuid == null) {
-            log.debug("Поле inbox_data_key не заполнено для объекта: " + qualifier.getQualifier());
-
-            return null;
-        }
-
-        ResourceQualifier taskQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, inboxGuid, TASK);
-        IRecord inbox = baseDao
-                .findBy(taskQualifier, "guid = '" + inboxGuid + "'")
-                .orElseThrow(() -> new IllegalStateException("Не найдено входящее сообщение: " + inboxGuid));
-
-        String guid = inbox.getAsString(GUID.getName());
-
-        return new Document((guid != null) ? java.util.UUID.fromString(guid) : null,
-                            SYSTEM_SCHEMA_NAME,
-                            INBOX_MARKER,
-                            INBOX_MARKER,
-                            inbox.getContent());
     }
 
     private List<String> getSchemasPublishedToGisogdRf(String targetProperty) {

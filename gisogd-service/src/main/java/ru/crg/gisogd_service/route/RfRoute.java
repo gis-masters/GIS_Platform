@@ -128,7 +128,7 @@ public class RfRoute extends RouteBuilder {
                 /**//**/.to("direct:send-data-endpoint")
                 .end()
                 .setHeader(STATUS, constant(Status.SUCCESS))
-                .log(LoggingLevel.INFO, "Status.SUCCESS");
+                .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "${header.status}");
 
         from("direct:send-data-endpoint")
                 .bean(enrichService)
@@ -168,7 +168,7 @@ public class RfRoute extends RouteBuilder {
                 .marshal().json()
                 .to("spring-rabbitmq:default?messagePropertiesConverter=#bean:propertiesConverter&routingKey="
                             + responseQueueName)
-                .log(LoggingLevel.INFO, log, MAIN_ROUTE_ID, "response to queue: ${body}");
+                .log(LoggingLevel.INFO, log, RESPONSE_TO_QUEUE_ROUTE_ID, "response to queue: ${body}");
     }
 
 }
