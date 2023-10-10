@@ -48,6 +48,7 @@ public class SimplePropertyDto {
     private String calculatedValueFormula;
     private String validationFormula;
     private String calculatedValueWellKnownFormula;
+    private String defaultValueWellKnownFormula;
 
     public String getName() {
         return name;
@@ -335,5 +336,13 @@ public class SimplePropertyDto {
 
     public void setCalculatedValueWellKnownFormula(String calculatedValueWellKnownFormula) {
         this.calculatedValueWellKnownFormula = calculatedValueWellKnownFormula;
+    }
+
+    public String getDefaultValueWellKnownFormula() {
+        return defaultValueWellKnownFormula;
+    }
+
+    public void setDefaultValueWellKnownFormula(String defaultValueWellKnownFormula) {
+        this.defaultValueWellKnownFormula = defaultValueWellKnownFormula;
     }
 }

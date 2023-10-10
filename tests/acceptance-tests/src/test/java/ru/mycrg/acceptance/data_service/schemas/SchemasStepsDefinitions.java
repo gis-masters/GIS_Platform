@@ -209,6 +209,30 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 createSchema(schemaWithOrder123);
 
                 break;
+            case "с полем типа UUID, в котором указан параметр 'defaultValueWellKnownFormula'":
+                SchemaDto schemaWithUuidFiled = prepareSchemaTarget();
+                schemaWithUuidFiled.setTableName("schemaWithUuidFiled");
+                schemaWithUuidFiled.setName("schemaWithUuidFiled");
+                schemaWithUuidFiled.setTitle("с полем типа UUID, указан параметр 'defaultValueWellKnownFormula'");
+
+                SimplePropertyDto uuidProperty = new SimplePropertyDto();
+                uuidProperty.setName("guid");
+                uuidProperty.setTitle("guid");
+                uuidProperty.setValueType("UUID");
+                uuidProperty.setDefaultValueWellKnownFormula("UUID");
+
+                SimplePropertyDto path = new SimplePropertyDto();
+                path.setName("path");
+                path.setTitle("path");
+                path.setValueType("STRING");
+
+                List<SimplePropertyDto> properties = schemaWithUuidFiled.getProperties();
+                properties.add(uuidProperty);
+                properties.add(path);
+
+                createSchema(schemaWithUuidFiled);
+
+                break;
             default:
                 throw new IllegalStateException("Unknown schema: " + schemaTemplate);
         }

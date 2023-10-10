@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
@@ -236,6 +237,13 @@ public class SqlBuilder {
                 result = attrDescription.getName() + " boolean default " + parseBoolean;
                 break;
             case UUID:
+                Object defaultValueWellKnownFormula = attrDescription.getDefaultValueWellKnownFormula();
+                String generationUUID = " uuid default uuid_in(md5(random()::text || random()::text)::cstring)";
+                if (nonNull(defaultValueWellKnownFormula) && defaultValueWellKnownFormula.equals("UUID")) {
+                    result = attrDescription.getName() + generationUUID;
+                    break;
+                }
+
                 result = attrDescription.getName() + " uuid";
                 break;
             default:

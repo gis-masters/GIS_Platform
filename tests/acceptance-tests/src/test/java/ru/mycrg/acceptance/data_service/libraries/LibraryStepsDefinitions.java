@@ -82,6 +82,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         createDocumentLibraryByAdmin();
     }
 
+    @When("Существует библиотека документов по текущей схеме")
+    public void createRandomDocumentLibraryByAdminByCurrentSchema() {
+        currentLibraryModel = null;
+
+        createDocumentLibraryByAdmin();
+    }
+
     @When("Существует библиотека документов с включённым версионированием")
     public void createDocumentLibraryWithVersioning() {
         if (Objects.isNull(currentLibraryWithVersioningModel)) {
@@ -180,7 +187,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     @Given("В текущей библиотеке существует документ с полем {string} заполненным {string}")
-    public void initRecordInCurrentLibrary(String filedName, String fieldValue) throws InterruptedException {
+    public void initRecordInCurrentLibraryWithFields(String filedName, String fieldValue) throws InterruptedException {
         String body = String.format("{\"%s\": \"%s\"}", filedName, fieldValue);
         createDocument(body, currentLibraryTableName);
 
@@ -191,7 +198,15 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
-    @Given("Пользователь создает документ")
+    @Given("Пользователь создает документ в текущей библиотеке")
+    public void initRecordInCurrentLibrary() throws InterruptedException {
+        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
+        createDocument(body, currentLibraryTableName);
+
+        assertEquals(201, response.getStatusCode());
+    }
+
+    @Given("Пользователь создает документ в библиотеке по умолчанию")
     public void currentUserCreateRecordInDefaultLibrary() {
         String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
         createDocument(body, DEFAULT_LIBRARY);
@@ -270,6 +285,16 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String newTitle = response.jsonPath().get("title");
 
         assertEquals("new title", newTitle);
+    }
+
+    @Then("Поле 'guid' было автоматически сгенерировано")
+    public void checkGuidField() {
+        getCurrentDocumentInCurrentLibrary();
+
+        String guid = response.jsonPath().get("guid");
+        assertTrue(Objects.nonNull(guid));
+        assertFalse(guid.isEmpty());
+        assertEquals(36, guid.length());
     }
 
     @Then("Поле 'last_modified' заполнилось датой создания")
@@ -574,7 +599,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void getCurrentRecordInLibrary() {
         authorizationBase.loginAsCurrentUser();
 
-        getRecordById(folder11Id);
+        getRecordById(folder11Id, DEFAULT_LIBRARY);
     }
 
     @And("Удалённая запись НЕ возвращается в теле ответа")
@@ -603,7 +628,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Удаленная запись восстановлена")
     public void checkThatRemovedDocumentIsRecover() {
-        getRecordById(currentDocumentId);
+        getRecordById(currentDocumentId, DEFAULT_LIBRARY);
 
         boolean isDeleted = Boolean.parseBoolean(response.jsonPath().get("is_deleted").toString());
 
@@ -695,7 +720,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Then("Перенос записи {int} выполнен успешно")
     public void checkFilePath(int recordId) {
-        getRecordById(recordId);
+        getRecordById(recordId, DEFAULT_LIBRARY);
 
         checkResponseValue("path", "/root/4/10/11/13");
     }
@@ -738,7 +763,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         body(body).
                         contentType(ContentType.JSON)
                 .when().
-                        log().ifValidationFails().
+                        log().all().
                         post();
     }
 
@@ -774,13 +799,17 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     private void getCurrentDocument() {
-        getRecordById(currentDocumentId);
+        getRecordById(currentDocumentId, DEFAULT_LIBRARY);
     }
 
-    private void getRecordById(Integer id) {
+    private void getCurrentDocumentInCurrentLibrary() {
+        getRecordById(currentDocumentId, currentLibraryTableName);
+    }
+
+    private void getRecordById(Integer id, String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/%s/records/%d", DEFAULT_LIBRARY, id));
+                       get(String.format("/%s/records/%d", libraryId, id));
     }
 
     private void createDocument(String body, String libraryId) {
@@ -789,7 +818,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         contentType("multipart/form-data").
                         multiPart("body", body)
                 .when().
-                        log().ifValidationFails().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);
