@@ -1,10 +1,11 @@
 import { LibraryRecord } from '../library/library.models';
 
 import {
+  allCompoundFilesTypes,
   allShapeFilesTypes,
   allTabFilesTypes,
   FileInfo,
-  FileType,
+  CompoundFileTypes,
   midMifRequiredFilesTypes,
   optionalShapeFilesTypes,
   optionalTabFilesTypes,
@@ -121,10 +122,10 @@ function isFileInfo(object: Partial<FileInfo>): boolean {
   );
 }
 
-export function getMissingCompoundFileTypes(files: FileInfo[]): FileType[] {
+export function getMissingCompoundFileTypes(files: FileInfo[]): CompoundFileTypes[] {
   const filesTypes = new Set(files.map(fileInfo => normalizeExtension(getFileExtension(fileInfo.title))));
-  let missingTypes: FileType[] = [];
-  const fileExtension = normalizeExtension(getFileExtension(files[0].title)) as FileType;
+  let missingTypes: CompoundFileTypes[] = [];
+  const fileExtension = normalizeExtension(getFileExtension(files[0].title)) as CompoundFileTypes;
 
   if (shapeRequiredFilesTypes.includes(fileExtension)) {
     missingTypes = shapeRequiredFilesTypes
@@ -155,12 +156,16 @@ export function getMissingCompoundFileTypes(files: FileInfo[]): FileType[] {
   return missingTypes;
 }
 
+export function isFilePartOfCompoundTypeFiles(file: FileInfo): boolean {
+  return allCompoundFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
+}
+
 export function isFilePartOfCompoundShapeTypeFile(file: FileInfo): boolean {
-  return allShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+  return allShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
 }
 
 export function isFilePartOfOptionalCompoundShapeTypeFile(file: FileInfo): boolean {
-  return optionalShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+  return optionalShapeFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
 }
 
 export function getCompoundShapeTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {
@@ -174,11 +179,11 @@ export function getCompoundShapeTypeFiles(file: FileInfo, files: FileInfo[]): Fi
 }
 
 export function isFilePartOfCompoundTabTypeFile(file: FileInfo): boolean {
-  return allTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+  return allTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
 }
 
 export function isFilePartOfOptionalCompoundTabTypeFile(file: FileInfo): boolean {
-  return optionalTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+  return optionalTabFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
 }
 
 export function getCompoundTabTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {
@@ -192,7 +197,7 @@ export function getCompoundTabTypeFiles(file: FileInfo, files: FileInfo[]): File
 }
 
 export function isFilePartOfCompoundMidTypeFile(file: FileInfo): boolean {
-  return midMifRequiredFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as FileType);
+  return midMifRequiredFilesTypes.includes(normalizeExtension(getFileExtension(file.title)) as CompoundFileTypes);
 }
 
 export function getCompoundMidTypeFiles(file: FileInfo, files: FileInfo[]): FileInfo[] {

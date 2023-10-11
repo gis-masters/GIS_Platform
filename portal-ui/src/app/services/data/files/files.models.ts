@@ -22,7 +22,7 @@ export enum CompoundMainFiles {
   MID = 'mid'
 }
 
-export enum FileType {
+export enum CompoundFileTypes {
   SHP = 'shp',
   SHX = 'shx',
   DBF = 'dbf',
@@ -45,49 +45,82 @@ export enum FileType {
   MIF = 'mif'
 }
 
-export const allShapeFilesTypes: Partial<FileType>[] = [
-  FileType.SHP,
-  FileType.SHX,
-  FileType.DBF,
-  FileType.PRJ,
-  FileType.SBN,
-  FileType.SBX,
-  FileType.FBN,
-  FileType.FBX,
-  FileType.AIN,
-  FileType.IXS,
-  FileType.MXS,
-  FileType.ATX,
-  FileType.XML
+export const allCompoundFilesTypes: CompoundFileTypes[] = [
+  CompoundFileTypes.SHP,
+  CompoundFileTypes.SHX,
+  CompoundFileTypes.DBF,
+  CompoundFileTypes.PRJ,
+  CompoundFileTypes.SBN,
+  CompoundFileTypes.SBX,
+  CompoundFileTypes.FBN,
+  CompoundFileTypes.FBX,
+  CompoundFileTypes.AIN,
+  CompoundFileTypes.IXS,
+  CompoundFileTypes.MXS,
+  CompoundFileTypes.ATX,
+  CompoundFileTypes.XML,
+  CompoundFileTypes.TAB,
+  CompoundFileTypes.DAT,
+  CompoundFileTypes.MAP,
+  CompoundFileTypes.ID,
+  CompoundFileTypes.IND,
+  CompoundFileTypes.MID,
+  CompoundFileTypes.MIF
 ];
 
-export const shapeRequiredFilesTypes: Partial<FileType>[] = [FileType.SHP, FileType.SHX, FileType.DBF, FileType.PRJ];
-
-export const optionalShapeFilesTypes: Partial<FileType>[] = [
-  FileType.SBN,
-  FileType.SBX,
-  FileType.FBN,
-  FileType.FBX,
-  FileType.AIN,
-  FileType.IXS,
-  FileType.MXS,
-  FileType.ATX,
-  FileType.XML
+export const allShapeFilesTypes: Partial<CompoundFileTypes>[] = [
+  CompoundFileTypes.SHP,
+  CompoundFileTypes.SHX,
+  CompoundFileTypes.DBF,
+  CompoundFileTypes.PRJ,
+  CompoundFileTypes.SBN,
+  CompoundFileTypes.SBX,
+  CompoundFileTypes.FBN,
+  CompoundFileTypes.FBX,
+  CompoundFileTypes.AIN,
+  CompoundFileTypes.IXS,
+  CompoundFileTypes.MXS,
+  CompoundFileTypes.ATX,
+  CompoundFileTypes.XML
 ];
 
-export const allTabFilesTypes: Partial<FileType>[] = [
-  FileType.TAB,
-  FileType.DAT,
-  FileType.MAP,
-  FileType.ID,
-  FileType.IND
+export const shapeRequiredFilesTypes: Partial<CompoundFileTypes>[] = [
+  CompoundFileTypes.SHP,
+  CompoundFileTypes.SHX,
+  CompoundFileTypes.DBF,
+  CompoundFileTypes.PRJ
 ];
 
-export const tabRequiredFilesTypes: Partial<FileType>[] = [FileType.TAB, FileType.DAT, FileType.MAP, FileType.ID];
+export const optionalShapeFilesTypes: Partial<CompoundFileTypes>[] = [
+  CompoundFileTypes.SBN,
+  CompoundFileTypes.SBX,
+  CompoundFileTypes.FBN,
+  CompoundFileTypes.FBX,
+  CompoundFileTypes.AIN,
+  CompoundFileTypes.IXS,
+  CompoundFileTypes.MXS,
+  CompoundFileTypes.ATX,
+  CompoundFileTypes.XML
+];
 
-export const optionalTabFilesTypes: Partial<FileType>[] = [FileType.IND];
+export const allTabFilesTypes: Partial<CompoundFileTypes>[] = [
+  CompoundFileTypes.TAB,
+  CompoundFileTypes.DAT,
+  CompoundFileTypes.MAP,
+  CompoundFileTypes.ID,
+  CompoundFileTypes.IND
+];
 
-export const midMifRequiredFilesTypes: Partial<FileType>[] = [FileType.MID, FileType.MIF];
+export const tabRequiredFilesTypes: Partial<CompoundFileTypes>[] = [
+  CompoundFileTypes.TAB,
+  CompoundFileTypes.DAT,
+  CompoundFileTypes.MAP,
+  CompoundFileTypes.ID
+];
+
+export const optionalTabFilesTypes: Partial<CompoundFileTypes>[] = [CompoundFileTypes.IND];
+
+export const midMifRequiredFilesTypes: Partial<CompoundFileTypes>[] = [CompoundFileTypes.MID, CompoundFileTypes.MIF];
 
 export const compoundFileFullType: Record<string, string> = {
   shp: 'Shapefile',

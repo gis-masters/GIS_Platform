@@ -19,7 +19,8 @@ import {
   getCompoundShapeTypeFiles,
   getCompoundTabTypeFiles,
   isFilePartOfOptionalCompoundShapeTypeFile,
-  isFilePartOfOptionalCompoundTabTypeFile
+  isFilePartOfOptionalCompoundTabTypeFile,
+  isFilePartOfCompoundTypeFiles
 } from '../../services/data/files/files.util';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
@@ -385,7 +386,10 @@ export default class Files extends Component<FilesProps> {
       }
     }
 
-    return [singularFiles.filter(file => !compoundFiles[getFileBaseName(file.title)]), compoundFiles];
+    return [
+      singularFiles.filter(file => !compoundFiles[getFileBaseName(file.title)] || !isFilePartOfCompoundTypeFiles(file)),
+      compoundFiles
+    ];
   }
 
   private setCompoundFiles(

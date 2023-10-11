@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
-import { reverse } from 'lodash';
 
 import { DocumentVersionExtended, LibraryRecord } from '../../../../services/data/library/library.models';
 import { getDocumentVersions } from '../../../../services/data/library/library.service';
@@ -62,6 +61,8 @@ export class ExplorerAdapterTypeDocumentVersionsRoot {
       documentVersions.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
     const pageEnd = pageStart + pageOptions.pageSize;
 
-    return [reverse(documentVersions.slice(pageStart, pageEnd)), pagesCount];
+    documentVersions.reverse();
+
+    return [documentVersions.slice(pageStart, pageEnd), pagesCount];
   }
 }

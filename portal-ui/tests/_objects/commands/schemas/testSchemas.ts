@@ -17,6 +17,7 @@ import { withSimpleContentType } from './testSchemas/withSimpleContentType';
 import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
 import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
+import { dlDataWithSimpleContentType } from './testSchemas/dlDataWithSimpleContentType';
 import { withFile } from './testSchemas/withFiles';
 
 const testSchemas: Schema[] = [
@@ -35,6 +36,7 @@ const testSchemas: Schema[] = [
   withDefinitionQuery,
   documentWithDocumentField,
   withInappropriateStyleName,
+  dlDataWithSimpleContentType,
   withoutViews,
   withFile,
   withViews
