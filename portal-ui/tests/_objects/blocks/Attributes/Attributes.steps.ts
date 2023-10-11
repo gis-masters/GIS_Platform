@@ -173,14 +173,12 @@ Then(
   async function (this: ScenarioScope, attributeTitle: string, pageNumber: string) {
     const defaultPageSize = 20;
 
-    const featureProperties = this.latestFeatures.map(feature => {
-      return feature.properties;
-    });
+    const featuresProperties = this.latestFeatures.map(feature => feature.properties);
     const property = getSchemaPropertyByTitle(this.latestSchema, attributeTitle);
     const start = defaultPageSize * (Number(pageNumber) - 1);
     const end = defaultPageSize * Number(pageNumber);
 
-    const result = sortObjects(featureProperties, property.name, true)
+    const result = sortObjects(featuresProperties, property.name, true)
       .slice(start, end)
       .map(prop => {
         return String(prop[property.name]);

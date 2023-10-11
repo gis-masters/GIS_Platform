@@ -1,14 +1,21 @@
+import { addValueToPool, getValueFromPool } from '@wdio/shared-store-service';
+
 import { createTestUsers, createTestUsersInOtherOrganization } from './createTestUsers';
-import { sleep } from '../../../../src/app/services/util/sleep';
 import { createOrganization } from './createOrganization';
 import { TestUser, getTestUser } from './testUsers';
 import { getUserToken } from './getUserToken';
 
 export async function createTestOrganizations(): Promise<void> {
+  let workerFreed = false;
+  do {
+    try {
+      workerFreed = Boolean(await getValueFromPool('creatingOrganizationWorkerFree'));
+      await browser.pause(1000);
+    } catch {}
+  } while (!workerFreed);
+
   const admin = getTestUser('Администратор организации');
   const otherAdmin = getTestUser('Администратор другой организации');
-
-  await sleep(5000 * ((global.testOrganizationIndex || 1) - 1));
 
   await createOrganization(admin);
   await waitForToken(admin);
@@ -18,10 +25,12 @@ export async function createTestOrganizations(): Promise<void> {
 
   await createTestUsers();
   await createTestUsersInOtherOrganization();
+
+  await addValueToPool('creatingOrganizationWorkerFree', true);
 }
 
 async function waitForToken(user: TestUser): Promise<string> {
-  const limit = 20;
+  const limit = 60;
 
   for (let i = 0; i < limit; i++) {
     try {

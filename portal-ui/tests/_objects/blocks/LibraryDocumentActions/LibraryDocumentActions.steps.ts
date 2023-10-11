@@ -15,6 +15,7 @@ When(
   'в библиотеке документов в окне редактирования созданного документа я нажимаю кнопку `Сохранить`',
   async function () {
     await libraryDocumentActionsEditDialogBlock.clickSave();
+    await libraryDocumentActionsEditDialogBlock.waitForHidden();
   }
 );
 

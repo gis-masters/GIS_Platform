@@ -14,6 +14,8 @@ export const config: Options.Testrunner = {
   specs: ['./**/*.feature'],
 
   onPrepare: async function (config: Options.Testrunner) {
+    await setResourcePool('creatingOrganizationWorkerFree', [true]);
+
     // array of ascending numbers from 1 to config.maxInstances
     const availableOrganizations = Array.from({ length: config.maxInstances || 1 }, (_, i) => i + 1);
     await setResourcePool('availableOrganizations', availableOrganizations);

@@ -31,12 +31,12 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
         break;
       }
       case PropertyType.FLOAT: {
-        result[name] = faker.datatype.float();
+        result[name] = faker.number.float({ min: 0, max: 99_999, precision: 0.01 });
 
         break;
       }
       case PropertyType.INT: {
-        result[name] = faker.datatype.number();
+        result[name] = faker.number.int({ min: 0, max: 99_999 });
 
         break;
       }
@@ -46,13 +46,13 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
         break;
       }
       case PropertyType.FILE: {
-        const filesCount = Number(faker.random.numeric());
+        const filesCount = Number(faker.string.numeric());
         const files = [];
 
         for (let i = 0; i < filesCount; i++) {
           files.push({
-            id: faker.datatype.uuid(),
-            size: faker.datatype.number(),
+            id: faker.string.uuid(),
+            size: faker.number.int({ min: 0, max: 99_999 }),
             title: `${faker.hacker.noun()}.fiz`
           });
         }
@@ -62,15 +62,16 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
         break;
       }
       case PropertyType.DOCUMENT: {
-        result[
-          name
-        ] = `[{"id":${faker.datatype.number()},"title":"${faker.hacker.adjective()}","libraryTableName":"${faker.hacker.ingverb()}"}]`;
+        const id = faker.number.int({ min: 0, max: 99_999 });
+        const tableName = faker.hacker.ingverb();
+
+        result[name] = `[{"id":${id},"title":"${faker.hacker.adjective()}","libraryTableName":"${tableName}"}]`;
 
         break;
       }
       default: {
         if (logLevel()) {
-          console.warn(`generateRandomProperties не поддерживает тип поля: ${propertyType}`);
+          console.warn(`generateObjectBySchema не поддерживает тип поля: ${propertyType}`);
         }
       }
     }
