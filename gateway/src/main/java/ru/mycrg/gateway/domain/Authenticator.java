@@ -11,15 +11,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
+import ru.mycrg.auth_service_contract.dto.UserInfoModel;
+import ru.mycrg.gateway.exceptions.CrgGatewayException;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.nonNull;
+import static ru.mycrg.auth_facade.JwtDetails.VERSION;
 
 @Log4j2
 @Service
@@ -46,6 +50,8 @@ public class Authenticator {
         final JwtToken token = oToken.get();
         try {
             final Claims claims = validateToken(token);
+
+            checkIfTokenNeedUpdated(token, claims);
 
             if (setAuthentication(claims)) {
                 return new AuthConclusion(token, "authByAccessToken");
@@ -80,7 +86,7 @@ public class Authenticator {
                 return new AuthConclusion(token, "IncorrectClaims");
             }
         } catch (Exception e) {
-            log.error("Error authentication: {}", e.getCause().getMessage());
+            log.error("Error authentication: {}", e.getMessage());
 
             return new AuthConclusion(null, "error");
         }
@@ -114,6 +120,19 @@ public class Authenticator {
         }
 
         return result;
+    }
+
+    private void checkIfTokenNeedUpdated(JwtToken token, Claims claims) throws HttpClientException {
+        UserInfoModel currentUser = authClient.getCurrentUser(token.getAccess_token());
+        log.debug("Пользователь {}", currentUser);
+        if (!currentUser.isEnabled()) {
+            throw new CrgGatewayException("Пользователь не активен");
+        }
+        Short userVersion = currentUser.getVersion();
+        Short tokenVersion = claims.get(VERSION, Short.class);
+        if (nonNull(userVersion) && !userVersion.equals(tokenVersion)) {
+            throw new ExpiredJwtException(null, claims, "Токен пользователя устарел");
+        }
     }
 
     @NotNull

@@ -42,6 +42,7 @@ public class GroupService {
 
     private final Validator validator;
     private final GroupRepository groupRepository;
+    private final UserService userService;
     private final ProjectionFactory projectionFactory;
     private final OrganizationRepository orgRepository;
     private final IAuthenticationFacade authenticationFacade;
@@ -49,11 +50,13 @@ public class GroupService {
 
     public GroupService(Validator validator,
                         GroupRepository groupRepository,
+                        UserService userService,
                         ProjectionFactory projectionFactory,
                         IAuthenticationFacade authenticationFacade,
                         OrganizationRepository orgRepository,
                         MessageBusProducer messageBus) {
         this.validator = validator;
+        this.userService = userService;
         this.orgRepository = orgRepository;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
@@ -117,6 +120,8 @@ public class GroupService {
         group.addUser(user);
 
         groupRepository.save(group);
+
+        userService.userVersionUpdate(userId);
     }
 
     public void removeUser(Long groupId, Long userId) {
@@ -128,6 +133,8 @@ public class GroupService {
                 .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
         group.removeUser(userId);
+
+        userService.userVersionUpdate(userId);
     }
 
     public void update(Long groupId, GroupUpdateDto dto) {

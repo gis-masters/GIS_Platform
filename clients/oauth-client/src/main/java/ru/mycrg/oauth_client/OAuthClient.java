@@ -3,6 +3,7 @@ package ru.mycrg.oauth_client;
 import com.google.gson.reflect.TypeToken;
 import okhttp3.*;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
+import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.config.RetryConfig;
@@ -119,6 +120,23 @@ public class OAuthClient {
             return response.getBody();
         } catch (HttpClientException | IOException e) {
             throw new HttpClientException("Ошибка выборки организаций для пользователя: " + username);
+        }
+    }
+
+    public UserInfoModel getCurrentUser(String accessToken) throws HttpClientException {
+        try {
+            Request request = new Request.Builder()
+                    .url(new URL(baseUrl, "/users/current"))
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .addHeader("Content-Type", "application/json")
+                    .get()
+                    .build();
+
+            ResponseModel<UserInfoModel> response = httpClient.handleRequest(request, UserInfoModel.class);
+
+            return response.getBody();
+        } catch (HttpClientException | IOException e) {
+            throw new HttpClientException("Ошибка получения текущего пользователя: ");
         }
     }
 

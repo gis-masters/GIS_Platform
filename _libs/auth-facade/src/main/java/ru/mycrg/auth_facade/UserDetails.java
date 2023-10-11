@@ -12,6 +12,7 @@ public class UserDetails {
     private List<Long> minions = new ArrayList<>();
     private List<Long> directMinions = new ArrayList<>();
     private String crgLogin;
+    private Short version;
 
     public UserDetails() {
         // Required
@@ -63,6 +64,14 @@ public class UserDetails {
 
     public void setDirectMinions(List<Long> directMinions) {
         this.directMinions = directMinions;
+    }
+
+    public Short getVersion() {
+        return version;
+    }
+
+    public void setVersion(Short version) {
+        this.version = version;
     }
 
     public void addDirectMinionId(Long minionId) {

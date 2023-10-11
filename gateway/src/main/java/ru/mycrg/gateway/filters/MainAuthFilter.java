@@ -146,22 +146,25 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
     private void tryAuthorize(HttpServletRequest request,
                               HttpServletResponse response,
                               FilterChain chain) {
-        final AuthConclusion authConclusion = authenticator.authenticate(request);
+        AuthConclusion authConclusion = authenticator.authenticate(request);
+
+        JwtToken token = authConclusion.getToken();
+
         if ("authByAccessToken".equals(authConclusion.getCause())) {
             log.debug("Success auth by access token");
 
             // Передаем далее только access токен
-            request.setAttribute(TEMPLATE_ATTRIBUTE, authConclusion.getToken().getAccess_token());
+            request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
 
             gotoNextFilter(request, response, chain);
         } else if ("authByRefreshToken".equals(authConclusion.getCause())) {
             log.debug("Success auth by refresh token");
 
             // Передаем далее только access токен
-            request.setAttribute(TEMPLATE_ATTRIBUTE, authConclusion.getToken().getAccess_token());
+            request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
 
             // Обновим куку свежим токеном
-            response.addCookie(cookieProducer.makeFromJwtToken(authConclusion.getToken()));
+            response.addCookie(cookieProducer.makeFromJwtToken(token));
 
             gotoNextFilter(request, response, chain);
         } else if ("refreshTokenExpired".equals(authConclusion.getCause())) {

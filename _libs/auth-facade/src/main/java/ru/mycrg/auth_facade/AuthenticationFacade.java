@@ -72,6 +72,11 @@ public class AuthenticationFacade implements IAuthenticationFacade {
                     userDetails.setCrgLogin(String.valueOf(o));
                 });
 
+        getValue(decodedDetails, VERSION)
+                .ifPresent(o -> {
+                    userDetails.setVersion(Short.valueOf(String.valueOf(o)));
+                });
+
         getValue(decodedDetails, GROUPS)
                 .ifPresent(groups -> {
                     ((List) groups).forEach(id -> userDetails.addGroupId(Long.valueOf(String.valueOf(id))));
@@ -119,7 +124,7 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     private Optional<Object> getValue(Map<String, Object> data, String target) {
         for (Map.Entry<String, Object> e: data.entrySet()) {
             if (target.equals(e.getKey())) {
-                return Optional.of(e.getValue());
+                return Optional.ofNullable(e.getValue());
             }
         }
 

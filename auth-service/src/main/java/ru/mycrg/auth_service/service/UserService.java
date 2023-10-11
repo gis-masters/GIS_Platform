@@ -30,12 +30,10 @@ import ru.mycrg.auth_service_contract.events.request.UserDeletedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service_contract.Authorities.USER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
@@ -92,7 +90,9 @@ public class UserService {
                                          .email(user.getEmail())
                                          .enabled(user.isEnabled())
                                          .authorities(authorities)
-                                         .createdAt(user.getCreatedAt())
+                                         .createdAt(user.getCreatedAt().format(ISO_LOCAL_DATE_TIME))
+                                         .lastModified(user.getLastModified().format(ISO_LOCAL_DATE_TIME))
+                                         .version(user.getVersion())
                                          .build();
 
         if (!authenticationFacade.isRoot()) {
@@ -114,7 +114,11 @@ public class UserService {
     }
 
     public boolean isExist(String login) {
-        return userRepository.findByLoginIgnoreCase(login).isPresent();
+        return getByLoginIgnoreCase(login).isPresent();
+    }
+
+    public Optional<User> getByLoginIgnoreCase(String login) {
+        return userRepository.findByLoginIgnoreCase(login);
     }
 
     public UserProjection create(UserCreateDto dto, Long orgId, String accessToken) {
@@ -124,7 +128,7 @@ public class UserService {
         if (userByEmail.isPresent()) {
             throw new ConflictException(String.format("Пользователь с email: %s уже существует", dto.getEmail()));
         }
-        if (Objects.nonNull(dto.getBossId())) {
+        if (nonNull(dto.getBossId())) {
             Optional<User> bossUser = userRepository.findById(Long.valueOf(dto.getBossId()));
             if (bossUser.isEmpty()) {
                 throw new BadRequestException("Неверно указан начальник для пользователя");
@@ -147,6 +151,7 @@ public class UserService {
         newUser.addAuthority(USER);
         newUser.setEnabled(false);
         newUser.setDepartment(dto.getDepartment());
+        newUser.setVersion((short) 0);
 
         User savedUser = userRepository.save(newUser);
         savedUser.setGeoserverLogin(prepareGeoserverLogin(savedUser.getLogin(), savedUser.getId()));
@@ -203,8 +208,8 @@ public class UserService {
     }
 
     /**
-     * Супер админ может получить пользователя любой организации.
-     * Любой пользователь может получить любого пользователя из своей организации.
+     * Супер админ может получить пользователя любой организации. Любой пользователь может получить любого пользователя
+     * из своей организации.
      *
      * @param id Идентификатор пользователя
      *
@@ -249,6 +254,8 @@ public class UserService {
 
             messageBus.produce(
                     new CrgAuditEvent(accessToken, "INVITE", email, "USER", userFromDB.getId()));
+
+            userVersionUpdate(userFromDB.getId());
         }
     }
 
@@ -310,15 +317,85 @@ public class UserService {
             if (bossUser.isEmpty()) {
                 throw new BadRequestException("Неверно указан начальник для пользователя");
             } else {
+                long newBossId = dto.getBossId().longValue();
+                Set<Long> usersForVersionUpdate = new HashSet<>(Arrays.asList(userId, newBossId));
+
+                if (nonNull(userForUpdate.getBossId())) {
+                    usersForVersionUpdate.add(userForUpdate.getBossId().longValue());
+                }
+
                 userForUpdate.setBossId(dto.getBossId());
+
+                usersForVersionUpdate.addAll(fetchAllBosses(usersForVersionUpdate, newBossId, new HashMap<>()));
+                usersForVersionUpdate.forEach(this::userVersionUpdate);
             }
         } else {
+            if (nonNull(userForUpdate.getBossId())) {
+                userVersionUpdate(userForUpdate.getBossId().longValue());
+            }
+            userVersionUpdate(userId);
+
             userForUpdate.setBossId(null);
         }
 
         userForUpdate.setLastModified(LocalDateTime.now());
 
         userRepository.save(userForUpdate);
+    }
+
+    public void userVersionUpdate(Long userId) {
+        User user = findOrThrow(userId);
+
+        Short userVersion = user.getVersion();
+        if (nonNull(userVersion) && userVersion < Short.MAX_VALUE) {
+            userVersion = (short) (userVersion + 1);
+            user.setVersion(userVersion);
+        } else {
+            user.setVersion((short) 0);
+        }
+    }
+
+    public Set<Long> fetchAllBosses(Set<Long> bossIds, Long userId, Map<Long, Integer> recursion) {
+        Integer counter = recursion.getOrDefault(userId, 0);
+        if (counter <= 3) {
+            User user = findOrThrow(userId);
+
+            if (nonNull(user.getBossId())) {
+                Long currentBossId = user.getBossId().longValue();
+                bossIds.add(currentBossId);
+
+                recursion.put(userId, counter + 1);
+                fetchAllBosses(bossIds, currentBossId, recursion);
+            }
+        } else {
+            log.debug("Для пользователя {} существует подозрение на рекурсию начальника", userId);
+        }
+
+        return bossIds;
+    }
+
+    public Set<Integer> fetchDirectMinions(Long bossId) {
+        return userRepository.findByBossId(bossId.intValue())
+                             .stream().map(user -> user.getId().intValue())
+                             .collect(Collectors.toSet());
+    }
+
+    public void fetchMinions(Set<Integer> minions, Long bossId, Map<Long, Integer> recursion) {
+        Integer counter = recursion.getOrDefault(bossId, 0);
+        if (counter <= 3) {
+            Set<Integer> currentMinions = userRepository.findByBossId(bossId.intValue())
+                                                        .stream().map(user -> user.getId().intValue())
+                                                        .collect(Collectors.toSet());
+
+            minions.addAll(currentMinions);
+
+            recursion.put(bossId, counter + 1);
+            for (Integer currentMinion: currentMinions) {
+                fetchMinions(minions, currentMinion.longValue(), recursion);
+            }
+        } else {
+            log.debug("Для пользователя {} существует подозрение на рекурсию подчинённых", bossId);
+        }
     }
 
     private boolean isUserHasAuthority(UserProjection userProjection, String authority) {

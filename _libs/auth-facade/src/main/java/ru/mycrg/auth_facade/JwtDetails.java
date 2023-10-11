@@ -15,4 +15,6 @@ public interface JwtDetails {
     String MINIONS = "minions";
 
     String DIRECT_MINIONS = "directMinions";
+
+    String VERSION = "version";
 }

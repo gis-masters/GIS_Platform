@@ -246,7 +246,7 @@ export const config: Options.Testrunner = {
     // <boolean> invoke formatters without executing steps
     dryRun: false,
     // <boolean> abort the run on first failure
-    failFast: true,
+    failFast: false,
     // <boolean> hide step definition snippets for pending steps
     snippets: true,
     // <boolean> hide source uris

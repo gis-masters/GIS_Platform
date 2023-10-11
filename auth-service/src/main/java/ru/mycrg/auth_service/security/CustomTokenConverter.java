@@ -3,7 +3,6 @@ package ru.mycrg.auth_service.security;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -13,7 +12,7 @@ import ru.mycrg.auth_service.entity.Group;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
-import ru.mycrg.auth_service.repository.UserRepository;
+import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 
 import java.util.*;
@@ -25,8 +24,11 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
 
     private final Logger log = LoggerFactory.getLogger(CustomTokenConverter.class);
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+
+    public CustomTokenConverter(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
@@ -67,7 +69,7 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
     private Map<String, Object> collectAdditionalInfo(String userName, Long orgId) {
         Map<String, Object> additionalInfo = new HashMap<>();
 
-        Optional<User> byUsername = userRepository.findByLoginIgnoreCase(userName);
+        Optional<User> byUsername = userService.getByLoginIgnoreCase(userName);
         if (byUsername.isPresent()) {
             User user = byUsername.get();
 
@@ -76,8 +78,8 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
                                          .collect(Collectors.toList());
 
             Set<Integer> minions = new HashSet<>();
-            fetchMinions(minions, user.getId());
-            Set<Integer> directMinions = fetchDirectMinions(user.getId());
+            userService.fetchMinions(minions, user.getId(), new HashMap<>());
+            Set<Integer> directMinions = userService.fetchDirectMinions(user.getId());
             minions.removeAll(directMinions);
 
             additionalInfo.put(USER_ID, user.getId());
@@ -86,7 +88,7 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
             additionalInfo.put(GROUPS, usersGroups);
             additionalInfo.put(MINIONS, minions);
             additionalInfo.put(DIRECT_MINIONS, directMinions);
-
+            additionalInfo.put(VERSION, user.getVersion());
             Optional<IdNameProjection> oOrganization;
             if (orgId == null) {
                 oOrganization = user.getOrganizations().stream()
@@ -110,23 +112,5 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
         }
 
         return additionalInfo;
-    }
-
-    private Set<Integer> fetchDirectMinions(Long bossId) {
-        return userRepository.findByBossId(bossId.intValue())
-                             .stream().map(user -> user.getId().intValue())
-                             .collect(Collectors.toSet());
-    }
-
-    private void fetchMinions(Set<Integer> minions, Long bossId) {
-        Set<Integer> currentMinions = userRepository.findByBossId(bossId.intValue())
-                                                    .stream().map(user -> user.getId().intValue())
-                                                    .collect(Collectors.toSet());
-
-        minions.addAll(currentMinions);
-
-        currentMinions.forEach(id -> {
-            fetchMinions(minions, id.longValue());
-        });
     }
 }

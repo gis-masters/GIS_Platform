@@ -56,6 +56,9 @@ public class User {
     @Column(name = "boss_id")
     private Integer bossId;
 
+    @Column
+    private Short version;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private Set<Authorities> authorities = new HashSet<>();
 
@@ -270,5 +273,13 @@ public class User {
 
     public void setBossId(Integer bossId) {
         this.bossId = bossId;
+    }
+
+    public Short getVersion() {
+        return version;
+    }
+
+    public void setVersion(Short version) {
+        this.version = version;
     }
 }

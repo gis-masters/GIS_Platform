@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.mycrg.auth_service.security.CustomTokenConverter;
+import ru.mycrg.auth_service.service.UserService;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.oauth_client.OAuthClient;
 
@@ -29,6 +30,9 @@ import java.security.NoSuchAlgorithmException;
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private final Logger log = LoggerFactory.getLogger(AuthorizationServerConfig.class);
+
+    @Autowired
+    private UserService userService;
 
     @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
     private String secret;
@@ -83,7 +87,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Bean
     public JwtAccessTokenConverter accessTokenConverter() {
-        CustomTokenConverter converter = new CustomTokenConverter();
+        CustomTokenConverter converter = new CustomTokenConverter(userService);
         converter.setSigningKey(secret);
 
         return converter;

@@ -52,12 +52,12 @@ public class ResponseModel<T> {
 
     @Override
     public String toString() {
-        return "ResponseModel{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", headers=" + headers +
-                ", successful=" + successful +
-                ", body=" + body +
-                '}';
+        return "{" +
+                "\"code\":\"" + code + "\"" + ", " +
+                "\"msg\":" + (msg == null ? "null" : "\"" + msg + "\"") + ", " +
+                "\"headers\":" + (headers == null ? "null" : headers) + ", " +
+                "\"successful\":\"" + successful + "\"" + ", " +
+                "\"body\":" + (body == null ? "null" : body) +
+                "}";
     }
 }
