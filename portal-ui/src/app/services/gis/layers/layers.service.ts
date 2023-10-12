@@ -77,13 +77,19 @@ export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
     const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);
     const geometryType = getGeometryTypeFromGeoserverAttributes(featureType.attributes.attribute);
     const template = `schema_template_${layer.id}_${layer.id}`;
-    if (!supportedGeometryTypes.includes(geometryType)) {
-      services.logger.warn(`Geometry type: ${geometryType} is not supported`);
-
-      return { name: template, title: template, properties, geometryType: geometryType as SupportedGeometryType };
+    if (supportedGeometryTypes.includes(geometryType)) {
+      return {
+        name: template,
+        title: template,
+        properties,
+        readOnly: true,
+        geometryType: geometryType as SupportedGeometryType
+      };
     }
 
-    return { name: template, title: template, properties };
+    services.logger.warn(`Geometry type: ${geometryType} is not supported`);
+
+    return { name: template, title: template, properties, readOnly: true };
   }
 }
 

@@ -16,6 +16,7 @@ import {
   applyView,
   applyViewOld,
   changeSchemaNamesCaseByFeature,
+  convertNewToOldSchema,
   convertOldToNewProperties,
   convertOldToNewSchema,
   getFieldRelations
@@ -105,13 +106,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.editFeatureForm = this.formBuilder.group({});
 
+        const layerSchema = await getLayerSchema(this.layer);
+        const oldSchema = convertNewToOldSchema(layerSchema);
         this.featureDescription = applyViewOld(
-          changeSchemaNamesCaseByFeature(await schemaService.getOldSchema(this.layer.schemaId), this.features[0]),
+          changeSchemaNamesCaseByFeature(oldSchema, this.features[0]),
           this.layer.view
         );
 
-        const schema = changeSchemaNamesCaseByFeature(await getLayerSchema(this.layer), this.features[0]);
-        const newSchema = applyView(schema, this.layer.view);
+        const schema = changeSchemaNamesCaseByFeature(oldSchema, this.features[0]);
+        const newSchema = applyView(layerSchema, this.layer.view);
 
         this.features = this.features.map(feature => ({
           ...feature,

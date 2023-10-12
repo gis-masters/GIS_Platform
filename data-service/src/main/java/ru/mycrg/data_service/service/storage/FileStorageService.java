@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.UUID;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Service
@@ -66,7 +67,7 @@ public class FileStorageService {
             // Copy file to the target location (Replacing existing file with the same name)
             targetLocation = storagePath.resolve(fileName);
 
-            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), targetLocation, REPLACE_EXISTING);
 
             return targetLocation.normalize().toString();
         } catch (AccessDeniedException e) {
@@ -124,8 +125,19 @@ public class FileStorageService {
      */
     public void moveFile(Path sourcePath, Path targetPath) {
         try {
-            Files.createDirectories(targetPath);
-            Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Try move file from: [{}] to [{}]", sourcePath, targetPath);
+
+            if (Files.exists(targetPath)) {
+                Files.deleteIfExists(sourcePath);
+            } else {
+                Files.createDirectories(targetPath);
+                Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (AccessDeniedException e) {
+            String msg = "Нет доступа к ресурсу: " + targetPath;
+            log.error(msg);
+
+            throw new DataServiceException(msg);
         } catch (Exception e) {
             String msg = String.format("Не удалось переместить файл из: '%s' в: '%s'. Возникла ошибка: %s",
                                        sourcePath, targetPath, e.getMessage());

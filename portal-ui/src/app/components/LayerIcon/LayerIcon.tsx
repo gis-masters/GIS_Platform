@@ -2,12 +2,15 @@ import { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
+import { CrgLayer } from '../../services/gis/layers/layers.models';
+
 export const cnLayerIcon = cn('LayerIcon');
 
 export type LayerIconType = 'vector' | 'dxf' | 'shp' | 'raster' | 'group' | 'error' | 'unknown';
 
 export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;
+  layer?: CrgLayer;
   schemaId?: string;
   colorized?: boolean;
   expanded?: boolean;

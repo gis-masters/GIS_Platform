@@ -24,6 +24,7 @@ public class PlaceShapeFileEvent extends DefaultMessageBusRequestEvent implement
     private String pathToFile;
     private String token;
     private String styleName;
+    private String crs = "EPSG:7829";
 
     public PlaceShapeFileEvent() {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
@@ -32,7 +33,7 @@ public class PlaceShapeFileEvent extends DefaultMessageBusRequestEvent implement
     public PlaceShapeFileEvent(String token, ProcessModel processModel, UUID wsMsgId, String wsUiId,
                                Long projectId, String libraryId, Long recordId, String layerTitle,
                                String workspaceName, String storeName, String featureName, String pathToFile,
-                               String styleName) {
+                               String styleName, String crs) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.processModel = processModel;
@@ -49,6 +50,7 @@ public class PlaceShapeFileEvent extends DefaultMessageBusRequestEvent implement
         this.pathToFile = pathToFile;
         this.token = token;
         this.styleName = styleName;
+        this.crs = crs;
     }
 
     public UUID getWsMsgId() {
@@ -155,6 +157,14 @@ public class PlaceShapeFileEvent extends DefaultMessageBusRequestEvent implement
         this.styleName = styleName;
     }
 
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -171,6 +181,7 @@ public class PlaceShapeFileEvent extends DefaultMessageBusRequestEvent implement
                 "\"pathToFile\":" + (pathToFile == null ? "null" : "\"" + pathToFile + "\"") + ", " +
                 "\"token\":" + (token == null ? "null" : "\"" + token + "\"") + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") +
+                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") +
                 "}";
     }
 }

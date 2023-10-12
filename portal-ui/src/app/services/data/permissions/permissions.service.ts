@@ -158,7 +158,18 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
     }
 
     return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
-  } else if (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type)) {
+  } else if (layer.type === CrgLayerType.RASTER) {
+    return await isRasterReadAllowed(layer);
+  } else if (isVectorFromFile(layer.type)) {
+    const schema: Schema = await getLayerSchema(layer);
+    if (!schema) {
+      return false;
+    }
+
+    if (schema.readOnly) {
+      return false;
+    }
+
     return await isRasterReadAllowed(layer);
   }
 

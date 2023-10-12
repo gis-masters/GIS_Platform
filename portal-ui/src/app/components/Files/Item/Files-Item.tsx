@@ -102,6 +102,11 @@ export class FilesItem extends Component<FilesItemProps> {
     const baseName = getFileBaseName(item.title);
     const disabled = status ? ['loading', 'new', 'error'].includes(status) : undefined;
 
+    const isFileConnected = !!this.connections?.length && showPlaceAction;
+    const isFileCanBePlaced =
+      (showMainCompoundFileActions && showPlaceAction) ||
+      (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isTifFile(item) || isDxfFile(item)));
+
     return (
       <>
         <LookupItem className={cnFilesItem({ numerous })}>
@@ -122,16 +127,9 @@ export class FilesItem extends Component<FilesItemProps> {
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
             {showMainCompoundFileActions && showPlaceAction && <FilesDownloadCompoundFile item={item} />}
 
-            {!!this.connections?.length && showPlaceAction && (
-              <FilesConnections file={item} connections={this.connections} />
-            )}
+            {isFileConnected && <FilesConnections file={item} connections={this.connections} />}
 
-            {((showMainCompoundFileActions && showPlaceAction) ||
-              (!showMainCompoundFileActions &&
-                showPlaceAction &&
-                (isGmlFile(item) || isDxfFile(item) || isTifFile(item)))) && (
-              <FilesPlacement document={document} fileInfo={item} />
-            )}
+            {isFileCanBePlaced && <FilesPlacement document={document} fileInfo={item} />}
 
             {((showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable)) && (
               <LookupDelete

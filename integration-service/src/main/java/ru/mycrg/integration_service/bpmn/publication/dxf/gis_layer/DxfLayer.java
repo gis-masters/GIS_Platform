@@ -36,8 +36,8 @@ public class DxfLayer implements Serializable {
         this.dataStoreName = dataStoreName;
     }
 
-    public DxfLayer(Long projectId, String tableName, String title, String libraryId, Long recordId, String styleName,
-                    String dataStoreName) {
+    public DxfLayer(Long projectId, String tableName, String title, String nativeCRS, String libraryId, Long recordId,
+                    String styleName, String dataStoreName) {
         this.type = "shp";
         this.mode = "gis-service";
         this.enabled = true;
@@ -46,6 +46,7 @@ public class DxfLayer implements Serializable {
 
         this.tableName = tableName;
         this.title = title;
+        this.nativeCRS = nativeCRS;
         this.libraryId = libraryId;
         this.recordId = recordId;
 

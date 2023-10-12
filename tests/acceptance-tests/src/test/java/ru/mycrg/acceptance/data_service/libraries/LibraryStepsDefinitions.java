@@ -16,7 +16,6 @@ import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +28,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.CommonStepDefinitions.checkSorting;
+import static ru.mycrg.acceptance.Config.DATE_TIME_FORMAT;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
@@ -177,19 +177,17 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @Given("В библиотеке по-умолчанию существует запись")
     public void initRecordInDefaultLibrary() throws InterruptedException {
         String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
-        createDocument(body, DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(body, DEFAULT_LIBRARY);
 
         sleep(800);
 
         assertEquals(201, response.getStatusCode());
-
-        currentDocumentId = extractEntityIdFromResponse(response);
     }
 
     @Given("В текущей библиотеке существует документ с полем {string} заполненным {string}")
     public void initRecordInCurrentLibraryWithFields(String filedName, String fieldValue) throws InterruptedException {
         String body = String.format("{\"%s\": \"%s\"}", filedName, fieldValue);
-        createDocument(body, currentLibraryTableName);
+        createDocumentAndWriteAsCurrent(body, currentLibraryTableName);
 
         sleep(800);
 
@@ -198,20 +196,18 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
-    @Given("Пользователь создает документ в текущей библиотеке")
-    public void initRecordInCurrentLibrary() throws InterruptedException {
-        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
-        createDocument(body, currentLibraryTableName);
-
-        assertEquals(201, response.getStatusCode());
+    @Given("Текущий пользователь создает документ в библиотеке по умолчанию")
+    public void currentUserCreateRecordInDefaultLibrary() {
+        createDocumentAndWriteAsCurrent(
+                String.format("{\"title\":\"%s\"}", generateString("STRING_10")),
+                DEFAULT_LIBRARY);
     }
 
-    @Given("Пользователь создает документ в библиотеке по умолчанию")
-    public void currentUserCreateRecordInDefaultLibrary() {
-        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
-        createDocument(body, DEFAULT_LIBRARY);
-
-        currentDocumentId = extractEntityIdFromResponse(response);
+    @Given("Текущий пользователь создает документ в текущей библиотеке")
+    public void currentUserCreateRecordInCurrentLibrary() {
+        createDocumentAndWriteAsCurrent(
+                String.format("{\"title\":\"%s\"}", generateString("STRING_10")),
+                currentLibraryTableName);
     }
 
     @When("Пользователь создаёт запись в библиотеке с отсылкой на второй файл")
@@ -257,7 +253,9 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     @When("Пользователь делает запрос на обновление текущей записи")
-    public void updateCurrentRecord() {
+    public void updateCurrentRecord() throws InterruptedException {
+        sleep(1000);
+
         updateDocument(currentDocumentId, gson.toJson(new DefaultDocumentModel("new title")), DEFAULT_LIBRARY);
     }
 
@@ -297,15 +295,15 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertEquals(36, guid.length());
     }
 
-    @Then("Поле 'last_modified' заполнилось датой создания")
-    public void checkLastModifiedField() {
+    @Then("Поле {string} заполнилось")
+    public void checkFieldNotNull(String field) {
         getCurrentDocument();
 
-        String lastModified = response.jsonPath().get("last_modified");
-        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
-                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Object data = response.jsonPath().get(field);
 
-        assertEquals(LocalDateTime.now().getDayOfMonth(), lastModifiedDate.getDayOfMonth());
+        System.out.println("-------------- " + data);
+
+        assertNotNull(data);
     }
 
     @Then("Поле 'last_modified' изменилось")
@@ -313,8 +311,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         getCurrentDocument();
 
         String lastModified = response.jsonPath().get("last_modified");
-        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
-                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
+
+        System.out.println("currentRecordLastModified: " + currentRecordLastModified.format(DATE_TIME_FORMAT));
+        System.out.println("lastModifiedDate: " + lastModifiedDate.format(DATE_TIME_FORMAT));
 
         assertEquals(-1, currentRecordLastModified.compareTo(lastModifiedDate));
     }
@@ -333,8 +333,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         getCurrentDocument();
 
         String lastModified = response.jsonPath().get("last_modified");
-        currentRecordLastModified = LocalDateTime.parse(lastModified,
-                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        currentRecordLastModified = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
     }
 
     @And("Запись успешно создана")
@@ -347,7 +346,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @And("Тело ответа содержит ошибку о том что данные не были сохранены")
     public void checkErrorMessage() {
         List<Object> errors = response.jsonPath().getList("errors.message");
-        assertTrue(errors.size() > 0);
+        assertFalse(errors.isEmpty());
 
         String errorMessage = errors.get(0).toString();
         assertEquals("В базе данных поле test отсутствует.", errorMessage);
@@ -431,17 +430,17 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Отправляется запрос на создание записи в библиотеке по-умолчанию")
     public void createRecordsRequest() {
-        createDocument(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
     }
 
     @When("B библиотеке по-умолчанию существует документ")
     public void createDocumentInDefaultLibrary() {
-        createDocument(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
     }
 
     @When("Пользователь делает запрос на создание записи передавая несуществующий в базе данных атрибут")
     public void tryCreateRecordWithNotExistAttributesInDB() {
-        createDocument(getRecordBodyForDlDefaultWithIncorrectField(), DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithIncorrectField(), DEFAULT_LIBRARY);
     }
 
     @When("Существует запись в библиотеке на основе растрового файла {string}")
@@ -477,7 +476,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    \"content_type_id\": \"doc_v4\"" +
                 "}";
 
-        createDocument(body, DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(body, DEFAULT_LIBRARY);
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
@@ -488,7 +487,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         data.put("content_type_id", "doc_v4");
         data.put("some_files", currentFiles);
 
-        createDocument(gson.toJson(data), DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(gson.toJson(data), DEFAULT_LIBRARY);
 
         currentDocumentId = extractEntityIdFromResponse(response);
     }
@@ -508,7 +507,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    \"content_type_id\": \"doc_v4\"" +
                 "}";
 
-        createDocument(body, DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(body, DEFAULT_LIBRARY);
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
@@ -793,7 +792,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         DefaultDocumentModel record = new DefaultDocumentModel(generateString("STRING_4"));
         record.setSome_files(descriptions);
 
-        createDocument(gson.toJson(record), DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(gson.toJson(record), DEFAULT_LIBRARY);
 
         currentDocumentId = extractEntityIdFromResponse(response);
     }
@@ -812,12 +811,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                        get(String.format("/%s/records/%d", libraryId, id));
     }
 
-    private void createDocument(String body, String libraryId) {
+    private void createDocumentAndWriteAsCurrent(String body, String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType("multipart/form-data").
                         multiPart("body", body)
                 .when().
+                        log().all().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);

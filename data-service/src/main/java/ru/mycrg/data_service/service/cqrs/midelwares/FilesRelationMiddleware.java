@@ -25,7 +25,6 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -48,19 +47,16 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
 
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
-    private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
 
     private final Path fileStoragePath;
 
     public FilesRelationMiddleware(Environment environment,
                                    FileRepository fileRepository,
-                                   IMessageBusProducer messageBus,
                                    FileStorageService fileStorageService,
                                    IAuthenticationFacade authenticationFacade) {
         this.fileRepository = fileRepository;
         this.fileStorageService = fileStorageService;
-        this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
 
         String path = environment.getRequiredProperty("crg-options.fileStoragePath");
@@ -190,8 +186,9 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                     .findFirst();
 
             String fileName = description.get().getTitle();
-            String template = makeFileName(qualifier, FilenameUtils.removeExtension(fileName));
-            String resultFileName = template + "." + FileNameUtils.getExtension(fileName).toLowerCase();
+            String resultFileName = String.format("%s.%s",
+                                                  makeFileName(qualifier, FilenameUtils.removeExtension(fileName)),
+                                                  FileNameUtils.getExtension(fileName).toLowerCase());
 
             Path targetPath = fileStoragePath.resolve(
                     String.format("%s/%s/%s/%s",
@@ -283,49 +280,4 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
                      .map(SimplePropertyDto::getName)
                      .collect(Collectors.toList());
     }
-
-//    private void deleteRelatedFiles(SchemaDto schema, IRecord record) {
-//        try {
-//            log.debug("DELETE CASE: {}", record.getId());
-//
-//            getFileFieldNames(schema)
-//                    .stream()
-//                    .flatMap(fileFieldName -> getFilesIdFromField(record.getContent(), fileFieldName).stream())
-//                    .collect(Collectors.toSet())
-//                    .forEach(this::deleteFile);
-//        } catch (Exception e) {
-//            logError("Не удалось выполнить удаление файлов при удалении записи: " + record.getId(), e);
-//        }
-//    }
-
-//    private void deleteFiles(Set<UUID> oldIds, Set<UUID> newIds) {
-//        oldIds.stream()
-//              .filter(oldId -> !newIds.contains(oldId))
-//              .collect(Collectors.toSet())
-//              .forEach(this::deleteFile);
-//    }
-
-//    private void deleteFile(UUID id) {
-//        log.debug("Try to delete file by id: '{}'", id);
-//
-//        Optional<File> oFile = fileRepository.findById(id);
-//        if (oFile.isPresent()) {
-//            File file = oFile.get();
-//            String path = file.getPath();
-//
-//            try {
-//                fileStorageService.deleteIfExists(path);
-//            } catch (StorageException e) {
-//                log.error("Не удалось удалить файл с диска, по пути: '{}'", path);
-//            }
-//
-//            fileRepository.delete(file);
-//
-//            messageBus.produce(new FileDeletedEvent(authenticationFacade.getLogin(),
-//                                                    authenticationFacade.getAccessToken(),
-//                                                    String.valueOf(id)));
-//        } else {
-//            log.info("Нечего удалять. Файл не найден по идентификатору: '{}'", id);
-//        }
-//    }
 }

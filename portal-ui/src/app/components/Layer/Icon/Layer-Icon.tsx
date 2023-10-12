@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType } from '../../../services/gis/layers/layers.models';
 import { LayerIcon as Icon } from '../../LayerIcon/LayerIcon.composed';
 import { LayerIconType } from '../../LayerIcon/LayerIcon';
 
@@ -18,27 +18,39 @@ interface LayerIconProps {
 
 export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded }) => {
   let iconType: LayerIconType;
-  let schemaId: string;
+  const layer = data as CrgLayer;
 
   if (isError) {
     iconType = 'error';
   } else if (isGroup) {
     iconType = 'group';
-  } else if ((data as CrgLayer).type === CrgLayerType.RASTER) {
-    iconType = 'raster';
-  } else if ((data as CrgLayer).type === CrgLayerType.VECTOR) {
-    iconType = 'vector';
-  } else if ((data as CrgLayer).type === CrgLayerType.DXF) {
-    iconType = 'dxf';
-  } else if ((data as CrgLayer).type === CrgLayerType.SHP) {
-    iconType = 'shp';
   } else {
-    iconType = 'unknown';
+    switch (layer.type) {
+      case CrgLayerType.RASTER: {
+        iconType = 'raster';
+
+        break;
+      }
+      case CrgLayerType.VECTOR: {
+        iconType = 'vector';
+
+        break;
+      }
+      case CrgLayerType.DXF: {
+        iconType = 'dxf';
+
+        break;
+      }
+      case CrgLayerType.SHP: {
+        iconType = 'shp';
+
+        break;
+      }
+      default: {
+        iconType = 'unknown';
+      }
+    }
   }
 
-  if (!isGroup) {
-    schemaId = (data as CrgVectorLayer).schemaId;
-  }
-
-  return <Icon type={iconType} className={cnLayerIcon()} schemaId={schemaId} expanded={expanded} />;
+  return <Icon type={iconType} className={cnLayerIcon()} layer={layer} schemaId={layer.schemaId} expanded={expanded} />;
 };

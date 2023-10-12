@@ -30,6 +30,7 @@ import java.util.UUID;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.service.processes.FileType.SHP;
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -38,6 +39,8 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
 
     private final Logger log = LoggerFactory.getLogger(ShapePlacementExecutor.class);
+
+    private final String DEFAULT_SHP_STYLE = "generic";
 
     private final FileRepository fileRepository;
     private final IMessageBusProducer messageBus;
@@ -76,21 +79,25 @@ public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePla
         sendWsMsg(PENDING, importReport, "Размещение файла: " + file.getTitle());
 
         FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(file.getResourceQualifier());
-        String featureName = join(frQualifier.getTable(), file.getId().toString());
+        String featureName = join(frQualifier.getTable(),
+                                  file.getId().toString(),
+                                  extractCrsNumber(payload.getCrs()).toString());
 
-        messageBus.produce(new PlaceShapeFileEvent(authenticationFacade.getAccessToken(),
-                                                   this.processModel,
-                                                   this.wsMsgId,
-                                                   this.payload.getWsUiId(),
-                                                   payload.getProjectId(),
-                                                   frQualifier.getTable(),
-                                                   frQualifier.getRecordId(),
-                                                   stripFilenameExtension(file.getTitle()),
-                                                   getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                   join(getDefaultStoreName("shp"), featureName),
-                                                   featureName,
-                                                   file.getPath(),
-                                                   "generic"));
+        messageBus.produce(
+                new PlaceShapeFileEvent(authenticationFacade.getAccessToken(),
+                                        this.processModel,
+                                        this.wsMsgId,
+                                        this.payload.getWsUiId(),
+                                        this.payload.getProjectId(),
+                                        frQualifier.getTable(),
+                                        frQualifier.getRecordId(),
+                                        stripFilenameExtension(file.getTitle()),
+                                        getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
+                                        join(getDefaultStoreName(getFileType().name().toLowerCase()), featureName),
+                                        featureName,
+                                        file.getPath(),
+                                        DEFAULT_SHP_STYLE,
+                                        this.payload.getCrs()));
 
         return importReport;
     }
@@ -118,6 +125,7 @@ public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePla
             this.payload.setWsUiId(String.valueOf(parsed.get("wsUiId")));
             this.payload.setProjectId(Long.valueOf(parsed.get("projectId").toString()));
             this.payload.setFileId(UUID.fromString(parsed.get("fileId").toString()));
+            this.payload.setCrs(parsed.get("crs").toString());
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель Shape импорта: %s", data);
             log.error(msg, e.getCause());

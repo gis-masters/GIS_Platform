@@ -12,12 +12,16 @@ import { FileInfo } from '../../services/data/files/files.models';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { CrgProject } from '../../services/gis/projects/projects.models';
-import { isDxfFile, isTifFile } from '../../services/data/files/files.util';
 import { communicationService } from '../../services/communication.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { defaultProjection } from '../../services/geoserver/projections.service';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
-import { placeDxf, placeFile, placeGml } from '../../services/data/file-placement/file-placement.service';
+import { isFileWithProjection, isTifFile } from '../../services/data/files/files.util';
+import {
+  placeFile,
+  placeFileWithProjection,
+  placeGml
+} from '../../services/data/file-placement/file-placement.service';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
 
@@ -53,7 +57,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         actionButtonLabel='Разместить в выбранном проекте'
         loading={this.addFormBusy}
         additionalAction={
-          isDxfFile(fileInfo) || isTifFile(fileInfo) ? (
+          isFileWithProjection(fileInfo) || isTifFile(fileInfo) ? (
             <SelectProjection
               className={cnProjectPlacementDialog('SelectProjection')}
               value={this.selectedCrs}
@@ -122,8 +126,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       this.setFormBusy(false);
     } else {
       try {
-        await (isDxfFile(this.props.fileInfo)
-          ? placeDxf(fileInfo, project.id, this.selectedCrs)
+        await (isFileWithProjection(this.props.fileInfo)
+          ? placeFileWithProjection(fileInfo, project.id, this.selectedCrs)
           : placeGml(fileInfo, project.id, this.invertedCoordinates));
 
         this.props.onClose();

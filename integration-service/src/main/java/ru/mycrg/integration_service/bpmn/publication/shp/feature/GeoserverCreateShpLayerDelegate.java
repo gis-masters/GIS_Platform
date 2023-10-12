@@ -30,16 +30,18 @@ public class GeoserverCreateShpLayerDelegate implements JavaDelegate {
             CreateFeatureDto dto = (CreateFeatureDto) execution.getVariable("CreateFeatureDto");
             PlaceShapeFileEvent event = (PlaceShapeFileEvent) execution.getVariable(EVENT_VAR_NAME);
             String filename = stripFilenameExtension(StringUtils.getFilename(event.getPathToFile()));
+            String crs = event.getCrs();
 
             log.debug("Create feature based on SHP file: [{}]", filename);
 
-            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(), filename);
+            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(), filename, crs);
             DxfLayer shpLayer = new DxfLayer(event.getProjectId(),
                                              event.getFeatureName(),
                                              event.getLayerTitle(),
+                                             crs,
                                              event.getLibraryId(),
                                              event.getRecordId(),
-                                             "generic",
+                                             event.getStyleName(),
                                              event.getWorkspaceName());
 
             var response = new FeatureTypeService(token).create(dto.getWorkspaceName(),

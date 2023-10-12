@@ -18,6 +18,8 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(GeoserverCreateDxfLayerDelegate.class);
 
+    private final String REQUIRED_DXF_NATIVE_NAME = "entities";
+
     @Override
     public void execute(DelegateExecution execution) throws Exception {
         log.debug("execute geoserverCreateDxfLayerDelegate");
@@ -28,7 +30,9 @@ public class GeoserverCreateDxfLayerDelegate implements JavaDelegate {
             PlaceDxfFileEvent event = (PlaceDxfFileEvent) execution.getVariable(EVENT_VAR_NAME);
             log.debug("CreateFeatureDto: [{}]", dto);
 
-            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(), event.getCrs(), true);
+            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(),
+                                                                REQUIRED_DXF_NATIVE_NAME,
+                                                                event.getCrs());
             DxfLayer dxfLayer = new DxfLayer(event.getProjectId(),
                                              event.getFeatureName(),
                                              event.getLayerTitle(),

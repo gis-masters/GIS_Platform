@@ -35,8 +35,8 @@ public class GeoserverCreateDxfStoreDelegate implements JavaDelegate {
 
                 execution.setVariable(IS_CREATED_VAR_NAME, true);
                 execution.setVariable("CreateFeatureDto", new CreateFeatureDto(event.getFeatureName(),
-                                                                           dto.getWorkspaceName(),
-                                                                           dto.getStoreName()));
+                                                                               dto.getWorkspaceName(),
+                                                                               dto.getStoreName()));
             } else {
                 String body = (String) response.getBody();
                 if (body.contains("already exists")) {
@@ -44,8 +44,8 @@ public class GeoserverCreateDxfStoreDelegate implements JavaDelegate {
 
                     execution.setVariable(IS_CREATED_VAR_NAME, true);
                     execution.setVariable("CreateFeatureDto", new CreateFeatureDto(event.getFeatureName(),
-                                                                               dto.getWorkspaceName(),
-                                                                               dto.getStoreName()));
+                                                                                   dto.getWorkspaceName(),
+                                                                                   dto.getStoreName()));
                 } else {
                     String failMsg = baseFailMsg();
                     log.error("{}. With params: [{}]. Response code: {}", failMsg, dto, response.getCode());

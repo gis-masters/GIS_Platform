@@ -8,16 +8,8 @@ public class FeatureTypeModel {
 
     private String srs;
 
-    public FeatureTypeModel(String name, String srs, boolean enabled) {
-        this(name, "entities", enabled, srs);
-    }
-
-    public FeatureTypeModel(String name, String nativeName) {
-        this(name, nativeName, true, null);
-    }
-
-    public FeatureTypeModel(String name, boolean enabled) {
-        this(name, "entities", enabled, null);
+    public FeatureTypeModel(String name, String nativeName, String srs) {
+        this(name, nativeName, true, srs);
     }
 
     public FeatureTypeModel(String name, String nativeName, boolean enabled, String srs) {

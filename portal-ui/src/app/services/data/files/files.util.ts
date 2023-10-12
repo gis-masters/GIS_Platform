@@ -83,6 +83,12 @@ export function isDxfFile(file: FileInfo): boolean {
   return normalizeExtension(getFileExtension(file.title)) === 'dxf';
 }
 
+export function isFileWithProjection(file: FileInfo): boolean {
+  const ext = normalizeExtension(getFileExtension(file.title));
+
+  return ext === 'dxf' || ext === 'shp';
+}
+
 export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] {
   return Object.values(libraryRecord)
     .map(value => {

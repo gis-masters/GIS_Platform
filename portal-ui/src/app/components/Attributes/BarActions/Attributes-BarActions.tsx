@@ -15,6 +15,7 @@ import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { mapStore } from '../../../stores/Map.store';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
+import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { AttributesTableRecord } from '../Table/Attributes-Table';
@@ -77,12 +78,14 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
               </Tooltip>
             )}
 
-            <CopyFeaturesButton
-              tooltipTitle={`Копировать${objLabel} в другой слой`}
-              layer={layer}
-              features={this.selectedFeatures}
-              size='small'
-            />
+            {!isVectorFromFile(layer.type) && (
+              <CopyFeaturesButton
+                tooltipTitle={`Копировать${objLabel} в другой слой`}
+                layer={layer}
+                features={this.selectedFeatures}
+                size='small'
+              />
+            )}
 
             {this.featuresUpdateAllowed && (
               <Tooltip title={`Удалить${objLabel}`}>

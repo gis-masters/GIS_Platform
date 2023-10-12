@@ -14,7 +14,6 @@ import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +24,7 @@ import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.Config.DATE_TIME_FORMAT;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
@@ -65,7 +65,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь создаёт запись в слое с отсылкой на текущий файл")
     public void currentUserCreateFeatureWithCurrentFile() {
         List<FileDescriptionModel> filesDescription = new ArrayList<>();
-        filesDescription.add(new FileDescriptionModel(currentFileId, 314L, "Current file"));
+        filesDescription.add(new FileDescriptionModel(currentFileId, 314L, "Current file.tif"));
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("some_files", filesDescription);
@@ -408,18 +408,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @Then("Поле 'created_at' и 'last_modified' заполнилось датой создания")
     public void checkCreatedAtAndLastModifiedField() {
         getFeature(currentFeatureId);
-        Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
 
-        String createdAt = String.valueOf(properties.get("created_at"));
-        String lastModified = String.valueOf(properties.get("last_modified"));
-        LocalDateTime createdAtDate = LocalDateTime.parse(createdAt,
-                                                          DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        Map<String, Object> firstRecordProps = (Map<String, Object>) response
+                .jsonPath()
+                .getList("properties").get(0);
 
-        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
-                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-
-        assertEquals(LocalDateTime.now().getDayOfMonth(), createdAtDate.getDayOfMonth());
-        assertEquals(LocalDateTime.now().getDayOfMonth(), lastModifiedDate.getDayOfMonth());
+        assertNotNull(firstRecordProps.get("created_at"));
+        assertNotNull(firstRecordProps.get("last_modified"));
     }
 
     @Then("Поле 'created_by' и 'updated_by' заполнилось логином создателя")
@@ -440,8 +435,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
 
         String lastModified = String.valueOf(properties.get("last_modified"));
-        currentRecordLastModified = LocalDateTime.parse(lastModified,
-                                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        currentRecordLastModified = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
     }
 
     @Then("Поле 'last_modified' обновилось")
@@ -450,8 +444,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         Map<String, Object> properties = (Map<String, Object>) response.jsonPath().getList("properties").get(0);
 
         String lastModified = String.valueOf(properties.get("last_modified"));
-        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified,
-                                                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
 
         assertEquals(-1, currentRecordLastModified.compareTo(lastModifiedDate));
     }

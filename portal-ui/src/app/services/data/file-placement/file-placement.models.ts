@@ -7,7 +7,7 @@ export interface GmlPlacementModel {
   invertedCoordinates?: boolean;
 }
 
-export interface DfxPlacementModel {
+export interface PlacementModelForFilesWithCrs {
   wsUiId: string;
   fileId: string;
   projectId: number;

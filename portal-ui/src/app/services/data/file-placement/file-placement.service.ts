@@ -24,13 +24,17 @@ export async function placeGml(
     payload: {
       wsUiId: wsService.getId(),
       fileId: fileInfo.id,
-      projectId: projectId,
+      projectId,
       invertedCoordinates: invertedCoordinates ?? undefined
     }
   });
 }
 
-export async function placeDxf(fileInfo: FileInfo, projectId: number, crs: string): Promise<ProcessResponse> {
+export async function placeFileWithProjection(
+  fileInfo: FileInfo,
+  projectId: number,
+  crs: string
+): Promise<ProcessResponse> {
   return createProcess({
     type: ProcessType.IMPORT,
     payload: {

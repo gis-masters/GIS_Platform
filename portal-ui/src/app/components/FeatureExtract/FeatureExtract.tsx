@@ -17,6 +17,7 @@ import { validateFormValue } from '../../services/formValidation.service';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeaturesUrl } from '../../services/map/map.util';
@@ -57,7 +58,7 @@ export class FeatureExtract extends Component<FeatureExtractProps> {
 
       services.logger.warn(`Ошибка доступа к библиотеке документов ${libraryTableName}. [${err.message}]`, error);
     }
-    const featureSchema = await schemaService.getSchema(layer.schemaId);
+    const featureSchema = await getLayerSchema(layer);
     this.setFields(featureSchema.properties);
 
     communicationService.libraryRecordUpdated.on(async () => {

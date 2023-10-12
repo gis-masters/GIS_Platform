@@ -1,5 +1,5 @@
 import {
-  DfxPlacementModel,
+  PlacementModelForFilesWithCrs,
   GmlPlacementModel,
   ImportFeaturesFromShapeFileModel
 } from '../file-placement/file-placement.models';
@@ -91,5 +91,5 @@ export interface ProcessResponse {
 
 export interface ProcessableModel {
   type: ProcessType;
-  payload: GmlPlacementModel | DfxPlacementModel | ImportFeaturesFromShapeFileModel;
+  payload: GmlPlacementModel | PlacementModelForFilesWithCrs | ImportFeaturesFromShapeFileModel;
 }
