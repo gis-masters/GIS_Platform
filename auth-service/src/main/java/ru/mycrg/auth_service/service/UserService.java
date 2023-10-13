@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
 import static ru.mycrg.auth_service_contract.Authorities.USER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
@@ -121,7 +123,9 @@ public class UserService {
         return userRepository.findByLoginIgnoreCase(login);
     }
 
-    public UserProjection create(UserCreateDto dto, Long orgId, String accessToken) {
+    public UserProjection create(UserCreateDto dto, Long orgId) {
+        String accessToken = authenticationFacade.getAccessToken();
+
         log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
@@ -166,6 +170,13 @@ public class UserService {
                                      true,
                                      getDefaultRoleName(orgId))
         );
+
+        messageBus.produce(new CrgAuditEvent(accessToken,
+                                             "CREATE",
+                                             savedUser.getEmail(),
+                                             "USER",
+                                             savedUser.getId(),
+                                             mapper.convertValue(dto, JsonNode.class)));
 
         return projectionFactory.createProjection(UserProjection.class, savedUser);
     }
@@ -231,10 +242,16 @@ public class UserService {
 
             messageBus.produce(
                     new UserDeletedEvent(user.getLogin(), authenticationFacade.getAccessToken(), id));
+
+            messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                                 "DELETE",
+                                                 userProjection.getEmail(),
+                                                 "USER",
+                                                 userProjection.getId()));
         });
     }
 
-    public void invite(String email, String accessToken, Long orgId) {
+    public void invite(String email, Long orgId) {
         log.debug("Try to invite user: {} in organization: {}", email, orgId);
 
         User userFromDB = userRepository.findByEmail(email)
@@ -253,7 +270,11 @@ public class UserService {
             organization.addUser(userFromDB);
 
             messageBus.produce(
-                    new CrgAuditEvent(accessToken, "INVITE", email, "USER", userFromDB.getId()));
+                    new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                      "INVITE",
+                                      email,
+                                      "USER",
+                                      userFromDB.getId()));
 
             userVersionUpdate(userFromDB.getId());
         }
@@ -341,6 +362,12 @@ public class UserService {
         userForUpdate.setLastModified(LocalDateTime.now());
 
         userRepository.save(userForUpdate);
+
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "UPDATE",
+                                             userForUpdate.getEmail(),
+                                             "USER", userForUpdate.getId(),
+                                             mapper.convertValue(dto, JsonNode.class)));
     }
 
     public void userVersionUpdate(Long userId) {

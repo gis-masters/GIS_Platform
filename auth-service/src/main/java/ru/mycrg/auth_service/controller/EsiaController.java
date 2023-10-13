@@ -140,8 +140,7 @@ public class EsiaController {
                                                   "esia",
                                                   "+79781111111");
 
-            String accessToken = authService.getRootAccessToken();
-            UserProjection userProjection = userService.create(dto, orgId, accessToken);
+            UserProjection userProjection = userService.create(dto, orgId);
 
             return Optional.ofNullable(userProjection);
         } catch (Exception e) {

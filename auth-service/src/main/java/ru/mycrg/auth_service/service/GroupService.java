@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.entity.Group;
@@ -26,9 +28,12 @@ import ru.mycrg.auth_service_contract.events.request.UserGroupDeletedEvent;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
 
 @Service
 @Transactional
@@ -84,6 +89,13 @@ public class GroupService {
 
         Group savedGroup = groupRepository.save(newGroup);
 
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "CREATE",
+                                             savedGroup.getName(),
+                                             "GROUP",
+                                             savedGroup.getId(),
+                                             mapper.convertValue(dto, JsonNode.class)));
+
         return projectionFactory.createProjection(GroupProjection.class, savedGroup);
     }
 
@@ -122,6 +134,14 @@ public class GroupService {
         groupRepository.save(group);
 
         userService.userVersionUpdate(userId);
+
+        List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "ADD_USER",
+                                             group.getName(),
+                                             "GROUP",
+                                             group.getId(),
+                                             mapper.convertValue(updatedUsers, JsonNode.class)));
     }
 
     public void removeUser(Long groupId, Long userId) {
@@ -135,6 +155,14 @@ public class GroupService {
         group.removeUser(userId);
 
         userService.userVersionUpdate(userId);
+
+        List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "REMOVE_USER",
+                                             group.getName(),
+                                             "GROUP",
+                                             userId,
+                                             mapper.convertValue(updatedUsers, JsonNode.class)));
     }
 
     public void update(Long groupId, GroupUpdateDto dto) {
@@ -153,6 +181,13 @@ public class GroupService {
         groupForUpdate.setLastModified(LocalDateTime.now());
 
         groupRepository.save(groupForUpdate);
+
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "UPDATE",
+                                             groupForUpdate.getName(),
+                                             "GROUP",
+                                             groupForUpdate.getId(),
+                                             mapper.convertValue(dto, JsonNode.class)));
     }
 
     public void delete(Long groupId) {
@@ -161,6 +196,12 @@ public class GroupService {
                 .orElseThrow(() -> new NotFoundException(GROUP, groupId));
 
         groupRepository.delete(group);
+
+        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                             "DELETE",
+                                             group.getName(),
+                                             "GROUP",
+                                             group.getId()));
 
         messageBus.produce(new UserGroupDeletedEvent(authenticationFacade.getAccessToken(), groupId));
     }

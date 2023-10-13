@@ -103,7 +103,7 @@ public class UserController {
             organizationId = authenticationFacade.getOrganizationId();
         }
 
-        UserProjection user = userService.create(userCreateDto, organizationId, authenticationFacade.getAccessToken());
+        UserProjection user = userService.create(userCreateDto, organizationId);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -174,7 +174,7 @@ public class UserController {
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> inviteUser(@RequestParam(name = "email") String email) {
         Long organizationId = authenticationFacade.getOrganizationId();
-        userService.invite(email, authenticationFacade.getAccessToken(), organizationId);
+        userService.invite(email, organizationId);
 
         return ResponseEntity.ok().build();
     }
