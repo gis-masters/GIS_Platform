@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties, ReactNode } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
@@ -67,8 +67,6 @@ export interface ExplorerProps extends IClassNameProps {
   withoutTitle?: boolean;
   fixedHeight?: boolean;
   urlChangeEnabled?: boolean;
-  libraryViewSwitch?: ReactNode;
-  deletedDocumentsSwitch?: ReactNode;
   customFilters?: CustomFilters;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
   onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
@@ -232,15 +230,7 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const {
-      withInfoPanel,
-      fixedHeight,
-      withoutTitle,
-      libraryViewSwitch,
-      deletedDocumentsSwitch,
-      className,
-      disabledTester
-    } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, className, disabledTester } = this.props;
 
     return (
       <div
@@ -255,9 +245,7 @@ export default class Explorer extends Component<ExplorerProps> {
           service={this.service}
           store={this.store}
           onChange={this.service.refreshItems}
-          full={withInfoPanel}
-          libraryViewSwitch={libraryViewSwitch}
-          deletedDocumentsSwitch={deletedDocumentsSwitch}
+          full={Boolean(withInfoPanel)}
         />
         {withInfoPanel && <ExplorerInfo store={this.store} />}
         <ExplorerPagination store={this.store} onChange={this.service.paginate} />
@@ -365,7 +353,7 @@ export default class Explorer extends Component<ExplorerProps> {
     const { explorerRole, onOpen } = this.props;
 
     if (url.searchParams.get(`path_${explorerRole}`)) {
-      const urlExplorerPath = url.searchParams.get(`path_${explorerRole}`);
+      const urlExplorerPath = url.searchParams.get(`path_${explorerRole}`) || '';
       const pathUrlItems = chunk(JSON.parse(urlExplorerPath) as string[], 2) as ExplorerUrlItem[];
       const path = this.store.path.slice(0, 1);
 

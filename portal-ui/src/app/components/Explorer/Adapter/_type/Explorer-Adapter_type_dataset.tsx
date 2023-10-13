@@ -30,7 +30,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<Dataset, VectorTable>>()
 export class ExplorerAdapterTypeDataset {
   static getId(item: ExplorerItemData<Dataset>): string {
     return item.payload.identifier;
@@ -86,7 +86,7 @@ export class ExplorerAdapterTypeDataset {
   ): Promise<[ExplorerItemData<VectorTable>[], number]> {
     const [tables, totalPages] = await getVectorTables(item.payload.identifier, {
       ...options,
-      filter: service.mergeCustomFilter(filter, item, store)
+      filter: service.mergeCustomFilter(filter || {}, item, store)
     });
 
     return [tables.map(payload => ({ type: ExplorerItemType.TABLE, payload })), totalPages];
@@ -98,10 +98,10 @@ export class ExplorerAdapterTypeDataset {
     identifier: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<VectorTable>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<VectorTable>[], number, number] | undefined> {
     const response = await getVectorTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
-      filter: service.mergeCustomFilter(filter, item, store),
+      filter: service.mergeCustomFilter(filter || {}, item, store),
       page
     });
 

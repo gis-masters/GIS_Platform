@@ -19,6 +19,8 @@ import { communicationService, DataChangeEventDetail } from '../../../../service
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { formatDate } from '../../../../services/util/date.util';
+import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
+import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -216,7 +218,13 @@ export class ExplorerAdapterTypeLibrary {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
 
-    return full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />;
+    return (
+      <>
+        {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
+        <LibraryDeletedDocumentsSwitch library={currentItem} path={[]} />
+        <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
+      </>
+    );
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {

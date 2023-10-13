@@ -14,7 +14,7 @@ export class ExplorerStore {
   @observable totalPages = 0;
   @observable sortItems: SortItem[] = [];
   @observable customFilters: CustomFilters = {};
-  @observable sort = '';
+  @observable sort?: string;
   @observable sortOrder: SortOrder = SortOrder.ASC;
   @observable filter: Record<string, string> = {};
   @observable loading = false;
@@ -34,7 +34,13 @@ export class ExplorerStore {
   get selectedItem(): ExplorerItemData {
     const { path } = this;
 
-    return path.at(-1);
+    const selectedItem = path.at(-1);
+
+    if (!selectedItem) {
+      throw new Error('Selection error');
+    }
+
+    return selectedItem;
   }
 
   @computed
@@ -83,7 +89,7 @@ export class ExplorerStore {
 
   @action
   setSort(sort?: string): void {
-    this.sort = sort || '';
+    this.sort = sort;
   }
 
   @action

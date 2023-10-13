@@ -14,7 +14,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<CrgProject>>()
 export class ExplorerAdapterTypeProject {
   static getId(item: ExplorerItemData<CrgProject>): string {
     return String(item.payload.id);

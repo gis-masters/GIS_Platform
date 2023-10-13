@@ -13,7 +13,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<Schema>>()
 export class ExplorerAdapterTypeSchema {
   static getId(item: ExplorerItemData<Schema>): string {
     return item.payload.name;

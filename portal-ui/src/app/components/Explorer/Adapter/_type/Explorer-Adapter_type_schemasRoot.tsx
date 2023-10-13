@@ -19,7 +19,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<null, Schema>>()
 export class ExplorerAdapterTypeSchemasRoot {
   static getId(): string {
     return 'schemasRoot';
@@ -50,7 +50,7 @@ export class ExplorerAdapterTypeSchemasRoot {
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData<Schema>[], number]> {
     const all = await schemaService.getAllSchemas();
-    const filtered = filter.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
+    const filtered = filter?.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
     const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
@@ -62,9 +62,9 @@ export class ExplorerAdapterTypeSchemasRoot {
     item: ExplorerItemData<null>,
     { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
-  ): Promise<[ExplorerItemData<Schema>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<Schema>[], number, number] | undefined> {
     const all = await schemaService.getAllSchemas();
-    const filtered = filterObjects(all, filter);
+    const filtered = filterObjects(all, filter || {});
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const index = sorted.findIndex(({ name }) => name === id);
 

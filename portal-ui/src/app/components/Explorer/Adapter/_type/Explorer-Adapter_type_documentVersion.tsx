@@ -14,7 +14,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<DocumentVersionExtended>>()
 export class ExplorerAdapterTypeDocumentVersion {
   static getId(item: ExplorerItemData<DocumentVersionExtended>): string {
     return item.payload.updatedTime;

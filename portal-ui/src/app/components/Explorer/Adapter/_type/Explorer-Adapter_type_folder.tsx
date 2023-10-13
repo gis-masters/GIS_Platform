@@ -25,6 +25,8 @@ import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitl
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
 import { ExplorerStore } from '../../Explorer.store';
+import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
+import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -32,14 +34,14 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<LibraryRecord, LibraryRecord>>()
 export class ExplorerAdapterTypeFolder {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
-    return item.payload.title;
+    return item.payload.title || '';
   }
 
   static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
@@ -92,14 +94,14 @@ export class ExplorerAdapterTypeFolder {
 
     const [libraryRecords, pagesCount] = await getLibraryRecords(libraryTableName, schemaId, {
       ...options,
-      filter: service.mergeCustomFilter(filter, explorerItem, store),
+      filter: service.mergeCustomFilter(filter || {}, explorerItem, store),
       queryParams: { parent: id }
     });
 
     const { contentTypes } = await schemaService.getSchema(schemaId);
 
     libraryRecords.forEach(record => {
-      const contentType = contentTypes.find(cType => cType.id === record.content_type_id);
+      const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
 
       result.push({
         type:
@@ -119,14 +121,14 @@ export class ExplorerAdapterTypeFolder {
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
     const response = await getLibraryRecordsWithParticularOne(
       item.payload.libraryTableName,
       item.payload.schemaId,
       Number(id),
       {
         ...options,
-        filter: service.mergeCustomFilter(filter, item, store),
+        filter: service.mergeCustomFilter(filter || {}, item, store),
         page,
         queryParams: { parent: item.payload.id }
       }
@@ -176,7 +178,7 @@ export class ExplorerAdapterTypeFolder {
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.libraryTableName, Number(recordId));
     const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
-    const contentType = contentTypes.find(cType => cType.id === payload.content_type_id);
+    const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
     return {
       type:
@@ -212,20 +214,25 @@ export class ExplorerAdapterTypeFolder {
     const currentItem = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||
-      (organizationSettings.createLibraryItem && [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
+      (organizationSettings.createLibraryItem &&
+        currentItem.role &&
+        [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
     const createHandler = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
+    const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library;
+    const path = store.path
+      .filter(({ type }) => type === ExplorerItemType.FOLDER)
+      .map(({ payload }) => (payload as LibraryRecord).id);
 
     return (
-      full &&
-      createEnabled && (
-        <CreateLibraryRecord
-          library={store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library}
-          parent={currentItem}
-          onCreate={createHandler}
-        />
-      )
+      <>
+        {full && createEnabled && (
+          <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />
+        )}
+        <LibraryDeletedDocumentsSwitch library={library} path={path} />
+        <LibraryViewSwitch to='registry' library={library} path={path} />
+      </>
     );
   }
 

@@ -3,13 +3,13 @@ import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
 import { DataChangeEventDetail } from '../../../services/communication.service';
-import { PageOptions, SortOrder } from '../../../services/models';
+import { PageOptions, SortOrder, ValueOf } from '../../../services/models';
 import { Emitter } from '../../../services/common/Emitter';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemPayloads, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
@@ -35,7 +35,7 @@ import { ExplorerAdapterTypeTaskHistoryRoot } from './_type/Explorer-Adapter_typ
 import { ExplorerAdapterTypeTaskHistory } from './_type/Explorer-Adapter_type_taskHistory';
 import { ExplorerService } from '../Explorer.service';
 
-const adapters: { [key in ExplorerItemType]: Adapter } = {
+const adapters: Record<keyof ExplorerItemPayloads, Adapter<ValueOf<ExplorerItemPayloads>>> = {
   [ExplorerItemType.NONE]: ExplorerAdapterTypeNone,
   [ExplorerItemType.DATASET]: ExplorerAdapterTypeDataset,
   [ExplorerItemType.TABLE]: ExplorerAdapterTypeTable,
@@ -84,7 +84,7 @@ export function getIcon(item: ExplorerItemData): ReactNode {
   return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFileOutlined />;
 }
 
-export function isFolder(item: ExplorerItemData, store?: ExplorerStore): boolean {
+export function isFolder(item: ExplorerItemData, store: ExplorerStore): boolean {
   return adapters[item.type].isFolder(item, store);
 }
 
@@ -134,7 +134,7 @@ export async function getChildrenWithParticularOne(
   id: string,
   store: ExplorerStore,
   service: ExplorerService
-): Promise<[ExplorerItemData[], number, number]> | undefined {
+): Promise<[ExplorerItemData[], number, number] | undefined> {
   if (adapters[item.type].getChildrenWithParticularOne) {
     try {
       return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, id, store, service);

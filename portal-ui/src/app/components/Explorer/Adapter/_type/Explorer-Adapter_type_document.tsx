@@ -22,14 +22,14 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<LibraryRecord, FileInfo>>()
 export class ExplorerAdapterTypeDocument {
   static getId(item: ExplorerItemData<LibraryRecord>): string {
     return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<LibraryRecord>): string {
-    return item.payload.title;
+    return item.payload.title || '';
   }
 
   static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
@@ -90,8 +90,13 @@ export class ExplorerAdapterTypeDocument {
 
   static getChildById(explorerItem: ExplorerItemData<LibraryRecord>, fileId: string): ExplorerItemData<FileInfo> {
     const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
+    const payload = files.find(file => file.id === fileId);
 
-    return { type: ExplorerItemType.FILE, payload: files.find(file => file.id === fileId) };
+    if (!payload) {
+      throw new Error(`File with id ${fileId} not found`);
+    }
+
+    return { type: ExplorerItemType.FILE, payload };
   }
 
   static getChildrenWithParticularOne(

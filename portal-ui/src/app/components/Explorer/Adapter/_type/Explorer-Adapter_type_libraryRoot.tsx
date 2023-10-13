@@ -24,7 +24,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<null, Library>>()
 export class ExplorerAdapterTypeLibraryRoot {
   static getId(): string {
     return 'libraryRoot';
@@ -47,7 +47,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static async getChildren(
-    item: ExplorerItemData,
+    item: ExplorerItemData<null>,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
@@ -61,7 +61,7 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData,
+    item: ExplorerItemData<null>,
     { filter, page, ...options }: PageOptions,
     tableName: string,
     store: ExplorerStore,
@@ -95,7 +95,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     ];
   }
 
-  static async getChildById(item: ExplorerItemData<Library>, id: string): Promise<ExplorerItemData<Library>> {
+  static async getChildById(item: ExplorerItemData<null>, id: string): Promise<ExplorerItemData<Library>> {
     const payload = await getLibrary(id);
 
     return {

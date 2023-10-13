@@ -12,7 +12,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<TaskHistory>>()
 export class ExplorerAdapterTypeTaskHistory {
   static getId(item: ExplorerItemData<TaskHistory>): string {
     return String(item.payload.id);

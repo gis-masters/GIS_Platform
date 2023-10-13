@@ -14,7 +14,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<FileInfo>>()
 export class ExplorerAdapterTypeFile {
   static getId(item: ExplorerItemData<FileInfo>): string {
     return String(item.payload.id);

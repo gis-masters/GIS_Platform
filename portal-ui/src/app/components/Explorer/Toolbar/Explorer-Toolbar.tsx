@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ToolbarDivider } from '../../ToolbarDivider/ToolbarDivider';
@@ -18,19 +18,10 @@ interface ExplorerToolbarProps {
   store: ExplorerStore;
   service: ExplorerService;
   onChange: () => void;
-  libraryViewSwitch: ReactNode;
-  deletedDocumentsSwitch: ReactNode;
   full: boolean;
 }
 
-export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
-  store,
-  service,
-  onChange,
-  full,
-  libraryViewSwitch,
-  deletedDocumentsSwitch
-}) => {
+export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange, full }) => {
   return (
     <div className={cnExplorerToolbar()}>
       <ExplorerFilter store={store} onChange={onChange} service={service} />
@@ -38,8 +29,6 @@ export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
       <ExplorerPageSize store={store} onChange={onChange} />
       <ToolbarDivider />
       <ExplorerToolbarActions service={service} store={store} full={full} />
-      {deletedDocumentsSwitch}
-      {libraryViewSwitch}
     </div>
   );
 };

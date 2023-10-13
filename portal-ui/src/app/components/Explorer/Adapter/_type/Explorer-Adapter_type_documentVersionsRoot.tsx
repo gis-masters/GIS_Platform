@@ -11,11 +11,11 @@ import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.mode
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
-    [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: null;
+    [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: LibraryRecord;
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<LibraryRecord, DocumentVersionExtended>>()
 export class ExplorerAdapterTypeDocumentVersionsRoot {
   static getId(): string {
     return 'documentVersionsRoot';

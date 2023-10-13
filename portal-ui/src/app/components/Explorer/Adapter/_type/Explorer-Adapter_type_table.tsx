@@ -17,7 +17,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<VectorTable>>()
 export class ExplorerAdapterTypeTable {
   static getId(item: ExplorerItemData<VectorTable>): string {
     return item.payload.identifier;

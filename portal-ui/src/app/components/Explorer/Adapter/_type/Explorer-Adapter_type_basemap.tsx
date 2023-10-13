@@ -12,7 +12,7 @@ declare module '../../Explorer.models' {
   }
 }
 
-@staticImplements<Adapter>()
+@staticImplements<Adapter<Basemap>>()
 export class ExplorerAdapterTypeBasemap {
   static getId(item: ExplorerItemData<Basemap>): string {
     return String(item.payload.id);
@@ -27,7 +27,7 @@ export class ExplorerAdapterTypeBasemap {
   }
 
   static getMeta(item: ExplorerItemData<Basemap>): string {
-    return item.payload.name;
+    return item.payload.name || '';
   }
 
   static getIcon(): ReactNode {
