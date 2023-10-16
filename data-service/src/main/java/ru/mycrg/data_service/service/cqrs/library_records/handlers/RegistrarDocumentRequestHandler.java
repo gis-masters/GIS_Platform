@@ -10,7 +10,6 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.RegisterDocum
 import ru.mycrg.data_service.service.records.IRecordsService;
 import ru.mycrg.data_service.service.records.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
@@ -18,6 +17,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.time.LocalDateTime.now;
 
 @Component
 public class RegistrarDocumentRequestHandler implements IRequestHandler<RegisterDocumentRequest, String> {
@@ -53,7 +54,7 @@ public class RegistrarDocumentRequestHandler implements IRequestHandler<Register
     @Override
     public String handle(RegisterDocumentRequest request) {
         ResourceQualifier rQualifier = request.getQualifier();
-        LocalDateTime now = DateTimeUtil.now();
+        LocalDateTime now = now();
         String libraryId = rQualifier.getTable();
         Long registryNumber = librariesService.incrementRegistryNumber(libraryId);
         SchemaDto schema = librariesService.getSchema(libraryId);

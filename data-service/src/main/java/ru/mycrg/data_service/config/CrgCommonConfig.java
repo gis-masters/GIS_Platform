@@ -16,8 +16,6 @@ public class CrgCommonConfig {
 
     public static final String SYSTEM_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
-    public static final ZoneId DEFAULT_ZONE = ZoneId.of("Europe/Moscow");
-
     @Bean
     public CrgScriptEngine crgScriptEngine() {
         return new CrgScriptEngine();

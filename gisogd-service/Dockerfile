@@ -16,4 +16,5 @@ ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                      -Delastic.apm.server_urls=${APM_URL} \
                                      -Delastic.apm.enable_log_correlation=true \
                                      -Delastic.apm.application_packages=ru.mycrg.gisogd_service \
+                                     -Duser.timezone=Europe/Moscow \
                                      -jar gisogd-service.jar

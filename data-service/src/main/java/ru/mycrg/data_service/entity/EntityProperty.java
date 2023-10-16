@@ -6,11 +6,12 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.LastModifiedDate;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.schemas.IEntityProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(
@@ -174,11 +175,11 @@ public class EntityProperty {
     private String createdBy;
 
     @Column
-    private LocalDateTime createdAt = DateTimeUtil.now();
+    private LocalDateTime createdAt = now();
 
     @Column
     @LastModifiedDate
-    private LocalDateTime lastModified = DateTimeUtil.now();
+    private LocalDateTime lastModified = now();
 
     public EntityProperty() {
         // Framework required

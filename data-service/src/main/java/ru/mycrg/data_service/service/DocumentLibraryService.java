@@ -20,7 +20,6 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.ContentType;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -31,6 +30,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
@@ -100,7 +100,7 @@ public class DocumentLibraryService {
 
         Long oldRegistryNumber = library.getRegistryCounter();
         library.setRegistryCounter(oldRegistryNumber + 1);
-        library.setLastModified(DateTimeUtil.now());
+        library.setLastModified(now());
 
         libraryRepository.save(library);
 

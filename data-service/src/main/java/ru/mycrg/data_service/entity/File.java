@@ -7,11 +7,12 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "files")
@@ -59,7 +60,7 @@ public class File {
     private String createdBy;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = DateTimeUtil.now();
+    private LocalDateTime createdAt = now();
 
     public File() {
         // Required
@@ -73,7 +74,7 @@ public class File {
         this.intents = intents;
         this.path = path;
         this.createdBy = userLogin;
-        this.createdAt = DateTimeUtil.now();
+        this.createdAt = now();
     }
 
     public UUID getId() {

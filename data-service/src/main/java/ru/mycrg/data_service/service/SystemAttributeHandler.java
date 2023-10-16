@@ -6,14 +6,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -115,7 +116,7 @@ public class SystemAttributeHandler {
         contentWithoutVersion.remove(VERSIONS.getName());
 
         DocumentVersioningDto newVersion = new DocumentVersioningDto(authenticationFacade.getUserDetails().getUserId(),
-                                                                     DateTimeUtil.now(),
+                                                                     now(),
                                                                      contentWithoutVersion);
         allVersions.add(newVersion);
 
@@ -166,7 +167,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler fillCreatorAndCreationDate(List<String> allColumns) {
         if (allColumns.contains(CREATED_AT.getName())) {
-            result.put(CREATED_AT.getName(), DateTimeUtil.now());
+            result.put(CREATED_AT.getName(), now());
         } else {
             log.warn(String.format("There is no column %s in database ", CREATED_AT.getName()));
         }
@@ -182,7 +183,7 @@ public class SystemAttributeHandler {
 
     public SystemAttributeHandler updateLastModifiedAndUpdatedBy(List<String> allColumns) {
         if (allColumns.contains(LAST_MODIFIED.getName())) {
-            result.put(LAST_MODIFIED.getName(), DateTimeUtil.now());
+            result.put(LAST_MODIFIED.getName(), now());
         } else {
             log.warn(String.format("There is no column %s in database ", LAST_MODIFIED.getName()));
         }

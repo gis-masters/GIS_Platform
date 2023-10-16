@@ -6,10 +6,10 @@ import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.BaseMapRepository;
 import ru.mycrg.data_service.service.cqrs.basemaps.requests.UpdateBaseMapRequest;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 
 @Component
@@ -74,7 +74,7 @@ public class UpdateBaseMapRequestHandler implements IRequestHandler<UpdateBaseMa
             baseMapForUpdate.setUrl(dto.getUrl());
         }
 
-        baseMapForUpdate.setLastModified(DateTimeUtil.now());
+        baseMapForUpdate.setLastModified(now());
 
         request.setBaseMapModel(baseMapForUpdate);
 

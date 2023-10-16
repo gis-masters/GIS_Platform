@@ -1,10 +1,11 @@
 package ru.mycrg.data_service.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
-import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "acl_permissions")
@@ -31,11 +32,11 @@ public class Permission {
     private String createdBy;
 
     @Column
-    private LocalDateTime createdAt = DateTimeUtil.now();
+    private LocalDateTime createdAt = now();
 
     @Column
     private @LastModifiedDate
-    LocalDateTime lastModified = DateTimeUtil.now();
+    LocalDateTime lastModified = now();
 
     public Permission() {
         // Framework required

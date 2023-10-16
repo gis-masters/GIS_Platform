@@ -12,12 +12,12 @@ import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 
 @Component
@@ -96,7 +96,7 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
                 tableForUpdate.setFiasAdress(dto.getFias__address());
             }
 
-            tableForUpdate.setLastModified(DateTimeUtil.now());
+            tableForUpdate.setLastModified(now());
 
             request.setTableModel(tableForUpdate);
 

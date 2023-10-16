@@ -2,10 +2,11 @@ package ru.mycrg.data_service.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.annotations.Type;
-import ru.mycrg.data_service.util.DateTimeUtil;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "tasks_log")
@@ -27,7 +28,7 @@ public class TaskLog {
     private String eventType;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = DateTimeUtil.now();
+    private LocalDateTime createdAt = now();
 
     public TaskLog() {
         //Required

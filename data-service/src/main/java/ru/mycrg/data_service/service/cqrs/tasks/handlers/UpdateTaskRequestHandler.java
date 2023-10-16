@@ -15,7 +15,6 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -23,6 +22,7 @@ import ru.mycrg.mediator.Voidy;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -69,7 +69,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
         Map<String, Object> dataForUpdate = newTask.getContent();
         dataForUpdate.put(UPDATED_BY.getName(), userDetails.getUserId());
-        dataForUpdate.put(LAST_MODIFIED.getName(), DateTimeUtil.now());
+        dataForUpdate.put(LAST_MODIFIED.getName(), now());
 
         try {
             recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, taskId),

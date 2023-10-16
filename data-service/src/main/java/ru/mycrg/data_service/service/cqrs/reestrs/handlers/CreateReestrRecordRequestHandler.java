@@ -8,7 +8,6 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
@@ -16,6 +15,7 @@ import ru.mycrg.mediator.IRequestHandler;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 
 @Component
@@ -40,7 +40,7 @@ public class CreateReestrRecordRequestHandler implements IRequestHandler<CreateR
         // System attributes
         content.put("id", UUID.randomUUID());
         content.put("user_from", authenticationFacade.getLogin());
-        content.put("date_in", DateTimeUtil.now());
+        content.put("date_in", now());
 
         try {
             return commonDao.save(new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName),

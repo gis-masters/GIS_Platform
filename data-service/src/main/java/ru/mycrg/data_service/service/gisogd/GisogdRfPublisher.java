@@ -22,7 +22,6 @@ import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.util.DateTimeUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
@@ -34,12 +33,16 @@ import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.net.URLDecoder;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.time.LocalDateTime.now;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.UUID.fromString;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -177,7 +180,7 @@ public class GisogdRfPublisher {
         Long taskId = record.getId();
 
         log.debug("Start full publication to GISOGD RF. With LIMIT: [{}] Task: [{}] at: [{}]",
-                  limit, taskId, DateTimeUtil.nowAsString());
+                  limit, taskId, now().format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
         log.debug("Found {} schemas prepared to publish", schemas.size());
 
         List<GisogdData> allGisogdDataBySchema = new ArrayList<>();
@@ -194,7 +197,7 @@ public class GisogdRfPublisher {
         gisogdDataWithPositiveOrderSorted
                 .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit, srid));
 
-        log.debug("All events have been sent. Task: {} at: {}", taskId, DateTimeUtil.nowAsString());
+        log.debug("All events have been sent. Task: {} at: {}", taskId, now().format(ISO_DATE_TIME));
 
         return taskId;
     }

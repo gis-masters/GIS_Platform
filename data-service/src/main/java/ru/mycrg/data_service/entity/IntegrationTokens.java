@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.entity;
 
-import ru.mycrg.data_service.util.DateTimeUtil;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "integration_tokens", schema = "public")
@@ -34,7 +34,7 @@ public class IntegrationTokens {
         this.serviceName = serviceName;
         this.token = token;
 
-        this.updatedAt = DateTimeUtil.now();
+        this.updatedAt = now();
     }
 
     public Long getId() {
