@@ -91,6 +91,11 @@ export const withSimpleContentType: Schema = {
       propertyType: PropertyType.BOOL
     },
     {
+      name: 'shape',
+      title: 'Поле GEOMETRY',
+      propertyType: PropertyType.GEOMETRY
+    },
+    {
       name: 'some_files',
       title: 'Поле FILE',
       propertyType: PropertyType.FILE

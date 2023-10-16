@@ -86,18 +86,17 @@ export class SchemasSelect extends Component<FormControlProps> {
       <>
         <div className={cnSchemasSelect()}>{this.selectedSchema}</div>
         <Button onClick={this.openDialog}>Выбрать схему</Button>
-        {this.schemas && (
-          <ChooseXTableDialog<Schema>
-            className={cnSchemasSelectDialog()}
-            title='Выберите схему'
-            data={this.schemas}
-            cols={this.cols}
-            open={this.dialogOpen}
-            onClose={this.closeDialog}
-            onSelect={this.select}
-            single
-          />
-        )}
+        <ChooseXTableDialog<Schema>
+          className={cnSchemasSelectDialog()}
+          title='Выберите схему'
+          data={this.schemas}
+          cols={this.cols}
+          open={this.dialogOpen}
+          loading={!this.schemas?.length}
+          onClose={this.closeDialog}
+          onSelect={this.select}
+          single
+        />
       </>
     );
   }

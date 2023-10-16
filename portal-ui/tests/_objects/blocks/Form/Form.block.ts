@@ -5,6 +5,7 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 export class FormBlock extends Block {
   selectors = {
     container: '.Form',
+    content: '.Form .Form-Content',
     formFields: '.Form .Form-Field'
   };
 
@@ -64,7 +65,14 @@ export class FormBlock extends Block {
 
   async getField(fieldName: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
+    const $content = await this.$('content');
+    await $content.waitForDisplayed();
+
     const $$fields = await this.$$('formFields');
+
+    if (!$$fields.length) {
+      throw new Error('В форме отсутствуют поля');
+    }
 
     for (const $field of $$fields) {
       const name = await $field.$('.Form-Label').getText();

@@ -30,6 +30,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   secondarySortField?: keyof T;
   getRowId?: (rowData: T) => string | number;
   single?: boolean;
+  loading?: boolean;
   filterable?: boolean;
   filtersAlwaysEnabled?: boolean;
   onSelect(items: T[]): void;
@@ -67,8 +68,17 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   }
 
   render() {
-    const { title, data, defaultSort, secondarySortField, single, filterable, className, filtersAlwaysEnabled } =
-      this.props;
+    const {
+      title,
+      data,
+      defaultSort,
+      loading,
+      secondarySortField,
+      single,
+      filterable,
+      className,
+      filtersAlwaysEnabled
+    } = this.props;
     const { getData, getRowId } = this.props as ChooseXTableAsyncProps<T>;
 
     return (
@@ -80,6 +90,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
         defaultSort={defaultSort}
         secondarySortField={secondarySortField}
         onFilter={this.setViewed}
+        loading={loading}
         filtersAlwaysEnabled={filtersAlwaysEnabled}
         filterable={filterable}
         getRowId={getRowId}

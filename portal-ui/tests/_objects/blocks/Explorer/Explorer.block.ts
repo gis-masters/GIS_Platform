@@ -51,7 +51,9 @@ export class ExplorerBlock extends Block {
   }
 
   async getContentWidgetField(field: string): Promise<WebdriverIO.Element> {
-    const formBlock = new FormBlock(await this.$('viewContentWidget'));
+    const $contentWidget = await this.$('viewContentWidget');
+    await $contentWidget.waitForDisplayed();
+    const formBlock = new FormBlock($contentWidget);
 
     return await formBlock.getField(field);
   }

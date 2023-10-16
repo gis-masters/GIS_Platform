@@ -46,6 +46,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   filterable?: boolean;
+  loading?: boolean;
   defaultFilter?: FilterQuery;
   filtersAlwaysEnabled?: boolean;
   containerProps?: Partial<PaperProps & XTableContainerProps>;
@@ -172,6 +173,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       className,
       size,
       singleLineContent,
+      loading = false,
       containerProps,
       showFiltersPanel,
       getRowId = defaultRowIdGetter,
@@ -241,7 +243,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
             <TableBody>
               {this.empty ? (
-                <XTableEmpty colsCount={this.cols.length} busy={this.busy} />
+                <XTableEmpty colsCount={this.cols.length} busy={this.busy || loading} />
               ) : (
                 this.dataPaged.map((rowData, i) => (
                   <XTableRow
@@ -273,7 +275,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
             <Pagination count={this.totalPages} page={this.page} onChange={this.handlePagination} />
           </XTableFooter>
         )}
-        <Loading noBackdrop visible={this.busy} />
+        <Loading noBackdrop visible={this.busy || loading} />
       </div>
     );
   }

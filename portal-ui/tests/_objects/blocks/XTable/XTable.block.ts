@@ -141,6 +141,7 @@ export class XTableBlock extends Block {
   }
 
   async waitForLoading(): Promise<void> {
+    await this.waitForVisible();
     const $loading = await this.$('loading');
     try {
       await $loading.waitForDisplayed();

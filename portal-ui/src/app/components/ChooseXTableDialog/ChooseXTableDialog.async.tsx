@@ -91,6 +91,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
             defaultSort={defaultSort}
             secondarySortField={secondarySortField}
             filterable
+            loading={loading}
             filtersAlwaysEnabled
             single={single}
             selectedItems={selectedItems}

@@ -73,7 +73,14 @@ Given(
       },
       library.table_name
     );
-    this.latestLibraryRecords = [record];
+
+    this.latestLibraryRecords = [
+      {
+        ...record,
+        libraryTableName: library.table_name,
+        schemaId: library.schemaId
+      }
+    ];
   }
 );
 
