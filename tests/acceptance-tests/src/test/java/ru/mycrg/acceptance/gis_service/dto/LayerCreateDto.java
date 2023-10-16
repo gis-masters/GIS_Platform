@@ -18,6 +18,7 @@ public class LayerCreateDto {
     private long maxZoom;
     private String mode;
     private String contentType;
+    private String style;
 
     public LayerCreateDto(String title, String type) {
         this.title = title;
@@ -26,7 +27,7 @@ public class LayerCreateDto {
 
     public LayerCreateDto(String title, String dataset, String tableName, String styleName, String type,
                           String schemaId, String dataStoreName, String nativeCRS, String dataSourceUri,
-                          String contentType) {
+                          String contentType, String style) {
         this.title = title;
         this.dataset = dataset;
         this.tableName = tableName;
@@ -37,6 +38,7 @@ public class LayerCreateDto {
         this.nativeCRS = nativeCRS;
         this.dataSourceUri = dataSourceUri;
         this.contentType = contentType;
+        this.style = style;
     }
 
     public String getTitle() {
@@ -149,5 +151,13 @@ public class LayerCreateDto {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }

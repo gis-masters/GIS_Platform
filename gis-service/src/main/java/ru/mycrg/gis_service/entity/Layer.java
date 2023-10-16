@@ -87,6 +87,8 @@ public class Layer implements Identifiable<Long> {
 
     private String errorText;
 
+    private String style;
+
     public Layer() {
         // Required
     }
@@ -115,6 +117,7 @@ public class Layer implements Identifiable<Long> {
         contentType = dto.getContentType();
         view = dto.getView();
         errorText = dto.getErrorText();
+        style = dto.getStyle();
     }
 
     public Layer(LayerCreateDto dto, Project project) {
@@ -314,6 +317,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setErrorText(String healthCheck) {
         this.errorText = healthCheck;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 
     @Override

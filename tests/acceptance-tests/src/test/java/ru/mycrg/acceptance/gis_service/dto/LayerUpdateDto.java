@@ -12,6 +12,7 @@ public class LayerUpdateDto {
     private int transparency = 10;
     private Long parentId;
     private String contentType;
+    private String style;
 
     public LayerUpdateDto() {
         // Required
@@ -22,7 +23,7 @@ public class LayerUpdateDto {
     }
 
     public LayerUpdateDto(String title, String dataset, Boolean enabled, int position, int transparency, int minZoom,
-                          int maxZoom, String nativeCRS, String contentType) {
+                          int maxZoom, String nativeCRS, String contentType, String style) {
         this.title = title;
         this.dataset = dataset;
         this.enabled = enabled;
@@ -32,6 +33,7 @@ public class LayerUpdateDto {
         this.maxZoom = maxZoom;
         this.nativeCRS = nativeCRS;
         this.contentType = contentType;
+        this.style = style;
     }
 
     public String getTitle() {
@@ -72,5 +74,9 @@ public class LayerUpdateDto {
 
     public String getContentType() {
         return contentType;
+    }
+
+    public String getStyle() {
+        return style;
     }
 }

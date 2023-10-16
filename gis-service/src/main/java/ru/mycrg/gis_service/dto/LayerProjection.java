@@ -26,6 +26,7 @@ public class LayerProjection {
     private final String contentType;
     private final String view;
     private final String errorText;
+    private final String style;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
         this.id = layer.getId();
@@ -50,6 +51,7 @@ public class LayerProjection {
         this.contentType = layer.getContentType();
         this.view = layer.getView();
         this.errorText = layer.getErrorText();
+        this.style = layer.getStyle();
     }
 
     public Long getId() {
@@ -138,5 +140,9 @@ public class LayerProjection {
 
     public String getErrorText() {
         return errorText;
+    }
+
+    public String getStyle() {
+        return style;
     }
 }

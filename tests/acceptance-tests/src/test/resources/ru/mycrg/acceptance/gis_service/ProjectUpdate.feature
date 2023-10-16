@@ -51,11 +51,11 @@ Feature: Обновление проектов
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     When Администратор даёт доступ: "VIEWER" для текущего пользователя на текущий проект
     When Пользователь делает запрос на обновление полей слоя проекта
-      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> | <style> |
     Then Сервер отвечает со статус-кодом 403
     Examples:
-      | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
-      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type |
+      | userName  | userSurname | userEmail | userPassword | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    | style |
+      | STRING_10 | STRING_10   | EMAIL_10  | testtestQ1   | newTitle | false   | NUMBER_3 | NUMBER_2     | 15      | 30      | EPSG:28410   | test_content_type | test  |
 
   Scenario: Редактирование проекта доступно пользователю через права выданные на группу
     Given Существует проект "PermissionTest2"

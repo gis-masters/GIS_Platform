@@ -9,15 +9,15 @@ Feature: Создание слоев в проектах
     Given Существует проект "STRING_10"
     Given Существует набор данных
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "<style>"
     Then Сервер отвечает со статус-кодом 201
     And Сервер передаёт ID слоя проекта в ответе
     When Пользователь делает запрос на текущий слой
     Then Сервер отвечает со статус-кодом 200
     And Поля векторного слоя совпадают с переданными
     Examples:
-      | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri |
-      | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      |
+      | title                             | styleName    | type   | schemaId     | nativeCRS  | dataSourceUri | style    |
+      | Искусственные дорожные сооружения | transportobj | vector | transportobj | EPSG:28406 | STRING_6      | STRING_6 |
 
   Scenario: Создание внешнего слоя
     Given Существует проект "STRING_10"
@@ -43,7 +43,7 @@ Feature: Создание слоев в проектах
     Given Существует проект "STRING_10"
     Given Существует набор данных
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "<content_type>"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "<content_type>" "style"
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | title      | styleName    | type     | schemaId     | nativeCRS  | dataSourceUri | content_type      | reason                          |

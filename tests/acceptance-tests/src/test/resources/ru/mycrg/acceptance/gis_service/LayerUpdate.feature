@@ -12,13 +12,13 @@ Feature: Обновление слоя проектов
     Given Существует слой проекта
     When Авторизируемся владельцем организации
     When Владелец делает запрос на обновление полей слоя проекта
-      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> |
+      | <newTitle> | <enabled> | <position> | <transparency> | <minZoom> | <maxZoom> | <newNativeCrs> | <newContentType> | <style> |
     Then Сервер отвечает со статус-кодом 204
     When Пользователь делает запрос на текущий слой
     Then Обновленные поля слоя совпадают с переданными
     Examples:
-      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    |
-      | newTitle | false   | NUMBER_3 | 20           | 15      | 30      | EPSG:28410   | test_content_type |
+      | newTitle | enabled | position | transparency | minZoom | maxZoom | newNativeCrs | newContentType    | style      |
+      | newTitle | false   | NUMBER_3 | 20           | 15      | 30      | EPSG:28410   | test_content_type | some_style |
 
   Scenario: Добавление слою проекта папки-родителя администратором организации
     Given Существует проект "STRING_10"

@@ -69,9 +69,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} {string} {string} {string} {string}")
+    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} " +
+            "{string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String schemaId, String epsg,
-                            String dataSourceUri, String libraryId, String recordId, String mode, String contentType) {
+                            String dataSourceUri, String libraryId, String recordId, String mode, String contentType,
+                            String style) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -84,7 +86,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(dataStoreName),
                                             generateString(epsg),
                                             generateString(dataSourceUri),
-                                            generateString(contentType));
+                                            generateString(contentType),
+                                            generateString(style));
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
@@ -118,7 +121,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto = new LayerCreateDto(generateString("STRING_5"), generateString("STRING_5"),
                                             generateString("STRING_5"), generateString("STRING_5"),
                                             "vector", generateString("STRING_5"), generateString("STRING_5"),
-                                            "EPSG:28406", generateString("STRING_8"), null);
+                                            "EPSG:28406", generateString("STRING_8"), null, generateString("STRING_8"));
 
         super.createEntity(layerCreateDto);
     }
@@ -177,7 +180,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         "libraryId",
                         "1",
                         "full",
-                        null);
+                        null,
+                        "some style");
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetLayerIdFromBody();
         }
@@ -194,7 +198,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     "libraryId",
                     "1",
                     "",
-                    null);
+                    null,
+                    "some style");
         assertEquals(SC_CREATED, response.getStatusCode());
         extractAndSetLayerIdFromBody();
     }
@@ -332,7 +337,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertThat(presentedData.get("minZoom"), is(layerUpdateDto.getMinZoom()));
         assertThat(presentedData.get("maxZoom"), is(layerUpdateDto.getMaxZoom()));
         assertThat(presentedData.get("nativeCRS"), is(layerUpdateDto.getNativeCRS()));
-        assertThat(presentedData.get("contentType"), is(layerUpdateDto.getContentType()));
+        assertThat(presentedData.get("style"), is(layerUpdateDto.getStyle()));
     }
 
     @When("Пользователь делает запрос на добавление слоя в папку-родитель")
@@ -519,7 +524,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             Integer.parseInt(generateString(data.get(4))),
                                             Integer.parseInt(generateString(data.get(5))),
                                             generateString(data.get(6)),
-                                            generateString(data.get(7)));
+                                            generateString(data.get(7)),
+                                            data.get(8));
 
         updateLayer(layerUpdateDto);
     }

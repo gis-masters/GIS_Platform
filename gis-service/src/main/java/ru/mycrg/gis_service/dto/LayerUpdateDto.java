@@ -49,6 +49,8 @@ public class LayerUpdateDto {
     @Length(min = 1, max = 255)
     private String styleName;
 
+    private String style;
+
     public LayerUpdateDto() {
         // Required by framework
     }
@@ -155,5 +157,13 @@ public class LayerUpdateDto {
 
     public void setErrorText(String errorText) {
         this.errorText = errorText;
+    }
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        this.style = style;
     }
 }
