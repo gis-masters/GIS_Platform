@@ -21,6 +21,7 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.util.JsonConverter.getJsonString;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.LAST_MODIFIED;
 import static ru.mycrg.gisog_service_contract.dto.Status.SUCCESS;
 
 @Component
@@ -60,7 +61,7 @@ public class GisogdRfEventHandler implements IEventHandler {
             LocalDateTime currentDatetime = now();
             if (SUCCESS.equals(status)) {
                 String query = String.format("UPDATE %s.%s SET " +
-                                                     "gisogdrf_publication_datetime = '" + currentDatetime + "', " +
+                                                     GISOGFRF_PUBLICATION_DATETIME + " = '" + currentDatetime + "', " +
                                                      GISOGFRF_RESPONSE + " = null" +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);
@@ -73,7 +74,7 @@ public class GisogdRfEventHandler implements IEventHandler {
                 response.put("status", event.getStatus().name());
 
                 String query = String.format("UPDATE %s.%s SET " +
-                                                     "last_modified = '" + currentDatetime + "', " +
+                                                     LAST_MODIFIED.getName() + " = '" + currentDatetime + "', " +
                                                      GISOGFRF_RESPONSE + " = :response " +
                                                      "  WHERE " + idTemplate + " = %s",
                                              schemaName, tableName, id);

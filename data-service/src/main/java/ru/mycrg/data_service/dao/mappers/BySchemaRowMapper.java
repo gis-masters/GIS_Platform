@@ -10,10 +10,18 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.sql.Types.*;
+import static java.util.Objects.isNull;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
@@ -27,6 +35,58 @@ public class BySchemaRowMapper {
 
     public BySchemaRowMapper(SchemaDto schema) {
         this.schema = schema;
+    }
+
+    void extract(ResultSet rs, Map<String, Object> properties) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+        int i = 1;
+        while (i <= metaData.getColumnCount()) {
+            String columnName = metaData.getColumnName(i);
+
+            switch (metaData.getColumnType(i)) {
+                case BIT:
+                    properties.put(columnName, rs.getBoolean(i));
+                    break;
+                case BIGINT:
+                    if (isNull(rs.getObject(i))) {
+                        properties.put(columnName, null);
+                    } else {
+                        properties.put(columnName, rs.getLong(i));
+                    }
+
+                    break;
+                case INTEGER:
+                    if (isNull(rs.getObject(i))) {
+                        properties.put(columnName, null);
+                    } else {
+                        properties.put(columnName, rs.getInt(i));
+                    }
+
+                    break;
+                case TIMESTAMP:
+                    Timestamp timestamp = rs.getTimestamp(i);
+                    if (timestamp != null) {
+                        properties.put(columnName, timestamp.toLocalDateTime()
+                                                            .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+                    } else {
+                        properties.put(columnName, null);
+                    }
+
+                    break;
+                case OTHER:
+                    if (rs.getObject(i) != null && schema != null) {
+                        handleBySchema(properties, columnName, rs.getObject(i));
+                    } else {
+                        properties.put(columnName, rs.getString(i));
+                    }
+                    break;
+                default:
+                    properties.put(columnName, rs.getString(i));
+                    break;
+            }
+
+            i++;
+        }
     }
 
     void handleBySchema(Map<String, Object> properties,

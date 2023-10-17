@@ -16,17 +16,14 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.SchemaExtractor;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.dto.TypeUrlData;
-import ru.mycrg.gisog_service_contract.AuditGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
 import ru.mycrg.mediator.Mediator;
@@ -62,8 +59,6 @@ public class GisogdRfPublisher {
 
     public static final String INBOX_MARKER = "inbox_data";
 
-    private static final String TARGET_COLUMN = "gisogdrf_publication_datetime";
-
     private final Logger log = LoggerFactory.getLogger(GisogdRfPublisher.class);
 
     private final BaseDao baseDao;
@@ -74,31 +69,28 @@ public class GisogdRfPublisher {
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
 
-    private final TableService tableService;
+    private final GisogdRfUtil gisogdRfUtil;
     private final SchemaService schemaService;
     private final SchemaExtractor schemaExtractor;
-    private final DocumentLibraryService dlService;
 
     public GisogdRfPublisher(BaseDao baseDao,
                              Mediator mediator,
                              GisogdRfDao gisogdRfDao,
+                             GisogdRfUtil gisogdRfUtil,
                              SchemaService schemaService,
                              IMessageBusProducer messageBus,
-                             SpatialRecordsDao spatialRecordsDao,
                              SchemaExtractor schemaExtractor,
-                             IAuthenticationFacade authenticationFacade,
-                             TableService tableService,
-                             DocumentLibraryService dlService) {
+                             SpatialRecordsDao spatialRecordsDao,
+                             IAuthenticationFacade authenticationFacade) {
         this.baseDao = baseDao;
         this.mediator = mediator;
-        this.gisogdRfDao = gisogdRfDao;
-        this.schemaService = schemaService;
         this.messageBus = messageBus;
+        this.gisogdRfDao = gisogdRfDao;
+        this.gisogdRfUtil = gisogdRfUtil;
+        this.schemaService = schemaService;
         this.schemaExtractor = schemaExtractor;
         this.spatialRecordsDao = spatialRecordsDao;
         this.authenticationFacade = authenticationFacade;
-        this.tableService = tableService;
-        this.dlService = dlService;
     }
 
     public void publish(long taskId, ResourceQualifier qualifier, int srid) {
@@ -166,66 +158,27 @@ public class GisogdRfPublisher {
      * @return Идентификатор начатой системной задачи.
      */
     public Long fullPublication(Long limit, int srid) {
-        List<String> schemas = getSchemasPublishedToGisogdRf(TARGET_COLUMN);
-        if (schemas.isEmpty()) {
-            String msg = format(
-                    "Не найдено предназначенных для отправки в ГИСОГД РФ библиотек. Не найдено схем с полем: %s",
-                    TARGET_COLUMN);
-            log.warn(msg);
-
-            throw new BadRequestException(msg);
-        }
-
         IRecord record = createSystemTask();
         Long taskId = record.getId();
 
         log.debug("Start full publication to GISOGD RF. With LIMIT: [{}] Task: [{}] at: [{}]",
                   limit, taskId, now().format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
-        log.debug("Found {} schemas prepared to publish", schemas.size());
 
-        List<GisogdData> allGisogdDataBySchema = new ArrayList<>();
-        schemas.forEach(schemaId -> allGisogdDataBySchema.addAll(getGisogdDataBySchemaId(schemaId)));
+        List<GisogdData> sortedGisogdEntities = gisogdRfUtil.getSchemasPreparedForGisogdRf()
+                                                            .stream()
+                                                            .flatMap(schemaId -> gisogdRfUtil.collectGisogdRfEntities(
+                                                                    schemaId).stream())
+                                                            .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
+                                                            .sorted(Comparator.comparing(GisogdData::getPublishOrder))
+                                                            .collect(Collectors.toList());
 
-        List<GisogdData> gisogdDataWithPositiveOrderSorted = allGisogdDataBySchema
-                .stream()
-                .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
-                .sorted(Comparator.comparing(GisogdData::getPublishOrder))
-                .collect(Collectors.toList());
+        log.debug("Gisogd Data sorted by order: {}", sortedGisogdEntities);
 
-        log.debug("Gisogd Data sortded by order: {}", gisogdDataWithPositiveOrderSorted);
-
-        gisogdDataWithPositiveOrderSorted
-                .forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit, srid));
+        sortedGisogdEntities.forEach(gisogdData -> publish(gisogdData.getResourceQualifier(), taskId, limit, srid));
 
         log.debug("All events have been sent. Task: {} at: {}", taskId, now().format(ISO_DATE_TIME));
 
         return taskId;
-    }
-
-    public void audit(ResourceQualifier qualifier) {
-        IRecord parent = baseDao
-                .findById(qualifier)
-                .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
-        String guid = parent.getAsString(GUID.getName());
-        if (guid == null) {
-            String msg = String.format("В документе [%s] не найдено поле 'guid'", qualifier.getQualifier());
-            log.debug(msg);
-
-            throw new BadRequestException(msg);
-        }
-
-        AuditGisogdRfEvent event = new AuditGisogdRfEvent(
-                authenticationFacade.getOrganizationId(),
-                new Document(fromString(guid),
-                             qualifier.getSchema(),
-                             qualifier.getTable(),
-                             parent.getAsString(CONTENT_TYPE_ID.getName()),
-                             parent.getContent())
-        );
-
-        log.debug("Publish audit event: [{}]", asJsonString(event));
-
-        messageBus.produce(event);
     }
 
     private void removeFields(Map<String, Object> documentContent) {
@@ -235,28 +188,6 @@ public class GisogdRfPublisher {
                       documentContent.remove(field, documentContent.get(field));
                   }
               });
-    }
-
-    private List<GisogdData> getGisogdDataBySchemaId(String schemaId) {
-        List<GisogdData> gisogdData = new ArrayList<>();
-
-        try {
-            List<GisogdData> libraryQualifiers = dlService.getLibrariesCreatedBySchema(schemaId);
-            log.debug("Found {} libraries created by schema", libraryQualifiers.size());
-            gisogdData.addAll(libraryQualifiers);
-            List<GisogdData> layerQualifiers = tableService.getTablesCreatedBySchema(schemaId);
-            log.debug("Found {} layers created by schema", layerQualifiers.size());
-            gisogdData.addAll(layerQualifiers);
-        } catch (Exception e) {
-            log.error("Не удалось начать публикацию по схеме: [{}]. По причине: {}", schemaId, e.getMessage(), e);
-        }
-        gisogdData.forEach(data -> {
-            if (Objects.isNull(data.getPublishOrder())) {
-                data.setPublishOrder(Integer.MAX_VALUE);
-            }
-        });
-
-        return gisogdData;
     }
 
     private void publish(ResourceQualifier qualifier, Long taskId, Long limit, int srid) {
@@ -670,12 +601,6 @@ public class GisogdRfPublisher {
         }
 
         return result;
-    }
-
-    private List<String> getSchemasPublishedToGisogdRf(String targetProperty) {
-        return schemaService.getBySpecificProperty(targetProperty).stream()
-                            .map(SchemaDto::getTableName)
-                            .collect(Collectors.toList());
     }
 
     private IRecord createSystemTask() {

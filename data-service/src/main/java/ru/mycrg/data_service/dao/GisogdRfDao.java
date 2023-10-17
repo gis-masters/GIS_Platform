@@ -4,13 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class GisogdRfDao {
@@ -97,10 +96,7 @@ public class GisogdRfDao {
                 "  ORDER BY last_modified" +
                 "  LIMIT " + publicationLimit;
 
-        return jdbcTemplate.queryForList(query)
-                           .stream()
-                           .map(RecordEntity::new)
-                           .collect(Collectors.toList());
+        return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 
     public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
@@ -109,9 +105,14 @@ public class GisogdRfDao {
                 " ORDER BY last_modified" +
                 " LIMIT " + publicationLimit;
 
-        return jdbcTemplate.queryForList(query)
-                           .stream()
-                           .map(RecordEntity::new)
-                           .collect(Collectors.toList());
+        return jdbcTemplate.query(query, new RecordRowMapper(null));
+    }
+
+    public List<IRecord> findAllForAudit(ResourceQualifier qualifier, Long limit) {
+        String query = "SELECT * FROM " + qualifier.getQualifier() +
+                " WHERE gisogdrf_sync_status = 'В процессе синхронизации'" +
+                " LIMIT " + limit;
+
+        return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 }

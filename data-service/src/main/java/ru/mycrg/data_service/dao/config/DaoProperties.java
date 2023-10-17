@@ -6,31 +6,20 @@ public class DaoProperties {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final short BATCH_SIZE = 100;
-    public static final String NULL_MARKER = "crg-null";
-
     /**
-     * Название ключевой колонки(идентификатор обьекта) в таблицах представляющих слой
+     * Различные ключевые параметры.
      */
     public static final String ID = "id";
 
     public static final String PRIMARY_KEY = "objectid";
 
-    public static final String GLOBAL_KEY = "globalid";
-
-    public static final String CLASS_ID = "classid";
-
-    public static final String GLOBAL_ID = "globalid";
-
     public static final String RULE_ID = "ruleid";
 
     public static final String EXTENSION_POSTFIX = "_extension";
 
-    public static final String AS_IS = "AsIs";
-
-    public static final String NOT_IMPORT = "NotImport";
-
     public static final String DEFAULT_GEOMETRY_COLUMN_NAME = "shape";
 
     public static final String GISOGFRF_RESPONSE = "gisogdrf_response";
+    public static final String GISOGFRF_AUDIT_DATETIME = "gisogdrf_audit_datetime";
+    public static final String GISOGFRF_PUBLICATION_DATETIME = "gisogdrf_publication_datetime";
 }

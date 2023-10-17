@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.service.gisogd.GisogdRfAuditor;
 import ru.mycrg.data_service.service.gisogd.GisogdRfPublisher;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -24,13 +26,16 @@ public class GisogdRfController {
 
     private final BaseDao baseDao;
     private final TableService tableService;
+    private final GisogdRfAuditor gisogdRfAuditor;
     private final GisogdRfPublisher gisogdRfPublisher;
 
     public GisogdRfController(BaseDao baseDao,
                               TableService tableService,
+                              GisogdRfAuditor gisogdRfAuditor,
                               GisogdRfPublisher gisogdRfPublisher) {
         this.baseDao = baseDao;
         this.tableService = tableService;
+        this.gisogdRfAuditor = gisogdRfAuditor;
         this.gisogdRfPublisher = gisogdRfPublisher;
     }
 
@@ -60,9 +65,17 @@ public class GisogdRfController {
                                         @RequestParam Long entityId) {
         ResourceQualifier qualifier = makeQualifier(entityName, entityId);
 
-        gisogdRfPublisher.audit(qualifier);
+        gisogdRfAuditor.audit(qualifier);
 
-        return ResponseEntity.status(CREATED).body(qualifier);
+        return ResponseEntity.status(ACCEPTED).body(qualifier);
+    }
+
+    @PostMapping("/full-audit")
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> fullAudit(@RequestParam(defaultValue = "100") Long limit) {
+        gisogdRfAuditor.fullAudit(limit);
+
+        return ResponseEntity.status(ACCEPTED).body("Accepted. Full publication with limit: " + limit);
     }
 
     private ResourceQualifier makeQualifier(String entityName, Long entityId) {

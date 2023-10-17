@@ -220,7 +220,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(message.contains("Причина: отсутствует поле для геометрии"));
     }
 
-    @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле отсутсвует поле classid")
+    @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле отсутствует поле classid")
     public void checkErrorMessageContainsErrorThatShapeFieldIsMissingForWellKnownCalculation() {
         String message = response.jsonPath().get("message");
         assertTrue(message.contains("Argument validation exception"));
@@ -231,7 +231,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         Map<String, Object> errorFirst = errors.get(0);
 
-        assertEquals("Для калькуляции по wellKnown формуле отсутсвуют следующие поля: classid.",
+        assertEquals("Для калькуляции по wellKnown формуле отсутствуют следующие поля: classid.",
                      errorFirst.get("message"));
     }
 

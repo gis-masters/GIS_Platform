@@ -2,6 +2,7 @@ package ru.mycrg.data_service.schedule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.concurrent.DelegatingSecurityContextRunnable;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,7 @@ public class TasksScheduler {
         this.tasksDetachedDao = tasksDetachedDao;
     }
 
+    @Scheduled(cron = "0 0 * * * *")
     public void closeOldTasks() {
         log.debug("close tasks by deadline: {}", DEADLINE_TIME);
 

@@ -40,7 +40,7 @@ public interface IWellKnownFormulaGenerator {
             }
         }
         if (!absentFields.isEmpty()) {
-            validationResult = String.format("Для калькуляции по wellKnown формуле отсутсвуют следующие поля: %s.",
+            validationResult = String.format("Для калькуляции по wellKnown формуле отсутствуют следующие поля: %s.",
                                              String.join(", ", absentFields));
         }
         if (!incompatibleTypes.isEmpty()) {
