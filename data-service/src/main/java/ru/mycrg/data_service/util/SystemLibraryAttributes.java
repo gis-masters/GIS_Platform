@@ -4,6 +4,7 @@ public enum SystemLibraryAttributes {
 
     ID("id"),
     GUID("guid"),
+    NAME("name"),
     EXTENSION_TABLE_ID("object_id"),
     TITLE("title"),
     CREATED_AT("created_at"),

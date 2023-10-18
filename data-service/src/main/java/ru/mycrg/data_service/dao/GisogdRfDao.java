@@ -7,9 +7,13 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
 
 @Repository
 public class GisogdRfDao {
@@ -90,19 +94,15 @@ public class GisogdRfDao {
 
     public List<IRecord> getDocumentsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
         String query = "SELECT * FROM " + qualifier.getQualifier() +
-                "  WHERE " +
-                "    is_folder = false AND " +
-                "    (gisogdrf_publication_datetime ISNULL OR gisogdrf_publication_datetime < last_modified)" +
-                "  ORDER BY last_modified" +
-                "  LIMIT " + publicationLimit;
+                " WHERE is_folder = false AND gisogdrf_sync_status = 'Не синхронизирован'" +
+                " LIMIT " + publicationLimit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 
     public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
         String query = "SELECT * FROM " + qualifier.getQualifier() +
-                " WHERE gisogdrf_publication_datetime ISNULL OR gisogdrf_publication_datetime < last_modified" +
-                " ORDER BY last_modified" +
+                " WHERE gisogdrf_sync_status = 'Не синхронизирован'" +
                 " LIMIT " + publicationLimit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
@@ -114,5 +114,17 @@ public class GisogdRfDao {
                 " LIMIT " + limit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
+    }
+
+    public void writeErrors(ResourceQualifier qualifier, Map<String, String> response) {
+        String asJson = JsonConverter.asJsonString(response);
+
+        String query = "UPDATE " + qualifier.getTableQualifier() +
+                " SET " + GISOGFRF_RESPONSE + " = '" + asJson + "'" +
+                " WHERE id = " + qualifier.getRecordId();
+
+        log.debug("Write errors query: [{}]", query);
+
+        jdbcTemplate.update(query);
     }
 }

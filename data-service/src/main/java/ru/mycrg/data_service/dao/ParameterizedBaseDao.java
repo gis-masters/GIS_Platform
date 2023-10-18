@@ -55,17 +55,6 @@ public class ParameterizedBaseDao {
         }
     }
 
-    public void updateById(@NotNull String query,
-                           @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
-        try {
-            log.debug("UPDATE by id QUERY: [{}]", query);
-
-            pJdbcTemplate.update(query, parameterSource);
-        } catch (Exception e) {
-            throw new CrgDaoException(e.getMessage());
-        }
-    }
-
     public void batchUpdate(@NotNull String query,
                             @NotNull List<MapSqlParameterSource> parameterSource) throws CrgDaoException {
         try {

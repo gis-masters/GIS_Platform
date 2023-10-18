@@ -125,7 +125,7 @@ public class SpatialRecordsDao {
                     feature,
                     schema);
 
-            pBaseDao.updateById(query, parameterSource);
+            pBaseDao.update(query, parameterSource);
         } catch (CrgDaoException e) {
             String msg = format("Не удалось обновить записи: '%s' в таблице %s",
                                 join(ids), qualifier.getTableQualifier());

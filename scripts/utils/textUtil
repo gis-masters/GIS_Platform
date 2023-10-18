@@ -20,6 +20,10 @@ function printInfo() {
   printf "${BLUE}******** $1${NC}\n"
 }
 
+function printSuccess() {
+  printf "${GREEN}******** $1${GREEN}\n"
+}
+
 function printError() {
   printf "${RED}!! !! !! $1${NC}\n"
 }

@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -31,15 +32,16 @@ public class SchemaExtractor {
     }
 
     public Optional<SchemaDto> get(ResourceQualifier qualifier) {
-        if (LIBRARY.equals(qualifier.getType())) {
+        ResourceType type = qualifier.getType();
+        if (LIBRARY.equals(type) || LIBRARY_RECORD.equals(type)) {
             return Optional.ofNullable(libraryService.getSchema(qualifier.getTable()));
-        } else if (TABLE.equals(qualifier.getType())) {
+        } else if (TABLE.equals(type) || FEATURE.equals(type)) {
             String schemaId = schemasAndTablesRepository
                     .findSchemaIdByIdentifier(qualifier.getTable())
                     .orElseThrow(() -> new NotFoundException(qualifier.getQualifier()));
 
             return schemaService.getSchemaByName(schemaId);
-        } else if (TASK.equals(qualifier.getType())) {
+        } else if (TASK.equals(type)) {
             return schemaService.getSchemaByName(TASKS_SCHEMA);
         } else {
             log.warn("Can't get schema. Unknown resource type: [{}]", qualifier.getQualifier());

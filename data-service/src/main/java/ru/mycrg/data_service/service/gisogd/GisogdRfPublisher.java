@@ -13,7 +13,6 @@ import ru.mycrg.data_service.dao.GisogdRfDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.SchemaExtractor;
@@ -99,45 +98,8 @@ public class GisogdRfPublisher {
         IRecord parentDoc = baseDao
                 .findById(qualifier)
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
-        String guid = parentDoc.getAsString(GUID.getName());
-        if (guid == null) {
-            String msg = String.format("Отправка не может быть выполнена. В документе [%s] не найдено поле 'guid'",
-                                       qualifier.getQualifier());
-            log.debug(msg);
 
-            throw new BadRequestException(msg);
-        }
-
-        Map<String, Object> parentContent = parentDoc.getContent();
-        if (parentContent.containsKey(DEFAULT_GEOMETRY_COLUMN_NAME)) {
-            String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, srid);
-            parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
-        }
-        removeFields(parentContent);
-
-        List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
-        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier, srid);
-        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent, srid);
-
-        List<Document> children = new ArrayList<>(documents);
-        children.addAll(urlAsFormula);
-        children.addAll(urlDirectly);
-        children.forEach(child -> removeFields(child.getContent()));
-
-        PublishToGisogdRfEvent event = new PublishToGisogdRfEvent(
-                authenticationFacade.getOrganizationId(),
-                taskId,
-                new Document(fromString(guid),
-                             qualifier.getSchema(),
-                             qualifier.getTable(),
-                             parentDoc.getAsString(
-                                     CONTENT_TYPE_ID.getName()),
-                             parentContent),
-                children);
-
-        log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
-
-        messageBus.produce(event);
+        publishDocument(taskId, qualifier, srid, parentDoc);
     }
 
     /**
@@ -164,13 +126,13 @@ public class GisogdRfPublisher {
         log.debug("Start full publication to GISOGD RF. With LIMIT: [{}] Task: [{}] at: [{}]",
                   limit, taskId, now().format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
 
-        List<GisogdData> sortedGisogdEntities = gisogdRfUtil.getSchemasPreparedForGisogdRf()
-                                                            .stream()
-                                                            .flatMap(schemaId -> gisogdRfUtil.collectGisogdRfEntities(
-                                                                    schemaId).stream())
-                                                            .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
-                                                            .sorted(Comparator.comparing(GisogdData::getPublishOrder))
-                                                            .collect(Collectors.toList());
+        List<GisogdData> sortedGisogdEntities = gisogdRfUtil
+                .getSchemasPreparedForGisogdRf()
+                .stream()
+                .flatMap(schemaId -> gisogdRfUtil.collectGisogdRfEntities(schemaId).stream())
+                .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
+                .sorted(Comparator.comparing(GisogdData::getPublishOrder))
+                .collect(Collectors.toList());
 
         log.debug("Gisogd Data sorted by order: {}", sortedGisogdEntities);
 
@@ -179,6 +141,86 @@ public class GisogdRfPublisher {
         log.debug("All events have been sent. Task: {} at: {}", taskId, now().format(ISO_DATE_TIME));
 
         return taskId;
+    }
+
+    private void publishDocument(long taskId, ResourceQualifier qualifier, int srid, IRecord parentDoc) {
+        String guid = parentDoc.getAsString(GUID.getName());
+        if (guid == null) {
+            log.warn("Отправка не может быть выполнена. В документе [{}] не найдено поле 'guid'",
+                     qualifier.getQualifier());
+
+            return;
+        }
+
+        Map<String, Object> parentContent = parentDoc.getContent();
+        if (parentContent.containsKey(DEFAULT_GEOMETRY_COLUMN_NAME)) {
+            String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, srid);
+            parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
+        }
+        removeFields(parentContent);
+
+        List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
+        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier, srid);
+        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent, srid);
+
+        List<Document> children = new ArrayList<>(documents);
+        children.addAll(urlAsFormula);
+        children.addAll(urlDirectly);
+        children.forEach(child -> removeFields(child.getContent()));
+
+        List<Document> notSyncedChildren = new ArrayList<>();
+        children.forEach(child -> {
+            if ("territorykey".equals(child.getName())) {
+                String territoryGuid = (String) child.getContent().get("guid");
+
+                ResourceQualifier territoryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "territory");
+                String filterByGuid = "guid = '" + territoryGuid + "'";
+
+                Optional<IRecord> oTerritory = baseDao.findBy(territoryQualifier, filterByGuid);
+                if (oTerritory.isPresent()) {
+                    IRecord territory = oTerritory.get();
+                    String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
+
+                    if (!"Синхронизирован".equals(territoryStatus)) {
+                        notSyncedChildren.add(child);
+                    }
+                }
+
+                return;
+            }
+
+            String syncStatus = (String) child.getContent().get("gisogdrf_sync_status");
+            if (!"Синхронизирован".equals(syncStatus)) {
+                notSyncedChildren.add(child);
+            }
+        });
+
+        if (!notSyncedChildren.isEmpty()) {
+            log.info("У документа: {} есть не синхронизированные дети: {}", guid, notSyncedChildren.size());
+
+            Map<String, String> response = new HashMap<>();
+            for (Document child: notSyncedChildren) {
+                response.put(child.getName(), child.getContent().get("gisogdrf_sync_status").toString());
+            }
+
+            gisogdRfDao.writeErrors(qualifier, response);
+
+            return;
+        }
+
+        PublishToGisogdRfEvent event = new PublishToGisogdRfEvent(
+                authenticationFacade.getOrganizationId(),
+                taskId,
+                new Document(fromString(guid),
+                             qualifier.getSchema(),
+                             qualifier.getTable(),
+                             parentDoc.getAsString(CONTENT_TYPE_ID.getName()),
+                             parentContent),
+                children);
+
+        log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
+
+        messageBus.produce(event);
     }
 
     private void removeFields(Map<String, Object> documentContent) {
@@ -199,12 +241,13 @@ public class GisogdRfPublisher {
                 log.debug("From library: {} publish: {} documents", qualifier.getQualifier(), documents.size());
 
                 for (IRecord record: documents) {
-                    publish(taskId,
-                            new ResourceQualifier(qualifier.getSchema(),
-                                                  qualifier.getTable(),
-                                                  record.getId(),
-                                                  LIBRARY_RECORD),
-                            srid);
+                    publishDocument(taskId,
+                                    new ResourceQualifier(qualifier.getSchema(),
+                                                          qualifier.getTable(),
+                                                          record.getId(),
+                                                          LIBRARY_RECORD),
+                                    srid,
+                                    record);
                 }
             } else if (qualifier.getType().equals(TABLE)) {
                 // Слои
@@ -212,19 +255,20 @@ public class GisogdRfPublisher {
                 log.debug("From layer: {} publish: {} records", qualifier.getQualifier(), records.size());
 
                 for (IRecord record: records) {
-                    publish(taskId,
-                            new ResourceQualifier(qualifier.getSchema(),
-                                                  qualifier.getTable(),
-                                                  record.getId(),
-                                                  FEATURE),
-                            srid);
+                    publishDocument(taskId,
+                                    new ResourceQualifier(qualifier.getSchema(),
+                                                          qualifier.getTable(),
+                                                          record.getId(),
+                                                          FEATURE),
+                                    srid,
+                                    record);
                 }
             } else {
                 log.error("Передан неподдерживаемый тип qualifier: {}", qualifier.getType());
             }
         } catch (Exception e) {
-            log.error("Не удалось начать публикацию qualifier: [{}]. По причине: {}",
-                      qualifier.getResourceTable(), e.getMessage(), e);
+            log.error("Не удалось начать публикацию: [{}]. По причине: {}",
+                      qualifier.getQualifier(), e.getMessage(), e);
         }
     }
 
@@ -323,55 +367,6 @@ public class GisogdRfPublisher {
                 .stream()
                 .map(recordQualifier -> prepareDocument(recordQualifier, srid))
                 .collect(Collectors.toList());
-    }
-
-    private List<ResourceQualifier> extractTableQualifiers(SimplePropertyDto property,
-                                                           Map<String, Object> parentContent) {
-        Object value = null;
-        List<TypeUrlData> urls = new ArrayList<>();
-        try {
-            value = parentContent.get(property.getName());
-
-            urls = mapper.readValue(value.toString(),
-                                    new TypeReference<List<TypeUrlData>>() {
-                                    });
-        } catch (Exception e) {
-            log.error("Задано некорректное значение в поле: [{}]. Не соответствует типа TypeUrlData", value, e);
-        }
-
-        List<ResourceQualifier> result = new ArrayList<>();
-        for (TypeUrlData url: urls) {
-            try {
-                MultiValueMap<String, String> queryParams = UriComponentsBuilder
-                        .fromUriString(URLDecoder.decode(String.valueOf(url.getUrl()), UTF_8)).build()
-                        .getQueryParams();
-
-                List<String> features = queryParams.get("features");
-                if (features == null) {
-                    log.warn("В URL: [{}] не найдены features", value);
-
-                    break;
-                }
-
-                for (String feature: features) {
-                    Map<String, Map<String, List<Long>>> data =
-                            mapper.readValue(feature,
-                                             new TypeReference<Map<String, Map<String, List<Long>>>>() {
-                                             });
-                    data.forEach((schema, featureAsMap) -> {
-                        featureAsMap.forEach((tableName, ids) -> {
-                            for (Long id: ids) {
-                                result.add(new ResourceQualifier(schema, tableName, id, TABLE));
-                            }
-                        });
-                    });
-                }
-            } catch (Exception e) {
-                log.error("Не удалось обработать URL: [{}]", value, e);
-            }
-        }
-
-        return result;
     }
 
     /**
@@ -482,6 +477,55 @@ public class GisogdRfPublisher {
         }
 
         return Optional.empty();
+    }
+
+    private List<ResourceQualifier> extractTableQualifiers(SimplePropertyDto property,
+                                                           Map<String, Object> parentContent) {
+        Object value = null;
+        List<TypeUrlData> urls = new ArrayList<>();
+        try {
+            value = parentContent.get(property.getName());
+
+            urls = mapper.readValue(value.toString(),
+                                    new TypeReference<List<TypeUrlData>>() {
+                                    });
+        } catch (Exception e) {
+            log.error("Задано некорректное значение в поле: [{}]. Не соответствует типа TypeUrlData", value, e);
+        }
+
+        List<ResourceQualifier> result = new ArrayList<>();
+        for (TypeUrlData url: urls) {
+            try {
+                MultiValueMap<String, String> queryParams = UriComponentsBuilder
+                        .fromUriString(URLDecoder.decode(String.valueOf(url.getUrl()), UTF_8)).build()
+                        .getQueryParams();
+
+                List<String> features = queryParams.get("features");
+                if (features == null) {
+                    log.warn("В URL: [{}] не найдены features", value);
+
+                    break;
+                }
+
+                for (String feature: features) {
+                    Map<String, Map<String, List<Long>>> data =
+                            mapper.readValue(feature,
+                                             new TypeReference<Map<String, Map<String, List<Long>>>>() {
+                                             });
+                    data.forEach((schema, featureAsMap) -> {
+                        featureAsMap.forEach((tableName, ids) -> {
+                            for (Long id: ids) {
+                                result.add(new ResourceQualifier(schema, tableName, id, TABLE));
+                            }
+                        });
+                    });
+                }
+            } catch (Exception e) {
+                log.error("Не удалось обработать URL: [{}]", value, e);
+            }
+        }
+
+        return result;
     }
 
     @NotNull
