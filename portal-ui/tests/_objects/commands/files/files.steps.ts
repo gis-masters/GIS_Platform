@@ -7,6 +7,8 @@ import { ScenarioScope } from '../../ScenarioScope';
 import { placeDxfFile } from './placeDxfFile';
 import { placeTifFile } from './placeTifFile';
 import { updateLibraryRecord } from '../docLibrary/updateLibraryRecord';
+import { getFileExtension } from '../../../../src/app/services/data/files/files.util';
+import { CompoundMainFiles } from '../../../../src/app/services/data/files/files.models';
 
 Given('загружен тестовый файл {string}', async function (this: ScenarioScope, fileName: string) {
   this.latestUploadedFile = await uploadTestFile(fileName);
@@ -26,6 +28,19 @@ Given(
   'загруженный тестовый dxf файл в проекции {string} размещен в созданном проекте',
   async function (this: ScenarioScope, crs: string) {
     await placeDxfFile(this.latestUploadedFile, this.latestProject.id, crs);
+  }
+);
+
+Given(
+  'загруженный тестовый shape файл в проекции {string} размещен в созданном проекте',
+  async function (this: ScenarioScope, crs: string) {
+    const shape = this.latestUploadedFiles.find(file => getFileExtension(file.title) === CompoundMainFiles.SHP);
+
+    if (shape) {
+      await placeDxfFile(shape, this.latestProject.id, crs);
+    } else {
+      throw new Error('no file');
+    }
   }
 );
 

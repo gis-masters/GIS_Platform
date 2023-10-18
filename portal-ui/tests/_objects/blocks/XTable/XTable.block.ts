@@ -218,6 +218,16 @@ export class XTableBlock extends Block {
 
     throw new Error(`Элемент с значением ${value} в поле ${field} не найден`);
   }
+
+  async getRows(rows: number): Promise<WebdriverIO.Element[]> {
+    const $$rows = await this.$$('rows');
+
+    return $$rows.slice(0, rows);
+  }
+
+  async getAllRows(): Promise<WebdriverIO.Element[]> {
+    return await this.$$('rows');
+  }
 }
 
 export const xTableBlock = new XTableBlock();

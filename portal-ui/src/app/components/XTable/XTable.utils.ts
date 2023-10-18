@@ -36,10 +36,26 @@ export function getXTableColumnsFromSchema<T>(schema: Schema, overrides?: XTable
   return _getXTableColumnsFromSchema(schema, overrides);
 }
 
-export function defaultRowIdGetter<
-  T extends { id?: string | number; identifier?: string; table_name?: string; name?: string }
->(data: T): string | number | undefined {
-  return data?.id || data?.identifier || data?.table_name || data?.name;
+export function defaultRowIdGetter<T>(data: T): string | number {
+  const { id, identifier, table_name: tableName, name } = (data || {}) as Record<string, unknown>;
+
+  if (id && (typeof id === 'string' || typeof id === 'number')) {
+    return id;
+  }
+
+  if (identifier && typeof identifier === 'string') {
+    return identifier;
+  }
+
+  if (tableName && typeof tableName === 'string') {
+    return tableName;
+  }
+
+  if (name && typeof name === 'string') {
+    return name;
+  }
+
+  throw new Error('Invalid data for defaultRowIdGetter');
 }
 
 function _getXTableColumnsFromSchema<T>(schema: Schema, overrides: XTableColumn<T>[] = []): XTableColumn<T>[] {

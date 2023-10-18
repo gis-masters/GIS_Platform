@@ -56,6 +56,24 @@ Given('открыта атрибутивная таблица слоя {string}'
   await attributesBlock.waitForLoadingDisappear();
 });
 
+Then(
+  'в атрибутивной таблице слоя {string} количество объектов равно {int}',
+  async (layerName: string, numberOfObjects: number) => {
+    await layersSidebarBlock.openAttributeTable(layerName);
+
+    await browser.waitUntil(async () => {
+      return (await attributesBlock.getTitle()) === layerName;
+    });
+
+    await attributesBlock.waitForTableVisible();
+    await attributesBlock.waitForLoadingDisappear();
+
+    const allRowsLength = await attributesBlock.getTotalObjectsNumber();
+
+    await expect(allRowsLength).toEqual(numberOfObjects);
+  }
+);
+
 When(
   'в атрибутивной таблице я сортирую по атрибуту {string} в порядке {string}',
   async function (title: string, directionTitle: string) {
@@ -241,3 +259,11 @@ function getSchemaPropertyByTitle(schema: Schema, title: string): PropertySchema
 
   return property;
 }
+
+When('в атрибутивной таблице я выбираю {int} объектов', async function (selectObjects: number) {
+  await attributesBlock.selectItems(selectObjects);
+});
+
+When('в атрибутивной таблице я нажимаю на кнопку множественного копирования', async function () {
+  await attributesBlock.clickMultipleCopy();
+});

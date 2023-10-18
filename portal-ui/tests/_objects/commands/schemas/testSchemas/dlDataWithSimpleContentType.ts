@@ -25,6 +25,7 @@ export const dlDataWithSimpleContentType: Schema = {
         {
           name: 'some_files',
           title: 'Поле FILE',
+          multiple: true,
           propertyType: PropertyType.FILE
         }
       ],

@@ -18,7 +18,9 @@ class AttributesBlock extends Block {
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
-    selectedNo: '.Attributes-CheckFilterButton_selected_no'
+    selectedNo: '.Attributes-CheckFilterButton_selected_no',
+    multipleCopy: '.Attributes .CopyFeaturesButton',
+    counterItem: '.Attributes .Attributes-CounterItem'
   };
 
   xTable = new XTableBlock(this.selectors.container);
@@ -96,6 +98,12 @@ class AttributesBlock extends Block {
     await $tabTitle.click();
   }
 
+  async clickMultipleCopy() {
+    const $multipleCopy = await this.$('multipleCopy');
+    await $multipleCopy.waitForClickable();
+    await $multipleCopy.click();
+  }
+
   async clickFiltersEnabler() {
     const $attributesTabs = await this.$('filtersEnabler');
     await $attributesTabs.waitForDisplayed();
@@ -120,6 +128,12 @@ class AttributesBlock extends Block {
     return await extractText(await $attributesTabs.$$('.Attributes-TabTitle'));
   }
 
+  async getAllRowsLength() {
+    const $$rows = await this.xTable.getAllRows();
+
+    return $$rows.length;
+  }
+
   async closeTab(layerTitle: string) {
     const $attributesTabs = await this.$('attributesTabs');
     const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
@@ -133,6 +147,24 @@ class AttributesBlock extends Block {
     const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
     await $selected.waitForClickable();
     await $selected.click();
+  }
+
+  async selectItems(itemsNumber: number): Promise<void> {
+    await this.xTable.waitForLoading();
+    const $$documentRow = await this.xTable.getRows(itemsNumber);
+
+    for (const $documentRow of $$documentRow) {
+      const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input');
+      await $xTableDocumentRowSelect.click();
+    }
+  }
+
+  async getTotalObjectsNumber() {
+    const $counterItem = await this.$('counterItem');
+    const counterItemTest = await $counterItem.getText();
+    const counterNumber = counterItemTest.split(':')[1];
+
+    return Number(counterNumber);
   }
 }
 

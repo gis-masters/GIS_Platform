@@ -48,8 +48,8 @@ export type ChooseXTableProps<T> = ChooseXTableSyncProps<T> | ChooseXTableAsyncP
 
 @observer
 export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
-  @observable private selected: T[];
-  @observable private viewed: T[];
+  @observable private selected: T[] = [];
+  @observable private viewed: T[] = [];
 
   constructor(props: ChooseXTableProps<T>) {
     super(props);
@@ -62,19 +62,19 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   componentDidUpdate(prevProps: ChooseXTableProps<T>) {
     const { data } = this.props;
 
-    if (this.isItemsCanBeViewed(prevProps)) {
+    if (this.isItemsCanBeViewed(prevProps) && data) {
       this.setViewed([...data]);
     }
   }
 
   render() {
     const {
-      title,
+      title = '',
       data,
       defaultSort,
       loading,
       secondarySortField,
-      single,
+      single = false,
       filterable,
       className,
       filtersAlwaysEnabled
@@ -84,13 +84,13 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
     return (
       <XTable<T>
         className={cnChooseXTable(null, [className])}
-        title={<ChooseXTableTitle title={title} items={data} selectedItems={this.selected} single={single} />}
+        title={<ChooseXTableTitle title={title} items={data || []} selectedItems={this.selected} single={single} />}
         data={data}
         cols={this.cols}
+        loading={loading}
         defaultSort={defaultSort}
         secondarySortField={secondarySortField}
         onFilter={this.setViewed}
-        loading={loading}
         filtersAlwaysEnabled={filtersAlwaysEnabled}
         filterable={filterable}
         getRowId={getRowId}
@@ -141,7 +141,7 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    const { single, getRowId = defaultRowIdGetter, onSelect } = this.props;
+    const { single = false, getRowId = defaultRowIdGetter, onSelect } = this.props;
 
     return (
       <ChooseXTableCheck

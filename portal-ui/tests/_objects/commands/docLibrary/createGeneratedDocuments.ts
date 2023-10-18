@@ -29,8 +29,11 @@ export async function createGeneratedDocuments(
   for (let i = 0; i < docsNumber; i++) {
     const selectedSchema = schemasWithContentTypes[Math.floor(Math.random() * 3)] || schemasWithContentTypes[0];
     const record = await createLibraryRecordAs(generateObjectBySchema(selectedSchema), library.table_name, user);
-    record.libraryTableName = record.libraryTableName || library.table_name;
-    created.push(record);
+    created.push({
+      ...record,
+      libraryTableName: library.table_name,
+      schemaId: library.schemaId
+    });
   }
 
   return created;

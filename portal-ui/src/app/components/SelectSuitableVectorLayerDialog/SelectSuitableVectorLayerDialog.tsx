@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable, makeObservable } from 'mobx';
@@ -20,6 +20,7 @@ interface SelectSuitableVectorLayerDialogProps {
   currentLayer: CrgLayer;
   features?: WfsFeature[];
   open: boolean;
+  customLoading?: ReactNode;
   onClose(): void;
   onSelect(layer: CrgVectorLayer[]): void;
 }
@@ -27,6 +28,8 @@ interface SelectSuitableVectorLayerDialogProps {
 @observer
 export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVectorLayerDialogProps> {
   @observable private layersAvailableForCopy: CrgVectorLayer[] = [];
+  @observable private busy = false;
+
   private fetchingOperation?: Promise<void>;
   private readonly layerDialogCols: XTableColumn<CrgVectorLayer>[] = [
     {
@@ -57,7 +60,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   }
 
   render() {
-    const { currentLayer, open, features, onClose, onSelect } = this.props;
+    const { currentLayer, open, customLoading, features, onClose, onSelect } = this.props;
 
     return (
       <ChooseXTableDialog
@@ -68,7 +71,9 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
         cols={this.layerDialogCols}
         onClose={onClose}
         onSelect={onSelect}
+        loading={this.busy}
         single
+        afterTable={customLoading}
         actionButtonProps={{ children: 'Копировать' }}
         additionalAction={
           <div className={cnSelectSuitableVectorLayerDialog('Description')}>
@@ -80,12 +85,18 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     );
   }
 
+  @action
+  private setBusy(busy: boolean) {
+    this.busy = busy;
+  }
+
   @action.bound
   private setLayersAvailableForCopy(layersAvailableForCopy: CrgVectorLayer[]) {
     this.layersAvailableForCopy = layersAvailableForCopy;
   }
 
   private async fetchAvailableForCopyingLayers() {
+    this.setBusy(true);
     const schemas = await Promise.all(currentProject.vectorLayers.map(layer => getLayerSchema(layer)));
 
     const { currentLayer, features } = this.props;
@@ -93,7 +104,6 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     for (const layer of currentProject.vectorableLayers) {
       layersUpdatePermissions.push(await isUpdateAllowed(layer));
     }
-
     const layersAvailableForCopy = currentProject.vectorLayers.filter((layer, i) => {
       if (!schemas[i]) {
         return false;
@@ -101,14 +111,19 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
 
       const { geometryType } = schemas[i];
 
-      return (
-        currentLayer.complexName !== layer.complexName &&
-        currentLayer.nativeCRS === layer.nativeCRS &&
-        this.isCompatibleByGeometry(features, geometryType) &&
-        layersUpdatePermissions[i]
-      );
+      if (features && geometryType) {
+        return (
+          currentLayer.complexName !== layer.complexName &&
+          currentLayer.nativeCRS === layer.nativeCRS &&
+          this.isCompatibleByGeometry(features, geometryType) &&
+          layersUpdatePermissions[i]
+        );
+      }
+
+      return false;
     });
 
+    this.setBusy(false);
     this.setLayersAvailableForCopy(layersAvailableForCopy);
   }
 

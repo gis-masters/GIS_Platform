@@ -47,6 +47,7 @@ class LayersSidebarBlock extends Block {
   }
 
   async openAttributeTable(layerTitle: string): Promise<void> {
+    await this.waitForVisible();
     await this.openMenu(layerTitle);
 
     await muiMenuBlock.clickItemByTitle('Открыть таблицу атрибутов');

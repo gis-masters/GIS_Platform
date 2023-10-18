@@ -31,6 +31,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
+  afterTable?: ReactNode;
   getRowId?: (rowData: T) => string | number;
   single?: boolean;
   additionalAction?: ReactNode;
@@ -68,6 +69,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       actionButtonProps = {},
       single,
       loading,
+      afterTable,
       additionalAction,
       selectedItems,
       cols,
@@ -99,6 +101,8 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
             getRowId={getRowId}
             getData={getData}
           />
+
+          {afterTable}
         </DialogContent>
         <DialogActions>
           <ActionsLeft>{additionalAction}</ActionsLeft>

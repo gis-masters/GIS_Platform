@@ -12,8 +12,9 @@ import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
-import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { withSimpleContentType } from './testSchemas/withSimpleContentType';
+import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
+import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
 import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
@@ -37,6 +38,7 @@ const testSchemas: Schema[] = [
   documentWithDocumentField,
   withInappropriateStyleName,
   dlDataWithSimpleContentType,
+  testShapeFeaturesCopy,
   withoutViews,
   withFile,
   withViews

@@ -28,6 +28,7 @@ export const withSimpleContentType: Schema = {
         {
           name: 'some_files',
           title: 'Поле FILE',
+          multiple: true,
           propertyType: PropertyType.FILE
         }
       ]
@@ -98,6 +99,7 @@ export const withSimpleContentType: Schema = {
     {
       name: 'some_files',
       title: 'Поле FILE',
+      multiple: true,
       propertyType: PropertyType.FILE
     }
   ]
