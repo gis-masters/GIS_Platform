@@ -10,12 +10,16 @@ import { ChildrenProps } from '../../services/models';
 
 import '!style-loader!css-loader!sass-loader!./TextOverflow.scss';
 
-const MAX_SHOWING_TEXT_LINES = 3;
+const DEFAULT_MAX_LINES = 3;
 
 const cnTextOverflow = cn('TextOverflow');
 
+interface TextOverflowProps extends ChildrenProps {
+  maxLines?: number;
+}
+
 @observer
-export class TextOverflow extends Component<ChildrenProps> {
+export class TextOverflow extends Component<TextOverflowProps> {
   @observable private textOverflow = false;
   @observable private isAllTextVisible = false;
 
@@ -23,7 +27,7 @@ export class TextOverflow extends Component<ChildrenProps> {
   private wrapperRef: RefObject<HTMLDivElement> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.resizeHandler);
 
-  constructor(props: ChildrenProps) {
+  constructor(props: TextOverflowProps) {
     super(props);
     makeObservable(this);
   }
@@ -53,8 +57,11 @@ export class TextOverflow extends Component<ChildrenProps> {
     const { children } = this.props;
 
     return (
-      <div ref={this.wrapperRef} className={cnTextOverflow()}>
-        <span ref={this.ref} className={cnTextOverflow('Value', { hidePartOfText: !this.isAllTextVisible })}>
+      <div ref={this.wrapperRef} className={cnTextOverflow()} style={{ '--TextOverflowMaxLines': this.maxLines }}>
+        <span
+          ref={this.ref}
+          className={cnTextOverflow('Value', { hidePartOfText: !this.isAllTextVisible }, ['scroll'])}
+        >
           {children}
         </span>
 
@@ -72,6 +79,10 @@ export class TextOverflow extends Component<ChildrenProps> {
     );
   }
 
+  private get maxLines(): number {
+    return this.props.maxLines || DEFAULT_MAX_LINES;
+  }
+
   @action.bound
   private showAllText() {
     this.isAllTextVisible = true;
@@ -84,10 +95,12 @@ export class TextOverflow extends Component<ChildrenProps> {
 
   @action.bound
   private setTextOverflow() {
+    if (!this.ref.current) {
+      return;
+    }
     const height = this.ref.current.scrollHeight;
     const lineHeight = parseInt(window.getComputedStyle(this.ref.current).getPropertyValue('line-height'));
-
-    this.textOverflow = height / lineHeight > MAX_SHOWING_TEXT_LINES;
+    this.textOverflow = height / lineHeight > this.maxLines;
   }
 
   @boundMethod

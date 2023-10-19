@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { Highlight } from '../../Highlight/Highlight';
-
+import { TextOverflow } from '../../TextOverflow/TextOverflow';
 import { XTableColumn } from '../XTable.models';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
 
@@ -79,10 +79,12 @@ export const XTableCell = observer((({
           />
         ) : (
           <>
-            <Highlight word={getFieldFilterValue(filterQuery, field)} enabled={filterActive}>
-              {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-            </Highlight>
-            {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+            <TextOverflow maxLines={2}>
+              <Highlight word={getFieldFilterValue(filterQuery, field)} enabled={filterActive}>
+                {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
+              </Highlight>
+              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+            </TextOverflow>
           </>
         )}
       </XTableCellContent>
