@@ -164,4 +164,24 @@ class DocumentRouteTest {
         Set<Document> documentGuids = exchange.getIn().getHeader("documentGuids", Set.class);
         assertEquals(overallCount, documentGuids.size());
     }
+
+    @Test
+    @SneakyThrows
+    void getRequestedDocumentsInvalidGisogdResponseRouteTest() {
+        when(gisogdRfClient.getRequestedDocuments(any(), any())).thenAnswer(invocation -> {
+            DocumentPagedModel model = new DocumentPagedModel();
+            model.setPageSize(invocation.getArgument(0));
+            model.setTotalItems(MAX_ITEMS);
+            model.setTotalPages(0);
+
+            int iteration = 0;
+            while (iteration++ < MAX_ITEMS) {
+                model.addItemsItem(new Document().guid(UUID.randomUUID().toString()).propertyClass("propertyClass"));
+            }
+            return model;
+        });
+        Exchange exchange = producerTemplate.request("direct:get-requested-documents", null);
+        Set<Document> documentGuids = exchange.getIn().getHeader("documentGuids", Set.class);
+        assertEquals(MAX_ITEMS, documentGuids.size());
+    }
 }

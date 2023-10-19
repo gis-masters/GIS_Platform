@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.crg.gisogd_service.client.DataServiceClient;
@@ -52,6 +54,18 @@ public class DocumentRoute extends RouteBuilder {
     @Value("${camel.get-requested-documents.schedule:0 0 * * * ?}")
     private String schedule;
 
+    private final Processor collectDocumentHeader = exchange -> {
+        Set<Document> documentGuids = exchange.getIn().getHeader("documentGuids", Set.class);
+        if (documentGuids == null) {
+            documentGuids = new HashSet<>();
+            exchange.getIn().setHeader("documentGuids", documentGuids);
+        }
+        DocumentPagedModel container = exchange.getIn().getBody(DocumentPagedModel.class);
+        if (container.getItems() != null && !container.getItems().isEmpty()) {
+            documentGuids.addAll(container.getItems());
+        }
+    };
+
     @Override
     public void configure() {
         log.info("active schedule: {}", schedule);
@@ -78,25 +92,28 @@ public class DocumentRoute extends RouteBuilder {
                 /**/.log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID,
                          "current documents page: ${headers.page}")
                 /**/.bean(gisogdRfClient, "getRequestedDocuments")
-                /**/.process(exchange -> {
-                    Set<Document> documentGuids = exchange.getIn().getHeader("documentGuids", Set.class);
-                    if (documentGuids == null) {
-                        documentGuids = new HashSet<>();
-                        exchange.getIn().setHeader("documentGuids", documentGuids);
-                    }
+                /**/.process(collectDocumentHeader)
+                .end()
+
+                //TODO убрать в будущем. Обход ошибки в ГИСОГД РФ
+                //Условие если TotalPage=0 и TotalItems > 0, то пробежим по списку Items соберем GUID
+                .process(exchange -> {
                     DocumentPagedModel container = exchange.getIn().getBody(DocumentPagedModel.class);
-                    if (container.getItems() != null) {
-                        documentGuids.addAll(container.getItems());
+                    if (container.getTotalPages() == 0
+                            && container.getItems() != null
+                            && !container.getItems().isEmpty()) {
+                        collectDocumentHeader.process(exchange);
                     }
                 })
-                .end()
 
                 .log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID,
                      "document guids: ${headers.documentGuids.size()}")
 
                 .process(exchange -> libraryRecordService.updateRecord(
                         exchange.getIn().getHeader("rootFolderRecId", Integer.class),
-                        Map.of("get_documents_list", exchange.getIn().getHeader("documentGuids", String.class))
+                        Map.of("get_documents_list",
+                               Optional.ofNullable(exchange.getIn().getHeader("documentGuids", String.class))
+                                       .orElse(StringUtils.EMPTY))
                 ))
 
                 .split(header("documentGuids")).parallelProcessing()
@@ -108,7 +125,7 @@ public class DocumentRoute extends RouteBuilder {
                 ))
 
                 .log(LoggingLevel.INFO, log, GET_REQUESTED_DOCUMENTS_ROUTE_ID,
-                     "documents were sent");
+                     "route '" + GET_REQUESTED_DOCUMENTS_ROUTE_ID + "' has been executed");
 
         from("direct:get-document-from-crimea")
                 .id(GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID)
