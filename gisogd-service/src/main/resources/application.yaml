@@ -48,7 +48,7 @@ spring:
             provider: gisogdRfClient
         provider:
           dataServiceClient:
-            token-uri: http://10.10.10.58/api/oauth/token
+            token-uri: http://crg-gateway:8100/oauth/token
           gisogdRfClient:
             token-uri: https://test-id.gisogd.gov.ru/oidc/connect/token
 
@@ -61,7 +61,7 @@ spring:
             loggerLevel: full
 
           dataServiceClient:
-            url: http://10.10.10.58:8084
+            url: http://data-service:8084
             loggerLevel: full
 
       oauth2:
