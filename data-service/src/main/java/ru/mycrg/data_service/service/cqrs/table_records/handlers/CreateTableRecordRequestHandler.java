@@ -14,10 +14,13 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
 @Component
@@ -45,6 +48,8 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         ResourceQualifier qualifier = request.getQualifier();
 
         List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
+        excludeSystemPropertiesFromFeature(feature);
+
         throwIfNotMatchTableColumns(feature.getPropertyNames(),
                                     allColumnNames);
 
@@ -71,5 +76,24 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
 
             throw new DataServiceException(msg);
         }
+    }
+
+    private void excludeSystemPropertiesFromFeature(Feature feature) {
+        Map<String, Object> propertiesWithoutSystemFields = new HashMap<>();
+        feature.getProperties().forEach((key, value) -> {
+            if (!isSystemField(key)) {
+                propertiesWithoutSystemFields.put(key, value);
+            }
+        });
+        feature.setProperties(propertiesWithoutSystemFields);
+    }
+
+    private boolean isSystemField(String propertyName) {
+        List<String> systemFields = Arrays.asList(CREATED_AT.getName(),
+                                                  UPDATED_BY.getName(),
+                                                  LAST_MODIFIED.getName(),
+                                                  CREATED_BY.getName());
+
+        return systemFields.contains(propertyName.toLowerCase());
     }
 }
