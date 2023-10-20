@@ -55,7 +55,7 @@ export const documentWithoutVersioned: Schema = {
       name: 'content_type_id',
       title: 'Идентификатор контент типа',
       hidden: true,
-      propertyType: PropertyType.DATETIME
+      propertyType: PropertyType.STRING
     },
     {
       name: 'is_folder',

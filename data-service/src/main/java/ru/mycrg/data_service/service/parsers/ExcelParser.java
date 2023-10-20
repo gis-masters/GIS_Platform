@@ -28,7 +28,6 @@ public class ExcelParser {
     private final Logger log = LoggerFactory.getLogger(ExcelParser.class);
 
     public List<Map<String, Object>> parse(MultipartFile excelFile, SchemaDto schemaDto) {
-
         try {
             XSSFWorkbook myExcelBook = new XSSFWorkbook(excelFile.getInputStream());
 

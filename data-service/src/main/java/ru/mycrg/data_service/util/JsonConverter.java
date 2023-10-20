@@ -39,7 +39,7 @@ public class JsonConverter {
 
             return JacksonUtil.toJsonNode(jsonString);
         } catch (JsonProcessingException e) {
-            log.error("Failed convert object: '{}' to jsonNode. Reason: {}", jsonString, e.getMessage());
+            log.warn("Failed convert object: '{}' to jsonNode. Reason: {}", jsonString, e.getMessage());
 
             return JacksonUtil.toJsonNode("");
         }

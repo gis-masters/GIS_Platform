@@ -34,7 +34,7 @@ public class ParameterizedBaseDao {
 
             return pJdbcTemplate.queryForObject(query, parameterSource, Long.class);
         } catch (Exception e) {
-            String msg = "Не удалось выполнить сохранение";
+            String msg = "Не удалось выполнить сохранение. По причине: " + e.getMessage();
             logError(msg, e);
 
             throw new CrgDaoException(msg, extractDetails(e));
@@ -48,7 +48,7 @@ public class ParameterizedBaseDao {
 
             pJdbcTemplate.update(query, parameterSource);
         } catch (Exception e) {
-            String msg = "Не удалось выполнить обновление";
+            String msg = "Не удалось выполнить обновление. По причине: " + e.getMessage();
             logError(msg, e);
 
             throw new CrgDaoException(msg, extractDetails(e));

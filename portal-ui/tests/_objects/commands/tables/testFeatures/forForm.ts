@@ -35,7 +35,7 @@ export const forForm: NewWfsFeature[] = [
       field_fias__oktmo: '35656401',
       field_fias__address: 'Черноморское',
       field_fias__id: 5,
-      field_file: '[{"id":35,"title":"some super file","libraryTableName":"super tableName"}]'
+      field_file: '[{"id":"5f6d0a28-3871-4a13-8fba-b411b54dc4f0","title":"some super file","size":314}]'
     }
   }
 ];

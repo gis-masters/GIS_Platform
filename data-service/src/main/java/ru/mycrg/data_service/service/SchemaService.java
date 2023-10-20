@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,7 +148,8 @@ public class SchemaService {
     private boolean isReglamentsExist(Schema schema) {
         AtomicBoolean isReglamentExist = new AtomicBoolean(false);
         schema.getClassRule().get("properties").forEach(props -> {
-            if (props.get("valueType").toString().equals("\"" + URL.name() + "\"")) {
+            JsonNode valueType = props.get("valueType");
+            if (valueType != null && valueType.toString().equals("\"" + URL.name() + "\"")) {
                 isReglamentExist.set(true);
             }
         });

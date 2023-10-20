@@ -33,9 +33,10 @@ public class TasksDetachedDao {
 
         log.debug("dateTime: {}", dateTime);
 
-        int updatedCounter = jdbcTemplate.update("UPDATE data.tasks " +
-                                                         "SET status = '" + status + "', last_modified = now() " +
-                                                         "WHERE status <> 'DONE' AND last_modified <= '" + dateTime + "'");
+        int updatedCounter = jdbcTemplate
+                .update("UPDATE data.tasks " +
+                                "SET status = '" + status + "', last_modified = now() " +
+                                "WHERE status <> 'DONE' AND last_modified <= '" + dateTime + "'");
 
         log.debug("Найдено и переведено в статус '{}' [{}] задач", status, updatedCounter);
     }

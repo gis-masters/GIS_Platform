@@ -27,16 +27,17 @@ public class TasksScheduler {
     public void closeOldTasks() {
         log.debug("close tasks by deadline: {}", DEADLINE_TIME);
 
-        try {
-            SecurityContext securityContext = SecurityContextHolder.getContext();
-            DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
+            try {
                 tasksDetachedDao.closeOldTasks(1L, DEADLINE_TIME);
-            }, securityContext);
-            new Thread(wrappedRunnable).start();
-        } catch (Exception e) {
-            String msg = "Не удалось выполнить процесс закрытия старых задач. Причина: " + e.getMessage();
-            log.error(msg);
-            throw new DataServiceException(msg);
-        }
+            } catch (Exception e) {
+                String msg = "Не удалось выполнить процесс закрытия старых задач. Причина: " + e.getMessage();
+                log.error(msg);
+                throw new DataServiceException(msg);
+            }
+        }, securityContext);
+
+        new Thread(wrappedRunnable).start();
     }
 }
