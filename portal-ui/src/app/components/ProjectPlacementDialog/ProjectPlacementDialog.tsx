@@ -4,7 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { action, observable, makeObservable } from 'mobx';
+import { Breakpoint } from '@mui/material';
 
+import { Link } from '../Link/Link';
 import { Toast } from '../Toast/Toast';
 import { services } from '../../services/services';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -22,6 +24,8 @@ import {
   placeFileWithProjection,
   placeGml
 } from '../../services/data/file-placement/file-placement.service';
+import { awaitProcess } from '../../services/data/processes/processes.service';
+import { ProcessResponse } from '../../services/data/processes/processes.models';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
 
@@ -31,6 +35,8 @@ interface ProjectPlacementDialogProps {
   fileInfo: FileInfo;
   open: boolean;
   document?: LibraryRecord;
+  maxWidth?: Breakpoint;
+  fullWidth?: boolean;
   onClose(): void;
 }
 
@@ -46,7 +52,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   render() {
-    const { open, onClose, fileInfo } = this.props;
+    const { open, onClose, maxWidth, fullWidth, fileInfo } = this.props;
 
     return (
       <SelectProjectsDialog
@@ -56,8 +62,11 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         onSelect={this.onProjectSelected}
         actionButtonLabel='Разместить в выбранном проекте'
         loading={this.addFormBusy}
+        maxWidth={maxWidth}
+        fullWidth={fullWidth}
         additionalAction={
-          isFileWithProjection(fileInfo) || isTifFile(fileInfo) ? (
+          !isTifFile(fileInfo) &&
+          (isFileWithProjection(fileInfo) ? (
             <SelectProjection
               className={cnProjectPlacementDialog('SelectProjection')}
               value={this.selectedCrs}
@@ -65,7 +74,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
             />
           ) : (
             <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
-          )
+          ))
         }
       />
     );
@@ -103,10 +112,15 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     if (isTifFile(this.props.fileInfo)) {
       if (this.props.document) {
         try {
-          await placeFile(this.props.fileInfo, { crs: this.selectedCrs, mode: 'full' }, project, this.props.document);
+          await placeFile(this.props.fileInfo, { crs: 'EPSG:28406', mode: 'full' }, project, this.props.document);
           communicationService.fileConnectionsUpdated.emit({ type: 'update', data: [this.props.fileInfo] });
 
-          Toast.success(`Файл ${this.props.fileInfo.title} успешно размещен в проекте`);
+          Toast.success(
+            <>
+              Файл {this.props.fileInfo.title} успешно размещен в проекте{' '}
+              {<Link href={`/projects/${project.id}/map`}>{project.name}</Link>}
+            </>
+          );
         } catch (error) {
           Toast.error('Не удалось подключить слой');
           services.logger.error('Не удалось подключить слой: ', (error as AxiosError).message);
@@ -126,9 +140,11 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       this.setFormBusy(false);
     } else {
       try {
-        await (isFileWithProjection(this.props.fileInfo)
+        const process = await (isFileWithProjection(this.props.fileInfo)
           ? placeFileWithProjection(fileInfo, project.id, this.selectedCrs)
           : placeGml(fileInfo, project.id, this.invertedCoordinates));
+
+        void this.waitForProcess(process);
 
         this.props.onClose();
         sidebars.openInfo();
@@ -144,6 +160,14 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       } finally {
         this.setFormBusy(false);
       }
+    }
+  }
+
+  private async waitForProcess(response: ProcessResponse): Promise<void> {
+    const process = await awaitProcess(Number(response._links.process.href.split('/').at(-1)));
+
+    if (process) {
+      communicationService.fileConnectionsUpdated.emit({ type: 'update', data: [this.props.fileInfo] });
     }
   }
 }

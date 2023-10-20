@@ -124,7 +124,6 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
     const libraryPath = JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, 'none', 'none']);
     const library = await getLibrary(libraryTableName);
     const currentItem = isFolder ? ['folder', id] : ['doc', id];
-
     const breadcrumbs = [
       { title: <HomeOutlined />, url: '/data-management' },
       {
@@ -148,7 +147,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
 
       parentsInfo = parentsInfo.filter(notFalsyFilter);
 
-      let pathWithoutCurrent = '';
+      let pathWithCurrent = '';
       const itemParentsBreadcrumbs: BreadcrumbsItemData[] = parentsInfo?.map((parent, index) => {
         const folders: (string | number)[] = [];
         for (let i = 0; i < index + 1; i++) {
@@ -165,7 +164,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
         ]);
 
         if (includeSelf) {
-          pathWithoutCurrent = JSON.stringify([
+          pathWithCurrent = JSON.stringify([
             ...libraryRootUrlItems,
             'library',
             libraryTableName,
@@ -184,7 +183,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
         itemParentsBreadcrumbs.push({
           title: <b>{title}</b>,
           url: `/data-management?path_dm=${
-            pathWithoutCurrent ?? JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
+            pathWithCurrent || JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
           }`
         });
       }

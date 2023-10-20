@@ -56,6 +56,10 @@ export async function removeEntityPermission(
   itemEntityType?: ExplorerItemEntityTypeTitle
 ): Promise<void> {
   try {
+    if (!payload.id) {
+      throw new Error('Ошибка удаления прав, не найден id');
+    }
+
     await permissionsClient.removeEntityPermission(payload.id, url);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', `${itemEntityType}`, `${title}`);
@@ -96,6 +100,10 @@ export async function addDatasetPermission(payload: RoleAssignmentBody, datasetI
 
 export async function removeDatasetPermission(payload: RoleAssignmentBody, datasetIdentifier: string): Promise<void> {
   try {
+    if (!payload.id) {
+      throw new Error('Ошибка удаления прав для набора данных, не найден id');
+    }
+
     await permissionsClient.removeDatasetPermission(payload.id, datasetIdentifier);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'набора данных', datasetIdentifier);
@@ -112,6 +120,10 @@ export async function addProjectPermission(payload: RoleAssignmentBody, project:
 
 export async function removeProjectPermission(payload: RoleAssignmentBody, project: CrgProject): Promise<void> {
   try {
+    if (!payload.id) {
+      throw new Error('Ошибка удаления прав для проекта, не найден id');
+    }
+
     await permissionsClient.removeProjectPermission(payload.id, project.id);
   } catch (error) {
     handleSavingError(error, payload, 'удалить', 'проекта', project.name);
@@ -123,9 +135,9 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
     return true;
   }
 
-  if (layer.type === CrgLayerType.VECTOR) {
+  if (layer.dataset && layer.tableName && layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
-  } else if (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type)) {
+  } else if (layer.type && (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type))) {
     return await isRasterReadAllowed(layer);
   }
 
@@ -134,6 +146,10 @@ export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
 
 export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<boolean> {
   const libraryRecord = record.role ? record : await getLibraryRecord(record.libraryTableName, record.id);
+
+  if (!libraryRecord.role) {
+    return false;
+  }
 
   return checkIsUpdateAllowed(libraryRecord.role);
 }
@@ -153,14 +169,14 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
       return false;
     }
 
-    if (schema.readOnly) {
+    if (schema.readOnly || !layer.dataset || !layer.tableName) {
       return false;
     }
 
     return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
   } else if (layer.type === CrgLayerType.RASTER) {
     return await isRasterReadAllowed(layer);
-  } else if (isVectorFromFile(layer.type)) {
+  } else if (layer.type && isVectorFromFile(layer.type)) {
     const schema: Schema = await getLayerSchema(layer);
     if (!schema) {
       return false;
@@ -183,7 +199,7 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
   } catch (error) {
     const err = error as AxiosError;
 
-    if (err.response.status !== 403) {
+    if (err.response?.status !== 403) {
       throw err;
     }
   }
@@ -195,9 +211,17 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
 
 export async function isRasterReadAllowed(layer: CrgLayer): Promise<boolean> {
   try {
+    if (!layer.libraryId || !layer.recordId || !layer.tableName) {
+      return false;
+    }
+
     const raster = await getLibraryRecord(layer.libraryId, layer.recordId);
+    if (raster.is_deleted) {
+      return false;
+    }
+
     const files = getLibraryRecordFiles(raster);
-    const datasource = files?.filter(file => layer.tableName.includes(file.id));
+    const datasource = files?.filter(file => layer.tableName?.includes(file.id));
 
     if (layer.tableName.slice(0, 7) === 'dl_data' && !datasource?.length) {
       return false;
@@ -228,7 +252,7 @@ function isFeaturesUpdateAllowed(dataset: string, table: string, schemaId: strin
 function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): boolean {
   const role = currentUser.isAdmin ? Role.OWNER : project.role;
 
-  return Boolean(role) && projectRolesPermissionPoints.get(role).includes(targetPoint);
+  return Boolean(role) && !!projectRolesPermissionPoints.get(role)?.includes(targetPoint);
 }
 
 async function isAllowedWithTable(
@@ -245,7 +269,7 @@ async function isAllowedWithTable(
   } catch (error) {
     const err = error as AxiosError;
 
-    if (err.response.status !== 403) {
+    if (err.response?.status !== 403) {
       throw err;
     }
   }
@@ -259,7 +283,7 @@ async function isAllowedWithTable(
     role = Role.VIEWER;
   }
 
-  return Boolean(role) && tableRolesPermissionPoints.get(role).includes(targetPoint);
+  return Boolean(role) && !!tableRolesPermissionPoints.get(role)?.includes(targetPoint);
 }
 
 function handleSavingError(

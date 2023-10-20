@@ -2,6 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
+import { Breakpoint } from '@mui/material';
 import { computed } from 'mobx';
 
 import { allProjects } from '../../stores/AllProjects.store';
@@ -17,6 +18,8 @@ interface SelectProjectDialogProps extends IClassNameProps {
   open: boolean;
   actionButtonLabel: string;
   loading?: boolean;
+  maxWidth?: Breakpoint;
+  fullWidth?: boolean;
   additionalAction?: ReactNode;
   onClose(): void;
   onSelect(items: CrgProject[]): void;
@@ -36,6 +39,8 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
       className,
       loading,
       additionalAction,
+      maxWidth,
+      fullWidth,
       onSelect,
       onClose
     } = this.props;
@@ -59,6 +64,8 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
         onClose={onClose}
         onSelect={onSelect}
         loading={loading}
+        maxWidth={maxWidth}
+        fullWidth={fullWidth}
         single
         additionalAction={additionalAction}
         actionButtonProps={{

@@ -15,6 +15,7 @@ import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsTo
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
 import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
+import { isTifFile } from '../../../services/data/files/files.util';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
@@ -50,7 +51,7 @@ interface RasterLayerInfo {
 export class FilesConnections extends Component<ConnectionsProps> {
   @observable private connectionsListDialogOpen = false;
   @observable private editRasterLayerDialogOpen = false;
-  @observable private transparentColor: string;
+  @observable private transparentColor: string = '';
 
   constructor(props: ConnectionsProps) {
     super(props);
@@ -139,6 +140,10 @@ export class FilesConnections extends Component<ConnectionsProps> {
   }
 
   private async updateTransparentColor() {
+    if (!isTifFile(this.props.file) || !this.props.connections[0].layer?.tableName) {
+      return;
+    }
+
     const response = await getFileTransparentColor(this.props.connections[0].layer.tableName);
     const entry = response?.coverage?.parameters?.entry;
 
@@ -153,6 +158,10 @@ export class FilesConnections extends Component<ConnectionsProps> {
 
   @boundMethod
   private async update(value: RasterLayerInfo) {
+    if (!this.props.connections[0].layer?.tableName) {
+      throw new Error('Ошибка сохранения. Не найден слой или tableName');
+    }
+
     await updateFileTransparentColor(this.props.connections[0].layer.tableName, value.transparentColor);
   }
 }

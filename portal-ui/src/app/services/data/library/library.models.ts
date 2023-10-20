@@ -47,6 +47,7 @@ export interface LibraryRecordRaw extends Record<string, unknown> {
   title?: string;
   details?: string;
   created_at?: string;
+  is_deleted?: boolean;
   inner_path?: string;
   parent?: string;
   path?: string;

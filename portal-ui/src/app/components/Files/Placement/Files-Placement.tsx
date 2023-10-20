@@ -39,7 +39,14 @@ export class FilesPlacement extends Component<PlacementProps> {
           </IconButton>
         </Tooltip>
 
-        <ProjectPlacementDialog document={document} fileInfo={fileInfo} open={this.dialogOpen} onClose={this.onClose} />
+        <ProjectPlacementDialog
+          maxWidth={'md'}
+          fullWidth
+          document={document}
+          fileInfo={fileInfo}
+          open={this.dialogOpen}
+          onClose={this.onClose}
+        />
       </>
     );
   }

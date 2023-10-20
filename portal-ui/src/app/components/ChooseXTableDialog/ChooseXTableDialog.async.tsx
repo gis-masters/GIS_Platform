@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, computed, observable, makeObservable } from 'mobx';
-import { Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Breakpoint, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
@@ -26,6 +26,8 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   open: boolean;
   data: T[];
   loading?: boolean;
+  maxWidth?: Breakpoint;
+  fullWidth?: boolean;
   selectedItems?: T[];
   disabledItems?: T[];
   cols: XTableColumn<T>[];
@@ -70,6 +72,8 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       single,
       loading,
       afterTable,
+      maxWidth = 'xl',
+      fullWidth,
       additionalAction,
       selectedItems,
       cols,
@@ -82,7 +86,8 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
         PaperProps={{ className: cnChooseXTableDialog(null, [className]) }}
         open={open}
         onClose={this.close}
-        maxWidth='xl'
+        maxWidth={maxWidth}
+        fullWidth={fullWidth}
       >
         <DialogContent className={cnChooseXTableDialog('Content')}>
           <ChooseXTable<T>

@@ -62,19 +62,17 @@ export class FilesItem extends Component<FilesItemProps> {
   }
 
   async componentDidMount() {
-    if (isTifFile(this.props.item)) {
-      communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
-        if (e.detail.data.some(file => file.id === this.currentFileId)) {
-          this.dropConnections();
-          await this.fetchConnections();
-        }
-      }, this);
-      await this.fetchConnections();
-    }
+    communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
+      if (e.detail.data.some(file => file.id === this.currentFileId)) {
+        this.dropConnections();
+        await this.fetchConnections();
+      }
+    }, this);
+    await this.fetchConnections();
   }
 
   async componentDidUpdate(prevProps: FilesItemProps) {
-    if (isTifFile(this.props.item) && this.props.item.id !== prevProps.item.id) {
+    if (this.props.item.id !== prevProps.item.id) {
       this.dropConnections();
       await this.fetchConnections();
     }
@@ -101,7 +99,6 @@ export class FilesItem extends Component<FilesItemProps> {
     const ext = getFileExtension(item.title);
     const baseName = getFileBaseName(item.title);
     const disabled = status ? ['loading', 'new', 'error'].includes(status) : undefined;
-
     const isFileConnected = !!this.connections?.length && showPlaceAction;
     const isFileCanBePlaced =
       (showMainCompoundFileActions && showPlaceAction) ||
