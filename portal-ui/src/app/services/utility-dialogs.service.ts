@@ -6,13 +6,31 @@ import { UtilityDialogCloseEventDetail, communicationService } from './communica
 import { sleep } from './util/sleep';
 
 // диалог с сообщением, аналог alert
-export async function achtung({ title, message }: { title?: ReactNode; message?: ReactNode }): Promise<void> {
-  await doDialog({ id: uuid(), type: 'achtung', title, message });
+export async function achtung({
+  title,
+  message,
+  okText
+}: {
+  title?: ReactNode;
+  message?: ReactNode;
+  okText?: string;
+}): Promise<void> {
+  await doDialog({ id: uuid(), type: 'achtung', title, message, okText });
 }
 
 // диалог с подтверждением, аналог confirm
-export async function konfirmieren({ title, message }: { title?: ReactNode; message?: ReactNode }): Promise<boolean> {
-  const { answer } = await doDialog({ id: uuid(), type: 'konfirmieren', title, message });
+export async function konfirmieren({
+  title,
+  message,
+  okText,
+  cancelText
+}: {
+  title?: ReactNode;
+  message?: ReactNode;
+  okText?: string;
+  cancelText?: string;
+}): Promise<boolean> {
+  const { answer } = await doDialog({ id: uuid(), type: 'konfirmieren', title, message, okText, cancelText });
 
   return Boolean(answer);
 }

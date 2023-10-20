@@ -40,21 +40,29 @@ export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRu
 }
 
 async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
+  if (!layer.styleName) {
+    return [];
+  }
+
   const sldStyle = await getStyleSld(layer.styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
   const rulesWithoutLegend: Omit<StyleRule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
-    .filter(ruleXml => ruleXml.querySelector('Name') && ruleXml.querySelector('Title'))
-    .map(ruleXml => ({
-      name: ruleXml.querySelector('Name')?.innerHTML,
-      title: ruleXml.querySelector('Title')?.innerHTML,
-      filter: ruleXml.querySelector('ElseFilter')
+    .filter(ruleNode => ruleNode.querySelector('Name') && ruleNode.querySelector('Title'))
+    .map(ruleNode => ({
+      name: ruleNode.querySelector('Name')?.innerHTML || '',
+      title: ruleNode.querySelector('Title')?.innerHTML || '',
+      filter: ruleNode.querySelector('ElseFilter')
         ? { operator: StyleFilterOperator.ELSE }
-        : parseFilter(ruleXml.querySelector('Filter')?.firstElementChild)
+        : parseFilter(ruleNode.querySelector('Filter')?.firstElementChild)
     }));
 
   return await Promise.all(
     rulesWithoutLegend.map(async rule => {
+      if (!layer.complexName || !layer.styleName) {
+        throw new Error('Невозможно получить легенду: нет имени слоя или стиля');
+      }
+
       const blob = await getLegendGraphic(layer.complexName, rule.name, layer.styleName);
       const legend = await createImageFromBlob(blob);
 
@@ -63,7 +71,11 @@ async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> 
   );
 }
 
-function parseFilter(xmlFilter?: Element): StyleFilter | undefined {
+function parseFilter(xmlFilter?: Element | null): StyleFilter | undefined {
+  if (!xmlFilter) {
+    return;
+  }
+
   let operator = xmlFilter?.tagName;
 
   if (operator?.includes(':')) {

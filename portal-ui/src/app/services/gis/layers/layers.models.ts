@@ -39,6 +39,7 @@ export interface CrgVectorLayer extends CrgBaseLayer {
   dataStoreName?: string;
   schemaId: string;
   styleName?: string;
+  style?: string;
   dataset: string;
   view?: string;
 }

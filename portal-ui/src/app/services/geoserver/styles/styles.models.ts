@@ -4,7 +4,7 @@ export interface StyleRule {
   name: string;
   title: string;
   legend: string;
-  filter: StyleFilter;
+  filter?: StyleFilter;
 }
 
 export interface FilteredStylesResponse {
@@ -66,3 +66,54 @@ export interface FilteredStylesLayerRequest {
   filter: StyleFilter;
   rules: StyleRule[];
 }
+
+interface PointRule {
+  markColor: string;
+  markSize: number;
+  markType: 'circle' | 'square' | 'triangle' | 'star';
+}
+
+interface LineRule {
+  strokeColor: string;
+  strokeWidth: number;
+  strokeDashArray?: number[];
+}
+
+interface PolygonRule {
+  strokeColor: string;
+  strokeWidth: number;
+  strokeDashArray: number[];
+  fillColor: string;
+  fillGraphic?: {
+    type: 'times';
+    strokeColor: string;
+    strokeWidth: number;
+  };
+}
+
+interface BaseCustomStyleDescription {
+  type: 'point' | 'line' | 'polygon';
+  rule: PointRule | LineRule | PolygonRule;
+}
+
+interface CustomStyleLineDescription extends BaseCustomStyleDescription {
+  type: 'line';
+  rule: LineRule;
+}
+
+interface CustomStylePointDescription extends BaseCustomStyleDescription {
+  type: 'point';
+  rule: PointRule;
+}
+
+interface CustomStylePolygonDescription extends BaseCustomStyleDescription {
+  type: 'polygon';
+  rule: PolygonRule;
+}
+
+export type CustomStyleDescription =
+  | CustomStyleLineDescription
+  | CustomStylePointDescription
+  | CustomStylePolygonDescription;
+
+export const CUSTOM_STYLE_NAME = '__custom__';

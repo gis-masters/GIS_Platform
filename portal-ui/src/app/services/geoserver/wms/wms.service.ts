@@ -1,18 +1,22 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
+import { buildSimpleSld, parseCustomStyle } from '../styles/styles.utils';
 import { getStyleSld } from '../styles/styles.service';
 import { cqlBuild } from '../../util/cqlBuild';
-import { cql2ol } from '../../util/cql2ol';
 import { Mime } from '../../util/Mime';
-import { WFS } from '../../ol/WFS';
 
 import { wmsClient } from './wms.client';
+import { getXmlFilterFromCql } from './wms.utils';
+import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
+import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 
 export async function getMap(url: string): Promise<Blob> {
   const parsedUrl = new URL(url);
   const featureIdParam = parsedUrl.searchParams.get('featureId');
   const featureIdsNegative = Boolean(parsedUrl.searchParams.get('featureIdsNegative'));
   const cqlFilter = parsedUrl.searchParams.get('CQL_FILTER');
+  const layerComplexName: string = parsedUrl.searchParams.get('LAYERS') || '';
+  const layerStyleName: string = parsedUrl.searchParams.get('STYLES') || '';
 
   if (featureIdParam) {
     const ids = featureIdParam.split(',').map(fid => Number(fid.split('.')[1]));
@@ -24,6 +28,21 @@ export async function getMap(url: string): Promise<Blob> {
   parsedUrl.searchParams.delete('featureId');
   parsedUrl.searchParams.delete('featureIdsNegative');
 
+  if (layerStyleName === CUSTOM_STYLE_NAME) {
+    parsedUrl.searchParams.delete('STYLES');
+    const layer = getLayerByComplexNameInCurrentProject(layerComplexName);
+
+    if (!layer) {
+      throw new Error('Не найден слой');
+    }
+
+    if (!layer.style) {
+      throw new Error('Отсутствует пользовательский стиль у слоя ' + layerComplexName);
+    }
+
+    parsedUrl.searchParams.set('SLD_BODY', buildSimpleSld(layerComplexName, parseCustomStyle(layer.style)));
+  }
+
   return await wmsClient.getMap(parsedUrl.href);
 }
 
@@ -31,11 +50,10 @@ export async function getMap(url: string): Promise<Blob> {
  * Запрашиваем карту через xml с подменой стиля.
  * Предполагаем, что в таких запросах всегда только один слой.
  *
- * Имеет проблемы с производительностью из-за бага геосервера.
- * Оставлено на всякий случай (например если геосервер починит другую багу в wms,
- * благодаря которой мы можем фильтровать по id в cql фильтре и не использовать этот метод).
+ * Может иметь проблемы с производительностью на сложных стилях из-за бага геосервера.
  *
- * @deprecated Не используется.
+ * @deprecated не доделано
+ *
  */
 
 export async function getMapByXml(url: string): Promise<Blob> {
@@ -47,78 +65,97 @@ export async function getMapByXml(url: string): Promise<Blob> {
   const [x1, y1, x2, y2] = parsedUrl.searchParams.get('BBOX')?.split(',') || [];
   const width = parsedUrl.searchParams.get('WIDTH');
   const height = parsedUrl.searchParams.get('HEIGHT');
-  const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
   const [, tableName] = layerComplexName.split(':');
   const layer = currentProject.vectorLayers.find(l => l.tableName === tableName);
 
-  if (!featureIdParam || !layerComplexName || !x1 || !y1 || !x2 || !y2) {
+  if (!layer || !layerComplexName || !x1 || !y1 || !x2 || !y2) {
     throw new Error('Неверные параметры запроса');
   }
 
-  const getFeatureRequest: Element = new WFS().writeGetFeature({
-    featureNS: '',
-    featurePrefix: '',
-    featureTypes: [layerComplexName],
-    featureIds: featureIdParam.split(','),
-    featureIdsNegative,
-    filter
-  }) as Element;
+  if (!layer.styleName) {
+    throw new Error('Не указан стиль для слоя');
+  }
 
-  const queryFilterElement = getFeatureRequest.querySelector('Filter');
+  const featureIds = featureIdParam ? featureIdParam.split(',') : [];
+  const queryFilterElement: Element | null = getXmlFilterFromCql(cqlFilter || '', featureIds, featureIdsNegative);
+
   const styleDocument = new DOMParser().parseFromString(await getStyleSld(layer.styleName), 'text/xml');
+  const nameNode = styleDocument.querySelector('NamedLayer > Name');
+  const styleSldNode = styleDocument.querySelector('StyledLayerDescriptor');
 
-  styleDocument.querySelector('NamedLayer > Name').innerHTML = layerComplexName;
-  const styleSldElement = styleDocument.querySelector('StyledLayerDescriptor');
+  if (!nameNode || !styleSldNode) {
+    throw new Error('Некорректный стиль');
+  }
+
+  nameNode.innerHTML = layerComplexName;
 
   const getMapDocument = new DOMParser().parseFromString(
     `<?xml version="1.0" encoding="UTF-8"?><ogc:GetMap xmlns:ogc="http://www.opengis.net/ows" xmlns:gml="http://www.opengis.net/gml" xmlns:sld="http://www.opengis.net/sld" version="1.3.0" service="WMS"><StyledLayerDescriptor version="1.0.0"></StyledLayerDescriptor><BoundingBox srsName="http://www.opengis.net/gml/srs/epsg.xml#3857"><gml:coord><gml:X>${x1}</gml:X><gml:Y>${y1}</gml:Y></gml:coord><gml:coord><gml:X>${x2}</gml:X><gml:Y>${y2}</gml:Y></gml:coord></BoundingBox><Output><Transparent>true</Transparent><Format>image/vnd.jpeg-png8</Format><Size><Width>${width}</Width><Height>${height}</Height></Size></Output></ogc:GetMap>`,
     'text/xml'
   );
 
-  for (const node of styleSldElement.childNodes) {
-    getMapDocument.querySelector('StyledLayerDescriptor').append(node);
+  const sldInGetMapNode = getMapDocument.querySelector('StyledLayerDescriptor');
+
+  if (!sldInGetMapNode) {
+    throw new Error('Отсутствует style descriptor в GetMap');
   }
 
-  const firstRuleElement = styleDocument.createElement('sld:Rule');
-  const firstRuleFilterElement = styleDocument.createElement('ogc:Filter');
-  if (queryFilterElement.firstChild.nodeName === 'Not') {
-    queryFilterElement.firstChild.childNodes.forEach(node => firstRuleFilterElement.append(node.cloneNode(true)));
-    firstRuleElement.append(firstRuleFilterElement);
-  } else {
-    const not = styleDocument.createElement('Not');
-    queryFilterElement.childNodes.forEach(node => not.append(node.cloneNode(true)));
-    firstRuleFilterElement.append(not);
-    firstRuleElement.append(firstRuleFilterElement);
+  for (const node of styleSldNode.childNodes) {
+    sldInGetMapNode.append(node);
   }
 
-  const featureTypeStyleElement = getMapDocument.querySelector('FeatureTypeStyle');
+  if (queryFilterElement) {
+    // в начало списка правил добавляется правило, скрывающее объекты, не попадающие под фильтр
+    const additionalFirstRuleNode = styleDocument.createElement('sld:Rule');
+    const additionalFirstRuleFilterNode = styleDocument.createElement('ogc:Filter');
 
-  const existingRules = featureTypeStyleElement.querySelectorAll('Rule');
+    if (queryFilterElement.firstChild?.nodeName === 'Not') {
+      queryFilterElement.firstChild.childNodes.forEach(node =>
+        additionalFirstRuleFilterNode.append(node.cloneNode(true))
+      );
+      additionalFirstRuleNode.append(additionalFirstRuleFilterNode);
+    } else {
+      const not = styleDocument.createElement('Not');
+      queryFilterElement.childNodes.forEach(node => not.append(node.cloneNode(true)));
+      additionalFirstRuleFilterNode.append(not);
+      additionalFirstRuleNode.append(additionalFirstRuleFilterNode);
+    }
 
-  for (const rule of existingRules) {
-    if (!rule.querySelector('ElseFilter')) {
-      const filter = rule.querySelector('Filter');
-      if (filter) {
-        const and = getMapDocument.createElement('And');
-        filter.childNodes.forEach(filterChild => and.append(filterChild));
-        queryFilterElement.childNodes.forEach(node => and.append(node.cloneNode(true)));
-        filter.append(and);
-      } else {
-        const newFilter = styleDocument.createElement('ogc:Filter');
-        queryFilterElement.childNodes.forEach(node => newFilter.append(node.cloneNode(true)));
-        rule.append(newFilter);
+    const featureTypeStyleNode = getMapDocument.querySelector('FeatureTypeStyle');
+
+    if (!featureTypeStyleNode) {
+      throw new Error('Отсутствует FeatureTypeStyle в GetMap');
+    }
+
+    const existingRules = featureTypeStyleNode.querySelectorAll('Rule');
+
+    for (const rule of existingRules) {
+      if (!rule.querySelector('ElseFilter')) {
+        const filter = rule.querySelector('Filter');
+        if (filter) {
+          const and = getMapDocument.createElement('And');
+          filter.childNodes.forEach(filterChild => and.append(filterChild));
+          queryFilterElement.childNodes.forEach(node => and.append(node.cloneNode(true)));
+          filter.append(and);
+        } else {
+          const newFilter = styleDocument.createElement('ogc:Filter');
+          queryFilterElement.childNodes.forEach(node => newFilter.append(node.cloneNode(true)));
+          rule.append(newFilter);
+        }
       }
     }
+
+    featureTypeStyleNode.insertBefore(additionalFirstRuleNode, featureTypeStyleNode.firstChild);
   }
-
-  featureTypeStyleElement.insertBefore(firstRuleElement, featureTypeStyleElement.firstChild);
-
   const xml = new XMLSerializer().serializeToString(getMapDocument);
 
   return await wmsClient.getMapByXml(xml);
 }
 
 export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; errors?: string[] }> {
+  if (!layer.complexName) {
+    return { ok: false, errors: ['Не указан complexName у слоя'] };
+  }
   if (layer.type === CrgLayerType.VECTOR) {
     const url = new URL(wmsClient.getWmsUrl());
 
@@ -150,6 +187,10 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
       return { ok: true };
     }
 
+    if (!layer.dataSourceUri) {
+      return { ok: false, errors: ['Не указан dataSourceUri у слоя'] };
+    }
+
     const url = new URL(layer.dataSourceUri);
     url.searchParams.set('F', 'Image');
     url.searchParams.set('FORMAT', 'PNG32');
@@ -172,9 +213,9 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
     }
 
     return { ok: true };
-  } else {
-    return { ok: true };
   }
+
+  return { ok: true };
 }
 
 /**
@@ -182,7 +223,7 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
  *
  * @param complexLayerName  Название слоя в формате 'workspace:layerName'
  * @param ruleName          Название правила в стиле.
- * @param style             Название стилея.
+ * @param style             Название стиля.
  */
 export async function getLegendGraphic(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
   return await wmsClient.getLegendGraphic(complexLayerName, ruleName, style);

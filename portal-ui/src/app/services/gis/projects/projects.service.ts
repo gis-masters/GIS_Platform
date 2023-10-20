@@ -1,5 +1,5 @@
 import { reaction } from 'mobx';
-import { debounce } from 'lodash';
+import { DebouncedFunc, debounce } from 'lodash';
 import { AxiosError } from 'axios';
 
 import { route } from '../../../stores/Route.store';
@@ -25,7 +25,7 @@ class ProjectsService {
   private fetchingCurrentProject?: Promise<CrgProject | void>;
   private fetchingAllProjectsRequest?: Promise<CrgProject[]>;
 
-  private readonly debouncedFetchAllProjects: () => Promise<void>;
+  private readonly debouncedFetchAllProjects: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
@@ -48,7 +48,7 @@ class ProjectsService {
       () => Object.keys(mapStore.selectedFeaturesByTableName),
       tableNames => {
         currentProject.layers?.forEach(layer => {
-          if (tableNames.includes(layer.tableName)) {
+          if (layer.tableName && tableNames.includes(layer.tableName)) {
             currentProject.patchLayer(layer.id, { enabled: true });
             this.enableGroupAndAncestors(layer.parentId);
           }
@@ -144,7 +144,7 @@ class ProjectsService {
     }
   }
 
-  enableGroupAndAncestors(groupId: number) {
+  enableGroupAndAncestors(groupId?: number) {
     if (groupId) {
       const group = currentProject.patchGroup(groupId, { enabled: true });
 
@@ -232,7 +232,7 @@ class ProjectsService {
     return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
   }
 
-  async getById(id: number): Promise<CrgProject> {
+  async getById(id: number): Promise<CrgProject | undefined> {
     try {
       return await projectsClient.getProject(id);
     } catch (error) {

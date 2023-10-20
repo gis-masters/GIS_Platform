@@ -706,6 +706,7 @@ class MapService {
     try {
       data = await getMap(url);
     } catch (error) {
+      services.logger.error(error);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       data = error?.error;
     }

@@ -69,10 +69,13 @@ export function alertLayerOperationError(
 }
 
 export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
-  const type = layer.type;
-  if (type === CrgLayerType.VECTOR) {
+  if (layer.type === CrgLayerType.VECTOR) {
+    if (!layer.schemaId) {
+      throw new Error('Схема не указана у слоя ' + layer.complexName);
+    }
+
     return await schemaService.getSchema(layer.schemaId);
-  } else if (isVectorFromFile(type)) {
+  } else if (layer.type && isVectorFromFile(layer.type)) {
     const featureType: FeatureType = await getFeatureType(layer);
     const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);
     const geometryType = getGeometryTypeFromGeoserverAttributes(featureType.attributes.attribute);
@@ -87,13 +90,10 @@ export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
       };
     }
 
-    services.logger.warn(`Geometry type: ${geometryType} is not supported`);
+    services.logger.warn(`Тип геометрии: ${geometryType} не поддерживается`);
 
     return { name: template, title: template, properties, readOnly: true };
   }
-}
 
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, { updateLayer });
+  throw new Error(`Тип слоя: ${layer.type} не поддерживается`);
 }

@@ -57,6 +57,10 @@ export function getLayerByFeatureInCurrentProject(
   return currentProject.vectorableLayers.find(l => l.tableName === tableName);
 }
 
+export function getLayerByComplexNameInCurrentProject(complexName: string): CrgVectorLayer | undefined {
+  return currentProject.vectorableLayers.find(l => l.complexName === complexName);
+}
+
 export function generateNextLayerId(): number {
   return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
 }
