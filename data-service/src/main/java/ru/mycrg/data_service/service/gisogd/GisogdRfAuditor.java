@@ -65,6 +65,7 @@ public class GisogdRfAuditor {
         gisogdRfUtil.getSchemasPreparedForGisogdRf()
                     .stream()
                     .flatMap(schemaId -> gisogdRfUtil.collectGisogdRfEntities(schemaId).stream())
+                    .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
                     .sorted(Comparator.comparing(GisogdData::getPublishOrder))
                     .forEach(gisogdEntity -> auditAll(gisogdEntity.getResourceQualifier(), limit));
     }
