@@ -24,8 +24,7 @@ import {
   CrgLayersGroup,
   CrgLayerType,
   CrgRasterLayer,
-  CrgVectorLayer,
-  crgLayerSchema
+  CrgVectorLayer
 } from '../../../services/gis/layers/layers.models';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
@@ -51,15 +50,13 @@ import { LayerTransparency } from '../Transparency/Layer-Transparency';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
-import { FormDialog } from '../../FormDialog/FormDialog';
-import { TextBadge } from '../../TextBadge/TextBadge';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
-import { ContentType, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
-import { getViewChoiceOptions } from '../../Form/Form.utils';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
+import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
+import { Schema } from '../../../services/data/schema/schema.models';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 
@@ -89,9 +86,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private importShapeAllowed = false;
   @observable private rasterDocument: LibraryRecord;
   @observable private vectorTable: VectorTable;
-  @observable private views: ContentType[];
+  @observable private schema?: Schema;
   @observable private dialogOpen = false;
-  @observable private layerEditDialog = false;
+  @observable private layerEditDialogOpen = false;
 
   constructor(props: LayerMenuProps) {
     super(props);
@@ -286,46 +283,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
         )}
 
         {!isGroup && editMode && (
-          <FormDialog<Partial<CrgLayer>>
-            className={cnLayerPropertiesDialog()}
-            open={this.layerEditDialog}
-            schema={this.layerSchema}
-            value={entity as CrgLayer}
-            actionFunction={this.editLayer}
-            actionButtonProps={{ children: 'Изменить' }}
+          <EditLayerDialog
+            open={this.layerEditDialogOpen}
             onClose={this.closeLayerEditDialog}
-            title={
-              <>
-                Свойства слоя
-                <TextBadge id={entity.id} />
-              </>
-            }
+            schema={this.schema}
+            layer={entity}
+            geometryType={this.geometryType}
           />
         )}
       </>
     );
-  }
-
-  @computed
-  private get layerSchema(): SimpleSchema {
-    const { entity } = this.props;
-
-    if (this.views && (entity as CrgLayer).type === CrgLayerType.VECTOR) {
-      return {
-        properties: [
-          {
-            name: 'view',
-            title: 'Представление',
-            options: getViewChoiceOptions(this.views),
-            defaultValue: '',
-            propertyType: PropertyType.CHOICE
-          },
-          ...crgLayerSchema.properties
-        ]
-      };
-    }
-
-    return crgLayerSchema;
   }
 
   @computed
@@ -339,6 +306,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private get isVectorFromFileLayer(): boolean {
     const { entity, isGroup } = this.props;
     const { type } = entity as CrgLayer;
+
+    if (!type) {
+      return false;
+    }
 
     return !isGroup && isVectorFromFile(type);
   }
@@ -434,10 +405,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   private async fetchGeometryType() {
-    if (this.isVectorLayer) {
+    if (this.isVectorLayer || this.isVectorFromFileLayer) {
       const schema = await getLayerSchema(this.props.entity as CrgVectorLayer);
 
-      this.setViews(schema.views);
+      this.setSchema(schema);
       this.setGeometryType(schema.geometryType);
     }
   }
@@ -519,13 +490,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action
-  private setGeometryType(geometryType: GeometryType) {
+  private setGeometryType(geometryType?: GeometryType) {
     this.geometryType = geometryType;
   }
 
   @action
-  private setViews(views: ContentType[]) {
-    this.views = views;
+  private setSchema(schema: Schema) {
+    this.schema = schema;
   }
 
   @action
@@ -536,20 +507,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action.bound
   private editGroup(title: string) {
     this.props.entity.title = title;
-  }
-
-  @action.bound
-  private editLayer(layer: Partial<CrgLayer>) {
-    (this.props.entity as CrgLayer).title = layer.title;
-    (this.props.entity as CrgLayer).maxZoom = layer.maxZoom;
-    (this.props.entity as CrgLayer).minZoom = layer.minZoom;
-    const view = layer.view || '';
-    (this.props.entity as CrgLayer).view = view;
-    const styleName: string = view === '' ? view : this.views.find(type => type.id === view)?.styleName;
-    (this.props.entity as CrgLayer).styleName =
-      styleName || this.layerSchema.styleName || layer.styleName || layer.schemaId;
-
-    communicationService.layerUpdated.emit({ type: 'update', data: this.props.entity as CrgLayer });
   }
 
   @action.bound
@@ -579,13 +536,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @action.bound
   private openLayerEditDialog() {
-    this.layerEditDialog = true;
+    this.layerEditDialogOpen = true;
     this.props.onClose();
   }
 
   @action.bound
   private closeLayerEditDialog() {
-    this.layerEditDialog = false;
+    this.layerEditDialogOpen = false;
   }
 
   @action.bound

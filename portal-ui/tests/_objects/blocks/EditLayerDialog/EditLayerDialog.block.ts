@@ -1,13 +1,14 @@
-import { Block } from '../../../Block';
-import { FormBlock } from '../../Form/Form.block';
-import { MuiInputBlock } from '../../MuiInput/MuiInput.block';
-import { MuiSelectBlock } from '../../MuiSelect/MuiSelect.block';
+import { Block } from '../../Block';
+import { FormBlock } from '../Form/Form.block';
+import { MuiInputBlock } from '../MuiInput/MuiInput.block';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
-class LayerPropertiesDialogBlock extends Block {
+class EditLayerPropertiesDialogBlock extends Block {
   selectors = {
-    container: '.Layer-PropertiesDialog',
-    layerPropertyFormDialogViewSelect: '.Layer-PropertiesDialog .Form-Field:first-child .MuiSelect-select',
-    formDialogLayerPropertySaveBtn: '.Layer-PropertiesDialog .MuiButton-outlinedPrimary'
+    container: '.EditLayerDialog',
+    layerPropertyFormDialogViewSelect: '.EditLayerDialog .Form-Field:first-child .MuiSelect-select',
+    formDialogLayerPropertySaveBtn: '.EditLayerDialog .MuiButton-outlinedPrimary',
+    loading: '.EditLayerDialog .Loading'
   };
 
   async viewFieldFirstValue(viewTitle: string): Promise<void> {
@@ -42,6 +43,11 @@ class LayerPropertiesDialogBlock extends Block {
     await inputBlock.clearValue();
     await inputBlock.setValue(value);
   }
+
+  async waitForLoadingHide(): Promise<void> {
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true, timeout: 5000 });
+  }
 }
 
-export const layerPropertiesDialogBlock = new LayerPropertiesDialogBlock();
+export const editLayerPropertiesDialogBlock = new EditLayerPropertiesDialogBlock();

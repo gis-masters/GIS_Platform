@@ -83,6 +83,7 @@ class LayerCardBlock extends Block {
 
     const $btn = await $layerCard.$(btnSelectorName);
     await $btn.waitForDisplayed();
+    await browser.pause(200); // обязательна иначе нет клика
     await $btn.click();
   }
 }

@@ -146,6 +146,11 @@
             "id": "listProjects",
             "title": "Переход к списку проектов",
             "contentUrl": "/assets/help/map/2projectManagement/7listProjects/07listProjects.html"
+          },
+          {
+            "id": "changesStyle",
+            "title": "Выбор стиля для слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/10changesStyle/10changesStyle.html"
           }
         ]
       },

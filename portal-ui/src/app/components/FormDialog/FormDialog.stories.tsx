@@ -25,7 +25,7 @@ const testData: TestData = {
   description: 'Описание писание писание писание'
 };
 
-const testFields: PropertySchema<TestData>[] = [
+const testFields: PropertySchema[] = [
   {
     propertyType: PropertyType.STRING,
     name: 'title',
@@ -43,7 +43,7 @@ const testFields: PropertySchema<TestData>[] = [
 
 const actionFunction = async (formValue: TestData) => {
   await sleep(2000 * Math.random());
-  const errors = validateFormValue(formValue, testFields as PropertySchema[]);
+  const errors = validateFormValue(formValue, testFields);
 
   if (errors.length) {
     throw { errors };
@@ -56,7 +56,7 @@ export const Create = Template.bind({});
 Create.args = {
   title: 'Сотворение штуки',
   open: true,
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   actionButtonProps: { children: 'Создать штуку' },
   actionFunction,
   onSuccess: () => Toast.success('Создано успешно!'),
@@ -67,7 +67,7 @@ export const Edit = Template.bind({});
 Edit.args = {
   title: 'Редактирование штуки',
   open: true,
-  schema: { properties: testFields as PropertySchema[] },
+  schema: { properties: testFields },
   value: testData,
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,

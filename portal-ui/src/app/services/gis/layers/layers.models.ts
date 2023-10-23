@@ -71,7 +71,7 @@ export const crgLayerSchema: SimpleSchema = {
   properties: [
     {
       name: 'title',
-      title: 'Название слоя',
+      title: 'Наименование',
       propertyType: PropertyType.STRING
     },
     {

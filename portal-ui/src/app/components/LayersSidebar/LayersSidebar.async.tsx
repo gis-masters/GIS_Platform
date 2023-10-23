@@ -166,6 +166,7 @@ export default class LayersSidebar extends Component {
     for (const group of currentProject.queriesQueue.groupsToCreate) {
       try {
         const createdGroup = await projectsService.createGroup(group, currentProject.id);
+
         if (group.id !== createdGroup.id && currentProject.groups.some(({ id }) => id === createdGroup.id)) {
           currentProject.switchGroupId(createdGroup.id, projectsService.generateNextGroupId());
         }

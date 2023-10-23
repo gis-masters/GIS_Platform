@@ -25,6 +25,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;
+  afterForm?: ReactNode;
   formRole?: FormRole;
   onClose(): void;
   onSuccess?(): void;
@@ -33,6 +34,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   actionFunction: (value: T) => Promise<void> | void;
+  invoke?: FormProps<T>['invoke'];
 }
 
 @observer
@@ -45,6 +47,15 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     makeObservable(this);
   }
 
+  componentDidUpdate() {
+    const { invoke } = this.props;
+    if (invoke) {
+      invoke.reset = this.formInvoke?.reset;
+      invoke.setValue = this.formInvoke?.setValue;
+      invoke.validate = this.formInvoke?.validate;
+    }
+  }
+
   render() {
     const {
       title,
@@ -55,6 +66,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       formRole,
       value = getDefaultValues(schema.properties),
       additionalAction,
+      afterForm,
       actionButtonProps = {},
       actionFunction,
       onFormChange
@@ -89,6 +101,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
               />
             )}
           </RegistryConsumer>
+          {afterForm}
         </DialogContent>
         <DialogActions>
           <ActionsLeft>{additionalAction}</ActionsLeft>

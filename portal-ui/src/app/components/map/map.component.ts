@@ -67,7 +67,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.reactionDisposer = reaction(
       () => [
-        currentProject.visibleOnMapLayers.map(({ payload }) => payload.view),
+        currentProject.visibleOnMapLayers.map(({ payload }) => [payload.view, payload.styleName]),
         cloneDeep(attributesTableStore.filter),
         cloneDeep(attributesTableStore.filterDisabled)
       ],

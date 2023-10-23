@@ -21,6 +21,7 @@ import {
 import { stylesClient } from './styles.client';
 import { cqlConcat } from '../../util/cqlConcat';
 import { getLayerSchema } from '../../gis/layers/layers.service';
+import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
@@ -203,4 +204,35 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
   );
 
   return stylesClient.getLegendForMapView(requestData);
+}
+
+const stylesList: Record<'line' | 'polygon' | 'point', string[]> = {
+  line: [],
+  point: [],
+  polygon: []
+};
+
+export async function getSimpleStylesListForGeometryType(geometryType: GeometryType): Promise<string[]> {
+  const supGeometryType = getSupGeoType(geometryType);
+  if (!stylesList[supGeometryType].length) {
+    const dirtyStylesList = await stylesClient.getStylesList();
+
+    stylesList[supGeometryType].push(
+      ...dirtyStylesList.styles.style.filter(el => el.name.includes(`simple_${supGeometryType}_`)).map(el => el.name)
+    );
+  }
+
+  return stylesList[supGeometryType];
+}
+
+function getSupGeoType(geometryType: GeometryType): 'line' | 'polygon' | 'point' {
+  if (isLinear(geometryType)) {
+    return 'line';
+  } else if (isPolygonal(geometryType)) {
+    return 'polygon';
+  } else if (isPoint(geometryType)) {
+    return 'point';
+  }
+
+  throw new Error('неподдерживаемый тип геометрии ' + geometryType);
 }

@@ -117,3 +117,8 @@ export type CustomStyleDescription =
   | CustomStylePolygonDescription;
 
 export const CUSTOM_STYLE_NAME = '__custom__';
+
+export interface StyleGeoserverInfo {
+  name: string;
+  href: string;
+}
