@@ -31,7 +31,7 @@ import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-De
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
 import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
 import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
-import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
+import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActionsCreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 
 export const cnLibraryDocumentActions = cn('LibraryDocumentActions');

@@ -1,7 +1,7 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { libraryDeletedDocumentRestoreDialogBlock } from './LibraryDeletedDocumentRestoreDialog.block';
+import { selectFolderDialogBlock } from './SelectFolderDialog.block';
 
 When('в окне выбора папки для восстановления документа я нажимаю `Выбрать`', async function () {
-  await libraryDeletedDocumentRestoreDialogBlock.selectFolder();
+  await selectFolderDialogBlock.selectFolder();
 });

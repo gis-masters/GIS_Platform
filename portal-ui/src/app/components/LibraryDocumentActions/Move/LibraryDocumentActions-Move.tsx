@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { RegistryConsumer } from '@bem-react/di';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { action, observable, makeObservable } from 'mobx';
 import { DriveFileMove, DriveFileMoveOutlined } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../../services/di-registry';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { getLibrary, moveLibraryRecord } from '../../../services/data/library/library.service';
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
-import { isRecordUpdateAllowed } from '../../../services/data/permissions/permissions.service';
-import { ActionsRight } from '../../ActionsRight/ActionsRight';
-import { Button } from '../../Button/Button';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Schema } from '../../../services/data/schema/schema.models';
 
 const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 
@@ -29,9 +23,8 @@ interface LibraryDocumentActionsFilesPlacementProps {
 @observer
 export class LibraryDocumentActionsMove extends Component<LibraryDocumentActionsFilesPlacementProps> {
   @observable private documentMoveDialogOpen = false;
-  @observable private disabled = true;
+  @observable private loading = false;
   @observable private currentLibrary?: Library;
-  @observable private selectedFolder?: LibraryRecord;
 
   constructor(props: LibraryDocumentActionsFilesPlacementProps) {
     super(props);
@@ -44,17 +37,7 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   render() {
-    const { as } = this.props;
-
-    const moveButton = (
-      <Button
-        children='Выбрать'
-        onClick={this.submitFolderSelection}
-        color='primary'
-        startIcon={<DriveFileMoveOutlined />}
-        disabled={this.disabled}
-      />
-    );
+    const { as, document } = this.props;
 
     return (
       <>
@@ -66,86 +49,34 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
           as={as}
         />
 
-        <Dialog open={this.documentMoveDialogOpen} onClose={this.closeDocumentMoveDialog}>
-          <DialogTitle>Укажите папку для перемещения</DialogTitle>
-          <DialogContent className='scroll'>
-            <RegistryConsumer id='common'>
-              {({ Explorer }: CommonDiRegistry) => (
-                <Explorer
-                  explorerRole='DocumentMove'
-                  path={this.path}
-                  onSelect={this.handleSelect}
-                  disabledTester={this.testForDisabled}
-                  customFilters={{
-                    [ExplorerItemType.LIBRARY]: { is_folder: { $in: [true] } }
-                  }}
-                />
-              )}
-            </RegistryConsumer>
-          </DialogContent>
-          <DialogActions>
-            <ActionsRight>
-              {this.disabled ? (
-                <Tooltip title={this.selectedFolder?.id ? 'Недостаточно прав для перемещения' : ''}>
-                  <span>{moveButton}</span>
-                </Tooltip>
-              ) : (
-                moveButton
-              )}
-              <Button onClick={this.closeDocumentMoveDialog}>Отмена</Button>
-            </ActionsRight>
-          </DialogActions>
-        </Dialog>
+        <SelectFolderDialog
+          document={document}
+          title='Укажите папку для перемещения'
+          startPath={
+            this.currentLibrary
+              ? ([{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, emptyItem] as ExplorerItemData[])
+              : undefined
+          }
+          open={this.documentMoveDialogOpen}
+          loading={this.loading}
+          onClose={this.closeDocumentMoveDialog}
+          onSelect={this.selectFolder}
+        />
       </>
     );
   }
 
-  @computed
-  private get path(): ExplorerItemData[] | undefined {
-    if (!this.currentLibrary) {
-      return;
-    }
-
-    return [{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, emptyItem];
-  }
-
-  @boundMethod
-  private async handleSelect(item: ExplorerItemData) {
-    this.setSelectedFolder(item.payload as LibraryRecord);
-    if (this.selectedFolder?.is_folder) {
-      this.setDisabled(!(await isRecordUpdateAllowed(this.selectedFolder)));
-    }
-
-    if (!this.selectedFolder?.is_folder && !this.selectedFolder?.loading) {
-      this.setDisabled(true);
-    }
-  }
-
-  @boundMethod
-  private async submitFolderSelection() {
-    await moveLibraryRecord(this.props.document, this.selectedFolder?.is_folder ? this.selectedFolder.id : undefined);
-
-    this.closeDocumentMoveDialog();
-  }
-
-  @boundMethod
-  private testForDisabled({ type }: ExplorerItemData<LibraryRecord>): boolean {
-    return type === ExplorerItemType.DOCUMENT;
-  }
-
   @action.bound
-  private setDisabled(disabled: boolean) {
-    this.disabled = disabled;
+  private async selectFolder(folder: LibraryRecord | null) {
+    this.setLoading(true);
+    await moveLibraryRecord(this.props.document, folder?.is_folder ? folder.id : undefined);
+    this.setLoading(false);
+    this.closeDocumentMoveDialog();
   }
 
   @action.bound
   private setCurrentLibrary(currentLibrary: Library) {
     this.currentLibrary = currentLibrary;
-  }
-
-  @action.bound
-  private setSelectedFolder(selectedFolder: LibraryRecord) {
-    this.selectedFolder = selectedFolder;
   }
 
   @action.bound
@@ -156,5 +87,10 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   @action.bound
   private closeDocumentMoveDialog() {
     this.documentMoveDialogOpen = false;
+  }
+
+  @action
+  private setLoading(loading: boolean) {
+    this.loading = loading;
   }
 }

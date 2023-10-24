@@ -1,10 +1,10 @@
 import { Block } from '../../Block';
 
-class LibraryDeletedDocumentRestoreDialogBlock extends Block {
+class SelectFolderDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDeletedDocumentRestoreDialog',
-    select: '.LibraryDeletedDocumentRestoreDialog .MuiButton-outlinedPrimary',
-    loading: '.LibraryDeletedDocumentRestoreDialog .Loading'
+    container: '.SelectFolderDialog',
+    select: '.SelectFolderDialog .MuiButton-outlinedPrimary',
+    loading: '.SelectFolderDialog .Loading'
   };
 
   async selectFolder(): Promise<void> {
@@ -26,4 +26,4 @@ class LibraryDeletedDocumentRestoreDialogBlock extends Block {
   }
 }
 
-export const libraryDeletedDocumentRestoreDialogBlock = new LibraryDeletedDocumentRestoreDialogBlock();
+export const selectFolderDialogBlock = new SelectFolderDialogBlock();

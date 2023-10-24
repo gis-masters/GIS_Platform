@@ -7,18 +7,19 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
+import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
+import { ExplorerItemData, ExplorerItemType, emptyItem } from '../../Explorer/Explorer.models';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { schemaService } from '../../../services/data/schema/schema.service';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { getDefaultValues } from '../../Form/Form.utils';
-import { sleep } from '../../../services/util/sleep';
 import { FormDialog } from '../../FormDialog/FormDialog';
-
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { sleep } from '../../../services/util/sleep';
 
 const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'CreateChild');
 
@@ -40,7 +41,9 @@ interface LibraryDocumentActionsCreateChildProps {
 export class LibraryDocumentActionsCreateChild extends Component<LibraryDocumentActionsCreateChildProps> {
   @observable private childrenData: ChildData[] = [];
   @observable private currentChild?: ChildData;
+  @observable private folder: LibraryRecord | null = null;
   @observable private dialogOpen = false;
+  @observable private folderSelectionDialogOpen = false;
   private operationId?: symbol;
   @observable private createdDocument?: LibraryRecord;
   @observable private createdDocumentDialogOpen = false;
@@ -104,12 +107,25 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
           ))}
         />
 
-        {this.currentChild && (
+        <SelectFolderDialog
+          title='Выберите папку для создания дочернего документа'
+          subtitle='(создание возможно только в библиотеки и в папки с доступом на редактирование)'
+          startPath={[{ type: ExplorerItemType.LIBRARY_ROOT, payload: null }, emptyItem]}
+          open={this.folderSelectionDialogOpen}
+          onClose={this.closeFolderSelectionDialog}
+          customTestForDisabled={this.customTestForDisabled}
+          onSelect={this.selectFolder}
+        />
+
+        {this.currentChild && this.folder && (
           <FormDialog
             open={this.dialogOpen}
             onClose={this.formDialogCloseHandler}
             schema={this.currentChild.schema}
-            value={{ content_type_id: this.currentChild?.contentType, ...getDefaultValues(properties, document) }}
+            value={{
+              content_type_id: this.currentChild?.contentType,
+              ...getDefaultValues(properties, document)
+            }}
             actionFunction={this.createDocument}
           />
         )}
@@ -128,6 +144,19 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   @action
   private setChildrenData(data: ChildData[]) {
     this.childrenData = data;
+  }
+
+  @action.bound
+  private selectFolder(folder: LibraryRecord | null) {
+    this.folder = folder;
+    this.closeFolderSelectionDialog();
+  }
+
+  @boundMethod
+  private customTestForDisabled(item: ExplorerItemData<LibraryRecord>) {
+    if (item.type === ExplorerItemType.LIBRARY && this.childrenData) {
+      return !this.childrenData.some(child => child.library.id === item.payload.id);
+    }
   }
 
   private async init() {
@@ -172,6 +201,19 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   }
 
   @action
+  private openFolderSelectionDialog() {
+    this.folderSelectionDialogOpen = true;
+  }
+
+  @action.bound
+  private closeFolderSelectionDialog() {
+    this.folderSelectionDialogOpen = false;
+    if (this.folder) {
+      this.openFormDialog();
+    }
+  }
+
+  @action
   private setCurrentChild(child?: ChildData) {
     this.currentChild = child;
   }
@@ -196,12 +238,13 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
     this.closeCreatedDocumentDialog();
     await sleep(300);
     this.setCreatedDocument();
+    this.selectFolder(null);
   }
 
   private handleChildClick(library: Library, schema: Schema, contentType: string) {
     const { document } = this.props;
     this.setCurrentChild({ document, library, schema, contentType });
-    this.openFormDialog();
+    this.openFolderSelectionDialog();
   }
 
   @boundMethod
@@ -210,6 +253,10 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
       throw new Error('Current child is not defined');
     }
     const { library, schema } = this.currentChild;
+    if (this.folder) {
+      value.path = `${this.folder.path}/${this.folder.id}`;
+    }
+
     this.setCreatedDocument(await createLibraryRecord(value, library.table_name, schema.name));
     this.openCreatedDocumentDialog();
   }

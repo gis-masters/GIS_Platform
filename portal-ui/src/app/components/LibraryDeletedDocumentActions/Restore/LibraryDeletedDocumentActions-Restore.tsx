@@ -2,17 +2,18 @@ import React, { Component } from 'react';
 import { observable, makeObservable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { RestorePageOutlined } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
-import { getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
-import { LibraryDeletedDocumentRestoreDialog } from '../../LibraryDeletedDocumentRestoreDialog/LibraryDeletedDocumentRestoreDialog';
+import { getLibrary, getLibraryRecord, recoverLibraryRecord } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { ExplorerItemData, ExplorerItemType, emptyItem } from '../../Explorer/Explorer.models';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDeletedDocumentActionsRestore = cn('LibraryDeletedDocumentActions', 'Restore');
 
@@ -25,7 +26,6 @@ interface LibraryDeletedDocumentActionsRestoreProps {
 export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDeletedDocumentActionsRestoreProps> {
   @observable private loading = false;
   @observable private dialogOpen = false;
-  @observable private documentRestoreDialogOpen = false;
   @observable private currentLibrary?: Library;
   @observable private parentFolderPath?: ExplorerItemData[];
 
@@ -52,55 +52,76 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
           icon={<RestorePageOutlined />}
         />
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-          <DialogTitle>
-            Невозможно восстановить документ в изначальную папку. Выберите папку для восстановления.
-          </DialogTitle>
-          <DialogActions>
-            <Button onClick={this.openDocumentRestoreDialog} loading={this.loading} color='primary'>
-              Выбрать
-            </Button>
-            <Button onClick={this.closeDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-
-        <LibraryDeletedDocumentRestoreDialog
+        <SelectFolderDialog
+          title='Выберите папку для восстановления документа'
+          subtitle='(восстановление возможно только в папку с доступом на редактирование)'
           document={document}
-          onClose={this.closeDocumentRestoreDialog}
-          currentLibrary={this.currentLibrary}
-          parentFolderPath={this.parentFolderPath}
-          open={this.documentRestoreDialogOpen}
+          startPath={
+            this.parentFolderPath ||
+            ([{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, emptyItem] as ExplorerItemData[])
+          }
+          onClose={this.closeDialog}
+          loading={this.loading}
+          open={this.dialogOpen}
+          onSelect={this.selectFolder}
         />
       </>
     );
   }
 
+  @action.bound
+  private async selectFolder(folder: LibraryRecord | null) {
+    this.setLoading(true);
+
+    try {
+      await recoverLibraryRecord(this.props.document, folder?.is_folder ? folder.id : undefined);
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string[] }>;
+
+      if (err?.response?.data?.message) {
+        Toast.error(err.response.data.message);
+      }
+    }
+
+    this.setLoading(false);
+    this.closeDialog();
+  }
+
   @boundMethod
   private async restoreDocument() {
-    const pathParts = this.props.document.path.split('/');
-    pathParts.shift();
+    const { document } = this.props;
+    if (document && document.path) {
+      const pathParts = document.path.split('/');
+      pathParts.shift();
 
-    if (pathParts.length > 1) {
-      const parent = await getLibraryRecord(this.props.document.libraryTableName, Number(pathParts.at(-1)));
+      if (pathParts.length > 1) {
+        const parent = await getLibraryRecord(document.libraryTableName, Number(pathParts.at(-1)));
 
-      if (parent?.is_deleted) {
-        this.openDialog();
+        if (parent?.is_deleted) {
+          if (
+            await konfirmieren({
+              title: 'Невозможно восстановить документ в изначальную папку. Выбрать другую папку для восстановления?'
+            })
+          ) {
+            this.openDialog();
+          }
+        } else {
+          const pathParts = document.path.split('/').slice(2);
+          const parents = await Promise.all(
+            pathParts.map(async part => {
+              const folder = await getLibraryRecord(document.libraryTableName, Number(part));
+
+              return { type: ExplorerItemType.FOLDER, payload: folder };
+            })
+          );
+          if (this.currentLibrary) {
+            this.setParentFolderPath([{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, ...parents]);
+            this.openDialog();
+          }
+        }
       } else {
-        const pathParts = this.props.document.path.split('/').slice(2);
-        const parents = await Promise.all(
-          pathParts.map(async part => {
-            const folder = await getLibraryRecord(this.props.document.libraryTableName, Number(part));
-
-            return { type: ExplorerItemType.FOLDER, payload: folder };
-          })
-        );
-
-        this.setParentFolderPath([{ type: ExplorerItemType.LIBRARY, payload: this.currentLibrary }, ...parents]);
-
-        this.openDocumentRestoreDialog();
+        this.openDialog();
       }
-    } else {
-      this.openDocumentRestoreDialog();
     }
   }
 
@@ -115,17 +136,6 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
   }
 
   @action.bound
-  private openDocumentRestoreDialog() {
-    this.closeDialog();
-    this.documentRestoreDialogOpen = true;
-  }
-
-  @action.bound
-  private closeDocumentRestoreDialog() {
-    this.documentRestoreDialogOpen = false;
-  }
-
-  @action.bound
   private openDialog() {
     this.dialogOpen = true;
   }
@@ -133,5 +143,10 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
   @action.bound
   private closeDialog() {
     this.dialogOpen = false;
+  }
+
+  @action
+  private setLoading(loading: boolean) {
+    this.loading = loading;
   }
 }

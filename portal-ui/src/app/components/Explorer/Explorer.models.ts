@@ -16,7 +16,7 @@ export type ExplorerRole =
   | 'dm'
   | 'ConnectionsToProjectsWidget'
   | 'DocumentVersions'
-  | 'DeletedDocuments'
+  | 'SelectFolder'
   | 'taskJournalHistory'
   | '';
 
