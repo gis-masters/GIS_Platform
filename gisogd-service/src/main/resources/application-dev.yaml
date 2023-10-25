@@ -1,0 +1,89 @@
+spring:
+
+  rabbitmq:
+    username: fiz
+    password: Fiorentina1
+    host: 10.10.10.58
+    exchanges:
+      exchange-receive-data:
+        name: gisogdPublicationQueue
+      exchange-send-data:
+        name: gisogdPublicationResponseQueue
+      exchange-receive-audit-data:
+        name: gisogdAuditQueue
+      exchange-send-audit-response-data:
+        name: gisogdAuditResponseQueue
+    queues:
+      queue-receive-data:
+        name: gisogdPublicationQueue
+      queue-send-data:
+        name: gisogdPublicationResponseQueue
+      queue-receive-audit-data:
+        name: gisogdAuditQueue
+      queue-send-audit-response-data:
+        name: gisogdAuditResponseQueue
+    bindings:
+      binding-receive-data:
+        exchange: exchange-receive-data
+        queue: queue-receive-data
+      binding-receive-audit-data:
+        exchange: exchange-receive-audit-data
+        queue: queue-receive-audit-data
+
+  security:
+    oauth2:
+      client:
+        registration:
+          dataServiceClient:
+            client-id: arh_grad_rk@mail.ru
+            client-secret: Fiorentina12
+            authorization-grant-type: password
+            provider: dataServiceClient
+          gisogdRfClient:
+            client-id: prodkrym
+            client-secret: 84TMGOJRTNXTK4T8A10KL1LY4M3D309SUO134IR3IZ6Z9QMM9SSTKWXSG
+            authorization-grant-type: client_credentials
+            provider: gisogdRfClient
+        provider:
+          dataServiceClient:
+            token-uri: http://10.10.10.58/api/oauth/token
+          gisogdRfClient:
+            token-uri: https://id.gisogd.gov.ru/oidc/connect/token
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          gisogdRfClient:
+            url: https://admin.gisogd.gov.ru/api/rgmu/
+            loggerLevel: full
+
+          dataServiceClient:
+            url: http://10.10.10.58:8084
+            loggerLevel: full
+
+      oauth2:
+        enabled: true
+
+feign:
+  okhttp:
+    enabled: true
+
+logging:
+  level:
+    ru.mycrg: DEBUG
+  file:
+    name: /opt/logs/gisogd-service.log
+
+camel:
+  get-requested-documents:
+    schedule: 0+*/1+*+*+*+*
+  springboot:
+    global-options:
+      CamelJacksonEnableTypeConverter: true
+      CamelJacksonTypeConverterToPojo: true
+
+---
+
+server:
+  port: 8088

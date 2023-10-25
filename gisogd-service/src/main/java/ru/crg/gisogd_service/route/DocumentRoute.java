@@ -1,11 +1,18 @@
 package ru.crg.gisogd_service.route;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import feign.FeignException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static java.util.stream.Collectors.toMap;
+
+import static org.apache.camel.Exchange.LOOP_INDEX;
+import static ru.crg.gisogd_service.route.RfRoute.ERRORS_RESPONSE_STATUS;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.IntStream;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
@@ -13,6 +20,14 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import feign.FeignException;
+import feign.form.FormData;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import ru.crg.gisogd_service.client.DataServiceClient;
 import ru.crg.gisogd_service.client.GisogdRfClient;
 import ru.crg.gisogd_service.model.crimea.common.FileRef;
@@ -22,13 +37,6 @@ import ru.crg.gisogd_service.service.BadRequestErrorsResolver;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
 import ru.crg.gisogd_service.service.LibraryRecordService;
 import ru.mycrg.gisog_service_contract.dto.Status;
-
-import java.util.*;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toMap;
-import static org.apache.camel.Exchange.LOOP_INDEX;
-import static ru.crg.gisogd_service.route.RfRoute.ERRORS_RESPONSE_STATUS;
 
 /**
  * DocumentsFiles processing routes.
@@ -100,8 +108,8 @@ public class DocumentRoute extends RouteBuilder {
                 .process(exchange -> {
                     DocumentPagedModel container = exchange.getIn().getBody(DocumentPagedModel.class);
                     if (container.getTotalPages() == 0
-                            && container.getItems() != null
-                            && !container.getItems().isEmpty()) {
+                        && container.getItems() != null
+                        && !container.getItems().isEmpty()) {
                         collectDocumentHeader.process(exchange);
                     }
                 })
@@ -181,8 +189,8 @@ public class DocumentRoute extends RouteBuilder {
                 .process(exchange -> {
                     Map<String, Object> data = new HashMap<>();
                     data.put("title", exchange.getIn().getBody() == null
-                            ? "Документ библиотеки не найден"
-                            : exchange.getIn().getHeader("subFolderTitle", String.class));
+                                      ? "Документ библиотеки не найден"
+                                      : exchange.getIn().getHeader("subFolderTitle", String.class));
                     data.put("library_name", exchange.getIn().getHeader("docLibId", String.class));
                     data.put("guid", exchange.getIn().getHeader("docGuid", String.class));
                     data.put("object_id", exchange.getIn().getHeader("objectId", Integer.class));
@@ -229,6 +237,7 @@ public class DocumentRoute extends RouteBuilder {
                 })
 
                 .setHeader("fileGuid", simple("${body.getId()}"))
+                .setHeader("fileName", simple("${body.getTitle()}"))
                 .log(LoggingLevel.DEBUG, log, GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID, "fileGuid: ${header.fileGuid}")
 
                 .doTry()
@@ -240,10 +249,10 @@ public class DocumentRoute extends RouteBuilder {
                             exchange.getIn().getHeader("documentRecId", Integer.class),
                             Map.of("title",
                                    exception instanceof FeignException.NotFound
-                                           ? "Нет файла для отправки" : "Файл недоступен",
+                                   ? "Нет файла для отправки" : "Файл недоступен",
                                    "gisogdrf_sync_status",
                                    exception instanceof FeignException.NotFound
-                                           ? Status.NOT_FOUND : Status.GISOGD_FAILED));
+                                   ? Status.NOT_FOUND : Status.GISOGD_FAILED));
                     exchange.getIn().setBody(null);
                 })
                 /**/.log(LoggingLevel.ERROR, log, SEND_DOCUMENT_ROUTE_ID,
@@ -254,12 +263,8 @@ public class DocumentRoute extends RouteBuilder {
                 .doTry()
                 /**/.setBody(
                         exchange -> {
-                            String aClass = exchange.getIn().getHeader("docClass", String.class);
-                            String guid = exchange.getIn().getHeader("docGuid", String.class);
-                            return Map.of("Class", aClass,
-                                          "Guid", guid,
-                                          "File", exchange.getIn().getBody()
-                            );
+                            String fileName = exchange.getIn().getHeader("fileName", String.class);
+                            return new FormData("application/octet-stream", fileName, (byte[]) exchange.getIn().getBody());
                         }
                 )
                 /**/.bean(gisogdRfClient, "sendDocument")
@@ -272,7 +277,7 @@ public class DocumentRoute extends RouteBuilder {
                     String message = exception.getMessage();
                     if (exception instanceof FeignException) {
                         message = errorsResolver.getFeignExceptionMessage((FeignException) exception);
-                        if (message.contains("ArrayOfString")) {
+                        if (message != null && message.contains("ArrayOfString")) {
                             List<String> data = new XmlMapper().readValue(message, List.class);
                             Map<String, String> content = IntStream.range(0, data.size())
                                                                    .boxed()

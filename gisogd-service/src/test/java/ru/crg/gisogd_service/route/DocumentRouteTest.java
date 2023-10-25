@@ -83,7 +83,7 @@ class DocumentRouteTest {
             return null;
         }).when(dataServiceClient).updateLibraryRecord(anyInt(), any());
 
-        doAnswer(invocation -> null).when(gisogdRfClient).sendDocument(any());
+        doAnswer(invocation -> null).when(gisogdRfClient).sendDocument(any(), any(), any());
 
         camelContext.getRouteController().startRoute(GET_REQUESTED_DOCUMENTS_ROUTE_ID);
         camelContext.getRouteController().startRoute(GET_DOCUMENT_FROM_CRIMEA_ROUTE_ID);
@@ -106,7 +106,7 @@ class DocumentRouteTest {
             assertEquals(guid, invocation.getArguments()[1]);
             assertEquals(MULTIPART_FILE, invocation.getArguments()[2]);
             return null;
-        }).when(gisogdRfClient).sendDocument(any());
+        }).when(gisogdRfClient).sendDocument(any(), any(), any());
 
         when(dataServiceClient.getDocByLibIdAndGuid(any(), any())).thenReturn(
                 objectMapper.readValue(dlDataSectionDoc.getInputStream(), Map.class));

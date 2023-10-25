@@ -4,13 +4,19 @@ import org.apache.camel.Body;
 import org.apache.camel.Header;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+
+import feign.form.FormData;
 import ru.crg.gisogd_service.config.GisogdFeignConfig;
 import ru.crg.gisogd_service.model.rf.AuditResponse;
 import ru.crg.gisogd_service.model.rf.Classifiers;
 import ru.crg.gisogd_service.model.rf.DocumentPagedModel;
-
-import java.util.Map;
 
 @FeignClient(value = "gisogdRfClient", url = "${spring.cloud.openfeign.client.config.gisogdRfClient.url}"
         , configuration = {GisogdFeignConfig.class})
@@ -39,5 +45,7 @@ public interface GisogdRfClient {
     );
 
     @PostMapping(value = "/DocumentsFiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    void sendDocument(@Body @RequestBody Map<String, ?> body);
+    void sendDocument( @Header("docClass") @RequestPart("Class") String docClass,
+                       @Header("docGuid")  @RequestPart("Guid") String docGuid,
+                       @Body @RequestPart("File") FormData file);
 }
