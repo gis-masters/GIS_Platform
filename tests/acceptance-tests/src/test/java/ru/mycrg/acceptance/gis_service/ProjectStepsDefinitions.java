@@ -125,6 +125,22 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         updateProject(jsonBody);
     }
 
+    @When("Пользователь делает запрос на обновление полей проекта {string} имея старый токен")
+    public void updateCurrentProjectWithOldCookie(String projectName) {
+        String projName = generateString(projectName);
+        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName);
+
+        String jsonBody = gson.toJson(updateDto);
+        projectDto = mapToProjectDto(projName);
+
+        response = getBaseRequestWithOldCookie()
+                .given().
+                        body(jsonBody).
+                        contentType(ContentType.JSON)
+                .when().
+                        patch("" + projectId);
+    }
+
     @When("Администратор делает запрос на обновление полей проекта {string}")
     public void updateCurrentProjectAsAdmin(String projectName) {
         authorizationBase.loginAsOwner();

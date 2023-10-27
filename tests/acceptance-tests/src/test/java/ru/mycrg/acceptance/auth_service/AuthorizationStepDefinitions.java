@@ -14,9 +14,9 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE;
+import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE_VALUE_SEPARATOR;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
@@ -116,6 +116,23 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         assertNotNull(cookie);
         assertEquals(cookie.getMaxAge(), 0);
         assertEquals(cookie.getValue(), "");
+    }
+
+    @Given("Текущий токен пользователя сохранен")
+    public void saveOldCookie() {
+        authorizationBase.loginAs(userDto.getEmail(), userDto.getPassword());
+
+        oldCookie = response.getDetailedCookie(AUTH_COOKIE);
+
+        assertNotNull(oldCookie);
+        assertTrue(oldCookie.getValue().contains(AUTH_COOKIE_VALUE_SEPARATOR));
+
+        System.out.println("current auth cookie: " + oldCookie);
+    }
+
+    @Then("Старый токен подменен, пользователь получил права владельца на проект и успешно обновил информацию о проекте")
+    public void checkThatTokenRefresh() {
+        assertEquals(200, response.getStatusCode());
     }
 
     @When("Пользователь пытается запросить что-либо, имея просроченную авторизацию")

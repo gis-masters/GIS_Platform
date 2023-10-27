@@ -48,6 +48,7 @@ public class BaseStepsDefinitions {
     public static RequestSpecification request;
     public static Response response;
     public static Cookie cookie;
+    public static Cookie oldCookie;
     public static JsonPath jsonPath;
     public static Gson gson = new Gson();
 
@@ -117,6 +118,10 @@ public class BaseStepsDefinitions {
 
     public RequestSpecification getBaseRequestWithCurrentCookie() {
         return getBaseRequest().cookie(cookie);
+    }
+
+    public RequestSpecification getBaseRequestWithOldCookie() {
+        return getBaseRequest().cookie(oldCookie);
     }
 
     public RequestSpecification getBaseRequestWithCurrentTokenAndPort(int port) {
