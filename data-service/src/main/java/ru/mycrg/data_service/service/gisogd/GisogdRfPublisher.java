@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -29,6 +30,8 @@ import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +41,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static java.util.UUID.fromString;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
@@ -57,6 +61,10 @@ import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 public class GisogdRfPublisher {
 
     public static final String INBOX_MARKER = "inbox_data";
+    public static final String FILE_WITH_FIELDS = "gisogdrfFields.json";
+
+    @Value("${crg-options.fileStoragePath}")
+    private String baseFileStoragePath;
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfPublisher.class);
 
@@ -157,11 +165,15 @@ public class GisogdRfPublisher {
             String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, srid);
             parentContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
         }
-        removeFields(parentContent);
 
-        List<Document> documents = fetchByTypeDocument(qualifier, parentDoc);
+        Map<String, Object> clearedContent = clearBySettings(qualifier.getTable(), parentContent);
+
+        log.info("Родительский объект до: [{}]", parentContent);
+        log.info("Родительский объект после удаления полей: [{}]", clearedContent);
+
+        List<Document> documents = fetchByTypeDocument(qualifier, clearedContent);
         Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier, srid);
-        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, parentContent, srid);
+        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, clearedContent, srid);
 
         List<Document> children = new ArrayList<>(documents);
         children.addAll(urlAsFormula);
@@ -200,7 +212,10 @@ public class GisogdRfPublisher {
 
             Map<String, String> response = new HashMap<>();
             for (Document child: notSyncedChildren) {
-                response.put(child.getName(), child.getContent().get("gisogdrf_sync_status").toString());
+                Object gisogdrfSyncStatus = child.getContent().get("gisogdrf_sync_status");
+                if (gisogdrfSyncStatus != null) {
+                    response.put(child.getName(), gisogdrfSyncStatus.toString());
+                }
             }
 
             gisogdRfDao.writeErrors(qualifier, response);
@@ -215,7 +230,7 @@ public class GisogdRfPublisher {
                              qualifier.getSchema(),
                              qualifier.getTable(),
                              parentDoc.getAsString(CONTENT_TYPE_ID.getName()),
-                             parentContent),
+                             clearedContent),
                 children);
 
         log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
@@ -230,6 +245,38 @@ public class GisogdRfPublisher {
                       documentContent.remove(field, documentContent.get(field));
                   }
               });
+    }
+
+    private Map<String, Object> clearBySettings(String libraryName, Map<String, Object> documentContent) {
+        Path pathToFile = Path.of(format("%s/%s/%s",
+                                         baseFileStoragePath,
+                                         getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
+                                         FILE_WITH_FIELDS));
+
+        Map<String, List<String>> data;
+        try {
+            data = mapper.readValue(Files.readAllBytes(pathToFile), HashMap.class);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось считать данные из файла: [%s] По причине: %s",
+                                       pathToFile, e.getMessage());
+            log.error(msg, e);
+
+            return documentContent;
+        }
+
+        List<String> fields = data.get(libraryName);
+        if (fields == null || fields.isEmpty()) {
+            log.warn("Для библиотеки: {} в файле конфигурации: {} не заданы поля!!!", libraryName, FILE_WITH_FIELDS);
+
+            return documentContent;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        for (String key: fields) {
+            result.put(key, documentContent.get(key));
+        }
+
+        return result;
     }
 
     private void publish(ResourceQualifier qualifier, Long taskId, Long limit, int srid) {
@@ -272,7 +319,7 @@ public class GisogdRfPublisher {
         }
     }
 
-    private List<Document> fetchByTypeDocument(ResourceQualifier qualifier, IRecord parent) {
+    private List<Document> fetchByTypeDocument(ResourceQualifier qualifier, Map<String, Object> content) {
         try {
             List<Document> result = new ArrayList<>();
 
@@ -294,7 +341,7 @@ public class GisogdRfPublisher {
             }
 
             for (SimplePropertyDto documentProperty: documentProperties) {
-                String asString = parent.getAsString(documentProperty.getName());
+                String asString = (String) content.get(documentProperty.getName());
                 if (asString == null) {
                     continue;
                 }
