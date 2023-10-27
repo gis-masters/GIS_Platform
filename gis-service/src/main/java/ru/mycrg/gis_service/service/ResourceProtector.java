@@ -1,6 +1,8 @@
 package ru.mycrg.gis_service.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
@@ -18,6 +20,8 @@ import static ru.mycrg.gis_service.security.Roles.OWNER;
 @Service
 public class ResourceProtector {
 
+    private final Logger log = LoggerFactory.getLogger(ResourceProtector.class);
+
     private final IAuthenticationFacade authenticationFacade;
     private final PermissionRepository permissionRepository;
 
@@ -32,6 +36,12 @@ public class ResourceProtector {
         List<Long> userPermissionIds = userPermissions.stream()
                                                       .map(Permission::getPrincipalId)
                                                       .collect(Collectors.toList());
+
+        log.warn("Try define best role for project: {}. Collected user permissions: {}",
+                 project.getId(), userPermissionIds);
+        if (userPermissionIds.isEmpty()) {
+            return Optional.empty();
+        }
 
         return permissionRepository.getBestRoleForProject(userPermissionIds, project.getId());
     }
