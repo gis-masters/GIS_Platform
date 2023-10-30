@@ -2,6 +2,8 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { ExplorerBlock } from './Explorer.block';
 import { ScenarioScope } from '../../ScenarioScope';
+import { dataManagementPage } from '../../pages/DataManagement.page';
+import { getDocumentsLibraryByTitle } from '../../commands/docLibrary/getDocLibraryByTitle';
 
 When('в диалоговом окне выбора источника данных я выбираю набор данных', async function (this: ScenarioScope) {
   const { latestDataset } = this;
@@ -65,3 +67,16 @@ Then('в списке элементов explorer присутствует {stri
   const explorerBlock = new ExplorerBlock();
   await expect(await explorerBlock.getListTitles()).toContain(itemTitle);
 });
+
+Then(
+  'в библиотеке {string} в папке {string} существует документ {string}',
+  async (library: string, folder: string, doc: string) => {
+    const lib = await getDocumentsLibraryByTitle(library);
+    await dataManagementPage.openLibraryPage(lib.table_name);
+
+    const explorerBlock = new ExplorerBlock();
+    await explorerBlock.openExplorerItem(folder);
+
+    await expect(await explorerBlock.getListTitles()).toContain(doc);
+  }
+);

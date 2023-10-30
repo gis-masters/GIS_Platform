@@ -22,6 +22,7 @@ import { FormDialog } from '../../FormDialog/FormDialog';
 import { sleep } from '../../../services/util/sleep';
 
 const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'CreateChild');
+const cnLibraryDocumentActionsCreateChildEditDialog = cn('LibraryDocumentActions', 'CreateChildEditDialog');
 
 interface ChildData {
   document: LibraryRecord;
@@ -119,6 +120,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
 
         {this.currentChild && this.folder && (
           <FormDialog
+            className={cnLibraryDocumentActionsCreateChildEditDialog()}
             open={this.dialogOpen}
             onClose={this.formDialogCloseHandler}
             schema={this.currentChild.schema}

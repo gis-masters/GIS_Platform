@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 class SelectFolderDialogBlock extends Block {
   selectors = {
@@ -23,6 +24,12 @@ class SelectFolderDialogBlock extends Block {
     await $select.waitForClickable();
     await $select.click();
     await $select.waitForDisplayed({ reverse: true });
+  }
+
+  async openExplorerItem(item: string): Promise<void> {
+    const explorerBlock = new ExplorerBlock();
+
+    await explorerBlock.openExplorerItem(item);
   }
 }
 

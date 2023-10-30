@@ -21,7 +21,9 @@ const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
 }) => (
   <Tooltip title={title} enterDelay={600}>
     {submenu ? (
-      <MenuIconButton icon={icon}>{submenu}</MenuIconButton>
+      <MenuIconButton className={className} icon={icon}>
+        {submenu}
+      </MenuIconButton>
     ) : (
       <IconButton
         className={cnActionsItem(null, [className])}

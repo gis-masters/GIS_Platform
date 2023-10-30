@@ -12,6 +12,8 @@ import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
+import { createDocumentsSource } from './testSchemas/createDocumentsSource';
+import { createDocumentsTarget } from './testSchemas/createDocumentsTarget';
 import { withSimpleContentType } from './testSchemas/withSimpleContentType';
 import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
@@ -41,7 +43,9 @@ const testSchemas: Schema[] = [
   testShapeFeaturesCopy,
   withoutViews,
   withFile,
-  withViews
+  withViews,
+  createDocumentsSource,
+  createDocumentsTarget
 ];
 
 export function getTestSchema(title: string): Schema {
