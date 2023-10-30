@@ -30,10 +30,10 @@ import ru.mycrg.auth_service_contract.events.request.UserCreatedEvent;
 import ru.mycrg.auth_service_contract.events.request.UserDeletedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
@@ -125,6 +125,7 @@ public class UserService {
 
     public UserProjection create(UserCreateDto dto, Long orgId) {
         String accessToken = authenticationFacade.getAccessToken();
+        String login = authenticationFacade.getLogin();
 
         log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
 
@@ -156,6 +157,8 @@ public class UserService {
         newUser.setEnabled(false);
         newUser.setDepartment(dto.getDepartment());
         newUser.setVersion((short) 0);
+        newUser.setCreatedBy(login);
+        newUser.setUpdatedBy(login);
 
         User savedUser = userRepository.save(newUser);
         savedUser.setGeoserverLogin(prepareGeoserverLogin(savedUser.getLogin(), savedUser.getId()));
@@ -359,7 +362,8 @@ public class UserService {
             userForUpdate.setBossId(null);
         }
 
-        userForUpdate.setLastModified(LocalDateTime.now());
+        userForUpdate.setLastModified(now());
+        userForUpdate.setUpdatedBy(authenticationFacade.getLogin());
 
         userRepository.save(userForUpdate);
 
@@ -380,6 +384,13 @@ public class UserService {
         } else {
             user.setVersion((short) 0);
         }
+    }
+
+    public void userUpdatedByAndLastModifiedUpdate(Long userId, String updatedBy) {
+        User user = findOrThrow(userId);
+
+        user.setUpdatedBy(updatedBy);
+        user.setLastModified(now());
     }
 
     public Set<Long> fetchAllBosses(Set<Long> bossIds, Long userId, Map<Long, Integer> recursion) {

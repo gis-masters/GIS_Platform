@@ -32,6 +32,8 @@ public class UsersMapper implements RowMapper<User> {
         user.setGeoserverLogin(rs.getString("geoserver_login"));
         user.setBossId(rs.getInt("boss_id"));
         user.setEnabled(rs.getBoolean("enabled"));
+        user.setCreatedBy(rs.getString("created_by"));
+        user.setUpdatedBy(rs.getString("updated_by"));
 
         return user;
     }

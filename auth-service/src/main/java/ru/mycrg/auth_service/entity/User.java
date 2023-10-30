@@ -85,6 +85,12 @@ public class User {
     private @LastModifiedDate
     LocalDateTime lastModified;
 
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
     public User() {
         // Required by framework
     }
@@ -281,5 +287,21 @@ public class User {
 
     public void setVersion(Short version) {
         this.version = version;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 }

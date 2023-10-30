@@ -27,11 +27,11 @@ import ru.mycrg.auth_service_contract.events.request.UserGroupDeletedEvent;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
 
@@ -84,8 +84,8 @@ public class GroupService {
         newGroup.setName(dto.getName());
         newGroup.setDescription(dto.getDescription());
         newGroup.setOrganization(organization);
-        newGroup.setCreatedAt(LocalDateTime.now());
-        newGroup.setLastModified(LocalDateTime.now());
+        newGroup.setCreatedAt(now());
+        newGroup.setLastModified(now());
 
         Group savedGroup = groupRepository.save(newGroup);
 
@@ -134,6 +134,8 @@ public class GroupService {
         groupRepository.save(group);
 
         userService.userVersionUpdate(userId);
+        user.setUpdatedBy(authenticationFacade.getLogin());
+        user.setLastModified(now());
 
         List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
@@ -155,6 +157,7 @@ public class GroupService {
         group.removeUser(userId);
 
         userService.userVersionUpdate(userId);
+        userService.userUpdatedByAndLastModifiedUpdate(userId, authenticationFacade.getLogin());
 
         List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());
         messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
@@ -178,7 +181,7 @@ public class GroupService {
             groupForUpdate.setDescription(dto.getDescription());
         }
 
-        groupForUpdate.setLastModified(LocalDateTime.now());
+        groupForUpdate.setLastModified(now());
 
         groupRepository.save(groupForUpdate);
 
