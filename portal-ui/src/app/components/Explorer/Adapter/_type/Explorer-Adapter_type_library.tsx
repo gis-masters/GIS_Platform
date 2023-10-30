@@ -219,11 +219,13 @@ export class ExplorerAdapterTypeLibrary {
     };
 
     return (
-      <>
-        {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
-        <LibraryDeletedDocumentsSwitch library={currentItem} path={[]} />
-        <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
-      </>
+      store.explorerRole === 'dm' && (
+        <>
+          {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
+          <LibraryDeletedDocumentsSwitch library={currentItem} path={[]} />
+          <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
+        </>
+      )
     );
   }
 

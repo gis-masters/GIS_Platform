@@ -120,8 +120,8 @@ export class ExplorerAdapterTypeLibraryRoot {
     return 'Фильтр по названию';
   }
 
-  static getToolbarActions(): ReactNode {
-    if (currentUser.isAdmin) {
+  static getToolbarActions(item: ExplorerItemData<null>, store: ExplorerStore): ReactNode {
+    if (currentUser.isAdmin && store.explorerRole === 'dm') {
       return <CreateLibrary />;
     }
 

@@ -137,13 +137,15 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
                 <>
                   {!this.showDeletedDocuments && (
                     <>
-                      <LibraryRegistryExport
-                        tablePageOptions={this.tablePageOptions}
-                        properties={this.properties}
-                        library={this.library}
-                        schema={this.schema}
-                        cols={this.cols}
-                      />
+                      {this.props.id === 'registryPage' && (
+                        <LibraryRegistryExport
+                          tablePageOptions={this.tablePageOptions}
+                          properties={this.properties}
+                          library={this.library}
+                          schema={this.schema}
+                          cols={this.cols}
+                        />
+                      )}
                       <LibraryRegistrySettings
                         properties={this.properties}
                         hiddenFields={this.hiddenFields}
@@ -151,13 +153,15 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
                       />
                     </>
                   )}
-                  <LibraryDeletedDocumentsSwitch
-                    library={this.library}
-                    showDeletedDocuments={this.showDeletedDocuments}
-                    path={this.breadcrumbsPath}
-                  />
+                  {this.props.id === 'registryPage' && (
+                    <LibraryDeletedDocumentsSwitch
+                      library={this.library}
+                      showDeletedDocuments={this.showDeletedDocuments}
+                      path={this.breadcrumbsPath}
+                    />
+                  )}
 
-                  {!this.showDeletedDocuments && (
+                  {!this.showDeletedDocuments && this.props.id === 'registryPage' && (
                     <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
                   )}
                 </>
@@ -173,7 +177,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   private getId(): string {
-    return this.props.id + '_LibraryRegistry_' + this.library.table_name;
+    return this.props.id + '_LibraryRegistry_' + this.library?.table_name;
   }
 
   @computed
@@ -191,7 +195,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get cols(): XTableColumn<LibraryRecord>[] {
-    const pathProperty = this.schema.properties.find(({ name }) => name === 'path');
+    const pathProperty = this.schema?.properties.find(({ name }) => name === 'path');
     const pathHidden = !pathProperty || pathProperty.hidden;
     const cols: XTableColumn<LibraryRecord>[] = [
       {

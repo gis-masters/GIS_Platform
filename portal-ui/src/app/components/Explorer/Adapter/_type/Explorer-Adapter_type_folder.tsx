@@ -221,18 +221,20 @@ export class ExplorerAdapterTypeFolder {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
     const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library;
-    const path = store.path
+    const path = store?.path
       .filter(({ type }) => type === ExplorerItemType.FOLDER)
       .map(({ payload }) => (payload as LibraryRecord).id);
 
     return (
-      <>
-        {full && createEnabled && (
-          <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />
-        )}
-        <LibraryDeletedDocumentsSwitch library={library} path={path} />
-        <LibraryViewSwitch to='registry' library={library} path={path} />
-      </>
+      store.explorerRole === 'dm' && (
+        <>
+          {full && createEnabled && (
+            <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />
+          )}
+          <LibraryDeletedDocumentsSwitch library={library} path={path} />
+          <LibraryViewSwitch to='registry' library={library} path={path} />
+        </>
+      )
     );
   }
 
