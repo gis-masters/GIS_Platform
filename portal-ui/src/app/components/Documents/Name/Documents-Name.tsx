@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
+import { TextOverflow } from '../../TextOverflow/TextOverflow';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
 import { DocumentInfo } from '../Documents';
@@ -20,8 +21,10 @@ interface DocumentsNameProps {
 
 export const DocumentsName: FC<DocumentsNameProps> = observer(({ item, disabled, numerous, onClick }) => (
   <LookupName numerous={numerous} className={cnDocumentsName()}>
-    <PseudoLink disabled={disabled} onClick={onClick}>
-      {item.title}
-    </PseudoLink>
+    <TextOverflow hideButton>
+      <PseudoLink disabled={disabled} onClick={onClick}>
+        {item.title}
+      </PseudoLink>
+    </TextOverflow>
   </LookupName>
 ));

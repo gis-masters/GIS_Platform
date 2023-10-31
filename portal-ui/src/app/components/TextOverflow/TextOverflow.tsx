@@ -16,6 +16,7 @@ const cnTextOverflow = cn('TextOverflow');
 
 interface TextOverflowProps extends ChildrenProps {
   maxLines?: number;
+  hideButton?: boolean;
 }
 
 @observer
@@ -54,7 +55,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, hideButton } = this.props;
 
     return (
       <div ref={this.wrapperRef} className={cnTextOverflow()} style={{ '--TextOverflowMaxLines': this.maxLines }}>
@@ -66,6 +67,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
         </span>
 
         {this.textOverflow &&
+          !hideButton &&
           (this.isAllTextVisible ? (
             <PseudoLink className={cnTextOverflow('PseudoLink')} onClick={this.hideText}>
               Свернуть
