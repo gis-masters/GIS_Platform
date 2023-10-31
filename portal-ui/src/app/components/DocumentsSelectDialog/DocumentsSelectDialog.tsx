@@ -73,7 +73,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         )}
 
         <DialogContent>
-          {this.libraryView && this.selectedItem?.[1] ? (
+          {this.libraryView && this.showRegistryBtn ? (
             <RegistryConsumer id='common'>
               {({ LibraryRegistry }: CommonDiRegistry) => (
                 <LibraryRegistry
@@ -119,7 +119,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
               {(this.selectedDocuments || []).length + addedDocuments.length} из {maxDocuments}
             </div>
           )}
-          <Button color='primary' disabled={!this.selectedDocuments || this.error} onClick={this.submitDialog}>
+          <Button color='primary' disabled={!this.selectedDocuments?.length || this.error} onClick={this.submitDialog}>
             Выбрать
           </Button>
           <Button onClick={this.closeDialog}>Отмена</Button>
@@ -135,6 +135,10 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get path(): ExplorerItemData[] | undefined {
+    if (this.selectedItem) {
+      return this.selectedItem;
+    }
+
     return this.limitingLibrary
       ? [{ type: ExplorerItemType.LIBRARY, payload: this.limitingLibrary }, emptyItem]
       : [{ type: ExplorerItemType.LIBRARY_ROOT, payload: null }, emptyItem];
@@ -176,7 +180,11 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get showRegistryBtn(): boolean {
-    return Boolean(this.selectedItem?.some(item => item.type === ExplorerItemType.LIBRARY));
+    if (this.path) {
+      return this.path?.length > 2; // если мы находимся внутри библиотеки то доступен переход в табличный вид
+    }
+
+    return false;
   }
 
   @action
@@ -192,6 +200,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
   @action.bound
   private toggleRegisterView() {
     this.select();
+
     this.libraryView = !this.libraryView;
   }
 

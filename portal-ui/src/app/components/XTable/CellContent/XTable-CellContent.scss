@@ -4,7 +4,7 @@
   display: block;
   overflow: hidden;
 
-  width: calc(calc(var(--XTableCellWidth) - 32) * 1px);
+  width: calc(calc(var(--XTableCellWidth) - 28) * 1px);
 
   &_singleLineContent {
     white-space: nowrap;
