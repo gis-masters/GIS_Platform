@@ -40,8 +40,13 @@ export class FeaturesListItemBlock extends Block {
     await $icon.waitForDisplayed();
 
     const $id = await this.$('id');
+    await $id.waitForDisplayed();
+
     const $layer = await this.$('layer');
+    await $layer.waitForDisplayed();
+
     const $title = await this.$('title');
+    await $title.waitForDisplayed();
 
     const id = await $id.getText();
     const layer = await $layer.getText();

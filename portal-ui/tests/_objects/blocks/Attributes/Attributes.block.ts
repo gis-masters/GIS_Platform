@@ -124,6 +124,7 @@ class AttributesBlock extends Block {
 
   async getTabsTitles() {
     const $attributesTabs = await this.$('attributesTabs');
+    await $attributesTabs.waitForDisplayed();
 
     return await extractText(await $attributesTabs.$$('.Attributes-TabTitle'));
   }

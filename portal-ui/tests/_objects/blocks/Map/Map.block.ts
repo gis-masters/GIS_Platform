@@ -1,3 +1,4 @@
+import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 
 import { getLayerVisibility } from '../../commands/getLayerVisibility';
@@ -23,6 +24,7 @@ class MapBlock extends Block {
   async clickOnMap(): Promise<void> {
     const $map = await this.$('map');
     await $map.waitForClickable();
+    await sleep(300); // жду подгрузки объектов
     await $map.click();
   }
 }
