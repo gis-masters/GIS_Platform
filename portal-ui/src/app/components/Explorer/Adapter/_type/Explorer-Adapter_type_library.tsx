@@ -222,7 +222,7 @@ export class ExplorerAdapterTypeLibrary {
       store.explorerRole === 'dm' && (
         <>
           {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
-          <LibraryDeletedDocumentsSwitch library={currentItem} path={[]} />
+          <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
         </>
       )

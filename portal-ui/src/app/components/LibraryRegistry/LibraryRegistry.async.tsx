@@ -82,7 +82,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     await this.getInfo();
 
     communicationService.libraryRecordUpdated.on(async () => {
-      if (this.tableInvoke.reload) {
+      if (this.tableInvoke?.reload) {
         await this.tableInvoke.reload();
       }
     });
@@ -101,19 +101,18 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       <div className={cnLibraryRegistry()}>
         {this.ready && (
           <>
-            {!this.props.inDialog && (
+            {this.showDeletedDocuments && (
+              <div className={cnLibraryRegistry('BreadcrumbsTextTitle')}>
+                <DeletedDocuments className={cnLibraryRegistry('BreadcrumbsTextTitleIcon')} color='inherit' />
+                Корзина удаленных документов
+              </div>
+            )}
+
+            {!this.showDeletedDocuments && !this.props.inDialog && this.library && (
               <LibraryRegistryBreadcrumbs
-                filter={this.tablePageOptions?.filter}
+                filter={this.tablePageOptions?.filter || {}}
                 library={this.library}
                 path={this.breadcrumbsPath}
-                additionalItem={
-                  this.showDeletedDocuments && (
-                    <div className={cnLibraryRegistry('BreadcrumbsTextTitle')}>
-                      <DeletedDocuments className={cnLibraryRegistry('BreadcrumbsTextTitleIcon')} color='inherit' />
-                      Корзина
-                    </div>
-                  )
-                }
                 onItemClick={this.handleBreadcrumbsItemClick}
                 fromHome
               />
@@ -153,16 +152,16 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
                       />
                     </>
                   )}
-                  {this.props.id === 'registryPage' && (
-                    <LibraryDeletedDocumentsSwitch
-                      library={this.library}
-                      showDeletedDocuments={this.showDeletedDocuments}
-                      path={this.breadcrumbsPath}
-                    />
+
+                  {this.showDeletedDocuments && this.library && this.props.id === 'registryPage' && (
+                    <LibraryViewSwitch to='registry' library={this.library} path={this.breadcrumbsPath} />
                   )}
 
-                  {!this.showDeletedDocuments && this.props.id === 'registryPage' && (
-                    <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
+                  {!this.showDeletedDocuments && this.library && this.props.id === 'registryPage' && (
+                    <>
+                      <LibraryDeletedDocumentsSwitch library={this.library} />
+                      <LibraryViewSwitch to='explorer' library={this.library} path={this.breadcrumbsPath} />
+                    </>
                   )}
                 </>
               }
@@ -235,15 +234,15 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
           field: 'title',
           AfterCellContent: pathHidden
             ? ({ rowData, filterParams }) => (
-                <LibraryRegistryBreadcrumbs
-                  size='small'
-                  filter={filterParams}
-                  library={this.library}
-                  path={getIdsFromPath(rowData.path)}
-                  onItemClick={this.handleBreadcrumbsItemClick}
-                  menuButtonOnly
-                />
-              )
+              <LibraryRegistryBreadcrumbs
+                size='small'
+                filter={filterParams}
+                library={this.library}
+                path={getIdsFromPath(rowData.path)}
+                onItemClick={this.handleBreadcrumbsItemClick}
+                menuButtonOnly
+              />
+            )
             : undefined
         }
       ])
@@ -281,7 +280,9 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     const filter = { ...this.tablePageOptions?.filter };
 
     removeFieldFilter(filter, 'path');
-    removeFieldFilter(filter, 'is_deleted');
+    if (!this.showDeletedDocuments) {
+      removeFieldFilter(filter, 'is_deleted');
+    }
 
     if (path.length) {
       addFilterPart(filter, getPathFilter(path));
@@ -373,7 +374,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   private getStorageKey(): string {
-    return `registrySettings_${currentUser.id}_${this.library.table_name}_${this.props.id}`;
+    return `registrySettings_${currentUser.id}_${this.library?.table_name}_${this.props.id}`;
   }
 
   private storeSettings() {
@@ -392,7 +393,9 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   private async getInfo() {
     try {
       this.setLibrary(await getLibrary(this.props.libraryTableName));
-      this.setSchema(await schemaService.getSchema(this.library.schemaId));
+      if (this.library?.schemaId) {
+        this.setSchema(await schemaService.getSchema(this.library.schemaId));
+      }
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
 

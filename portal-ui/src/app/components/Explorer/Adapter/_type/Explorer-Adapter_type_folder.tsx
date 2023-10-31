@@ -231,7 +231,7 @@ export class ExplorerAdapterTypeFolder {
           {full && createEnabled && (
             <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />
           )}
-          <LibraryDeletedDocumentsSwitch library={library} path={path} />
+          <LibraryDeletedDocumentsSwitch library={library} />
           <LibraryViewSwitch to='registry' library={library} path={path} />
         </>
       )

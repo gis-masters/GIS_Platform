@@ -74,7 +74,9 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
   private get filteredColumns(): XTableColumn<T>[] {
     const { filterQuery, cols } = this.props;
 
-    return cols.filter(col => getFieldFilterPart(filterQuery, col.field) !== undefined && this.allowedToShow(col));
+    return cols.filter(
+      col => col.field && getFieldFilterPart(filterQuery, col.field) !== undefined && this.allowedToShow(col)
+    );
   }
 
   @boundMethod
@@ -87,6 +89,10 @@ export class XTableFilterPanel<T> extends Component<XTableFilterPanelProps<T>> {
   }
 
   private allowedToShow(item: XTableColumn<T>): boolean {
+    if (item.field === 'path' && item.type === PropertyType.CUSTOM) {
+      return false;
+    }
+
     return (
       Boolean(item.CustomFilterPanelItemComponent) ||
       !(

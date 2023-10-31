@@ -158,6 +158,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   }
 
   componentWillUnmount() {
+    this.clearInvoke();
     this.pageOptionsReactionDisposer?.();
     this.pagedDataReactionDisposer?.();
   }
@@ -347,15 +348,15 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
   @computed
   private get pageOptions(): PageOptions {
-    const { filterable, filtersAlwaysEnabled } = this.props;
+    const { filtersAlwaysEnabled } = this.props;
 
     return {
       page: this.page - 1,
       pageSize: this.pageSize,
       totalPages: this.totalPages,
-      sort: this.sortParams.field as string,
-      sortOrder: this.sortParams.asc ? SortOrder.ASC : SortOrder.DESC,
-      filter: (filterable && this.filterActive) || filtersAlwaysEnabled ? this.filterQuery : {}
+      sort: this.sortParams?.field as string,
+      sortOrder: this.sortParams?.asc ? SortOrder.ASC : SortOrder.DESC,
+      filter: filtersAlwaysEnabled ? this.filterQuery : {}
     };
   }
 
@@ -511,6 +512,19 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       invoke.setPageSize = this.setPageSize;
       invoke.setFilter = this.setFilterQuery;
       invoke.setSort = this.setSortParams;
+    }
+  }
+
+  private clearInvoke() {
+    const { invoke } = this.props;
+
+    if (invoke) {
+      delete invoke.reload;
+      delete invoke.reset;
+      delete invoke.paginate;
+      delete invoke.setPageSize;
+      delete invoke.setFilter;
+      delete invoke.setSort;
     }
   }
 }

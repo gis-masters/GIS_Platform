@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { StorageOutlined, TableViewOutlined } from '@mui/icons-material';
+import { TableViewOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { RegistryConsumer } from '@bem-react/di';
@@ -13,6 +13,7 @@ import { getLibrary } from '../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { DocumentInfo } from '../Documents/Documents';
+import { ExplorerView } from '../Icons/ExplorerView';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
@@ -65,7 +66,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
           <div className={cnDocumentsSelectDialog('Switcher')}>
             <Tooltip title={this.libraryView ? 'Вложенный список документов' : 'Таблица документов'}>
               <IconButton onClick={this.toggleRegisterView}>
-                {this.libraryView ? <StorageOutlined /> : <TableViewOutlined />}
+                {this.libraryView ? <ExplorerView /> : <TableViewOutlined />}
               </IconButton>
             </Tooltip>
           </div>

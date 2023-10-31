@@ -40,7 +40,7 @@ export interface RegistryProps<T> {
 
 @observer
 export class Registry<T> extends Component<RegistryProps<T>> {
-  private defaultFilter: FilterQuery;
+  private defaultFilter: FilterQuery = {};
   private unsubscribe$: Subject<void> = new Subject<void>();
   private tableInvoke: XTableProps<T>['invoke'] = {};
   private selfInitedNavigationIds: number[] = [];
@@ -66,24 +66,23 @@ export class Registry<T> extends Component<RegistryProps<T>> {
             return;
           }
 
-          this.tableInvoke.setSort(this.getSortFromUrl());
-          this.tableInvoke.setFilter(this.getFilterFromUrl());
+          const sort = this.getSortFromUrl();
+          if (this.tableInvoke?.setSort && sort) {
+            this.tableInvoke.setSort(sort);
+          }
+
+          const filter = this.getFilterFromUrl();
+          if (this.tableInvoke?.setFilter && filter) {
+            this.tableInvoke.setFilter(filter);
+          }
         }
       });
     }
   }
 
   render() {
-    const {
-      cols,
-      id,
-      getData,
-      defaultSort,
-      className,
-      inDialog,
-      headerActions,
-      secondarySortField,
-      invoke } = this.props;
+    const { cols, id, getData, defaultSort, className, inDialog, headerActions, secondarySortField, invoke } =
+      this.props;
 
     return (
       <XTable<T>
@@ -97,7 +96,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
         secondarySortField={secondarySortField}
         defaultFilter={this.defaultFilter}
         invoke={invoke}
-        onPageOptionsChange={inDialog ? null : this.handleTablePageOptionsChange}
+        onPageOptionsChange={inDialog ? undefined : this.handleTablePageOptionsChange}
         headerActions={headerActions}
       />
     );
@@ -139,17 +138,20 @@ export class Registry<T> extends Component<RegistryProps<T>> {
       const queryParamsSort = route.queryParams?.sort;
       const sort = queryParamsSort && (JSON.parse(queryParamsSort) as string[]);
 
-      return sort && { field: sort[0] as keyof T, asc: sort[1] === SortOrder.ASC };
+      if (sort) {
+        return { field: sort[0] as keyof T, asc: sort[1] === SortOrder.ASC };
+      }
     } catch {
       services.logger.warn('Не удалось восстановить параметры сортировки из url');
     }
   }
 
-  private getFilterFromUrl(): FilterQuery {
+  private getFilterFromUrl(): FilterQuery | undefined {
     try {
       const queryParamsFilter = route.queryParams?.filter;
-
-      return queryParamsFilter && (JSON.parse(queryParamsFilter) as FilterQuery);
+      if (queryParamsFilter) {
+        return JSON.parse(queryParamsFilter) as FilterQuery;
+      }
     } catch {
       services.logger.warn('Не удалось восстановить параметры фильтрации из url');
     }
@@ -161,8 +163,10 @@ export class Registry<T> extends Component<RegistryProps<T>> {
       this.defaultFilter = this.props.defaultFilter;
     }
 
-    if (this.props.urlChangeEnabled) {
-      this.defaultFilter = this.getFilterFromUrl();
+    const filter = this.getFilterFromUrl();
+
+    if (this.props.urlChangeEnabled && filter) {
+      this.defaultFilter = filter;
     }
   }
 }
