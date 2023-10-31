@@ -67,7 +67,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.reactionDisposer = reaction(
       () => [
-        currentProject.visibleOnMapLayers.map(({ payload }) => [payload.view, payload.styleName]),
+        currentProject.visibleOnMapLayers.map(({ payload }) => [payload.view, payload.styleName, payload.style]),
         cloneDeep(attributesTableStore.filter),
         cloneDeep(attributesTableStore.filterDisabled)
       ],
@@ -79,7 +79,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
         mapService.hideUserLayers();
 
         for (let i = 0; i < currentProject.visibleOnMapLayers.length; i++) {
-          const { actualTransparency, payload: layer } = currentProject.visibleOnMapLayers[i];
+          const { actualTransparency = 0, payload: layer } = currentProject.visibleOnMapLayers[i];
           const zIndex = currentProject.visibleOnMapLayers.length - i;
 
           if (layer.type === CrgLayerType.EXTERNAL) {

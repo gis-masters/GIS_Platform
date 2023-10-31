@@ -203,6 +203,7 @@ class CurrentProject implements CrgProjectData {
       'transparency',
       'view',
       'styleName',
+      'style',
       'minZoom',
       'maxZoom'
     ];

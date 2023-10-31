@@ -1,6 +1,5 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
-import { buildSimpleSld, parseCustomStyle } from '../styles/styles.utils';
 import { getStyleSld } from '../styles/styles.service';
 import { cqlBuild } from '../../util/cqlBuild';
 import { Mime } from '../../util/Mime';
@@ -40,7 +39,7 @@ export async function getMap(url: string): Promise<Blob> {
       throw new Error('Отсутствует пользовательский стиль у слоя ' + layerComplexName);
     }
 
-    parsedUrl.searchParams.set('SLD_BODY', buildSimpleSld(layerComplexName, parseCustomStyle(layer.style)));
+    parsedUrl.searchParams.set('SLD_BODY', layer.style);
   }
 
   return await wmsClient.getMap(parsedUrl.href);

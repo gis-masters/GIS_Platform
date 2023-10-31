@@ -67,27 +67,31 @@ export interface FilteredStylesLayerRequest {
   rules: StyleRule[];
 }
 
-interface PointRule {
-  markColor: string;
-  markSize: number;
+export interface PointRule {
+  markColor?: string;
+  markSize?: number;
   markType: 'circle' | 'square' | 'triangle' | 'star';
 }
 
-interface LineRule {
+export interface LineRule {
   strokeColor: string;
   strokeWidth: number;
   strokeDashArray?: number[];
 }
 
-interface PolygonRule {
-  strokeColor: string;
-  strokeWidth: number;
-  strokeDashArray: number[];
-  fillColor: string;
+export type FillGraphicType = 'times';
+
+export interface PolygonRule {
+  strokeColor?: string;
+  strokeWidth?: number;
+  strokeDashArray?: number[];
+  fillColor?: string;
   fillGraphic?: {
-    type: 'times';
-    strokeColor: string;
-    strokeWidth: number;
+    type: FillGraphicType;
+    strokeColor?: string;
+    strokeWidth?: number;
+    size?: number;
+    strokeDashArray?: number[];
   };
 }
 

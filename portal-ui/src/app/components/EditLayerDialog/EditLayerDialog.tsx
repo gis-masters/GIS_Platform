@@ -158,6 +158,10 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       layer.styleName = patch.styleName;
     }
 
+    if (patch.style !== undefined) {
+      layer.style = patch.style;
+    }
+
     communicationService.layerUpdated.emit({ type: 'update', data: layer });
   }
 

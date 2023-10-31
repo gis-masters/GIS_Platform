@@ -89,12 +89,14 @@ export class SchemasSelect extends Component<FormControlProps> {
         <ChooseXTableDialog<Schema>
           className={cnSchemasSelectDialog()}
           title='Выберите схему'
-          data={this.schemas}
+          data={this.schemas || []}
           cols={this.cols}
           open={this.dialogOpen}
           loading={!this.schemas?.length}
           onClose={this.closeDialog}
           onSelect={this.select}
+          maxWidth='lg'
+          fullWidth
           single
         />
       </>

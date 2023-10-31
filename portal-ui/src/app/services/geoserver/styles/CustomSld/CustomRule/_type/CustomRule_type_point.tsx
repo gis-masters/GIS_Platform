@@ -22,9 +22,7 @@ export const CustomRuleTypePoint: FC<CustomStyleDescription> = ({ rule, type }) 
         <Graphic>
           <Mark>
             <WellKnownName>{rule.markType}</WellKnownName>
-            <Fill>
-              <SvgParameter name='fill'>{rule.markColor}</SvgParameter>
-            </Fill>
+            <Fill>{rule.markColor && <SvgParameter name='fill'>{rule.markColor}</SvgParameter>}</Fill>
           </Mark>
           <Size>{rule.markSize}</Size>
         </Graphic>

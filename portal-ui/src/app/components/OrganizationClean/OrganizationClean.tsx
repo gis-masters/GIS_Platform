@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { Button } from '../Button/Button';
 import {
@@ -14,6 +14,11 @@ import { sleep } from '../../services/util/sleep';
 @observer
 export class OrganizationClean extends Component {
   @observable private busy = false;
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     return (
@@ -34,9 +39,9 @@ export class OrganizationClean extends Component {
         await sleep(55);
       }
 
-      Toast.success({ message: 'Done' });
+      Toast.success({ message: 'Готово' });
     } else {
-      Toast.success({ message: 'Done' });
+      Toast.success({ message: 'Готово' });
     }
 
     this.setBusy(false);
