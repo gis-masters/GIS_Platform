@@ -87,7 +87,7 @@ type XTableColsSettings<T> = Partial<Record<keyof T, XTableColSettings>>;
 export default class XTable<T> extends Component<XTableProps<T>> {
   @observable private sortParams: SortParams<T>;
   @observable private filterQuery: FilterQuery;
-  @observable private filterActive = false;
+  @observable private filterActive = true;
   @observable private _page = 1;
   @observable private _asyncData: T[] = [];
   @observable private _asyncTotalPages = 0;
@@ -106,12 +106,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     makeObservable(this);
 
     this.reset();
-
-    if (props.filtersAlwaysEnabled) {
-      this.filterActive = true;
+    if (props.id) {
+      this.restoreColsSettings(props.id);
     }
-
-    this.restoreColsSettings(props.id);
   }
 
   componentDidMount() {
@@ -152,7 +149,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       this.fillInvoke();
     }
 
-    if (id !== prevProps.id) {
+    if (id && id !== prevProps.id) {
       this.restoreColsSettings(id);
     }
   }
@@ -166,7 +163,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   render() {
     const {
       filterable,
-      filtersAlwaysEnabled,
+      filtersAlwaysEnabled = true,
       title,
       headerActions,
       headerless,
@@ -174,7 +171,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       className,
       size,
       loading = false,
-      singleLineContent,
+      singleLineContent = false,
       containerProps,
       showFiltersPanel,
       getRowId = defaultRowIdGetter,
@@ -204,8 +201,8 @@ export default class XTable<T> extends Component<XTableProps<T>> {
               />
             )}
             <XTableTitleBarActions
-              filterActive={this.filterActive || filtersAlwaysEnabled}
-              filterable={filterable && !filtersAlwaysEnabled}
+              filterActive
+              filterable={Boolean(filterable && !filtersAlwaysEnabled)}
               onChangePageSize={this.setPageSize}
               onToggleFilter={this.toggleFilter}
               pageSize={this.pageSize}
@@ -258,7 +255,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                         col={col}
                         filterActive={(filterable && this.filterActive) || filtersAlwaysEnabled}
                         filterQuery={this.filterQuery}
-                        singleLineContent={singleLineContent}
+                        singleLineContent={Boolean(singleLineContent)}
                         width={this.getColWidth(col)}
                         hidden={this.colsSettings[col.field]?.hidden}
                         key={`${i}_${String(col.field)}`}
@@ -377,7 +374,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   @action.bound
   private beforeFilterChange() {
     if (this.dataPaged.length === this.pageSize || !this.tableMinHeight) {
-      this.tableMinHeight = this.tableRef?.current?.offsetHeight;
+      this.tableMinHeight = this.tableRef?.current?.offsetHeight || 0;
     }
   }
 
@@ -477,8 +474,6 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
     const sortOpts = { field: opts.sort as keyof T, asc: opts.sortOrder === SortOrder.ASC };
     this.sortParams = {
-      field: null,
-      asc: true,
       ...this.props.defaultSort,
       ...sortOpts
     };
