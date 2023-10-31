@@ -6,14 +6,15 @@ class TextOverflowBlock extends Block {
     link: '.TextOverflow-PseudoLink'
   };
 
-  async clickShowAllButton(): Promise<void> {
+  async clickButton(): Promise<void> {
     const $link = await this.$('link');
     await $link.click();
   }
 
-  async clickHideTextButton(): Promise<void> {
+  async getButtonLabel(): Promise<string> {
     const $link = await this.$('link');
-    await $link.click();
+
+    return await $link.getText();
   }
 }
 

@@ -25,9 +25,10 @@ export const XTableCellContentBase: <T>(props: XTableCellContentProps<T>) => Rea
   singleLineContent,
   className,
   cellData,
+  type,
   ...spanProps
 }) => (
-  <span className={cnXTableCellContent({ singleLineContent }, [className])} {...spanProps}>
+  <span className={cnXTableCellContent({ singleLineContent, type: type || 'string' }, [className])} {...spanProps}>
     {children !== null && children !== undefined ? children : ''}
   </span>
 )) as <T>(props: XTableCellContentProps<T>) => ReactElement;
