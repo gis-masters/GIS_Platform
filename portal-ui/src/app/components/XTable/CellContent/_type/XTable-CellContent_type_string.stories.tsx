@@ -39,8 +39,8 @@ const cols: XTableColumn<TestData>[] = [
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const TextOverflow = Template.bind({}) as ComponentStory<XTableForTestData>;
-TextOverflow.args = {
+export const TypeStringOverflow = Template.bind({}) as ComponentStory<XTableForTestData>;
+TypeStringOverflow.args = {
   data: testDataForTextOverflowInTables,
   cols
 };
