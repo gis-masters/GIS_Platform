@@ -13,6 +13,8 @@ import { FormErrors } from '../../Errors/Form-Errors';
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_choice.scss';
 
 const cnFormChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
+const cnFormChoiceRenderValue = cn('Form', 'ChoiceRenderValue');
+const cnFormChoiceRenderValueText = cn('Form', 'ChoiceRenderValueText');
 
 const EMPTY = '~~~empty_value~~~';
 
@@ -43,9 +45,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               onChange={this.handleChangeSelect}
               error={!!errors?.length}
               renderValue={selected =>
-                options.find(({ value }) => String(value) === String(selected))?.title || (
-                  <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
-                )
+                this.getRenderValue(selected) || <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
               }
               variant={variant}
             >
@@ -60,7 +60,8 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               {options.map((item, i) => {
                 return (
                   <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item.value}>
-                    <ListItemText>{item.title}</ListItemText>
+                    {item.startIcon}
+                    {<ListItemText>{item.title}</ListItemText>}
                     {item.endIcon}
                   </MenuItem>
                 );
@@ -89,6 +90,20 @@ class FormControlTypeChoice extends Component<FormControlProps> {
         )}
       </div>
     );
+  }
+
+  private getRenderValue(selected: string | number) {
+    const { property } = this.props;
+    const { options } = property as PropertySchemaChoice;
+    const option = options.find(({ value }) => String(value) === selected);
+
+    if (option?.startIcon || option?.title || option?.endIcon) {
+      return (
+        <div className={cnFormChoiceRenderValue()}>
+          {option.startIcon} <div className={cnFormChoiceRenderValueText()}>{option.title}</div> {option.endIcon}
+        </div>
+      );
+    }
   }
 
   @boundMethod

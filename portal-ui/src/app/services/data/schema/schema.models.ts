@@ -139,7 +139,6 @@ interface PropertySchemaBaseNumber {
   maxValue?: number;
   minValue?: number;
   measureUnit?: string;
-  allowMultipleValues?: boolean;
   step?: number;
 }
 
@@ -173,14 +172,17 @@ export interface PropertySchemaDatetime extends BasePropertySchema {
   defaultValue?: string;
 }
 
-export type PropertyOption = { title: string; value: string | number; startIcon?: ReactNode; endIcon?: ReactNode };
+export type PropertyOption = {
+  title: string;
+  value: string | number;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+};
 
 export interface PropertySchemaChoice extends BasePropertySchema {
   propertyType: PropertyType.CHOICE;
   display?: 'select' | 'radiogroup' | 'buttongroup';
   multiple?: boolean;
-  allowMultipleValues?: boolean;
-  allowFillIn?: boolean;
   defaultValue?: string | number;
   options: PropertyOption[];
 }

@@ -13,16 +13,25 @@ interface LegendProps extends IClassNameProps {
   forPrint?: boolean;
   resolution?: number;
   resize?: number;
+  withoutTitle?: boolean;
   cleanDuplicates?: boolean;
 }
 
-export const Legend: FC<LegendProps> = ({ rules, forPrint, resolution, className, resize = 1, cleanDuplicates }) => {
+export const Legend: FC<LegendProps> = ({
+  rules,
+  forPrint,
+  resolution,
+  className,
+  withoutTitle,
+  resize = 1,
+  cleanDuplicates
+}) => {
   const rulesTitlesRegistry: { [key: string]: boolean } = {};
 
   return (
     <div
       className={cnLegend({ forPrint }, [className])}
-      style={{ '--LegendResolution': resolution, '--LegendResize': resize }}
+      style={{ '--LegendResolution': resolution || '', '--LegendResize': resize }}
     >
       {(cleanDuplicates
         ? rules.filter(({ title }) => {
@@ -37,7 +46,7 @@ export const Legend: FC<LegendProps> = ({ rules, forPrint, resolution, className
       ).map(({ legend, title }: StyleRule, i) => (
         <div className={cnLegend('Rule')} key={i}>
           <img src={legend} className={cnLegend('Img')} />
-          <div className={cnLegend('Title')}>{title}</div>
+          {!withoutTitle && <div className={cnLegend('Title')}>{title}</div>}
         </div>
       ))}
     </div>

@@ -34,18 +34,18 @@ export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRu
   }
 
   if (!parsedStyles[styleName]) {
-    parsedStyles[styleName] = loadLayerStyleRules(layer);
+    parsedStyles[styleName] = loadLayerStyleRules(layer.styleName, layer.complexName);
   }
 
   return await parsedStyles[styleName];
 }
 
-async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
-  if (!layer.styleName) {
+export async function loadLayerStyleRules(styleName?: string, complexName?: string): Promise<StyleRule[]> {
+  if (!styleName) {
     return [];
   }
 
-  const sldStyle = await getStyleSld(layer.styleName);
+  const sldStyle = await getStyleSld(styleName);
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
 
   const rulesWithoutLegend: Omit<StyleRule, 'legend'>[] = [...xmlDoc.querySelectorAll('Rule')]
@@ -60,11 +60,11 @@ async function loadLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> 
 
   return await Promise.all(
     rulesWithoutLegend.map(async rule => {
-      if (!layer.complexName || !layer.styleName) {
+      if (!complexName || !styleName) {
         throw new Error('Невозможно получить легенду: нет имени слоя или стиля');
       }
 
-      const blob = await getLegendGraphic(layer.complexName, rule.name, layer.styleName);
+      const blob = await getLegendGraphic(complexName, rule.name, styleName);
       const legend = await createImageFromBlob(blob);
 
       return { ...rule, legend };

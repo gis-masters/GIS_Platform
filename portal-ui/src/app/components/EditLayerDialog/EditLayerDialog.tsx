@@ -15,11 +15,17 @@ import {
 } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
 import { getViewChoiceOptions } from '../Form/Form.utils';
-import { getSimpleStylesListForGeometryType } from '../../services/geoserver/styles/styles.service';
+import {
+  getSimpleStylesListForGeometryType,
+  getStyleSld,
+  loadLayerStyleRules
+} from '../../services/geoserver/styles/styles.service';
+import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
-import { FormProps } from '../Form/Form';
 import { Loading } from '../Loading/Loading';
+import { Legend } from '../Legend/Legend';
+import { FormProps } from '../Form/Form';
 
 const cnEditLayerDialog = cn('EditLayerDialog');
 
@@ -96,7 +102,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     return this.schemaWithAppliedView?.styleName
       ? [
           {
-            title: this.schemaWithAppliedView.styleName + ' (по-умолчанию)',
+            title: `По-умолчанию (${this.schemaWithAppliedView.styleName})`,
             value: this.schemaWithAppliedView.styleName
           }
         ]
@@ -172,9 +178,22 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       throw new Error('Отсутствует тип геометрии');
     }
     const stylesList = await getSimpleStylesListForGeometryType(this.props.geometryType);
-    const stylesListOptions: PropertyOption[] = stylesList.map(el => {
-      return { title: el, value: el };
-    });
+    const stylesListOptions: PropertyOption[] = await Promise.all(
+      stylesList.map(async el => {
+        try {
+          const legend = await loadLayerStyleRules(el, this.props.layer.complexName);
+          const sldStyle = await getStyleSld(el);
+
+          return {
+            title: getStyleTitle(sldStyle) || el,
+            value: el,
+            startIcon: <Legend rules={legend} withoutTitle cleanDuplicates />
+          };
+        } catch {
+          return { title: el, value: el };
+        }
+      })
+    );
 
     this.setSimpleStylesOptions(stylesListOptions);
     this.setBusy(false);

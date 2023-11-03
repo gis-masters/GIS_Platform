@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
 
 import { CustomSld } from './CustomSld/CustomSld';
+import { Mime } from '../../util/Mime';
 
 export function buildCustomSld(layerComplexName: string, style: CustomStyleDescription): string {
   return (
@@ -55,6 +56,18 @@ function parsePointSymbolizer(pointSymbolizerNode: Element): PointRule {
     markSize: Number(markSizeNode.textContent),
     markType: markTypeNode.textContent as PointRule['markType']
   };
+}
+
+export function getStyleTitle(sldStyle: string): string | null | undefined {
+  const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
+  const rules = xmlDoc.querySelectorAll('Rule');
+  let styleTitle = xmlDoc.querySelector('NamedLayer Name');
+
+  if (rules.length === 1) {
+    styleTitle = xmlDoc.querySelector('UserStyle Rule Title');
+  }
+
+  return styleTitle?.textContent;
 }
 
 function parseLineSymbolizer(lineSymbolizerNode: Element): LineRule {
