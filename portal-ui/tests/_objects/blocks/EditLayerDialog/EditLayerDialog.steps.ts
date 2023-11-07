@@ -27,3 +27,10 @@ When(
 When('жду исчезновения блокирующего диалоговое окно `Свойства слоя` лоадера', async () => {
   await editLayerPropertiesDialogBlock.waitForLoadingHide();
 });
+
+When(
+  'в диалоговом окне свойств слоя у формы в поле {string} типа choice я выбираю значение {string}',
+  async (title: string, value: string) => {
+    await editLayerPropertiesDialogBlock.setChoiceFieldValue(title, value);
+  }
+);
