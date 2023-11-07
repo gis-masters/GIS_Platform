@@ -63,8 +63,9 @@ public class DdlDatabase {
 
             JdbcTemplate newDbJdbcTemplate = new JdbcTemplate(newDataSource);
 
-            newDbJdbcTemplate.execute("CREATE EXTENSION postgis");
+            newDbJdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS postgis");
 
+            // TODO: Кажется уже не надо учить БД этим проекциям
             GeometryProjection geometryProjection314314 = epsgCodes.getProjBySrid(314314);
             GeometryProjection geometryProjection314315 = epsgCodes.getProjBySrid(314315);
 

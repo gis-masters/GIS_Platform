@@ -11,6 +11,7 @@ while true; do
     \n${GREEN}r  ${NC}- ${BLUE}remove all \
     \n${GREEN}rd ${NC}- ${BLUE}remove all created data \
     \n${GREEN}b  ${NC}- ${BLUE}build \
+    \n${GREEN}g  ${NC}- ${BLUE}generate frontend types \
     \n${GREEN}-----------------------------------${NC} \
     \n${GREEN}t  ${NC}- ${BLUE}run All       acceptance tests \
     \n${GREEN}to ${NC}- ${BLUE}run @OnlyThis acceptance tests \
@@ -23,6 +24,7 @@ while true; do
     r ) . remove-our-images.sh ;;
     rd) . remove-data.sh ;;
     b ) . build-run.sh ;;
+    g ) . build-and-copy-generated-types.sh ;;
     t ) . run-acceptance-tests.sh ;;
     to) . run-acceptance-tests.sh -o ;;
     e ) exit;;

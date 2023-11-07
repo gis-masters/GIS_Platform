@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 
 public class FeatureRowMapper extends BySchemaRowMapper implements RowMapper<Feature> {
@@ -25,6 +26,11 @@ public class FeatureRowMapper extends BySchemaRowMapper implements RowMapper<Fea
         extract(rs, properties);
 
         Object primaryKey = properties.get(PRIMARY_KEY);
+        if (primaryKey != null) {
+            feature.setId(Long.valueOf(primaryKey.toString()));
+        }
+
+        primaryKey = properties.get(ID);
         if (primaryKey != null) {
             feature.setId(Long.valueOf(primaryKey.toString()));
         }
