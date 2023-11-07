@@ -92,6 +92,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
 
   @action.bound
   private hideText() {
+    this.resetScroll();
     this.isAllTextVisible = false;
   }
 
@@ -108,5 +109,11 @@ export class TextOverflow extends Component<TextOverflowProps> {
   @boundMethod
   private resizeHandler() {
     this.setTextOverflow();
+  }
+
+  private resetScroll() {
+    if (this.ref.current) {
+      this.ref.current.scrollTop = 0;
+    }
   }
 }
