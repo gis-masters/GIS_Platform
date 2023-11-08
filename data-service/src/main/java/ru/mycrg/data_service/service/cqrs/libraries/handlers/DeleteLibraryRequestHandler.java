@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ddl.DdlTablesBase;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.DeleteLibraryRequest;

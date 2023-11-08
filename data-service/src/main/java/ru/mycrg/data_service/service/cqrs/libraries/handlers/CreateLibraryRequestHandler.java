@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.ddl.DdlLibrary;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.dto.LibraryCreateDto;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_DELETED;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 
@@ -31,18 +33,18 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
     private final SchemaService schemaService;
     private final DocumentLibraryRepository libraryRepository;
     private final IAuthenticationFacade authenticationFacade;
-    private final DdlLibrary ddlLibrary;
+    private final DdlTablesBase ddlTablesBase;
     private final DocLibraryProtector docLibraryProtector;
 
     public CreateLibraryRequestHandler(SchemaService schemaService,
+                                       DdlTablesBase ddlTablesBase,
                                        DocumentLibraryRepository libraryRepository,
                                        IAuthenticationFacade authenticationFacade,
-                                       DdlLibrary ddlLibrary,
                                        DocLibraryProtector docLibraryProtector) {
         this.schemaService = schemaService;
         this.libraryRepository = libraryRepository;
         this.authenticationFacade = authenticationFacade;
-        this.ddlLibrary = ddlLibrary;
+        this.ddlTablesBase = ddlTablesBase;
         this.docLibraryProtector = docLibraryProtector;
     }
 
@@ -73,7 +75,7 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         List<SimplePropertyDto> schemaProperties = schema.getProperties();
         generateSystemAttributes(schemaProperties);
 
-        ddlLibrary.create(library.getTableName(), schemaProperties);
+        ddlTablesBase.create(SYSTEM_SCHEMA_NAME, library.getTableName(), schemaProperties, ID);
 
         LibraryModel libraryModel = new LibraryModel(library);
         request.setLibraryModel(libraryModel);

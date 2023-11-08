@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.IRecord;

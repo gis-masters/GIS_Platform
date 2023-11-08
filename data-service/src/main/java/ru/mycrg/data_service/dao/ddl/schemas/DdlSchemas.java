@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.ddl;
+package ru.mycrg.data_service.dao.ddl.schemas;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,16 +9,10 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
-import java.util.List;
-
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-
 @Service
 public class DdlSchemas {
 
     private final Logger log = LoggerFactory.getLogger(DdlSchemas.class);
-
-    private final List<String> systemSchemas = List.of(SYSTEM_SCHEMA_NAME);
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;
@@ -39,27 +33,6 @@ public class DdlSchemas {
         } catch (DataAccessException e) {
             String msg = "Не удалось создать схему: " + schemaQualifier.getQualifier();
 
-            log.error(msg);
-
-            throw new DataServiceException(msg, e.getCause());
-        }
-    }
-
-    public boolean isExist(ResourceQualifier schemaQualifier) {
-        try {
-            if (systemSchemas.contains(schemaQualifier.getQualifier())) {
-                log.info("try use system schema: {}", schemaQualifier);
-
-                return true;
-            }
-
-            String sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = '" + schemaQualifier + "')";
-
-            Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class);
-
-            return Boolean.TRUE.equals(result);
-        } catch (DataAccessException e) {
-            final String msg = "Check schema: " + schemaQualifier + " failed: " + e.getMessage();
             log.error(msg);
 
             throw new DataServiceException(msg, e.getCause());

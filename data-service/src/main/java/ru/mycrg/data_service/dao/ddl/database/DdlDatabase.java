@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao.ddl;
+package ru.mycrg.data_service.dao.ddl.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;

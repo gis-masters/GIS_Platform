@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.ddl.DdlTablesBase;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;

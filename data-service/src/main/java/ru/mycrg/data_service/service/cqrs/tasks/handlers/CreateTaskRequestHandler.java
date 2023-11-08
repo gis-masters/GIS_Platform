@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dao.RecordsDao;
-import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.entity.IRecord;

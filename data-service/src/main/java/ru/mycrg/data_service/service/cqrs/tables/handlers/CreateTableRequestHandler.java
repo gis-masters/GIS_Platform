@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ddl.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;

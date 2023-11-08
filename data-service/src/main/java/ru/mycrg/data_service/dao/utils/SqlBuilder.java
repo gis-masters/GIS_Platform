@@ -24,6 +24,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.SchemaUtil.*;
 import static ru.mycrg.data_service.util.StringUtil.join;
@@ -185,7 +186,17 @@ public class SqlBuilder {
 
     @NotNull
     public static String buildDeleteTableQuery(ResourceQualifier table) {
-        return String.format("DROP TABLE IF EXISTS %s;", table.getQualifier());
+        return String.format("DROP TABLE IF EXISTS %s;", table.getTableQualifier());
+    }
+
+    @NotNull
+    public static String buildCreateTableQuery(String schemaName,
+                                               String targetTable,
+                                               String idColumnName,
+                                               String otherProps) {
+        return String.format("CREATE TABLE %1$s (%2$s bigserial NOT NULL %3$s); " +
+                                     "ALTER TABLE ONLY %1$s ADD CONSTRAINT %4$s_pkey PRIMARY KEY (%2$s)",
+                             schemaName + "." + targetTable, idColumnName, otherProps, targetTable);
     }
 
     @NotNull

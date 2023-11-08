@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.datasets.handlers;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ddl.DdlSchemas;
+import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.SchemasAndTables;

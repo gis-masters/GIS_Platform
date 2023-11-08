@@ -12,8 +12,10 @@ import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
+import ru.mycrg.data_service.service.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
@@ -34,11 +36,14 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 
     private final FtsDao ftsDao;
+    private final SchemaExtractor schemaExtractor;
     private final SpatialRecordsDao spatialRecordsDao;
 
     public DocumentSearchEngine(FtsDao ftsDao,
+                                SchemaExtractor schemaExtractor,
                                 SpatialRecordsDao spatialRecordsDao) {
         this.ftsDao = ftsDao;
+        this.schemaExtractor = schemaExtractor;
         this.spatialRecordsDao = spatialRecordsDao;
     }
 
@@ -72,10 +77,13 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
         List<FtsResponseDto> result = new ArrayList<>();
         featuresByLibrary.forEach((libraryName, recordIds) -> {
+            ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
+            SchemaDto schema = schemaExtractor.get(qualifier).orElse(null);
+
             List<FtsResponseDto> features = spatialRecordsDao
-                    .findByIds(new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY), null, recordIds)
+                    .findByIds(qualifier, schema, recordIds)
                     .stream()
-                    .map(toResponseDto(libraryName, items))
+                    .map(toResponseDto(libraryName, schema, items))
                     .collect(Collectors.toList());
 
             result.addAll(features);
@@ -87,7 +95,9 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private static Function<Feature, FtsResponseDto> toResponseDto(String libraryName, List<FtsItem> items) {
+    private static Function<Feature, FtsResponseDto> toResponseDto(String libraryName,
+                                                                   SchemaDto schema,
+                                                                   List<FtsItem> items) {
         return feature -> {
             Optional<FtsItem> oItem = items.stream()
                                            .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
@@ -95,7 +105,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
             return new FtsResponseDto(DOCUMENT,
                                       oItem.map(FtsItem::getDist).orElse(0f),
-                                      Map.of("library", libraryName),
+                                      Map.of("library", libraryName, "schema", schema),
                                       feature.getProperties());
         };
     }
