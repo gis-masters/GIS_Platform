@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.GISOGFRF_RESPONSE;
+import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
 
 @Repository
 public class GisogdRfDao {
@@ -119,9 +120,9 @@ public class GisogdRfDao {
     public void writeErrors(ResourceQualifier qualifier, Map<String, String> response) {
         String asJson = JsonConverter.asJsonString(response);
 
-        String query = "UPDATE " + qualifier.getTableQualifier() +
-                " SET " + GISOGFRF_RESPONSE + " = '" + asJson + "'" +
-                " WHERE id = " + qualifier.getRecordId();
+        String query = String.format("UPDATE %s SET %s = '%s' WHERE %s = %s",
+                                     qualifier.getTableQualifier(), GISOGFRF_RESPONSE, asJson, getIdField(qualifier),
+                                     qualifier.getRecordId());
 
         log.debug("Write errors query: [{}]", query);
 
