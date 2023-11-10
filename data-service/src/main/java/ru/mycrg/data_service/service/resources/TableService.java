@@ -178,21 +178,19 @@ public class TableService {
     private Function<SchemasAndTables, GisogdData> buildFullQualifier() {
         return table -> {
             Optional<Long> oParentId = systemAttributeHandler.getLastIdFromPath(table.getPath());
-            if (oParentId.isPresent()) {
-                Long parentId = oParentId.get();
-
-                Optional<SchemasAndTables> parent = schemasAndTablesRepository.findById(parentId);
-                if (parent.isEmpty()) {
-                    log.warn("Не найден набор данных по id: " + parentId);
-                } else {
-                    return null;
-                }
-
-                return new GisogdData(new ResourceQualifier("", table.getIdentifier(), TABLE),
-                                      parent.get().getGisogdRfPublicationOrder());
+            if (oParentId.isEmpty()) {
+                return null;
             }
 
-            return null;
+            Optional<SchemasAndTables> oParent = schemasAndTablesRepository.findById(oParentId.get());
+            if (oParent.isEmpty()) {
+                log.warn("Не найден набор данных по id: " + oParentId.get());
+
+                return null;
+            }
+
+            return new GisogdData(new ResourceQualifier(oParent.get().getIdentifier(), table.getIdentifier(), TABLE),
+                                  table.getGisogdRfPublicationOrder());
         };
     }
 }
