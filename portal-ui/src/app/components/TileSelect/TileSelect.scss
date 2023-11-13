@@ -1,0 +1,14 @@
+body .TileSelect {
+  vertical-align: middle;
+
+  &-Dropdown {
+    display: grid;
+    grid-template-columns: repeat(var(--TileSelectDropdownColumns), 1fr);
+
+    padding: 8px;
+  }
+
+  &-Tile {
+    padding: 8px;
+  }
+}

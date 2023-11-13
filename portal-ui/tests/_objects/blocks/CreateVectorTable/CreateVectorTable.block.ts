@@ -1,7 +1,7 @@
 import { Block } from '../../Block';
 import { createVectorTableDialogBlock } from '../CreateVectorTableDialog/CreateVectorTableDialog.block';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
-import { schemasSelectDialogBlock } from '../SchemasSelectDialog/SchemasSelectDialog.block';
+import { selectSchemaControlDialogBlock } from '../SelectSchemaControlDialog/SelectSchemaControlDialog.block';
 
 class CreateVectorTableBlock extends Block {
   selectors = {
@@ -20,10 +20,10 @@ class CreateVectorTableBlock extends Block {
     );
     await createVectorTableDialogBlock.waitForFormDialogClickable();
     await createVectorTableDialogBlock.openSchemaSelection();
-    await schemasSelectDialogBlock.waitForSelectSchemaTableDisplay();
-    await schemasSelectDialogBlock.clickSelectSchemaFirstOption();
-    await schemasSelectDialogBlock.clickSelectSchemaConfirm();
-    await schemasSelectDialogBlock.waitForSelectSchemaDisappear();
+    await selectSchemaControlDialogBlock.waitForSelectSchemaTableDisplay();
+    await selectSchemaControlDialogBlock.clickSelectSchemaFirstOption();
+    await selectSchemaControlDialogBlock.clickSelectSchemaConfirm();
+    await selectSchemaControlDialogBlock.waitForSelectSchemaDisappear();
     await createVectorTableDialogBlock.clickSaveFormDialog();
   }
 }

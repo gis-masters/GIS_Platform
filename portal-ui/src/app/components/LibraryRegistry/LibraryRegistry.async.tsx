@@ -234,15 +234,15 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
           field: 'title',
           AfterCellContent: pathHidden
             ? ({ rowData, filterParams }) => (
-              <LibraryRegistryBreadcrumbs
-                size='small'
-                filter={filterParams}
-                library={this.library}
-                path={getIdsFromPath(rowData.path)}
-                onItemClick={this.handleBreadcrumbsItemClick}
-                menuButtonOnly
-              />
-            )
+                <LibraryRegistryBreadcrumbs
+                  size='small'
+                  filter={filterParams}
+                  library={this.library}
+                  path={getIdsFromPath(rowData.path)}
+                  onItemClick={this.handleBreadcrumbsItemClick}
+                  menuButtonOnly
+                />
+              )
             : undefined
         }
       ])

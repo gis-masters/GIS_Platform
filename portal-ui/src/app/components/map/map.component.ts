@@ -15,8 +15,9 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { fetchBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
+import { mapSelectionService } from '../../services/map/map-selection.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { mapService } from '../../services/map/map.service';
 import { MapMode } from '../../services/map/map.models';
@@ -24,7 +25,6 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { Emitter } from '../../services/common/Emitter';
 import { cn } from '../../services/util/cn';
 import { Toast } from '../Toast/Toast';
-import { projectsService } from '../../services/gis/projects/projects.service';
 
 @Component({
   selector: 'crg-map',

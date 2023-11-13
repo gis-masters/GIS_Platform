@@ -27,8 +27,8 @@ import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { services } from '../../services/services';
-import { SelectFileInLibraryRecord } from '../SelectFileInLibraryRecord/SelectFileInLibraryRecord';
-import { SelectVectorTable } from '../SelectVectorTable/SelectVectorTable';
+import { SelectFileInLibraryRecordControl } from '../SelectFileInLibraryRecordControl/SelectFileInLibraryRecordControl';
+import { SelectVectorTableControl } from '../SelectVectorTableControl/SelectVectorTableControl';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 
@@ -197,7 +197,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           name: 'datasource',
           title: 'Источник данных',
           defaultValue: true,
-          ControlComponent: props => <SelectVectorTable {...props} usedVectorTables={this.usedVectorTables} />,
+          ControlComponent: props => <SelectVectorTableControl {...props} usedVectorTables={this.usedVectorTables} />,
           validationFormula: validateLayer
         },
         {
@@ -242,7 +242,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           name: 'datasource',
           title: 'Документ',
           defaultValue: true,
-          ControlComponent: SelectFileInLibraryRecord,
+          ControlComponent: SelectFileInLibraryRecordControl,
           validationFormula: validateLayer
         }
       ];

@@ -4,7 +4,7 @@ class AddLayerDialogBlock extends Block {
   selectors = {
     container: '.AddLayerDialog',
     addLayerDialogViewField: '.AddLayerDialog .Form-Content .Form-Field:last-child label',
-    layerFormDialogSelectDatasource: '.AddLayerDialog .SelectVectorTable'
+    layerFormDialogSelectDatasource: '.AddLayerDialog .SelectVectorTableControl'
   };
 
   async checkViewFieldIsAppear(): Promise<void> {

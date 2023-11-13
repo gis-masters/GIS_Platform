@@ -120,9 +120,73 @@ export type CustomStyleDescription =
   | CustomStylePointDescription
   | CustomStylePolygonDescription;
 
-export const CUSTOM_STYLE_NAME = '__custom__';
-
 export interface StyleGeoserverInfo {
   name: string;
   href: string;
 }
+
+export const CUSTOM_STYLE_NAME = '__custom__';
+
+export const customStyleStrokeColors: string[] = [
+  '#000000',
+  '#555555',
+  '#888888',
+  '#eeeeee',
+  '#aa0000',
+  '#ff3333',
+  '#ff8888',
+  '#ffaaaa',
+  '#00aa00',
+  '#33ff33',
+  '#88ff88',
+  '#aaffaa',
+  '#0000aa',
+  '#0000ff',
+  '#3333ff',
+  '#aaaaff',
+  '#ffff00',
+  '#00ffff',
+  '#ff00ff',
+  '#7f5e00'
+];
+
+export const customStyleFillColors: string[] = [
+  '#ffffff',
+  '#888888',
+  '#eeeeee',
+  '#aa5555',
+  '#ff5555',
+  '#ff8888',
+  '#ffaaaa',
+  '#55aa55',
+  '#55ff55',
+  '#88ff88',
+  '#aaffaa',
+  '#5555aa',
+  '#5555ff',
+  '#5555ff',
+  '#aaaaff',
+  '#ffff55',
+  '#55ffff',
+  '#ff55ff',
+  '#7f5e55'
+];
+
+export const customStyleStrokes: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>[] = [
+  { strokeWidth: 2 },
+  { strokeWidth: 2, strokeDashArray: [2, 2] },
+  { strokeWidth: 2, strokeDashArray: [4, 2] },
+  { strokeWidth: 2, strokeDashArray: [4, 2, 2, 2] },
+  { strokeWidth: 4 },
+  { strokeWidth: 4, strokeDashArray: [4, 4] },
+  { strokeWidth: 4, strokeDashArray: [8, 4] },
+  { strokeWidth: 4, strokeDashArray: [8, 4, 4, 4] },
+  { strokeWidth: 6 },
+  { strokeWidth: 6, strokeDashArray: [6, 6] },
+  { strokeWidth: 6, strokeDashArray: [12, 6] },
+  { strokeWidth: 6, strokeDashArray: [12, 6, 6, 6] },
+  { strokeWidth: 8 },
+  { strokeWidth: 8, strokeDashArray: [8, 8] },
+  { strokeWidth: 8, strokeDashArray: [16, 8] },
+  { strokeWidth: 8, strokeDashArray: [16, 8, 8, 8] }
+];

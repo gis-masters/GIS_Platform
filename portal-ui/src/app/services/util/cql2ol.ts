@@ -50,7 +50,7 @@ enum Token {
 }
 
 const patterns = {
-  [Token.PROPERTY]: /^[A-Z_a-z]\w*/,
+  [Token.PROPERTY]: /^[_a-z]\w*/i,
   [Token.COMPARISON]: /^(=|<>|<=|<|>=|>|like|ilike)/i,
   [Token.IS_NULL]: /^is null/i,
   [Token.COMMA]: /^,/,

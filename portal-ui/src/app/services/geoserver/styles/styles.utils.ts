@@ -1,10 +1,10 @@
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
-
 import { CustomSld } from './CustomSld/CustomSld';
 import { Mime } from '../../util/Mime';
+
+import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
 
 export function buildCustomSld(layerComplexName: string, style: CustomStyleDescription): string {
   return (

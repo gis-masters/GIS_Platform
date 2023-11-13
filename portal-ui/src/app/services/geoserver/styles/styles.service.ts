@@ -213,7 +213,7 @@ const stylesList: Record<'line' | 'polygon' | 'point', string[]> = {
 };
 
 export async function getSimpleStylesListForGeometryType(geometryType: GeometryType): Promise<string[]> {
-  const supGeometryType = getSupGeoType(geometryType);
+  const supGeometryType = getSupGeometryType(geometryType);
   if (!stylesList[supGeometryType].length) {
     const dirtyStylesList = await stylesClient.getStylesList();
 
@@ -225,7 +225,7 @@ export async function getSimpleStylesListForGeometryType(geometryType: GeometryT
   return stylesList[supGeometryType];
 }
 
-function getSupGeoType(geometryType: GeometryType): 'line' | 'polygon' | 'point' {
+export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygon' | 'point' {
   if (isLinear(geometryType)) {
     return 'line';
   } else if (isPolygonal(geometryType)) {

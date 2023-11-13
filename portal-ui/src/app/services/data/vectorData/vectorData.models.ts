@@ -1,4 +1,4 @@
-import { SchemasSelect } from '../../../components/SchemasSelect/SchemasSelect';
+import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { viewedProjections } from '../../geoserver/projections.service';
 import { CrgProject } from '../../gis/projects/projects.models';
 import { PropertyType, SimpleSchema } from '../schema/schema.models';
@@ -184,7 +184,7 @@ export const emptyVectorTableSchema: SimpleSchema = {
       required: true,
       propertyType: PropertyType.CUSTOM,
       onlyWithGeometry: true,
-      ControlComponent: SchemasSelect
+      ControlComponent: SelectSchemaControl
     },
     ...vectorTableSchemaBase.properties
   ]

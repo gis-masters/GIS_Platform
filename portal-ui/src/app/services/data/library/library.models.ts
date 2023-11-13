@@ -1,4 +1,4 @@
-import { SchemasSelect } from '../../../components/SchemasSelect/SchemasSelect';
+import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { Role } from '../permissions/permissions.models';
 import { PropertyType, SimpleSchema } from '../schema/schema.models';
 import { DataEntity, DataEntityType } from '../vectorData/vectorData.models';
@@ -25,7 +25,7 @@ export const librarySchema: SimpleSchema = {
       required: true,
       propertyType: PropertyType.CUSTOM,
       onlyWithGeometry: false,
-      ControlComponent: SchemasSelect
+      ControlComponent: SelectSchemaControl
     },
     {
       name: 'details',

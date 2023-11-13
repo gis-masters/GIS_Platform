@@ -15,12 +15,12 @@ import { Datasource } from '../AddLayerDialog/AddLayerDialog';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./SelectFileInLibraryRecord.scss';
+import '!style-loader!css-loader!sass-loader!./SelectFileInLibraryRecordControl.scss';
 
-const cnSelectFileInLibraryRecord = cn('SelectFileInLibraryRecord');
+const cnSelectFileInLibraryRecordControl = cn('SelectFileInLibraryRecordControl');
 
 @observer
-export class SelectFileInLibraryRecord extends Component<FormControlProps> {
+export class SelectFileInLibraryRecordControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
   @observable private selectedLibraryRecord?: LibraryRecord;
   @observable private selectedLibrary?: Library;
@@ -39,7 +39,7 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
       <>
         <ButtonBase
           focusRipple
-          className={cnSelectFileInLibraryRecord({ empty: !libraryRecord }, [className])}
+          className={cnSelectFileInLibraryRecordControl({ empty: !libraryRecord }, [className])}
           id={htmlId}
           onClick={this.openDialog}
         >
@@ -50,7 +50,7 @@ export class SelectFileInLibraryRecord extends Component<FormControlProps> {
           <DialogContent>
             <Explorer
               explorerRole='SelectLibraryRecord'
-              className={cnSelectFileInLibraryRecord('Explorer')}
+              className={cnSelectFileInLibraryRecordControl('Explorer')}
               preset={ExplorerItemType.LIBRARY_ROOT}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}

@@ -1,0 +1,11 @@
+.CustomStyleControl-Label {
+  margin-right: 8px;
+  margin-left: 10px;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}

@@ -3,9 +3,6 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layers/layers.models';
-import { FormDialog } from '../FormDialog/FormDialog';
-import { TextBadge } from '../TextBadge/TextBadge';
 import {
   PropertyOption,
   PropertySchema,
@@ -13,16 +10,21 @@ import {
   Schema,
   SimpleSchema
 } from '../../services/data/schema/schema.models';
-import { communicationService } from '../../services/communication.service';
-import { getViewChoiceOptions } from '../Form/Form.utils';
 import {
   getSimpleStylesListForGeometryType,
   getStyleSld,
   loadLayerStyleRules
 } from '../../services/geoserver/styles/styles.service';
+import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layers/layers.models';
+import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
+import { communicationService } from '../../services/communication.service';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
+import { getViewChoiceOptions } from '../Form/Form.utils';
+import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
+import { FormDialog } from '../FormDialog/FormDialog';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
 import { Legend } from '../Legend/Legend';
 import { FormProps } from '../Form/Form';
@@ -128,8 +130,21 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         propertyType: PropertyType.CHOICE,
         name: 'styleName',
         title: 'Стиль',
-        options: [...this.defaultStylesOptions, ...this.simpleStylesOptions]
+        options: [
+          ...this.defaultStylesOptions,
+          ...this.simpleStylesOptions,
+          { title: 'Настраиваемый', value: CUSTOM_STYLE_NAME }
+        ]
       });
+
+      if ({ ...layer, ...this.currentFormValue }.styleName === CUSTOM_STYLE_NAME) {
+        properties.push({
+          name: 'style',
+          title: 'Настройки стиля',
+          propertyType: PropertyType.CUSTOM,
+          ControlComponent: CustomStyleControl
+        });
+      }
 
       if (schema?.views) {
         properties.unshift({

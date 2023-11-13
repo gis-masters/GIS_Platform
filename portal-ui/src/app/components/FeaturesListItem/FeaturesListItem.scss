@@ -40,7 +40,6 @@
     grid-area: id;
 
     overflow: hidden;
-    align-self: center;
 
     width: 30px;
 
@@ -53,7 +52,7 @@
     font-size: 12px;
     line-height: 20px;
 
-    justify-self: center;
+    place-self: center center;
 
     &::before {
       position: absolute;
@@ -107,25 +106,21 @@
   & &-Buttons {
     grid-area: buttons;
 
-    align-self: center;
-
     transition: opacity 0.15s;
 
     opacity: 0.2;
 
-    justify-self: end;
+    place-self: center end;
   }
 
   &-Icon {
     grid-area: icon;
 
-    align-self: center;
-
     width: 26px;
 
     line-height: 16px;
 
-    justify-self: flex-end;
+    place-self: center flex-end;
   }
 
   &-Svg {

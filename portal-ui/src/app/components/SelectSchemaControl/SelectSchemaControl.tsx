@@ -10,13 +10,13 @@ import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable.models';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./SchemasSelect.scss';
+import '!style-loader!css-loader!sass-loader!./SelectSchemaControl.scss';
 
-const cnSchemasSelect = cn('SchemasSelect');
-const cnSchemasSelectDialog = cn('SchemasSelect', 'Dialog');
+const cnSelectSchemaControl = cn('SelectSchemaControl');
+const cnSelectSchemaControlDialog = cn('SelectSchemaControl', 'Dialog');
 
 @observer
-export class SchemasSelect extends Component<FormControlProps> {
+export class SelectSchemaControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
   @observable private schemas?: Schema[];
   @observable private selectedSchema?: string;
@@ -84,10 +84,10 @@ export class SchemasSelect extends Component<FormControlProps> {
   render() {
     return (
       <>
-        <div className={cnSchemasSelect()}>{this.selectedSchema}</div>
+        <div className={cnSelectSchemaControl()}>{this.selectedSchema}</div>
         <Button onClick={this.openDialog}>Выбрать схему</Button>
         <ChooseXTableDialog<Schema>
-          className={cnSchemasSelectDialog()}
+          className={cnSelectSchemaControlDialog()}
           title='Выберите схему'
           data={this.schemas || []}
           cols={this.cols}

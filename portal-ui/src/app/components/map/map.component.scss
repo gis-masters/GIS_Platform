@@ -3,16 +3,14 @@
   inset: 55px 0 0;
 
   display: grid;
-  align-content: stretch;
-  align-items: stretch;
-  justify-content: stretch;
   grid-template:
     'bar-left map bar-right'
     'bar-bottom bar-bottom bar-bottom';
   grid-template-rows: 1fr auto;
   grid-template-columns: auto 1fr auto;
 
-  justify-items: stretch;
+  place-content: stretch stretch;
+  place-items: stretch stretch;
   grid-gap: 0;
 
   &__map {

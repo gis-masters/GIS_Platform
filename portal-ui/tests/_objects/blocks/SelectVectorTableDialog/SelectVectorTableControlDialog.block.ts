@@ -1,9 +1,9 @@
 import { Block } from '../../Block';
 
-class SelectVectorTableDialogBlock extends Block {
+class SelectVectorTableControlDialogBlock extends Block {
   selectors = {
-    container: '.SelectVectorTable-Dialog',
-    datasourceDialogAddBtn: '.SelectVectorTable-Dialog .MuiButton-outlinedPrimary'
+    container: '.SelectVectorTableControl-Dialog',
+    datasourceDialogAddBtn: '.SelectVectorTableControl-Dialog .MuiButton-outlinedPrimary'
   };
 
   async selectVectorTableBtn(): Promise<void> {
@@ -14,4 +14,4 @@ class SelectVectorTableDialogBlock extends Block {
   }
 }
 
-export const selectVectorTableDialogBlock = new SelectVectorTableDialogBlock();
+export const selectVectorTableControlDialogBlock = new SelectVectorTableControlDialogBlock();

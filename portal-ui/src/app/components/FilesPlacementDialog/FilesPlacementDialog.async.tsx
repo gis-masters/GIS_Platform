@@ -148,7 +148,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
                 <Select
                   className={cnFilesPlacementDialog('CrsSelector')}
                   label='Система координат'
-                  options={viewedProjections.map(proj => ({ value: proj.id, children: proj.title }))}
+                  options={viewedProjections.map(proj => ({ value: proj.id, title: proj.title }))}
                   onChange={this.handleCrsChange}
                   value={crs}
                 />

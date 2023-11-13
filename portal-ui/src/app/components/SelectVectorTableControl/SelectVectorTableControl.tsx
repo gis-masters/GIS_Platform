@@ -13,26 +13,26 @@ import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./SelectVectorTable.scss';
+import '!style-loader!css-loader!sass-loader!./SelectVectorTableControl.scss';
 
-const cnSelectVectorTable = cn('SelectVectorTable');
+const cnSelectVectorTable = cn('SelectVectorTableControl');
 
 interface Datasource {
   dataset: Dataset;
   vectorTable: VectorTable;
 }
 
-interface SelectVectorTableProps extends FormControlProps {
+interface SelectVectorTableControlProps extends FormControlProps {
   usedVectorTables: VectorTable[];
 }
 
 @observer
-export class SelectVectorTable extends Component<SelectVectorTableProps> {
+export class SelectVectorTableControl extends Component<SelectVectorTableControlProps> {
   @observable private dialogOpen = false;
   @observable private selectedDataset?: Dataset;
   @observable private selectedVectorTable?: VectorTable;
 
-  constructor(props: SelectVectorTableProps) {
+  constructor(props: SelectVectorTableControlProps) {
     super(props);
     makeObservable(this);
   }
@@ -95,12 +95,12 @@ export class SelectVectorTable extends Component<SelectVectorTableProps> {
     if (item.type === ExplorerItemType.TABLE && !(await this.testForDisabled(item))) {
       this.select(path[1].payload as Dataset, item.payload as VectorTable);
     } else {
-      this.select(null, null);
+      this.select();
     }
   }
 
   @action
-  private select(dataset: Dataset, table: VectorTable) {
+  private select(dataset?: Dataset, table?: VectorTable) {
     this.selectedDataset = dataset;
     this.selectedVectorTable = table;
   }
@@ -125,16 +125,19 @@ export class SelectVectorTable extends Component<SelectVectorTableProps> {
 
   @action.bound
   private submitDialog() {
-    const { property } = this.props;
+    const { property, onChange } = this.props;
 
     this.closeDialog();
-    this.props.onChange({
-      value: { dataset: this.selectedDataset, vectorTable: this.selectedVectorTable },
-      propertyName: property.name
-    });
 
-    this.selectedDataset = null;
-    this.selectedVectorTable = null;
+    if (onChange) {
+      onChange({
+        value: { dataset: this.selectedDataset, vectorTable: this.selectedVectorTable },
+        propertyName: property.name
+      });
+    }
+
+    this.selectedDataset = undefined;
+    this.selectedVectorTable = undefined;
   }
 
   @boundMethod
