@@ -532,12 +532,13 @@ public class GisogdRfPublisher {
         List<TypeUrlData> urls = new ArrayList<>();
         try {
             value = parentContent.get(property.getName());
-
-            urls = mapper.readValue(value.toString(),
-                                    new TypeReference<List<TypeUrlData>>() {
-                                    });
+            if (value != null) {
+                urls = mapper.readValue(value.toString(),
+                                        new TypeReference<List<TypeUrlData>>() {
+                                        });
+            }
         } catch (Exception e) {
-            log.error("Задано некорректное значение в поле: [{}]. Не соответствует типа TypeUrlData", value, e);
+            log.error("Задано некорректное значение в поле: [{}]. Не соответствует типу TypeUrlData", value, e);
         }
 
         List<ResourceQualifier> result = new ArrayList<>();

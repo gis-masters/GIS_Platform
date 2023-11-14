@@ -3,7 +3,9 @@ package ru.mycrg.data_service.entity;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.TITLE;
 
 public class RecordEntity implements IRecord {
 
@@ -29,12 +31,17 @@ public class RecordEntity implements IRecord {
 
     @Override
     public Long getId() {
-        Object id = content.get(ID.getName());
-        if (id != null) {
-            return Long.valueOf(id.toString());
-        } else {
-            return -1L;
+        Object primaryKey = content.get(PRIMARY_KEY);
+        if (primaryKey != null) {
+            return Long.valueOf(primaryKey.toString());
         }
+
+        primaryKey = content.get(ID);
+        if (primaryKey != null) {
+            return Long.valueOf(primaryKey.toString());
+        }
+
+        return -1L;
     }
 
     @Override
