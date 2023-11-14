@@ -4,7 +4,14 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 
-import { Library, DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
+import {
+  Library,
+  DocumentVersion,
+  LibraryRecord,
+  LibraryRecordNew,
+  LibraryRecordRaw,
+  LibraryNew
+} from './library.models';
 import { libraryClient } from './library.client';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {
@@ -24,8 +31,8 @@ export async function getLibrary(libraryTableName: string): Promise<Library> {
   return await libraryClient.getLibrary(libraryTableName);
 }
 
-export async function createLibrary(details: string, schemaId: string, versioned: boolean): Promise<Library> {
-  const result = await libraryClient.createLibrary(details, schemaId, versioned);
+export async function createLibrary({ details, schemaId, versioned, readyForFts }: LibraryNew): Promise<Library> {
+  const result = await libraryClient.createLibrary(details || '', schemaId, versioned, readyForFts);
 
   communicationService.libraryUpdated.emit({ type: 'create', data: result });
 

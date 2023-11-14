@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao.ddl.tables;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -33,17 +34,10 @@ public class DdlTablesBase {
                        String tableName,
                        List<SimplePropertyDto> properties,
                        String primaryKeyName) {
-        StringBuilder propertiesBuilder = new StringBuilder();
-        for (SimplePropertyDto property: properties) {
-            if (!property.getName().equalsIgnoreCase(primaryKeyName)) {
-                String result = wkfGenerator.generate(property.getCalculatedValueWellKnownFormula(),
-                                                      generatePropertySqlString(property));
-
-                propertiesBuilder.append(",").append(result);
-            }
-        }
-
-        String query = buildCreateTableQuery(schemaName, tableName, primaryKeyName, propertiesBuilder.toString());
+        String query = buildCreateTableQuery(schemaName,
+                                             tableName,
+                                             primaryKeyName,
+                                             buildProps(properties, primaryKeyName));
 
         log.debug("Create table query: [{}]", query);
 
@@ -83,5 +77,23 @@ public class DdlTablesBase {
 
             return true;
         }
+    }
+
+    @NotNull
+    private String buildProps(List<SimplePropertyDto> properties, String primaryKeyName) {
+        StringBuilder props = new StringBuilder();
+        for (SimplePropertyDto property: properties) {
+            if (!property.getName().equalsIgnoreCase(primaryKeyName)) {
+                String base = generatePropertySqlString(property);
+                props.append(",").append(base);
+
+                String calculatedValueWellKnownFormula = property.getCalculatedValueWellKnownFormula();
+                if (calculatedValueWellKnownFormula != null) {
+                    props.append(" ").append(wkfGenerator.generate(calculatedValueWellKnownFormula));
+                }
+            }
+        }
+
+        return props.toString();
     }
 }

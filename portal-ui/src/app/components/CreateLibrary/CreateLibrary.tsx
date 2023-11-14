@@ -31,6 +31,7 @@ export class CreateLibrary extends Component {
           </IconButton>
         </Tooltip>
         <FormDialog<LibraryNew>
+          title='Создание новой библиотеки'
           className={cnCreateLibrary('Form')}
           open={this.dialogOpen}
           value={{}}
@@ -53,7 +54,7 @@ export class CreateLibrary extends Component {
     this.dialogOpen = false;
   }
 
-  private async create({ details, schemaId, versioned }: LibraryNew) {
-    await createLibrary(details || '', schemaId, versioned);
+  private async create(libraryNew: LibraryNew) {
+    await createLibrary(libraryNew);
   }
 }

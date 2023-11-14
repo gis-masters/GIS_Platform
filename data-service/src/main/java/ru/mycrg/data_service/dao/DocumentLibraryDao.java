@@ -47,6 +47,17 @@ public class DocumentLibraryDao {
                                    ));
     }
 
+    public List<DocumentLibrary> findAll(String ecqlFilter) {
+        String query = "SELECT * FROM doc_libraries " + buildWhereSection(ecqlFilter);
+
+        log.debug("Request find all by path: [{}]", query);
+
+        return pJdbcTemplate.query(query,
+                                   new RowMapperResultSetExtractor<>(
+                                           new DocLibraryMapper()
+                                   ));
+    }
+
     public Long getTotal(String ecqlFilter) {
         String query = "SELECT count(*) FROM doc_libraries" + " " + buildWhereSection(ecqlFilter);
 

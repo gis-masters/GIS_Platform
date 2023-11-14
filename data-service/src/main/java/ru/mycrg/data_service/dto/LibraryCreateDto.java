@@ -11,7 +11,9 @@ public class LibraryCreateDto {
     @Size(max = 50)
     private String schemaId;
 
-    private boolean versioned;
+    private boolean versioned = false;
+
+    private boolean readyForFts = false;
 
     public LibraryCreateDto() {
     }
@@ -38,5 +40,13 @@ public class LibraryCreateDto {
 
     public void setVersioned(boolean versioned) {
         this.versioned = versioned;
+    }
+
+    public boolean isReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(boolean readyForFts) {
+        this.readyForFts = readyForFts;
     }
 }

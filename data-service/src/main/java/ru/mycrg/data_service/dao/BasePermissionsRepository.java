@@ -122,6 +122,59 @@ public class BasePermissionsRepository {
                                    ));
     }
 
+    public List<IRecord> findAllowedByParent(ResourceQualifier rQualifier,
+                                             String parent,
+                                             String ecqlFilter,
+                                             SchemaDto schema) {
+        String tableQualifier = rQualifier.getTableQualifier();
+        String tableName = rQualifier.getTable();
+
+        List<String> allPrincipalIds = principalService.getAllIds();
+        if (allPrincipalIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String requestTemplate = "" +
+                "SELECT n2.* FROM " +
+                "  (" +
+                "    SELECT " +
+                "      res.id AS allowed_res_id " +
+                "    FROM " +
+                "      " + tableQualifier + " AS res " +
+                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "      AND p.resource_table = '" + tableName + "' " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
+                "      AND res.path = '" + parent + "' " +
+                " " +
+                "    UNION " +
+                " " +
+                "    SELECT " +
+                "      SPLIT_PART(" +
+                "        regexp_replace(path, '" + parent + "/', ''), " +
+                "        '/', " +
+                "        1" +
+                "      ):: bigint as allowed_res_id " +
+                "    FROM " +
+                "      " + tableQualifier + " AS res " +
+                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "      AND p.resource_table = '" + tableName + "' " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
+                "      AND res.path LIKE '" + parent + "/%' " +
+                "    GROUP BY " +
+                "      allowed_res_id" +
+                "  ) AS n1 " +
+                "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
+                " " + buildWhereSection(ecqlFilter);
+
+        log.debug("Request to find allowed resources by parent: [{}]", requestTemplate);
+
+        return pJdbcTemplate.getJdbcTemplate()
+                            .query(requestTemplate,
+                                   new RowMapperResultSetExtractor<>(
+                                           new RecordRowMapper(schema)
+                                   ));
+    }
+
     public boolean isAllowedByParentsPermissions(ResourceQualifier targetTable, Set<String> parentFolderIds) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty() || parentFolderIds.isEmpty()) {

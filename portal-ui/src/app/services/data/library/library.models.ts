@@ -13,9 +13,10 @@ export interface Library extends Omit<DataEntity, 'identifier'> {
   schemaId: string;
   role: Role;
   versioned: boolean;
+  readyForFts: boolean;
 }
 
-export type LibraryNew = Pick<Library, 'schemaId' | 'details' | 'versioned'>;
+export type LibraryNew = Pick<Library, 'schemaId' | 'details' | 'versioned' | 'readyForFts'>;
 
 export const librarySchema: SimpleSchema = {
   properties: [
@@ -35,6 +36,11 @@ export const librarySchema: SimpleSchema = {
     {
       name: 'versioned',
       title: 'Версионирование',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'readyForFts',
+      title: 'Полнотекстовый поиск',
       propertyType: PropertyType.BOOL
     }
   ]

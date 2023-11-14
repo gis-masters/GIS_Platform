@@ -27,3 +27,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_fts_layers ON data.fts_layers (sche
 
 CREATE INDEX IF NOT EXISTS idx_fts_documents_concatenated_data
     ON data.fts_documents USING gist (data.replace_ru_letters(concatenated_data) public.gist_trgm_ops);
+
+ALTER TABLE IF EXISTS data.doc_libraries
+    ADD COLUMN IF NOT EXISTS ready_for_fts boolean;
+
+ALTER TABLE IF EXISTS data.schemas_and_tables
+    ADD COLUMN IF NOT EXISTS ready_for_fts boolean;

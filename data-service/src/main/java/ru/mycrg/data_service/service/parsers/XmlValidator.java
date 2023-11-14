@@ -30,6 +30,7 @@ public class XmlValidator {
         this.resourceLoader = resourceLoader;
     }
 
+    // TODO: Разобраться/Удалить?
     public void checkXmlByXsd(MultipartFile xml) {
         try {
             final Resource resource = resourceLoader.getResource("classpath:xsd_mp_v6/MP_v06.xsd");

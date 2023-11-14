@@ -17,6 +17,7 @@ public class TableModel extends ResourceModel implements IResourceModel {
     private String documentType;
     private String status;
     private Boolean isPublic;
+    private Boolean readyForFts;
     private String docTerminationDate;
     private String docApproveDate;
     private Long fias__id;
@@ -25,13 +26,6 @@ public class TableModel extends ResourceModel implements IResourceModel {
 
     public TableModel() {
         super();
-    }
-
-    public TableModel(SchemasAndTables table) {
-        this(table.getId(), table.getTitle(), table.getDetails(), TABLE.name(), table.getIdentifier(),
-             table.getItemsCount(), table.getCrs(), table.getSchemaId(), table.getCreatedAt().toString(), null,
-             table.getDocumentType(), table.getStatus(), table.getIsPublic(), table.getDocTerminationDate(),
-             table.getDocApproveDate(), table.getFiasId(), table.getFiasAddress(), table.getFiasOktmo());
     }
 
     public TableModel(Map<String, Object> table) {
@@ -141,5 +135,13 @@ public class TableModel extends ResourceModel implements IResourceModel {
 
     public void setFias__oktmo(String fias__oktmo) {
         this.fias__oktmo = fias__oktmo;
+    }
+
+    public Boolean getReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(Boolean readyForFts) {
+        this.readyForFts = readyForFts;
     }
 }

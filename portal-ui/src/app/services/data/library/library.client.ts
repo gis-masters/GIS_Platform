@@ -90,8 +90,8 @@ class LibraryClient extends Client {
     );
   }
 
-  async createLibrary(details: string, schemaId: string, versioned: boolean): Promise<Library> {
-    return await http.post<Library>(this.getDocLibrariesUrl(), { details, schemaId, versioned });
+  async createLibrary(details: string, schemaId: string, versioned: boolean, readyForFts?: boolean): Promise<Library> {
+    return await http.post<Library>(this.getDocLibrariesUrl(), { details, schemaId, versioned, readyForFts });
   }
 
   async getLibrary(libraryTableName: string): Promise<Library> {

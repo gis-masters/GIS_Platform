@@ -14,13 +14,14 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateTableRequest implements IRequest<TableModel>, Auditable {
 
-    private TableCreateDto tableCreateDto;
-    private ResourceQualifier tQualifier;
     private SchemasAndTables entity;
 
-    public CreateTableRequest(TableCreateDto tableCreateDto, ResourceQualifier tQualifier) {
+    private final ResourceQualifier qualifier;
+    private final TableCreateDto tableCreateDto;
+
+    public CreateTableRequest(TableCreateDto tableCreateDto, ResourceQualifier qualifier) {
         this.tableCreateDto = tableCreateDto;
-        this.tQualifier = tQualifier;
+        this.qualifier = qualifier;
     }
 
     @Override
@@ -41,8 +42,8 @@ public class CreateTableRequest implements IRequest<TableModel>, Auditable {
         return tableCreateDto;
     }
 
-    public ResourceQualifier gettQualifier() {
-        return tQualifier;
+    public ResourceQualifier getQualifier() {
+        return qualifier;
     }
 
     public void setEntity(SchemasAndTables entity) {

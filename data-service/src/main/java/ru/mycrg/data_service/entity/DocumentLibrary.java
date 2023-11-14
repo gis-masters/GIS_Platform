@@ -48,6 +48,9 @@ public class DocumentLibrary {
     @Column
     private boolean versioned;
 
+    @Column(name = "ready_for_fts")
+    private Boolean readyForFts;
+
     @Column(name = "gisogd_rf_publication_order")
     private Integer gisogdRfPublicationOrder;
 
@@ -156,5 +159,13 @@ public class DocumentLibrary {
 
     public void setGisogdRfPublicationOrder(Integer gisogdRfPublicationOrder) {
         this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
+    }
+
+    public Boolean getReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(Boolean readyForFts) {
+        this.readyForFts = readyForFts;
     }
 }

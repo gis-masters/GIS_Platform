@@ -23,6 +23,7 @@ public class ResourceCreateDto {
 
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String documentType;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docApproveDate;
 
@@ -35,16 +36,6 @@ public class ResourceCreateDto {
 
     public ResourceCreateDto(String title) {
         this.title = title;
-    }
-
-    public ResourceCreateDto(String title, String details, String oktmo, String documentType,
-                             LocalDate docApproveDate, Integer scale) {
-        this.title = title;
-        this.details = details;
-        this.oktmo = oktmo;
-        this.documentType = documentType;
-        this.docApproveDate = docApproveDate;
-        this.scale = scale;
     }
 
     public String getTitle() {

@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.TableModel;
@@ -24,8 +26,10 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.IRequestHandler;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,25 +41,29 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
 
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
 
     private final Logger log = LoggerFactory.getLogger(CreateTableRequestHandler.class);
 
-    private final DdlTablesSpecial ddlTablesSpecial;
-    private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final PermissionsService permissionsService;
+    private final DdlTriggers ddlTriggers;
     private final SchemaService schemaService;
+    private final DdlTablesSpecial ddlTablesSpecial;
     private final IResourceProtector datasetProtector;
+    private final PermissionsService permissionsService;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
-    public CreateTableRequestHandler(DdlTablesSpecial ddlTablesSpecial,
-                                     SchemasAndTablesRepository schemasAndTablesRepository,
-                                     PermissionsService permissionsService,
+    public CreateTableRequestHandler(DdlTriggers ddlTriggers,
                                      SchemaService schemaService,
+                                     DdlTablesSpecial ddlTablesSpecial,
                                      IResourceProtector datasetProtector,
+                                     PermissionsService permissionsService,
+                                     SchemasAndTablesRepository schemasAndTablesRepository,
                                      List<IWellKnownFormulaGenerator> generators) {
+        this.ddlTriggers = ddlTriggers;
         this.ddlTablesSpecial = ddlTablesSpecial;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
@@ -67,30 +75,77 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     }
 
     @Override
+    @Transactional
     public TableModel handle(CreateTableRequest request) {
         TableCreateDto dto = request.getTableCreateDto();
-        ResourceQualifier tQualifier = request.gettQualifier();
 
-        if (!datasetProtector.isEditAllowed(new ResourceQualifier(tQualifier.getSchema()))) {
-            throw new ForbiddenException("Недостаточно прав для редактирования набора: " + tQualifier.getQualifier());
-        }
+        SchemaDto schema = schemaService
+                .getSchemaByName(dto.getSchemaId())
+                .orElseThrow(() -> new BadRequestException(
+                        "Не возможно создать таблицу. Не существует схемы: " + dto.getSchemaId()));
 
-        String datasetId = tQualifier.getSchema();
-        SchemasAndTables dataset = schemasAndTablesRepository
-                .findByIdentifier(datasetId)
-                .orElseThrow(() -> new NotFoundException("Not found dataset: " + datasetId));
+        validateSchema(schema);
 
-        Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(dto.getSchemaId());
-        if (schemaByName.isEmpty()) {
-            throw new BadRequestException(
-                    "Не возможно создать таблицу. Не существует схемы: '" + dto.getSchemaId() + "");
-        }
+        SchemasAndTables dataset = getDataset(request);
 
-        SchemaDto schema = schemaByName.get();
-
-        throwIfNoGeometryInSchema(schema);
         String tableName = buildTableName(schema.getTableName(), dataset.getId(), dto.getName());
         dto.setName(tableName);
+
+        createTable(schema, dataset.getIdentifier(), dto);
+
+        if (dto.getReadyForFts()) {
+            ResourceQualifier qualifier = new ResourceQualifier(dataset.getIdentifier(), tableName);
+            List<String> ftsProperties = getFtsProperties(schema);
+            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
+            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
+            ddlTriggers.createDeleteTrigger(qualifier);
+        }
+
+        // Add record to schemasAndTables table
+        SchemasAndTables table = new SchemasAndTables(dto, dataset.getPath() + "/" + dataset.getId(), TABLE);
+        SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
+        request.setEntity(newEntity);
+
+        // Create OWNER permission
+        permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
+
+        return new TableModel(newEntity, OWNER.name());
+    }
+
+    private SchemasAndTables getDataset(CreateTableRequest request) {
+        ResourceQualifier datasetQualifier = request.getQualifier();
+        if (!datasetProtector.isEditAllowed(new ResourceQualifier(datasetQualifier.getSchema()))) {
+            throw new ForbiddenException(
+                    "Недостаточно прав для редактирования набора: " + datasetQualifier.getQualifier());
+        }
+
+        String datasetId = datasetQualifier.getSchema();
+        return schemasAndTablesRepository
+                .findByIdentifier(datasetId)
+                .orElseThrow(() -> new NotFoundException("Не найден набор данных: " + datasetId));
+    }
+
+    private void createTable(SchemaDto schema, String datasetId, TableCreateDto dto) {
+        try {
+            List<SimplePropertyDto> schemaProperties = schema.getProperties();
+            generateSystemAttributes(schemaProperties);
+
+            ddlTablesSpecial.create(datasetId, dto, schemaProperties);
+        } catch (BadSqlGrammarException e) {
+            String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
+                                       dto.getName(), schema.getName(), e.getMessage());
+            logError(msg, e);
+
+            throw new BadRequestException(msg);
+        }
+    }
+
+    private void validateSchema(SchemaDto schema) {
+        long geomField = schema.getProperties().stream().filter(SimplePropertyDto::isGeometry).count();
+        if (isNull(schema.getGeometryType()) || geomField < 1) {
+            throw new BadRequestException(
+                    "Отсутствует описание геометрии. Невозможно создать таблицу по схеме: " + schema.getName());
+        }
 
         List<ErrorInfo> errors = new ArrayList<>();
         schema.getProperties().forEach(property -> {
@@ -123,48 +178,6 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
             throw new BadRequestException("Argument validation exception", errors);
         }
-
-        try {
-            List<SimplePropertyDto> schemaProperties = schema.getProperties();
-            generateSystemAttributes(schemaProperties);
-
-            ddlTablesSpecial.create(datasetId, dto, schemaProperties);
-        } catch (BadSqlGrammarException e) {
-            String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
-                                       dto.getName(), schema.getName(), e.getMessage());
-            logError(msg, e);
-
-            throw new BadRequestException(msg);
-        }
-
-        // Add record to schemasAndTables table
-        LocalDateTime approveDate = Objects.nonNull(dto.getDocApproveDate())
-                ? dto.getDocApproveDate().atStartOfDay()
-                : null;
-
-        LocalDateTime docTerminationDate = Objects.nonNull(dto.getDocTerminationDate())
-                ? dto.getDocTerminationDate().atStartOfDay()
-                : null;
-
-        String path = dataset.getPath() + "/" + dataset.getId();
-        SchemasAndTables table = new SchemasAndTables(TABLE, dto, tableName, path);
-        table.setCrs(dto.getCrs());
-        table.setSchemaId(dto.getSchemaId());
-        table.setStatus(dto.getStatus());
-        table.setIsPublic(dto.getIsPublic());
-        table.setDocApproveDate(approveDate);
-        table.setDocTerminationDate(docTerminationDate);
-        table.setFiasId(dto.getFias__id());
-        table.setFiasAdress(dto.getFias__address());
-        table.setFiasOktmo(dto.getFias__oktmo());
-
-        SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
-        request.setEntity(newEntity);
-
-        // Create OWNER permission
-        permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
-
-        return new TableModel(newEntity, OWNER.name());
     }
 
     private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
@@ -184,15 +197,6 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
             return String.format("%s_%d_%s", sTableName, datasetId, UUID.randomUUID().toString().substring(0, 4));
         } else {
             return nameFromDto;
-        }
-    }
-
-    private void throwIfNoGeometryInSchema(SchemaDto schema) {
-        long geomField = schema.getProperties().stream().filter(SimplePropertyDto::isGeometry).count();
-        if (isNull(schema.getGeometryType()) || geomField < 1) {
-            throw new BadRequestException(String.format("Невозможно создать таблицу по схеме: %s. " +
-                                                                "Причина: отсутствует поле для геометрии.",
-                                                        schema.getName()));
         }
     }
 }

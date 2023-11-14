@@ -11,6 +11,7 @@ import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.sql.Types.VARCHAR;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
@@ -27,7 +28,7 @@ public class FtsDao {
     }
 
     public List<FtsItem> search(ResourceQualifier qualifier,
-                                List<ResourceQualifier> libraries,
+                                List<String> resources,
                                 String ecqlFilter,
                                 String text,
                                 float bound,
@@ -39,7 +40,7 @@ public class FtsDao {
                 "  d.table," +
                 "  d.id " +
                 "FROM " + qualifier.getTableQualifier() + " AS d " +
-                " " + buildWhere(ecqlFilter, bound) + " " +
+                " " + buildWhere(ecqlFilter, bound, resources) + " " +
                 "ORDER BY dist OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
 
         log.debug("fts by documents: [{}]", query);
@@ -51,12 +52,12 @@ public class FtsDao {
     }
 
     public Long countTotal(ResourceQualifier qualifier,
-                           List<ResourceQualifier> libraries,
+                           List<String> resources,
                            String ecqlFilter,
                            String text,
                            float bound) {
         String query = "SELECT count(*) FROM " + qualifier.getTableQualifier() + " AS d " +
-                " " + buildWhere(ecqlFilter, bound);
+                " " + buildWhere(ecqlFilter, bound, resources);
 
         log.debug("fts count total for documents: [{}]", query);
 
@@ -66,14 +67,26 @@ public class FtsDao {
         return pJdbcTemplate.queryForObject(query, parameters, Long.class);
     }
 
-    private String buildWhere(String ecqlFilter, float bound) {
+    private String buildWhere(String ecqlFilter, float bound, List<String> resources) {
+        String ftsCondition = String.format("(d.concatenated_data OPERATOR (public.<->) :searchedText < %s)", bound);
+
         String filter = buildWhereSection(ecqlFilter);
+
+        String result;
         if (filter.isBlank()) {
-            return String.format("WHERE (d.concatenated_data OPERATOR (public.<->) :searchedText < %s)",
-                                 bound);
+            result = "WHERE " + ftsCondition;
         } else {
-            return String.format("%s AND (d.concatenated_data OPERATOR (public.<->) :searchedText < %s)",
-                                 buildWhereSection(ecqlFilter), bound);
+            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
         }
+
+        if (!resources.isEmpty()) {
+            List<String> asString = resources.stream()
+                                             .map(s -> "'" + s + "'")
+                                             .collect(Collectors.toList());
+
+            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
+        }
+
+        return result;
     }
 }

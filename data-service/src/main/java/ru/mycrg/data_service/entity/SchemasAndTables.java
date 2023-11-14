@@ -3,12 +3,13 @@ package ru.mycrg.data_service.entity;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.dto.TableCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import static java.time.LocalDateTime.now;
+import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
 @Entity
 @Table(name = "schemas_and_tables")
@@ -68,6 +69,9 @@ public class SchemasAndTables {
     @Column(name = "is_public")
     private Boolean isPublic;
 
+    @Column(name = "ready_for_fts")
+    private Boolean readyForFts;
+
     @Column(name = "doc_termination_date")
     private LocalDateTime docTerminationDate;
 
@@ -84,22 +88,49 @@ public class SchemasAndTables {
         // Required by framework
     }
 
-    public SchemasAndTables(ResourceType resourceType, ResourceCreateDto dto, String identifier, String path) {
-        this.identifier = identifier;
-        this.title = dto.getTitle();
-        this.details = dto.getDetails();
-        this.documentType = dto.getDocumentType();
-        this.docApproveDate = Objects.nonNull(dto.getDocApproveDate())
-                ? dto.getDocApproveDate().atStartOfDay()
-                : null;
-        this.fiasOktmo = dto.getOktmo();
-        this.scale = dto.getScale();
-        this.isFolder = resourceType.equals(ResourceType.DATASET);
-        this.path = path;
+    public SchemasAndTables(ResourceType type, ResourceCreateDto dto, String identifier, String path) {
+        this(dto.getTitle(), dto.getDetails(), type.equals(DATASET), identifier, path, null, null, 0, now(), now(),
+             dto.getOktmo(), dto.getDocumentType(),
+             dto.getDocApproveDate() != null ? dto.getDocApproveDate().atStartOfDay() : null, dto.getScale(),
+             null, null, null, null, null, null, null);
+    }
 
-        this.itemsCount = 0;
-        this.createdAt = now();
-        this.lastModified = now();
+    public SchemasAndTables(TableCreateDto dto, String path, ResourceType type) {
+        this(dto.getTitle(), dto.getDetails(), type.equals(DATASET), dto.getName(), path, dto.getCrs(),
+             dto.getSchemaId(), 0, now(), now(), dto.getFias__oktmo(), dto.getDocumentType(),
+             dto.getDocApproveDate() != null ? dto.getDocApproveDate().atStartOfDay() : null, dto.getScale(),
+             dto.getStatus(), dto.getIsPublic(), dto.getReadyForFts(),
+             dto.getDocTerminationDate() != null ? dto.getDocTerminationDate().atStartOfDay() : null,
+             dto.getFias__address(), dto.getFias__id(), null);
+    }
+
+    public SchemasAndTables(String title, String details, boolean isFolder, String identifier, String path,
+                            String crs, String schemaId, Integer itemsCount, LocalDateTime createdAt,
+                            LocalDateTime lastModified, String fiasOktmo, String documentType,
+                            LocalDateTime docApproveDate, Integer scale, String status, Boolean isPublic,
+                            Boolean readyForFts, LocalDateTime docTerminationDate, String fiasAddress, Long fiasId,
+                            Integer gisogdRfPublicationOrder) {
+        this.title = title;
+        this.details = details;
+        this.isFolder = isFolder;
+        this.identifier = identifier;
+        this.path = path;
+        this.crs = crs;
+        this.schemaId = schemaId;
+        this.itemsCount = itemsCount;
+        this.createdAt = createdAt;
+        this.lastModified = lastModified;
+        this.fiasOktmo = fiasOktmo;
+        this.documentType = documentType;
+        this.docApproveDate = docApproveDate;
+        this.scale = scale;
+        this.status = status;
+        this.isPublic = isPublic;
+        this.readyForFts = readyForFts;
+        this.docTerminationDate = docTerminationDate;
+        this.fiasAddress = fiasAddress;
+        this.fiasId = fiasId;
+        this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
     }
 
     public long getId() {
@@ -272,5 +303,13 @@ public class SchemasAndTables {
 
     public void setGisogdRfPublicationOrder(Integer gisogdRfPublicationOrder) {
         this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
+    }
+
+    public Boolean getReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(Boolean readyForFts) {
+        this.readyForFts = readyForFts;
     }
 }

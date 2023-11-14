@@ -11,12 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 public class SchemaUtil {
+
+    private static final List<ValueType> typesReadyForFts = List.of(STRING, DATETIME, DOCUMENT, CHOICE, FILE, FIAS,
+                                                                    LOOKUP, UUID, USER, TEXT, URL);
 
     private SchemaUtil() {
         throw new IllegalStateException("Utility class");
@@ -45,6 +49,13 @@ public class SchemaUtil {
                          .filter(simplePropertyDto -> simplePropertyDto.getValueTypeAsEnum().equals(type))
                          .map(SimplePropertyDto::getName)
                          .findFirst();
+    }
+
+    public static List<String> getFtsProperties(SchemaDto schema) {
+        return schema.getProperties().stream()
+                     .filter(SchemaUtil::isSearchable)
+                     .map(SimplePropertyDto::getName)
+                     .collect(Collectors.toList());
     }
 
     public static Optional<SimplePropertyDto> getPropertyByName(SchemaDto schema, String name) {
@@ -120,5 +131,9 @@ public class SchemaUtil {
     private static boolean isPropertyExistByType(SchemaDto schema, ValueType type) {
         return schema.getProperties().stream()
                      .anyMatch(property -> property.getValueTypeAsEnum().equals(type));
+    }
+
+    private static boolean isSearchable(SimplePropertyDto prop) {
+        return typesReadyForFts.contains(ValueType.valueOf(prop.getValueType()));
     }
 }

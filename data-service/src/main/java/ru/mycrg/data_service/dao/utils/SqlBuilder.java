@@ -201,6 +201,8 @@ public class SqlBuilder {
 
     @NotNull
     public static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
+        Object defaultValue = attrDescription.getDefaultValue();
+
         String result;
         switch (attrDescription.getValueTypeAsEnum()) {
             case INT:
@@ -228,7 +230,12 @@ public class SqlBuilder {
             case URL:
             case TEXT:
             case LOOKUP:
-                result = attrDescription.getName() + " text";
+                if (defaultValue == null) {
+                    result = attrDescription.getName() + " text";
+                    break;
+                }
+
+                result = attrDescription.getName() + " text default '" + defaultValue + "'";
                 break;
             case GEOMETRY:
                 result = "shape public.geometry";
@@ -241,8 +248,7 @@ public class SqlBuilder {
                 result = attrDescription.getName() + " jsonb";
                 break;
             case BOOLEAN:
-                Object defaultValue = attrDescription.getDefaultValue();
-                if (Objects.isNull(defaultValue)) {
+                if (defaultValue == null) {
                     result = attrDescription.getName() + " boolean";
                     break;
                 }
@@ -273,8 +279,6 @@ public class SqlBuilder {
     private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
         ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
         if (foreignKeyType == null) {
-            log.warn("ForeignKeyType not set. Will be used string type");
-
             return attrDescription.getName() + " character varying(255)";
         }
 

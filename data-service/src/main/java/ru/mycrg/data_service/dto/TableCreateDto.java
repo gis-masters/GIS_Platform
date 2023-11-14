@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
@@ -29,7 +30,9 @@ public class TableCreateDto extends ResourceCreateDto {
     @Size(max = 100, message = "Не должно превышать 100 символов")
     private String status;
 
-    private Boolean isPublic;
+    private Boolean isPublic = false;
+
+    private Boolean readyForFts = false;
 
     private String fias__address;
 
@@ -127,13 +130,27 @@ public class TableCreateDto extends ResourceCreateDto {
         this.fias__id = fias__id;
     }
 
+    public Boolean getReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(Boolean readyForFts) {
+        this.readyForFts = readyForFts;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
                 "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
                 "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
+                "\"docTerminationDate\":" + (docTerminationDate == null ? "null" : docTerminationDate) + ", " +
                 "\"status\":" + (status == null ? "null" : "\"" + status + "\"") + ", " +
+                "\"isPublic\":" + (isPublic == null ? "null" : "\"" + isPublic + "\"") + ", " +
+                "\"readyForFts\":" + (readyForFts == null ? "null" : "\"" + readyForFts + "\"") + ", " +
+                "\"fias__address\":" + (fias__address == null ? "null" : "\"" + fias__address + "\"") + ", " +
+                "\"fias__oktmo\":" + (fias__oktmo == null ? "null" : "\"" + fias__oktmo + "\"") + ", " +
+                "\"fias__id\":" + (fias__id == null ? "null" : "\"" + fias__id + "\"") + ", " +
                 "\"additionalFields\":" + (additionalFields == null ? "null" : additionalFields) +
                 "}";
     }

@@ -217,7 +217,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     public void checkErrorMessageContainsErrorThatGeometryFieldIsMissing() {
         String message = response.jsonPath().get("message");
 
-        assertTrue(message.contains("Причина: отсутствует поле для геометрии"));
+        assertEquals("Отсутствует описание геометрии. Невозможно создать таблицу по схеме: dl_default_schema", message);
     }
 
     @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле отсутствует поле classid")

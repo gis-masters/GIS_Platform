@@ -32,19 +32,25 @@ public class SchemaExtractor {
     }
 
     public Optional<SchemaDto> get(ResourceQualifier qualifier) {
-        ResourceType type = qualifier.getType();
-        if (LIBRARY.equals(type) || LIBRARY_RECORD.equals(type)) {
-            return Optional.ofNullable(libraryService.getSchema(qualifier.getTable()));
-        } else if (TABLE.equals(type) || FEATURE.equals(type)) {
-            String schemaId = schemasAndTablesRepository
-                    .findSchemaIdByIdentifier(qualifier.getTable())
-                    .orElseThrow(() -> new NotFoundException(qualifier.getQualifier()));
+        try {
+            ResourceType type = qualifier.getType();
+            if (LIBRARY.equals(type) || LIBRARY_RECORD.equals(type)) {
+                return Optional.ofNullable(libraryService.getSchema(qualifier.getTable()));
+            } else if (TABLE.equals(type) || FEATURE.equals(type)) {
+                String schemaId = schemasAndTablesRepository
+                        .findSchemaIdByIdentifier(qualifier.getTable())
+                        .orElseThrow(() -> new NotFoundException(qualifier.getQualifier()));
 
-            return schemaService.getSchemaByName(schemaId);
-        } else if (TASK.equals(type)) {
-            return schemaService.getSchemaByName(TASKS_SCHEMA);
-        } else {
-            log.warn("Can't get schema. Unknown resource type: [{}]", qualifier.getQualifier());
+                return schemaService.getSchemaByName(schemaId);
+            } else if (TASK.equals(type)) {
+                return schemaService.getSchemaByName(TASKS_SCHEMA);
+            } else {
+                log.warn("Не удалось достать схему. Unknown resource type: [{}]", qualifier.getQualifier());
+
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            log.warn("Не удалось достать схему. Причина: {}", e.getMessage(), e);
 
             return Optional.empty();
         }

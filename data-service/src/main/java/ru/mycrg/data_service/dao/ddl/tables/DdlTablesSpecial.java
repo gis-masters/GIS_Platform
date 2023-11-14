@@ -54,7 +54,7 @@ public class DdlTablesSpecial {
             // Add index on GEOMETRY field
             String createIndexQuery = String.format("CREATE INDEX %s ON %s USING gist (shape)",
                                                     targetTable + "_idx", target);
-            log.debug("Create index query: [{}]", addConstraintQuery);
+            log.debug("Create index query: [{}]", createIndexQuery);
             jdbcTemplate.execute(createIndexQuery);
         }
     }
