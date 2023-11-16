@@ -1,24 +1,31 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
+import { cn } from '@bem-react/classname';
 
-import { FormViewValue } from '../../../Form/ViewValue/Form-ViewValue';
+import { Schema } from '../../../../services/data/schema/schema.models';
+import { cnExplorerWidgets } from '../Explorer-Widgets.base';
+import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerItemType } from '../../Explorer.models';
+import { SchemaProperties } from '../../../SchemaProperties/SchemaPropertiesList';
 
-const ExplorerWidgetsTypeSchema: FC<ExplorerWidgetsProps> = observer(({ className, item }) => {
-  return (
-    <div className={cnExplorerWidgets(null, [className])}>
-      <ExplorerInfoDescItem multiline>
-        <FormViewValue code>{JSON.stringify(item.payload, null, 2)}</FormViewValue>
-      </ExplorerInfoDescItem>
-    </div>
-  );
-});
+import '!style-loader!css-loader!sass-loader!../../InfoBoxTitle/Explorer-InfoBoxTitle.scss';
 
-export const withTypeSchema = withBemMod<ExplorerWidgetsProps, ExplorerWidgetsProps>(
+const cnExplorerInfoBoxTitle = cn('Explorer', 'InfoBoxTitle');
+
+interface ExplorerWidgetsTypeSchemaProps {
+  className: string;
+  item: ExplorerItemData<Schema>;
+}
+
+const ExplorerWidgetsTypeSchema: FC<ExplorerWidgetsTypeSchemaProps> = observer(({ className, item }) => (
+  <div className={cnExplorerWidgets(null, [className])}>
+    <span className={cnExplorerInfoBoxTitle()}>Свойства:</span>
+    <SchemaProperties schema={item.payload} />
+  </div>
+));
+
+export const withTypeSchema = withBemMod<ExplorerWidgetsTypeSchemaProps>(
   cnExplorerWidgets(),
   { type: ExplorerItemType.SCHEMA },
   () => ExplorerWidgetsTypeSchema

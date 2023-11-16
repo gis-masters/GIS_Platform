@@ -18,14 +18,18 @@ const allTypesWithAsTitleSchema: Schema = {
   })
 };
 
-When('я открываю карточку редактирования схемы данных', async () => {
+When('я открываю окно редактирования схемы данных', async () => {
   await schemaActionsBlock.clickEditBtn();
 });
 
-When('в карточке редактирования схемы данных добавляю в схему атрибут asTitle в поле field_int', async () => {
+When('в окне редактирования схемы данных добавляю в схему атрибут asTitle в поле field_int', async () => {
   await schemaActionsBlock.updateSchema(JSON.stringify(allTypesWithAsTitleSchema));
 });
 
-Then('схема, которая была обновлена, не потеряла данные при сохранении', async () => {
-  await expect(await schemaActionsBlock.getSelectedSchema()).toEqual(allTypesWithAsTitleSchema);
+When('в окне редактирования схемы данных нажимаю кнопку `Сохранить`', async () => {
+  await schemaActionsBlock.clickSaveBtn();
+});
+
+Then('в окне редактирования схемы в поле field_int содержится атрибут asTitle', async () => {
+  await expect(await schemaActionsBlock.getEditingSchema()).toEqual(allTypesWithAsTitleSchema);
 });

@@ -1,14 +1,13 @@
+import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 
 class SchemaActionsBlock extends Block {
   selectors = {
     container: '.SchemaActions',
     editBtn: '.SchemaActions .SchemaActions-Edit',
-    dialogEdit: '.SchemaActions-EditDialog',
-    dialogEditYes: '.SchemaActions-EditDialogYes',
-    viewValue: '.Form-ViewValue_code'
+    editDialog: '.SchemaActions-EditDialog',
+    editDialogYes: '.SchemaActions-EditDialogYes'
   };
 
   async clickEditBtn(): Promise<void> {
@@ -18,25 +17,25 @@ class SchemaActionsBlock extends Block {
   }
 
   async updateSchema(updatedSchema: string): Promise<void> {
-    const $editDialogYes = await this.$('dialogEditYes');
-    await $editDialogYes.waitForDisplayed({ timeout: 10_000 });
-
     await browser.pause(500); // анимация появления диалога
 
-    const formBlock = new FormBlock(this.selectors.dialogEdit);
+    const formBlock = new FormBlock(this.selectors.editDialog);
     await formBlock.replaceStringValue('Схема', updatedSchema);
-
-    await $editDialogYes.click();
-    await $editDialogYes.waitForDisplayed({ reverse: true });
   }
 
-  async getSelectedSchema(): Promise<Schema> {
-    const $viewValue = await this.$('viewValue');
-    await $viewValue.waitForDisplayed();
+  async getEditingSchema(): Promise<Schema> {
+    await browser.pause(500); // анимация появления диалога
 
-    const updatedSchema = await $viewValue.getText();
+    const formBlock = new FormBlock(this.selectors.editDialog);
 
-    return JSON.parse(updatedSchema) as Schema;
+    return JSON.parse(await formBlock.getStringValue('Схема')) as Schema;
+  }
+
+  async clickSaveBtn(): Promise<void> {
+    const $editDialogYes = await this.$('editDialogYes');
+    await $editDialogYes.waitForDisplayed({ timeout: 10_000 });
+    await $editDialogYes.click();
+    await $editDialogYes.waitForDisplayed({ reverse: true });
   }
 }
 
