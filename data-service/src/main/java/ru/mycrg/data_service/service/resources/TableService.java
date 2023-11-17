@@ -21,6 +21,7 @@ import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -49,11 +50,11 @@ public class TableService {
                         BasePermissionsRepository permissionsRepository,
                         BaseDao baseDao,
                         SystemAttributeHandler systemAttributeHandler) {
-        this.authenticationFacade = authenticationFacade;
-        this.schemasAndTablesRepository = schemasAndTablesRepository;
-        this.permissionsRepository = permissionsRepository;
         this.baseDao = baseDao;
+        this.authenticationFacade = authenticationFacade;
+        this.permissionsRepository = permissionsRepository;
         this.systemAttributeHandler = systemAttributeHandler;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     public List<GisogdData> getTablesCreatedBySchema(String schemaId) {
@@ -103,6 +104,31 @@ public class TableService {
         }
 
         return new PageImpl<>(unmodifiableList(allowedTables), pageable, total);
+    }
+
+    public List<TableModel> getAll(SchemasAndTables dataset) {
+        List<TableModel> allowedTables;
+        if (authenticationFacade.isOrganizationAdmin()) {
+            allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                            addPathToDataset(dataset.pathTo()),
+                                            TableModel.class);
+        } else {
+            ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, dataset.getIdentifier());
+            Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
+            if (roleForParentDataset.isPresent()) {
+                allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                addPathToDataset(dataset.pathTo()),
+                                                TableModel.class);
+            } else {
+                allowedTables = permissionsRepository
+                        .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), null, null)
+                        .stream()
+                        .map(record -> new TableModel(record.getContent()))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return allowedTables;
     }
 
     public Long getAllowedTablesCount(String datasetId) {
@@ -172,6 +198,11 @@ public class TableService {
             ecqlFilter = ecqlFilter + " AND path = '" + pathTo + "'";
         }
         return ecqlFilter;
+    }
+
+    @NotNull
+    private String addPathToDataset(String path) {
+        return addPathToDataset(null, path);
     }
 
     @NotNull

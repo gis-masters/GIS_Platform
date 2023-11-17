@@ -12,6 +12,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
@@ -87,6 +88,18 @@ public class DatasetService {
                     .getTotalByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
 
             return new PageImpl<>(datasetsWithItemsCount, pageable, total);
+        }
+    }
+
+    public List<SchemasAndTables> getAll() {
+        if (authenticationFacade.isOrganizationAdmin()) {
+            return baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER, null, SchemasAndTables.class);
+        } else {
+            return permissionsRepository
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, null, null)
+                    .stream()
+                    .map(SchemasAndTablesMapper::mapToEntity)
+                    .collect(Collectors.toList());
         }
     }
 

@@ -23,6 +23,10 @@ public interface IRecord {
     String getAsString(String field);
 
     default boolean isFolder() {
-        return Boolean.parseBoolean(getAsString(IS_FOLDER.getName()));
+        return asBoolean(IS_FOLDER.getName());
+    }
+
+    default boolean asBoolean(String field) {
+        return Boolean.parseBoolean(getAsString(field));
     }
 }

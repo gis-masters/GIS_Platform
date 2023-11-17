@@ -121,6 +121,23 @@ public class BaseDao {
         return pJdbcTemplate.query(query, params, rowMapper);
     }
 
+    public <T> List<T> findAll(ResourceQualifier qualifier,
+                               String ecqlFilter,
+                               Class<T> clazz) {
+        return findAll(qualifier, ecqlFilter, new BeanPropertyRowMapper<>(clazz));
+    }
+
+    public <T> List<T> findAll(ResourceQualifier qualifier,
+                               String ecqlFilter,
+                               RowMapper<T> rowMapper) {
+        String query = "SELECT * FROM " + qualifier.getTableQualifier() +
+                " " + buildWhereSection(ecqlFilter);
+
+        log.debug("Query find all with filter: [{}]", query);
+
+        return pJdbcTemplate.query(query, rowMapper);
+    }
+
     public Long getTotal(ResourceQualifier qualifier, String ecqlFilter) {
         String query = String.format("SELECT count(*) FROM %s %s",
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));

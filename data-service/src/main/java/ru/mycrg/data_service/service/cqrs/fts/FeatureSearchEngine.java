@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
@@ -12,9 +13,12 @@ import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.service.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
+import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -36,13 +40,19 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     private final Logger log = LoggerFactory.getLogger(FeatureSearchEngine.class);
 
     private final FtsDao ftsDao;
+    private final TableService tableService;
+    private final DatasetService datasetService;
     private final SchemaExtractor schemaExtractor;
     private final SpatialRecordsDao spatialRecordsDao;
 
     public FeatureSearchEngine(FtsDao ftsDao,
+                               TableService tableService,
+                               DatasetService datasetService,
                                SchemaExtractor schemaExtractor,
                                SpatialRecordsDao spatialRecordsDao) {
         this.ftsDao = ftsDao;
+        this.tableService = tableService;
+        this.datasetService = datasetService;
         this.schemaExtractor = schemaExtractor;
         this.spatialRecordsDao = spatialRecordsDao;
     }
@@ -50,11 +60,17 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     @Override
     public Page<FtsResponseDto> search(FtsRequest request) {
         log.info("FeatureSearcher: {}", request);
+        Pageable pageable = request.getPageable();
         FtsRequestDto dto = request.getFtsRequestDto();
 
-        List<FtsItem> founded = ftsDao.search(LAYERS, new ArrayList<>(), null, dto.getText(),
-                                              getBound(dto), request.getPageable());
-        Long total = ftsDao.countTotal(LAYERS, new ArrayList<>(), dto.getEcqlFilter(), dto.getText(), getBound(dto));
+        List<ResourceQualifier> sources = getAllowedSources(dto);
+        if (sources.isEmpty()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        List<String> tableNames = sources.stream().map(ResourceQualifier::getTable).collect(Collectors.toList());
+        List<FtsItem> founded = ftsDao.search(LAYERS, tableNames, null, dto.getText(), getBound(dto), pageable);
+        Long total = ftsDao.countTotal(LAYERS, new ArrayList<>(), null, dto.getText(), getBound(dto));
 
         List<FtsResponseDto> result = fetchEntities(founded);
 
@@ -64,6 +80,45 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     @Override
     public FtsType getType() {
         return FEATURE;
+    }
+
+    @NotNull
+    private List<ResourceQualifier> getAllowedSources(FtsRequestDto dto) {
+        List<SchemasAndTables> allowedDatasets = datasetService.getAll();
+        List<ResourceQualifier> allowedTables = getAllowedTables(allowedDatasets);
+
+        List<ResourceQualifier> allowedSources = new ArrayList<>();
+        List<Map<String, Object>> requestedSources = dto.getSources();
+        if (requestedSources == null || requestedSources.isEmpty()) {
+            return allowedTables;
+        }
+
+        requestedSources.forEach(data -> {
+            String dataset = String.valueOf(data.get("dataset"));
+            String table = String.valueOf(data.get("table"));
+            allowedTables.stream()
+                         .filter(qualifier -> dataset.equalsIgnoreCase(qualifier.getSchema())
+                                 && table.equalsIgnoreCase(qualifier.getTable()))
+                         .findFirst()
+                         .ifPresent(allowedSources::add);
+        });
+
+        return allowedSources;
+    }
+
+    private List<ResourceQualifier> getAllowedTables(List<SchemasAndTables> allowedDatasets) {
+        List<ResourceQualifier> result = new ArrayList<>();
+        allowedDatasets.forEach(dataset -> {
+            List<ResourceQualifier> allowedTables = tableService
+                    .getAll(dataset)
+                    .stream()
+                    .map(table -> new ResourceQualifier(dataset.getIdentifier(), table.getIdentifier()))
+                    .collect(Collectors.toList());
+
+            result.addAll(allowedTables);
+        });
+
+        return result;
     }
 
     private List<FtsResponseDto> fetchEntities(List<FtsItem> tables) {

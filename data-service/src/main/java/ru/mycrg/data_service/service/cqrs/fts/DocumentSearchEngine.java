@@ -59,7 +59,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         FtsRequestDto dto = request.getFtsRequestDto();
         String ecqlFilter = dto.getEcqlFilter();
 
-        List<ResourceQualifier> sources = getSources(dto);
+        List<ResourceQualifier> sources = getAllowedSources(dto);
         if (sources.isEmpty()) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
@@ -79,29 +79,29 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private List<ResourceQualifier> getSources(FtsRequestDto dto) {
-        List<ResourceQualifier> result = new ArrayList<>();
+    private List<ResourceQualifier> getAllowedSources(FtsRequestDto dto) {
+        List<ResourceQualifier> allowedSources = new ArrayList<>();
 
-        List<ResourceQualifier> allowedSources = librariesService
-                .getAll(dto.getEcqlFilter())
+        List<ResourceQualifier> allowedLibraries = librariesService
+                .getAll(null)
                 .stream()
                 .map(library -> new ResourceQualifier(SYSTEM_SCHEMA_NAME, library.getTableName(), LIBRARY))
                 .collect(Collectors.toList());
 
         List<Map<String, Object>> requestedSources = dto.getSources();
         if (requestedSources == null || requestedSources.isEmpty()) {
-            return allowedSources;
+            return allowedLibraries;
         }
 
         requestedSources.forEach(data -> {
             String library = String.valueOf(data.get("library"));
-            allowedSources.stream()
+            allowedLibraries.stream()
                           .filter(qualifier -> library.equalsIgnoreCase(qualifier.getTable()))
                           .findFirst()
-                          .ifPresent(result::add);
+                          .ifPresent(allowedSources::add);
         });
 
-        return result;
+        return allowedSources;
     }
 
     private List<FtsResponseDto> fetchEntities(List<FtsItem> items) {
