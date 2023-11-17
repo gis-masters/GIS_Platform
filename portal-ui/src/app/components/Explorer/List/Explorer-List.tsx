@@ -89,7 +89,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
 
     return {
       item,
-      title: getTitle(item),
+      title: getTitle(item, store),
       meta: getMeta(item),
       icon: getIcon(item),
       selected: selectedItem,
@@ -121,9 +121,13 @@ export class ExplorerList extends Component<ExplorerListProps> {
     const container = this.thisRef.current;
     const selected = this.selectedItemRef.current;
 
-    if (selected && container.scrollTop > selected.offsetTop) {
+    if (selected && container && container.scrollTop > selected.offsetTop) {
       container.scrollTo({ top: selected.offsetTop, behavior: 'smooth' });
-    } else if (selected && container.scrollTop + container.offsetHeight < selected.offsetTop + selected.offsetHeight) {
+    } else if (
+      selected &&
+      container &&
+      container.scrollTop + container.offsetHeight < selected.offsetTop + selected.offsetHeight
+    ) {
       container.scrollTo({
         top:
           container.scrollTop +

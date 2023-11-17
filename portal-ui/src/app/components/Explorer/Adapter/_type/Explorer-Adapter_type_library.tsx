@@ -196,14 +196,6 @@ export class ExplorerAdapterTypeLibrary {
     return SortOrder.DESC;
   }
 
-  static getChildrenFilterField(): string {
-    return 'title';
-  }
-
-  static getChildrenFilterLabel(): string {
-    return 'Фильтр по названию';
-  }
-
   static async getToolbarActions(
     item: ExplorerItemData<Library>,
     store: ExplorerStore,
@@ -227,6 +219,10 @@ export class ExplorerAdapterTypeLibrary {
         </>
       )
     );
+  }
+
+  static hasSearch(): boolean {
+    return true;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {

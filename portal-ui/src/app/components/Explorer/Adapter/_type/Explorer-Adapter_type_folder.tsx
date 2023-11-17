@@ -197,14 +197,6 @@ export class ExplorerAdapterTypeFolder {
     return SortOrder.DESC;
   }
 
-  static getChildrenFilterField(): string {
-    return 'title';
-  }
-
-  static getChildrenFilterLabel(): string {
-    return 'Фильтр по названию';
-  }
-
   static async getToolbarActions(
     item: ExplorerItemData<LibraryRecord>,
     store: ExplorerStore,
@@ -220,7 +212,7 @@ export class ExplorerAdapterTypeFolder {
     const createHandler = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
-    const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library;
+    const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY)?.payload as Library;
     const path = store?.path
       .filter(({ type }) => type === ExplorerItemType.FOLDER)
       .map(({ payload }) => (payload as LibraryRecord).id);
@@ -236,6 +228,10 @@ export class ExplorerAdapterTypeFolder {
         </>
       )
     );
+  }
+
+  static hasSearch(): boolean {
+    return true;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {

@@ -1,0 +1,9 @@
+.SearchResultDialog {
+  &-Explorer {
+    max-height: calc(100vh - 200px);
+  }
+
+  .MuiDialogContent-root {
+    padding: 0 24px;
+  }
+}

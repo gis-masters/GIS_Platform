@@ -359,7 +359,8 @@ export default class Explorer extends Component<ExplorerProps> {
 
       for (let i = 1; i < pathUrlItems.length; i++) {
         const [type, id] = pathUrlItems[i];
-        const child = type === ExplorerItemType.NONE ? emptyItem : await getChildById(path[i - 1], id, type);
+        const child =
+          type === ExplorerItemType.NONE ? emptyItem : await getChildById(path[i - 1], id, type, this.store);
         if (child) {
           path[i] = child;
         } else {

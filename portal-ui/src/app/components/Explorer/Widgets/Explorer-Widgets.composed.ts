@@ -11,6 +11,7 @@ import { withTypeTable } from './_type/Explorer-Widgets_type_table';
 import { withTypeProject } from './_type/Explorer-Widgets_type_project';
 import { withTypeDocumentVersion } from './_type/Explorer-Widgets_type_documentVersion';
 import { withTypeTaskHistory } from './_type/Explorer-Widgets_type_taskHistory';
+import { withTypeSearchItem } from './_type/Explorer-Widgets_type_searchItem';
 
 export const ExplorerWidgets = compose(
   withTypeBasemap,
@@ -20,6 +21,7 @@ export const ExplorerWidgets = compose(
   withTypeLibrary,
   withTypeSchema,
   withTypeTable,
+  withTypeSearchItem,
   withTypeDocumentVersion,
   withTypeTaskHistory,
   withTypeProject

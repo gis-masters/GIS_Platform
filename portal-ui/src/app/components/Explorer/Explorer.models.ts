@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import { DataChangeEventDetail } from '../../services/communication.service';
+import { FtsType } from '../../../server-types/common-contracts';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
@@ -18,6 +19,7 @@ export type ExplorerRole =
   | 'DocumentVersions'
   | 'SelectFolder'
   | 'taskJournalHistory'
+  | 'SearchResultDialog'
   | '';
 
 export enum ExplorerItemType {
@@ -48,6 +50,8 @@ export enum ExplorerItemType {
   TASK_HISTORY_ROOT = 'thr',
   TASK_HISTORY = 'th',
   MESSAGES_REGISTRIES_ROOT = 'mrr',
+  SEARCH_RESULT_ROOT = 'srr',
+  SEARCH_ITEM = 'si',
   ROOT = 'r'
 }
 
@@ -65,6 +69,13 @@ export enum ExplorerItemEntityTypeTitle {
 export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
   type: ExplorerItemType;
   payload: T;
+}
+
+export interface ExplorerSearchValue {
+  searchValue?: string;
+  path?: ExplorerItemData[];
+  breadcrumbSearchValue?: string;
+  type?: FtsType;
 }
 
 export type CustomFilters = Partial<Record<ExplorerItemType, FilterQuery>>;
@@ -102,7 +113,7 @@ export interface Adapter<
   C = ExplorerItemPayloads[keyof ExplorerItemPayloads]
 > {
   getId: (item: ExplorerItemData<T>) => string;
-  getTitle: (item: ExplorerItemData<T>) => ReactNode;
+  getTitle: (item: ExplorerItemData<T>, store: ExplorerStore) => ReactNode;
   getMeta: (item: ExplorerItemData<T>) => string;
   getDescription?: (item: ExplorerItemData<T>) => ReactNode;
   getIcon?: (item: ExplorerItemData<T>) => ReactNode;
@@ -129,7 +140,8 @@ export interface Adapter<
   getChildById?: (
     item: ExplorerItemData<T>,
     id: string,
-    type: ExplorerItemType
+    type: ExplorerItemType,
+    store: ExplorerStore
   ) => ExplorerItemData<C> | Promise<ExplorerItemData<C>> | undefined;
   getChildrenSortDefaultValue?: (item: ExplorerItemData<T>) => string;
   getChildrenSortDefaultOrder?: (item: ExplorerItemData<T>) => SortOrder;
@@ -143,4 +155,5 @@ export interface Adapter<
   ) => Promise<ReactNode> | ReactNode;
   getRefreshEmitters?: (item: ExplorerItemData<T>) => Emitter<DataChangeEventDetail<unknown>>[];
   getActions?: (item: ExplorerItemData<T>) => ReactNode;
+  hasSearch?: () => boolean;
 }

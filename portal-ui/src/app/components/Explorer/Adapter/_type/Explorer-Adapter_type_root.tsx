@@ -126,5 +126,11 @@ export class ExplorerAdapterTypeRoot {
         payload: null
       };
     }
+    if (id === 'searchResultRoot') {
+      return {
+        type: ExplorerItemType.SEARCH_RESULT_ROOT,
+        payload: null
+      };
+    }
   }
 }

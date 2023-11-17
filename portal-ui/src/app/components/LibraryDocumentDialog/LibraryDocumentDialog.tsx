@@ -43,12 +43,13 @@ export const LibraryDocumentDialog: FC<LibraryDocumentDialogProps> = ({ document
     </DialogContent>
 
     <DialogActions>
-      {deletedDocument ? (
+      {deletedDocument && (
         <LibraryDeletedDocumentActions forDialog onDialogClose={onClose} hideOpen document={document} as='button' />
-      ) : (
+      )}
+      {!deletedDocument && (
         <RegistryConsumer id='common'>
           {({ LibraryDocumentActions }: CommonDiRegistry) => (
-            <LibraryDocumentActions document={document} as='button' forDialog onDialogClose={onClose} />
+            <LibraryDocumentActions document={document} as='iconButton' forDialog onDialogClose={onClose} />
           )}
         </RegistryConsumer>
       )}

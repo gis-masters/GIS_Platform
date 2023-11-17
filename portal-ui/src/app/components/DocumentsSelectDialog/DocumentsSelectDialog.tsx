@@ -101,8 +101,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                     customFilters={
                       (librariesTableNames?.length || 0) > 1
                         ? {
-                            [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames || [] } }
-                          }
+                          [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames || [] } }
+                        }
                         : undefined
                     }
                     disabledTester={this.testForDisabled}
@@ -180,11 +180,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
 
   @computed
   private get showRegistryBtn(): boolean {
-    if (this.path) {
-      return this.path?.length > 2; // если мы находимся внутри библиотеки то доступен переход в табличный вид
-    }
-
-    return false;
+    // если мы находимся внутри библиотеки то доступен переход в табличный вид
+    return !!(this.path && this.path.some(item => item.type === 'lib'));
   }
 
   @action

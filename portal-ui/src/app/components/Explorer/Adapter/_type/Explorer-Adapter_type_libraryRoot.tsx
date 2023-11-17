@@ -112,20 +112,16 @@ export class ExplorerAdapterTypeLibraryRoot {
     return SortOrder.ASC;
   }
 
-  static getChildrenFilterField(): string {
-    return 'title';
-  }
-
-  static getChildrenFilterLabel(): string {
-    return 'Фильтр по названию';
-  }
-
   static getToolbarActions(item: ExplorerItemData<null>, store: ExplorerStore): ReactNode {
     if (currentUser.isAdmin && store.explorerRole === 'dm') {
       return <CreateLibrary />;
     }
 
     return null;
+  }
+
+  static hasSearch(): boolean {
+    return true;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Library>>[] {

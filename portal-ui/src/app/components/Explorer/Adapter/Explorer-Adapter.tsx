@@ -33,6 +33,8 @@ import { ExplorerAdapterTypeDocumentVersion } from './_type/Explorer-Adapter_typ
 import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
 import { ExplorerAdapterTypeTaskHistoryRoot } from './_type/Explorer-Adapter_type_taskHistoryRoot';
 import { ExplorerAdapterTypeTaskHistory } from './_type/Explorer-Adapter_type_taskHistory';
+import { ExplorerAdapterTypeSearchResultRoot } from './_type/Explorer-Adapter_type_searchResultRoot';
+import { ExplorerAdapterTypeSearchItem } from './_type/Explorer-Adapter_type_searchItem';
 import { ExplorerService } from '../Explorer.service';
 
 const adapters: Record<keyof ExplorerItemPayloads, Adapter<ValueOf<ExplorerItemPayloads>>> = {
@@ -58,7 +60,9 @@ const adapters: Record<keyof ExplorerItemPayloads, Adapter<ValueOf<ExplorerItemP
   [ExplorerItemType.DOCUMENT_VERSION]: ExplorerAdapterTypeDocumentVersion,
   [ExplorerItemType.TASKS_ROOT]: ExplorerAdapterTypeTasksRoot,
   [ExplorerItemType.TASK_HISTORY_ROOT]: ExplorerAdapterTypeTaskHistoryRoot,
-  [ExplorerItemType.TASK_HISTORY]: ExplorerAdapterTypeTaskHistory
+  [ExplorerItemType.TASK_HISTORY]: ExplorerAdapterTypeTaskHistory,
+  [ExplorerItemType.SEARCH_RESULT_ROOT]: ExplorerAdapterTypeSearchResultRoot,
+  [ExplorerItemType.SEARCH_ITEM]: ExplorerAdapterTypeSearchItem
 };
 
 const lackOfRightMessage = 'Недостаточно прав';
@@ -68,8 +72,8 @@ export function getId(item: ExplorerItemData): string {
   return adapters[item.type].getId(item);
 }
 
-export function getTitle(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].getTitle(item);
+export function getTitle(item: ExplorerItemData, store?: ExplorerStore): ReactNode {
+  return adapters[item.type].getTitle(item, store);
 }
 
 export function getDescription(item: ExplorerItemData): ReactNode {
@@ -166,11 +170,12 @@ export function getChildrenSortItems(item: ExplorerItemData): SortItem[] | undef
 export async function getChildById(
   item: ExplorerItemData,
   id: string,
-  type: ExplorerItemType
+  type: ExplorerItemType,
+  store: ExplorerStore
 ): Promise<ExplorerItemData | undefined> {
   if (adapters[item.type].getChildById) {
     try {
-      return await adapters[item.type].getChildById(item, id, type);
+      return await adapters[item.type].getChildById(item, id, type, store);
     } catch (error) {
       const err = error as AxiosError;
 
@@ -227,4 +232,8 @@ export function getRefreshEmitters(item: ExplorerItemData): Emitter<DataChangeEv
 
 export function getActions(item: ExplorerItemData): ReactNode | undefined {
   return adapters[item.type].getActions && adapters[item.type].getActions(item);
+}
+
+export function hasSearch(item: ExplorerItemData): boolean {
+  return adapters[item.type].hasSearch && adapters[item.type].hasSearch();
 }
