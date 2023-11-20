@@ -95,6 +95,7 @@ public class CrgMigrationHandler {
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER,
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
                 ScriptUtils.executeSqlScript(connection, getResource("M29__addFtsTables.sql"));
+                ScriptUtils.executeSqlScript(connection, getResource("M30__addIndexesForPermissions.sql"));
             }
         } catch (Exception e) {
             log.error("Не удалось выполнить миграции в полном объеме для базы данных: {} По причине: {}",
