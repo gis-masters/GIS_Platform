@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<QueryResult xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <smevMetadata>
+        <MessageId>f730f678-7edc-11ee-9726-0242ac120007</MessageId>
+        <TransactionCode>019aa9d3-6173-4b6f-8fc7-b9e5b1c398c0</TransactionCode>
+        <OriginalMessageID>53c79e1a-7edc-11ee-9cdc-5e0899b27aec</OriginalMessageID>
+        <Sender>777002</Sender>
+        <Recipient>U629301</Recipient>
+        <SendingDate>2023-11-09T08:50:30.056Z</SendingDate>
+    </smevMetadata>
+    <Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ResponseMessageType">
+        <messageType>PrimaryMessage</messageType>
+        <ResponseMetadata>
+            <clientId>2a88c27e-96d6-406b-9d33-30c5277ab3c6</clientId>
+            <replyToClientId>1009f24d-077e-26e0-bfc7-02c467a42970</replyToClientId>
+        </ResponseMetadata>
+        <ResponseContent>
+            <content>
+                <MessagePrimaryContent>1</MessagePrimaryContent>
+            </content>
+        </ResponseContent>
+    </Message>
+</QueryResult>

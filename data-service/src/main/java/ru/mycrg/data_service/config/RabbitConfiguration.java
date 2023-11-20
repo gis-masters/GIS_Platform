@@ -4,6 +4,7 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -71,8 +72,15 @@ public class RabbitConfiguration {
     @Bean public Queue gisogdPublicationQueue() { return new Queue(GISOGD_PUBLICATION_QUEUE);}
     @Bean public Queue gisogdPublicationResponseQueue() { return new Queue(GISOGD_PUBLICATION_RESPONSE_QUEUE);}
 
-    @Bean public Queue gisogdAuditQueue() { return new Queue(GISOGD_AUDIT_QUEUE);}
-    @Bean public Queue gisogdAuditResponseQueue() { return new Queue(GISOGD_AUDIT_RESPONSE_QUEUE);}
+    @Bean
+    public Queue adapterReceiveQueue(Smev3Config smev3Config) {
+        return new Queue(smev3Config.getMnemonicIS() + SMEV3_RECEIVE_QUEUE);
+    }
+
+    @Bean
+    public Queue adapterSendQueue(Smev3Config smev3Config) {
+        return new Queue(smev3Config.getMnemonicIS() + SMEV3_SEND_QUEUE);
+    }
 
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
@@ -85,5 +93,12 @@ public class RabbitConfiguration {
         rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
 
         return rabbitTemplate;
+    }
+    @Bean
+    public RabbitTemplate rabbitSmevAdapterTemplate(Smev3Config smev3Config) {
+        var factory = new CachingConnectionFactory(smev3Config.getAmqpHost());
+        factory.setUsername(smev3Config.getAmqpUsername());
+        factory.setPassword(smev3Config.getAmqpPassword());
+        return new RabbitTemplate(factory);
     }
 }

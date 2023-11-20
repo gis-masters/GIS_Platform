@@ -68,3 +68,9 @@ crg-options:
     gisogd-rf-token: https://id-gisogd.npc.ba/oidc/connect/token
     gisogd-rf-client-id: gisogdrfclient1
     gisogd-rf-client-secret: XDZ8XHY8TPR2WKXR6MHPTJ0MH0V4RT9QGHZOB90D6SQG9VNA67Y2QQJ4R
+    smev3:
+      mnemonic: U629301
+      amqp:
+        host: 10.10.10.32
+        username: admin
+        password: admin

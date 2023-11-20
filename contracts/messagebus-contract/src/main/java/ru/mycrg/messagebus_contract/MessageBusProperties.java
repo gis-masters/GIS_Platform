@@ -78,4 +78,8 @@ public class MessageBusProperties {
 
     public static final String GISOGD_AUDIT_QUEUE = "gisogdAuditQueue";
     public static final String GISOGD_AUDIT_RESPONSE_QUEUE = "gisogdAuditResponseQueue";
+
+    // SMEV 3 adapter
+    public static final String SMEV3_RECEIVE_QUEUE = "_QUEUE_RECEIVE";
+    public static final String SMEV3_SEND_QUEUE = "_QUEUE_SEND";
 }
