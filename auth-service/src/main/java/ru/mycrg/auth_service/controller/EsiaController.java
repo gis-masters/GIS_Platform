@@ -27,6 +27,8 @@ import static org.springframework.http.HttpStatus.FOUND;
 @RestController
 public class EsiaController {
 
+    public static final String ESIA = "esia";
+
     private final Logger log = LoggerFactory.getLogger(EsiaController.class);
 
     private final Environment environment;
@@ -85,10 +87,12 @@ public class EsiaController {
                            log.debug("EsiaUserInfo: {}", esiaUser);
 
                            if (!userService.isExist(esiaUser.getEmail())) {
-                               createUser(orgId, esiaUser).ifPresent(newUser -> {
+                               String accessToken = authService.getRootAccessToken();
+
+                               createUser(orgId, esiaUser, accessToken).ifPresent(newUser -> {
                                    waitUserCreation();
 
-                                   joinToGroup(orgId, groupId, newUser);
+                                   joinToGroup(orgId, groupId, newUser, accessToken);
                                });
                            }
 
@@ -130,17 +134,17 @@ public class EsiaController {
         return new ResponseEntity<>(headers, FOUND);
     }
 
-    private Optional<UserProjection> createUser(Long orgId, EsiaUserInfo esiaUser) {
+    private Optional<UserProjection> createUser(Long orgId, EsiaUserInfo esiaUser, String accessToken) {
         try {
             UserCreateDto dto = new UserCreateDto(esiaUser.getFirstName(),
                                                   esiaUser.getLastName(),
                                                   esiaUser.getEmail(),
                                                   "Fiz" + esiaUser.getSbjId(),
                                                   esiaUser.getMiddleName(),
-                                                  "esia",
+                                                  ESIA,
                                                   "+79781111111");
 
-            UserProjection userProjection = userService.create(dto, orgId);
+            UserProjection userProjection = userService.create(dto, orgId, accessToken, ESIA, true);
 
             return Optional.ofNullable(userProjection);
         } catch (Exception e) {
@@ -150,9 +154,9 @@ public class EsiaController {
         return Optional.empty();
     }
 
-    private void joinToGroup(Long orgId, Long groupId, UserProjection newUser) {
+    private void joinToGroup(Long orgId, Long groupId, UserProjection newUser, String accessToken) {
         try {
-            groupService.addUser(orgId, groupId, newUser.getId());
+            groupService.addUser(orgId, groupId, newUser.getId(), ESIA, accessToken);
         } catch (Exception e) {
             log.error("При авторизации через госулсуги не удалось добавить пользователя в группу. " +
                               "Убедитесь что указали корректный ID группы. Текущий GROUP_ID: {}. Reason: {}",

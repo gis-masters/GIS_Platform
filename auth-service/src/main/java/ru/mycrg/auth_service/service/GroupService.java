@@ -114,7 +114,18 @@ public class GroupService {
         return groupRepository.findByOrganizationId(orgId, pageable);
     }
 
-    public void addUser(Long orgId, Long groupId, Long userId) {
+    /**
+     * Use only this authentication context.
+     */
+    public void addUser(Long groupId, Long userId) {
+        addUser(authenticationFacade.getOrganizationId(),
+                groupId,
+                userId,
+                authenticationFacade.getLogin(),
+                authenticationFacade.getAccessToken());
+    }
+
+    public void addUser(Long orgId, Long groupId, Long userId, String creator, String accessToken) {
         log.debug("Try add user: {} to group: {}", userId, groupId);
 
         Group group = groupRepository.findByIdAndOrganizationId(groupId, orgId)
@@ -133,12 +144,13 @@ public class GroupService {
 
         groupRepository.save(group);
 
-        userService.userVersionUpdate(userId);
-        user.setUpdatedBy(authenticationFacade.getLogin());
+        userService.upVersion(user);
+        user.setUpdatedBy(creator);
         user.setLastModified(now());
 
         List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());
-        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
+
+        messageBus.produce(new CrgAuditEvent(accessToken,
                                              "ADD_USER",
                                              group.getName(),
                                              "GROUP",
@@ -156,7 +168,7 @@ public class GroupService {
 
         group.removeUser(userId);
 
-        userService.userVersionUpdate(userId);
+        userService.upVersion(userId);
         userService.userUpdatedByAndLastModifiedUpdate(userId, authenticationFacade.getLogin());
 
         List<Long> updatedUsers = group.getUsers().stream().map(User::getId).collect(Collectors.toList());

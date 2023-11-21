@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_service.dto.GroupProjection;
 import ru.mycrg.auth_service.service.GroupService;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
@@ -35,12 +34,9 @@ public class GroupController {
     }
 
     private final GroupService groupService;
-    private final IAuthenticationFacade authenticationFacade;
 
-    public GroupController(IAuthenticationFacade authenticationFacade,
-                           GroupService groupService) {
+    public GroupController(GroupService groupService) {
         this.groupService = groupService;
-        this.authenticationFacade = authenticationFacade;
     }
 
     @PostMapping("/groups")
@@ -71,8 +67,7 @@ public class GroupController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> addAuthority(@PathVariable Long id,
                                                @PathVariable Long userId) {
-        Long orgId = authenticationFacade.getOrganizationId();
-        groupService.addUser(orgId, id, userId);
+        groupService.addUser(id, userId);
 
         return new ResponseEntity<>(NO_CONTENT);
     }

@@ -123,16 +123,21 @@ public class UserService {
         return userRepository.findByLoginIgnoreCase(login);
     }
 
+    /**
+     * Use only this authentication context.
+     */
     public UserProjection create(UserCreateDto dto, Long orgId) {
-        String accessToken = authenticationFacade.getAccessToken();
-        String login = authenticationFacade.getLogin();
+        return create(dto, orgId, authenticationFacade.getAccessToken(), authenticationFacade.getLogin(), false);
+    }
 
-        log.debug("Try create user: {} in organization: {}", dto.getEmail(), orgId);
+    public UserProjection create(UserCreateDto dto, Long orgId, String accessToken, String creator, boolean enabled) {
+        log.debug("'{}' create user: '{}' in organization: '{}'", creator, dto.getEmail(), orgId);
 
         Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
         if (userByEmail.isPresent()) {
             throw new ConflictException(String.format("Пользователь с email: %s уже существует", dto.getEmail()));
         }
+
         if (nonNull(dto.getBossId())) {
             Optional<User> bossUser = userRepository.findById(Long.valueOf(dto.getBossId()));
             if (bossUser.isEmpty()) {
@@ -154,11 +159,11 @@ public class UserService {
         );
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
-        newUser.setEnabled(false);
+        newUser.setEnabled(enabled);
         newUser.setDepartment(dto.getDepartment());
         newUser.setVersion((short) 0);
-        newUser.setCreatedBy(login);
-        newUser.setUpdatedBy(login);
+        newUser.setCreatedBy(creator);
+        newUser.setUpdatedBy(creator);
 
         User savedUser = userRepository.save(newUser);
         savedUser.setGeoserverLogin(prepareGeoserverLogin(savedUser.getLogin(), savedUser.getId()));
@@ -257,29 +262,29 @@ public class UserService {
     public void invite(String email, Long orgId) {
         log.debug("Try to invite user: {} in organization: {}", email, orgId);
 
-        User userFromDB = userRepository.findByEmail(email)
-                                        .orElseThrow(() -> new NotFoundException("Пользователь", email));
+        User user = userRepository.findByEmail(email)
+                                  .orElseThrow(() -> new NotFoundException("Пользователь", email));
 
         Organization organization = orgRepository.findById(orgId)
                                                  .orElseThrow(() -> new NotFoundException(orgId));
 
         Set<User> organizationUsers = organization.getUsers();
-        if (organizationUsers.contains(userFromDB)) {
+        if (organizationUsers.contains(user)) {
             String msg = "Пользователь " + email + " уже добавлен в данную организацию!";
             log.debug(msg);
 
             throw new ConflictException(msg);
         } else {
-            organization.addUser(userFromDB);
+            organization.addUser(user);
 
             messageBus.produce(
                     new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                       "INVITE",
                                       email,
                                       "USER",
-                                      userFromDB.getId()));
+                                      user.getId()));
 
-            userVersionUpdate(userFromDB.getId());
+            upVersion(user);
         }
     }
 
@@ -351,13 +356,13 @@ public class UserService {
                 userForUpdate.setBossId(dto.getBossId());
 
                 usersForVersionUpdate.addAll(fetchAllBosses(usersForVersionUpdate, newBossId, new HashMap<>()));
-                usersForVersionUpdate.forEach(this::userVersionUpdate);
+                usersForVersionUpdate.forEach(this::upVersion);
             }
         } else {
             if (nonNull(userForUpdate.getBossId())) {
-                userVersionUpdate(userForUpdate.getBossId().longValue());
+                upVersion(userForUpdate.getBossId().longValue());
             }
-            userVersionUpdate(userId);
+            upVersion(userId);
 
             userForUpdate.setBossId(null);
         }
@@ -374,9 +379,14 @@ public class UserService {
                                              mapper.convertValue(dto, JsonNode.class)));
     }
 
-    public void userVersionUpdate(Long userId) {
-        User user = findOrThrow(userId);
+    /**
+     * Use only this authentication context.
+     */
+    public void upVersion(Long userId) {
+        upVersion(findOrThrow(userId));
+    }
 
+    public void upVersion(User user) {
         Short userVersion = user.getVersion();
         if (nonNull(userVersion) && userVersion < Short.MAX_VALUE) {
             userVersion = (short) (userVersion + 1);
