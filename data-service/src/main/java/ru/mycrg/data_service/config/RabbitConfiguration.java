@@ -82,6 +82,9 @@ public class RabbitConfiguration {
         return new Queue(smev3Config.getMnemonicIS() + SMEV3_SEND_QUEUE);
     }
 
+    //Импорт КПТ
+    @Bean public Queue kptImportTaskQueue() { return new Queue(IMPORT_KPT_TASK_QUEUE); }
+
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();

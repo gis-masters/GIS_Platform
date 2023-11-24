@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dto.WorkImport;
+import ru.mycrg.data_service.dto.kpt_import.KptImportXmlRequest;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.import_.ImportService;
 import ru.mycrg.data_service.service.import_.Importer;
+import ru.mycrg.data_service.service.import_.kpt.KptImportXmlRequestService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportRecordReport;
 
@@ -29,11 +31,14 @@ public class ImportController extends BaseController {
 
     private final List<Importer> importers;
     private final ImportService importService;
+    private final KptImportXmlRequestService kptImportXmlRequestService;
 
     public ImportController(List<Importer> importers,
-                            ImportService importService) {
+                            ImportService importService,
+                            KptImportXmlRequestService kptImportXmlRequestService) {
         this.importers = importers;
         this.importService = importService;
+        this.kptImportXmlRequestService = kptImportXmlRequestService;
     }
 
     @PostMapping("/import/{projectId}")
@@ -101,6 +106,11 @@ public class ImportController extends BaseController {
         List<ImportRecordReport> result = (List<ImportRecordReport>) eImporter.doImport(file, lQualifier);
 
         return ResponseEntity.status(CREATED).body(result);
+    }
+
+    @PostMapping("/import/kpt")
+    public ResponseEntity<Object> importKpt(@RequestBody @Valid KptImportXmlRequest request) {
+        return ResponseEntity.status(ACCEPTED).body(kptImportXmlRequestService.initImport(request));
     }
 
     private void throwIfEmpty(String datasetId, String tableId, String importType) {
