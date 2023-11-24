@@ -7,7 +7,7 @@ import { Schema } from '../../../../services/data/schema/schema.models';
 import { cnExplorerWidgets } from '../Explorer-Widgets.base';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
-import { SchemaProperties } from '../../../SchemaProperties/SchemaPropertiesList';
+import { SchemaProperties } from '../../../SchemaProperties/SchemaProperties';
 
 import '!style-loader!css-loader!sass-loader!../../InfoBoxTitle/Explorer-InfoBoxTitle.scss';
 

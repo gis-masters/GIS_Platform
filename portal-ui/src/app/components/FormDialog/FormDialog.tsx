@@ -34,6 +34,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   actionFunction: (value: T) => Promise<void> | void;
+  closeButtonProps?: ButtonProps;
   invoke?: FormProps<T>['invoke'];
 }
 
@@ -69,6 +70,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       afterForm,
       actionButtonProps = {},
       actionFunction,
+      closeButtonProps,
       onFormChange
     } = this.props;
     const htmlId = generateRandomId();
@@ -109,7 +111,11 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
             <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
               {actionButtonProps.children || 'Отправить'}
             </Button>
-            {!unclosable && <Button onClick={this.close}>Отмена</Button>}
+            {!unclosable && (
+              <Button {...closeButtonProps} onClick={this.close}>
+                {closeButtonProps?.children || 'Отмена'}
+              </Button>
+            )}
           </ActionsRight>
         </DialogActions>
       </Dialog>

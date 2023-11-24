@@ -8,6 +8,7 @@ import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { Actions } from '../Actions/Actions.composed';
 
 import { SchemaActionsEdit } from './Edit/SchemaActions-Edit';
+import { SchemaActionsPreview } from './Preview/SchemaActions-Preview';
 
 export const cnSchemaActions = cn('SchemaActions');
 
@@ -25,6 +26,7 @@ export default class SchemaActions extends Component<SchemaActionsProps> {
     return (
       <Actions className={cnSchemaActions({ forDialog }, [className])} as={as}>
         <SchemaActionsEdit schema={schema} as={as} />
+        <SchemaActionsPreview schema={schema} as={as} />
       </Actions>
     );
   }

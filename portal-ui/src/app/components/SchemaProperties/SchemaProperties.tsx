@@ -5,6 +5,8 @@ import { cn } from '@bem-react/classname';
 import { SchemaPropertiesItem } from './Item/SchemaProperties-Item';
 import { Schema } from '../../services/data/schema/schema.models';
 
+import '!style-loader!css-loader!sass-loader!./SchemaProperties.scss';
+
 const cnSchemaProperties = cn('SchemaProperties');
 
 export interface SchemaPropertiesListProps {

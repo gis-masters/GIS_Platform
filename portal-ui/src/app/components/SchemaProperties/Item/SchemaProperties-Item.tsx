@@ -6,20 +6,20 @@ import {
   HelpOutline,
   VisibilityOffOutlined,
   Check,
-  FormatListBulleted,
-  AccessAlarm,
-  Article,
-  ContactMail,
-  AttachFile,
+  FormatListBulletedOutlined,
+  AccessAlarmOutlined,
+  ArticleOutlined,
+  ContactMailOutlined,
+  AttachFileOutlined,
   LooksOneOutlined,
-  Pin,
-  SquareFoot,
-  Abc,
-  Http,
+  PinOutlined,
+  SquareFootOutlined,
+  AbcOutlined,
   PersonOutline,
-  PersonSearch,
-  Fingerprint,
-  SvgIconComponent
+  PersonSearchOutlined,
+  FingerprintOutlined,
+  SvgIconComponent,
+  HttpOutlined
 } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
@@ -31,19 +31,19 @@ import '!style-loader!css-loader!sass-loader!../PrimaryText/SchemaProperties-Pri
 const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
   const icons: Partial<Record<PropertyType, [SvgIconComponent, string]>> = {
     [PropertyType.BOOL]: [Check, 'Логическое'],
-    [PropertyType.CHOICE]: [FormatListBulleted, 'Выбор'],
-    [PropertyType.DATETIME]: [AccessAlarm, 'Дата'],
-    [PropertyType.DOCUMENT]: [Article, 'Документ'],
-    [PropertyType.FIAS]: [ContactMail, 'Адрес'],
-    [PropertyType.FILE]: [AttachFile, 'Файл'],
+    [PropertyType.CHOICE]: [FormatListBulletedOutlined, 'Выбор'],
+    [PropertyType.DATETIME]: [AccessAlarmOutlined, 'Дата'],
+    [PropertyType.DOCUMENT]: [ArticleOutlined, 'Документ'],
+    [PropertyType.FIAS]: [ContactMailOutlined, 'Адрес'],
+    [PropertyType.FILE]: [AttachFileOutlined, 'Файл'],
     [PropertyType.FLOAT]: [LooksOneOutlined, 'Число (дробное)'],
-    [PropertyType.GEOMETRY]: [SquareFoot, 'Геометрия'],
-    [PropertyType.INT]: [Pin, 'Число (целое)'],
-    [PropertyType.STRING]: [Abc, 'Строка'],
-    [PropertyType.URL]: [Http, 'Ссылка'],
+    [PropertyType.GEOMETRY]: [SquareFootOutlined, 'Геометрия'],
+    [PropertyType.INT]: [PinOutlined, 'Число (целое)'],
+    [PropertyType.STRING]: [AbcOutlined, 'Строка'],
+    [PropertyType.URL]: [HttpOutlined, 'Ссылка'],
     [PropertyType.USER]: [PersonOutline, 'Пользователь'],
-    [PropertyType.USER_ID]: [PersonSearch, 'Идентификатор пользователя'],
-    [PropertyType.UUID]: [Fingerprint, 'Уникальный идентификатор']
+    [PropertyType.USER_ID]: [PersonSearchOutlined, 'Идентификатор пользователя'],
+    [PropertyType.UUID]: [FingerprintOutlined, 'Уникальный идентификатор']
   };
 
   return icons[type] || [HelpOutline, type];
