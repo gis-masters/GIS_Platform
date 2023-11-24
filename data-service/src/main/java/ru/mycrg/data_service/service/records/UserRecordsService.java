@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -24,7 +25,6 @@ import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.*;
 
 import static java.util.Objects.nonNull;
@@ -107,29 +107,16 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public Page<IRecord> getAsRegistry(ResourceQualifier lQualifier, Pageable pageable, String ecqlFilter) {
-        Set<String> ids = new HashSet<>();
-        Set<String> pathsToChildren = new HashSet<>();
-        Set<String> pathsToMyParent = new HashSet<>();
-        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
-
-        List<IRecord> allowedDirectly = permissionsRepository.findAllowedDirectly(lQualifier, schema);
-        allowedDirectly.forEach(record -> {
-            String id = String.valueOf(record.getAsString(ID.getName()));
-            ids.add(id);
-
-            String path = record.getAsString(PATH.getName());
-            pathsToChildren.add(MessageFormat.format("{0}/{1}/%", path, id));
-            pathsToMyParent.add(MessageFormat.format("{0}/{1}", path, id));
-        });
-
         ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
                 ? ecqlFilter
                 : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
-        List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, ids, pathsToChildren,
-                                                                            pathsToMyParent, ecqlFilter, schema,
-                                                                            pageable);
-        long total = recordsDao.getTotalAllowedForRegistry(lQualifier, ids, pathsToChildren, pathsToMyParent, ecqlFilter);
+        RegistryData registryData = librariesService.prepareDataForRegistry(lQualifier);
+        SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
+
+        List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, registryData, ecqlFilter,
+                                                                            schema, pageable);
+        long total = recordsDao.getTotalAllowedForRegistry(lQualifier, registryData, ecqlFilter);
 
         return new PageImpl<>(allAllowedRecords, pageable, total);
     }
@@ -270,7 +257,8 @@ public class UserRecordsService implements IRecordsService {
     }
 
     @Override
-    public void recoverRecord(ResourceQualifier qualifier, SchemaDto schema, String recoverPath) throws CrgDaoException {
+    public void recoverRecord(ResourceQualifier qualifier, SchemaDto schema, String recoverPath)
+            throws CrgDaoException {
         throwIfRecoverNotAllowed(qualifier);
 
         ownerRecordsService.recoverRecord(qualifier, schema, recoverPath);

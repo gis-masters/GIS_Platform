@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -23,8 +24,7 @@ import java.util.*;
 
 import static com.google.common.primitives.Longs.asList;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
@@ -192,35 +192,13 @@ public class RecordsDao {
     }
 
     public List<IRecord> findAllowedForRegistry(ResourceQualifier tableQualifier,
-                                                Set<String> ids,
-                                                Set<String> pathsToChildren,
-                                                Set<String> pathsToMyParent,
+                                                RegistryData registryData,
                                                 String ecqlFilter,
                                                 SchemaDto schema,
                                                 Pageable pageable) {
-        String ecqlFiltersSection = buildWhereSection(ecqlFilter);
-        if (!ecqlFiltersSection.isBlank()) {
-            ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
-        }
+        String query = buildFindAllowedForRegistryQuery(tableQualifier, registryData, ecqlFilter, pageable);
 
-        String query = "" +
-                " SELECT " +
-                "   * " +
-                " FROM " +
-                " " + tableQualifier.getTableQualifier() +
-                " WHERE " +
-                "   (" +
-                "     (" +
-                "       id IN (" + joinAndQuoteMark(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(pathsToChildren) + " ])" +
-                "       OR path IN (" + joinAndQuoteMark(pathsToMyParent) + ")" +
-                "     )" +
-                " " + ecqlFiltersSection +
-                "   )" +
-                "  " + buildOrderBySection(pageable.getSort()) +
-                " LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
-
-        log.debug("Request find allowed records: [{}]", query);
+        log.debug("Request find allowed records as registry: [{}]", query);
 
         return pJdbcTemplate.query(query,
                                    new RowMapperResultSetExtractor<>(
@@ -229,29 +207,10 @@ public class RecordsDao {
     }
 
     public Long getTotalAllowedForRegistry(ResourceQualifier tableQualifier,
-                                           Set<String> ids,
-                                           Set<String> pathsToChildren,
-                                           Set<String> pathsToMyParent,
+                                           RegistryData registryData,
                                            String ecqlFilter) {
-        String ecqlFiltersSection = buildWhereSection(ecqlFilter);
-        if (!ecqlFiltersSection.isBlank()) {
-            ecqlFiltersSection = "AND " + ecqlFiltersSection.replace("WHERE", "");
-        }
-
-        String query = "" +
-                " SELECT " +
-                "   count(*) " +
-                " FROM " +
-                " " + tableQualifier.getTableQualifier() +
-                " WHERE " +
-                "   (" +
-                "     (" +
-                "       id IN (" + joinAndQuoteMark(ids) + ") " +
-                "       OR path LIKE ANY (array[ " + joinAndQuoteMark(pathsToChildren) + " ])" +
-                "       OR path IN (" + joinAndQuoteMark(pathsToMyParent) + ")" +
-                "     )" +
-                " " + ecqlFiltersSection +
-                "   )";
+        String query = buildFindAllowedForRegistryQuery(tableQualifier, registryData, ecqlFilter);
+        query = query.replace("SELECT *", "SELECT count(*)");
 
         log.debug("Request find total allowed records: [{}]", query);
 

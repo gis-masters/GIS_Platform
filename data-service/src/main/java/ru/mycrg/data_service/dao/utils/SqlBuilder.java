@@ -1,9 +1,12 @@
 package ru.mycrg.data_service.dao.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
@@ -16,7 +19,6 @@ import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -24,10 +26,13 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SchemaUtil.*;
 import static ru.mycrg.data_service.util.StringUtil.join;
+import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_DELETED;
 
 public class SqlBuilder {
 
@@ -35,6 +40,174 @@ public class SqlBuilder {
 
     private SqlBuilder() {
         throw new IllegalStateException("Utility class");
+    }
+
+    @NotNull
+    public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
+                                                          RegistryData registryData,
+                                                          String ecqlFilter) {
+        return buildFindAllowedForRegistryQuery(qualifier, registryData, ecqlFilter, null);
+    }
+
+    @NotNull
+    public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
+                                                          RegistryData registryData,
+                                                          String ecqlFilter,
+                                                          @Nullable Pageable pageable) {
+        String patchedFilter = (ecqlFilter != null && ecqlFilter.toLowerCase().contains(IS_DELETED.getName()))
+                ? ecqlFilter
+                : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
+
+        String byAllowedDirectlySection = "";
+        if (!registryData.getAllowedDirectlyDocumentIds().isEmpty()) {
+            byAllowedDirectlySection = String.format(" id IN (%s) ",
+                                                     joinAndQuoteMark(registryData.getAllowedDirectlyDocumentIds()));
+        }
+
+        String byChildrenSection = "";
+        if (!registryData.getChildrenPaths().isEmpty()) {
+            byChildrenSection = String.format(" OR path LIKE ANY (array[ %s ])",
+                                              joinAndQuoteMark(registryData.getChildrenPaths()));
+        }
+
+        String byParentSection = "";
+        if (!registryData.getParentPaths().isEmpty()) {
+            byParentSection = String.format(" OR path IN (%s)", joinAndQuoteMark(registryData.getParentPaths()));
+        }
+
+        String mainSection = "";
+        if (!(byAllowedDirectlySection.isBlank() && byChildrenSection.isBlank() && byParentSection.isBlank())) {
+            mainSection = "(" +
+                    "   " + byAllowedDirectlySection +
+                    "   " + byChildrenSection +
+                    "   " + byParentSection +
+                    ")";
+        }
+
+        if (!mainSection.isBlank()) {
+            mainSection = mainSection + " AND ";
+        }
+
+        String ecqlFiltersSection = buildWhereSection(patchedFilter);
+        if (!ecqlFiltersSection.isBlank()) {
+            ecqlFiltersSection = ecqlFiltersSection.replace("WHERE", "");
+        }
+
+        String orderSection = "";
+        if (pageable != null) {
+            orderSection = buildOrderBySection(pageable.getSort());
+        }
+
+        String pagingSection = "";
+        if (pageable != null) {
+            pagingSection = String.format(" OFFSET %d LIMIT %d", pageable.getOffset(), pageable.getPageSize());
+        }
+
+        return "  SELECT * " +
+                " FROM " + qualifier.getTableQualifier() +
+                " WHERE " +
+                "   (" +
+                "     " + mainSection +
+                "     " + ecqlFiltersSection +
+                "   )" +
+                " " + orderSection + pagingSection;
+    }
+
+    @NotNull
+    public static String buildFindAllowedQuery(String parent,
+                                               String ecqlFilter,
+                                               ResourceQualifier qualifier,
+                                               List<String> allPrincipalIds) {
+        String tableQualifier = qualifier.getTableQualifier();
+        String tableName = qualifier.getTable();
+
+        return "SELECT n2.* FROM " +
+                "  (" +
+                "    SELECT res.id AS allowed_res_id " +
+                "    FROM " + tableQualifier + " AS res " +
+                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "      AND p.resource_table = '" + tableName + "' " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
+                "      AND res.path = '" + parent + "' " +
+                " " +
+                "    UNION " +
+                " " +
+                "    SELECT SPLIT_PART(regexp_replace(path, '" + parent + "/', ''), '/', 1)::bigint as allowed_res_id " +
+                "    FROM " + tableQualifier + " AS res " +
+                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
+                "      AND p.resource_table = '" + tableName + "' " +
+                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
+                "      AND res.path LIKE '" + parent + "/%' " +
+                "    GROUP BY allowed_res_id" +
+                "  ) AS n1 " +
+                "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
+                " " + buildWhereSection(ecqlFilter);
+    }
+
+    @NotNull
+    public static String buildFtsQuery(ResourceQualifier qualifier,
+                                       String ecqlFilter,
+                                       float bound,
+                                       @Nullable List<String> requestedTables,
+                                       @Nullable Pageable pageable) {
+        String ftsWhere = (requestedTables != null)
+                ? buildFtsWhere(ecqlFilter, bound, requestedTables)
+                : buildFtsWhere(ecqlFilter, bound);
+
+        String pQuery = "";
+        if (pageable != null) {
+            pQuery = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
+        }
+
+        String query = "" +
+                "SELECT " +
+                "  d.concatenated_data OPERATOR (public.<->) :searchedText as dist," +
+                "  d.schema," +
+                "  d.table," +
+                "  d.id " +
+                "FROM " + qualifier.getTableQualifier() + " AS d " +
+                " " + ftsWhere + " " +
+                "ORDER BY dist" +
+                pQuery;
+
+        return query;
+    }
+
+    @NotNull
+    public static String buildFtsQuery(ResourceQualifier qualifier,
+                                       String ecqlFilter,
+                                       float bound,
+                                       List<String> requestedLibraryIds) {
+        return buildFtsQuery(qualifier, ecqlFilter, bound, requestedLibraryIds, null);
+    }
+
+    public static String buildFtsWhere(String ecqlFilter, float bound, List<String> resources) {
+        String result = buildFtsWhere(ecqlFilter, bound);
+
+        if (!resources.isEmpty()) {
+            List<String> asString = resources.stream()
+                                             .map(s -> "'" + s + "'")
+                                             .collect(Collectors.toList());
+
+            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
+        }
+
+        return result;
+    }
+
+    public static String buildFtsWhere(String ecqlFilter, float bound) {
+        String ftsCondition = String.format("(d.concatenated_data OPERATOR (public.<->) :searchedText < %s)", bound);
+
+        String filter = buildWhereSection(ecqlFilter);
+
+        String result;
+        if (filter.isBlank()) {
+            result = "WHERE " + ftsCondition;
+        } else {
+            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
+        }
+
+        return result;
     }
 
     public static String fillWhereSectionByFilter(CrgFilter filter) {

@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildFindAllowedQuery;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 import static ru.mycrg.data_service.util.RoleHandler.defineRoleById;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
@@ -40,7 +40,7 @@ public class BasePermissionsRepository {
         this.pJdbcTemplate = pJdbcTemplate;
     }
 
-    public List<IRecord> findAllowedDirectly(ResourceQualifier rQualifier, SchemaDto schema) {
+    public List<IRecord> findAllowedDirectly(ResourceQualifier rQualifier) {
         String tableQualifier = rQualifier.getTableQualifier();
         String tableName = rQualifier.getTable();
 
@@ -63,7 +63,7 @@ public class BasePermissionsRepository {
         return pJdbcTemplate.getJdbcTemplate()
                             .query(query,
                                    new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper(schema)
+                                           new RecordRowMapper(null)
                                    ));
     }
 
@@ -389,45 +389,5 @@ public class BasePermissionsRepository {
         if (rQualifier.getRecordIdAsLong() == null) {
             throw new IllegalStateException("Qualifier must contain record");
         }
-    }
-
-    @NotNull
-    private static String buildFindAllowedQuery(String parent,
-                                                String ecqlFilter,
-                                                ResourceQualifier qualifier,
-                                                List<String> allPrincipalIds) {
-        String tableQualifier = qualifier.getTableQualifier();
-        String tableName = qualifier.getTable();
-
-        return "SELECT n2.* FROM " +
-                "  (" +
-                "    SELECT " +
-                "      res.id AS allowed_res_id " +
-                "    FROM " +
-                "      " + tableQualifier + " AS res " +
-                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
-                "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
-                "      AND res.path = '" + parent + "' " +
-                " " +
-                "    UNION " +
-                " " +
-                "    SELECT " +
-                "      SPLIT_PART(" +
-                "        regexp_replace(path, '" + parent + "/', ''), " +
-                "        '/', " +
-                "        1" +
-                "      ):: bigint as allowed_res_id " +
-                "    FROM " +
-                "      " + tableQualifier + " AS res " +
-                "      JOIN data.acl_permissions AS p ON p.resource_id = res.id " +
-                "      AND p.resource_table = '" + tableName + "' " +
-                "      AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
-                "      AND res.path LIKE '" + parent + "/%' " +
-                "    GROUP BY " +
-                "      allowed_res_id" +
-                "  ) AS n1 " +
-                "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
-                " " + buildWhereSection(ecqlFilter);
     }
 }

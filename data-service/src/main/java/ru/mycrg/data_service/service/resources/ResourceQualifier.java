@@ -8,6 +8,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 
 public class ResourceQualifier {
@@ -57,6 +58,10 @@ public class ResourceQualifier {
         this.resourceTables.put(LIBRARY, "doc_libraries");
         this.resourceTables.put(TABLE, "schemas_and_tables");
         this.resourceTables.put(DATASET, "schemas_and_tables");
+    }
+
+    public static ResourceQualifier libraryQualifier(String libraryName) {
+        return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
     }
 
     public String getTable() {

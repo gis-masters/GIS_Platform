@@ -190,6 +190,10 @@ public class LayerService {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
+        if (projectIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<Layer> relatedLayers;
         if ("table".equals(field)) {
             relatedLayers = layerRepository.findRelatedByTableName(value, projectIds);

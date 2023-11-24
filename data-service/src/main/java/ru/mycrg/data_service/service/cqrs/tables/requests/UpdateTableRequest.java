@@ -14,12 +14,12 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class UpdateTableRequest implements IRequest<Voidy>, Auditable {
 
-    private ResourceQualifier tQualifier;
+    private ResourceQualifier qualifier;
     private TableUpdateDto dto;
     private SchemasAndTables tableModel;
 
-    public UpdateTableRequest(ResourceQualifier tQualifier, TableUpdateDto dto) {
-        this.tQualifier = tQualifier;
+    public UpdateTableRequest(ResourceQualifier qualifier, TableUpdateDto dto) {
+        this.qualifier = qualifier;
         this.dto = dto;
     }
 
@@ -37,12 +37,12 @@ public class UpdateTableRequest implements IRequest<Voidy>, Auditable {
                                  tableModel.getId());
     }
 
-    public ResourceQualifier gettQualifier() {
-        return tQualifier;
+    public ResourceQualifier getQualifier() {
+        return qualifier;
     }
 
-    public void settQualifier(ResourceQualifier tQualifier) {
-        this.tQualifier = tQualifier;
+    public void setQualifier(ResourceQualifier qualifier) {
+        this.qualifier = qualifier;
     }
 
     public TableUpdateDto getDto() {

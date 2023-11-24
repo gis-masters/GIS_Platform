@@ -31,12 +31,34 @@ public class DdlTriggers {
         createTrigger(qualifier, fields, "INSERT");
     }
 
+    public void deleteInsertTrigger(ResourceQualifier qualifier) {
+        dropTrigger(qualifier, "INSERT");
+    }
+
     public void createUpdateTrigger(ResourceQualifier qualifier, List<String> fields) {
         createTrigger(qualifier, fields, "UPDATE");
     }
 
+    public void deleteUpdateTrigger(ResourceQualifier qualifier) {
+        dropTrigger(qualifier, "UPDATE");
+    }
+
     public void createDeleteTrigger(ResourceQualifier qualifier) {
         createTrigger(qualifier, null, "DELETE");
+    }
+
+    public void dropDeleteTrigger(ResourceQualifier qualifier) {
+        dropTrigger(qualifier, "DELETE");
+    }
+
+    private void dropTrigger(ResourceQualifier qualifier, String operation) {
+        String schema = qualifier.getSchema();
+        String table = qualifier.getTable();
+        String triggerName = makeTriggerName(table, operation.toLowerCase());
+
+        String dropQuery = String.format("DROP TRIGGER IF EXISTS %s ON %s.%s", triggerName, schema, table);
+
+        jdbcTemplate.execute(dropQuery);
     }
 
     private void createTrigger(ResourceQualifier qualifier, List<String> fields, String operation) {
@@ -59,8 +81,7 @@ public class DdlTriggers {
                                           getIdField(qualifier), join(fields, ","));
         }
 
-        String dropQuery = String.format("DROP TRIGGER IF EXISTS %s ON %s.%s", triggerName, schema, table);
-        jdbcTemplate.execute(dropQuery);
+        dropTrigger(qualifier, operation);
 
         String createQuery = String.format(
                 "CREATE TRIGGER %s AFTER %s ON %s.%s FOR EACH ROW EXECUTE FUNCTION public.%s(%s)",

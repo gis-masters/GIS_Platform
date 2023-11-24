@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
@@ -13,6 +12,8 @@ import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
+import ru.mycrg.data_service.dto.LibraryModel;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
@@ -23,17 +24,15 @@ import ru.mycrg.geo_json.Feature;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.mycrg.common_contracts.generated.fts.FtsType.DOCUMENT;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Component
 public class DocumentSearchEngine implements IFullTextSearchEngine {
-
-    private static final ResourceQualifier DOCUMENTS = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                             "fts_documents",
-                                                                             LIBRARY);
 
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 
@@ -55,22 +54,29 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     @Override
     public Page<FtsResponseDto> search(FtsRequest request) {
         log.info("Document searcher: {}", request);
-        Pageable pageable = request.getPageable();
+
         FtsRequestDto dto = request.getFtsRequestDto();
-        String ecqlFilter = dto.getEcqlFilter();
+        List<FtsItem> byAllLibraries = new ArrayList<>();
+        getAllowedLibraries(dto).forEach(libraryName -> {
+            ResourceQualifier libraryQualifier = libraryQualifier(libraryName);
 
-        List<ResourceQualifier> sources = getAllowedSources(dto);
-        if (sources.isEmpty()) {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0);
-        }
+            RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
 
-        List<String> libNames = sources.stream().map(ResourceQualifier::getTable).collect(Collectors.toList());
-        List<FtsItem> founded = ftsDao.search(DOCUMENTS, libNames, ecqlFilter, dto.getText(), getBound(dto), pageable);
-        Long total = ftsDao.countTotal(DOCUMENTS, libNames, ecqlFilter, dto.getText(), getBound(dto));
+            List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
+                                                              dto.getEcqlFilter(),
+                                                              dto.getText(),
+                                                              getBound(dto),
+                                                              registryData);
+            byAllLibraries.addAll(temp);
+        });
 
-        List<FtsResponseDto> result = fetchEntities(founded);
+        List<FtsResponseDto> result = fetchEntities(byAllLibraries)
+                .sorted(ftsBoundComparator)
+                .collect(Collectors.toList());
 
-        return new PageImpl<>(result, pageable, total);
+        log.debug("In all libraries founded: {} documents", result.size());
+
+        return new PageImpl<>(result, request.getPageable(), result.size());
     }
 
     @Override
@@ -79,32 +85,39 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private List<ResourceQualifier> getAllowedSources(FtsRequestDto dto) {
-        List<ResourceQualifier> allowedSources = new ArrayList<>();
-
-        List<ResourceQualifier> allowedLibraries = librariesService
-                .getAll(null)
-                .stream()
-                .map(library -> new ResourceQualifier(SYSTEM_SCHEMA_NAME, library.getTableName(), LIBRARY))
+    private Stream<String> getAllowedLibraries(FtsRequestDto dto) {
+        List<String> allowedLibraries = librariesService
+                .getAll(null).stream()
+                .map(LibraryModel::getTableName)
                 .collect(Collectors.toList());
 
-        List<Map<String, Object>> requestedSources = dto.getSources();
-        if (requestedSources == null || requestedSources.isEmpty()) {
-            return allowedLibraries;
+        // Разрешенных нет
+        if (allowedLibraries.isEmpty()) {
+            return Stream.empty();
         }
 
-        requestedSources.forEach(data -> {
-            String library = String.valueOf(data.get("library"));
-            allowedLibraries.stream()
-                          .filter(qualifier -> library.equalsIgnoreCase(qualifier.getTable()))
-                          .findFirst()
-                          .ifPresent(allowedSources::add);
-        });
+        // Ничего не запрошено, возвращаем только разрешенные
+        List<String> requestedLibraries = getRequestedLibraries(dto).collect(Collectors.toList());
+        if (requestedLibraries.isEmpty()) {
+            return allowedLibraries.stream();
+        }
 
-        return allowedSources;
+        // Среди запрошенных оставляем только разрешенные
+        return requestedLibraries.stream().filter(allowedLibraries::contains);
     }
 
-    private List<FtsResponseDto> fetchEntities(List<FtsItem> items) {
+    private Stream<String> getRequestedLibraries(FtsRequestDto dto) {
+        List<Map<String, Object>> requestedSources = dto.getSources();
+        if (requestedSources == null || requestedSources.isEmpty()) {
+            return Stream.empty();
+        }
+
+        return requestedSources.stream()
+                               .map(source -> source.getOrDefault("library", "").toString())
+                               .filter(s -> !s.isBlank());
+    }
+
+    private Stream<FtsResponseDto> fetchEntities(List<FtsItem> items) {
         // Перегруппируем данные, чтобы доставать сущности из отдельных библиотек одним запросом.
         Map<String, List<Long>> featuresByLibrary = new HashMap<>();
         items.forEach(ftsItem -> {
@@ -130,9 +143,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
             result.addAll(features);
         });
 
-        return result.stream()
-                     .sorted(ftsBoundComparator)
-                     .collect(Collectors.toList());
+        return result.stream();
     }
 
     @NotNull

@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.DocumentLibraryDao;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -18,7 +19,6 @@ import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +27,8 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Service
 public class DocumentLibraryService {
@@ -143,5 +145,21 @@ public class DocumentLibraryService {
                                         new ResourceQualifier(SYSTEM_SCHEMA_NAME, dl.getTableName(), LIBRARY),
                                         dl.getGisogdRfPublicationOrder()))
                                 .collect(Collectors.toList());
+    }
+
+    public RegistryData prepareDataForRegistry(ResourceQualifier lQualifier) {
+        RegistryData registryData = new RegistryData();
+
+        permissionsRepository.findAllowedDirectly(lQualifier).forEach(record -> {
+            String id = String.valueOf(record.getAsString(ID.getName()));
+            registryData.addId(id);
+
+            if (record.isFolder()) {
+                String path = record.getAsString(PATH.getName());
+                registryData.addPaths(path, id);
+            }
+        });
+
+        return registryData;
     }
 }
