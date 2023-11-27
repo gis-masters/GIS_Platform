@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -34,6 +35,7 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
     private final Logger log = LoggerFactory.getLogger(UpdateTableRequestHandler.class);
 
+    private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
     private final SchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
@@ -41,12 +43,14 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
 
-    public UpdateTableRequestHandler(DdlTriggers ddlTriggers,
+    public UpdateTableRequestHandler(FtsDao ftsDao,
+                                     DdlTriggers ddlTriggers,
                                      SchemaService schemaService,
                                      PermissionsService permissionsService,
                                      IAuthenticationFacade authenticationFacade,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      BasePermissionsRepository permissionsRepository) {
+        this.ftsDao = ftsDao;
         this.ddlTriggers = ddlTriggers;
         this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
@@ -107,12 +111,16 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
                 ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
                 ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
                 ddlTriggers.createDeleteTrigger(qualifier);
+
+                ftsDao.copySourceData(qualifier, schema);
             } else {
                 log.debug("Удаляем таблицу: '{}' из полнотекстового поиска", qualifier.getQualifier());
 
                 ddlTriggers.deleteInsertTrigger(qualifier);
                 ddlTriggers.deleteUpdateTrigger(qualifier);
                 ddlTriggers.dropDeleteTrigger(qualifier);
+
+                ftsDao.dropSourceData(qualifier);
             }
         }
 

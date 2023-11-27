@@ -20,6 +20,7 @@ import ru.mycrg.geo_json.GeoJsonObject;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -40,6 +41,28 @@ public class SqlBuilder {
 
     private SqlBuilder() {
         throw new IllegalStateException("Utility class");
+    }
+
+    public static String buildCopyDataToFtsLayersQuery(ResourceQualifier qualifier,
+                                                       List<String> properties) {
+        StringBuilder query = new StringBuilder();
+
+        query.append("INSERT INTO data.fts_layers(schema, \"table\", id, concatenated_data) SELECT ")
+             .append("'").append(qualifier.getSchema()).append("' AS schema, ")
+             .append("'").append(qualifier.getTable()).append("' AS \"table\", ")
+             .append(qualifier.getPrimaryKeyName()).append("::bigint AS id, ");
+
+        IntStream.range(0, properties.size()).forEach(i -> {
+            query.append("COALESCE(").append(properties.get(i)).append("::text, '')");
+            if (i < properties.size() - 1) {
+                query.append(" || ' ' || ");
+            }
+        });
+
+        query.append(" AS concatenated_data FROM ").append(qualifier.getTableQualifier())
+             .append(" ON CONFLICT (schema, \"table\", id) DO NOTHING");
+
+        return query.toString();
     }
 
     @NotNull

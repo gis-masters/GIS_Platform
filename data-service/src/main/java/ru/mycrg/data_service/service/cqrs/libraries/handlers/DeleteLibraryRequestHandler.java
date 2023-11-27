@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
 import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -16,13 +17,16 @@ import javax.transaction.Transactional;
 @Component
 public class DeleteLibraryRequestHandler implements IRequestHandler<DeleteLibraryRequest, Voidy> {
 
+    private final FtsDao ftsDao;
     private final DdlTablesBase ddlTablesBase;
     private final IMasterResourceProtector resourceProtector;
     private final DocumentLibraryRepository documentLibraryRepository;
 
-    public DeleteLibraryRequestHandler(DdlTablesBase ddlTablesBase,
+    public DeleteLibraryRequestHandler(FtsDao ftsDao,
+                                       DdlTablesBase ddlTablesBase,
                                        MasterResourceProtector resourceProtector,
                                        DocumentLibraryRepository documentLibraryRepository) {
+        this.ftsDao = ftsDao;
         this.ddlTablesBase = ddlTablesBase;
         this.resourceProtector = resourceProtector;
         this.documentLibraryRepository = documentLibraryRepository;
@@ -43,6 +47,9 @@ public class DeleteLibraryRequestHandler implements IRequestHandler<DeleteLibrar
 
         // Delete from DB
         ddlTablesBase.drop(libraryQualifier);
+
+        // Delete data from full text search table
+        ftsDao.dropSourceData(libraryQualifier);
 
         return new Voidy();
     }

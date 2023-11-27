@@ -7,10 +7,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.dto.FtsItem;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import static java.sql.Types.VARCHAR;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
 
 @Repository
 public class FtsDao {
@@ -36,6 +38,32 @@ public class FtsDao {
                   NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.principalService = principalService;
         this.pJdbcTemplate = parameterJdbcTemplate;
+    }
+
+    public void copySourceData(ResourceQualifier qualifier,
+                               SchemaDto schema) {
+        String query = buildCopyDataToFtsLayersQuery(qualifier, getFtsProperties(schema));
+
+        log.debug("Copy source: '{}' data to FTS table query: [{}]", qualifier.getQualifier(), query);
+
+        pJdbcTemplate.getJdbcTemplate().update(query);
+    }
+
+    public void dropSourceData(ResourceQualifier qualifier) {
+        String ftsTable = "fts_layers";
+        if (qualifier.getType().equals(LIBRARY)) {
+            ftsTable = "fts_documents";
+        }
+
+        String query = String.format("DELETE FROM data.%s WHERE \"schema\" = :schema AND \"table\" = :table", ftsTable);
+
+        log.debug("Delete source: '{}' from fts table query: [{}]", qualifier.getQualifier(), query);
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("schema", qualifier.getSchema(), VARCHAR);
+        parameters.addValue("table", qualifier.getTable(), VARCHAR);
+
+        pJdbcTemplate.update(query, parameters);
     }
 
     public List<FtsItem> search(ResourceQualifier qualifier,

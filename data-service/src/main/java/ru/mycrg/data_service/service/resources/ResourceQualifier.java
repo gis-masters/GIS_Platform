@@ -8,6 +8,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 
@@ -129,6 +131,12 @@ public class ResourceQualifier {
                 }
             }
         }
+    }
+
+    public String getPrimaryKeyName() {
+        return (this.type.equals(FEATURE) || this.type.equals(TABLE))
+                ? PRIMARY_KEY
+                : ID;
     }
 
     @Override

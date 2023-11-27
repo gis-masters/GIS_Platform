@@ -1,7 +1,9 @@
 package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -20,47 +22,53 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
 @Component
 public class DeleteTableRequestHandler implements IRequestHandler<DeleteTableRequest, Voidy> {
 
+    private final FtsDao ftsDao;
     private final DdlTablesBase ddlTablesBase;
-    private final SchemasAndTablesRepository schemasAndTablesRepository;
-    private final PermissionsService permissionsService;
     private final IMessageBusProducer messageBus;
+    private final PermissionsService permissionsService;
     private final IAuthenticationFacade authenticationFacade;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public DeleteTableRequestHandler(DdlTablesBase ddlTablesBase,
-                                     SchemasAndTablesRepository schemasAndTablesRepository,
-                                     PermissionsService permissionsService,
+    public DeleteTableRequestHandler(FtsDao ftsDao,
+                                     DdlTablesBase ddlTablesBase,
                                      IMessageBusProducer messageBus,
-                                     IAuthenticationFacade authenticationFacade) {
-        this.ddlTablesBase = ddlTablesBase;
-        this.schemasAndTablesRepository = schemasAndTablesRepository;
-        this.permissionsService = permissionsService;
+                                     PermissionsService permissionsService,
+                                     IAuthenticationFacade authenticationFacade,
+                                     SchemasAndTablesRepository schemasAndTablesRepository) {
+        this.ftsDao = ftsDao;
         this.messageBus = messageBus;
+        this.ddlTablesBase = ddlTablesBase;
+        this.permissionsService = permissionsService;
         this.authenticationFacade = authenticationFacade;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     @Override
+    @Transactional
     public Voidy handle(DeleteTableRequest request) {
-        ResourceQualifier tQualifier = request.gettQualifier();
+        ResourceQualifier qualifier = request.gettQualifier();
 
         SchemasAndTables table = schemasAndTablesRepository
-                .findByIdentifier(tQualifier.getTable())
-                .orElseThrow(() -> new NotFoundException(tQualifier));
+                .findByIdentifier(qualifier.getTable())
+                .orElseThrow(() -> new NotFoundException(qualifier));
 
         schemasAndTablesRepository.deleteByIdentifier(table.getIdentifier());
 
         // Delete assigned rule
-        permissionsService.deleteAssigned(tQualifier, table.getId());
+        permissionsService.deleteAssigned(qualifier, table.getId());
 
-        String extTableName = tQualifier.getTable() + EXTENSION_POSTFIX;
-        ResourceQualifier extTable = new ResourceQualifier(tQualifier.getSchema(), extTableName);
+        String extTableName = qualifier.getTable() + EXTENSION_POSTFIX;
+        ResourceQualifier extTable = new ResourceQualifier(qualifier.getSchema(), extTableName);
 
-        ddlTablesBase.drop(tQualifier);
+        ddlTablesBase.drop(qualifier);
         ddlTablesBase.drop(extTable);
+
+        ftsDao.dropSourceData(qualifier);
 
         messageBus.produce(
                 new LayerReferencesDeletionEvent(getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                 tQualifier.getSchema(),
-                                                 tQualifier.getTable(),
+                                                 qualifier.getSchema(),
+                                                 qualifier.getTable(),
                                                  authenticationFacade.getAccessToken()));
 
         return new Voidy();
