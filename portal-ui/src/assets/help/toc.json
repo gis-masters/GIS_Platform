@@ -438,6 +438,22 @@
         ]
       },
       {
+        "id": "dataSchemas",
+        "title": "Схемы данных",
+        "children": [
+          {
+            "id": "dataSchemasBasis",
+            "title": "Схемы данных",
+            "contentUrl": "/assets/help/5dataManagement/16dataSchemas/16dataSchemas.html"
+          },
+          {
+            "id": "visualSchemas",
+            "title": "Свойства схем",
+            "contentUrl": "/assets/help/5dataManagement/17visualSchemas/17visualSchemas.html"
+          }
+        ]
+      },
+      {
         "id": "substrate",
         "title": "Картографические подосновы",
         "contentUrl": "/assets/help/5dataManagement/3substrate/03substrate.html"
