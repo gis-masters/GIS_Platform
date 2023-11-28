@@ -22,7 +22,7 @@ interface ImportXmlDialogProps {
   onClose: () => void;
   datasetId: string;
   tableId: string;
-  complexName: string;
+  complexName?: string;
 }
 
 @observer
@@ -75,6 +75,15 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
 
     try {
       this.setLoading(true);
+
+      if (!complexName) {
+        throw new Error('Некорректный слой');
+      }
+
+      if (!this.file) {
+        throw new Error('Не указан файл');
+      }
+
       const objectId = await importXml(this.file, datasetId, tableId);
       const wfsFeatures = await getFeaturesById([objectId.toString()], complexName);
       if (wfsFeatures.length > 0) {
@@ -92,15 +101,15 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   }
 
   @action.bound
-  private changeHandler(fileList: FileList) {
-    if (fileList[0]) {
+  private changeHandler(fileList: FileList | null) {
+    if (fileList?.[0]) {
       this.file = fileList[0];
     }
   }
 
   @action
   private reset() {
-    this.file = null;
+    this.file = undefined;
     this.loading = false;
   }
 }

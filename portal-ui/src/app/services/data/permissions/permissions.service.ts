@@ -130,7 +130,7 @@ export async function removeProjectPermission(payload: RoleAssignmentBody, proje
   }
 }
 
-export async function isReadAllowed(layer: CrgLayer): Promise<boolean> {
+export async function isLayerReadAllowed(layer: CrgLayer): Promise<boolean> {
   if (currentUser.isAdmin || layer.type === CrgLayerType.EXTERNAL || layer.type === CrgLayerType.EXTERNAL_GEOSERVER) {
     return true;
   }
@@ -193,20 +193,20 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
 }
 
 export async function isShapeImportAllowed(datasetIdentifier: string, tableIdentifier: string): Promise<boolean> {
-  let table: VectorTable;
   try {
-    table = await getVectorTable(datasetIdentifier, tableIdentifier);
+    const table: VectorTable = await getVectorTable(datasetIdentifier, tableIdentifier);
+    const role = table?.role;
+
+    return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
   } catch (error) {
     const err = error as AxiosError;
 
     if (err.response?.status !== 403) {
       throw err;
     }
+
+    return false;
   }
-
-  const role = table?.role;
-
-  return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
 }
 
 export async function isRasterReadAllowed(layer: CrgLayer): Promise<boolean> {
@@ -261,29 +261,29 @@ async function isAllowedWithTable(
   targetPoint: TablePermissionPoint,
   schemaIdForReadonlyCheck?: string
 ): Promise<boolean> {
-  const schema = schemaIdForReadonlyCheck && (await schemaService.getSchema(schemaIdForReadonlyCheck));
+  const schema = (schemaIdForReadonlyCheck && (await schemaService.getSchema(schemaIdForReadonlyCheck))) || undefined;
   const readOnly = schema?.readOnly;
-  let table: VectorTable;
   try {
-    table = await getVectorTable(datasetIdentifier, tableIdentifier);
+    const table = await getVectorTable(datasetIdentifier, tableIdentifier);
+    let role = table?.role;
+
+    if (currentUser.isAdmin) {
+      role = Role.OWNER;
+    }
+    if (roles.indexOf(role) > roles.indexOf(Role.VIEWER) && readOnly) {
+      role = Role.VIEWER;
+    }
+
+    return Boolean(role) && !!tableRolesPermissionPoints.get(role)?.includes(targetPoint);
   } catch (error) {
     const err = error as AxiosError;
 
     if (err.response?.status !== 403) {
       throw err;
     }
-  }
 
-  let role = table?.role;
-
-  if (currentUser.isAdmin) {
-    role = Role.OWNER;
+    return false;
   }
-  if (roles.indexOf(role) > roles.indexOf(Role.VIEWER) && readOnly) {
-    role = Role.VIEWER;
-  }
-
-  return Boolean(role) && !!tableRolesPermissionPoints.get(role)?.includes(targetPoint);
 }
 
 function handleSavingError(

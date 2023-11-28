@@ -1,0 +1,37 @@
+.CustomStyleControl-MarkTile {
+  width: 30px;
+  height: 20px;
+
+  text-align: center;
+
+  color: var(--CustomStyleControlMarkTileColor);
+
+  font-size: calc(var(--CustomStyleControlMarkTileSize) * 0.75px + 4px);
+  line-height: 20px;
+
+  &_type {
+    &_circle {
+      &::before {
+        content: '●';
+      }
+    }
+
+    &_square {
+      &::before {
+        content: '■';
+      }
+    }
+
+    &_triangle {
+      &::before {
+        content: '▲';
+      }
+    }
+
+    &_star {
+      &::before {
+        content: '★';
+      }
+    }
+  }
+}

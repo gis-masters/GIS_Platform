@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
-import { isEqual } from 'lodash';
 
-import {
-  LineRule,
-  customStyleStrokeColors,
-  customStyleStrokes
-} from '../../../../services/geoserver/styles/styles.models';
-import { TileSelect } from '../../../TileSelect/TileSelect';
+import { LineRule, customStyleStrokeColors } from '../../../../services/geoserver/styles/styles.models';
 
 import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
-import { CustomStyleControlStrokeTile } from '../../StrokeTile/CustomStyleControl-StrokeTile';
-import { CustomStyleControlColorTile } from '../../ColorTile/CustomStyleControl-ColorTile';
-import { CustomStyleControlLabel } from '../../Label/CustomStyleControl-Label';
+import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
+import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 
 @observer
 class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormProps> {
@@ -28,51 +20,31 @@ class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormPro
       throw this.ruleTypeError;
     }
 
-    const currentStrokeIndex = customStyleStrokes.findIndex(
-      ({ strokeWidth, strokeDashArray }) =>
-        value.rule.strokeWidth === strokeWidth && isEqual(value.rule.strokeDashArray, strokeDashArray)
-    );
-
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
-        <CustomStyleControlLabel>цвет</CustomStyleControlLabel>
-        <TileSelect
-          value={value.rule.strokeColor}
-          options={customStyleStrokeColors.map(color => ({
-            tile: <CustomStyleControlColorTile color={color} />,
-            value: color
-          }))}
-          onChange={this.onStrokeColorChange}
+        <CustomStyleControlStrokeSelect
+          label='линия'
+          value={value.rule}
+          color={value.rule.strokeColor}
+          onChange={this.strokeChangeHandler}
         />
-
-        <CustomStyleControlLabel>линия</CustomStyleControlLabel>
-        <TileSelect
-          value={currentStrokeIndex}
-          options={customStyleStrokes.map((stroke, i) => ({
-            tile: (
-              <CustomStyleControlStrokeTile strokeWidth={stroke.strokeWidth} strokeDasharray={stroke.strokeDashArray} />
-            ),
-            value: i
-          }))}
-          onChange={this.onDashChange}
+        <CustomStyleControlColorSelect
+          colors={customStyleStrokeColors}
+          value={value.rule.strokeColor}
+          onChange={this.colorChangeHandler}
         />
       </div>
     );
   }
 
   @boundMethod
-  private onDashChange(e: SelectChangeEvent<unknown>) {
+  private strokeChangeHandler(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'line') {
       throw this.ruleTypeError;
     }
 
-    if (typeof e.target.value !== 'number') {
-      throw new TypeError('Ошибка при выборе линии');
-    }
-
-    const stroke = customStyleStrokes[e.target.value];
     const rule: LineRule = {
       ...value.rule,
       strokeDashArray: stroke.strokeDashArray,
@@ -83,20 +55,16 @@ class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormPro
   }
 
   @boundMethod
-  private onStrokeColorChange(e: SelectChangeEvent<unknown>) {
+  private colorChangeHandler(color: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'line') {
       throw this.ruleTypeError;
     }
 
-    if (typeof e.target.value !== 'string') {
-      throw new TypeError('Ошибка при выборе цвета');
-    }
-
     const rule: LineRule = {
       ...value.rule,
-      strokeColor: e.target.value
+      strokeColor: color
     };
 
     onChange({ ...value, rule });

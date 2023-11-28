@@ -6,6 +6,24 @@ import { Mime } from '../../util/Mime';
 
 import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
 
+export function createImageFromBlob(image: Blob): Promise<string> {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+
+    reader.addEventListener(
+      'load',
+      () => {
+        resolve(reader.result as string);
+      },
+      false
+    );
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  });
+}
+
 export function buildCustomSld(layerComplexName: string, style: CustomStyleDescription): string {
   return (
     '<?xml version="1.0" encoding="UTF-8"?>' + renderToString(createElement(CustomSld, { layerComplexName, style }))
@@ -47,12 +65,12 @@ function parsePointSymbolizer(pointSymbolizerNode: Element): PointRule {
   const markSizeNode = pointSymbolizerNode.querySelector('Size');
   const markColorNode = pointSymbolizerNode.querySelector('Mark > Fill > SvgParameter[name="fill"]');
 
-  if (!markColorNode || !markSizeNode || !markTypeNode) {
+  if (!markColorNode || !markColorNode.textContent || !markSizeNode || !markTypeNode) {
     throw new Error('Отсутствуют обязательные параметры для стиля точки');
   }
 
   return {
-    markColor: markColorNode.textContent || undefined,
+    markColor: markColorNode.textContent,
     markSize: Number(markSizeNode.textContent),
     markType: markTypeNode.textContent as PointRule['markType']
   };
@@ -61,13 +79,13 @@ function parsePointSymbolizer(pointSymbolizerNode: Element): PointRule {
 export function getStyleTitle(sldStyle: string): string | null | undefined {
   const xmlDoc = new DOMParser().parseFromString(sldStyle, Mime.XML);
   const rules = xmlDoc.querySelectorAll('Rule');
-  let styleTitle = xmlDoc.querySelector('NamedLayer Name');
+  let titleNode = xmlDoc.querySelector('NamedLayer Name');
 
   if (rules.length === 1) {
-    styleTitle = xmlDoc.querySelector('UserStyle Rule Title');
+    titleNode = xmlDoc.querySelector('UserStyle Rule Title');
   }
 
-  return styleTitle?.textContent;
+  return titleNode?.textContent;
 }
 
 function parseLineSymbolizer(lineSymbolizerNode: Element): LineRule {
@@ -102,14 +120,23 @@ function parsePolygonSymbolizer(polygonSymbolizerNode: Element): PolygonRule {
     'Fill > SvgParameter[name="fill"]:not(Graphic SvgParameter)'
   );
 
-  const result: PolygonRule = {
-    strokeWidth: strokeWidthNode ? Number(strokeWidthNode.textContent) : undefined,
-    strokeColor: strokeColorNode?.textContent || undefined,
+  if (!strokeWidthNode || !strokeColorNode || !strokeColorNode.textContent) {
+    throw new Error('Отсутствуют обязательные параметры для стиля многоугольника');
+  }
+
+  const result: Omit<PolygonRule, 'fillColor'> = {
+    strokeWidth: Number(strokeWidthNode.textContent),
+    strokeColor: strokeColorNode.textContent,
     strokeDashArray: strokeDashArrayNode?.textContent
       ? strokeDashArrayNode.textContent.split(' ').map(Number)
-      : undefined,
-    fillColor: fillColorNode?.textContent || undefined
+      : undefined
   };
+
+  let fillColor: string | undefined;
+
+  if (fillColorNode?.textContent) {
+    fillColor = fillColorNode.textContent;
+  }
 
   const graphicNode = polygonSymbolizerNode.querySelector('Graphic');
 
@@ -117,21 +144,30 @@ function parsePolygonSymbolizer(polygonSymbolizerNode: Element): PolygonRule {
     const graphicTypeNode = graphicNode.querySelector('Mark > WellKnownName');
     const graphicStrokeColorNode = graphicNode.querySelector('SvgParameter[name="stroke"]');
     const graphicStrokeWidthNode = graphicNode.querySelector('SvgParameter[name="stroke-width"]');
-    const graphicStrokeDashArrayNode = graphicNode.querySelector('SvgParameter[name="stroke-dasharray"]');
     const graphicSizeNode = graphicNode.querySelector('Size');
 
-    if (graphicTypeNode) {
-      result.fillGraphic = {
-        type: graphicTypeNode.textContent as FillGraphicType,
-        strokeColor: graphicStrokeColorNode?.textContent || undefined,
-        strokeWidth: graphicStrokeWidthNode ? Number(graphicStrokeWidthNode.textContent) : undefined,
-        strokeDashArray: graphicStrokeDashArrayNode?.textContent
-          ? graphicStrokeDashArrayNode.textContent.split(' ').map(Number)
-          : undefined,
-        size: graphicSizeNode ? Number(graphicSizeNode.textContent) : undefined
-      };
+    if (
+      !graphicTypeNode ||
+      !graphicTypeNode.textContent ||
+      !graphicStrokeWidthNode ||
+      !graphicSizeNode ||
+      !graphicStrokeColorNode ||
+      !graphicStrokeColorNode.textContent
+    ) {
+      throw new Error('Отсутствуют обязательные параметры для штриховки');
     }
+    result.fillGraphic = {
+      type: graphicTypeNode.textContent.replace('shape://', '') as FillGraphicType,
+      strokeWidth: Number(graphicStrokeWidthNode.textContent),
+      size: Number(graphicSizeNode.textContent)
+    };
+
+    fillColor = graphicStrokeColorNode.textContent;
   }
 
-  return result;
+  if (!fillColor) {
+    throw new Error('Отсутствует цвет заливки многоугольника');
+  }
+
+  return { ...result, fillColor };
 }

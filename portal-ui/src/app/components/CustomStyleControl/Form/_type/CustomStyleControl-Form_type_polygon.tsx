@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
-import { isEqual } from 'lodash';
 
 import {
+  LineRule,
   PolygonRule,
   customStyleFillColors,
-  customStyleStrokeColors,
-  customStyleStrokes
+  customStyleStrokeColors
 } from '../../../../services/geoserver/styles/styles.models';
-import { TileSelect } from '../../../TileSelect/TileSelect';
 
+import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
 import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
-import { CustomStyleControlStrokeTile } from '../../StrokeTile/CustomStyleControl-StrokeTile';
-import { CustomStyleControlColorTile } from '../../ColorTile/CustomStyleControl-ColorTile';
-import { CustomStyleControlLabel } from '../../Label/CustomStyleControl-Label';
+import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
+import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 
 @observer
 class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlFormProps> {
@@ -29,42 +26,31 @@ class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlForm
       throw this.ruleTypeError;
     }
 
-    const currentStrokeIndex = customStyleStrokes.findIndex(
-      ({ strokeWidth, strokeDashArray }) =>
-        value.rule.strokeWidth === strokeWidth && isEqual(value.rule.strokeDashArray, strokeDashArray)
-    );
-
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
-        <CustomStyleControlLabel>цвет обводки</CustomStyleControlLabel>
-        <TileSelect
+        <CustomStyleControlStrokeSelect
+          label='обводка'
+          color={value.rule.strokeColor}
+          value={{ strokeWidth: value.rule.strokeWidth, strokeDashArray: value.rule.strokeDashArray }}
+          onChange={this.strokeChangeHandler}
+        />
+
+        <CustomStyleControlColorSelect
+          colors={customStyleStrokeColors}
           value={value.rule.strokeColor}
-          options={customStyleStrokeColors.map(color => ({
-            tile: <CustomStyleControlColorTile color={color} />,
-            value: color
-          }))}
           onChange={this.strokeColorChangeHandler}
         />
 
-        <CustomStyleControlLabel>обводка</CustomStyleControlLabel>
-        <TileSelect
-          value={currentStrokeIndex}
-          options={customStyleStrokes.map((stroke, i) => ({
-            tile: (
-              <CustomStyleControlStrokeTile strokeWidth={stroke.strokeWidth} strokeDasharray={stroke.strokeDashArray} />
-            ),
-            value: i
-          }))}
-          onChange={this.onDashChange}
+        <CustomStyleControlHatchingSelect
+          label='заливка'
+          color={value.rule.fillColor}
+          value={value.rule.fillGraphic}
+          onChange={this.fillGraphicChangeHandler}
         />
 
-        <CustomStyleControlLabel>цвет заливки</CustomStyleControlLabel>
-        <TileSelect
+        <CustomStyleControlColorSelect
+          colors={customStyleFillColors}
           value={value.rule.fillColor}
-          options={customStyleFillColors.map(color => ({
-            tile: <CustomStyleControlColorTile color={color} />,
-            value: color
-          }))}
           onChange={this.fillColorChangeHandler}
         />
       </div>
@@ -72,18 +58,13 @@ class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlForm
   }
 
   @boundMethod
-  private onDashChange(e: SelectChangeEvent<unknown>) {
+  private strokeChangeHandler(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
     const { onChange, value } = this.props;
 
-    if (value.type !== 'polygon' || typeof e.target.value !== 'number') {
+    if (value.type !== 'polygon') {
       throw this.ruleTypeError;
     }
 
-    if (typeof e.target.value !== 'number') {
-      throw new TypeError('Ошибка при выборе линии');
-    }
-
-    const stroke = customStyleStrokes[e.target.value];
     const rule: PolygonRule = {
       ...value.rule,
       strokeDashArray: stroke.strokeDashArray,
@@ -94,29 +75,41 @@ class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlForm
   }
 
   @boundMethod
-  private strokeColorChangeHandler(e: SelectChangeEvent<unknown>) {
-    this.colorChange('strokeColor', e.target.value);
+  private strokeColorChangeHandler(color: string) {
+    this.colorChange('strokeColor', color);
   }
 
   @boundMethod
-  private fillColorChangeHandler(e: SelectChangeEvent<unknown>) {
-    this.colorChange('fillColor', e.target.value);
+  private fillColorChangeHandler(color: string) {
+    this.colorChange('fillColor', color);
   }
 
-  private colorChange(property: 'fillColor' | 'strokeColor', color: unknown) {
+  private colorChange(property: 'fillColor' | 'strokeColor', color: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'polygon') {
       throw this.ruleTypeError;
     }
 
-    if (typeof color !== 'string') {
-      throw new TypeError('Ошибка при выборе цвета');
+    const rule: PolygonRule = {
+      ...value.rule,
+      [property]: color
+    };
+
+    onChange({ ...value, rule });
+  }
+
+  @boundMethod
+  private fillGraphicChangeHandler(graphic: PolygonRule['fillGraphic']) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'polygon') {
+      throw this.ruleTypeError;
     }
 
     const rule: PolygonRule = {
       ...value.rule,
-      [property]: color
+      fillGraphic: graphic
     };
 
     onChange({ ...value, rule });

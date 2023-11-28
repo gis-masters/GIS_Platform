@@ -50,7 +50,11 @@ export class ExplorerAdapterTypeSchemasRoot {
     { page, pageSize, sort, sortOrder, filter }: PageOptions
   ): Promise<[ExplorerItemData<Schema>[], number]> {
     const all = await schemaService.getAllSchemas();
-    const filtered = filter?.name ? filterObjects(all, { name: { $ilike: `%${String(filter.name)}%` } }) : all;
+    const filtered = filter?.text
+      ? filterObjects(all, {
+          $or: [{ name: { $ilike: `%${String(filter.text)}%` } }, { title: { $ilike: `%${String(filter.text)}%` } }]
+        })
+      : all;
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
     const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
@@ -108,11 +112,11 @@ export class ExplorerAdapterTypeSchemasRoot {
   }
 
   static getChildrenFilterField(): string {
-    return 'name';
+    return 'text';
   }
 
   static getChildrenFilterLabel(): string {
-    return 'Фильтр по идентификатору';
+    return 'Фильтр';
   }
 
   static getToolbarActions(): ReactNode {

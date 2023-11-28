@@ -2,22 +2,22 @@ import React, { FC, ReactNode } from 'react';
 import { Select, MenuItem, SelectProps as BaseSelectProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./TileSelect.scss';
+import '!style-loader!css-loader!sass-loader!./TiledSelect.scss';
 
-const cnTileSelect = cn('TileSelect');
-
-interface TileSelectProps extends BaseSelectProps {
-  label?: string;
-  options: TileOption[];
-  dropdownColumns?: number;
-}
+const cnTiledSelect = cn('TiledSelect');
 
 interface TileOption {
   tile: ReactNode;
   value: string | number;
 }
 
-export const TileSelect: FC<TileSelectProps> = ({
+interface TiledSelectProps extends BaseSelectProps {
+  label?: string;
+  options: TileOption[];
+  dropdownColumns?: number;
+}
+
+export const TiledSelect: FC<TiledSelectProps> = ({
   className,
   options,
   variant = 'standard',
@@ -29,18 +29,18 @@ export const TileSelect: FC<TileSelectProps> = ({
     {...props}
     MenuProps={{
       MenuListProps: {
-        className: cnTileSelect('Dropdown', [MenuProps?.MenuListProps?.className]),
-        style: { '--TileSelectDropdownColumns': dropdownColumns, ...MenuProps?.MenuListProps?.style },
+        className: cnTiledSelect('Dropdown', [MenuProps?.MenuListProps?.className]),
+        style: { '--TiledSelectDropdownColumns': dropdownColumns, ...MenuProps?.MenuListProps?.style },
         ...MenuProps?.MenuListProps
       },
       ...MenuProps
     }}
     variant={variant}
-    className={cnTileSelect(null, [className])}
+    className={cnTiledSelect(null, [className])}
   >
     {options.map((item, i) => {
       return (
-        <MenuItem key={i} value={item.value} className={cnTileSelect('Tile')}>
+        <MenuItem key={i} value={item.value} className={cnTiledSelect('Tile')}>
           {item.tile}
         </MenuItem>
       );

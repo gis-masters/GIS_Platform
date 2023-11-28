@@ -10,11 +10,7 @@ import {
   Schema,
   SimpleSchema
 } from '../../services/data/schema/schema.models';
-import {
-  getSimpleStylesListForGeometryType,
-  getStyleSld,
-  loadLayerStyleRules
-} from '../../services/geoserver/styles/styles.service';
+import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
 import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layers/layers.models';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
@@ -26,8 +22,9 @@ import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Loading } from '../Loading/Loading';
-import { Legend } from '../Legend/Legend';
 import { FormProps } from '../Form/Form';
+
+import { EditLayerDialogStyleIcon } from './StyleIcon/EditLayerDialog-StyleIcon';
 
 const cnEditLayerDialog = cn('EditLayerDialog');
 
@@ -69,7 +66,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         invoke={this.formInvoke}
         schema={this.layerSchema}
         value={layer}
-        afterForm={Loading({ visible: this.busy })}
+        afterForm={<Loading visible={this.busy} />}
         actionFunction={this.editLayer}
         onFormChange={this.formChangeHandler}
         actionButtonProps={{ children: 'Изменить' }}
@@ -101,9 +98,17 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
 
   @computed
   private get defaultStylesOptions(): PropertyOption[] {
+    const { layer } = this.props;
+
     return this.schemaWithAppliedView?.styleName
       ? [
           {
+            startIcon: (
+              <EditLayerDialogStyleIcon
+                styleName={this.schemaWithAppliedView.styleName}
+                layerComplexName={layer.complexName}
+              />
+            ),
             title: `По-умолчанию (${this.schemaWithAppliedView.styleName})`,
             value: this.schemaWithAppliedView.styleName
           }
@@ -133,7 +138,11 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         options: [
           ...this.defaultStylesOptions,
           ...this.simpleStylesOptions,
-          { title: 'Настраиваемый', value: CUSTOM_STYLE_NAME }
+          {
+            startIcon: <EditLayerDialogStyleIcon styleName={CUSTOM_STYLE_NAME} layerComplexName={layer.complexName} />,
+            title: 'Настраиваемый',
+            value: CUSTOM_STYLE_NAME
+          }
         ]
       });
 
@@ -194,19 +203,20 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     }
     const stylesList = await getSimpleStylesListForGeometryType(this.props.geometryType);
     const stylesListOptions: PropertyOption[] = await Promise.all(
-      stylesList.map(async el => {
+      stylesList.map(async styleName => {
+        let title = styleName;
         try {
-          const legend = await loadLayerStyleRules(el, this.props.layer.complexName);
-          const sldStyle = await getStyleSld(el);
-
-          return {
-            title: getStyleTitle(sldStyle) || el,
-            value: el,
-            startIcon: <Legend rules={legend} withoutTitle cleanDuplicates />
-          };
+          const sldStyle = await getStyleSld(styleName);
+          title = getStyleTitle(sldStyle);
         } catch {
-          return { title: el, value: el };
+          // ничего не делаем, так как если не удалось получить название стиля, то мы выводим его имя
         }
+
+        return {
+          startIcon: <EditLayerDialogStyleIcon layerComplexName={this.props.layer.complexName} styleName={styleName} />,
+          title,
+          value: styleName
+        };
       })
     );
 
@@ -219,6 +229,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     this.simpleStylesOptions = options;
   }
 
+  @action
   private setBusy(busy: boolean) {
     this.busy = busy;
   }

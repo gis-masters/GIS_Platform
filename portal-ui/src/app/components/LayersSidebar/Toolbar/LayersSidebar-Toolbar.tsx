@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, observable, makeObservable, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
-import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
-import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
+import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
+import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayersSettings } from '../../Icons/LayersSettings';
+import { IconButton } from '../../IconButton/IconButton';
 import { LayerAdd } from '../../Icons/LayerAdd';
-import { projectsService } from '../../../services/gis/projects/projects.service';
-import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
@@ -48,45 +49,42 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
 
   render() {
     const { editMode, above } = this.props;
+    const hasChangedLayers: boolean = currentProject.canBeEdited
+      ? Boolean(currentProject.queriesQueueLength)
+      : this.hasChangedLayersIgnoringEnabledAndExpanded;
 
     return (
       <>
         <div className={cnLayersSidebarToolbar({ above })}>
-          <LayersSidebarToolbarLeft>
-            {editMode && currentProject.canBeEdited && (
-              <Tooltip title='Сохранить для всех пользователей'>
+          {hasChangedLayers && (
+            <LayersSidebarToolbarLeft>
+              <Tooltip
+                title={
+                  'Сохранить список слоёв для всех пользователей' +
+                  (currentProject.canBeEdited ? '' : ' (недостаточно прав)')
+                }
+              >
                 <span>
                   <IconButton
                     className={cnLayersSidebarSaveBtn()}
                     onClick={this.save}
-                    disabled={!currentProject.queriesQueueLength}
+                    disabled={!currentProject.canBeEdited}
                     color='primary'
                   >
                     <SaveOutlined />
                   </IconButton>
                 </span>
               </Tooltip>
-            )}
 
-            {editMode && (
               <Tooltip title='Отменить изменения'>
-                <span>
-                  <IconButton onClick={this.cancel} color='secondary'>
-                    <CancelOutlined />
-                  </IconButton>
-                </span>
-              </Tooltip>
-            )}
-          </LayersSidebarToolbarLeft>
-          <LayersSidebarToolbarRight>
-            {editMode && (
-              <Tooltip title='Подключить слой'>
-                <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
-                  {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
+                <IconButton onClick={this.cancel} color='secondary'>
+                  <CancelOutlined />
                 </IconButton>
               </Tooltip>
-            )}
+            </LayersSidebarToolbarLeft>
+          )}
 
+          <LayersSidebarToolbarRight>
             {editMode && (
               <Tooltip title='Создать группу'>
                 <IconButton onClick={this.openCreateGroupDialog}>
@@ -94,6 +92,12 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
                 </IconButton>
               </Tooltip>
             )}
+
+            <Tooltip title='Подключить слой'>
+              <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
+                {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
+              </IconButton>
+            </Tooltip>
 
             {organizationSettings.editProjectLayer && (
               <Tooltip title='Настроить слои проекта'>
@@ -114,6 +118,21 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
 
         <AddLayerDialog open={this.addLayerDialogOpen} onClose={this.closeAddLayerDialog} onAdd={this.addLayer} />
       </>
+    );
+  }
+
+  @computed
+  private get hasChangedLayersIgnoringEnabledAndExpanded(): boolean {
+    const { groupsToCreate, groupsToDelete, groupsToPatch, layersToCreate, layersToDelete, layersToPatch } =
+      currentProject.queriesQueue;
+
+    if (groupsToCreate.length || groupsToDelete.length || layersToCreate.length || layersToDelete.length) {
+      return true;
+    }
+
+    return (
+      groupsToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled' && key !== 'expanded')) ||
+      layersToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled'))
     );
   }
 

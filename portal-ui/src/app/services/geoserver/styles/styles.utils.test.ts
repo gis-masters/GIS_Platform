@@ -46,11 +46,10 @@ const checkeredOrangePolygon: CustomStyleDescription = {
     strokeColor: '#0000bb',
     strokeWidth: 2,
     strokeDashArray: [4, 4],
-    fillColor: '#ff8000',
+    fillColor: '#0000bb',
     fillGraphic: {
       type: 'times',
       strokeWidth: 2,
-      strokeColor: '#0000bb',
       size: 6
     }
   }
@@ -69,7 +68,7 @@ const redPolygonSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><SvgParameter name="fill">#ff5555</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const checkeredOrangePolygonSld =
-  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><SvgParameter name="fill">#ff8000</SvgParameter><GraphicFill><Graphic><Mark><WellKnownName>times</WellKnownName><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>6</Size></Graphic></GraphicFill></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-dasharray">4 4</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><GraphicFill><Graphic><Mark><WellKnownName>shape://times</WellKnownName><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>6</Size></Graphic></GraphicFill></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-dasharray">4 4</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 describe('утилита создания SLD-стилей buildCustomSld', () => {
   test('красная круглая точка', () => {

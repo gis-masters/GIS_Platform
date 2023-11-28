@@ -9,15 +9,17 @@ import '!style-loader!css-loader!sass-loader!./CustomStyleControl-StrokeTile.scs
 const cnCustomStyleControlStrokeTile = cn('CustomStyleControl', 'StrokeTile');
 
 interface CustomStyleControlStrokeTileProps {
+  color: string;
   strokeWidth: number;
   strokeDasharray?: number[];
 }
 
-const STROKE_TILE_SIZE = 55;
+const STROKE_TILE_SIZE = 65;
 
 export const CustomStyleControlStrokeTile: FC<CustomStyleControlStrokeTileProps> = ({
   strokeWidth,
-  strokeDasharray = [STROKE_TILE_SIZE]
+  strokeDasharray = [STROKE_TILE_SIZE],
+  color
 }) => {
   const displayedInTileDashArray: number[] = [];
   let summaryLength = 0;
@@ -32,7 +34,11 @@ export const CustomStyleControlStrokeTile: FC<CustomStyleControlStrokeTileProps>
   return (
     <div
       className={cnCustomStyleControlStrokeTile()}
-      style={{ '--CustomStyleControlStrokeWidth': strokeWidth, '--CustomStyleControlStrokeTileSize': STROKE_TILE_SIZE }}
+      style={{
+        '--CustomStyleControlStrokeWidth': strokeWidth,
+        '--CustomStyleControlStrokeTileSize': STROKE_TILE_SIZE,
+        '--CustomStyleControlStrokeTileColor': color
+      }}
     >
       {chunk(displayedInTileDashArray, 2).map(([length, gap], i) => (
         <CustomStyleControlDash length={length} nextGap={gap} key={i} />

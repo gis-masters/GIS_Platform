@@ -22,16 +22,14 @@ export const CustomRuleTypePolygon: FC<CustomStyleDescription> = ({ rule, type }
     <Rule>
       <PolygonSymbolizer>
         <Fill>
-          {rule.fillColor && <SvgParameter name='fill'>{rule.fillColor}</SvgParameter>}
+          {rule.fillColor && !rule.fillGraphic && <SvgParameter name='fill'>{rule.fillColor}</SvgParameter>}
           {rule.fillGraphic && (
             <GraphicFill>
               <Graphic>
                 <Mark>
-                  <WellKnownName>{rule.fillGraphic.type}</WellKnownName>
+                  <WellKnownName>{`shape://${rule.fillGraphic.type}`}</WellKnownName>
                   <Stroke>
-                    {rule.fillGraphic.strokeColor && (
-                      <SvgParameter name='stroke'>{rule.fillGraphic.strokeColor}</SvgParameter>
-                    )}
+                    {rule.fillColor && <SvgParameter name='stroke'>{rule.fillColor}</SvgParameter>}
                     {rule.fillGraphic.strokeWidth && (
                       <SvgParameter name='stroke-width'>{rule.fillGraphic.strokeWidth}</SvgParameter>
                     )}

@@ -68,8 +68,8 @@ export interface FilteredStylesLayerRequest {
 }
 
 export interface PointRule {
-  markColor?: string;
-  markSize?: number;
+  markColor: string;
+  markSize: number;
   markType: 'circle' | 'square' | 'triangle' | 'star';
 }
 
@@ -79,19 +79,17 @@ export interface LineRule {
   strokeDashArray?: number[];
 }
 
-export type FillGraphicType = 'times';
+export type FillGraphicType = 'oarrow' | 'slash' | 'backslash' | 'times' | 'horline' | 'vertline' | 'plus';
 
 export interface PolygonRule {
-  strokeColor?: string;
-  strokeWidth?: number;
+  strokeColor: string;
+  strokeWidth: number;
   strokeDashArray?: number[];
-  fillColor?: string;
+  fillColor: string;
   fillGraphic?: {
     type: FillGraphicType;
-    strokeColor?: string;
-    strokeWidth?: number;
-    size?: number;
-    strokeDashArray?: number[];
+    strokeWidth: number;
+    size: number;
   };
 }
 
@@ -128,65 +126,148 @@ export interface StyleGeoserverInfo {
 export const CUSTOM_STYLE_NAME = '__custom__';
 
 export const customStyleStrokeColors: string[] = [
-  '#000000',
-  '#555555',
+  '#51a7f9',
+  '#6fc040',
+  '#f5d427',
+  '#f3901d',
+  '#ed5c57',
+  '#b36ae2',
+
+  '#0c64c0',
+  '#0c882a',
+  '#dcbe22',
+  '#de6a19',
+  '#c82613',
+  '#763e9b',
+
+  '#174e86',
+  '#0f5c1a',
+  '#c3971d',
+  '#be5b17',
+  '#861106',
+  '#5e327c',
+
+  '#002451',
+  '#06400c',
+  '#a37519',
+  '#934511',
+  '#570606',
+  '#3b204d',
+
+  '#cccccc',
+  '#aaaaaa',
   '#888888',
-  '#eeeeee',
-  '#aa0000',
-  '#ff3333',
-  '#ff8888',
-  '#ffaaaa',
-  '#00aa00',
-  '#33ff33',
-  '#88ff88',
-  '#aaffaa',
-  '#0000aa',
-  '#0000ff',
-  '#3333ff',
-  '#aaaaff',
-  '#ffff00',
-  '#00ffff',
-  '#ff00ff',
-  '#7f5e00'
+  '#666666',
+  '#333333',
+  '#000000'
 ];
 
 export const customStyleFillColors: string[] = [
-  '#ffffff',
-  '#888888',
-  '#eeeeee',
-  '#aa5555',
-  '#ff5555',
-  '#ff8888',
-  '#ffaaaa',
-  '#55aa55',
-  '#55ff55',
-  '#88ff88',
-  '#aaffaa',
-  '#5555aa',
-  '#5555ff',
-  '#5555ff',
-  '#aaaaff',
-  '#ffff55',
-  '#55ffff',
-  '#ff55ff',
-  '#7f5e55'
+  '#80ffff',
+  '#00ff00',
+  '#ffff00',
+  '#ff8000',
+  '#ff0000',
+  '#ff00ff',
+
+  '#a0a0ff',
+  '#80ff80',
+  '#ffff80',
+  '#ffc080',
+  '#ff8080',
+  '#ff80ff',
+
+  '#6666ff',
+  '#cccccc',
+  '#999999',
+  '#666666',
+  '#333333',
+  '#000000'
 ];
 
 export const customStyleStrokes: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>[] = [
+  { strokeWidth: 1 },
+  { strokeWidth: 1, strokeDashArray: [2, 2] },
+  { strokeWidth: 1, strokeDashArray: [4, 2] },
+  { strokeWidth: 1, strokeDashArray: [4, 2, 2, 2] },
+
   { strokeWidth: 2 },
   { strokeWidth: 2, strokeDashArray: [2, 2] },
-  { strokeWidth: 2, strokeDashArray: [4, 2] },
-  { strokeWidth: 2, strokeDashArray: [4, 2, 2, 2] },
+  { strokeWidth: 2, strokeDashArray: [6, 2] },
+  { strokeWidth: 2, strokeDashArray: [6, 2, 2, 2] },
+
   { strokeWidth: 4 },
   { strokeWidth: 4, strokeDashArray: [4, 4] },
-  { strokeWidth: 4, strokeDashArray: [8, 4] },
-  { strokeWidth: 4, strokeDashArray: [8, 4, 4, 4] },
+  { strokeWidth: 4, strokeDashArray: [12, 4] },
+  { strokeWidth: 4, strokeDashArray: [12, 4, 4, 4] },
+
   { strokeWidth: 6 },
   { strokeWidth: 6, strokeDashArray: [6, 6] },
-  { strokeWidth: 6, strokeDashArray: [12, 6] },
-  { strokeWidth: 6, strokeDashArray: [12, 6, 6, 6] },
+  { strokeWidth: 6, strokeDashArray: [18, 6] },
+  { strokeWidth: 6, strokeDashArray: [18, 6, 6, 6] },
+
   { strokeWidth: 8 },
   { strokeWidth: 8, strokeDashArray: [8, 8] },
-  { strokeWidth: 8, strokeDashArray: [16, 8] },
-  { strokeWidth: 8, strokeDashArray: [16, 8, 8, 8] }
+  { strokeWidth: 8, strokeDashArray: [24, 8] },
+  { strokeWidth: 8, strokeDashArray: [24, 8, 8, 8] }
+];
+
+export const customStyleHatches: PolygonRule['fillGraphic'][] = [
+  { strokeWidth: 1, size: 3, type: 'slash' },
+  { strokeWidth: 1, size: 3, type: 'backslash' },
+  { strokeWidth: 1, size: 4, type: 'times' },
+  { strokeWidth: 1, size: 3, type: 'horline' },
+  { strokeWidth: 1, size: 3, type: 'vertline' },
+  { strokeWidth: 1, size: 3, type: 'plus' },
+
+  { strokeWidth: 2, size: 6, type: 'slash' },
+  { strokeWidth: 2, size: 6, type: 'backslash' },
+  { strokeWidth: 2, size: 8, type: 'times' },
+  { strokeWidth: 2, size: 5, type: 'horline' },
+  { strokeWidth: 2, size: 5, type: 'vertline' },
+  { strokeWidth: 2, size: 5, type: 'plus' },
+
+  { strokeWidth: 3, size: 9, type: 'slash' },
+  { strokeWidth: 3, size: 9, type: 'backslash' },
+  { strokeWidth: 3, size: 12, type: 'times' },
+  { strokeWidth: 3, size: 7, type: 'horline' },
+  { strokeWidth: 3, size: 7, type: 'vertline' },
+  { strokeWidth: 3, size: 7, type: 'plus' },
+
+  { strokeWidth: 4, size: 12, type: 'slash' },
+  { strokeWidth: 4, size: 12, type: 'backslash' },
+  { strokeWidth: 4, size: 16, type: 'times' },
+  { strokeWidth: 4, size: 9, type: 'horline' },
+  { strokeWidth: 4, size: 9, type: 'vertline' },
+  { strokeWidth: 4, size: 9, type: 'plus' },
+
+  { strokeWidth: 5, size: 15, type: 'slash' },
+  { strokeWidth: 5, size: 15, type: 'backslash' },
+  { strokeWidth: 5, size: 20, type: 'times' },
+  { strokeWidth: 5, size: 12, type: 'horline' },
+  { strokeWidth: 5, size: 12, type: 'vertline' },
+  { strokeWidth: 5, size: 12, type: 'plus' },
+  undefined
+];
+
+export const customStyleMarks: Pick<PointRule, 'markSize' | 'markType'>[] = [
+  { markSize: 10, markType: 'circle' },
+  { markSize: 10, markType: 'square' },
+  { markSize: 10, markType: 'triangle' },
+  { markSize: 10, markType: 'star' },
+
+  { markSize: 20, markType: 'circle' },
+  { markSize: 20, markType: 'square' },
+  { markSize: 20, markType: 'triangle' },
+  { markSize: 20, markType: 'star' },
+
+  { markSize: 30, markType: 'circle' },
+  { markSize: 30, markType: 'square' },
+  { markSize: 30, markType: 'triangle' },
+  { markSize: 30, markType: 'star' },
+
+  { markSize: 40, markType: 'circle' },
+  { markSize: 40, markType: 'square' },
+  { markSize: 40, markType: 'triangle' },
+  { markSize: 40, markType: 'star' }
 ];

@@ -12,6 +12,7 @@ import { services } from '../../services';
 import { Mime } from '../../util/Mime';
 
 import {
+  CUSTOM_STYLE_NAME,
   FilteredStylesLayerRequest,
   FilteredStylesResponse,
   StyleFilter,
@@ -29,7 +30,7 @@ export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRu
   const schema = await getLayerSchema(layer);
   const styleName = layer.styleName || schema.styleName;
 
-  if (!styleName) {
+  if (!styleName || styleName === CUSTOM_STYLE_NAME) {
     return [];
   }
 
@@ -40,7 +41,7 @@ export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRu
   return await parsedStyles[styleName];
 }
 
-export async function loadLayerStyleRules(styleName?: string, complexName?: string): Promise<StyleRule[]> {
+export async function loadLayerStyleRules(styleName?: string, layerComplexName?: string): Promise<StyleRule[]> {
   if (!styleName) {
     return [];
   }
@@ -60,12 +61,11 @@ export async function loadLayerStyleRules(styleName?: string, complexName?: stri
 
   return await Promise.all(
     rulesWithoutLegend.map(async rule => {
-      if (!complexName || !styleName) {
+      if (!layerComplexName || !styleName) {
         throw new Error('Невозможно получить легенду: нет имени слоя или стиля');
       }
 
-      const blob = await getLegendGraphic(complexName, rule.name, styleName);
-      const legend = await createImageFromBlob(blob);
+      const legend = await getLegendGraphic(layerComplexName, rule.name, styleName);
 
       return { ...rule, legend };
     })
@@ -125,24 +125,6 @@ function parseFilter(xmlFilter?: Element | null): StyleFilter | undefined {
   }
 }
 
-function createImageFromBlob(image: Blob): Promise<string> {
-  return new Promise(resolve => {
-    const reader = new FileReader();
-
-    reader.addEventListener(
-      'load',
-      () => {
-        resolve(reader.result as string);
-      },
-      false
-    );
-
-    if (image) {
-      reader.readAsDataURL(image);
-    }
-  });
-}
-
 // sld's cache
 const sldStyles: Record<string, Promise<string>> = {};
 
@@ -155,6 +137,11 @@ export async function getStyleSld(complexStyleName: string): Promise<string> {
   if (!sldStyles[complexStyleName]) {
     sldStyles[complexStyleName] = stylesClient.getStyleSld(complexStyleName);
   }
+
+  // не хранить promise, который поймал ошибку, и при повторном вызове делать новый запрос
+  sldStyles[complexStyleName].catch(() => {
+    delete sldStyles[complexStyleName];
+  });
 
   return await sldStyles[complexStyleName];
 }
@@ -218,7 +205,7 @@ export async function getSimpleStylesListForGeometryType(geometryType: GeometryT
     const dirtyStylesList = await stylesClient.getStylesList();
 
     stylesList[supGeometryType].push(
-      ...dirtyStylesList.styles.style.filter(el => el.name.includes(`simple_${supGeometryType}_`)).map(el => el.name)
+      ...dirtyStylesList.styles.style.filter(el => el.name.startsWith(`simple_${supGeometryType}_`)).map(el => el.name)
     );
   }
 

@@ -4,14 +4,18 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { CustomStyleDescription } from '../../services/geoserver/styles/styles.models';
 import { buildCustomSld, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
+import { CustomStyleDescription } from '../../services/geoserver/styles/styles.models';
 import { getSupGeometryType } from '../../services/geoserver/styles/styles.service';
+import { schemaService } from '../../services/data/schema/schema.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
 import { CustomStyleControlForm } from './Form/CustomStyleControl-Form.composed';
-import { schemaService } from '../../services/data/schema/schema.service';
+import { getLegendGraphic } from '../../services/geoserver/wms/wms.service';
+
+import '!style-loader!css-loader!sass-loader!./CustomStyleControl.scss';
+import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 
 const cnCustomStyleControl = cn('CustomStyleControl');
 
@@ -19,7 +23,7 @@ const defaultCustomStyles: Record<CustomStyleDescription['type'], CustomStyleDes
   line: {
     type: 'line',
     rule: {
-      strokeColor: '#ff0000',
+      strokeColor: '#0f5c1a',
       strokeWidth: 2
     }
   },
@@ -27,15 +31,15 @@ const defaultCustomStyles: Record<CustomStyleDescription['type'], CustomStyleDes
     type: 'point',
     rule: {
       markType: 'circle',
-      markSize: 5,
-      markColor: '#ff0000'
+      markSize: 20,
+      markColor: '#ed5c57'
     }
   },
   polygon: {
     type: 'polygon',
     rule: {
-      fillColor: '#ff55ff',
-      strokeColor: '#ff0000',
+      fillColor: '#ffff80',
+      strokeColor: '#0f5c1a',
       strokeWidth: 2
     }
   }
@@ -44,6 +48,7 @@ const defaultCustomStyles: Record<CustomStyleDescription['type'], CustomStyleDes
 @observer
 export class CustomStyleControl extends Component<FormControlProps> {
   @observable private type?: CustomStyleDescription['type'];
+  @observable private preview?: string;
 
   constructor(props: FormControlProps) {
     super(props);
@@ -51,9 +56,10 @@ export class CustomStyleControl extends Component<FormControlProps> {
   }
 
   async componentDidMount() {
-    const { schemaId } = this.props.formValue as CrgLayer;
+    const { formValue, onChange } = this.props;
+    const { schemaId, style, complexName } = formValue as CrgLayer;
 
-    if (!schemaId) {
+    if (!schemaId || !complexName) {
       throw new Error('Некорректный слой');
     }
 
@@ -64,11 +70,28 @@ export class CustomStyleControl extends Component<FormControlProps> {
     }
 
     this.setType(getSupGeometryType(schema.geometryType));
+
+    if (!style && this.type && onChange) {
+      onChange({
+        propertyName: 'style',
+        value: buildCustomSld(complexName, defaultCustomStyles[this.type])
+      });
+    }
+
+    await this.loadPreview();
+  }
+
+  async componentDidUpdate(prevProps: Readonly<FormControlProps>) {
+    if (this.props.fieldValue !== prevProps.fieldValue) {
+      await this.loadPreview();
+    }
   }
 
   render() {
     return (
       <div className={cnCustomStyleControl()}>
+        {this.preview && <CustomStyleControlPreview previewSrc={this.preview} />}
+
         {this.parsedValue && (
           <CustomStyleControlForm type={this.parsedValue.type} value={this.parsedValue} onChange={this.onFormChange} />
         )}
@@ -104,8 +127,25 @@ export class CustomStyleControl extends Component<FormControlProps> {
     }
   }
 
+  private async loadPreview() {
+    const { fieldValue, formValue } = this.props;
+    const complexName = (formValue as CrgLayer).complexName;
+
+    if (!fieldValue || typeof fieldValue !== 'string') {
+      return;
+    }
+
+    const preview = await getLegendGraphic(complexName, null, null, fieldValue);
+    this.setPreview(preview && undefined); // временно отключил отображение превью, будет включено вскоре
+  }
+
   @action
   private setType(type: CustomStyleDescription['type']) {
     this.type = type;
+  }
+
+  @action
+  private setPreview(preview: string) {
+    this.preview = preview;
   }
 }

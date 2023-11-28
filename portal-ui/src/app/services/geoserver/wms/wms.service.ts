@@ -7,6 +7,7 @@ import { Mime } from '../../util/Mime';
 import { wmsClient } from './wms.client';
 import { getXmlFilterFromCql } from './wms.utils';
 import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
+import { createImageFromBlob } from '../styles/styles.utils';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 
 export async function getMap(url: string): Promise<Blob> {
@@ -221,9 +222,15 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
  * Get a graphic that is representative of specific rule by their name.
  *
  * @param complexLayerName  Название слоя в формате 'workspace:layerName'
- * @param ruleName          Название правила в стиле.
- * @param style             Название стиля.
+ * @param ruleName          Название правила в стиле
+ * @param styleName         Название стиля
+ * @param style             Стиль в sld
  */
-export async function getLegendGraphic(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
-  return await wmsClient.getLegendGraphic(complexLayerName, ruleName, style);
+export async function getLegendGraphic(
+  complexLayerName: string,
+  ruleName?: string,
+  styleName?: string,
+  style?: string
+): Promise<string> {
+  return await createImageFromBlob(await wmsClient.getLegendGraphic(complexLayerName, ruleName, styleName, style));
 }

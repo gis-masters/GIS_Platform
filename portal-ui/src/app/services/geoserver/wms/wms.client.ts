@@ -34,17 +34,27 @@ class WmsClient extends GeoserverClient {
     });
   }
 
-  getLegendGraphic(complexLayerName: string, ruleName: string, style: string): Promise<Blob> {
-    const params = {
+  getLegendGraphic(complexLayerName: string, ruleName?: string, styleName?: string, style?: string): Promise<Blob> {
+    const params: Record<string, string> = {
       REQUEST: 'GetLegendGraphic',
       VERSION: '1.3.0',
       FORMAT: 'image/png',
       WIDTH: '40',
       HEIGHT: '20',
-      LAYER: complexLayerName,
-      STYLE: style,
-      RULE: ruleName
+      LAYER: complexLayerName
     };
+
+    if (styleName) {
+      params.STYLE = styleName;
+    }
+
+    if (style) {
+      params.SLD_BODY = style;
+    }
+
+    if (ruleName) {
+      params.RULE = ruleName;
+    }
 
     return http.get<Blob>(this.getWmsUrl(), { responseType: 'blob', params });
   }

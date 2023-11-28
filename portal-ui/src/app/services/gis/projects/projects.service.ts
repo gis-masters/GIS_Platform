@@ -6,7 +6,7 @@ import { route } from '../../../stores/Route.store';
 import { mapStore } from '../../../stores/Map.store';
 import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { isReadAllowed } from '../../data/permissions/permissions.service';
+import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
 import { communicationService } from '../../communication.service';
 import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 import { usersService } from '../../auth/users/users.service';
@@ -132,7 +132,7 @@ class ProjectsService {
     await usersService.fetchCurrentUser();
     const layers = await this.getLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
-    const layersPermissions = await Promise.all(layers.map(async layer => await isReadAllowed(layer)));
+    const layersPermissions = await Promise.all(layers.map(async layer => await isLayerReadAllowed(layer)));
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
     const groups = await this.getGroups(project.id);
 

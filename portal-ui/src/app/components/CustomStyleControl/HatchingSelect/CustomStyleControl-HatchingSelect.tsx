@@ -1,0 +1,65 @@
+import React, { Component } from 'react';
+import { SelectChangeEvent } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+
+import { PolygonRule, customStyleHatches } from '../../../services/geoserver/styles/styles.models';
+import { TiledSelect } from '../../TiledSelect/TiledSelect';
+
+import { CustomStyleControlHatchingTile } from '../HatchingTile/CustomStyleControl-HatchingTile';
+import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
+import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
+
+const cnCustomStyleControlHatchingSelect = cn('CustomStyleControl', 'HatchingSelect');
+
+interface CustomStyleControlHatchingSelectProps {
+  label?: string;
+  color: string;
+  value: PolygonRule['fillGraphic'];
+  onChange(value: PolygonRule['fillGraphic']): void;
+}
+
+export class CustomStyleControlHatchingSelect extends Component<CustomStyleControlHatchingSelectProps> {
+  render() {
+    const { value, label, color } = this.props;
+
+    const hatchingIndex = customStyleHatches.findIndex(
+      hatch =>
+        hatch === value ||
+        (hatch?.type === value?.type && hatch?.strokeWidth === value?.strokeWidth && hatch?.size === value?.size)
+    );
+
+    return (
+      <CustomStyleControlSubControl className={cnCustomStyleControlHatchingSelect()}>
+        {label && <CustomStyleControlLabel>{label}</CustomStyleControlLabel>}
+        <TiledSelect
+          value={hatchingIndex}
+          dropdownColumns={6}
+          options={customStyleHatches.map((hatch, i) => ({
+            tile: (
+              <CustomStyleControlHatchingTile
+                color={color}
+                size={hatch?.size}
+                type={hatch?.type}
+                strokeWidth={hatch?.strokeWidth}
+              />
+            ),
+            value: i
+          }))}
+          onChange={this.changeHandler}
+        />
+      </CustomStyleControlSubControl>
+    );
+  }
+
+  @boundMethod
+  private changeHandler(e: SelectChangeEvent<unknown>) {
+    const { onChange } = this.props;
+
+    if (typeof e.target.value !== 'number') {
+      throw new TypeError('Ошибка при выборе штриховки');
+    }
+
+    onChange(customStyleHatches[e.target.value]);
+  }
+}

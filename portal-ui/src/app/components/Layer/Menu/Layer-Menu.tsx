@@ -84,8 +84,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private importXmlDialogOpen = false;
   @observable private importShapeDialogOpen = false;
   @observable private importShapeAllowed = false;
-  @observable private rasterDocument: LibraryRecord;
-  @observable private vectorTable: VectorTable;
+  @observable private rasterDocument?: LibraryRecord;
+  @observable private vectorTable?: VectorTable;
   @observable private schema?: Schema;
   @observable private dialogOpen = false;
   @observable private layerEditDialogOpen = false;
@@ -126,15 +126,6 @@ export class LayerMenu extends Component<LayerMenuProps> {
           <MenuItem disableRipple>
             <LayerTransparency entity={entity} />
           </MenuItem>
-
-          {editMode && !isGroup && (
-            <MenuItem onClick={this.openLayerEditDialog}>
-              <ListItemIcon>
-                <TuneOutlined />
-              </ListItemIcon>
-              Свойства
-            </MenuItem>
-          )}
 
           {!editMode && (this.isVectorLayer || this.isVectorFromFileLayer) && (
             <MenuItem onClick={this.openAttributeTable}>
@@ -210,6 +201,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </MenuItem>
           )}
 
+          {!isGroup && (
+            <MenuItem onClick={this.openLayerEditDialog}>
+              <ListItemIcon>
+                <TuneOutlined />
+              </ListItemIcon>
+              Свойства
+            </MenuItem>
+          )}
+
           {((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
             <MenuItem onClick={this.deleteLayer}>
               <ListItemIcon>
@@ -252,7 +252,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               open={this.importXmlDialogOpen}
               onClose={this.closeImportXmlDialog}
               datasetId={(entity as CrgVectorLayer).dataset}
-              tableId={(entity as CrgLayer).tableName}
+              tableId={(entity as CrgVectorLayer).tableName}
               complexName={(entity as CrgLayer).complexName}
             />
           )}
@@ -262,7 +262,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             open={this.importShapeDialogOpen}
             onClose={this.closeImportShapeDialog}
             datasetId={(entity as CrgVectorLayer).dataset}
-            tableId={(entity as CrgLayer).tableName}
+            tableId={(entity as CrgVectorLayer).tableName}
           />
         )}
 
@@ -282,7 +282,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           <LibraryDocumentDialog document={this.rasterDocument} open={this.dialogOpen} onClose={this.closeDialog} />
         )}
 
-        {!isGroup && editMode && (
+        {!isGroup && (
           <EditLayerDialog
             open={this.layerEditDialogOpen}
             onClose={this.closeLayerEditDialog}
@@ -519,7 +519,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const layer = this.props.entity as CrgLayer;
     currentProject.deleteLayer(layer);
 
-    if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
+    if (layer.type === CrgLayerType.VECTOR || (layer.type && isVectorFromFile(layer.type))) {
       communicationService.layerUpdated.emit({ type: 'delete', data: layer as CrgVectorLayer });
     }
   }

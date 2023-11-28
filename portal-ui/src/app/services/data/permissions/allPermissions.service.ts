@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { DebouncedFunc, debounce } from 'lodash';
 
 import { allPermissions } from '../../../stores/AllPermissions.store';
 import { communicationService } from '../../communication.service';
@@ -17,7 +17,7 @@ class AllPermissionsService {
   private static _instance: AllPermissionsService;
   private allPermissionsStoreInited = false;
   private fetchingOperationId?: symbol;
-  private debouncedFetchPermissionsListStore: () => Promise<void>;
+  private debouncedFetchPermissionsListStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchPermissionsListStore = debounce(this.fetchPermissionsListStore, 300);
