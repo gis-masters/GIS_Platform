@@ -72,6 +72,9 @@ public class RabbitConfiguration {
     @Bean public Queue gisogdPublicationQueue() { return new Queue(GISOGD_PUBLICATION_QUEUE);}
     @Bean public Queue gisogdPublicationResponseQueue() { return new Queue(GISOGD_PUBLICATION_RESPONSE_QUEUE);}
 
+    @Bean public Queue gisogdAuditQueue() { return new Queue(GISOGD_AUDIT_QUEUE);}
+    @Bean public Queue gisogdAuditResponseQueue() { return new Queue(GISOGD_AUDIT_RESPONSE_QUEUE);}
+
     @Bean
     public Queue adapterReceiveQueue(Smev3Config smev3Config) {
         return new Queue(smev3Config.getMnemonicIS() + SMEV3_RECEIVE_QUEUE);

@@ -66,8 +66,9 @@ public class BySchemaRowMapper {
                 case TIMESTAMP:
                     Timestamp timestamp = rs.getTimestamp(i);
                     if (timestamp != null) {
-                        properties.put(columnName, timestamp.toLocalDateTime()
-                                                            .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+                        properties.put(columnName,
+                                       timestamp.toLocalDateTime()
+                                                .format(DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
                     } else {
                         properties.put(columnName, null);
                     }
@@ -75,7 +76,7 @@ public class BySchemaRowMapper {
                     break;
                 case OTHER:
                     if (rs.getObject(i) != null && schema != null) {
-                        handleBySchema(properties, columnName, rs.getObject(i));
+                        handleOtherTypesBySchema(properties, columnName, rs.getObject(i));
                     } else {
                         properties.put(columnName, rs.getString(i));
                     }
@@ -89,33 +90,39 @@ public class BySchemaRowMapper {
         }
     }
 
-    void handleBySchema(Map<String, Object> properties,
-                        String columnName,
-                        @NotNull Object object) {
+    void handleOtherTypesBySchema(Map<String, Object> properties,
+                                  String columnName,
+                                  @NotNull Object object) {
         try {
             Optional<SimplePropertyDto> oProperty = getPropertyByName(schema, columnName);
-            if (oProperty.isPresent()) {
-                SimplePropertyDto property = oProperty.get();
-                ValueType valueType = property.getValueTypeAsEnum();
-                if (valueType.equals(FILE)) {
-                    List<FileDescription> descriptions = mapper.readValue(object.toString(),
-                                                                          new TypeReference<List<FileDescription>>() {
-                                                                          });
-
-                    properties.put(columnName, descriptions);
-                } else if (valueType.equals(VERSIONS)) {
-                    List<DocumentVersioningDto> descriptions = mapper.readValue(object.toString(),
-                                                                                new TypeReference<List<DocumentVersioningDto>>() {
-                                                                                });
-
-                    properties.put(columnName, descriptions);
-                } else if (valueType.equals(UUID)) {
-                    properties.put(columnName, object.toString());
-                } else {
-                    log.warn("Unknown property type: {}", valueType);
-                }
-            } else {
+            if (oProperty.isEmpty()) {
+                log.warn("Не удалось найти свойство: '{}' в схеме", columnName);
                 properties.put(columnName, object.toString());
+
+                return;
+            }
+
+            SimplePropertyDto property = oProperty.get();
+            ValueType valueType = property.getValueTypeAsEnum();
+            if (valueType.equals(FILE)) {
+                List<FileDescription> descriptions = mapper.readValue(object.toString(),
+                                                                      new TypeReference<List<FileDescription>>() {
+                                                                      });
+
+                properties.put(columnName, descriptions);
+            } else if (valueType.equals(VERSIONS)) {
+                List<DocumentVersioningDto> descriptions = mapper
+                        .readValue(object.toString(),
+                                   new TypeReference<List<DocumentVersioningDto>>() {
+                                   });
+
+                properties.put(columnName, descriptions);
+            } else if (valueType.equals(UUID)) {
+                properties.put(columnName, object.toString());
+            } else if (valueType.equals(GEOMETRY)) {
+                properties.put(columnName, object.toString());
+            } else {
+                log.warn("Unknown property type: {}", valueType);
             }
         } catch (Exception e) {
             logError("Не удалось обработать колонку: '" + columnName + "'", e);
