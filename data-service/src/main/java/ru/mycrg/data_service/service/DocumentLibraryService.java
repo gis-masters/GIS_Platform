@@ -123,11 +123,11 @@ public class DocumentLibraryService {
         }
 
         Optional<String> oRole = permissionsRepository.getBestRoleForLibrary(libraryId);
-        if (oRole.isPresent()) {
-            return new LibraryModel(dl, oRole.get());
-        } else {
+        if (oRole.isEmpty()) {
             throw new ForbiddenException("Недостаточно прав для просмотра библиотеки: " + libraryId);
         }
+
+        return new LibraryModel(dl, oRole.get());
     }
 
     public boolean isExist(ResourceQualifier rIdentifier) {

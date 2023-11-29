@@ -28,6 +28,7 @@ import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SchemaUtil.*;
@@ -45,12 +46,24 @@ public class SqlBuilder {
 
     public static String buildCopyDataToFtsLayersQuery(ResourceQualifier qualifier,
                                                        List<String> properties) {
-        StringBuilder query = new StringBuilder();
+        boolean isLibrary = qualifier.getType().equals(LIBRARY);
 
-        query.append("INSERT INTO data.fts_layers(schema, \"table\", id, concatenated_data) SELECT ")
+        String ftsTable = "fts_layers";
+        if (isLibrary) {
+            ftsTable = "fts_documents";
+        }
+
+        StringBuilder query = new StringBuilder();
+        query.append("INSERT INTO data.").append(ftsTable).append("(schema, \"table\", id, ")
+             .append(isLibrary ? "path," : "")
+             .append(" concatenated_data) ").append("SELECT ")
              .append("'").append(qualifier.getSchema()).append("' AS schema, ")
              .append("'").append(qualifier.getTable()).append("' AS \"table\", ")
              .append(qualifier.getPrimaryKeyName()).append("::bigint AS id, ");
+
+        if (isLibrary) {
+            query.append("path AS path,");
+        }
 
         IntStream.range(0, properties.size()).forEach(i -> {
             query.append("COALESCE(").append(properties.get(i)).append("::text, '')");

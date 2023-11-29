@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryCreateDto;
 import ru.mycrg.data_service.dto.LibraryModel;
+import ru.mycrg.data_service.dto.LibraryUpdateDto;
 import ru.mycrg.data_service.service.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryRequest;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.DeleteLibraryRequest;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryRequest;
 import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
@@ -20,14 +21,16 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @RestController
 public class DocumentLibraryController {
 
-    private final DocumentLibraryService librariesService;
     private final Mediator mediator;
+    private final DocumentLibraryService librariesService;
 
-    public DocumentLibraryController(DocumentLibraryService librariesService, Mediator mediator) {
+    public DocumentLibraryController(Mediator mediator,
+                                     DocumentLibraryService librariesService) {
         this.librariesService = librariesService;
         this.mediator = mediator;
     }
@@ -63,10 +66,19 @@ public class DocumentLibraryController {
         return new ResponseEntity<>(documentLibrary, CREATED);
     }
 
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PutMapping("/document-libraries/{docLibId}")
+    public ResponseEntity<IResourceModel> updateTable(@PathVariable String docLibId,
+                                                      @Valid @RequestBody LibraryUpdateDto dto) {
+        mediator.execute(new UpdateLibraryRequest(libraryQualifier(docLibId), dto));
+
+        return ResponseEntity.ok().build();
+    }
+
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    @DeleteMapping("/document-libraries/{libraryName}")
-    public ResponseEntity<Void> deleteLibrary(@PathVariable String libraryName) {
-        mediator.execute(new DeleteLibraryRequest(new ResourceQualifier("data", libraryName)));
+    @DeleteMapping("/document-libraries/{docLibId}")
+    public ResponseEntity<Void> deleteLibrary(@PathVariable String docLibId) {
+        mediator.execute(new DeleteLibraryRequest(libraryQualifier(docLibId)));
 
         return ResponseEntity.noContent().build();
     }
