@@ -51,6 +51,8 @@ public class LayerUpdateDto {
 
     private String style;
 
+    private String photoMode;
+
     public LayerUpdateDto() {
         // Required by framework
     }
@@ -165,5 +167,13 @@ public class LayerUpdateDto {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    public String getPhotoMode() {
+        return photoMode;
+    }
+
+    public void setPhotoMode(String photoMode) {
+        this.photoMode = photoMode;
     }
 }

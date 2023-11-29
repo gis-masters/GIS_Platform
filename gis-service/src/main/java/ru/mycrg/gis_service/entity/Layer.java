@@ -83,11 +83,17 @@ public class Layer implements Identifiable<Long> {
     @Column(name = "content_type")
     private String contentType;
 
+    @Column
     private String view;
 
+    @Column
     private String errorText;
 
+    @Column
     private String style;
+
+    @Column
+    private String photoMode;
 
     public Layer() {
         // Required
@@ -118,6 +124,7 @@ public class Layer implements Identifiable<Long> {
         view = dto.getView();
         errorText = dto.getErrorText();
         style = dto.getStyle();
+        photoMode = dto.getPhotoMode();
     }
 
     public Layer(LayerCreateDto dto, Project project) {
@@ -325,6 +332,14 @@ public class Layer implements Identifiable<Long> {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    public String getPhotoMode() {
+        return photoMode;
+    }
+
+    public void setPhotoMode(String photoMode) {
+        this.photoMode = photoMode;
     }
 
     @Override

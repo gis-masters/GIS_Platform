@@ -78,6 +78,8 @@ public class LayerCreateDto {
 
     private String style;
 
+    private String photoMode;
+
     public LayerCreateDto() {
         //Required by framework
     }
@@ -258,6 +260,14 @@ public class LayerCreateDto {
         this.style = style;
     }
 
+    public String getPhotoMode() {
+        return photoMode;
+    }
+
+    public void setPhotoMode(String photoMode) {
+        this.photoMode = photoMode;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -282,6 +292,7 @@ public class LayerCreateDto {
                 "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
                 "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +
                 "\"errorText\":" + (errorText == null ? "null" : "\"" + errorText + "\"") + ", " +
+                "\"photoMode\":" + (photoMode == null ? "null" : "\"" + photoMode + "\"") + ", " +
                 "\"style\":" + (style == null ? "null" : "\"" + style + "\"") +
                 "}";
     }

@@ -62,6 +62,15 @@ public class LayerController {
         return ResponseEntity.ok(layers);
     }
 
+    @GetMapping("/layers/{layer_id}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
+                                                  @PathVariable(name = "layer_id") long layerId) {
+        LayerProjection layerProjection = layerService.findById(projectId, layerId);
+
+        return new Resource<>(layerProjection);
+    }
+
     @PostMapping("/layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
@@ -76,15 +85,6 @@ public class LayerController {
         return layerService.create(projectId, dto)
                            .map(layerProjection -> new ResponseEntity<>(layerProjection, HttpStatus.CREATED))
                            .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.CREATED));
-    }
-
-    @GetMapping("/layers/{layer_id}")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
-                                                  @PathVariable(name = "layer_id") long layerId) {
-        LayerProjection layerProjection = layerService.findById(projectId, layerId);
-
-        return new Resource<>(layerProjection);
     }
 
     @PatchMapping(path = "/layers/{layer_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
