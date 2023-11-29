@@ -5,6 +5,7 @@ import { FilterQuery, addFilterPart } from '../../services/util/filterObjects';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { LibraryRecord } from 'src/app/services/data/library/library.models';
 
+export const datasetRootUrlItems = ['r', 'root', 'dr', 'datasetRoot'];
 export const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];
 
 export function getLibraryFolderExplorerUrl(libraryTableName: string, path: number[]): string {

@@ -457,6 +457,11 @@
         "id": "substrate",
         "title": "Картографические подосновы",
         "contentUrl": "/assets/help/5dataManagement/3substrate/03substrate.html"
+      },
+      {
+        "id": "fullText",
+        "title": "Полнотекстовый поиск",
+        "contentUrl": "/assets/help/5dataManagement/18fullText/18fullText.html"
       }
     ]
   },

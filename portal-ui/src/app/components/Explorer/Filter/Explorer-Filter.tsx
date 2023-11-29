@@ -3,10 +3,14 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
+import { FilterAltOutlined } from '@mui/icons-material';
 
 import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
-import { ExplorerStore } from '../Explorer.store';
+import { IconButton } from '../../IconButton/IconButton';
 import { ExplorerService } from '../Explorer.service';
+import { ExplorerStore } from '../Explorer.store';
+
+import '!style-loader!css-loader!sass-loader!./Explorer-Filter.scss';
 
 const cnExplorerFilter = cn('Explorer', 'Filter');
 
@@ -24,16 +28,21 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
 
     return (
       filterField && (
-        <TextField
-          className={cnExplorerFilter()}
-          label={getChildrenFilterLabel(openedItem) || 'Поиск'}
-          value={filter[filterField] || ''}
-          onChange={this.handleFilterChange}
-          InputProps={{
-            startAdornment: ' '
-          }}
-          variant='standard'
-        />
+        <div className={cnExplorerFilter()}>
+          <TextField
+            label={getChildrenFilterLabel(openedItem) || 'Поиск'}
+            value={filter[filterField] || ''}
+            onChange={this.handleFilterChange}
+            InputProps={{
+              endAdornment: (
+                <IconButton size='small'>
+                  <FilterAltOutlined />
+                </IconButton>
+              )
+            }}
+            variant='standard'
+          />
+        </div>
       )
     );
   }
@@ -43,7 +52,11 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
     const { store, service, onChange } = this.props;
     const { openedItem } = store;
     const filterField = getChildrenFilterField(openedItem);
-    store.setFilter({ [filterField]: e.target.value });
+
+    if (filterField) {
+      store.setFilter({ [filterField]: e.target.value });
+    }
+
     onChange();
     service.paginate(0);
   }

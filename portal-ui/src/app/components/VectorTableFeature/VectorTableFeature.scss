@@ -1,0 +1,24 @@
+body .VectorTableFeature {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  height: 100%;
+
+  &-FeatureCard {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    flex-shrink: 1;
+  }
+
+  &-Breadcrumbs {
+    margin-bottom: 10px;
+  }
+
+  &-DateTitle {
+    margin-right: 0.4em;
+
+    color: var(--gray);
+  }
+}

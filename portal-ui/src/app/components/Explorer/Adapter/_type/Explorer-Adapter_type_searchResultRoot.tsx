@@ -1,6 +1,9 @@
+import React, { ReactNode } from 'react';
+
 import { DataChangeEventDetail, communicationService } from '../../../../services/communication.service';
 import { SearchItemData, SearchRequest } from '../../../../services/data/search/search.model';
 import { Library, LibraryRecord } from '../../../../services/data/library/library.models';
+import { ExportSearchResults } from '../../../ExportSearchResults/ExportSearchResults';
 import { getSearchResults } from '../../../../services/data/search/search.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { getPathFilter } from '../../../DataManagement/DataManagement.utils';
@@ -61,8 +64,15 @@ export class ExplorerAdapterTypeSearchResultRoot {
       }
     }
 
+    if (search.type === 'FEATURE' && search.searchValue) {
+      searchRequest = {
+        text: search.searchValue,
+        type: 'FEATURE'
+      };
+    }
+
     if (searchRequest.text) {
-      const [items] = await getSearchResults(searchRequest);
+      const [items, pagesCount] = await getSearchResults(searchRequest, pageOptions);
       const results = items.map(payload => {
         return {
           type: ExplorerItemType.SEARCH_ITEM,
@@ -70,15 +80,14 @@ export class ExplorerAdapterTypeSearchResultRoot {
         };
       });
 
-      const pagesCount = Math.ceil(results.length / pageOptions.pageSize);
-      const pageStart =
-        results.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
-      const pageEnd = pageStart + pageOptions.pageSize;
-
-      return [results.slice(pageStart, pageEnd), pagesCount];
+      return [results, pagesCount];
     }
 
     return [[], 0];
+  }
+
+  static getToolbarActions(item: ExplorerItemData<ExplorerSearchValue>): ReactNode {
+    return <ExportSearchResults item={item} />;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {

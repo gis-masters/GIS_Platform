@@ -89,7 +89,7 @@ export type NewWfsFeature = Pick<WfsFeature, 'type' | 'geometry' | 'properties'>
 export interface WfsFeature<T extends Coordinate | CoordinateEdited = Coordinate> extends GeoJSONObject {
   type: 'Feature';
   id: string;
-  geometry: WfsGeometry<T>;
+  geometry?: WfsGeometry<T>;
   geometry_name: string;
   properties: Record<string, unknown>;
 }

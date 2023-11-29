@@ -2,9 +2,10 @@ import { boundClass } from 'autobind-decorator';
 
 import { PageableResources } from '../../../../server-types/common-contracts';
 import { http } from '../../api/http.service';
+import { PageOptions } from '../../models';
 import { Client } from '../../api/Client';
 
-import { SearchItemData, SearchRequest } from './search.model';
+import { SearchRawItemData, SearchRequest } from './search.model';
 
 @boundClass
 class SearchClient extends Client {
@@ -14,12 +15,21 @@ class SearchClient extends Client {
     return this._instance || (this._instance = new this());
   }
 
-  private getSearchResultUrl(): string {
-    return `${this.getDataUrl()}/fts`;
+  private getSearchResultUrl(page: number, size: number): string {
+    return `${this.getDataUrl()}/fts?page=${page}&size=${size}`;
   }
 
-  async getSearchResults(searchRequest: SearchRequest): Promise<PageableResources<SearchItemData>> {
-    return await http.post<PageableResources<SearchItemData>>(this.getSearchResultUrl(), searchRequest);
+  async getSearchResults(
+    searchRequest: SearchRequest,
+    pageOptions: PageOptions
+  ): Promise<PageableResources<SearchRawItemData>> {
+    return await http.post<PageableResources<SearchRawItemData>>(
+      this.getSearchResultUrl(pageOptions.page, pageOptions.pageSize),
+      searchRequest,
+      {
+        cache: { disabled: false, clear: false }
+      }
+    );
   }
 }
 

@@ -28,7 +28,7 @@ interface ExplorerSearchProps {
 
 @observer
 export class ExplorerSearch extends Component<ExplorerSearchProps> {
-  @observable private search: ExplorerSearchValue;
+  @observable private search: ExplorerSearchValue = {};
   @observable private dialogOpen = false;
 
   constructor(props: ExplorerSearchProps) {
@@ -100,6 +100,11 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
       this.props.store.openedItem.type === ExplorerItemType.FOLDER
     ) {
       type = 'DOCUMENT';
+    } else if (
+      this.props.store.openedItem.type === ExplorerItemType.DATASET_ROOT ||
+      this.props.store.openedItem.type === ExplorerItemType.DATASET
+    ) {
+      type = 'FEATURE';
     }
 
     if (value) {

@@ -234,6 +234,14 @@ export class ExplorerAdapterTypeFolder {
     return true;
   }
 
+  static getChildrenFilterField(): string {
+    return 'title';
+  }
+
+  static getChildrenFilterLabel(): string {
+    return 'Фильтр по названию';
+  }
+
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<LibraryRecord>>[] {
     return [communicationService.libraryRecordUpdated];
   }

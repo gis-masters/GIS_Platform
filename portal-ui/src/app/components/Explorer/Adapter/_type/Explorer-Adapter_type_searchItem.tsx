@@ -2,11 +2,14 @@ import React, { ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 
 import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
-import { SearchItemData } from '../../../../services/data/search/search.model';
+import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { SearchItemData } from '../../../../services/data/search/search.model';
+import { extractFeatureId } from '../../../../services/geoserver/feature.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
+import { FeatureIcon } from '../../../FeatureIcon/FeatureIcon';
 import { SortOrder } from '../../../../services/models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
@@ -21,36 +24,46 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter<SearchItemData>>()
 export class ExplorerAdapterTypeSearchItem {
   static getId(item: ExplorerItemData<SearchItemData>): string {
-    if (item.payload.type === 'DOCUMENT') {
+    if (item.payload.type === 'DOCUMENT' || item.payload.type === 'FEATURE') {
       return String(item.payload.payload.id);
     }
 
     throw new Error('id элемента не найдено');
   }
 
-  static getTitle(item: ExplorerItemData<SearchItemData>): string {
+  static getTitle(item: ExplorerItemData<SearchItemData>): ReactNode {
     if (item.payload.type === 'DOCUMENT' && item.payload.payload.title) {
       return item.payload.payload.title;
+    }
+
+    if (item.payload.type === 'FEATURE') {
+      return <FeatureTitle feature={item.payload.payload} schemaId={item.payload.source.schema} />;
     }
 
     return '';
   }
 
   static getDescription(item: ExplorerItemData<SearchItemData>): ReactNode {
-    if (item.payload.type === 'DOCUMENT') {
-      const { created_at: createdAt } = item.payload.payload;
+    let createdAt: string;
 
-      return (
-        <>
-          {createdAt && (
-            <ExplorerInfoDescItem>
-              <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
-              {formatDate(createdAt, 'LL')}
-            </ExplorerInfoDescItem>
-          )}
-        </>
-      );
+    if (item.payload.type === 'DOCUMENT') {
+      createdAt = item.payload.payload.created_at;
     }
+
+    if (item.payload.type === 'FEATURE') {
+      createdAt = String(item.payload.payload.properties.created_at);
+    }
+
+    return (
+      <>
+        {createdAt && (
+          <ExplorerInfoDescItem>
+            <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
+            {formatDate(createdAt, 'LL')}
+          </ExplorerInfoDescItem>
+        )}
+      </>
+    );
   }
 
   static getActions(item: ExplorerItemData<SearchItemData>): ReactNode {
@@ -65,13 +78,24 @@ export class ExplorerAdapterTypeSearchItem {
 
       return getIcon({ type: ExplorerItemType.DOCUMENT, payload: {} });
     }
+
+    if (item.payload.type === 'FEATURE') {
+      return <FeatureIcon geometryType={item.payload.source.geometryType} className='' />;
+    }
   }
 
   static getMeta(item: ExplorerItemData<SearchItemData>): string {
     if (item.payload.type === 'DOCUMENT') {
       const record = item.payload.payload;
 
-      return `${record.id}. Источник данных: ${String(item.payload.source?.library)}`;
+      return `${record.id}. Источник данных: ${item.payload.source?.title}`;
+    }
+
+    if (item.payload.type === 'FEATURE') {
+      const { payload, source } = item.payload;
+      const featureDataSource = `${source?.datasetTitle} > ${source?.tableTitle}`;
+
+      return `${String(extractFeatureId(payload.id))}. Источник данных: ${featureDataSource}`;
     }
 
     return '';

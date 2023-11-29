@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
@@ -15,7 +16,6 @@ import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 import static ru.mycrg.common_contracts.generated.fts.FtsType.DOCUMENT;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Component
 public class DocumentSearchEngine implements IFullTextSearchEngine {
@@ -37,16 +36,13 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 
     private final FtsDao ftsDao;
-    private final SchemaExtractor schemaExtractor;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DocumentLibraryService librariesService;
 
     public DocumentSearchEngine(FtsDao ftsDao,
-                                SchemaExtractor schemaExtractor,
                                 SpatialRecordsDao spatialRecordsDao,
                                 DocumentLibraryService librariesService) {
         this.ftsDao = ftsDao;
-        this.schemaExtractor = schemaExtractor;
         this.spatialRecordsDao = spatialRecordsDao;
         this.librariesService = librariesService;
     }
@@ -57,26 +53,38 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
         FtsRequestDto dto = request.getFtsRequestDto();
         List<FtsItem> byAllLibraries = new ArrayList<>();
-        getAllowedLibraries(dto).forEach(libraryName -> {
-            ResourceQualifier libraryQualifier = libraryQualifier(libraryName);
+        getAllowedLibraries(dto)
+                .map(ResourceQualifier::libraryQualifier)
+                .forEach(libraryQualifier -> {
+                    try {
+                        RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
 
-            RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
+                        List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
+                                                                          dto.getEcqlFilter(),
+                                                                          dto.getText(),
+                                                                          getBound(dto),
+                                                                          registryData);
+                        byAllLibraries.addAll(temp);
+                    } catch (Exception e) {
+                        log.error("Не удалось выполнить поиск для библиотеки: '{}'. По причине: {}",
+                                  libraryQualifier.getQualifier(), e.getMessage());
+                    }
+                });
 
-            List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
-                                                              dto.getEcqlFilter(),
-                                                              dto.getText(),
-                                                              getBound(dto),
-                                                              registryData);
-            byAllLibraries.addAll(temp);
-        });
-
-        List<FtsResponseDto> result = fetchEntities(byAllLibraries)
+        List<FtsResponseDto> allSortedEntities = fetchEntities(byAllLibraries)
                 .sorted(ftsBoundComparator)
                 .collect(Collectors.toList());
 
-        log.debug("In all libraries founded: {} documents", result.size());
+        log.debug("In all libraries founded: {} documents", allSortedEntities.size());
 
-        return new PageImpl<>(result, request.getPageable(), result.size());
+        Pageable pageable = request.getPageable();
+        List<FtsResponseDto> page = allSortedEntities
+                .stream()
+                .skip(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(page, pageable, allSortedEntities.size());
     }
 
     @Override
@@ -129,15 +137,13 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         List<FtsResponseDto> result = new ArrayList<>();
         featuresByLibrary.forEach((libraryName, recordIds) -> {
             ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
-            SchemaDto schema = schemaExtractor.get(qualifier).orElse(null);
-            if (schema == null) {
-                return;
-            }
+            SchemaDto schema = librariesService.getSchema(libraryName);
+            String libraryTitle = librariesService.getInfo(libraryName).getTitle();
 
             List<FtsResponseDto> features = spatialRecordsDao
                     .findByIds(qualifier, schema, recordIds)
                     .stream()
-                    .map(toResponseDto(libraryName, schema.getName(), items))
+                    .map(toResponseDto(libraryName, libraryTitle, schema.getName(), items))
                     .collect(Collectors.toList());
 
             result.addAll(features);
@@ -148,6 +154,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
     @NotNull
     private static Function<Feature, FtsResponseDto> toResponseDto(String libraryName,
+                                                                   String libraryTitle,
                                                                    String schemaName,
                                                                    List<FtsItem> items) {
         return feature -> {
@@ -157,7 +164,9 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
             return new FtsResponseDto(DOCUMENT,
                                       oItem.map(FtsItem::getDist).orElse(0f),
-                                      Map.of("library", libraryName, "schema", schemaName),
+                                      Map.of("library", libraryName,
+                                             "schema", schemaName,
+                                             "title", libraryTitle),
                                       feature.getProperties());
         };
     }

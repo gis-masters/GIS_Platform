@@ -1,6 +1,6 @@
 .SearchResultDialog {
-  &-Explorer {
-    max-height: calc(100vh - 200px);
+  &-Explorer.Explorer {
+    height: calc(100vh - 300px);
   }
 
   .MuiDialogContent-root {

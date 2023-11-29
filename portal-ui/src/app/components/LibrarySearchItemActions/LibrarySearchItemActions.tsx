@@ -6,10 +6,14 @@ import { IClassNameProps } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
 import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { SearchItemData } from '../../services/data/search/search.model';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { SearchItemData } from '../../services/data/search/search.model';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
 
+import { LibrarySearchItemActionsConnections } from './Connections/LibrarySearchItemActions-Connections';
 import { LibrarySearchItemActionsOpen } from './Open/LibrarySearchItemActions-Open';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { Actions } from '../Actions/Actions.composed';
@@ -24,7 +28,9 @@ export interface LibrarySearchItemActionsProps extends IClassNameProps {
 @observer
 export class LibrarySearchItemActions extends Component<LibrarySearchItemActionsProps> {
   @observable private canEdit = true;
-  @observable private document: LibraryRecord | undefined;
+  @observable private libraryRecord: LibraryRecord | undefined;
+  @observable private vectorTable: VectorTable | undefined;
+
   private operationId?: symbol;
 
   constructor(props: LibrarySearchItemActionsProps) {
@@ -42,11 +48,23 @@ export class LibrarySearchItemActions extends Component<LibrarySearchItemActions
   }
 
   render() {
-    const { as, className } = this.props;
+    const { as, className, item } = this.props;
 
     return (
       <Actions className={cnLibrarySearchItemActions({}, [className])} as={as}>
-        {this.canEdit && this.document && <LibrarySearchItemActionsOpen document={this.document} as={as} />}
+        {this.canEdit && (
+          <>
+            <LibrarySearchItemActionsOpen item={item} libraryRecord={this.libraryRecord} as={as} />
+
+            {item.type === 'FEATURE' && this.vectorTable && (
+              <LibrarySearchItemActionsConnections
+                featureId={String(extractFeatureId(item.payload.id))}
+                vectorTable={this.vectorTable}
+                as={as}
+              />
+            )}
+          </>
+        )}
       </Actions>
     );
   }
@@ -54,15 +72,24 @@ export class LibrarySearchItemActions extends Component<LibrarySearchItemActions
   async checkUserRole(): Promise<void> {
     const operationId = Symbol();
     this.operationId = operationId;
-
     const { item } = this.props;
+
     if (item.type === 'DOCUMENT') {
       const document = item.payload;
       const record = await getLibraryRecord(item.source.library, document.id);
 
       if (this.operationId === operationId) {
-        this.setDocument(record);
+        this.setLibraryRecord(record);
         this.setCanEdit(await isRecordUpdateAllowed(record));
+      }
+    }
+
+    if (item.type === 'FEATURE') {
+      const table = await getVectorTable(item.source.dataset, item.source.table);
+
+      if (this.operationId === operationId) {
+        this.setVectorTable(table);
+        this.setCanEdit(true);
       }
     }
   }
@@ -73,7 +100,12 @@ export class LibrarySearchItemActions extends Component<LibrarySearchItemActions
   }
 
   @action
-  setDocument(document: LibraryRecord): void {
-    this.document = document;
+  setLibraryRecord(libraryRecord: LibraryRecord | undefined): void {
+    this.libraryRecord = libraryRecord;
+  }
+
+  @action
+  setVectorTable(vectorTable: VectorTable | undefined): void {
+    this.vectorTable = vectorTable;
   }
 }

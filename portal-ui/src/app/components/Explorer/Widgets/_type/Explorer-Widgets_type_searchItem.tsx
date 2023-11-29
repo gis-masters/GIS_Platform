@@ -4,12 +4,13 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { SearchItemData } from '../../../../services/data/search/search.model';
+import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
 import { communicationService } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { schemaService } from '../../../../services/data/schema/schema.service';
+import { SearchItemData } from '../../../../services/data/search/search.model';
 import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { ExplorerItemType, ExplorerItemData } from '../../Explorer.models';
@@ -41,15 +42,19 @@ class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
 
   render() {
     const { className, item } = this.props;
+    const { payload } = item as ExplorerItemData<SearchItemData>;
+    const cardTitle = payload.type === 'DOCUMENT' ? 'документа' : 'объекта';
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
+        {payload.type === 'FEATURE' && <ConnectionsFeaturesToProjectsWidget feature={payload} />}
+
         {this.schema && (
           <ExplorerInfoDescItem multiline>
             <ViewContentWidget
               schema={this.schema}
-              data={(item as ExplorerItemData<SearchItemData>).payload.payload}
-              title='Карточка документа'
+              data={payload.type === 'DOCUMENT' ? payload.payload : payload.payload.properties}
+              title={`Карточка ${cardTitle}`}
             />
           </ExplorerInfoDescItem>
         )}
@@ -63,11 +68,11 @@ class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
     const operationId = Symbol();
 
     this.operationId = operationId;
-    if (payload.type === 'DOCUMENT') {
+    if (payload.type === 'DOCUMENT' || payload.type === 'FEATURE') {
       let schema = await schemaService.getSchema(payload.source.schema);
 
       if (this.operationId === operationId) {
-        if (payload.payload.content_type_id) {
+        if (payload.type === 'DOCUMENT' && payload.payload.content_type_id) {
           schema = applyContentType(schema, payload.payload.content_type_id);
         }
 

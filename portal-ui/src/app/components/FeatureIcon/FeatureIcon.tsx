@@ -6,7 +6,7 @@ import { Shape } from '../Icons/Shape';
 
 interface FeatureIconProps {
   geometryType: GeometryType;
-  className: string;
+  className?: string;
 }
 
 export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) => {

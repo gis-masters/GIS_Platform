@@ -1,5 +1,5 @@
 import { FtsRequestDto, FtsResponseDto } from '../../../../server-types/common-contracts';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { LibraryRecord } from '../library/library.models';
 
 export interface SearchRequest extends Partial<FtsRequestDto> {
@@ -8,18 +8,29 @@ export interface SearchRequest extends Partial<FtsRequestDto> {
 
 interface SearchSourceForDocument {
   library: string;
+  title: string;
   schema: string;
 }
 
-interface SearchSourceForFeature {
+export interface SearchSourceForFeature {
   dataset: string;
+  datasetTitle: string;
+  schema: string;
   table: string;
+  tableTitle: string;
+  geometryType: GeometryType;
 }
 
-interface SearchItemDataTypeFeature extends FtsResponseDto {
+export interface SearchItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
   payload: WfsFeature;
+}
+
+export interface SearchRawItemDataTypeFeature extends FtsResponseDto {
+  type: 'FEATURE';
+  source: SearchSourceForFeature;
+  payload: Record<string, unknown>;
 }
 
 interface SearchItemDataTypeDocument extends FtsResponseDto {
@@ -29,3 +40,4 @@ interface SearchItemDataTypeDocument extends FtsResponseDto {
 }
 
 export type SearchItemData = SearchItemDataTypeDocument | SearchItemDataTypeFeature;
+export type SearchRawItemData = SearchItemDataTypeDocument | SearchRawItemDataTypeFeature;

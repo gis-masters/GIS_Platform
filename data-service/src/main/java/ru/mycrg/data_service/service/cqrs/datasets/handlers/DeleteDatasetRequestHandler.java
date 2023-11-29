@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.cqrs.datasets.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
@@ -40,6 +41,7 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
     }
 
     @Override
+    @Transactional
     public Voidy handle(DeleteDatasetRequest request) {
         ResourceQualifier datasetQualifier = request.getDatasetQualifier();
 
