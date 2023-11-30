@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -101,6 +102,10 @@ public class RabbitConfiguration {
         return rabbitTemplate;
     }
     @Bean
+    @ConditionalOnProperty(
+            value = "crg-options.integration.smev3.enabled",
+            havingValue = "true",
+            matchIfMissing = true)
     public RabbitTemplate rabbitSmevAdapterTemplate(Smev3Config smev3Config) {
         var factory = new CachingConnectionFactory(smev3Config.getAmqpHost());
         factory.setUsername(smev3Config.getAmqpUsername());

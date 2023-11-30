@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
@@ -22,6 +23,10 @@ import static ru.mycrg.data_service.util.smev3.Smev3XmlUtils.mapCalendar;
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
  */
 @Service
+@ConditionalOnProperty(
+        value = "crg-options.integration.smev3.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class ReceiptRnsRequestService {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
     private final Smev3Config smev3Config;

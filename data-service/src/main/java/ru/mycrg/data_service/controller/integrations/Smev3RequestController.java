@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.controller.integrations;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,10 @@ import ru.mycrg.data_service_contract.dto.smev3.RequestDto;
  */
 @RestController
 @RequestMapping("/integration/smev3")
+@ConditionalOnProperty(
+        value = "crg-options.integration.smev3.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class Smev3RequestController {
 
     private final ReceiptRnsRequestService requestService;
