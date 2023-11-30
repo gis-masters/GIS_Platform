@@ -9,14 +9,17 @@ public class ImportSourceFileDto {
     private String path;
     private LocalDateTime createdAt;
 
+    private TypeDocumentData document;
+
     public ImportSourceFileDto() {
         //for json deserialization
     }
 
-    public ImportSourceFileDto(UUID id, String path, LocalDateTime createdAt) {
+    public ImportSourceFileDto(UUID id, String path, LocalDateTime createdAt, TypeDocumentData document) {
         this.id = id;
         this.path = path;
         this.createdAt = createdAt;
+        this.document = document;
     }
 
     public UUID getId() {
@@ -41,5 +44,13 @@ public class ImportSourceFileDto {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public TypeDocumentData getDocument() {
+        return document;
+    }
+
+    public void setDocument(TypeDocumentData document) {
+        this.document = document;
     }
 }
