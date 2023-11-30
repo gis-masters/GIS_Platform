@@ -80,48 +80,56 @@ public class SqlBuilder {
 
     @NotNull
     public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
-                                                          RegistryData registryData,
                                                           String ecqlFilter) {
-        return buildFindAllowedForRegistryQuery(qualifier, registryData, ecqlFilter, null);
+        return buildFindAllowedForRegistryQuery(qualifier, ecqlFilter, null, null);
     }
 
     @NotNull
     public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
-                                                          RegistryData registryData,
                                                           String ecqlFilter,
+                                                          @Nullable RegistryData registryData) {
+        return buildFindAllowedForRegistryQuery(qualifier, ecqlFilter, registryData, null);
+    }
+
+    @NotNull
+    public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
+                                                          String ecqlFilter,
+                                                          @Nullable RegistryData registryData,
                                                           @Nullable Pageable pageable) {
         String patchedFilter = (ecqlFilter != null && ecqlFilter.toLowerCase().contains(IS_DELETED.getName()))
                 ? ecqlFilter
                 : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
-        String byAllowedDirectlySection = "";
-        if (!registryData.getAllowedDirectlyDocumentIds().isEmpty()) {
-            byAllowedDirectlySection = String.format(" id IN (%s) ",
-                                                     joinAndQuoteMark(registryData.getAllowedDirectlyDocumentIds()));
-        }
+        String byPermissionsSection = "";
+        if (registryData != null) {
+            String byAllowedDirectlySection = "";
+            if (!registryData.getAllowedDirectlyDocumentIds().isEmpty()) {
+                byAllowedDirectlySection = String.format(" id IN (%s) ",
+                                                         joinAndQuoteMark(registryData.getAllowedDirectlyDocumentIds()));
+            }
 
-        String byChildrenSection = "";
-        if (!registryData.getChildrenPaths().isEmpty()) {
-            byChildrenSection = String.format(" OR path LIKE ANY (array[ %s ])",
-                                              joinAndQuoteMark(registryData.getChildrenPaths()));
-        }
+            String byChildrenSection = "";
+            if (!registryData.getChildrenPaths().isEmpty()) {
+                byChildrenSection = String.format(" OR path LIKE ANY (array[ %s ])",
+                                                  joinAndQuoteMark(registryData.getChildrenPaths()));
+            }
 
-        String byParentSection = "";
-        if (!registryData.getParentPaths().isEmpty()) {
-            byParentSection = String.format(" OR path IN (%s)", joinAndQuoteMark(registryData.getParentPaths()));
-        }
+            String byParentSection = "";
+            if (!registryData.getParentPaths().isEmpty()) {
+                byParentSection = String.format(" OR path IN (%s)", joinAndQuoteMark(registryData.getParentPaths()));
+            }
 
-        String mainSection = "";
-        if (!(byAllowedDirectlySection.isBlank() && byChildrenSection.isBlank() && byParentSection.isBlank())) {
-            mainSection = "(" +
-                    "   " + byAllowedDirectlySection +
-                    "   " + byChildrenSection +
-                    "   " + byParentSection +
-                    ")";
-        }
+            if (!(byAllowedDirectlySection.isBlank() && byChildrenSection.isBlank() && byParentSection.isBlank())) {
+                byPermissionsSection = "(" +
+                        "   " + byAllowedDirectlySection +
+                        "   " + byChildrenSection +
+                        "   " + byParentSection +
+                        ")";
+            }
 
-        if (!mainSection.isBlank()) {
-            mainSection = mainSection + " AND ";
+            if (!byPermissionsSection.isBlank()) {
+                byPermissionsSection = byPermissionsSection + " AND ";
+            }
         }
 
         String ecqlFiltersSection = buildWhereSection(patchedFilter);
@@ -143,7 +151,7 @@ public class SqlBuilder {
                 " FROM " + qualifier.getTableQualifier() +
                 " WHERE " +
                 "   (" +
-                "     " + mainSection +
+                "     " + byPermissionsSection +
                 "     " + ecqlFiltersSection +
                 "   )" +
                 " " + orderSection + pagingSection;

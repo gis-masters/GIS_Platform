@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
@@ -38,13 +39,16 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     private final FtsDao ftsDao;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DocumentLibraryService librariesService;
+    private final IAuthenticationFacade authenticationFacade;
 
     public DocumentSearchEngine(FtsDao ftsDao,
                                 SpatialRecordsDao spatialRecordsDao,
-                                DocumentLibraryService librariesService) {
+                                DocumentLibraryService librariesService,
+                                IAuthenticationFacade authenticationFacade) {
         this.ftsDao = ftsDao;
         this.spatialRecordsDao = spatialRecordsDao;
         this.librariesService = librariesService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -57,13 +61,21 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                 .map(ResourceQualifier::libraryQualifier)
                 .forEach(libraryQualifier -> {
                     try {
-                        RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
+                        log.debug("Поиск по библиотеке: [{}]", libraryQualifier);
 
-                        List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
-                                                                          dto.getEcqlFilter(),
-                                                                          dto.getText(),
-                                                                          getBound(dto),
-                                                                          registryData);
+                        List<FtsItem> temp;
+                        if (authenticationFacade.isOrganizationAdmin()) {
+                            temp = ftsDao.searchWithPermissions(libraryQualifier, dto, getBound(dto));
+                        } else {
+                            RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
+
+                            temp = ftsDao.searchWithPermissions(libraryQualifier,
+                                                                dto.getEcqlFilter(),
+                                                                dto.getText(),
+                                                                getBound(dto),
+                                                                registryData);
+                        }
+
                         byAllLibraries.addAll(temp);
                     } catch (Exception e) {
                         log.error("Не удалось выполнить поиск для библиотеки: '{}'. По причине: {}",

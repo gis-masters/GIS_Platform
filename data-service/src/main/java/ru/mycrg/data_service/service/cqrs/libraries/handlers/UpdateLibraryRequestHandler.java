@@ -74,36 +74,42 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
             library.setDetails(updateDto.getDetails());
         }
 
-        if (updateDto.isReadyForFts()) {
-            log.debug("Добавляем библиотеку: '{}' к полнотекстовому поиску", qualifier.getQualifier());
+        if (updateDto.isReadyForFts() != null) {
+            library.setReadyForFts(updateDto.isReadyForFts());
 
-            if (library.getSchemaId() == null) {
-                throw new ForbiddenException("Не задана схема для библиотеки: " + qualifier.getQualifier());
+            if (updateDto.isReadyForFts()) {
+                log.debug("Добавляем библиотеку: '{}' к полнотекстовому поиску", qualifier.getQualifier());
+
+                if (library.getSchemaId() == null) {
+                    throw new ForbiddenException("Не задана схема для библиотеки: " + qualifier.getQualifier());
+                }
+
+                SchemaDto schema = schemaService
+                        .getSchemaByName(library.getSchemaId())
+                        .orElseThrow(() -> new BadRequestException(
+                                "Не возможно обновить библиотеку. Не существует схемы: " + library.getSchemaId()));
+
+                List<String> ftsProperties = getFtsProperties(schema);
+                ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
+                ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
+                ddlTriggers.createDeleteTrigger(qualifier);
+
+                ftsDao.copySourceData(qualifier, schema);
+            } else {
+                log.debug("Удаляем библиотеку: '{}' из полнотекстового поиска", qualifier.getQualifier());
+
+                ddlTriggers.deleteInsertTrigger(qualifier);
+                ddlTriggers.deleteUpdateTrigger(qualifier);
+                ddlTriggers.dropDeleteTrigger(qualifier);
+
+                ftsDao.dropSourceData(qualifier);
             }
-
-            SchemaDto schema = schemaService
-                    .getSchemaByName(library.getSchemaId())
-                    .orElseThrow(() -> new BadRequestException(
-                            "Не возможно обновить библиотеку. Не существует схемы: " + library.getSchemaId()));
-
-            List<String> ftsProperties = getFtsProperties(schema);
-            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(qualifier);
-
-            ftsDao.copySourceData(qualifier, schema);
-        } else {
-            log.debug("Удаляем библиотеку: '{}' из полнотекстового поиска", qualifier.getQualifier());
-
-            ddlTriggers.deleteInsertTrigger(qualifier);
-            ddlTriggers.deleteUpdateTrigger(qualifier);
-            ddlTriggers.dropDeleteTrigger(qualifier);
-
-            ftsDao.dropSourceData(qualifier);
         }
 
-        library.setReadyForFts(updateDto.isReadyForFts());
-        library.setVersioned(updateDto.isVersioned());
+        if (updateDto.isVersioned() != null) {
+            library.setVersioned(updateDto.isVersioned());
+        }
+
         library.setLastModified(LocalDateTime.now());
 
         libraryRepository.save(library);

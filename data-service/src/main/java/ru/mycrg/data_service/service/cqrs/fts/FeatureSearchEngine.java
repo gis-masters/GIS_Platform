@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.fts;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -67,17 +68,12 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         Pageable pageable = request.getPageable();
         FtsRequestDto dto = request.getFtsRequestDto();
 
-        List<String> tableNames = new ArrayList<>();
-        if (!authenticationFacade.isOrganizationAdmin()) {
-            List<ResourceQualifier> allowedTables = getAllowedSources(dto);
-            if (allowedTables.isEmpty()) {
-                return new PageImpl<>(new ArrayList<>(), pageable, 0);
-            }
-
-            tableNames = allowedTables.stream().map(ResourceQualifier::getTable).collect(Collectors.toList());
+        List<String> allowedTables = getAllowedSources(dto);
+        if (allowedTables == null) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        List<FtsItem> founded = ftsDao.search(LAYERS, tableNames, null, dto.getText(), getBound(dto), pageable);
+        List<FtsItem> founded = ftsDao.search(LAYERS, allowedTables, null, dto.getText(), getBound(dto), pageable);
         Long total = ftsDao.countTotal(LAYERS, new ArrayList<>(), null, dto.getText(), getBound(dto));
 
         List<FtsResponseDto> result = fetchEntities(founded);
@@ -90,28 +86,71 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         return FEATURE;
     }
 
-    @NotNull
-    private List<ResourceQualifier> getAllowedSources(FtsRequestDto dto) {
+    /**
+     * @return null - разрешений нет. Пустой список - доступно всё.
+     */
+    @Nullable
+    private List<String> getAllowedSources(FtsRequestDto dto) {
+        List<ResourceQualifier> requestedTables = getRequestedLibraries(dto);
+
+        if (authenticationFacade.isOrganizationAdmin()) {
+            if (requestedTables.isEmpty()) {
+                return new ArrayList<>();
+            }
+
+            return requestedTables.stream()
+                                  .map(ResourceQualifier::getTable)
+                                  .collect(Collectors.toList());
+        }
+
         List<SchemasAndTables> allowedDatasets = datasetService.getAll();
         List<ResourceQualifier> allowedTables = getAllowedTables(allowedDatasets);
 
-        List<ResourceQualifier> allowedSources = new ArrayList<>();
-        List<Map<String, Object>> requestedSources = dto.getSources();
-        if (requestedSources == null || requestedSources.isEmpty()) {
-            return allowedTables;
+        // Разрешенных нет
+        if (allowedTables.isEmpty()) {
+            return null;
         }
 
-        requestedSources.forEach(data -> {
-            String dataset = String.valueOf(data.get("dataset"));
-            String table = String.valueOf(data.get("table"));
-            allowedTables.stream()
-                         .filter(qualifier -> dataset.equalsIgnoreCase(qualifier.getSchema())
-                                 && table.equalsIgnoreCase(qualifier.getTable()))
-                         .findFirst()
-                         .ifPresent(allowedSources::add);
-        });
+        // Ничего не запрошено, возвращаем только разрешенные
+        if (requestedTables.isEmpty()) {
+            return allowedTables.stream()
+                                .map(ResourceQualifier::getTable)
+                                .collect(Collectors.toList());
+        }
 
-        return allowedSources;
+        // Среди запрошенных оставляем только разрешенные
+        return requestedTables.stream()
+                              .filter(requestedTable -> isExistInAllowed(requestedTable, allowedTables))
+                              .map(ResourceQualifier::getTable)
+                              .collect(Collectors.toList());
+    }
+
+    private boolean isExistInAllowed(ResourceQualifier requestedTable, List<ResourceQualifier> allowedTables) {
+        return allowedTables.stream()
+                            .anyMatch(allowedTable -> allowedTable.getTable().equals(requestedTable.getTable())
+                                    && allowedTable.getSchema().equals(requestedTable.getSchema()));
+    }
+
+    @NotNull
+    private List<ResourceQualifier> getRequestedLibraries(FtsRequestDto dto) {
+        List<Map<String, Object>> requestedSources = dto.getSources();
+        if (requestedSources == null || requestedSources.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return requestedSources.stream()
+                               .map(source -> {
+                                   String dataset = source.getOrDefault("dataset", "").toString();
+                                   String table = source.getOrDefault("table", "").toString();
+
+                                   if (!dataset.isBlank() || !table.isBlank()) {
+                                       return ResourceQualifier.libraryQualifier(dataset, table);
+                                   } else {
+                                       return null;
+                                   }
+                               })
+                               .filter(Objects::nonNull)
+                               .collect(Collectors.toList());
     }
 
     private List<ResourceQualifier> getAllowedTables(List<SchemasAndTables> allowedDatasets) {

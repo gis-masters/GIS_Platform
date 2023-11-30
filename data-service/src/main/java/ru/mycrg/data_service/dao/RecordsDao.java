@@ -192,11 +192,11 @@ public class RecordsDao {
     }
 
     public List<IRecord> findAllowedForRegistry(ResourceQualifier tableQualifier,
-                                                RegistryData registryData,
                                                 String ecqlFilter,
+                                                RegistryData registryData,
                                                 SchemaDto schema,
                                                 Pageable pageable) {
-        String query = buildFindAllowedForRegistryQuery(tableQualifier, registryData, ecqlFilter, pageable);
+        String query = buildFindAllowedForRegistryQuery(tableQualifier, ecqlFilter, registryData, pageable);
 
         log.debug("Request find allowed records as registry: [{}]", query);
 
@@ -207,9 +207,9 @@ public class RecordsDao {
     }
 
     public Long getTotalAllowedForRegistry(ResourceQualifier tableQualifier,
-                                           RegistryData registryData,
-                                           String ecqlFilter) {
-        String query = buildFindAllowedForRegistryQuery(tableQualifier, registryData, ecqlFilter);
+                                           String ecqlFilter,
+                                           RegistryData registryData) {
+        String query = buildFindAllowedForRegistryQuery(tableQualifier, ecqlFilter, registryData);
         query = query.replace("SELECT *", "SELECT count(*)");
 
         log.debug("Request find total allowed records: [{}]", query);

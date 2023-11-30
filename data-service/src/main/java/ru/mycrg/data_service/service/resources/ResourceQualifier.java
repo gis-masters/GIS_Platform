@@ -66,6 +66,10 @@ public class ResourceQualifier {
         return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
     }
 
+    public static ResourceQualifier libraryQualifier(String schemaName, String libraryName) {
+        return new ResourceQualifier(schemaName, libraryName, LIBRARY);
+    }
+
     public String getTable() {
         return table;
     }

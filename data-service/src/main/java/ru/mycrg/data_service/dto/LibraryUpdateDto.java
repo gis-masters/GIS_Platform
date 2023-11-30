@@ -10,9 +10,9 @@ public class LibraryUpdateDto {
     @Size(max = 1024)
     private String details;
 
-    private boolean versioned;
+    private Boolean versioned;
 
-    private boolean readyForFts;
+    private Boolean readyForFts;
 
     public LibraryUpdateDto() {
         // Required
@@ -26,7 +26,7 @@ public class LibraryUpdateDto {
         this.details = details;
     }
 
-    public boolean isVersioned() {
+    public Boolean isVersioned() {
         return versioned;
     }
 
@@ -34,7 +34,7 @@ public class LibraryUpdateDto {
         this.versioned = versioned;
     }
 
-    public boolean isReadyForFts() {
+    public Boolean isReadyForFts() {
         return readyForFts;
     }
 

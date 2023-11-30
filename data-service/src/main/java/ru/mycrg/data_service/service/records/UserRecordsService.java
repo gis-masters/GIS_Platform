@@ -114,9 +114,9 @@ public class UserRecordsService implements IRecordsService {
         RegistryData registryData = librariesService.prepareDataForRegistry(lQualifier);
         SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
 
-        List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, registryData, ecqlFilter,
+        List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, ecqlFilter, registryData,
                                                                             schema, pageable);
-        long total = recordsDao.getTotalAllowedForRegistry(lQualifier, registryData, ecqlFilter);
+        long total = recordsDao.getTotalAllowedForRegistry(lQualifier, ecqlFilter, registryData);
 
         return new PageImpl<>(allAllowedRecords, pageable, total);
     }

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -7,9 +8,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.PrincipalService;
+import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -82,18 +85,22 @@ public class FtsDao {
         return pJdbcTemplate.query(query, parameters, new BeanPropertyRowMapper<>(FtsItem.class));
     }
 
+    public List<FtsItem> searchWithPermissions(ResourceQualifier qualifier, FtsRequestDto dto, float bound) {
+        return searchWithPermissions(qualifier, dto.getEcqlFilter(), dto.getText(), bound, null);
+    }
+
     public List<FtsItem> searchWithPermissions(ResourceQualifier libraryQualifier,
                                                String ecqlFilter,
                                                String text,
                                                float bound,
-                                               RegistryData registryData) {
+                                               @Nullable RegistryData registryData) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return new ArrayList<>();
         }
 
         String ftsQuery = buildFtsQuery(DOCUMENTS, ecqlFilter, bound, List.of(libraryQualifier.getTable()));
-        String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, registryData, ecqlFilter);
+        String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, ecqlFilter);
 
         String resultQuery = "" +
                 "SELECT result.dist, result.schema, result.table, result.id " +
