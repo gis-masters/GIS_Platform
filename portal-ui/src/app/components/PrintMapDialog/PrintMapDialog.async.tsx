@@ -10,16 +10,17 @@ import { PrintMapDialogContent } from './Content/PrintMapDialog-Content';
 import { PrintMapDialogPreview } from './Preview/PrintMapDialog-Preview';
 import { PrintMapDialogForm } from './Form/PrintMapDialog-Form';
 
+import '!style-loader!css-loader!sass-loader!./PrintMapDialog.scss';
 import '!style-loader!css-loader!sass-loader!./JpegButton/PrintMapDialog-JpegButton.scss';
 
 const cnPrintMapDialog = cn('PrintMapDialog');
 
 export interface PrintMapDialogProps {
   open: boolean;
-  onClose(): void;
-  directlyPrint?: boolean;
   allowJpg?: boolean;
+  directlyPrint?: boolean;
   onPrint?(pdf: Blob): void;
+  onClose(): void;
 }
 
 export default class PrintMapDialog extends Component<PrintMapDialogProps> {
@@ -49,7 +50,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
 
   @boundMethod
   private async submitHandler() {
-    const { onClose, directlyPrint, onPrint } = this.props;
+    const { onClose, directlyPrint = false, onPrint } = this.props;
     onClose();
     const pdfBlob = await printMap(directlyPrint);
     if (onPrint) {

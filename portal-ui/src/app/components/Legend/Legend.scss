@@ -3,6 +3,23 @@
 
   --LegendResizeFactor: 1;
 
+  &-Title {
+    margin-bottom: calc(var(--LegendResizeFactor) * 2px);
+
+    text-align: center;
+
+    font-size: calc(var(--LegendResizeFactor) * 14px);
+  }
+
+  &-LayerTitle {
+    margin-top: calc(var(--LegendResizeFactor) * 8px);
+    margin-bottom: calc(var(--LegendResizeFactor) * 5px);
+
+    color: var(--grey);
+
+    font-size: calc(var(--LegendResizeFactor) * 11px);
+  }
+
   &-Rule {
     display: flex;
     align-items: center;
@@ -16,7 +33,7 @@
     height: calc(var(--LegendResizeFactor) * 20px);
   }
 
-  &-Title {
+  &-RuleTitle {
     flex-grow: 1;
 
     color: var(--grey);

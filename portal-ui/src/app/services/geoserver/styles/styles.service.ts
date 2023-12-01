@@ -190,7 +190,7 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
     })
   );
 
-  return stylesClient.getLegendForMapView(requestData);
+  return stylesClient.getLegendForMapView(requestData.filter(({ rules }) => rules.length));
 }
 
 const stylesList: Record<'line' | 'polygon' | 'point', string[]> = {

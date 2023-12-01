@@ -45,7 +45,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               onChange={this.handleChangeSelect}
               error={!!errors?.length}
               renderValue={selected =>
-                this.getRenderValue(selected) || <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
+                this.renderValue(selected) || <em>{valueCanBeDisplayed ? fieldValue : 'Не выбрано'}</em>
               }
               variant={variant}
             >
@@ -92,10 +92,10 @@ class FormControlTypeChoice extends Component<FormControlProps> {
     );
   }
 
-  private getRenderValue(selected: string | number) {
+  private renderValue(selected: string | number) {
     const { property } = this.props;
     const { options } = property as PropertySchemaChoice;
-    const option = options.find(({ value }) => String(value) === selected);
+    const option = options.find(({ value }) => String(value) === String(selected));
 
     if (option?.startIcon || option?.title || option?.endIcon) {
       return (
