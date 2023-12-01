@@ -31,7 +31,7 @@ public class KptSourceFilesService {
 
     private static final Logger log = LoggerFactory.getLogger(KptSourceFilesService.class);
 
-    private static final String KPT_LIBRARY_ID = "dl_data_kpt";
+    public static final String KPT_LIBRARY_ID = "dl_data_kpt";
     private static final String FILE_PROPERTY = "file";
 
     private final RecordServiceFactory recordServiceFactory;
@@ -52,12 +52,8 @@ public class KptSourceFilesService {
     /**
      * Ищет файлы на жестком диске, привязанные к папке или документу КПТ
      */
-    public List<ImportSourceFileDto> getSourceFiles(long kptId) {
+    public List<ImportSourceFileDto> getSourceFiles(IRecord kptRecord) {
         SchemaDto kptLibSchema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
-        IRecord kptRecord = getKptRecord(kptId);
-        if (kptRecord == null) {
-            throw new DataServiceException("Не найден КПТ id=" + kptId);
-        }
         List<ImportSourceFileDto> sourceFiles;
         if (kptRecord.isFolder()) {
             sourceFiles = getSourceFilesByDirectory(kptRecord, kptLibSchema);
@@ -67,7 +63,7 @@ public class KptSourceFilesService {
         return sourceFiles;
     }
 
-    private IRecord getKptRecord(long kptId) {
+    public IRecord getKptRecord(long kptId) {
         ResourceQualifier qualifier = new ResourceQualifier(
                 SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, kptId, LIBRARY_RECORD
         );

@@ -32,6 +32,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
      * Идентификатор проекта
      */
     private long projectId;
+    private long taskId;
 
     public KptImportXmlRequestEvent() {
         super();
@@ -41,7 +42,8 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
                                     String dbName, List<SchemaDto> layerSchemas,
                                     String initiatorAccessToken,
                                     String initiatorLogin,
-                                    long projectId) {
+                                    long projectId,
+                                    long taskId) {
         super(UUID.randomUUID(), IMPORT_KPT_TASK_QUEUE);
         this.sourceFiles = sourceFiles;
         this.dbName = dbName;
@@ -49,6 +51,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         this.initiatorAccessToken = initiatorAccessToken;
         this.initiatorLogin = initiatorLogin;
         this.projectId = projectId;
+        this.taskId = taskId;
     }
 
     public List<ImportSourceFileDto> getSourceFiles() {
@@ -97,5 +100,13 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(long taskId) {
+        this.taskId = taskId;
     }
 }

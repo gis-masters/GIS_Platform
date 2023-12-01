@@ -10,6 +10,12 @@ public class TypeDocumentData {
         // Required
     }
 
+    public TypeDocumentData(Long id, String title, String libraryTableName) {
+        this.id = id;
+        this.title = title;
+        this.libraryTableName = libraryTableName;
+    }
+
     public Long getId() {
         return id;
     }
