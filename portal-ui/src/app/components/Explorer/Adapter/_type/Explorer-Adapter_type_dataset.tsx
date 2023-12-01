@@ -159,6 +159,10 @@ export class ExplorerAdapterTypeDataset {
     return createEnabled && <CreateVectorTable dataset={item.payload} />;
   }
 
+  static hasSearch(): boolean {
+    return true;
+  }
+
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<VectorTable>>[] {
     return [communicationService.vectorTableUpdated];
   }

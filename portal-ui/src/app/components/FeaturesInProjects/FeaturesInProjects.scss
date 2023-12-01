@@ -1,5 +1,10 @@
 .FeaturesInProjects {
-  display: block;
+  display: flex;
+  justify-content: space-between;
 
   margin-bottom: 5px;
+
+  &-Icon {
+    margin-left: 3px;
+  }
 }

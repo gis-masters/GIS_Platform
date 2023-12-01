@@ -92,7 +92,7 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
   }
 
   private setSearchInfo(value?: string) {
-    let type: FtsType = 'DOCUMENT';
+    let type: FtsType;
 
     if (
       this.props.store.openedItem.type === ExplorerItemType.LIBRARY_ROOT ||

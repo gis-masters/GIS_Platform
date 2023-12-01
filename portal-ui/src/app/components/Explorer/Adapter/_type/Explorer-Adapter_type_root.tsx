@@ -133,4 +133,8 @@ export class ExplorerAdapterTypeRoot {
       };
     }
   }
+
+  static hasSearch(): boolean {
+    return true;
+  }
 }

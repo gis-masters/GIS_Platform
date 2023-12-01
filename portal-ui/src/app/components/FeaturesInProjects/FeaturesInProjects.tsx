@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { List, ListItem, ListItemText } from '@mui/material';
+import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { FileConnection } from '../../services/data/files/files.models';
@@ -34,6 +35,10 @@ export const FeatureInProjects: FC<FeaturesInProjectsProps> = ({ connections, fe
                     ])}
                   >
                     {connection.project.name}
+                    <div className={cnFeaturesInProjects('IconWrapper')}>
+                      Перейти
+                      <MyLocation className={cnFeaturesInProjects('Icon')} />
+                    </div>
                   </Button>
                 }
                 secondary={connection.layer && <>Слой: {connection.layer?.title}</>}

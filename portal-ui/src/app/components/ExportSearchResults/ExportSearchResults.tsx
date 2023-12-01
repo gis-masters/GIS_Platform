@@ -5,21 +5,22 @@ import { Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { FileUploadOutlined } from '@mui/icons-material';
 
-import { SearchItemDataTypeFeature, SearchRequest } from '../../services/data/search/search.model';
-import { ExplorerItemData, ExplorerSearchValue } from '../Explorer/Explorer.models';
+import { SearchItemData, SearchItemDataTypeFeature } from '../../services/data/search/search.model';
+import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { getSearchResults } from '../../services/data/search/search.service';
+import { getSearchRequest } from '../../services/data/search/search.util';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { exportAsXLSX } from '../../services/util/export';
 import { IconButton } from '../IconButton/IconButton';
 
 interface ExportSearchResultsProps {
-  item: ExplorerItemData<ExplorerSearchValue>;
+  item: ExplorerSearchValue;
 }
 
 @observer
 export class ExportSearchResults extends Component<ExportSearchResultsProps> {
   @observable private loading = false;
-  @observable private exportSearchItems: SearchItemDataTypeFeature[] = [];
+  @observable private exportSearchItems: SearchItemData[] = [];
 
   constructor(props: ExportSearchResultsProps) {
     super(props);
@@ -28,13 +29,11 @@ export class ExportSearchResults extends Component<ExportSearchResultsProps> {
 
   render() {
     return (
-      this.props.item.payload.type === 'FEATURE' && (
-        <Tooltip title='Выгрузить в XLSX'>
-          <IconButton loading={this.loading} onClick={this.exportXLSX}>
-            <FileUploadOutlined />
-          </IconButton>
-        </Tooltip>
-      )
+      <Tooltip title='Выгрузить в XLSX'>
+        <IconButton loading={this.loading} onClick={this.exportXLSX}>
+          <FileUploadOutlined />
+        </IconButton>
+      </Tooltip>
     );
   }
 
@@ -53,6 +52,10 @@ export class ExportSearchResults extends Component<ExportSearchResultsProps> {
             `${searchItems.source.dataset}, ${searchItems.source.table}`
           ]);
         }
+
+        if (searchItems.type === 'DOCUMENT') {
+          data.push([String(searchItems.payload.id), searchItems.payload.title || '', searchItems.source.title]);
+        }
       }
     }
 
@@ -62,25 +65,14 @@ export class ExportSearchResults extends Component<ExportSearchResultsProps> {
 
   private async getData() {
     this.setLoading(true);
-    const search = this.props.item.payload;
-    let searchRequest: SearchRequest = { text: '' };
+    const searchRequest = await getSearchRequest(this.props.item);
 
-    if (search.type === 'FEATURE' && search.searchValue) {
-      searchRequest = {
-        text: search.searchValue,
-        type: 'FEATURE'
-      };
-    }
+    const [items] = await getSearchResults(searchRequest, {
+      page: 0,
+      pageSize: 50
+    });
 
-    if (searchRequest.text) {
-      const [items] = await getSearchResults(searchRequest, {
-        page: 0,
-        pageSize: 50
-      });
-
-      this.setExportSearchItems(items as SearchItemDataTypeFeature[]);
-    }
-
+    this.setExportSearchItems(items as SearchItemDataTypeFeature[]);
     this.setLoading(false);
   }
 

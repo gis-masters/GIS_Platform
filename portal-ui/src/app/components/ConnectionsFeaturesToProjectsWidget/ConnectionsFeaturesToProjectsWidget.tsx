@@ -62,6 +62,8 @@ export class ConnectionsFeaturesToProjectsWidget extends Component<ConnectionsFe
                 open={this.dialogOpen}
                 onClose={this.closeDialog}
                 PaperProps={{ className: cnConnectionsFeaturesToProjectsWidget('Dialog') }}
+                maxWidth='sm'
+                fullWidth
               >
                 <DialogTitle>Переход к объекту в проекте:</DialogTitle>
                 <DialogContent className='scroll'>

@@ -74,6 +74,8 @@ export class LibrarySearchItemActionsConnections extends Component<LibrarySearch
           open={this.dialogOpen}
           onClose={this.closeDialog}
           PaperProps={{ className: cnLibrarySearchItemActionsConnectionsDialog() }}
+          maxWidth='sm'
+          fullWidth
         >
           <DialogTitle>Переход к объекту в проекте:</DialogTitle>
           <DialogContent className='scroll'>
