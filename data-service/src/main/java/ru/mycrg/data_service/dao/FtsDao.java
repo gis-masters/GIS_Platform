@@ -12,7 +12,6 @@ import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.PrincipalService;
-import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -45,11 +44,16 @@ public class FtsDao {
 
     public void copySourceData(ResourceQualifier qualifier,
                                SchemaDto schema) {
-        String query = buildCopyDataToFtsLayersQuery(qualifier, getFtsProperties(schema));
+        try {
+            String query = buildCopyDataToFtsLayersQuery(qualifier, getFtsProperties(schema));
 
-        log.debug("Copy source: '{}' data to FTS table query: [{}]", qualifier.getQualifier(), query);
+            log.debug("Copy source: '{}' data to FTS table query: [{}]", qualifier.getQualifier(), query);
 
-        pJdbcTemplate.getJdbcTemplate().update(query);
+            pJdbcTemplate.getJdbcTemplate().update(query);
+        } catch (Exception e) {
+            log.error("Не удалось выполнить перенос данных в таблицу для полнотекстового поиска из таблицы: '{}'. " +
+                              "По причине: {}", qualifier.getQualifier(), e.getMessage(), e);
+        }
     }
 
     public void dropSourceData(ResourceQualifier qualifier) {

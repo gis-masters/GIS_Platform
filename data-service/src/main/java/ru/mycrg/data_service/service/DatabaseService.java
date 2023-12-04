@@ -36,7 +36,7 @@ public class DatabaseService {
 
         ddlDatabase.create(dbName);
 
-        migrationHandler.initMigration(dbName);
+        migrationHandler.performInitialMigrations(dbName);
     }
 
     public void delete(String dbName) {

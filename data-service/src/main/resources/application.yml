@@ -62,6 +62,7 @@ crg-options:
   client_secret: geoserver
   system-admin-login: admin@mail.ru
   system-admin-password: geoserver
+  initFullTextSearch: true
   integration:
     sed-url: https://httpbin.org/anything
     gisogd-rf: https://gisogd.npc.ba/api/rgmu

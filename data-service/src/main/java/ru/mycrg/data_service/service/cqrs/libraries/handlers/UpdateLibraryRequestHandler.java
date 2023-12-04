@@ -98,8 +98,8 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
             } else {
                 log.debug("Удаляем библиотеку: '{}' из полнотекстового поиска", qualifier.getQualifier());
 
-                ddlTriggers.deleteInsertTrigger(qualifier);
-                ddlTriggers.deleteUpdateTrigger(qualifier);
+                ddlTriggers.dropInsertTrigger(qualifier);
+                ddlTriggers.dropUpdateTrigger(qualifier);
                 ddlTriggers.dropDeleteTrigger(qualifier);
 
                 ftsDao.dropSourceData(qualifier);

@@ -193,7 +193,7 @@ public class GisogdRfPublisher {
                     IRecord territory = oTerritory.get();
                     String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
 
-                    if (!"Синхронизирован".equals(territoryStatus)) {
+                    if (isNotSynced(territoryStatus)) {
                         notSyncedChildren.add(child);
                     }
                 }
@@ -202,7 +202,7 @@ public class GisogdRfPublisher {
             }
 
             String syncStatus = (String) child.getContent().get("gisogdrf_sync_status");
-            if (!"Синхронизирован".equals(syncStatus)) {
+            if (isNotSynced(syncStatus)) {
                 notSyncedChildren.add(child);
             }
         });
@@ -236,6 +236,11 @@ public class GisogdRfPublisher {
         log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
 
         messageBus.produce(event);
+    }
+
+    private static boolean isNotSynced(String territoryStatus) {
+        return !"Синхронизирован".equals(territoryStatus) &&
+                !"Cинхронизация завершилась предупреждением".equals(territoryStatus);
     }
 
     private void removeFields(Map<String, Object> documentContent) {

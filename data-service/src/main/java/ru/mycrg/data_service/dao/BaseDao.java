@@ -63,9 +63,8 @@ public class BaseDao {
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
         log.debug("Find by schema and by filter: [{}]", query);
 
-        List<IRecord> records = pJdbcTemplate
-                .getJdbcTemplate()
-                .query(query, new RecordRowMapper(schema));
+        List<IRecord> records = pJdbcTemplate.getJdbcTemplate()
+                                             .query(query, new RecordRowMapper(schema));
 
         return records.isEmpty()
                 ? Optional.empty()
@@ -86,39 +85,30 @@ public class BaseDao {
         log.debug("find record by id: [{}]", query);
 
         return pJdbcTemplate.query(query,
-                        new MapSqlParameterSource(fieldId, qualifier.getRecordId()),
-                        new RecordRowMapper(schema)
-                )
-                .stream()
-                .findFirst();
+                                   new MapSqlParameterSource(fieldId, qualifier.getRecordId()),
+                                   new RecordRowMapper(schema))
+                            .stream()
+                            .findFirst();
     }
 
     /**
      * Пример запроса:
-     * <p>
-     * select *
-     * from workspace_789.landplot_1627_2d2b
-     * where jsonb_path_exists(file::jsonb, '$[*] ? (@.id == $idvalue )', '{"idvalue":26410}');
+     *
+     * @code SELECT * FROM workspace_789.landplot_1627_2d2b WHERE jsonb_path_exists(file::jsonb, '$[*] ? (@.id ==
+     * $idvalue )', '{"idvalue":26410}');
      */
     public Optional<IRecord> findByJson(ResourceJsonCondition qualifier, @Nullable SchemaDto schema) {
-
-        // Пример запроса
-        // select *
-        // from workspace_789.landplot_1627_2d2b
-        // where jsonb_path_exists(file::jsonb, '$[*] ? (@.id == $idvalue )', '{"idvalue":26410}');
-
         var query = String.format(
-                "select * from %s where jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
+                "SELECT * FROM %s WHERE jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
                 qualifier.getTableQualifier(),
                 qualifier.getJsonFieldName(),
                 qualifier.getJsonIdValue()
         );
 
-        log.debug("find record by json: [{}]", query);
+        log.debug("find record by json query: [{}]", query);
 
-        var records = pJdbcTemplate
-                .getJdbcTemplate()
-                .query(query, new RecordRowMapper(schema));
+        var records = pJdbcTemplate.getJdbcTemplate()
+                                   .query(query, new RecordRowMapper(schema));
 
         return records.isEmpty()
                 ? Optional.empty()

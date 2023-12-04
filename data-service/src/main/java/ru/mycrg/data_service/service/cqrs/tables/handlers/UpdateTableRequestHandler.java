@@ -116,8 +116,8 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
             } else {
                 log.debug("Удаляем таблицу: '{}' из полнотекстового поиска", qualifier.getQualifier());
 
-                ddlTriggers.deleteInsertTrigger(qualifier);
-                ddlTriggers.deleteUpdateTrigger(qualifier);
+                ddlTriggers.dropInsertTrigger(qualifier);
+                ddlTriggers.dropUpdateTrigger(qualifier);
                 ddlTriggers.dropDeleteTrigger(qualifier);
 
                 ftsDao.dropSourceData(qualifier);

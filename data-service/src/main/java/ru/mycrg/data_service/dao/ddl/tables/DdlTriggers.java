@@ -31,7 +31,7 @@ public class DdlTriggers {
         createTrigger(qualifier, fields, "INSERT");
     }
 
-    public void deleteInsertTrigger(ResourceQualifier qualifier) {
+    public void dropInsertTrigger(ResourceQualifier qualifier) {
         dropTrigger(qualifier, "INSERT");
     }
 
@@ -39,7 +39,7 @@ public class DdlTriggers {
         createTrigger(qualifier, fields, "UPDATE");
     }
 
-    public void deleteUpdateTrigger(ResourceQualifier qualifier) {
+    public void dropUpdateTrigger(ResourceQualifier qualifier) {
         dropTrigger(qualifier, "UPDATE");
     }
 
@@ -88,7 +88,7 @@ public class DdlTriggers {
                 triggerName, operation.toUpperCase(), schema, table, funcName,
                 triggerParams);
 
-        log.debug("create {} trigger: [{}]", operation, createQuery);
+        log.trace("create {} trigger: [{}]", operation, createQuery);
 
         jdbcTemplate.execute(createQuery);
     }

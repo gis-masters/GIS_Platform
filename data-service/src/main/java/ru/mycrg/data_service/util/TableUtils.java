@@ -11,6 +11,12 @@ public class TableUtils {
         throw new IllegalStateException("Utility class");
     }
 
+    public static Long getParentId(String path) {
+        String[] parentIdSplitted = path.split("/root/");
+
+        return Long.valueOf(parentIdSplitted[1]);
+    }
+
     public static void throwIfNotMatchTableColumns(Set<String> propsBySchema, List<String> dbColumns) {
         List<String> notMatchingColumns = getNotMatchingColumns(propsBySchema, dbColumns);
 
