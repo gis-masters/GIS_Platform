@@ -15,6 +15,7 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -66,11 +67,9 @@ public class BaseDao {
                 .getJdbcTemplate()
                 .query(query, new RecordRowMapper(schema));
 
-        if (records.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(records.get(0));
+        return records.isEmpty()
+                ? Optional.empty()
+                : Optional.of(records.get(0));
     }
 
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
@@ -87,9 +86,43 @@ public class BaseDao {
         log.debug("find record by id: [{}]", query);
 
         return pJdbcTemplate.query(query,
-                                   new MapSqlParameterSource(fieldId, qualifier.getRecordId()),
-                                   new RecordRowMapper(schema))
-                            .stream().findFirst();
+                        new MapSqlParameterSource(fieldId, qualifier.getRecordId()),
+                        new RecordRowMapper(schema)
+                )
+                .stream()
+                .findFirst();
+    }
+
+    /**
+     * Пример запроса:
+     * <p>
+     * select *
+     * from workspace_789.landplot_1627_2d2b
+     * where jsonb_path_exists(file::jsonb, '$[*] ? (@.id == $idvalue )', '{"idvalue":26410}');
+     */
+    public Optional<IRecord> findByJson(ResourceJsonCondition qualifier, @Nullable SchemaDto schema) {
+
+        // Пример запроса
+        // select *
+        // from workspace_789.landplot_1627_2d2b
+        // where jsonb_path_exists(file::jsonb, '$[*] ? (@.id == $idvalue )', '{"idvalue":26410}');
+
+        var query = String.format(
+                "select * from %s where jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
+                qualifier.getTableQualifier(),
+                qualifier.getJsonFieldName(),
+                qualifier.getJsonIdValue()
+        );
+
+        log.debug("find record by json: [{}]", query);
+
+        var records = pJdbcTemplate
+                .getJdbcTemplate()
+                .query(query, new RecordRowMapper(schema));
+
+        return records.isEmpty()
+                ? Optional.empty()
+                : Optional.of(records.get(0));
     }
 
     public Optional<IRecord> findById(ResourceQualifier qualifier) {

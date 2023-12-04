@@ -248,6 +248,12 @@
             <version>${jaxb-api.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+            <version>7.1.4</version>
+        </dependency>
+
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -426,6 +432,24 @@
 
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>register_rns_1_0_10</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/register_rns_1_0_10/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.register_rns_1_0_10</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
                     <execution>
                         <id>kpt_import</id>
                         <goals>

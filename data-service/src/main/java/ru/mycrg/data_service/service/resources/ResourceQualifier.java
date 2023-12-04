@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.dto.ResourceType;
 
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Objects;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
@@ -13,16 +11,9 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 
-public class ResourceQualifier {
+public class ResourceQualifier extends AQualifier {
 
-    private static final String SEPARATOR = "\\.";
-
-    private final String schema;
-    private final String table;
     private final Object recordId;
-    private final ResourceType type;
-    private final Map<ResourceType, String> resourceTables = new EnumMap<>(ResourceType.class);
-
     private String fieldName;
 
     public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
@@ -70,21 +61,6 @@ public class ResourceQualifier {
         return new ResourceQualifier(schemaName, libraryName, LIBRARY);
     }
 
-    public String getTable() {
-        return table;
-    }
-
-    /**
-     * Для наборов и таблиц - schemas_and_tables, для библиотек - doc_libraries. А для записей - название таблицы.
-     */
-    public String getResourceTable() {
-        return this.resourceTables.getOrDefault(this.type, this.table);
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
     public Long getRecordIdAsLong() {
         if (recordId != null) {
             return Long.parseLong(recordId.toString());
@@ -96,10 +72,6 @@ public class ResourceQualifier {
     @Nullable
     public Object getRecordId() {
         return recordId;
-    }
-
-    public ResourceType getType() {
-        return type;
     }
 
     public String getFieldName() {

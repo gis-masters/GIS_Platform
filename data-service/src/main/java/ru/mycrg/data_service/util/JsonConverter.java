@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -55,13 +56,23 @@ public class JsonConverter {
         }
     }
 
+    public static <T> Optional<T> fromJson(String stringJson, TypeReference valueTypeRef) {
+        try {
+            return Optional.of(mapper.readValue(stringJson, valueTypeRef));
+        } catch (IOException e) {
+            log.error("Failed convert from string to JSON: {}", e.getMessage());
+
+            return Optional.empty();
+        }
+    }
+
     public static <T> Optional<T> fromJson(String stringJson, Class<T> classOfT) {
         try {
             return Optional.of(mapper.readValue(stringJson, classOfT));
         } catch (IOException e) {
             log.error("Failed convert from string to JSON: {}", e.getMessage());
 
-            return Optional.of(null);
+            return Optional.empty();
         }
     }
 

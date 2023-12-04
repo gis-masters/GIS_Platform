@@ -1,15 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. -->
 <xs:schema xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types"
            xmlns:faults="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults"
-           xmlns:tns="urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9"
+           xmlns:tns="urn://x-artefacts-uishc.domrf.ru/register-rns/1.0.10"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified"
            version="1.0"
            targetNamespace="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+
     <xs:import namespace="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults"
                schemaLocation="./faults.xsd"/>
-    <xs:import namespace="urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9"
-               schemaLocation="../receipt-rns-1.0.9.xsd"/>
+
+    <xs:import namespace="urn://x-artefacts-uishc.domrf.ru/register-rns/1.0.10"
+               schemaLocation="../register-rns-1.0.10.xsd"/>
+
     <xs:element name="AttachmentHeaderList">
         <xs:complexType>
             <xs:sequence>

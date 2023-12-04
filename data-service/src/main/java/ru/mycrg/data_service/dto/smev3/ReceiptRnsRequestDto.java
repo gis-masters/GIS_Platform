@@ -12,6 +12,8 @@ public class ReceiptRnsRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate constPermitDateTo;
 
+    private Boolean sendToSmev = true;
+
     public LocalDate getConstPermitDateFrom() {
         return constPermitDateFrom;
     }
@@ -27,6 +29,15 @@ public class ReceiptRnsRequestDto {
 
     public ReceiptRnsRequestDto setConstPermitDateTo(LocalDate constPermitDateTo) {
         this.constPermitDateTo = constPermitDateTo;
+        return this;
+    }
+
+    public Boolean getSendToSmev() {
+        return sendToSmev;
+    }
+
+    public ReceiptRnsRequestDto setSendToSmev(Boolean sendToSmev) {
+        this.sendToSmev = sendToSmev;
         return this;
     }
 }
