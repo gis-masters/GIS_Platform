@@ -17,13 +17,12 @@ import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.support_classes.XmlMapper;
 import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.JsonConverter;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.of;
@@ -31,6 +30,8 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 
 public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcess.class);
+    private static final String MNEMONIC = "register-rns";
+    private static final String MNEMONIC_VERSION = "1.0.10";
     private final Smev3Config smev3Config;
     private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
     private final ReusableElements reusable = new ReusableElements();
@@ -94,12 +95,30 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
 
             var xmlText = marshaller.marshall(xmlObject, ClientMessage.class);
             log.debug("SMEV3. request: {}", xmlText);
+
+            var xmlObjectJson = JsonConverter.toJsonNode(xmlObject);
+
+            var sourceJson = of(sourceRecords)
+                    .map(map -> map.isEmpty() ? null : map.entrySet())
+                    .map(Collection::stream)
+                    .map(stream -> stream.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getContent())))
+                    .map(JsonConverter::toJsonNode)
+                    .orElse(null);
+
+            var attachmentsJson = of(attachments)
+                    .map(object -> object.isEmpty() ? null : object.values())
+                    .map(ArrayList::new)
+                    .map(JsonConverter::toJsonNode)
+                    .orElse(null);
+
             return new XmlBuildMeta(
+                    MNEMONIC,
+                    MNEMONIC_VERSION,
                     clientId,
-                    xmlObject,
+                    xmlObjectJson,
                     xmlText,
-                    sourceRecords,
-                    attachments
+                    sourceJson,
+                    attachmentsJson
             );
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());

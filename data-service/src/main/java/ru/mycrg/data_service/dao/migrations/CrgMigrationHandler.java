@@ -118,6 +118,7 @@ public class CrgMigrationHandler {
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
                 ScriptUtils.executeSqlScript(connection, getResource("M29__addFtsTables.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M30__addIndexesForPermissions.sql"));
+                ScriptUtils.executeSqlScript(connection, getResource("M31__addSmevMessageTable.sql"));
             }
 
             if (initFullTextSearch) {

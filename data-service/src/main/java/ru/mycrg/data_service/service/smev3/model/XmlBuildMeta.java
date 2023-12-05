@@ -1,60 +1,100 @@
 package ru.mycrg.data_service.service.smev3.model;
 
-import ru.mycrg.data_service.entity.IRecord;
+import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Мета информация по запросу
  */
 public class XmlBuildMeta {
+    private String mnemonic;
+    private String mnemonicVersion;
     private UUID clientId;
-    private Object xmlObject;
-    private String xmlRequest;
-    private Map<RecordData, Map<String, Object>> sourceRecords;
-    private List<SmevAttachment> attachments;
+    private JsonNode xmlObject;
+    private String xmlString;
+    private JsonNode sources;
+    private JsonNode attachments;
 
     public XmlBuildMeta(
+            String mnemonic,
+            String mnemonicVersion,
             UUID clientId,
-            Object xmlObject,
-            String xmlRequest,
-            Map<RecordData, IRecord> sourceRecords,
-            Map<String, SmevAttachment> attachmentsMap
+            JsonNode xmlObject,
+            String xmlString,
+            JsonNode sources,
+            JsonNode attachments
     ) {
+        this.mnemonic = mnemonic;
+        this.mnemonicVersion = mnemonicVersion;
         this.clientId = clientId;
         this.xmlObject = xmlObject;
-        this.xmlRequest = xmlRequest;
-        if (sourceRecords != null) {
-            this.sourceRecords = sourceRecords.entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getContent()));
-        }
-        if (attachmentsMap != null) {
-            this.attachments = new ArrayList<>(attachmentsMap.values());
-        }
+        this.xmlString = xmlString;
+        this.sources = sources;
+        this.attachments = attachments;
+
+    }
+
+    public String getMnemonic() {
+        return mnemonic;
+    }
+
+    public XmlBuildMeta setMnemonic(String mnemonic) {
+        this.mnemonic = mnemonic;
+        return this;
+    }
+
+    public String getMnemonicVersion() {
+        return mnemonicVersion;
+    }
+
+    public XmlBuildMeta setMnemonicVersion(String mnemonicVersion) {
+        this.mnemonicVersion = mnemonicVersion;
+        return this;
     }
 
     public UUID getClientId() {
         return clientId;
     }
 
-    public Object getXmlObject() {
+    public XmlBuildMeta setClientId(UUID clientId) {
+        this.clientId = clientId;
+        return this;
+    }
+
+    public JsonNode getXmlObject() {
         return xmlObject;
     }
 
-    public String getXmlRequest() {
-        return xmlRequest;
+    public XmlBuildMeta setXmlObject(JsonNode xmlObject) {
+        this.xmlObject = xmlObject;
+        return this;
     }
 
-    public Map<RecordData, Map<String, Object>> getSourceRecords() {
-        return sourceRecords;
+    public String getXmlString() {
+        return xmlString;
     }
 
-    public List<SmevAttachment> getAttachments() {
+    public XmlBuildMeta setXmlString(String xmlString) {
+        this.xmlString = xmlString;
+        return this;
+    }
+
+    public JsonNode getSources() {
+        return sources;
+    }
+
+    public XmlBuildMeta setSources(JsonNode sources) {
+        this.sources = sources;
+        return this;
+    }
+
+    public JsonNode getAttachments() {
         return attachments;
+    }
+
+    public XmlBuildMeta setAttachments(JsonNode attachments) {
+        this.attachments = attachments;
+        return this;
     }
 }

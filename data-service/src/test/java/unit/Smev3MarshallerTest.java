@@ -30,7 +30,7 @@ public class Smev3MarshallerTest {
 
         var meta = new ReceiptRnsXmlBuildProcess(smev3Config).run(dto);
 
-        var clientMessageUnmarshal = marshaller.unmarshall(meta.getXmlRequest(), ClientMessage.class);
+        var clientMessageUnmarshal = marshaller.unmarshall(meta.getXmlString(), ClientMessage.class);
 
         var receiptListConstruction = clientMessageUnmarshal
                 .getRequestMessage()

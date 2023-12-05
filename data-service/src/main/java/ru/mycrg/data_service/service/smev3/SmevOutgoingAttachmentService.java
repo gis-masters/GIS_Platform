@@ -2,6 +2,8 @@ package ru.mycrg.data_service.service.smev3;
 
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
@@ -21,6 +23,7 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class SmevOutgoingAttachmentService {
+    private final Logger log = LoggerFactory.getLogger(SmevMessageService.class);
     private final FileStorageService fileStorageService;
     private final MinioClient s3client;
     private final Smev3Config smev3Config;
@@ -43,6 +46,8 @@ public class SmevOutgoingAttachmentService {
 
             var s3fileName = String.format("fileid_%s", fileId);
             putObject(s3fileName, fileBytes);
+
+            log.info("add attachment to s3. id {}. filename {}", attachmentId, s3fileName);
 
             return new SmevAttachment(fileId, fileTitle, attachmentId, s3fileName);
         } catch (Exception e) {

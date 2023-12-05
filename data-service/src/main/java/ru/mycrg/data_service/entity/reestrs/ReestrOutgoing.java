@@ -9,9 +9,12 @@ import java.util.UUID;
 public class ReestrOutgoing {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    /**
+     * Список систем
+     * @see ru.mycrg.data_service.service.reestrs.Systems
+     */
     @Column(length = 100, nullable = false)
     private String system;
 

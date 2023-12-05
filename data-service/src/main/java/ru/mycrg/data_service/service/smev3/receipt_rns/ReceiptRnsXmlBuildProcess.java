@@ -10,6 +10,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ import static ru.mycrg.data_service.service.smev3.support_classes.XmlMapper.mapC
 
 public class ReceiptRnsXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsXmlBuildProcess.class);
+    private static final String MNEMONIC = "receipt-rns";
+    private static final String MNEMONIC_VERSION = "1.0.9";
     private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
     private final Smev3Config smev3Config;
     private UUID clientId;
@@ -66,8 +69,10 @@ public class ReceiptRnsXmlBuildProcess {
             log.debug("SMEV3. request: {}", xmlText);
 
             return new XmlBuildMeta(
+                    MNEMONIC,
+                    MNEMONIC_VERSION,
                     clientId,
-                    xmlObject,
+                    JsonConverter.toJsonNode(xmlObject),
                     xmlText,
                     null,
                     null

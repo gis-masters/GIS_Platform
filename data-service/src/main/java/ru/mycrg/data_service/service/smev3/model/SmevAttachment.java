@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.smev3.model;
 
 import java.util.UUID;
 
+
 public class SmevAttachment {
     private String fileId;
     private String fileName;

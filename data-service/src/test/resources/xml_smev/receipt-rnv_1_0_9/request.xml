@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typ:ClientMessage xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <typ:itSystem>U629301</typ:itSystem>
+    <typ:RequestMessage>
+        <typ:RequestMetadata>
+            <typ:clientId>1009f24d-077e-26e0-bfc7-2c467a42970</typ:clientId>
+        </typ:RequestMetadata>
+        <typ:RequestContent>
+            <typ:content>
+                <typ:MessagePrimaryContent>
+                    <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9"
+                                 xmlns:com="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9">
+                        <tns:ReceiptExploitation>
+                            <tns:RecipientInfo>
+                                <com:OrganizationInfo>
+                                    <com:OGRN>1187746953976</com:OGRN>
+                                    <com:INN>7704466023</com:INN>
+                                </com:OrganizationInfo>
+                                <com:Email>tewtetastest@domrf.ru</com:Email>
+                                <com:MailingAddress>
+                                    <com:FIAS>ef8f9fe1-bc9f-48ca-8219-92a87f8af4c7</com:FIAS>
+                                    <com:Region>77</com:Region>
+                                    <com:Locality Name="Москва" Type="г"/>
+                                    <com:Street Name="Воздвиженка" Type="ул"/>
+                                    <com:HouseNumber>10</com:HouseNumber>
+                                    <com:BuildingNumber>соор 1</com:BuildingNumber>
+                                    <com:Note>125009 Москва, ул. Воздвиженка д 10, соор 1</com:Note>
+                                </com:MailingAddress>
+                            </tns:RecipientInfo>
+                            <tns:PermitNumber>50-RU03308000-112233-2022-1</tns:PermitNumber>
+                            <tns:PermitDate>2022-11-22</tns:PermitDate>
+                            <tns:IssueOrgan>
+                                <com:OGRN>1185053037476</com:OGRN>
+                                <com:INN>5024190060</com:INN>
+                            </tns:IssueOrgan>
+                            <tns:DocId>507892</tns:DocId>
+                            <tns:BuildPermitId>506763</tns:BuildPermitId>
+                            <tns:RequestObjectInfo>
+                                <tns:ObjectID>504122</tns:ObjectID>
+                                <tns:ObjectBusinessID>50-01-000-001402</tns:ObjectBusinessID>
+                            </tns:RequestObjectInfo>
+                        </tns:ReceiptExploitation>
+                    </tns:Request>
+                </typ:MessagePrimaryContent>
+            </typ:content>
+        </typ:RequestContent>
+    </typ:RequestMessage>
+</typ:ClientMessage>
