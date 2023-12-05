@@ -1,0 +1,83 @@
+package ru.mycrg.data_service.kpt_import.validation;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import ru.mycrg.common_utils.CrgGlobalProperties;
+import ru.mycrg.data_service.dao.detached.KptImportValidationDao;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+
+import java.util.List;
+import java.util.Map;
+
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+
+/**
+ * Валидтор, сопоставляющий количество импортируемых записей с количеством записей в результирующей таблице
+ */
+@Component
+public class RecordsCountValidator extends CommonKptImportValidator {
+
+    private static final Logger log = LoggerFactory.getLogger(RecordsCountValidator.class);
+
+    private static final String LESS_RECORDS_TEMPLATE = "Во временной таблице %s записей значимо меньше или равно(на " +
+            "константу (%d)), чем в результирующей %s для квартала %s";
+    private static final String MORE_RECORDS_TEMPALTE = "Во временной таблице %s больше записей чем в результирующей " +
+            "%s за вычетом константы (%d) для квартала %s";
+    private static final String ERROR_TEMPLATE = "Ошибка подсчета количества записей в таблице %s";
+
+    private final KptImportValidationDao validationDao;
+
+    public RecordsCountValidator(KptImportValidationDao validationDao) {
+        this.validationDao = validationDao;
+    }
+
+    @Override
+    protected void validateSchemaImport(KptImportValidationData data,
+                                        SchemaDto schema,
+                                        KptImportValidationSettings settings,
+                                        Map<String, List<KptImportValidationResult>> results) {
+        if (!settings.isValidateRecordsCount()) {
+            return;
+        }
+
+        String cadastralSqare = data.getCadastralSqare();
+        String dbName = data.getDbName();
+        ResourceQualifier tmpTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TMP_TABLE_PREFIX + schema.getName());
+        ResourceQualifier resultTable = new ResourceQualifier(
+                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), schema.getName()
+        );
+        int countToImport;
+        int currentCount;
+
+        try {
+            countToImport = validationDao.countRecordsByCadastralSquare(cadastralSqare, dbName, tmpTable);
+        } catch (Exception ex) {
+            String msg = String.format(ERROR_TEMPLATE, tmpTable);
+            log.error(msg, ex);
+            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            return;
+        }
+
+        try {
+            currentCount = validationDao.countRecordsByCadastralSquare(cadastralSqare, dbName, resultTable);
+        } catch (Exception ex) {
+            String msg = String.format(ERROR_TEMPLATE, resultTable);
+            log.error(msg, ex);
+            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            return;
+        }
+
+        int allowedDiff = settings.getAllowedDiff();
+        if (countToImport + allowedDiff <= currentCount) {
+            addResult(results, schema.getName(), KptImportLogLevel.WARN,
+                      String.format(LESS_RECORDS_TEMPLATE, tmpTable, allowedDiff, resultTable, cadastralSqare)
+            );
+        } else if (countToImport + allowedDiff > currentCount) {
+            addResult(results, schema.getName(), KptImportLogLevel.SUCCESS,
+                      String.format(MORE_RECORDS_TEMPALTE, tmpTable, resultTable, allowedDiff, cadastralSqare));
+        }
+    }
+}

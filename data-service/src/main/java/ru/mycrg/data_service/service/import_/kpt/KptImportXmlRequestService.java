@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.import_.kpt;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
@@ -12,8 +14,10 @@ import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
+import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
+import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 import ru.mycrg.data_service_contract.enums.TaskType;
 import ru.mycrg.data_service_contract.queue.request.KptImportXmlRequestEvent;
 import ru.mycrg.mediator.Mediator;
@@ -38,6 +42,7 @@ import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 @Service
 public class KptImportXmlRequestService {
 
+    private static final int DEFAULT_ALLOWED_RECORDS_DIFF = 10;
     private static final String TASK_TYPE_PROPERTY = "type";
     private static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
     private static final String TASK_OWNER_ID_PROPERTY = "owner_id";
@@ -75,14 +80,17 @@ public class KptImportXmlRequestService {
             throw new DataServiceException("Не найден КПТ id=" + request.getFileId());
         }
         IRecord task = createTask(kptRecord);
+        Pair<List<ImportSourceFileDto>, String> sourceFilesPair =
+                kptSourceFilesService.getSourceFiles(kptRecord);
+        handleValidationSettings(request.getValidationSettings(), sourceFilesPair.getRight());
         KptImportXmlRequestEvent event = new KptImportXmlRequestEvent(
-                kptSourceFilesService.getSourceFiles(kptRecord),
+                sourceFilesPair.getLeft(),
                 getDatabaseName(),
                 findSchemas(request.getLayersSchemasNames()),
-                authenticationFacade.getAccessToken(),
                 authenticationFacade.getLogin(),
                 request.getProjectId(),
-                task.getId()
+                task.getId(),
+                request.getValidationSettings()
         );
         messageBus.produce(event);
         return task;
@@ -128,5 +136,16 @@ public class KptImportXmlRequestService {
         body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
         body.put(TASK_DATA_SECTION_PROPERTY, toJsonNode(typeDocumentData).toString());
         return body;
+    }
+
+    private void handleValidationSettings(@Nullable KptImportValidationSettings settings, String dateOrderCompletion) {
+        if (settings != null) {
+            if (settings.isValidateRecordsCount() && settings.getAllowedDiff() == null) {
+                settings.setAllowedDiff(DEFAULT_ALLOWED_RECORDS_DIFF);
+            }
+            if (settings.isValidateFreshness()) {
+                settings.setDateOrderCompletion(dateOrderCompletion);
+            }
+        }
     }
 }

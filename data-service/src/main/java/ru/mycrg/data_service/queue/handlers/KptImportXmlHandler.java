@@ -7,6 +7,7 @@ import org.springframework.util.StopWatch;
 import ru.mycrg.data_service.kpt_import.model.KptElement;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 import ru.mycrg.data_service.kpt_import.reader.KptXmlElementReader;
+import ru.mycrg.data_service.kpt_import.validation.KptImportValidatorService;
 import ru.mycrg.data_service.kpt_import.writer.KptElementWriter;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -39,6 +40,7 @@ public class KptImportXmlHandler implements IEventHandler {
     private static final Logger log = LoggerFactory.getLogger(KptImportXmlHandler.class);
     private static final int BATCH_INSERT_SIZE = 50;
 
+    private final KptImportValidatorService validationService;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
     private final Map<Class<? extends KptElement>, KptElementWriter> kptElementsWriters;
     /**
@@ -51,7 +53,9 @@ public class KptImportXmlHandler implements IEventHandler {
     private final Map<String, Set<String>> schemaNameTags = new HashMap<>();
 
     public KptImportXmlHandler(List<KptXmlElementReader<? extends KptElement>> readers,
-                               List<KptElementWriter> writers) {
+                               List<KptElementWriter> writers,
+                               KptImportValidatorService validationService) {
+        this.validationService = validationService;
         Map<String, KptXmlElementReader<? extends KptElement>> tmpReaders = new HashMap<>();
         Map<Class<? extends KptElement>, KptElementWriter> tmpWriters = new HashMap<>();
         readers.forEach(reader -> tmpReaders.put(reader.getXmlTag(), reader));
@@ -80,6 +84,7 @@ public class KptImportXmlHandler implements IEventHandler {
         log.info("Получено событие импорта КПТ из XML id: {}", event.getId());
         KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
         Set<String> requiredTags = getRequiredTags(importEvent.getLayerSchemas());
+        boolean validate = importEvent.getValidationSettings() != null;
         for (ImportSourceFileDto file: importEvent.getSourceFiles()) {
             try {
                 importFile(file, requiredTags, importEvent.getLayerSchemas(), importEvent.getInitiatorLogin(),
@@ -87,8 +92,19 @@ public class KptImportXmlHandler implements IEventHandler {
             } catch (XMLStreamException ex) {
                 log.error("Ошибка чтения xml файла " + file.getPath(), ex);
                 //todo task log
+                continue;
             } catch (Exception ex) {
                 log.error("Ошибка импорта КПТ kptId={} из файла {}", file.getDocument().getId(), file.getPath(), ex);
+                continue;
+            }
+            if (validate) {
+                validationService.validate(file.getDocument().getTitle(),
+                                           importEvent.getValidationSettings(),
+                                           importEvent.getLayerSchemas(),
+                                           importEvent.getDbName(),
+                                           importEvent.getProjectId(),
+                                           importEvent.getTaskId()
+                );
             }
         }
     }

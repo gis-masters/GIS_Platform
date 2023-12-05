@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.import_.kpt;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class KptSourceFilesService {
 
     public static final String KPT_LIBRARY_ID = "dl_data_kpt";
     private static final String FILE_PROPERTY = "file";
+    private static final String DATA_ORDER_COMPLETION_PROPERTY = "date_order_completion";
 
     private final RecordServiceFactory recordServiceFactory;
     private final FileRepository fileRepository;
@@ -51,8 +54,10 @@ public class KptSourceFilesService {
 
     /**
      * Ищет файлы на жестком диске, привязанные к папке или документу КПТ
+     *
+     * @return Пара из файлов источников и даты "свежести" кпт
      */
-    public List<ImportSourceFileDto> getSourceFiles(IRecord kptRecord) {
+    public Pair<List<ImportSourceFileDto>, String> getSourceFiles(IRecord kptRecord) {
         SchemaDto kptLibSchema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
         List<ImportSourceFileDto> sourceFiles;
         if (kptRecord.isFolder()) {
@@ -60,7 +65,7 @@ public class KptSourceFilesService {
         } else {
             sourceFiles = Collections.singletonList(getSingleSourceFile(kptRecord));
         }
-        return sourceFiles;
+        return new ImmutablePair<>(sourceFiles, (String) kptRecord.getContent().get(DATA_ORDER_COMPLETION_PROPERTY));
     }
 
     public IRecord getKptRecord(long kptId) {

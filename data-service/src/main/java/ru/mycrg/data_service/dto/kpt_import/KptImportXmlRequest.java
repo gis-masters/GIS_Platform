@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.dto.kpt_import;
 
+import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -24,6 +26,10 @@ public class KptImportXmlRequest {
      */
     @NotNull
     private Long projectId;
+    /**
+     * Настройки валидации импортируемых данных
+     */
+    private KptImportValidationSettings validationSettings;
 
     public long getFileId() {
         return documentId;
@@ -47,5 +53,13 @@ public class KptImportXmlRequest {
 
     public void setProjectId(long projectId) {
         this.projectId = projectId;
+    }
+
+    public KptImportValidationSettings getValidationSettings() {
+        return validationSettings;
+    }
+
+    public void setValidationSettings(KptImportValidationSettings validationSettings) {
+        this.validationSettings = validationSettings;
     }
 }
