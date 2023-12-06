@@ -59,6 +59,7 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
         open={dialogOpen}
         onClose={this.closeDialog}
         maxWidth={this.libraryView ? 'xl' : 'md'}
+        fullWidth
       >
         <DialogTitle>Выберите документ</DialogTitle>
 
@@ -101,8 +102,8 @@ export class DocumentsSelectDialog extends Component<DocumentsSelectDialogProps>
                     customFilters={
                       (librariesTableNames?.length || 0) > 1
                         ? {
-                          [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames || [] } }
-                        }
+                            [ExplorerItemType.LIBRARY_ROOT]: { table_name: { $in: librariesTableNames || [] } }
+                          }
                         : undefined
                     }
                     disabledTester={this.testForDisabled}

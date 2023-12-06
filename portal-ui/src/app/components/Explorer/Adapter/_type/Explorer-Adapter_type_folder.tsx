@@ -197,12 +197,7 @@ export class ExplorerAdapterTypeFolder {
     return SortOrder.DESC;
   }
 
-  static async getToolbarActions(
-    item: ExplorerItemData<LibraryRecord>,
-    store: ExplorerStore,
-    service: ExplorerService,
-    full: boolean
-  ): Promise<ReactNode> {
+  static async getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): Promise<ReactNode> {
     const currentItem = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||
@@ -218,15 +213,15 @@ export class ExplorerAdapterTypeFolder {
       .map(({ payload }) => (payload as LibraryRecord).id);
 
     return (
-      store.explorerRole === 'dm' && (
-        <>
-          {full && createEnabled && (
-            <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />
-          )}
-          <LibraryDeletedDocumentsSwitch library={library} />
-          <LibraryViewSwitch to='registry' library={library} path={path} />
-        </>
-      )
+      <>
+        {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
+        {store.explorerRole === 'dm' && (
+          <>
+            <LibraryDeletedDocumentsSwitch library={library} />
+            <LibraryViewSwitch to='registry' library={library} path={path} />
+          </>
+        )}
+      </>
     );
   }
 

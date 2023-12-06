@@ -9,6 +9,7 @@ import {
   OldPropertySchemaDatetime,
   OldPropertySchemaDouble,
   OldPropertySchemaSet,
+  OldPropertySchemaStringText,
   OldPropertySchemaUrl,
   OldSchema,
   ValueType
@@ -221,6 +222,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
       field.propertyType = PropertyType.STRING;
+      if (oldField.pattern) {
+        (field as PropertySchemaString).regex = oldField.pattern;
+        delete (field as OldPropertySchemaStringText).pattern;
+      }
     }
 
     if (oldField.objectIdentityOnUi !== undefined) {
@@ -326,6 +331,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.STRING) {
       field.valueType = ValueType.STRING;
+      if (newField.regex) {
+        (field as OldPropertySchemaStringText).pattern = newField.regex;
+        delete (field as PropertySchemaString).regex;
+      }
     }
 
     if (newField.propertyType === PropertyType.FLOAT) {
