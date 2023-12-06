@@ -4,11 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
+import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.kpt_import.model.KptElement;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 import ru.mycrg.data_service.kpt_import.reader.KptXmlElementReader;
+import ru.mycrg.data_service.kpt_import.validation.KptImportLogLevel;
+import ru.mycrg.data_service.kpt_import.validation.KptImportValidationResult;
 import ru.mycrg.data_service.kpt_import.validation.KptImportValidatorService;
 import ru.mycrg.data_service.kpt_import.writer.KptElementWriter;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
@@ -28,6 +35,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.kpt_import.validation.CommonKptImportValidator.TMP_TABLE_PREFIX;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 
@@ -43,6 +52,8 @@ public class KptImportXmlHandler implements IEventHandler {
     private final KptImportValidatorService validationService;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
     private final Map<Class<? extends KptElement>, KptElementWriter> kptElementsWriters;
+    private final DetachedRecordsDao recordsDao;
+    private final TaskLogDetachedDao taskLogDetachedDao;
     /**
      * Соответствие элементов КПТ со схемами таблиц в БД
      */
@@ -54,8 +65,11 @@ public class KptImportXmlHandler implements IEventHandler {
 
     public KptImportXmlHandler(List<KptXmlElementReader<? extends KptElement>> readers,
                                List<KptElementWriter> writers,
-                               KptImportValidatorService validationService) {
+                               KptImportValidatorService validationService, DetachedRecordsDao recordsDao,
+                               TaskLogDetachedDao taskLogDetachedDao) {
         this.validationService = validationService;
+        this.recordsDao = recordsDao;
+        this.taskLogDetachedDao = taskLogDetachedDao;
         Map<String, KptXmlElementReader<? extends KptElement>> tmpReaders = new HashMap<>();
         Map<Class<? extends KptElement>, KptElementWriter> tmpWriters = new HashMap<>();
         readers.forEach(reader -> tmpReaders.put(reader.getXmlTag(), reader));
@@ -83,12 +97,25 @@ public class KptImportXmlHandler implements IEventHandler {
     public void handle(IMessageBusEvent event) {
         log.info("Получено событие импорта КПТ из XML id: {}", event.getId());
         KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
-        Set<String> requiredTags = getRequiredTags(importEvent.getLayerSchemas());
+        Collection<SchemaDto> requiredSchemas = importEvent.getTables().values();
+        Set<String> requiredTags = getRequiredTags(requiredSchemas);
+        String dbName = importEvent.getDbName();
         boolean validate = importEvent.getValidationSettings() != null;
+        try {
+            cleanTmpTables(requiredSchemas, dbName);
+        } catch (CrgDaoException e) {
+            log.error("Ошибка очистки временной таблицы!", e);
+            taskLogDetachedDao.createTaskLog(
+                    dbName,
+                    new TaskLogDto("Импорт КПТ", importEvent.getTaskId()),
+                    new KptImportValidationResult(KptImportLogLevel.ERROR, "Не удалось очистить временные таблицы")
+            );
+            return;
+        }
+
         for (ImportSourceFileDto file: importEvent.getSourceFiles()) {
             try {
-                importFile(file, requiredTags, importEvent.getLayerSchemas(), importEvent.getInitiatorLogin(),
-                           importEvent.getDbName());
+                importFile(file, requiredTags, requiredSchemas, importEvent.getInitiatorLogin(), dbName);
             } catch (XMLStreamException ex) {
                 log.error("Ошибка чтения xml файла " + file.getPath(), ex);
                 //todo task log
@@ -100,7 +127,7 @@ public class KptImportXmlHandler implements IEventHandler {
             if (validate) {
                 validationService.validate(file.getDocument().getTitle(),
                                            importEvent.getValidationSettings(),
-                                           importEvent.getLayerSchemas(),
+                                           importEvent.getTables(),
                                            importEvent.getDbName(),
                                            importEvent.getProjectId(),
                                            importEvent.getTaskId()
@@ -112,16 +139,17 @@ public class KptImportXmlHandler implements IEventHandler {
     /**
      * Возвращает множество тэгов, которые необходимо парсить
      */
-    private Set<String> getRequiredTags(List<SchemaDto> schemas) {
+    private Set<String> getRequiredTags(Collection<SchemaDto> schemas) {
         return schemas.stream().map(schema -> schemaNameTags.get(schema.getName())).flatMap(Set::stream)
                       .collect(Collectors.toSet());
     }
 
-    public void importFile(ImportSourceFileDto file, Set<String> requiredTags, List<SchemaDto> requiredSchemas,
+    public void importFile(ImportSourceFileDto file, Set<String> requiredTags, Collection<SchemaDto> requiredSchemas,
                            String initiator, String databaseName) throws XMLStreamException {
         String filePath = file.getPath();
         StopWatch timer = new StopWatch();
         timer.start();
+
         try (ZipFile zipFile = new ZipFile(filePath)) {
             Optional<ZipEntry> xmlZipEntry = extractXmlZipEntry(zipFile);
             if (xmlZipEntry.isEmpty()) {
@@ -129,9 +157,11 @@ public class KptImportXmlHandler implements IEventHandler {
                           filePath);
                 return;
             }
+
             ZipEntry xmlFile = xmlZipEntry.get();
             InputStream inputStream = zipFile.getInputStream(xmlFile);
             XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(inputStream);
+
             try {
                 log.info("Импорт КПТ {} из {}/{}", file.getDocument().getTitle(), filePath, xmlFile.getName());
                 List<KptElement> batch = new LinkedList<>();
@@ -139,6 +169,7 @@ public class KptImportXmlHandler implements IEventHandler {
                 KptXmlElementReader<? extends KptElement> batchReader = null;
                 SchemaDto batchSchema = null;
                 KptElementWriter batchWriter = null;
+
                 while (streamReader.hasNext()) {
                     int eventType = streamReader.next();
                     if (eventType != XMLStreamConstants.START_ELEMENT) {
@@ -149,11 +180,13 @@ public class KptImportXmlHandler implements IEventHandler {
                         continue;
                     }
                     batchTag = batchTag == null ? tagName : batchTag;
+
                     if (!Objects.equals(batchTag, tagName) || batch.size() >= BATCH_INSERT_SIZE) {
                         if (!batch.isEmpty()) {
                             batchWriter.writeBatch(batch, batchSchema, databaseName);
                             batch.clear();
                         }
+
                         if (!Objects.equals(batchTag, tagName)) {
                             batchTag = tagName;
                             batchSchema = null;
@@ -161,33 +194,40 @@ public class KptImportXmlHandler implements IEventHandler {
                             batchReader = null;
                         }
                     }
+
                     if (batchReader == null) {
                         batchReader = tagReaders.get(tagName);
                     }
+
                     if (batchReader == null) {
                         log.warn("Не найден reader для тэга {}. Элемент пропущен", tagName);
                         continue;
                     }
+
                     KptElement kptElement = batchReader.read(streamReader);
                     if (batchWriter == null) {
                         batchWriter = kptElementsWriters.get(kptElement.getClass());
                     }
+
                     if (batchWriter == null) {
                         log.warn("Не задан writer для класса {}, элемент пропущен",
                                  kptElement.getClass().getName());
                         continue;
                     }
+
                     if (!kptElement.hasGeometry()) {
                         log.debug("Элемент {} пропущен т.к. не содержит геометрию",
                                   kptElement.getClass().getSimpleName());
                         continue;
                     }
+
                     if (batchSchema == null) {
                         batchSchema = getKptElementSchema(kptElement.getClass(), requiredSchemas);
                     }
                     fillContentWithCommonData(kptElement.getContent(), initiator, file.getDocument());
                     batch.add(kptElement);
                 }
+
                 if (!batch.isEmpty()) {
                     batchWriter.writeBatch(batch, batchSchema, databaseName);
                 }
@@ -225,11 +265,18 @@ public class KptImportXmlHandler implements IEventHandler {
     }
 
     private SchemaDto getKptElementSchema(Class<? extends KptElement> elementClass,
-                                          List<SchemaDto> requiredSchemas) {
+                                          Collection<SchemaDto> requiredSchemas) {
         String schemaName = kptElementSchemaNames.get(elementClass);
         return requiredSchemas.stream()
                               .filter(schemaDto -> schemaName.equals(schemaDto.getName()))
                               .findFirst()
                               .get();
+    }
+
+    private void cleanTmpTables(Collection<SchemaDto> schemas, String dbName) throws CrgDaoException {
+        for (SchemaDto schema: schemas) {
+            ResourceQualifier rq = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TMP_TABLE_PREFIX + schema.getName());
+            recordsDao.truncateTable(rq, dbName);
+        }
     }
 }

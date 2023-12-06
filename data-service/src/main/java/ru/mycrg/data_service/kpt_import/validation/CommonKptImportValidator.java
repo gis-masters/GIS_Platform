@@ -12,18 +12,23 @@ import java.util.Map;
  */
 public abstract class CommonKptImportValidator implements KptImportValidator {
 
-    protected static final String TMP_TABLE_PREFIX = "kpt_";
+    public static final String TMP_TABLE_PREFIX = "kpt_";
 
-    protected abstract void validateSchemaImport(KptImportValidationData data, SchemaDto schema,
+    protected abstract void validateSchemaImport(KptImportValidationData data,
+                                                 String tableName,
+                                                 SchemaDto schema,
                                                  KptImportValidationSettings settings,
                                                  Map<String, List<KptImportValidationResult>> result);
 
     @Override
-    public void validate(KptImportValidationData data, List<SchemaDto> schemas, KptImportValidationSettings settings,
+    public void validate(KptImportValidationData data,
+                         Map<String, SchemaDto> tables,
+                         KptImportValidationSettings settings,
                          Map<String, List<KptImportValidationResult>> results) {
-        for (SchemaDto schema: schemas) {
+        for (String tableName: tables.keySet()) {
+            SchemaDto schema = tables.get(tableName);
             if (schemaSupportsValidation(schema)) {
-                validateSchemaImport(data, schema, settings, results);
+                validateSchemaImport(data, tableName, schema, settings, results);
             } else {
                 addResult(results, schema.getName(), KptImportLogLevel.WARN,
                           String.format("Схема %s не содержит поле source_doc, валидация пропущена", schema.getName()));
@@ -35,9 +40,9 @@ public abstract class CommonKptImportValidator implements KptImportValidator {
      * Добавляет результат валидации в переданную map Map<String, List<KptImportValidationResult>> results
      */
     protected void addResult(Map<String, List<KptImportValidationResult>> results,
-                             String schemaName, KptImportLogLevel level,
+                             String tableName, KptImportLogLevel level,
                              String message) {
-        results.computeIfAbsent(schemaName, v -> new LinkedList<>())
+        results.computeIfAbsent(tableName, v -> new LinkedList<>())
                .add(new KptImportValidationResult(level, message));
     }
 

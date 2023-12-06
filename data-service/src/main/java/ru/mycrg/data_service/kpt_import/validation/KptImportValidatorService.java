@@ -29,17 +29,17 @@ public class KptImportValidatorService {
 
     public Map<String, List<KptImportValidationResult>> validate(String cadastralSqare,
                                                                  KptImportValidationSettings settings,
-                                                                 List<SchemaDto> schemas,
+                                                                 Map<String, SchemaDto> tables,
                                                                  String dbName,
                                                                  long projectId,
                                                                  long taskId) {
         KptImportValidationData validationData = new KptImportValidationData(cadastralSqare, dbName, projectId);
         Map<String, List<KptImportValidationResult>> results = new HashMap<>();
-        validators.forEach(validator -> validator.validate(validationData, schemas, settings, results));
-        for (String schema: results.keySet()) {
-            List<KptImportValidationResult> schemaResults = results.get(schema);
-            for (KptImportValidationResult schemaResult: schemaResults) {
-                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), schemaResult);
+        validators.forEach(validator -> validator.validate(validationData, tables, settings, results));
+        for (String tableName: results.keySet()) {
+            List<KptImportValidationResult> tableResults = results.get(tableName);
+            for (KptImportValidationResult tableResult: tableResults) {
+                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), tableResult);
             }
         }
         return results;

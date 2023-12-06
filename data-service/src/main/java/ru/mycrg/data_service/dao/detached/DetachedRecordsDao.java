@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -57,6 +58,19 @@ public class DetachedRecordsDao {
             String msg = String.format("Что то пошло не так при вставке в таблицу: '%s'. %s",
                                        qualifier, e.getCause().getMessage());
             throw new CrgDaoException(msg);
+        }
+    }
+
+    public void truncateTable(@NotNull ResourceQualifier qualifier, @NotNull String databaseName)
+            throws CrgDaoException {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+        String query = String.format("TRUNCATE %s.%s", qualifier.getSchema(), qualifier.getTable());
+        log.debug("TRUNCATE QUERY: [{}]", query);
+
+        try {
+            jdbcTemplate.execute(query);
+        } catch (Exception e) {
+            throw new CrgDaoException("Ошибка очистки таблицы " + qualifier, e);
         }
     }
 }

@@ -17,10 +17,10 @@ public class KptImportXmlRequest {
     @NotNull
     private Long documentId;
     /**
-     * Названия схем слоёв для импорта
+     * Названия таблиц для импорта
      */
     @NotEmpty
-    private List<String> layersSchemasNames;
+    private List<String> tableNames;
     /**
      * Идентификатор проекта
      */
@@ -35,8 +35,8 @@ public class KptImportXmlRequest {
         return documentId;
     }
 
-    public List<String> getLayersSchemasNames() {
-        return layersSchemasNames;
+    public List<String> getTableNames() {
+        return tableNames;
     }
 
     public long getProjectId() {
@@ -47,8 +47,8 @@ public class KptImportXmlRequest {
         this.documentId = documentId;
     }
 
-    public void setLayersSchemasNames(List<String> layersSchemasNames) {
-        this.layersSchemasNames = layersSchemasNames;
+    public void setTableNames(List<String> tableNames) {
+        this.tableNames = tableNames;
     }
 
     public void setProjectId(long projectId) {

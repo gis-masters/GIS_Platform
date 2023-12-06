@@ -36,6 +36,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
 
     @Override
     protected void validateSchemaImport(KptImportValidationData data,
+                                        String tableName,
                                         SchemaDto schema,
                                         KptImportValidationSettings settings,
                                         Map<String, List<KptImportValidationResult>> results) {
@@ -47,7 +48,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         String dbName = data.getDbName();
         ResourceQualifier tmpTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TMP_TABLE_PREFIX + schema.getName());
         ResourceQualifier resultTable = new ResourceQualifier(
-                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), schema.getName()
+                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), tableName
         );
         int countToImport;
         int currentCount;
@@ -57,7 +58,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         } catch (Exception ex) {
             String msg = String.format(ERROR_TEMPLATE, tmpTable);
             log.error(msg, ex);
-            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
             return;
         }
 
@@ -66,17 +67,17 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         } catch (Exception ex) {
             String msg = String.format(ERROR_TEMPLATE, resultTable);
             log.error(msg, ex);
-            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
             return;
         }
 
         int allowedDiff = settings.getAllowedDiff();
         if (countToImport + allowedDiff <= currentCount) {
-            addResult(results, schema.getName(), KptImportLogLevel.WARN,
+            addResult(results, tableName, KptImportLogLevel.WARN,
                       String.format(LESS_RECORDS_TEMPLATE, tmpTable, allowedDiff, resultTable, cadastralSqare)
             );
         } else if (countToImport + allowedDiff > currentCount) {
-            addResult(results, schema.getName(), KptImportLogLevel.SUCCESS,
+            addResult(results, tableName, KptImportLogLevel.SUCCESS,
                       String.format(MORE_RECORDS_TEMPALTE, tmpTable, resultTable, allowedDiff, cadastralSqare));
         }
     }

@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public interface KptImportValidator {
 
-    void validate(KptImportValidationData data, List<SchemaDto> schemas, KptImportValidationSettings settings,
+    void validate(KptImportValidationData data,
+                  Map<String, SchemaDto> tables,
+                  KptImportValidationSettings settings,
                   Map<String, List<KptImportValidationResult>> result);
 }

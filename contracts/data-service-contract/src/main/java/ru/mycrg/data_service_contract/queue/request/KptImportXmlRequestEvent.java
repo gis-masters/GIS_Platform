@@ -6,6 +6,7 @@ import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.IMPORT_KPT_TASK_QUEUE;
@@ -21,9 +22,9 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
      */
     private String dbName;
     /**
-     * Схемы слоёв, которые необходимо загрузить
+     * Таблицы, в которые будет выполнен импорт. Key=Название таблицы, value=схема таблицы
      */
-    private List<SchemaDto> layerSchemas;
+    private Map<String, SchemaDto> tables;
     private String initiatorLogin;
     /**
      * Идентификатор проекта
@@ -41,7 +42,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
 
     public KptImportXmlRequestEvent(List<ImportSourceFileDto> sourceFiles,
                                     String dbName,
-                                    List<SchemaDto> layerSchemas,
+                                    Map<String, SchemaDto> tables,
                                     String initiatorLogin,
                                     long projectId,
                                     long taskId,
@@ -49,7 +50,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         super(UUID.randomUUID(), IMPORT_KPT_TASK_QUEUE);
         this.sourceFiles = sourceFiles;
         this.dbName = dbName;
-        this.layerSchemas = layerSchemas;
+        this.tables = tables;
         this.initiatorLogin = initiatorLogin;
         this.projectId = projectId;
         this.taskId = taskId;
@@ -64,8 +65,8 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         return dbName;
     }
 
-    public List<SchemaDto> getLayerSchemas() {
-        return layerSchemas;
+    public Map<String, SchemaDto> getTables() {
+        return tables;
     }
 
     public String getInitiatorLogin() {
@@ -84,8 +85,8 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         this.dbName = dbName;
     }
 
-    public void setLayerSchemas(List<SchemaDto> layerSchemas) {
-        this.layerSchemas = layerSchemas;
+    public void setTables(Map<String, SchemaDto> tables) {
+        this.tables = tables;
     }
 
     public void setInitiatorLogin(String initiatorLogin) {

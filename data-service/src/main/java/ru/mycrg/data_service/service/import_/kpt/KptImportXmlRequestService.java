@@ -8,8 +8,10 @@ import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dto.kpt_import.KptImportXmlRequest;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -27,6 +29,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
@@ -54,17 +57,20 @@ public class KptImportXmlRequestService {
     private final IAuthenticationFacade authenticationFacade;
     private final KptSourceFilesService kptSourceFilesService;
     private final Mediator mediator;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public KptImportXmlRequestService(IMessageBusProducer messageBus,
                                       SchemaService schemaService,
                                       IAuthenticationFacade authenticationFacade,
                                       KptSourceFilesService kptSourceFilesService,
-                                      Mediator mediator) {
+                                      Mediator mediator,
+                                      SchemasAndTablesRepository schemasAndTablesRepository) {
         this.messageBus = messageBus;
         this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
         this.kptSourceFilesService = kptSourceFilesService;
         this.mediator = mediator;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     /**
@@ -86,7 +92,7 @@ public class KptImportXmlRequestService {
         KptImportXmlRequestEvent event = new KptImportXmlRequestEvent(
                 sourceFilesPair.getLeft(),
                 getDatabaseName(),
-                findSchemas(request.getLayersSchemasNames()),
+                findSchemas(request.getTableNames()),
                 authenticationFacade.getLogin(),
                 request.getProjectId(),
                 task.getId(),
@@ -101,16 +107,30 @@ public class KptImportXmlRequestService {
         return getDefaultDatabaseName(orgId);
     }
 
-    private List<SchemaDto> findSchemas(List<String> names) {
-        List<SchemaDto> schemas = schemaService.getSchemas(names);
-        if (schemas.size() != names.size()) {
-            List<String> foundNames = schemas.stream().map(SchemaDto::getName).collect(Collectors.toList());
-            String notFoundNames = names.stream()
-                                        .filter(name -> !foundNames.contains(name))
-                                        .collect(Collectors.joining(","));
-            throw new DataServiceException("Не найдены схемы для импорта: " + notFoundNames);
+    private Map<String, SchemaDto> findSchemas(List<String> tableIdentifiers) {
+        List<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findByIdentifierIn(tableIdentifiers);
+        checkTablesExists(schemasAndTables, tableIdentifiers);
+        Map<String, SchemaDto> result = new HashMap<>();
+        for (SchemasAndTables table: schemasAndTables) {
+            Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(table.getSchemaId());
+            if (schemaByName.isEmpty()) {
+                throw new DataServiceException("Не найдена схема таблицы " + table.getIdentifier());
+            }
+            result.put(table.getIdentifier(), schemaByName.get());
         }
-        return schemas;
+        return result;
+    }
+
+    private void checkTablesExists(List<SchemasAndTables> found, List<String> requested) {
+        if (found.size() < requested.size()) {
+            List<String> foundIdentifiers = found.stream()
+                                                 .map(SchemasAndTables::getIdentifier)
+                                                 .collect(Collectors.toList());
+            String notFoundNames = requested.stream()
+                                            .filter(identifier -> !foundIdentifiers.contains(identifier))
+                                            .collect(Collectors.joining(","));
+            throw new DataServiceException("Не найдены таблицы для импорта: " + notFoundNames);
+        }
     }
 
     private IRecord createTask(IRecord kptRecord) {

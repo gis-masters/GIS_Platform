@@ -6,7 +6,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +23,6 @@ public interface SchemasAndTablesRepository extends PagingAndSortingRepository<S
     Optional<String> findSchemaIdByIdentifier(@Param("identifier") String identifier);
 
     List<SchemasAndTables> findBySchemaId(String schemaId);
+
+    List<SchemasAndTables> findByIdentifierIn(List<String> identifiers);
 }

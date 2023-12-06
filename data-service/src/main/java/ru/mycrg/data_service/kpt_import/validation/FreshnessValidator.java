@@ -36,25 +36,28 @@ public class FreshnessValidator extends CommonKptImportValidator {
 
     @Override
     protected void validateSchemaImport(KptImportValidationData data,
+                                        String tableName,
                                         SchemaDto schema,
                                         KptImportValidationSettings settings,
                                         Map<String, List<KptImportValidationResult>> results) {
         if (!settings.isValidateFreshness() || settings.getDateOrderCompletion() == null) {
             return;
         }
+
         LocalDateTime orderCompletion;
         try {
             orderCompletion = LocalDateTime.parse(settings.getDateOrderCompletion(), DATE_FORMAT);
         } catch (Exception ex) {
             String msg = String.format(DATE_FORMAT_ERROR_TEMPLATE, data.getCadastralSqare());
             log.error(msg);
-            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
             return;
         }
 
         ResourceQualifier resultTable = new ResourceQualifier(
-                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), schema.getName()
+                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), tableName
         );
+
         LocalDateTime resultTableDate;
         try {
             resultTableDate = validationDao.latestOrderCompletionDateByCadastralSquare(
@@ -62,12 +65,12 @@ public class FreshnessValidator extends CommonKptImportValidator {
         } catch (Exception ex) {
             String msg = String.format(DATE_COMPLETION_ERROR_TEMPLATE, resultTable);
             log.error(msg, ex);
-            addResult(results, schema.getName(), KptImportLogLevel.ERROR, msg);
+            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
             return;
         }
 
         if (resultTableDate != null && resultTableDate.truncatedTo(ChronoUnit.SECONDS).isAfter(orderCompletion)) {
-            addResult(results, schema.getName(), KptImportLogLevel.WARN,
+            addResult(results, tableName, KptImportLogLevel.WARN,
                       String.format(OLD_DATA_TEMPLATE, resultTable));
         }
     }
