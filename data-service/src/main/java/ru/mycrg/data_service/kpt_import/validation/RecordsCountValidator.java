@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_utils.CrgGlobalProperties;
-import ru.mycrg.data_service.dao.detached.KptImportValidationDao;
+import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
@@ -28,9 +28,9 @@ public class RecordsCountValidator extends CommonKptImportValidator {
             "%s за вычетом константы (%d) для квартала %s";
     private static final String ERROR_TEMPLATE = "Ошибка подсчета количества записей в таблице %s";
 
-    private final KptImportValidationDao validationDao;
+    private final KptImportDao validationDao;
 
-    public RecordsCountValidator(KptImportValidationDao validationDao) {
+    public RecordsCountValidator(KptImportDao validationDao) {
         this.validationDao = validationDao;
     }
 

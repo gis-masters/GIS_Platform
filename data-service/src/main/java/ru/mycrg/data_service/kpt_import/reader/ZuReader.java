@@ -4,7 +4,7 @@ import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.CadastralNumberExtractor;
+import ru.mycrg.data_service.kpt_import.KptImportUtils;
 import ru.mycrg.data_service.kpt_import.GeometryParser;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
@@ -54,7 +54,7 @@ public class ZuReader implements KptXmlElementReader<ZuElement> {
         if (shape.isPresent()) {
             //парсим только объекты с геометрией
             content.put("cadastralnum", cadastralNumber);
-            content.put("num_zu", CadastralNumberExtractor.extractNumberFromCadastralNum(cadastralNumber));
+            content.put("num_zu", KptImportUtils.extractNumberFromCadastralNum(cadastralNumber));
             content.put("usage", extractPermittedUsageByDocument(lr));
             content.put("subtype", extractSubtype(lr));
             content.put("category", extractCategory(lr));

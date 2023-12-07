@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
+import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
@@ -35,8 +36,9 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.kpt_import.validation.CommonKptImportValidator.TMP_TABLE_PREFIX;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 
@@ -54,6 +56,7 @@ public class KptImportXmlHandler implements IEventHandler {
     private final Map<Class<? extends KptElement>, KptElementWriter> kptElementsWriters;
     private final DetachedRecordsDao recordsDao;
     private final TaskLogDetachedDao taskLogDetachedDao;
+    private final KptImportDao kptImportDao;
     /**
      * Соответствие элементов КПТ со схемами таблиц в БД
      */
@@ -65,11 +68,14 @@ public class KptImportXmlHandler implements IEventHandler {
 
     public KptImportXmlHandler(List<KptXmlElementReader<? extends KptElement>> readers,
                                List<KptElementWriter> writers,
-                               KptImportValidatorService validationService, DetachedRecordsDao recordsDao,
-                               TaskLogDetachedDao taskLogDetachedDao) {
+                               KptImportValidatorService validationService,
+                               DetachedRecordsDao recordsDao,
+                               TaskLogDetachedDao taskLogDetachedDao,
+                               KptImportDao kptImportDao) {
         this.validationService = validationService;
         this.recordsDao = recordsDao;
         this.taskLogDetachedDao = taskLogDetachedDao;
+        this.kptImportDao = kptImportDao;
         Map<String, KptXmlElementReader<? extends KptElement>> tmpReaders = new HashMap<>();
         Map<Class<? extends KptElement>, KptElementWriter> tmpWriters = new HashMap<>();
         readers.forEach(reader -> tmpReaders.put(reader.getXmlTag(), reader));
@@ -97,42 +103,61 @@ public class KptImportXmlHandler implements IEventHandler {
     public void handle(IMessageBusEvent event) {
         log.info("Получено событие импорта КПТ из XML id: {}", event.getId());
         KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
-        Collection<SchemaDto> requiredSchemas = importEvent.getTables().values();
+        Map<String, SchemaDto> targetTables = importEvent.getTables();
+        Collection<SchemaDto> requiredSchemas = targetTables.values();
         Set<String> requiredTags = getRequiredTags(requiredSchemas);
         String dbName = importEvent.getDbName();
         boolean validate = importEvent.getValidationSettings() != null;
+
         try {
             cleanTmpTables(requiredSchemas, dbName);
         } catch (CrgDaoException e) {
             log.error("Ошибка очистки временной таблицы!", e);
-            taskLogDetachedDao.createTaskLog(
-                    dbName,
-                    new TaskLogDto("Импорт КПТ", importEvent.getTaskId()),
-                    new KptImportValidationResult(KptImportLogLevel.ERROR, "Не удалось очистить временные таблицы")
-            );
+            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                         "Не удалось очистить временные таблицы");
             return;
         }
 
         for (ImportSourceFileDto file: importEvent.getSourceFiles()) {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
             try {
                 importFile(file, requiredTags, requiredSchemas, importEvent.getInitiatorLogin(), dbName);
-            } catch (XMLStreamException ex) {
+            } catch (XMLStreamException | IOException ex) {
                 log.error("Ошибка чтения xml файла " + file.getPath(), ex);
-                //todo task log
+                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                             String.format("Не прочитать файл КПТ %s: %s", file.getPath(), ex.getMessage()));
                 continue;
             } catch (Exception ex) {
                 log.error("Ошибка импорта КПТ kptId={} из файла {}", file.getDocument().getId(), file.getPath(), ex);
+                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                             String.format("Непредвиденная ошибка импорта файла КПТ %s: %s", file.getPath(),
+                                           ex.getMessage())
+                );
                 continue;
             }
+
             if (validate) {
                 validationService.validate(file.getDocument().getTitle(),
                                            importEvent.getValidationSettings(),
-                                           importEvent.getTables(),
-                                           importEvent.getDbName(),
+                                           targetTables,
+                                           dbName,
                                            importEvent.getProjectId(),
                                            importEvent.getTaskId()
                 );
             }
+
+            for (String table: targetTables.keySet()) {
+                copyData(targetTables.get(table),
+                         new ResourceQualifier(getDefaultProjectName(importEvent.getProjectId()), table),
+                         file.getDocument().getTitle(),
+                         importEvent.getDbName()
+                );
+            }
+
+            stopWatch.stop();
+            log.debug("Файл {} полностью импортирован за {} сек",
+                      file.getDocument().getTitle(), stopWatch.getTotalTimeSeconds());
         }
     }
 
@@ -145,7 +170,7 @@ public class KptImportXmlHandler implements IEventHandler {
     }
 
     public void importFile(ImportSourceFileDto file, Set<String> requiredTags, Collection<SchemaDto> requiredSchemas,
-                           String initiator, String databaseName) throws XMLStreamException {
+                           String initiator, String databaseName) throws XMLStreamException, IOException {
         String filePath = file.getPath();
         StopWatch timer = new StopWatch();
         timer.start();
@@ -216,8 +241,6 @@ public class KptImportXmlHandler implements IEventHandler {
                     }
 
                     if (!kptElement.hasGeometry()) {
-                        log.debug("Элемент {} пропущен т.к. не содержит геометрию",
-                                  kptElement.getClass().getSimpleName());
                         continue;
                     }
 
@@ -240,6 +263,7 @@ public class KptImportXmlHandler implements IEventHandler {
             }
         } catch (IOException ex) {
             log.error("Ошибка чтения архива КПТ. kptId: {}, архив: {}", file.getDocument().getId(), filePath, ex);
+            throw ex;
         }
     }
 
@@ -248,10 +272,12 @@ public class KptImportXmlHandler implements IEventHandler {
         ZipEntry xmlEntry = null;
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            String[] parts = entry.getName().split("\\.");
-            if ("xml".equals(parts[parts.length - 1])) {
-                xmlEntry = entry;
-                break;
+            if (entry.getName().startsWith("report")) {
+                String[] parts = entry.getName().split("\\.");
+                if ("xml".equals(parts[parts.length - 1])) {
+                    xmlEntry = entry;
+                    break;
+                }
             }
         }
         return Optional.ofNullable(xmlEntry);
@@ -275,8 +301,30 @@ public class KptImportXmlHandler implements IEventHandler {
 
     private void cleanTmpTables(Collection<SchemaDto> schemas, String dbName) throws CrgDaoException {
         for (SchemaDto schema: schemas) {
-            ResourceQualifier rq = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TMP_TABLE_PREFIX + schema.getName());
+            ResourceQualifier rq = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(schema.getName()));
             recordsDao.truncateTable(rq, dbName);
         }
+    }
+
+    private void copyData(SchemaDto schema, ResourceQualifier targetQualifier, String cadastralSquare, String dbName) {
+        StopWatch timer = new StopWatch();
+        timer.start();
+        String sourceTable = tmbTableName(schema.getName());
+        ResourceQualifier sourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, sourceTable);
+
+        kptImportDao.deleteAllByCadatstralSquare(dbName, targetQualifier, cadastralSquare);
+        kptImportDao.copyCadastralSquare(dbName, sourceQualifier, targetQualifier, schema.getProperties(),
+                                         schema.getProperties(), cadastralSquare);
+
+        timer.stop();
+        log.debug("Данные перенесены из {} в {} за {} сек.", sourceTable, targetQualifier, timer.getTotalTimeSeconds());
+    }
+
+    private void writeTaskLog(String dbName, Long taskId, KptImportLogLevel lvl, String message) {
+        taskLogDetachedDao.createTaskLog(
+                dbName,
+                new TaskLogDto("Импорт КПТ", taskId),
+                new KptImportValidationResult(lvl, message)
+        );
     }
 }

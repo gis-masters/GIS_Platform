@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_utils.CrgGlobalProperties;
-import ru.mycrg.data_service.dao.detached.KptImportValidationDao;
+import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
@@ -28,9 +28,9 @@ public class FreshnessValidator extends CommonKptImportValidator {
             " таблицы %s";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final KptImportValidationDao validationDao;
+    private final KptImportDao validationDao;
 
-    public FreshnessValidator(KptImportValidationDao validationDao) {
+    public FreshnessValidator(KptImportDao validationDao) {
         this.validationDao = validationDao;
     }
 
