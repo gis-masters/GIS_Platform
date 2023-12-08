@@ -74,11 +74,11 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         }
 
         List<FtsItem> founded = ftsDao.search(LAYERS, allowedTables, null, dto.getText(), getBound(dto), pageable);
-        Long total = ftsDao.countTotal(LAYERS, new ArrayList<>(), null, dto.getText(), getBound(dto));
+        // Long total = ftsDao.countTotal(LAYERS, allowedTables, null, dto.getText(), getBound(dto));
 
         List<FtsResponseDto> result = fetchEntities(founded);
 
-        return new PageImpl<>(result, request.getPageable(), total);
+        return new PageImpl<>(result, pageable, pageable.getPageNumber());
     }
 
     @Override

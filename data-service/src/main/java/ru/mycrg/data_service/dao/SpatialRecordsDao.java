@@ -88,7 +88,7 @@ public class SpatialRecordsDao {
     public List<Feature> findByIds(ResourceQualifier qualifier, SchemaDto schema, List<Long> ids) {
         try {
             String fieldId = getIdField(qualifier);
-            String query = format("SELECT * FROM %s WHERE %s in (%s)",
+            String query = format("SELECT * FROM %s WHERE %s IN (%s)",
                                   qualifier.getTableQualifier(), fieldId, join(ids));
 
             log.debug("find feature by id: [{}]", query);
@@ -197,7 +197,7 @@ public class SpatialRecordsDao {
             String fieldId = getIdField(qualifier);
             Iterable<String> iterable = ids.stream().map(Object::toString).collect(toList());
 
-            String query = format("DELETE FROM %s WHERE %s in (%s)",
+            String query = format("DELETE FROM %s WHERE %s IN (%s)",
                                   qualifier.getTableQualifier(), fieldId, join(",", iterable));
             log.debug("Request to delete several features: [{}]", query);
 

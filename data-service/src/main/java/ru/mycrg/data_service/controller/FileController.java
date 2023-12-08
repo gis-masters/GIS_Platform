@@ -81,7 +81,7 @@ public class FileController extends BaseController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping(value = "/files")
-    public ResponseEntity<Object> createFile(@RequestPart MultipartFile[] files) {
+    public ResponseEntity<List<FileProjection>> createFile(@RequestPart MultipartFile[] files) {
         validateRequest(files);
 
         List<FileProjection> projections = mediator.execute(new CreateFileRequest(files));

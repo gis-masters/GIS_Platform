@@ -30,7 +30,7 @@ export interface SearchItemDataTypeFeature extends FtsResponseDto {
 export interface SearchRawItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
-  payload: { properties: Record<string, unknown> };
+  payload: Record<string, unknown>;
 }
 
 interface SearchItemDataTypeDocument extends FtsResponseDto {

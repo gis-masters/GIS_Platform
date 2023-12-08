@@ -14,7 +14,7 @@ public interface IFullTextSearchEngine {
 
     FtsType getType();
 
-    float DEFAULT_BOUND = 0.9f;
+    float DEFAULT_BOUND = 0.93f;
 
     Comparator<FtsResponseDto> ftsBoundComparator = (i1, i2) -> Float.compare(i1.getValue(), i2.getValue());
 

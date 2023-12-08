@@ -81,7 +81,7 @@ public class FtsDao {
                                 Pageable pageable) {
         String query = buildFtsQuery(qualifier, ecqlFilter, bound, requestedTables, pageable);
 
-        log.debug("fts by documents: [{}]", query);
+        log.debug("fts by '{}': [{}]", qualifier.getQualifier(), query);
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("searchedText", text, VARCHAR);
