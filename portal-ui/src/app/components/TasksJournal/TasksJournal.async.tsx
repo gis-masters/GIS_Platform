@@ -168,6 +168,11 @@ export default class TasksJournal extends Component {
 
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[Task[], number]> {
+    // костыль для корректной работы задач (+ починить заскипаные тесты если это нужно)
+    if (pageOptions.filter.is_folder) {
+      delete pageOptions.filter.is_folder;
+    }
+
     if (pageOptions.filter) {
       const filterById = getFieldFilterValue(pageOptions.filter, 'id') as { $in: number[] } | undefined;
       if (filterById) {
@@ -232,6 +237,10 @@ export default class TasksJournal extends Component {
   @boundMethod
   private updateSchema(pageOptions: PageOptions) {
     const { filter } = pageOptions;
+    // костыль для корректной работы задач (+ починить заскипаные тесты если это нужно)
+    if (filter.is_folder) {
+      delete filter.is_folder;
+    }
 
     const contentTypeId = getFieldFilterValue(filter, 'content_type_id') as FilterQuery;
     if (Object.keys(filter).length === 0 || !contentTypeId) {

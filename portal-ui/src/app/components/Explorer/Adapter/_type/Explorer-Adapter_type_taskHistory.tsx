@@ -19,7 +19,7 @@ export class ExplorerAdapterTypeTaskHistory {
   }
 
   static getTitle(item: ExplorerItemData<TaskHistory>): string {
-    return formatDate(String(item.payload.massage.last_modified), 'HH:mm DD.MM.YYYY');
+    return formatDate(String(item.payload.massage.last_modified || item.payload.createdAt), 'HH:mm DD.MM.YYYY');
   }
 
   static getDetails(): string {

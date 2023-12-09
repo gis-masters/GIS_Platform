@@ -5,7 +5,6 @@ import { CreateOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { updateTask } from '../../../services/data/task/task.service';
@@ -55,7 +54,7 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
           onClose={this.closeDialog}
           value={task}
           open={this.openDialog}
-          schema={applyContentType(schema, task.content_type_id)}
+          schema={schema}
           actionButtonProps={{ children: 'Сохранить', loading: this.loading }}
         />
       </>
