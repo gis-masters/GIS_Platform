@@ -13,9 +13,11 @@ export const withTypeGroup = withBemMod<LayerIconTypeGroupProps, LayerIconProps>
   cnLayerIcon(),
   { type: 'group' },
   () =>
-    ({ expanded, className, colorized }) => {
+    ({ expanded, className, colorized, size }) => {
       const Icon = expanded ? FolderOpen : Folder;
 
-      return <Icon className={cnLayerIcon(null, [className])} color={colorized ? 'primary' : 'inherit'} />;
+      return (
+        <Icon className={cnLayerIcon(null, [className])} fontSize={size} color={colorized ? 'primary' : 'inherit'} />
+      );
     }
 );

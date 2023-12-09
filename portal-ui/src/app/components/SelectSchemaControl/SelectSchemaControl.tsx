@@ -9,6 +9,7 @@ import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable.models';
 import { Button } from '../Button/Button';
+import { SelectSchemaControlActions } from './Actions/SelectSchemaControl-Actions';
 
 import '!style-loader!css-loader!sass-loader!./SelectSchemaControl.scss';
 
@@ -69,6 +70,12 @@ export class SelectSchemaControl extends Component<FormControlProps> {
           }
         ]
       }
+    },
+    {
+      title: 'Действия',
+      align: 'right',
+      cellProps: { padding: 'checkbox' },
+      CellContent: SelectSchemaControlActions
     }
   ];
 

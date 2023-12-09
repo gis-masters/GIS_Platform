@@ -47,7 +47,7 @@ export class SchemaActionsPreview extends Component<SchemaActionsPreviewProps> {
       <>
         <ActionsItem
           className={cnSchemaActionsPreview()}
-          title={`Предпросмотр формы по схеме — ${schema.name}`}
+          title={'Предпросмотр'}
           as={as}
           onClick={this.openDialog}
           icon={this.dialogOpen ? <Preview /> : <PreviewOutlined />}

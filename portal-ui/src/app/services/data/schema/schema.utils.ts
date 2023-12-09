@@ -9,7 +9,6 @@ import {
   OldPropertySchemaDatetime,
   OldPropertySchemaDouble,
   OldPropertySchemaSet,
-  OldPropertySchemaStringText,
   OldPropertySchemaUrl,
   OldSchema,
   ValueType
@@ -35,7 +34,11 @@ import { LibraryRecord } from '../library/library.models';
 import { DocumentInfo } from '../../../components/Documents/Documents';
 import { formatDate } from '../../util/date.util';
 import { FileInfo } from '../files/files.models';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import {
+  CoordinateEdited,
+  GeometryType,
+  WfsFeature
+} from '../../geoserver/wfs/wfs.models';
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 import { FilterQuery } from '../../util/filterObjects';
 import { services } from '../../services';
@@ -46,7 +49,10 @@ export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   return applyTypeToSchemaOld(schema, view);
 }
 
-function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType | undefined): OldSchema {
+function applyTypeToSchemaOld(
+  schema: OldSchema,
+  type: OldContentType | undefined
+): OldSchema {
   const clonedSchema = cloneDeep(schema);
 
   if (type) {
@@ -59,11 +65,18 @@ function applyTypeToSchemaOld(schema: OldSchema, type: OldContentType | undefine
       relations = clonedSchema.relations,
       definitionQuery = clonedSchema.definitionQuery
     } = type;
-    const actualProperties: OldPropertySchema[] = attributes.map(contentTypeProperty => {
-      const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
+    const actualProperties: OldPropertySchema[] = attributes.map(
+      contentTypeProperty => {
+        const schemaProperty = clonedSchema.properties.find(
+          property => property.name === contentTypeProperty.name
+        );
 
-      return { ...schemaProperty, ...contentTypeProperty } as OldPropertySchema;
-    });
+        return {
+          ...schemaProperty,
+          ...contentTypeProperty
+        } as OldPropertySchema;
+      }
+    );
 
     Object.assign(clonedSchema, {
       properties: actualProperties,
@@ -99,8 +112,13 @@ export function applyView(schema: Schema, viewId?: string): Schema {
   return resultSchema;
 }
 
-export function applyContentType(schema: Schema, contentTypeId: string): Schema {
-  const contentType = schema.contentTypes?.find(cType => cType.id === contentTypeId);
+export function applyContentType(
+  schema: Schema,
+  contentTypeId: string
+): Schema {
+  const contentType = schema.contentTypes?.find(
+    cType => cType.id === contentTypeId
+  );
   const resultSchema = applyTypeToSchema(schema, contentType);
 
   if (contentType) {
@@ -110,7 +128,10 @@ export function applyContentType(schema: Schema, contentTypeId: string): Schema 
   return resultSchema;
 }
 
-export function mergeContentTypes(schema: Schema, contentTypeIds: string[]): ContentType {
+export function mergeContentTypes(
+  schema: Schema,
+  contentTypeIds: string[]
+): ContentType {
   const properties: Partial<PropertySchema>[] = [];
 
   for (const contentType of schema.contentTypes) {
@@ -131,7 +152,10 @@ export function mergeContentTypes(schema: Schema, contentTypeIds: string[]): Con
   };
 }
 
-function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schema {
+function applyTypeToSchema(
+  schema: Schema,
+  type: ContentType | undefined
+): Schema {
   if (schema.appliedView || schema.appliedContentType) {
     throw new Error('К схеме уже применен тип или представление');
   }
@@ -149,11 +173,15 @@ function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schem
       relations = clonedSchema.relations,
       definitionQuery = clonedSchema.definitionQuery
     } = type;
-    const actualProperties: PropertySchema[] = properties.map(contentTypeProperty => {
-      const schemaProperty = clonedSchema.properties.find(property => property.name === contentTypeProperty.name);
+    const actualProperties: PropertySchema[] = properties.map(
+      contentTypeProperty => {
+        const schemaProperty = clonedSchema.properties.find(
+          property => property.name === contentTypeProperty.name
+        );
 
-      return { ...schemaProperty, ...contentTypeProperty } as PropertySchema;
-    });
+        return { ...schemaProperty, ...contentTypeProperty } as PropertySchema;
+      }
+    );
 
     Object.assign(clonedSchema, {
       title,
@@ -176,20 +204,34 @@ function applyTypeToSchema(schema: Schema, type: ContentType | undefined): Schem
   return clonedSchema;
 }
 
-export function convertOldToNewSchema({ properties, contentTypes, views, ...rest }: OldSchema): Schema {
+export function convertOldToNewSchema({
+  properties,
+  contentTypes,
+  views,
+  ...rest
+}: OldSchema): Schema {
   return {
     ...rest,
     properties: convertOldToNewProperties(properties),
-    ...(contentTypes ? { contentTypes: contentTypes?.map(convertOldToNewContentType) } : {}),
+    ...(contentTypes
+      ? { contentTypes: contentTypes?.map(convertOldToNewContentType) }
+      : {}),
     ...(views ? { views: views.map(convertOldToNewContentType) } : {})
   };
 }
 
-export function convertNewToOldSchema({ properties, contentTypes, views, ...rest }: Schema): OldSchema {
+export function convertNewToOldSchema({
+  properties,
+  contentTypes,
+  views,
+  ...rest
+}: Schema): OldSchema {
   return {
     ...rest,
     properties: convertNewToOldProperties(properties),
-    ...(contentTypes ? { contentTypes: contentTypes?.map(convertNewToOldContentType) } : {}),
+    ...(contentTypes
+      ? { contentTypes: contentTypes?.map(convertNewToOldContentType) }
+      : {}),
     ...(views ? { views: views?.map(convertNewToOldContentType) } : {})
   };
 }
@@ -197,7 +239,9 @@ export function convertNewToOldSchema({ properties, contentTypes, views, ...rest
 function convertOldToNewContentType(contentType: OldContentType): ContentType {
   const newContentType: ContentType & Partial<OldContentType> = {
     ...contentType,
-    properties: convertOldToNewProperties(contentType.attributes as OldPropertySchema[])
+    properties: convertOldToNewProperties(
+      contentType.attributes as OldPropertySchema[]
+    )
   };
 
   delete newContentType.attributes;
@@ -208,7 +252,9 @@ function convertOldToNewContentType(contentType: OldContentType): ContentType {
 function convertNewToOldContentType(contentType: ContentType): OldContentType {
   const oldContentType: OldContentType & Partial<ContentType> = {
     ...contentType,
-    attributes: convertNewToOldProperties(contentType.properties as PropertySchema[])
+    attributes: convertNewToOldProperties(
+      contentType.properties as PropertySchema[]
+    )
   };
 
   delete oldContentType.properties;
@@ -216,16 +262,17 @@ function convertNewToOldContentType(contentType: ContentType): OldContentType {
   return oldContentType;
 }
 
-export function convertOldToNewProperties(oldFields: OldPropertySchema[]): PropertySchema[] {
+export function convertOldToNewProperties(
+  oldFields: OldPropertySchema[]
+): PropertySchema[] {
   return oldFields?.map(oldField => {
     const field: Partial<PropertySchema> = { ...oldField } as OldPropertySchema;
 
-    if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
+    if (
+      oldField.valueType === ValueType.STRING ||
+      oldField.valueType === ValueType.TEXT
+    ) {
       field.propertyType = PropertyType.STRING;
-      if (oldField.pattern) {
-        (field as PropertySchemaString).regex = oldField.pattern;
-        delete (field as OldPropertySchemaStringText).pattern;
-      }
     }
 
     if (oldField.objectIdentityOnUi !== undefined) {
@@ -236,7 +283,8 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
     if (oldField.valueType === ValueType.DOUBLE) {
       field.propertyType = PropertyType.FLOAT;
 
-      (field as Partial<PropertySchemaFloat>).precision = oldField.fractionDigits;
+      (field as Partial<PropertySchemaFloat>).precision =
+        oldField.fractionDigits;
       delete (field as Partial<OldPropertySchemaDouble>).fractionDigits;
     }
 
@@ -271,7 +319,8 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
     if (oldField.valueType === ValueType.URL) {
       field.propertyType = PropertyType.URL;
       if (oldField.displayMode) {
-        (field as Partial<PropertySchemaUrl>).openIn = oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
+        (field as Partial<PropertySchemaUrl>).openIn =
+          oldField.displayMode === 'in_popup' ? 'popup' : 'newTab';
         delete (field as Partial<OldPropertySchemaUrl>).displayMode;
       }
     }
@@ -285,10 +334,12 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
     }
 
     if (oldField.valueType === ValueType.SET) {
-      (field as PropertySchema as PropertySchemaSet).propertyType = PropertyType.SET;
-      (field as PropertySchema as PropertySchemaSet).properties = convertOldToNewProperties(
-        (oldField as OldPropertySchema as OldPropertySchemaSet).properties
-      );
+      (field as PropertySchema as PropertySchemaSet).propertyType =
+        PropertyType.SET;
+      (field as PropertySchema as PropertySchemaSet).properties =
+        convertOldToNewProperties(
+          (oldField as OldPropertySchema as OldPropertySchemaSet).properties
+        );
     }
 
     if (oldField.valueType === ValueType.FIAS) {
@@ -325,22 +376,23 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
   });
 }
 
-export function convertNewToOldProperties(newFields: PropertySchema[]): OldPropertySchema[] {
+export function convertNewToOldProperties(
+  newFields: PropertySchema[]
+): OldPropertySchema[] {
   return newFields.map(newField => {
-    const field: Partial<OldPropertySchema> = { ...newField } as Partial<OldPropertySchema>;
+    const field: Partial<OldPropertySchema> = {
+      ...newField
+    } as Partial<OldPropertySchema>;
 
     if (newField.propertyType === PropertyType.STRING) {
       field.valueType = ValueType.STRING;
-      if (newField.regex) {
-        (field as OldPropertySchemaStringText).pattern = newField.regex;
-        delete (field as PropertySchemaString).regex;
-      }
     }
 
     if (newField.propertyType === PropertyType.FLOAT) {
       field.valueType = ValueType.DOUBLE;
 
-      (field as Partial<OldPropertySchemaDouble>).fractionDigits = newField.precision;
+      (field as Partial<OldPropertySchemaDouble>).fractionDigits =
+        newField.precision;
       delete (field as Partial<PropertySchemaFloat>).precision;
     }
 
@@ -359,15 +411,18 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
     if (newField.propertyType === PropertyType.DATETIME) {
       field.valueType = ValueType.DATETIME;
 
-      (field as Partial<OldPropertySchemaDatetime>).dateFormat = newField.format;
+      (field as Partial<OldPropertySchemaDatetime>).dateFormat =
+        newField.format;
       delete (field as Partial<PropertySchemaDatetime>).format;
     }
 
     if (newField.propertyType === PropertyType.CHOICE) {
       field.valueType = ValueType.CHOICE;
 
-      (field as Partial<OldPropertySchemaChoice>).isMultiple = newField.multiple;
-      (field as Partial<OldPropertySchemaChoice>).enumerations = newField.options;
+      (field as Partial<OldPropertySchemaChoice>).isMultiple =
+        newField.multiple;
+      (field as Partial<OldPropertySchemaChoice>).enumerations =
+        newField.options;
       delete (field as Partial<PropertySchemaChoice>).multiple;
       delete (field as Partial<PropertySchemaChoice>).options;
     }
@@ -376,7 +431,8 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
       field.valueType = ValueType.URL;
 
       if (newField.openIn) {
-        (field as Partial<OldPropertySchemaUrl>).displayMode = newField.openIn === 'popup' ? 'in_popup' : 'newTab';
+        (field as Partial<OldPropertySchemaUrl>).displayMode =
+          newField.openIn === 'popup' ? 'in_popup' : 'newTab';
       } else {
         (field as Partial<OldPropertySchemaUrl>).displayMode = undefined;
       }
@@ -430,7 +486,8 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 }
 
 export const valueWellKnownFormulas: Record<string, ValueFormula> = {
-  inherit: (obj, property, parent) => (parent as Record<string, unknown>)[property.name],
+  inherit: (obj, property, parent) =>
+    (parent as Record<string, unknown>)[property.name],
 
   parentDocument: (obj, property, parent: unknown) => {
     const { libraryTableName, id, title } = parent as LibraryRecord;
@@ -442,11 +499,17 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   relationLink: (obj, { valueFormulaParams = {} }) =>
     JSON.stringify({
       url:
-        `/data-management/library/${String(valueFormulaParams.library)}/registry?filter=` +
+        `/data-management/library/${String(
+          valueFormulaParams.library
+        )}/registry?filter=` +
         encodeURI(
           JSON.stringify({
             applicant_name: {
-              $ilike: `%${String((obj as Record<string, unknown>)[valueFormulaParams.property as string])}%`
+              $ilike: `%${String(
+                (obj as Record<string, unknown>)[
+                  valueFormulaParams.property as string
+                ]
+              )}%`
             }
           })
         ),
@@ -488,7 +551,9 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
 
     return JSON.stringify([
       {
-        url: `${pathname}?queryLayers=${layers.join(',')}&queryFilter=${filter}`,
+        url: `${pathname}?queryLayers=${layers.join(
+          ','
+        )}&queryFilter=${filter}`,
         text
       }
     ]);
@@ -514,9 +579,13 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
     }
 
     const parts: FilterQuery[] = ids.map(currId => ({
-      [property]: { $ilike: `%{"id":${currId},%"libraryTableName":"${libraryTableName}"%` }
+      [property]: {
+        $ilike: `%{"id":${currId},%"libraryTableName":"${libraryTableName}"%`
+      }
     }));
-    const filter: string = encodeURI(JSON.stringify(parts.length === 1 ? parts[0] : { $or: parts }));
+    const filter: string = encodeURI(
+      JSON.stringify(parts.length === 1 ? parts[0] : { $or: parts })
+    );
 
     if (!id || !libraryTableName) {
       return [];
@@ -531,21 +600,34 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
   }
 };
 
-export function getFieldRelations(field: string | number, schema: Schema | SimpleSchema): Relation[] {
-  return schema?.relations?.filter(relation => relation.property === field) || [];
+export function getFieldRelations(
+  field: string | number,
+  schema: Schema | SimpleSchema
+): Relation[] {
+  return (
+    schema?.relations?.filter(relation => relation.property === field) || []
+  );
 }
 
-const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, prop: PropertySchema) => string>> = {
+const valueToReadableTransformers: Partial<
+  Record<PropertyType, (val: unknown, prop: PropertySchema) => string>
+> = {
   [PropertyType.BOOL](value: unknown) {
     return ['true', '1'].includes(String(value).toLowerCase()) ? 'да' : 'нет';
   },
 
   [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
-    return (property as PropertySchemaChoice).options.find(option => option.value === value)?.title || String(value);
+    return (
+      (property as PropertySchemaChoice).options.find(
+        option => option.value === value
+      )?.title || String(value)
+    );
   },
 
   [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
-    return typeof value === 'number' || typeof value === 'string' || value instanceof Date
+    return typeof value === 'number' ||
+      typeof value === 'string' ||
+      value instanceof Date
       ? formatDate(value, (property as PropertySchemaDatetime).format)
       : '';
   },
@@ -553,7 +635,9 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
   [PropertyType.DOCUMENT](value: unknown) {
     try {
       if (typeof value === 'string' || Array.isArray(value)) {
-        const documents = Array.isArray(value) ? (value as DocumentInfo[]) : (JSON.parse(value) as DocumentInfo[]);
+        const documents = Array.isArray(value)
+          ? (value as DocumentInfo[])
+          : (JSON.parse(value) as DocumentInfo[]);
 
         return documents.map(({ title }) => title).join(', ');
       }
@@ -565,7 +649,9 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
   [PropertyType.FILE](value: unknown) {
     try {
       if (typeof value === 'string' || Array.isArray(value)) {
-        const files = Array.isArray(value) ? (value as FileInfo[]) : (JSON.parse(value) as FileInfo[]);
+        const files = Array.isArray(value)
+          ? (value as FileInfo[])
+          : (JSON.parse(value) as FileInfo[]);
 
         return files.map(({ title }) => title).join(', ');
       }
@@ -585,7 +671,10 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
   }
 };
 
-export function getReadablePropertyValue(value: unknown, property?: PropertySchema): string {
+export function getReadablePropertyValue(
+  value: unknown,
+  property?: PropertySchema
+): string {
   if (
     property?.propertyType !== PropertyType.BOOL &&
     (value === null || value === undefined || property === undefined)
@@ -602,9 +691,13 @@ export function getReadablePropertyValue(value: unknown, property?: PropertySche
 }
 
 export function getGeometryFieldName(schema: Schema): string {
-  const gProperty = schema.properties.find(prop => prop.propertyType === PropertyType.GEOMETRY);
+  const gProperty = schema.properties.find(
+    prop => prop.propertyType === PropertyType.GEOMETRY
+  );
   if (!gProperty) {
-    throw new Error(`В схеме: '${schema.name}' не найдено свойство с геометрией`);
+    throw new Error(
+      `В схеме: '${schema.name}' не найдено свойство с геометрией`
+    );
   }
 
   return gProperty.name || 'shape';
@@ -616,26 +709,33 @@ export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
 ): T {
   return {
     ...schema,
-    properties: schema.properties.map((property: PropertySchema | OldPropertySchema) => ({
-      ...property,
-      name: getNameFromFeatureKeys(property.name, feature)
-    })),
-    contentTypes: schema.contentTypes?.map((contentType: ContentType | OldContentType) => ({
-      ...contentType,
-      properties: (
-        ((contentType as ContentType).properties || (contentType as OldContentType).attributes) as (
-          | PropertySchema
-          | OldPropertySchema
-        )[]
-      ).map(property => ({
+    properties: schema.properties.map(
+      (property: PropertySchema | OldPropertySchema) => ({
         ...property,
         name: getNameFromFeatureKeys(property.name, feature)
-      }))
-    }))
+      })
+    ),
+    contentTypes: schema.contentTypes?.map(
+      (contentType: ContentType | OldContentType) => ({
+        ...contentType,
+        properties: (
+          ((contentType as ContentType).properties ||
+            (contentType as OldContentType).attributes) as (
+            | PropertySchema
+            | OldPropertySchema
+          )[]
+        ).map(property => ({
+          ...property,
+          name: getNameFromFeatureKeys(property.name, feature)
+        }))
+      })
+    )
   };
 }
 
-export function convertGeoserverPropertiesToSchemaProperties(attributes: Attribute[] = []): PropertySchema[] {
+export function convertGeoserverPropertiesToSchemaProperties(
+  attributes: Attribute[] = []
+): PropertySchema[] {
   return attributes.map(attribute => {
     if (attribute.binding.includes('org.locationtech.jts.geom')) {
       return {
@@ -671,7 +771,9 @@ export function convertGeoserverPropertiesToSchemaProperties(attributes: Attribu
         } as PropertySchemaFloat;
       }
       default: {
-        services.logger.warn(`Unsupported attribute type: '${attribute.binding}' Handled as String`);
+        services.logger.warn(
+          `Unsupported attribute type: '${attribute.binding}' Handled as String`
+        );
 
         return {
           name: attribute.name,
@@ -684,8 +786,12 @@ export function convertGeoserverPropertiesToSchemaProperties(attributes: Attribu
   });
 }
 
-export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] = []): GeometryType {
-  const geometryAttribute = attributes.find(attribute => attribute.binding.includes('org.locationtech.jts.geom'));
+export function getGeometryTypeFromGeoserverAttributes(
+  attributes: Attribute[] = []
+): GeometryType {
+  const geometryAttribute = attributes.find(attribute =>
+    attribute.binding.includes('org.locationtech.jts.geom')
+  );
   if (geometryAttribute) {
     if (geometryAttribute.binding.includes(GeometryType.LINE_STRING)) {
       return GeometryType.LINE_STRING;
@@ -699,15 +805,23 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
       return GeometryType.POINT;
     } else if (geometryAttribute.binding.includes(GeometryType.LINEAR_RING)) {
       return GeometryType.LINEAR_RING;
-    } else if (geometryAttribute.binding.includes(GeometryType.GEOMETRY_COLLECTION)) {
+    } else if (
+      geometryAttribute.binding.includes(GeometryType.GEOMETRY_COLLECTION)
+    ) {
       return GeometryType.GEOMETRY_COLLECTION;
     } else if (geometryAttribute.binding.includes(GeometryType.CIRCLE)) {
       return GeometryType.CIRCLE;
-    } else if (geometryAttribute.binding.includes(GeometryType.MULTI_LINE_STRING)) {
+    } else if (
+      geometryAttribute.binding.includes(GeometryType.MULTI_LINE_STRING)
+    ) {
       return GeometryType.MULTI_LINE_STRING;
     }
 
-    services.logger.warn('Unknown geometry type: ', geometryAttribute.binding, attributes);
+    services.logger.warn(
+      'Unknown geometry type: ',
+      geometryAttribute.binding,
+      attributes
+    );
   } else {
     const message = 'Not any attributes with geometry';
     services.logger.error(message);
@@ -716,8 +830,13 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
   }
 }
 
-function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {
+function getNameFromFeatureKeys(
+  name: string,
+  feature?: WfsFeature<Coordinate | CoordinateEdited>
+): string {
   return (
-    Object.keys(feature?.properties || {}).find(key => key.toLowerCase() === name.toLowerCase()) || name.toLowerCase()
+    Object.keys(feature?.properties || {}).find(
+      key => key.toLowerCase() === name.toLowerCase()
+    ) || name.toLowerCase()
   );
 }

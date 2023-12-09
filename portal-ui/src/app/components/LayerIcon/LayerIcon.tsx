@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { IClassNameProps } from '@bem-react/core';
+import { SvgIconProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { CrgLayer } from '../../services/gis/layers/layers.models';
@@ -14,6 +15,7 @@ export interface LayerIconProps extends IClassNameProps {
   schemaId?: string;
   colorized?: boolean;
   expanded?: boolean;
+  size?: SvgIconProps['fontSize'];
 }
 
 export const LayerIcon: FC<LayerIconProps> = () => null;

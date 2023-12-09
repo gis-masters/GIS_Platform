@@ -24,12 +24,14 @@ class LayerIconTypeShp extends Component<LayerIconProps> {
     const { layer } = this.props;
     if (layer) {
       const schema = await getLayerSchema(layer);
-      this.setGeometryType(schema.geometryType);
+      if (schema.geometryType) {
+        this.setGeometryType(schema.geometryType);
+      }
     }
   }
 
   render() {
-    const { className, colorized } = this.props;
+    const { className, colorized, size } = this.props;
     let Icon: SvgIconComponent;
     let htmlColor: string;
 
@@ -60,6 +62,7 @@ class LayerIconTypeShp extends Component<LayerIconProps> {
         className={className}
         color={colorized && !htmlColor ? 'primary' : 'inherit'}
         htmlColor={colorized && htmlColor ? htmlColor : ''}
+        fontSize={size}
       />
     );
   }

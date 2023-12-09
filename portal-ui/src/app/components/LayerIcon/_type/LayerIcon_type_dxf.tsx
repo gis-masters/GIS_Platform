@@ -8,7 +8,9 @@ export const withTypeDxf = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'dxf' },
   () =>
-    ({ className, colorized }) => {
-      return <Autocad className={cnLayerIcon(null, [className])} color={colorized ? 'primary' : 'inherit'} />;
+    ({ className, colorized, size }) => {
+      return (
+        <Autocad className={cnLayerIcon(null, [className])} fontSize={size} color={colorized ? 'primary' : 'inherit'} />
+      );
     }
 );

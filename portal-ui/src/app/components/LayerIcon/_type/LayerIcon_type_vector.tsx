@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { SvgIconProps } from '@mui/material';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
 import { Adjust, SvgIconComponent, PolylineOutlined, ReportProblemOutlined } from '@mui/icons-material';
 
@@ -13,6 +14,7 @@ interface LayerIconTypeVectorProps extends IClassNameProps {
   type: 'vector';
   schemaId?: string;
   colorized?: boolean;
+  size?: SvgIconProps['fontSize'];
 }
 
 @observer
@@ -28,12 +30,14 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
     const { schemaId } = this.props;
     if (schemaId) {
       const schema = await schemaService.getSchema(schemaId);
-      this.setGeometryType(schema.geometryType);
+      if (schema.geometryType) {
+        this.setGeometryType(schema.geometryType);
+      }
     }
   }
 
   render() {
-    const { className, colorized } = this.props;
+    const { className, colorized, size } = this.props;
     let Icon: SvgIconComponent;
     let htmlColor: string;
 
@@ -64,6 +68,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
         className={className}
         color={colorized && !htmlColor ? 'primary' : 'inherit'}
         htmlColor={colorized && htmlColor ? htmlColor : ''}
+        fontSize={size}
       />
     );
   }

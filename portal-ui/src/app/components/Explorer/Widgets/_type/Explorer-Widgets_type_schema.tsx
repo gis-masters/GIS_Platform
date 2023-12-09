@@ -2,25 +2,22 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { Tooltip } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/Select';
 
+import { isLinear, isPoint, isPolygonal } from '../../../../services/geoserver/wfs/wfs.util';
 import { applyContentType, applyView } from '../../../../services/data/schema/schema.utils';
 import { SchemaProperties } from '../../../SchemaProperties/SchemaProperties';
+import { Card } from '../../../../components/Card/Card';
+import { CardRow } from '../../../../components/Card/Row/Card-Row';
+import { CardRowTitle } from '../../../../components/Card/RowTitle/Card-RowTitle';
+import { CardValue } from '../../../../components/Card/Value/Card-Value';
 import { ContentType, PropertyOption, Schema } from '../../../../services/data/schema/schema.models';
 import { Select } from '../../../../components/Select/Select';
-
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { LayerIcon } from '../../../../components/LayerIcon/LayerIcon.composed';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { cnExplorerWidgets } from '../Explorer-Widgets.base';
-
-import '!style-loader!css-loader!sass-loader!../../InfoBoxTitle/Explorer-InfoBoxTitle.scss';
-import '!style-loader!css-loader!sass-loader!./Explorer-Widgets_type_schema.scss';
-
-const cnExplorerInfoBoxTitle = cn('Explorer', 'InfoBoxTitle');
-const cnExplorerWidgetsTypeSchemaItemType = cn('ExplorerWidgetsTypeSchema', 'ItemType');
 
 const EMPTY = '~~~empty_value~~~';
 
@@ -41,27 +38,60 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
 
   render() {
     const { className, item } = this.props;
+    const schema = item.payload;
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {item.payload.views?.length ? (
-          <ExplorerInfoDescItem className={cnExplorerWidgetsTypeSchemaItemType()}>
-            <ExplorerInfoDescTitle>Представление:</ExplorerInfoDescTitle>
-            <Select options={this.viewsOptions} onChange={this.changeViewHadler} value={this.selectedViewId} />
-          </ExplorerInfoDescItem>
-        ) : null}
-        {item.payload.contentTypes?.length ? (
-          <ExplorerInfoDescItem className={cnExplorerWidgetsTypeSchemaItemType()}>
-            <ExplorerInfoDescTitle>Тип документа:</ExplorerInfoDescTitle>
-            <Select
-              options={this.contentTypesOptions}
-              onChange={this.changeContentTypeHandler}
-              value={this.selectedContentTypeId}
-            />
-          </ExplorerInfoDescItem>
-        ) : null}
-        <span className={cnExplorerInfoBoxTitle()}>Свойства:</span>
-        <SchemaProperties schema={this.schemaWithAppliedType} />
+        <Card>
+          <CardRow>
+            <CardRowTitle>Идентификатор:</CardRowTitle>
+            {schema.name}
+          </CardRow>
+          <CardRow>
+            <CardRowTitle>Только для чтения:</CardRowTitle>
+            {schema.readOnly ? 'да' : 'нет'}
+          </CardRow>
+          {schema.styleName ? (
+            <CardRow>
+              <CardRowTitle>Стиль:</CardRowTitle>
+              {schema.styleName}
+            </CardRow>
+          ) : null}
+          {schema.geometryType ? (
+            <CardRow>
+              <CardRowTitle>Тип геометрии:</CardRowTitle>
+              <Tooltip title={this.getGeometryType()}>
+                <CardValue>
+                  <LayerIcon colorized size='small' type='vector' schemaId={schema.name} />
+                </CardValue>
+              </Tooltip>
+            </CardRow>
+          ) : null}
+          {schema.views?.length ? (
+            <CardRow>
+              <CardRowTitle>Представление:</CardRowTitle>
+              <CardValue>
+                <Select options={this.viewsOptions} onChange={this.changeViewHadler} value={this.selectedViewId} />
+              </CardValue>
+            </CardRow>
+          ) : null}
+          {schema.contentTypes?.length ? (
+            <CardRow>
+              <CardRowTitle>Тип документа:</CardRowTitle>
+              <Select
+                options={this.contentTypesOptions}
+                onChange={this.changeContentTypeHandler}
+                value={this.selectedContentTypeId}
+              />
+            </CardRow>
+          ) : null}
+          <CardRow alignBlock>
+            <CardRowTitle>Свойства:</CardRowTitle>
+            <CardValue block>
+              <SchemaProperties schema={this.schemaWithAppliedType} />
+            </CardValue>
+          </CardRow>
+        </Card>
       </div>
     );
   }
@@ -86,6 +116,19 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
   @computed
   private get contentTypesOptions(): PropertyOption[] {
     return [{ title: 'Все свойства', value: EMPTY }, ...this.getOptions(this.props.item.payload.contentTypes)];
+  }
+
+  private getGeometryType() {
+    const geometryType = this.props.item.payload.geometryType;
+    if (isLinear(geometryType)) {
+      return 'линейный';
+    } else if (isPoint(geometryType)) {
+      return 'точечный';
+    } else if (isPolygonal(geometryType)) {
+      return 'полигональный';
+    }
+
+    return 'неопределенный тип геометрии';
   }
 
   private getOptions(types?: ContentType[]): PropertyOption[] {

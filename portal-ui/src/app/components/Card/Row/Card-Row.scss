@@ -1,0 +1,10 @@
+.Card {
+  &-Row {
+    display: flex;
+    align-items: center;
+
+    &_type_block {
+      display: block;
+    }
+  }
+}
