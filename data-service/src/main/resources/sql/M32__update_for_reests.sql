@@ -5,14 +5,14 @@ ADD COLUMN IF NOT EXISTS last_modified timestamp without time zone DEFAULT now()
 ADD COLUMN IF NOT EXISTS UPDATEd_by character varying;
 
 ALTER TABLE data.reestr_outgoing
-ALTER COLUMN response_to TYPE character varying(50) IF EXISTS,
+ALTER COLUMN response_to TYPE character varying(50),
 ADD COLUMN IF NOT EXISTS created_by character varying,
 ADD COLUMN IF NOT EXISTS created_at timestamp without time zone DEFAULT now(),
 ADD COLUMN IF NOT EXISTS last_modified timestamp without time zone DEFAULT now(),
 ADD COLUMN IF NOT EXISTS UPDATEd_by character varying;
 
 ALTER TABLE data.reestr_incoming
-ALTER COLUMN response_to TYPE character varying(50) IF EXISTS,
+ALTER COLUMN response_to TYPE character varying(50),
 ADD COLUMN IF NOT EXISTS created_by character varying,
 ADD COLUMN IF NOT EXISTS created_at timestamp without time zone DEFAULT now(),
 ADD COLUMN IF NOT EXISTS last_modified timestamp without time zone DEFAULT now(),

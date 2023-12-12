@@ -27,6 +27,6 @@ public class FtsHandler implements IRequestHandler<FtsRequest, Page<FtsResponseD
     @Override
     public Page<FtsResponseDto> handle(FtsRequest request) {
         return searchEngines.get(request.getRequestType())
-                            .search(request);
+                            .search(request, null);
     }
 }

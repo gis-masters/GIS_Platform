@@ -19,6 +19,7 @@ import ru.mycrg.geo_json.GeoJsonObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -105,7 +106,8 @@ public class SqlBuilder {
             String byAllowedDirectlySection = "";
             if (!registryData.getAllowedDirectlyDocumentIds().isEmpty()) {
                 byAllowedDirectlySection = String.format(" id IN (%s) ",
-                                                         joinAndQuoteMark(registryData.getAllowedDirectlyDocumentIds()));
+                                                         joinAndQuoteMark(
+                                                                 registryData.getAllowedDirectlyDocumentIds()));
             }
 
             String byChildrenSection = "";
@@ -218,6 +220,58 @@ public class SqlBuilder {
     }
 
     @NotNull
+    public static String buildFtsQuery2(ResourceQualifier qualifier,
+                                        String ecqlFilter,
+                                        float bound,
+                                        @Nullable List<String> requestedTables,
+                                        @NotNull Set<String> words,
+                                        @Nullable Pageable pageable) {
+        String ftsWhere = (requestedTables != null)
+                ? buildFtsWhere2(ecqlFilter, bound, requestedTables)
+                : buildFtsWhere2(ecqlFilter, bound);
+
+        String pQuery = "";
+        if (pageable != null) {
+            pQuery = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
+        }
+
+        String query = "" +
+                "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+                "       subquery.schema, " +
+                "       subquery.table, " +
+                "       subquery.id " +
+                "FROM (" +
+                "        SELECT ts_rank(d.vector_data, query) AS _rank_," +
+                "               d.schema," +
+                "               d.table," +
+                "               d.id," +
+                "               d.concatenated_data " +
+                "        FROM data.fts_layers AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
+                "    " + ftsWhere + " " +
+                "        ORDER BY _rank_ DESC" +
+                "    ) AS subquery " +
+                "ORDER BY dist " +
+                pQuery;
+
+        return query;
+    }
+
+    @NotNull
+    public static String buildLikeQuery(ResourceQualifier qualifier,
+                                        List<String> resources) {
+        String whereSection = "WHERE concatenated_data LIKE :searchedText";
+        if (!resources.isEmpty()) {
+            List<String> asString = resources.stream()
+                                             .map(s -> "'" + s + "'")
+                                             .collect(Collectors.toList());
+
+            whereSection = whereSection + " AND \"table\" IN (" + String.join(",", asString) + ")";
+        }
+
+        return "SELECT * FROM data.fts_layers " + whereSection;
+    }
+
+    @NotNull
     public static String buildFtsQuery(ResourceQualifier qualifier,
                                        String ecqlFilter,
                                        float bound,
@@ -249,6 +303,35 @@ public class SqlBuilder {
             result = "WHERE " + ftsCondition;
         } else {
             result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
+        }
+
+        return result;
+    }
+
+    public static String buildFtsWhere2(String ecqlFilter, float bound) {
+        String ftsCondition = "ts_rank(d.vector_data, query) > " + bound;
+
+        String filter = buildWhereSection(ecqlFilter);
+
+        String result;
+        if (filter.isBlank()) {
+            result = "WHERE " + ftsCondition;
+        } else {
+            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
+        }
+
+        return result;
+    }
+
+    public static String buildFtsWhere2(String ecqlFilter, float bound, List<String> resources) {
+        String result = buildFtsWhere2(ecqlFilter, bound);
+
+        if (!resources.isEmpty()) {
+            List<String> asString = resources.stream()
+                                             .map(s -> "'" + s + "'")
+                                             .collect(Collectors.toList());
+
+            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
         }
 
         return result;

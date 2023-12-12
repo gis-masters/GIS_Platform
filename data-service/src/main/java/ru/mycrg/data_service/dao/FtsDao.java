@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static java.sql.Types.VARCHAR;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -77,14 +79,30 @@ public class FtsDao {
                                 List<String> requestedTables,
                                 String ecqlFilter,
                                 String text,
+                                @NotNull Set<String> words,
                                 float bound,
                                 Pageable pageable) {
-        String query = buildFtsQuery(qualifier, ecqlFilter, bound, requestedTables, pageable);
+        String query = buildFtsQuery2(qualifier, ecqlFilter, 0f, requestedTables, words, pageable);
 
-        log.debug("fts by '{}': [{}]", qualifier.getQualifier(), query);
+        log.debug("fts v2 query by '{}': [{}]", qualifier.getQualifier(), query);
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("searchedText", text, VARCHAR);
+
+        return pJdbcTemplate.query(query, parameters, new BeanPropertyRowMapper<>(FtsItem.class));
+    }
+
+    public List<FtsItem> searchCadastrNumber(ResourceQualifier qualifier,
+                                             List<String> requestedTables,
+                                             @Nullable String ecqlFilter,
+                                             String text,
+                                             Pageable pageable) {
+        String query = buildLikeQuery(qualifier, requestedTables);
+
+        log.debug("Search cadastr number query: [{}]", query);
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("searchedText", "%" + text + "%", VARCHAR);
 
         return pJdbcTemplate.query(query, parameters, new BeanPropertyRowMapper<>(FtsItem.class));
     }

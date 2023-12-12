@@ -120,6 +120,7 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, getResource("M30__addIndexesForPermissions.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M31__addSmevMessageTable.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M32__update_for_reests.sql"));
+                ScriptUtils.executeSqlScript(connection, getResource("M33__addVectorColumnToFts.sql"));
             }
 
             if (initFullTextSearch) {

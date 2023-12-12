@@ -52,10 +52,17 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     }
 
     @Override
-    public Page<FtsResponseDto> search(FtsRequest request) {
-        log.info("Document searcher: {}", request);
+    public Page<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
+        log.info("Document searcher: {}, with dictionary: [{}]", request, dictionaryWords);
 
         FtsRequestDto dto = request.getFtsRequestDto();
+        String text = dto.getText().trim();
+        if (isCadastrNumber(text)) {
+            log.debug("Поиск в документах кадастрового номера: '{}'", text);
+
+            return searchAsCadastrNumber(request);
+        }
+
         List<FtsItem> byAllLibraries = new ArrayList<>();
         getAllowedLibraries(dto)
                 .map(ResourceQualifier::libraryQualifier)
@@ -71,7 +78,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
 
                             temp = ftsDao.searchWithPermissions(libraryQualifier,
                                                                 dto.getEcqlFilter(),
-                                                                dto.getText(),
+                                                                text,
                                                                 getBound(dto),
                                                                 registryData);
                         }
@@ -97,6 +104,13 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(page, pageable, allSortedEntities.size());
+    }
+
+    @Override
+    public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
+        Pageable pageable = request.getPageable();
+
+        return new PageImpl<>(new ArrayList<>(), pageable, pageable.getPageNumber());
     }
 
     @Override

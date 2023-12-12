@@ -8,12 +8,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
+import ru.mycrg.data_service.dao.FtsDictionaryDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
+import ru.mycrg.data_service.dto.FtsDictionaryItem;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -45,6 +48,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     private final TableService tableService;
     private final DatasetService datasetService;
     private final SchemaExtractor schemaExtractor;
+    private final FtsDictionaryDao ftsDictionaryDao;
     private final SpatialRecordsDao spatialRecordsDao;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -52,19 +56,84 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                TableService tableService,
                                DatasetService datasetService,
                                SchemaExtractor schemaExtractor,
+                               FtsDictionaryDao ftsDictionaryDao,
                                SpatialRecordsDao spatialRecordsDao,
                                IAuthenticationFacade authenticationFacade) {
         this.ftsDao = ftsDao;
         this.tableService = tableService;
         this.datasetService = datasetService;
         this.schemaExtractor = schemaExtractor;
+        this.ftsDictionaryDao = ftsDictionaryDao;
         this.spatialRecordsDao = spatialRecordsDao;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
-    public Page<FtsResponseDto> search(FtsRequest request) {
-        log.info("FeatureSearcher: {}", request);
+    public Page<FtsResponseDto> search(FtsRequest request,
+                                       @Nullable Set<String> dictionaryWords) {
+        log.info("FeatureSearcher: {}, with dictionary: [{}]", request, dictionaryWords);
+
+        FtsRequestDto dto = request.getFtsRequestDto();
+        String text = dto.getText().trim();
+
+        // Если кадастровый номер, то все упростим
+        if (isCadastrNumber(text)) {
+            log.debug("Поиск в слоях кадастрового номера: '{}'", text);
+
+            return searchAsCadastrNumber(request);
+        }
+
+        // Проверим права и запрошенные ресурсы
+        Pageable pageable = request.getPageable();
+        List<String> allowedTables = getAllowedSources(dto);
+        if (allowedTables == null) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        // Соберем слова из словаря если их нам не прислали
+        // TODO: пустой список безсмысленен - запрос ничего не найдет.
+        // Надо или искать по другому или возвращать return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        if (dictionaryWords == null) {
+            StopWatch wordsWatcher = new StopWatch();
+            wordsWatcher.start();
+
+            dictionaryWords = collectWordsFromDictionary(text)
+                    .stream()
+                    .filter(item -> item.getTypeId().equals(1))
+                    .map(FtsDictionaryItem::getWord)
+                    .collect(Collectors.toSet());
+
+            wordsWatcher.stop();
+            double totalTimeSeconds = wordsWatcher.getTotalTimeSeconds();
+            log.info("Для поискового запроса: '{}' в словаре найдены: \n" +
+                             "--- для поиска в слоях слова: {} \n" +
+                             "--- затраченное на поиск по словарю время: {} сек",
+                     text, dictionaryWords, totalTimeSeconds);
+        }
+
+        // Собственно основной поиск
+        StopWatch foundWatcher = new StopWatch();
+        foundWatcher.start();
+        List<FtsItem> founded = ftsDao.search(LAYERS,
+                                              allowedTables,
+                                              null,
+                                              text,
+                                              dictionaryWords,
+                                              getBound(dto),
+                                              pageable);
+        foundWatcher.stop();
+        double totalTimeSeconds = foundWatcher.getTotalTimeSeconds();
+        log.debug("Поиск выполнен за: {} сек", totalTimeSeconds);
+
+        // Long total = ftsDao.countTotal(LAYERS, allowedTables, null, text, getBound(dto));
+
+        List<FtsResponseDto> result = fetchEntities(founded);
+
+        return new PageImpl<>(result, pageable, pageable.getPageNumber());
+    }
+
+    @Override
+    public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
         Pageable pageable = request.getPageable();
         FtsRequestDto dto = request.getFtsRequestDto();
 
@@ -73,9 +142,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        List<FtsItem> founded = ftsDao.search(LAYERS, allowedTables, null, dto.getText(), getBound(dto), pageable);
-        // Long total = ftsDao.countTotal(LAYERS, allowedTables, null, dto.getText(), getBound(dto));
-
+        List<FtsItem> founded = ftsDao.searchCadastrNumber(LAYERS, allowedTables, null, dto.getText(), pageable);
         List<FtsResponseDto> result = fetchEntities(founded);
 
         return new PageImpl<>(result, pageable, pageable.getPageNumber());
@@ -169,6 +236,9 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     }
 
     private List<FtsResponseDto> fetchEntities(List<FtsItem> tables) {
+        StopWatch fetchEntitiesWatcher = new StopWatch();
+        fetchEntitiesWatcher.start();
+
         // Перегруппируем данные, чтобы доставать сущности из отдельных библиотек одним запросом.
         Map<String, List<Long>> featuresByTable = new HashMap<>();
         tables.forEach(ftsItem -> {
@@ -180,24 +250,32 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
 
         List<FtsResponseDto> result = new ArrayList<>();
         featuresByTable.forEach((complexName, recordIds) -> {
-            String[] split = complexName.split("\\.");
-            String datasetId = split[0];
-            String tableId = split[1];
-            ResourceQualifier tableQualifier = new ResourceQualifier(datasetId, tableId);
+            try {
+                String[] split = complexName.split("\\.");
+                String datasetId = split[0];
+                String tableId = split[1];
+                ResourceQualifier tableQualifier = new ResourceQualifier(datasetId, tableId);
 
-            SchemaDto schema = schemaExtractor.get(tableQualifier).orElse(null);
-            if (schema == null) {
-                return;
+                SchemaDto schema = schemaExtractor.get(tableQualifier).orElse(null);
+                if (schema == null) {
+                    return;
+                }
+
+                List<FtsResponseDto> features = spatialRecordsDao
+                        .findByIds(tableQualifier, schema, recordIds)
+                        .stream()
+                        .map(feature -> mapToResponseDto(feature, tableQualifier, schema, tables))
+                        .collect(Collectors.toList());
+
+                result.addAll(features);
+            } catch (Exception e) {
+                log.error("Не удалось достать объекты: {} из: {}", recordIds, complexName);
             }
-
-            List<FtsResponseDto> features = spatialRecordsDao
-                    .findByIds(tableQualifier, schema, recordIds)
-                    .stream()
-                    .map(feature -> mapToResponseDto(feature, tableQualifier, schema, tables))
-                    .collect(Collectors.toList());
-
-            result.addAll(features);
         });
+
+        fetchEntitiesWatcher.stop();
+        double totalTimeSeconds = fetchEntitiesWatcher.getTotalTimeSeconds();
+        log.debug("Собрали данные найденных сущностей за: {} сек", totalTimeSeconds);
 
         return result.stream()
                      .sorted(ftsBoundComparator)
@@ -225,5 +303,22 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                          "geometryType", schema.getGeometryType().getType(),
                                          "schema", schema.getName()),
                                   feature.getProperties());
+    }
+
+    private Set<FtsDictionaryItem> collectWordsFromDictionary(String text) {
+        String trimedText = text.trim();
+        List<String> splitedText = Arrays.stream(trimedText.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
+                                         .collect(Collectors.toList());
+
+        if (splitedText.size() == 1) {
+            return new HashSet<>(ftsDictionaryDao.search(trimedText));
+        }
+
+        Set<FtsDictionaryItem> words = new HashSet<>();
+        for (String word: splitedText) {
+            words.addAll(ftsDictionaryDao.search(word, 6));
+        }
+
+        return words;
     }
 }
