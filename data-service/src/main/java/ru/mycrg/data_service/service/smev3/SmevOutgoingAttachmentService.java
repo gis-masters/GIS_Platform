@@ -23,12 +23,14 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class SmevOutgoingAttachmentService {
-    private final Logger log = LoggerFactory.getLogger(SmevMessageService.class);
+    private final Logger log = LoggerFactory.getLogger(SmevOutgoingAttachmentService.class);
     private final FileStorageService fileStorageService;
     private final MinioClient s3client;
     private final Smev3Config smev3Config;
 
-    public SmevOutgoingAttachmentService(FileStorageService fileStorageService, MinioClient s3client, Smev3Config smev3Config) {
+    public SmevOutgoingAttachmentService(FileStorageService fileStorageService,
+                                         MinioClient s3client,
+                                         Smev3Config smev3Config) {
         this.fileStorageService = fileStorageService;
         this.s3client = s3client;
         this.smev3Config = smev3Config;

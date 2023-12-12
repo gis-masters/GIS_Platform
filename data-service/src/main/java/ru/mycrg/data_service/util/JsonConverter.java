@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import java.util.Optional;
 
 public class JsonConverter {
@@ -93,6 +94,27 @@ public class JsonConverter {
             log.error("Не удалось конвертировать объект: [{}] в JSON строку", value);
 
             return "FAIL";
+        }
+    }
+
+    public static <T> T fromKeyValueMap(Map<String, Object> value, Class<T> tClass) {
+        try {
+            return mapper.convertValue(value, tClass);
+        } catch (Exception e) {
+            log.error("Не удалось конвертировать мапу: [{}] в объект", value);
+
+            return null;
+        }
+    }
+
+    public static Map<String, Object> asKeyValueMap(Object value) {
+        try {
+            return mapper.convertValue(value, new TypeReference<Map<String, Object>>() {
+            });
+        } catch (Exception e) {
+            log.error("Не удалось конвертировать объект: [{}] в мапу", value);
+
+            return null;
         }
     }
 }

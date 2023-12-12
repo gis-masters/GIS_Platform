@@ -55,12 +55,20 @@
 
     <xs:element name="QueryMessage" type="typ:QueryMessageType"/>
 
-    <xs:element name="QueryResult" type="typ:AdapterMessage"/>
+    <xs:element name="QueryResult">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
+                <xs:element name="Message" type="typ:Message"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
 
     <xs:element name="QueryResultList">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="QueryResult" type="typ:AdapterMessage" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="QueryResult" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -114,6 +122,8 @@
     <xs:complexType name="Message">
         <xs:sequence>
             <xs:element name="messageType" type="xs:string" minOccurs="0"/>
+            <xs:element name="ResponseMetadata" type="typ:ResponseMetadataType"/>
+            <xs:element name="ResponseContent" type="typ:ResponseContentType"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -335,13 +345,6 @@
         <xs:sequence>
             <xs:element name="content" type="typ:Content"/>
             <xs:element name="originalContent" type="xs:string" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="AdapterMessage">
-        <xs:sequence>
-            <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
-            <xs:element name="Message" type="typ:Message"/>
         </xs:sequence>
     </xs:complexType>
 

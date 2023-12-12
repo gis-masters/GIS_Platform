@@ -1,15 +1,22 @@
 package ru.mycrg.data_service.entity.reestrs;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import ru.mycrg.data_service.entity.IContent;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "reestr_incoming")
-public class ReestrIncoming {
+public class ReestrIncoming implements IContent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(length = 100, nullable = false)

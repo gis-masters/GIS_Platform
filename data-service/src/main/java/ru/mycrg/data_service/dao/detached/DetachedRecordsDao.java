@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
+import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -32,6 +33,13 @@ public class DetachedRecordsDao {
                               DatasourceFactory datasourceFactory) {
         this.sqlParameterSourceFactory = sqlParameterSourceFactory;
         this.datasourceFactory = datasourceFactory;
+    }
+
+    public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
+                                  @NotNull IContent content,
+                                  @NotNull SchemaDto schema,
+                                  @NotNull String databaseName) throws CrgDaoException {
+        this.addRecordsAsBatch(qualifier, content.asBatch(), schema, databaseName);
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,

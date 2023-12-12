@@ -25,12 +25,12 @@ public class Smev3RequestController {
 
     private final ReceiptRnsRequestService receiptRnsService;
     private final RegisterRnsRequestService registerRnsService;
-    private final SmevMessageService messageService;
+    private final SmevMessageService storageService;
 
-    public Smev3RequestController(ReceiptRnsRequestService receiptRnsService, RegisterRnsRequestService registerRnsService, SmevMessageService messageService) {
+    public Smev3RequestController(ReceiptRnsRequestService receiptRnsService, RegisterRnsRequestService registerRnsService, SmevMessageService storageService) {
         this.receiptRnsService = receiptRnsService;
         this.registerRnsService = registerRnsService;
-        this.messageService = messageService;
+        this.storageService = storageService;
     }
 
     /**
@@ -38,7 +38,7 @@ public class Smev3RequestController {
      */
     @GetMapping("/request/meta/{id}")
     public ResponseEntity<XmlBuildMeta> getMeta(@PathVariable UUID id) {
-        return ResponseEntity.ok(messageService.getMeta(id));
+        return ResponseEntity.ok(storageService.getMeta(id));
     }
 
     /**

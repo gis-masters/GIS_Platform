@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<QueryResult xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <smevMetadata>
+        <MessageId>549c1cbd-8e0d-11ee-bd2f-0242ac120005</MessageId>
+        <TransactionCode>18434900-f30b-48ea-90e0-9e2ef3ae40b5</TransactionCode>
+        <OriginalMessageID>809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e</OriginalMessageID>
+        <Sender>777002</Sender>
+        <Recipient>U629301</Recipient>
+        <SendingDate>2023-11-28T16:44:30.035Z</SendingDate>
+    </smevMetadata>
+    <Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ResponseMessageType">
+        <messageType>RejectMessage</messageType>
+        <ResponseMetadata>
+            <clientId>80052141-6d18-479e-ace9-d24655fbb902</clientId>
+            <replyToClientId>57084b8e-8e0c-11ee-b9d1-0242ac120002</replyToClientId>
+        </ResponseMetadata>
+        <ResponseContent>
+            <rejects>
+                <code>ACCESS_DENIED</code>
+                <description>Отказ в предоставлении сведений. Отсутствуют права на получение информации (например, в
+                    случае, если поставщик проверяет ЭП-СП).
+                </description>
+            </rejects>
+        </ResponseContent>
+    </Message>
+</QueryResult>

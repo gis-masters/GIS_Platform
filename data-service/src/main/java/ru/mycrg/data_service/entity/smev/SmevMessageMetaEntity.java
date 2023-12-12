@@ -1,22 +1,28 @@
 package ru.mycrg.data_service.entity.smev;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
+import ru.mycrg.data_service.config.CrgCommonConfig;
+import ru.mycrg.data_service.entity.IContent;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "smev_message_meta")
 @TypeDef(
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class SmevMessageMetaEntity {
+public class SmevMessageMetaEntity implements IContent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -46,6 +52,8 @@ public class SmevMessageMetaEntity {
     @Type(type = "jsonb-node")
     @Column(columnDefinition = "attachments")
     private JsonNode attachments;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = CrgCommonConfig.SYSTEM_DATETIME_PATTERN)
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -166,6 +174,26 @@ public class SmevMessageMetaEntity {
         return this;
     }
 
+    public static SmevMessageMetaEntity createIncoming(@NotNull String mnemonic,
+                                                       @NotNull String mnemonicVersion,
+                                                       @NotNull UUID clientId,
+                                                       @NotNull UUID referenceClientId,
+                                                       @NotNull UUID referenceReestrIncoming,
+                                                       @NotNull JsonNode xmlObject,
+                                                       @NotNull String xmlString) {
+        var message = new SmevMessageMetaEntity();
+        message.setId(UUID.randomUUID());
+        message.setDirection(MessageDirection.INCOMING);
+        message.setClientId(clientId);
+        message.setReferenceClientId(referenceClientId);
+        message.setMnemonic(mnemonic);
+        message.setMnemonicVersion(mnemonicVersion);
+        message.setReferenceReestrIncoming(referenceReestrIncoming);
+        message.setXmlObject(xmlObject);
+        message.setXmlString(xmlString);
+        return message;
+    }
+
     public static SmevMessageMetaEntity createOutgoing(@NotNull String mnemonic,
                                                        @NotNull String mnemonicVersion,
                                                        @NotNull UUID clientId,
@@ -173,6 +201,7 @@ public class SmevMessageMetaEntity {
                                                        @NotNull JsonNode xmlObject,
                                                        @NotNull String xmlString) {
         var message = new SmevMessageMetaEntity();
+        message.setId(UUID.randomUUID());
         message.setDirection(MessageDirection.OUTGOING);
         message.setClientId(clientId);
         message.setMnemonic(mnemonic);

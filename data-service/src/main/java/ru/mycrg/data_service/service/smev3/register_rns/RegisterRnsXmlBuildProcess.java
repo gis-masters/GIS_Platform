@@ -26,12 +26,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.of;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsRequestService.MNEMONIC;
+import static ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsRequestService.MNEMONIC_VERSION;
 
 public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcess.class);
-    private static final String MNEMONIC = "register-rns";
-    private static final String MNEMONIC_VERSION = "1.0.10";
     private final Smev3Config smev3Config;
     private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
     private final ReusableElements reusable = new ReusableElements();
@@ -115,6 +116,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                     MNEMONIC,
                     MNEMONIC_VERSION,
                     clientId,
+                    null,
                     xmlObjectJson,
                     xmlText,
                     sourceJson,
@@ -268,7 +270,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private RequestType requestType() {
         var section13Record = getRecordById(
                 LIBRARY_RECORD,
-                FieldsSection.SCHEMA,
+                SYSTEM_SCHEMA_NAME,
                 FieldsSection.TABLE_13,
                 FieldsSection.TABLE_13,
                 reusable.section13recordId
@@ -410,7 +412,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private ObjectInfoType objectInfo() {
         var rsoksRecord = getRecordByJsonIdValue(
                 LIBRARY_RECORD,
-                FieldsRsoks.SCHEMA,
+                SYSTEM_SCHEMA_NAME,
                 FieldsRsoks.TABLE,
                 FieldsRsoks.TABLE,
                 FieldsRsoks.PROPERTY_DL_DATA_SECTION13_DATA_CONNECTION,
@@ -426,7 +428,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private ObjectProjectDescriptionType objectProjectDescriptionType(IRecord rsoksRecord) {
         var rsoksPartRecord = getRecordByJsonIdValue(
                 LIBRARY_RECORD,
-                FieldsRsoksPart.SCHEMA,
+                SYSTEM_SCHEMA_NAME,
                 FieldsRsoksPart.TABLE,
                 FieldsRsoksPart.TABLE,
                 FieldsRsoksPart.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION,

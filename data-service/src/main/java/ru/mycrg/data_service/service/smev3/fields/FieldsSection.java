@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsSection {
-     public static final String SCHEMA = "data";
     public static final String TABLE_13 = "dl_data_section13";
     public static final String TABLE_7 = "dl_data_section7";
     public static final String PROPERTY_IDENTIFIER = "id";

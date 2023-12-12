@@ -103,7 +103,7 @@ public abstract class AXmlBuildProcess {
                         .stream()
                         .map(fileDescription -> getRecordById(
                                 LIBRARY_RECORD,
-                                FieldsFiles.SCHEMA,
+                                SYSTEM_SCHEMA_NAME,
                                 null,
                                 FieldsFiles.TABLE,
                                 fileDescription.getId()

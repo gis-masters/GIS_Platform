@@ -11,6 +11,7 @@ public class XmlBuildMeta {
     private String mnemonic;
     private String mnemonicVersion;
     private UUID clientId;
+    private UUID referenceClientId;
     private JsonNode xmlObject;
     private String xmlString;
     private JsonNode sources;
@@ -20,6 +21,7 @@ public class XmlBuildMeta {
             String mnemonic,
             String mnemonicVersion,
             UUID clientId,
+            UUID referenceClientId,
             JsonNode xmlObject,
             String xmlString,
             JsonNode sources,
@@ -28,6 +30,7 @@ public class XmlBuildMeta {
         this.mnemonic = mnemonic;
         this.mnemonicVersion = mnemonicVersion;
         this.clientId = clientId;
+        this.referenceClientId = referenceClientId;
         this.xmlObject = xmlObject;
         this.xmlString = xmlString;
         this.sources = sources;
@@ -59,6 +62,15 @@ public class XmlBuildMeta {
 
     public XmlBuildMeta setClientId(UUID clientId) {
         this.clientId = clientId;
+        return this;
+    }
+
+    public UUID getReferenceClientId() {
+        return referenceClientId;
+    }
+
+    public XmlBuildMeta setReferenceClientId(UUID referenceClientId) {
+        this.referenceClientId = referenceClientId;
         return this;
     }
 

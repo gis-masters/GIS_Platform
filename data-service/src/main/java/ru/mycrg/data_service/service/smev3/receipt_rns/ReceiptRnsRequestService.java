@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.SmevMessageService;
+import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 
 /**
@@ -23,9 +23,9 @@ import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 public class ReceiptRnsRequestService {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
     private final Smev3Config smev3Config;
-    private final SmevMessageService messageService;
+    private final SmevMessageSenderService messageService;
 
-    public ReceiptRnsRequestService(Smev3Config smev3Config, SmevMessageService messageService) {
+    public ReceiptRnsRequestService(Smev3Config smev3Config, SmevMessageSenderService messageService) {
         this.smev3Config = smev3Config;
         this.messageService = messageService;
     }

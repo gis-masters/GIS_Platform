@@ -1,12 +1,17 @@
 package ru.mycrg.data_service.entity.reestrs;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import ru.mycrg.data_service.entity.IContent;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "reestr_outgoing")
-public class ReestrOutgoing {
+public class ReestrOutgoing implements IContent {
 
     @Id
     private UUID id;

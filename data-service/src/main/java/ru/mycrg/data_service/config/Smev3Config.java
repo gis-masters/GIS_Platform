@@ -13,14 +13,8 @@ public class Smev3Config {
     @Value("${crg-options.integration.smev3.mnemonic}")
     private String mnemonicIS;
 
-    @Value("${crg-options.integration.smev3.amqp.host}")
-    private String amqpHost;
-
-    @Value("${crg-options.integration.smev3.amqp.username}")
-    private String amqpUsername;
-
-    @Value("${crg-options.integration.smev3.amqp.password}")
-    private String amqpPassword;
+    @Value("${crg-options.integration.smev3.targetDb}")
+    private String targetDb;
 
     @Value("${crg-options.integration.smev3.s3.endpoint}")
     private String s3endpoint;
@@ -41,16 +35,8 @@ public class Smev3Config {
         return mnemonicIS;
     }
 
-    public String getAmqpHost() {
-        return amqpHost;
-    }
-
-    public String getAmqpUsername() {
-        return amqpUsername;
-    }
-
-    public String getAmqpPassword() {
-        return amqpPassword;
+    public String getTargetDb() {
+        return targetDb;
     }
 
     public String getS3endpoint() {

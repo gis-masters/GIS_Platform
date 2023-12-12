@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsRsoks {
-    public static final String SCHEMA = "data";
     public static final String TABLE = "dl_data_rsoks";
     public static final String PROPERTY_DL_DATA_SECTION13_DATA_CONNECTION = "dl_data_section13_data_connection";
     public static final String PROPERTY_DL_DATA_TAR_DATA_CONNECTION = "dl_data_tar_data_connection";

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,29 +14,43 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
+import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.geo_json.Feature;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
 
 @Transactional
 @Repository
 public class BaseDao {
 
-    private final Logger log = LoggerFactory.getLogger(BaseDao.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseDao.class);
 
+    static {
+        System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
+    }
+
+    private final SqlParameterSourceFactory sqlParameterSourceFactory;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
-    public BaseDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
-        System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
+    public BaseDao(SqlParameterSourceFactory sqlParameterSourceFactory, NamedParameterJdbcTemplate parameterJdbcTemplate) {
+        this.sqlParameterSourceFactory = sqlParameterSourceFactory;
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 

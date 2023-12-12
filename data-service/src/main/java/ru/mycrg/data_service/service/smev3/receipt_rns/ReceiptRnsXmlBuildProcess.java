@@ -72,6 +72,7 @@ public class ReceiptRnsXmlBuildProcess {
                     MNEMONIC,
                     MNEMONIC_VERSION,
                     clientId,
+                    null,
                     JsonConverter.toJsonNode(xmlObject),
                     xmlText,
                     null,
