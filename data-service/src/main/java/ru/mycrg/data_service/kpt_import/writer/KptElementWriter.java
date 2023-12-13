@@ -12,5 +12,8 @@ public interface KptElementWriter {
 
     void writeBatch(List<KptElement> kptElements, SchemaDto tableSchemaDto, String databaseName);
 
-    Class<? extends KptElement> getTargetClass();
+
+    List<Class<? extends KptElement>> getTargetClasses();
+
+    String getSchemaName();
 }

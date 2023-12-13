@@ -5,13 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.KptImportUtils;
-import ru.mycrg.data_service.kpt_import.GeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry.ZuGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.stream.XMLStreamReader;
 import java.math.BigDecimal;
 import java.util.*;
@@ -19,15 +17,13 @@ import java.util.*;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 @Component
-public class ZuReader implements KptXmlElementReader<ZuElement> {
+public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(ZuReader.class);
-    private final Unmarshaller unmarshaller;
-    private final GeometryParser geometryParser;
+    private final ZuGeometryParser geometryParser;
 
-    public ZuReader(GeometryParser geometryParser) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance(LandRecord.class);
-        this.unmarshaller = jaxbContext.createUnmarshaller();
+    public ZuReader(ZuGeometryParser geometryParser) throws JAXBException {
+        super(LandRecord.class, ZuElement.XML_TAG);
         this.geometryParser = geometryParser;
     }
 
@@ -35,7 +31,7 @@ public class ZuReader implements KptXmlElementReader<ZuElement> {
     public ZuElement read(XMLStreamReader reader) {
         LandRecord lr;
         try {
-            lr = unmarshaller.unmarshal(reader, LandRecord.class).getValue();
+            lr = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения земельного участка: " + ex.getMessage());
             return new ZuElement(Collections.emptyMap());
@@ -65,11 +61,6 @@ public class ZuReader implements KptXmlElementReader<ZuElement> {
             content.put("area_doc_2", extractAreaDoc(lr));
         }
         return new ZuElement(content);
-    }
-
-    @Override
-    public String getXmlTag() {
-        return ZuElement.XML_TAG;
     }
 
     private String extractCadastralNumber(LandRecord lr) {

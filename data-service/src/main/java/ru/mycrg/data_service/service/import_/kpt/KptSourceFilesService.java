@@ -104,12 +104,12 @@ public class KptSourceFilesService {
 
         List<IRecord> kptRecords = recordsDao.findAll(resourceQualifier, filter, kptLibSchema);
         Set<UUID> fileIds = kptRecords
-                                      .stream()
-                                      .map(this::extractKptFileDescription)
-                                      .filter(Optional::isPresent)
-                                      .map(Optional::get)
-                                      .map(FileDescription::getId)
-                                      .collect(Collectors.toSet());
+                .stream()
+                .map(this::extractKptFileDescription)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(FileDescription::getId)
+                .collect(Collectors.toSet());
         List<File> files = fileRepository.findAllByIdIn(fileIds);
         return files.stream()
                     .map(file -> fileToImportSourceFileDto(file, findKptRecordByFileId(kptRecords, file.getId())))
@@ -141,10 +141,10 @@ public class KptSourceFilesService {
         TypeDocumentData typeDocumentData = new TypeDocumentData();
         typeDocumentData.setId(kptRecord.getId());
         typeDocumentData.setTitle(kptRecord.getTitle());
+        typeDocumentData.setLibraryTableName(KPT_LIBRARY_ID);
         return new ImportSourceFileDto(
                 file.getId(),
                 file.getPath(),
-                file.getCreatedAt(),
                 typeDocumentData
         );
     }

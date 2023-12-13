@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao.detached;
 
+import org.hsqldb.types.Types;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,14 @@ public class DetachedRecordsDao {
             Feature firstFeature = new Feature(body[0]);
             String query = buildParameterizedInsertQuery(qualifier, firstFeature, false);
             MapSqlParameterSource[] parameterSource = Arrays.stream(body)
-                                                            .map(b -> sqlParameterSourceFactory.buildParameterizedSource(
-                                                                    new Feature(b), schema))
-                                                            .toArray(MapSqlParameterSource[]::new);
+                .map(b -> {
+                    MapSqlParameterSource source =
+                            sqlParameterSourceFactory.buildParameterizedSource(
+                            new Feature(b), schema);
+                    source.registerSqlType("source_doc", Types.OTHER);
+                    return source;
+                })
+                .toArray(MapSqlParameterSource[]::new);
 
             log.debug("BATCH(size = {}) INSERT QUERY: [{}]", body.length, query);
             jdbcTemplate.batchUpdate(query, parameterSource);

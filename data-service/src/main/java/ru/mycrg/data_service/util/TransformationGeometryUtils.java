@@ -113,7 +113,7 @@ public class TransformationGeometryUtils {
                                .toArray(Point[]::new);
     }
 
-    private List<org.locationtech.jts.geom.Polygon> transformationOfPolygons(
+    public List<org.locationtech.jts.geom.Polygon> transformationOfPolygons(
             List<org.locationtech.jts.geom.Polygon> polygons, int srid) {
         return polygons.stream()
                        .map(polygon -> {

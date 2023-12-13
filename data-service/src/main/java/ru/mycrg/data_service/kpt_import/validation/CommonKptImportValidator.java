@@ -1,6 +1,9 @@
 package ru.mycrg.data_service.kpt_import.validation;
 
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
 import java.util.LinkedList;
@@ -12,26 +15,26 @@ import java.util.Map;
  */
 public abstract class CommonKptImportValidator implements KptImportValidator {
 
-    public static final String TMP_TABLE_PREFIX = "kpt_";
-
     protected abstract void validateSchemaImport(KptImportValidationData data,
-                                                 String tableName,
+                                                 ResourceQualifier table,
                                                  SchemaDto schema,
                                                  KptImportValidationSettings settings,
                                                  Map<String, List<KptImportValidationResult>> result);
 
     @Override
     public void validate(KptImportValidationData data,
-                         Map<String, SchemaDto> tables,
+                         List<KptImportTableDto> tables,
                          KptImportValidationSettings settings,
                          Map<String, List<KptImportValidationResult>> results) {
-        for (String tableName: tables.keySet()) {
-            SchemaDto schema = tables.get(tableName);
-            if (schemaSupportsValidation(schema)) {
-                validateSchemaImport(data, tableName, schema, settings, results);
+        for (KptImportTableDto tableDto: tables) {
+            DatasetResourceQualifierDto qualifierDto = tableDto.getResourceQualifierDto();
+            if (schemaSupportsValidation(tableDto.getSchemaDto())) {
+                validateSchemaImport(data, new ResourceQualifier(qualifierDto.getDataset(), qualifierDto.getTable()),
+                                     tableDto.getSchemaDto(), settings, results);
             } else {
-                addResult(results, schema.getName(), KptImportLogLevel.WARN,
-                          String.format("Схема %s не содержит поле source_doc, валидация пропущена", schema.getName()));
+                addResult(results, qualifierDto.getTable(), KptImportLogLevel.WARN,
+                          String.format("Схема %s не содержит поле source_doc, валидация пропущена",
+                                        tableDto.getSchemaDto().getName()));
             }
         }
     }

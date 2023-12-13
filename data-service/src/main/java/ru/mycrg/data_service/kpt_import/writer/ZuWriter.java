@@ -5,17 +5,23 @@ import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
 import ru.mycrg.data_service.kpt_import.model.KptElement;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class ZuWriter extends KptElementDBWriter {
 
-    private static final String TABLE = "kpt_zu_pro";
-
     public ZuWriter(DetachedRecordsDao recordsDao) {
-        super(recordsDao, TABLE);
+        super(recordsDao);
     }
 
     @Override
-    public Class<? extends KptElement> getTargetClass() {
-        return ZuElement.class;
+    public List<Class<? extends KptElement>> getTargetClasses() {
+        return Collections.singletonList(ZuElement.class);
+    }
+
+    @Override
+    public String getSchemaName() {
+        return "zu_pro";
     }
 }

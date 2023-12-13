@@ -4,12 +4,10 @@ public class KptImportValidationData {
 
     private final String cadastralSqare;
     private final String dbName;
-    private final long projectId;
 
-    public KptImportValidationData(String cadastralSqare, String dbName, long projectId) {
+    public KptImportValidationData(String cadastralSqare, String dbName) {
         this.cadastralSqare = cadastralSqare;
         this.dbName = dbName;
-        this.projectId = projectId;
     }
 
     public String getCadastralSqare() {
@@ -18,9 +16,5 @@ public class KptImportValidationData {
 
     public String getDbName() {
         return dbName;
-    }
-
-    public long getProjectId() {
-        return projectId;
     }
 }

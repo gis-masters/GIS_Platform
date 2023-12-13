@@ -3,7 +3,6 @@ package ru.mycrg.data_service.kpt_import.validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common_utils.CrgGlobalProperties;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 
 /**
  * Валидтор, сопоставляющий количество импортируемых записей с количеством записей в результирующей таблице
@@ -36,7 +36,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
 
     @Override
     protected void validateSchemaImport(KptImportValidationData data,
-                                        String tableName,
+                                        ResourceQualifier resultTable,
                                         SchemaDto schema,
                                         KptImportValidationSettings settings,
                                         Map<String, List<KptImportValidationResult>> results) {
@@ -46,10 +46,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
 
         String cadastralSqare = data.getCadastralSqare();
         String dbName = data.getDbName();
-        ResourceQualifier tmpTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TMP_TABLE_PREFIX + schema.getName());
-        ResourceQualifier resultTable = new ResourceQualifier(
-                CrgGlobalProperties.getDefaultProjectName(data.getProjectId()), tableName
-        );
+        ResourceQualifier tmpTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(schema.getName()));
         int countToImport;
         int currentCount;
 
@@ -58,7 +55,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         } catch (Exception ex) {
             String msg = String.format(ERROR_TEMPLATE, tmpTable);
             log.error(msg, ex);
-            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
+            addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
             return;
         }
 
@@ -67,17 +64,17 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         } catch (Exception ex) {
             String msg = String.format(ERROR_TEMPLATE, resultTable);
             log.error(msg, ex);
-            addResult(results, tableName, KptImportLogLevel.ERROR, msg);
+            addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
             return;
         }
 
         int allowedDiff = settings.getAllowedDiff();
         if (countToImport + allowedDiff <= currentCount) {
-            addResult(results, tableName, KptImportLogLevel.WARN,
+            addResult(results, resultTable.getTable(), KptImportLogLevel.WARN,
                       String.format(LESS_RECORDS_TEMPLATE, tmpTable, allowedDiff, resultTable, cadastralSqare)
             );
         } else if (countToImport + allowedDiff > currentCount) {
-            addResult(results, tableName, KptImportLogLevel.SUCCESS,
+            addResult(results, resultTable.getTable(), KptImportLogLevel.SUCCESS,
                       String.format(MORE_RECORDS_TEMPALTE, tmpTable, resultTable, allowedDiff, cadastralSqare));
         }
     }

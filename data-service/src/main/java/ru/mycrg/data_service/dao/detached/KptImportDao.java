@@ -3,16 +3,21 @@ package ru.mycrg.data_service.dao.detached;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCreateTableQuery;
 
 @Repository
 public class KptImportDao {
@@ -21,9 +26,11 @@ public class KptImportDao {
     private static final String CADASTRAL_SQARE_FILTER_TEMPLATE = "(source_doc::json)->>'title' = ?";
 
     private final DatasourceFactory datasourceFactory;
+    private final DdlTablesBase ddlTablesBase;
 
-    public KptImportDao(DatasourceFactory datasourceFactory) {
+    public KptImportDao(DatasourceFactory datasourceFactory, DdlTablesBase ddlTablesBase) {
         this.datasourceFactory = datasourceFactory;
+        this.ddlTablesBase = ddlTablesBase;
     }
 
     public Integer countRecordsByCadastralSquare(String cadastralSquare,
@@ -55,6 +62,43 @@ public class KptImportDao {
         List<LocalDateTime> result = jdbcTemplate.queryForList(query, LocalDateTime.class, cadastralSquare);
 
         return result.isEmpty() ? null : result.get(0);
+    }
+
+    /**
+     * Ищет временные таблицы для импорта КПТ в схеме data
+     *
+     * @param dbName     название БД
+     * @param tableNames названия временных таблиц, которые необходимо найти
+     *
+     * @return список названий существующих таблиц
+     */
+    public List<String> findKptTablesByNames(String dbName, Collection<String> tableNames) {
+        NamedParameterJdbcTemplate pJdbcTemplate =
+                new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(dbName));
+        MapSqlParameterSource params = new MapSqlParameterSource("names", tableNames);
+
+        String query = "SELECT t.table_name FROM information_schema.tables t " +
+                "WHERE table_schema = 'data' " +
+                "AND t.table_name in (:names)";
+        log.debug("KPT temporary tables request: [{}]", query);
+
+        return pJdbcTemplate.queryForList(query, params, String.class);
+    }
+
+    public void createTable(String dbName,
+                            String schemaName,
+                            String tableName,
+                            List<SimplePropertyDto> properties,
+                            String primaryKeyName) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
+        String query = buildCreateTableQuery(schemaName,
+                                             tableName,
+                                             primaryKeyName,
+                                             ddlTablesBase.buildProps(properties, primaryKeyName));
+
+        log.debug("Create table query: [{}]", query);
+
+        jdbcTemplate.execute(query);
     }
 
     /**

@@ -7,11 +7,16 @@ import org.springframework.util.StopWatch;
 import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
+import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service.kpt_import.model.KptElement;
-import ru.mycrg.data_service.kpt_import.model.ZuElement;
+import ru.mycrg.data_service.kpt_import.TmpTablesCreator;
+import ru.mycrg.data_service.kpt_import.model.*;
+import ru.mycrg.data_service.kpt_import.model.oks.OksBuildingElement;
+import ru.mycrg.data_service.kpt_import.model.oks.OksConstructionElement;
+import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
 import ru.mycrg.data_service.kpt_import.reader.KptXmlElementReader;
+import ru.mycrg.data_service.kpt_import.reader.kvartal.KvartalPartialDataReader;
 import ru.mycrg.data_service.kpt_import.validation.KptImportLogLevel;
 import ru.mycrg.data_service.kpt_import.validation.KptImportValidationResult;
 import ru.mycrg.data_service.kpt_import.validation.KptImportValidatorService;
@@ -19,7 +24,10 @@ import ru.mycrg.data_service.kpt_import.writer.KptElementWriter;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
+import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
+import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.data_service_contract.queue.request.KptImportXmlRequestEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
@@ -32,11 +40,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultProjectName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
@@ -50,6 +58,7 @@ public class KptImportXmlHandler implements IEventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(KptImportXmlHandler.class);
     private static final int BATCH_INSERT_SIZE = 50;
+    private static final String KVARTAL_SCHEMA = "kvartal_kpt";
 
     private final KptImportValidatorService validationService;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
@@ -57,41 +66,52 @@ public class KptImportXmlHandler implements IEventHandler {
     private final DetachedRecordsDao recordsDao;
     private final TaskLogDetachedDao taskLogDetachedDao;
     private final KptImportDao kptImportDao;
-    /**
-     * Соответствие элементов КПТ со схемами таблиц в БД
-     */
-    private final Map<Class<? extends KptElement>, String> kptElementSchemaNames = new HashMap<>();
+    private final TmpTablesCreator tmpTablesCreator;
+    private final TasksDetachedDao tasksDetachedDao;
     /**
      * Соответствие названия схем таблиц БД с тэгами xml
      */
     private final Map<String, Set<String>> schemaNameTags = new HashMap<>();
+    /** Флаг выполнения импорта для обеспечения возможности отмены операции */
+    private final AtomicBoolean running = new AtomicBoolean(false);
 
     public KptImportXmlHandler(List<KptXmlElementReader<? extends KptElement>> readers,
                                List<KptElementWriter> writers,
                                KptImportValidatorService validationService,
                                DetachedRecordsDao recordsDao,
                                TaskLogDetachedDao taskLogDetachedDao,
-                               KptImportDao kptImportDao) {
+                               KptImportDao kptImportDao,
+                               TmpTablesCreator tmpTablesCreator,
+                               TasksDetachedDao tasksDetachedDao) {
         this.validationService = validationService;
         this.recordsDao = recordsDao;
         this.taskLogDetachedDao = taskLogDetachedDao;
         this.kptImportDao = kptImportDao;
+        this.tmpTablesCreator = tmpTablesCreator;
+        this.tasksDetachedDao = tasksDetachedDao;
         Map<String, KptXmlElementReader<? extends KptElement>> tmpReaders = new HashMap<>();
         Map<Class<? extends KptElement>, KptElementWriter> tmpWriters = new HashMap<>();
         readers.forEach(reader -> tmpReaders.put(reader.getXmlTag(), reader));
-        writers.forEach(writer -> tmpWriters.put(writer.getTargetClass(), writer));
+        writers.forEach(writer -> writer.getTargetClasses().forEach(clz -> tmpWriters.put(clz, writer)));
         tagReaders = Collections.unmodifiableMap(tmpReaders);
         kptElementsWriters = Collections.unmodifiableMap(tmpWriters);
-        initKptElementSchemaNames();
         initSchemaNameTags();
-    }
-
-    private void initKptElementSchemaNames() {
-        kptElementSchemaNames.put(ZuElement.class, "zu_pro");
     }
 
     private void initSchemaNameTags() {
         schemaNameTags.put("zu_pro", Set.of(ZuElement.XML_TAG));
+        schemaNameTags.put("zouit_pro", Set.of(ZouitElement.XML_TAG));
+        schemaNameTags.put(KVARTAL_SCHEMA, Set.of("cadastral_number", "area_quarter",
+                                                  "spatial_data"));
+        schemaNameTags.put("municipality_boundaries_egrn", Set.of(MunicipalityBoundaryElement.XML_TAG));
+        schemaNameTags.put("oks_pro", Set.of(OksConstructionElement.XML_TAG, OksBuildingElement.XML_TAG,
+                                             OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put("oks_polyline_pro", Set.of(OksConstructionElement.XML_TAG,
+                                                      OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put("oks_constructions_points", Set.of(OksConstructionElement.XML_TAG,
+                                                              OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put("borderwaterobj", Set.of(BorderWaterObjectElement.XML_TAG));
+        schemaNameTags.put("borderwaterobj_polilyne", Set.of(BorderWaterObjectElement.XML_TAG));
     }
 
     @Override
@@ -103,11 +123,30 @@ public class KptImportXmlHandler implements IEventHandler {
     public void handle(IMessageBusEvent event) {
         log.info("Получено событие импорта КПТ из XML id: {}", event.getId());
         KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
-        Map<String, SchemaDto> targetTables = importEvent.getTables();
-        Collection<SchemaDto> requiredSchemas = targetTables.values();
-        Set<String> requiredTags = getRequiredTags(requiredSchemas);
         String dbName = importEvent.getDbName();
+
+        if (taskCancelled(dbName, importEvent.getTaskId())) {
+            return;
+        }
+        running.set(true);
+
+        List<KptImportTableDto> targetTables = importEvent.getTables();
+        Collection<SchemaDto> requiredSchemas = targetTables.stream()
+                                                            .map(KptImportTableDto::getSchemaDto)
+                                                            .collect(Collectors.toList());
+        Map<Class<? extends KptElement>, KptElementWriter> requiredWriters = chooseWriters(requiredSchemas);
+        Set<String> requiredTags = getRequiredTags(requiredSchemas);
+
         boolean validate = importEvent.getValidationSettings() != null;
+
+        try {
+            tmpTablesCreator.createIfNotExists(dbName, requiredSchemas);
+        } catch (Exception e) {
+            String message = "Не удалось создать временные таблицы для импорта!";
+            log.error(message, e);
+            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR, message);
+            return;
+        }
 
         try {
             cleanTmpTables(requiredSchemas, dbName);
@@ -122,7 +161,11 @@ public class KptImportXmlHandler implements IEventHandler {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             try {
-                importFile(file, requiredTags, requiredSchemas, importEvent.getInitiatorLogin(), dbName);
+                if (!running.get()) {
+                    return;
+                }
+                importFile(file, requiredTags, requiredSchemas, requiredWriters, importEvent.getInitiatorLogin(),
+                           dbName, importEvent.getValidationSettings().getDateOrderCompletion());
             } catch (XMLStreamException | IOException ex) {
                 log.error("Ошибка чтения xml файла " + file.getPath(), ex);
                 writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
@@ -142,23 +185,37 @@ public class KptImportXmlHandler implements IEventHandler {
                                            importEvent.getValidationSettings(),
                                            targetTables,
                                            dbName,
-                                           importEvent.getProjectId(),
                                            importEvent.getTaskId()
                 );
             }
 
-            for (String table: targetTables.keySet()) {
-                copyData(targetTables.get(table),
-                         new ResourceQualifier(getDefaultProjectName(importEvent.getProjectId()), table),
-                         file.getDocument().getTitle(),
-                         importEvent.getDbName()
-                );
+            for (KptImportTableDto table: targetTables) {
+                if (!running.get()) {
+                    return;
+                }
+                try {
+                    copyData(table.getSchemaDto(),
+                             new ResourceQualifier(table.getResourceQualifierDto().getDataset(),
+                                                   table.getResourceQualifierDto().getTable()),
+                             file.getDocument().getTitle(),
+                             importEvent.getDbName()
+                    );
+                } catch (Exception e) {
+                    log.error("Ошибка переноса данных из временной таблицы в "
+                                      + table.getResourceQualifierDto().getTable(), e);
+                }
+
             }
 
             stopWatch.stop();
             log.debug("Файл {} полностью импортирован за {} сек",
                       file.getDocument().getTitle(), stopWatch.getTotalTimeSeconds());
+            tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
         }
+    }
+
+    public void cancelImport() {
+        running.set(false);
     }
 
     /**
@@ -170,10 +227,14 @@ public class KptImportXmlHandler implements IEventHandler {
     }
 
     public void importFile(ImportSourceFileDto file, Set<String> requiredTags, Collection<SchemaDto> requiredSchemas,
-                           String initiator, String databaseName) throws XMLStreamException, IOException {
+                           Map<Class<? extends KptElement>, KptElementWriter> requiredWriters,
+                           String initiator, String databaseName, String acsepAt) throws XMLStreamException,
+                                                                                         IOException {
         String filePath = file.getPath();
         StopWatch timer = new StopWatch();
         timer.start();
+
+        KvartalElement kvartalElement = new KvartalElement(new HashMap<>()); //кадастровый квартал
 
         try (ZipFile zipFile = new ZipFile(filePath)) {
             Optional<ZipEntry> xmlZipEntry = extractXmlZipEntry(zipFile);
@@ -190,53 +251,40 @@ public class KptImportXmlHandler implements IEventHandler {
             try {
                 log.info("Импорт КПТ {} из {}/{}", file.getDocument().getTitle(), filePath, xmlFile.getName());
                 List<KptElement> batch = new LinkedList<>();
-                String batchTag = null;
-                KptXmlElementReader<? extends KptElement> batchReader = null;
                 SchemaDto batchSchema = null;
                 KptElementWriter batchWriter = null;
 
                 while (streamReader.hasNext()) {
+                    if (!running.get()) {
+                        break;
+                    }
+
                     int eventType = streamReader.next();
                     if (eventType != XMLStreamConstants.START_ELEMENT) {
                         continue;
                     }
+
                     String tagName = streamReader.getLocalName();
                     if (!requiredTags.contains(tagName)) {
                         continue;
                     }
-                    batchTag = batchTag == null ? tagName : batchTag;
 
-                    if (!Objects.equals(batchTag, tagName) || batch.size() >= BATCH_INSERT_SIZE) {
-                        if (!batch.isEmpty()) {
-                            batchWriter.writeBatch(batch, batchSchema, databaseName);
-                            batch.clear();
-                        }
-
-                        if (!Objects.equals(batchTag, tagName)) {
-                            batchTag = tagName;
-                            batchSchema = null;
-                            batchWriter = null;
-                            batchReader = null;
-                        }
-                    }
-
-                    if (batchReader == null) {
-                        batchReader = tagReaders.get(tagName);
-                    }
-
-                    if (batchReader == null) {
+                    KptXmlElementReader<? extends KptElement> tagReader = tagReaders.get(tagName);
+                    if (tagReader == null) {
                         log.warn("Не найден reader для тэга {}. Элемент пропущен", tagName);
                         continue;
                     }
 
-                    KptElement kptElement = batchReader.read(streamReader);
-                    if (batchWriter == null) {
-                        batchWriter = kptElementsWriters.get(kptElement.getClass());
+                    if (isKvartalElementTag(tagName)) {
+                        ((KvartalPartialDataReader<?, ?>) tagReader).readKvartalData(streamReader, kvartalElement);
+                        continue;
                     }
 
-                    if (batchWriter == null) {
-                        log.warn("Не задан writer для класса {}, элемент пропущен",
-                                 kptElement.getClass().getName());
+                    KptElement kptElement;
+                    try {
+                        kptElement = tagReader.read(streamReader);
+                    } catch (Exception e) {
+                        log.error("Ошибка чтения элемента в " + tagReader.getClass().getSimpleName(), e);
                         continue;
                     }
 
@@ -244,19 +292,43 @@ public class KptImportXmlHandler implements IEventHandler {
                         continue;
                     }
 
-                    if (batchSchema == null) {
-                        batchSchema = getKptElementSchema(kptElement.getClass(), requiredSchemas);
+                    KptElementWriter writer = requiredWriters.get(kptElement.getClass());
+                    if (writer == null) {
+                        continue;
                     }
-                    fillContentWithCommonData(kptElement.getContent(), initiator, file.getDocument());
+
+                    if (!Objects.equals(batchWriter, writer) || batch.size() >= BATCH_INSERT_SIZE) {
+                        if (!batch.isEmpty()) {
+                            try {
+                                batchWriter.writeBatch(batch, batchSchema, databaseName);
+                            } catch (Exception e) {
+                                log.error("Ошибка сохранения данных слоя " + batchWriter.getSchemaName(), e);
+                            }
+                            batch.clear();
+                        }
+                        if (!Objects.equals(batchWriter, writer)) {
+                            batchWriter = writer;
+                            batchSchema = getKptElementSchema(writer, requiredSchemas);
+                        }
+                    }
+
+                    fillContentWithCommonData(kptElement.getContent(), initiator, file.getDocument(), acsepAt);
                     batch.add(kptElement);
                 }
 
                 if (!batch.isEmpty()) {
                     batchWriter.writeBatch(batch, batchSchema, databaseName);
                 }
+
+                if (!kvartalElement.getContent().isEmpty()) {
+                    fillContentWithCommonData(kvartalElement.getContent(), initiator, file.getDocument(), acsepAt);
+                    KptElementWriter kvartalWriter = requiredWriters.get(KvartalElement.class);
+                    SchemaDto schema = getKptElementSchema(kvartalWriter, requiredSchemas);
+                    kvartalWriter.writeBatch(Collections.singletonList(kvartalElement), schema, databaseName);
+                }
+
                 timer.stop();
                 log.info("Файл {} обработан за {} сек", filePath, timer.getTotalTimeSeconds());
-                //todo task log
             } finally {
                 inputStream.close();
                 streamReader.close();
@@ -283,20 +355,21 @@ public class KptImportXmlHandler implements IEventHandler {
         return Optional.ofNullable(xmlEntry);
     }
 
-    private void fillContentWithCommonData(Map<String, Object> content, String initiator, TypeDocumentData document) {
-        content.put("acsept_at", null); //TODO fill;
+    private void fillContentWithCommonData(Map<String, Object> content, String initiator, TypeDocumentData document,
+                                           String acseptAt) {
+        content.put("acsept_at", acseptAt);
         content.put(CREATED_BY.getName(), initiator);
         content.put(CREATED_AT.getName(), LocalDateTime.now());
         content.put("source_doc", document.toString());
     }
 
-    private SchemaDto getKptElementSchema(Class<? extends KptElement> elementClass,
+    private SchemaDto getKptElementSchema(KptElementWriter writer,
                                           Collection<SchemaDto> requiredSchemas) {
-        String schemaName = kptElementSchemaNames.get(elementClass);
+        String schemaName = writer.getSchemaName();
         return requiredSchemas.stream()
                               .filter(schemaDto -> schemaName.equals(schemaDto.getName()))
                               .findFirst()
-                              .get();
+                              .orElse(null);
     }
 
     private void cleanTmpTables(Collection<SchemaDto> schemas, String dbName) throws CrgDaoException {
@@ -309,11 +382,16 @@ public class KptImportXmlHandler implements IEventHandler {
     private void copyData(SchemaDto schema, ResourceQualifier targetQualifier, String cadastralSquare, String dbName) {
         StopWatch timer = new StopWatch();
         timer.start();
+
+        Set<String> generatedValues = Set.of("area", "lenght");
         String sourceTable = tmbTableName(schema.getName());
         ResourceQualifier sourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, sourceTable);
+        List<SimplePropertyDto> properties = schema.getProperties().stream()
+                                                   .filter(it -> !generatedValues.contains((it.getName())))
+                                                   .collect(Collectors.toList());
 
         kptImportDao.deleteAllByCadatstralSquare(dbName, targetQualifier, cadastralSquare);
-        kptImportDao.copyCadastralSquare(dbName, sourceQualifier, targetQualifier, schema.getProperties(),
+        kptImportDao.copyCadastralSquare(dbName, sourceQualifier, targetQualifier, properties,
                                          schema.getProperties(), cadastralSquare);
 
         timer.stop();
@@ -326,5 +404,26 @@ public class KptImportXmlHandler implements IEventHandler {
                 new TaskLogDto("Импорт КПТ", taskId),
                 new KptImportValidationResult(lvl, message)
         );
+    }
+
+    private Map<Class<? extends KptElement>, KptElementWriter> chooseWriters(Collection<SchemaDto> requiredSchemas) {
+        Map<Class<? extends KptElement>, KptElementWriter> requiredWriters = new HashMap<>();
+        Set<String> requiredSchemaNames = requiredSchemas.stream().map(SchemaDto::getName).collect(Collectors.toSet());
+        for (Class<? extends KptElement> key: kptElementsWriters.keySet()) {
+            KptElementWriter writer = kptElementsWriters.get(key);
+            if (requiredSchemaNames.contains(writer.getSchemaName())) {
+                requiredWriters.put(key, writer);
+            }
+        }
+
+        return requiredWriters;
+    }
+
+    private boolean isKvartalElementTag(String xmlTag) {
+        return schemaNameTags.get(KVARTAL_SCHEMA).contains(xmlTag);
+    }
+
+    private boolean taskCancelled(String dbName, long taskId) {
+        return tasksDetachedDao.getTaskStatus(dbName, taskId) == TaskStatus.CANCELED;
     }
 }

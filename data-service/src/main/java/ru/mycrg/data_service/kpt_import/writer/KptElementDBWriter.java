@@ -12,15 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 
 public abstract class KptElementDBWriter implements KptElementWriter {
     private final Logger log = LoggerFactory.getLogger(KptElementDBWriter.class);
     private final DetachedRecordsDao recordsDao;
     private final ResourceQualifier resourceQualifier;
 
-    protected KptElementDBWriter(DetachedRecordsDao recordsDao, String tableName) {
+    protected KptElementDBWriter(DetachedRecordsDao recordsDao) {
         this.recordsDao = recordsDao;
-        this.resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName);
+        this.resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(getSchemaName()));
     }
 
     @Override

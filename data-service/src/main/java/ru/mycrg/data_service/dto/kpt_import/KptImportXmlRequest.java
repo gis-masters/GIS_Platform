@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dto.kpt_import;
 
+import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
 import javax.validation.constraints.NotEmpty;
@@ -20,12 +21,8 @@ public class KptImportXmlRequest {
      * Названия таблиц для импорта
      */
     @NotEmpty
-    private List<String> tableNames;
-    /**
-     * Идентификатор проекта
-     */
-    @NotNull
-    private Long projectId;
+    private List<DatasetResourceQualifierDto> tables;
+
     /**
      * Настройки валидации импортируемых данных
      */
@@ -35,24 +32,16 @@ public class KptImportXmlRequest {
         return documentId;
     }
 
-    public List<String> getTableNames() {
-        return tableNames;
-    }
-
-    public long getProjectId() {
-        return projectId;
+    public List<DatasetResourceQualifierDto> getTables() {
+        return tables;
     }
 
     public void setDocumentId(long documentId) {
         this.documentId = documentId;
     }
 
-    public void setTableNames(List<String> tableNames) {
-        this.tableNames = tableNames;
-    }
-
-    public void setProjectId(long projectId) {
-        this.projectId = projectId;
+    public void setTables(List<DatasetResourceQualifierDto> tables) {
+        this.tables = tables;
     }
 
     public KptImportValidationSettings getValidationSettings() {

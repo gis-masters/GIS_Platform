@@ -16,9 +16,11 @@ import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
+import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
+import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 import ru.mycrg.data_service_contract.enums.TaskType;
 import ru.mycrg.data_service_contract.queue.request.KptImportXmlRequestEvent;
@@ -26,10 +28,7 @@ import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
@@ -92,9 +91,8 @@ public class KptImportXmlRequestService {
         KptImportXmlRequestEvent event = new KptImportXmlRequestEvent(
                 sourceFilesPair.getLeft(),
                 getDatabaseName(),
-                findSchemas(request.getTableNames()),
+                buildTableImportDtoList(request.getTables()),
                 authenticationFacade.getLogin(),
-                request.getProjectId(),
                 task.getId(),
                 request.getValidationSettings()
         );
@@ -107,17 +105,27 @@ public class KptImportXmlRequestService {
         return getDefaultDatabaseName(orgId);
     }
 
-    private Map<String, SchemaDto> findSchemas(List<String> tableIdentifiers) {
+    private List<KptImportTableDto> buildTableImportDtoList(List<DatasetResourceQualifierDto> qualifiers) {
+        List<String> tableIdentifiers = qualifiers.stream()
+                                                  .map(DatasetResourceQualifierDto::getTable)
+                                                  .collect(Collectors.toList());
+
         List<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findByIdentifierIn(tableIdentifiers);
         checkTablesExists(schemasAndTables, tableIdentifiers);
-        Map<String, SchemaDto> result = new HashMap<>();
+
+        List<KptImportTableDto> result = new LinkedList<>();
         for (SchemasAndTables table: schemasAndTables) {
             Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(table.getSchemaId());
             if (schemaByName.isEmpty()) {
                 throw new DataServiceException("Не найдена схема таблицы " + table.getIdentifier());
             }
-            result.put(table.getIdentifier(), schemaByName.get());
+
+            DatasetResourceQualifierDto qualifier = qualifiers.stream()
+                                                              .filter(it -> it.getTable().equals(table.getIdentifier()))
+                                                              .findFirst().get();
+            result.add(new KptImportTableDto(qualifier, schemaByName.get()));
         }
+
         return result;
     }
 

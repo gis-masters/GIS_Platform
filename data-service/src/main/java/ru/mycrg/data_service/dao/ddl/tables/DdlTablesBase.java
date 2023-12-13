@@ -79,8 +79,9 @@ public class DdlTablesBase {
         }
     }
 
+    //TODO Вынести это отсюда
     @NotNull
-    private String buildProps(List<SimplePropertyDto> properties, String primaryKeyName) {
+    public String buildProps(List<SimplePropertyDto> properties, String primaryKeyName) {
         StringBuilder props = new StringBuilder();
         for (SimplePropertyDto property: properties) {
             if (!property.getName().equalsIgnoreCase(primaryKeyName)) {

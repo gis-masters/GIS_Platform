@@ -2,6 +2,7 @@ package ru.mycrg.data_service.dao.detached;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
@@ -39,5 +40,37 @@ public class TasksDetachedDao {
                                 "WHERE status <> 'DONE' AND last_modified <= '" + dateTime + "'");
 
         log.debug("Найдено и переведено в статус '{}' [{}] задач", status, updatedCounter);
+    }
+
+    public void updateStatus(String databaseName, Long taskId, TaskStatus newStatus) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+
+        jdbcTemplate.update("UPDATE data.tasks " +
+                                    "SET status = ?, last_modified = now() " +
+                                    "WHERE id = ?", newStatus.toString(), taskId);
+        log.debug("Закрыта задача " + taskId);
+    }
+
+    public TaskStatus getTaskStatus(String databaseName, Long taskId) {
+        String statusString = null;
+        TaskStatus status = null;
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+
+        try {
+            statusString = jdbcTemplate.queryForObject("SELECT t.status FROM data.tasks t WHERE id = ?",
+                                                              String.class, taskId);
+        } catch (DataAccessException e) {
+            log.error("Ошибка получения статуса задачи по id={}", taskId, e);
+        }
+
+        if (statusString != null) {
+            try {
+                status = TaskStatus.valueOf(statusString);
+            } catch (IllegalArgumentException e) {
+                log.error("Неизвестный статус задачи '{}'", statusString);
+            }
+        }
+
+        return status;
     }
 }
