@@ -41,8 +41,8 @@ class DataManagementPage extends Page {
 
   async testLibraryRootPage() {
     await this.waitForVisible();
-    // eslint-disable-next-line @typescript-eslint/await-thenable -- типы врут
     await expect(browser).toHaveUrlContaining(this.libraryRootUrl);
+    await breadcrumbsBlock.waitForVisible();
     const texts = await breadcrumbsBlock.getItemsText();
     await expect(texts.at(-1)).toBe('Библиотеки документов');
   }

@@ -88,14 +88,14 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
           <RegistryConsumer id='common'>
             {({ Form }: CommonDiRegistry) => (
               <Form
-                id={htmlId}
-                className={cnFormDialog()}
+                className={cnFormDialog('Form')}
+                formRole={formRole}
                 schema={schema}
                 value={value}
-                formRole={formRole}
+                id={htmlId}
                 auto
-                onFormSubmit={this.submitHandler}
                 onFormChange={onFormChange}
+                onFormSubmit={this.submitHandler}
                 onActionSuccess={this.successHandler}
                 onActionError={this.errorHandler}
                 actionFunction={actionFunction}
@@ -158,7 +158,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     }
 
     const { onClose } = this.props;
-    this.formInvoke?.reset();
+    this.formInvoke?.reset?.();
     onClose();
   }
 }

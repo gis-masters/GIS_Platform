@@ -11,7 +11,7 @@ const cnPrintMapDialogLegend = cn('PrintMapDialog', 'Legend');
 
 export const PrintMapDialogLegend: FC = observer(() => {
   const { legend, resolution, pageFormatId, legendSize } = printSettings;
-  const formatsResizes: Record<string, number> = { a5: 0.41, a4: 0.304, a3: 0.22 };
+  const formatsResizes: Record<string, number> = { a5: 0.41, a4: 0.304, a3: 0.22, square: 0.35 };
   const resizeForPageFormat = formatsResizes[pageFormatId];
 
   return (
@@ -21,6 +21,7 @@ export const PrintMapDialogLegend: FC = observer(() => {
       forPrint
       resolution={resolution}
       resize={resizeForPageFormat * legendSize * 1.3}
+      cleanDuplicates
     />
   );
 });

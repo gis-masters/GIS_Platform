@@ -5,19 +5,8 @@ import { xTableBlock } from '../XTable/XTable.block';
 class CreateVectorTableDialogBlock extends Block {
   selectors = {
     container: '.CreateVectorTableDialog',
-    dialogYes: '.CreateVectorTableDialog-Yes',
-    formDialog: '.CreateVectorTableDialog .FormDialog'
+    dialogYes: '.CreateVectorTableDialog-Yes'
   };
-
-  async waitForFormDialogDisplayed(): Promise<void> {
-    const $formDialog = await this.$('formDialog');
-    await $formDialog.waitForDisplayed();
-  }
-
-  async waitForFormDialogClickable(): Promise<void> {
-    const $formDialog = await this.$('formDialog');
-    await $formDialog.waitForClickable();
-  }
 
   async clickSaveFormDialog(): Promise<void> {
     const $editDialogYes = await this.$('dialogYes');

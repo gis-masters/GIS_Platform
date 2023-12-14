@@ -1,16 +1,19 @@
 import { action, makeObservable, observable } from 'mobx';
 import { Component, ReactNode } from 'react';
 
+import { SimpleSchema } from '../services/data/schema/schema.models';
+
 export interface UtilityDialogInfo {
   id: string;
   title: ReactNode;
   message?: ReactNode;
   multiline?: boolean;
-  type: 'achtung' | 'konfirmieren' | 'prompto';
+  type: 'achtung' | 'konfirmieren' | 'prompto' | 'formPrompt';
   defaultValue?: string;
   open?: boolean;
   okText?: string;
   cancelText?: string;
+  schema?: SimpleSchema
 }
 
 class UtilityDialogsStore {

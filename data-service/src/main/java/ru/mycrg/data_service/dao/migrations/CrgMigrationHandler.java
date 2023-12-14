@@ -94,7 +94,6 @@ public class CrgMigrationHandler {
                 ScriptUtils.executeSqlScript(connection, getResource("M11__updateDocLibraries.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M12__addFileEntity.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M13__addTestSchemaForTables.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M14__addFeatureExtractLibrary.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M15__updateSchemasAndTables_V2.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M16__updateBaseMaps.sql"));
                 ScriptUtils.executeSqlScript(connection, getResource("M18__fixSchemas.sql"));

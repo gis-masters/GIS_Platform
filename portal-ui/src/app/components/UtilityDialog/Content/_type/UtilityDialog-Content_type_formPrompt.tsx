@@ -1,0 +1,50 @@
+import React, { Component } from 'react';
+import { DialogContent, DialogContentText } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
+import { RegistryConsumer } from '@bem-react/di';
+import { withBemMod } from '@bem-react/core';
+
+import { communicationService } from '../../../../services/communication.service';
+import { CommonDiRegistry } from '../../../../services/di-registry';
+
+import { UtilityDialogContentProps, cnUtilityDialogContent } from '../UtilityDialog-Content.base';
+import { getDefaultValues } from '../../../Form/Form.utils';
+
+class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentProps> {
+  render() {
+    const {
+      className,
+      formId,
+      info: { message, schema }
+    } = this.props;
+
+    return (
+      <DialogContent className={className}>
+        <DialogContentText>{message}</DialogContentText>
+        <RegistryConsumer id='common'>
+          {({ Form }: CommonDiRegistry) => (
+            <Form
+              schema={schema}
+              id={formId}
+              auto
+              actionFunction={this.submitHandler}
+              value={getDefaultValues(schema.properties)}
+            />
+          )}
+        </RegistryConsumer>
+      </DialogContent>
+    );
+  }
+
+  @boundMethod
+  private submitHandler(formValue: unknown) {
+    const { id } = this.props.info;
+    communicationService.utilityDialogClosed.emit({ id, answer: true, formValue });
+  }
+}
+
+export const withTypeFormPrompt = withBemMod<UtilityDialogContentProps, UtilityDialogContentProps>(
+  cnUtilityDialogContent(),
+  { type: 'formPrompt' },
+  () => UtilityDialogContentTypeFormPrompt
+);

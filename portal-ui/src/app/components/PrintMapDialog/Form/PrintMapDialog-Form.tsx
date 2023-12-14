@@ -26,6 +26,7 @@ import '!style-loader!css-loader!sass-loader!../FormPart/PrintMapDialog-FormPart
 const cnPrintMapDialog = cn('PrintMapDialog');
 
 interface PrintMapDialogFormProps {
+  format?: string;
   onSubmit: () => void;
 }
 
@@ -94,12 +95,15 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
 
   @computed
   private get mainFields(): PropertySchema[] {
+    const { format } = this.props;
+
     return [
       {
         name: 'pageFormatId',
+        hidden: Boolean(format),
         title: 'Формат',
         propertyType: PropertyType.CHOICE,
-        options: pageFormats.map(({ id, name }) => ({ title: name, value: id }))
+        options: pageFormats.filter(({ name }) => name).map(({ id, name }) => ({ title: name || '', value: id }))
       },
       {
         name: 'scale',
@@ -110,6 +114,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
       {
         name: 'orientation',
         title: 'Ориентация',
+        hidden: Boolean(format),
         propertyType: PropertyType.CHOICE,
         options: orientations
       },
@@ -244,7 +249,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   }
 
   @action.bound
-  private handleFormChange(values: PrintSettings) {
+  private handleFormChange(values: Partial<ExtraFormValues | MainFormValues>) {
     printSettings.setValues(getPatch(values, printSettings, Object.keys(values)));
   }
 }

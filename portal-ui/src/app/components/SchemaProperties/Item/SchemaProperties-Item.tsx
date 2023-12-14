@@ -7,19 +7,19 @@ import {
   VisibilityOffOutlined,
   Check,
   FormatListBulletedOutlined,
-  AccessAlarmOutlined,
   ArticleOutlined,
   ContactMailOutlined,
   AttachFileOutlined,
   LooksOneOutlined,
   PinOutlined,
   SquareFootOutlined,
-  AbcOutlined,
   PersonOutline,
   PersonSearchOutlined,
   FingerprintOutlined,
   SvgIconComponent,
-  HttpOutlined
+  TextFieldsOutlined,
+  CalendarMonthOutlined,
+  LinkOutlined
 } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
@@ -32,15 +32,15 @@ const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
   const icons: Partial<Record<PropertyType, [SvgIconComponent, string]>> = {
     [PropertyType.BOOL]: [Check, 'Логическое'],
     [PropertyType.CHOICE]: [FormatListBulletedOutlined, 'Выбор'],
-    [PropertyType.DATETIME]: [AccessAlarmOutlined, 'Дата'],
+    [PropertyType.DATETIME]: [CalendarMonthOutlined, 'Дата'],
     [PropertyType.DOCUMENT]: [ArticleOutlined, 'Документ'],
     [PropertyType.FIAS]: [ContactMailOutlined, 'Адрес'],
     [PropertyType.FILE]: [AttachFileOutlined, 'Файл'],
     [PropertyType.FLOAT]: [LooksOneOutlined, 'Число (дробное)'],
     [PropertyType.GEOMETRY]: [SquareFootOutlined, 'Геометрия'],
     [PropertyType.INT]: [PinOutlined, 'Число (целое)'],
-    [PropertyType.STRING]: [AbcOutlined, 'Строка'],
-    [PropertyType.URL]: [HttpOutlined, 'Ссылка'],
+    [PropertyType.STRING]: [TextFieldsOutlined, 'Строка'],
+    [PropertyType.URL]: [LinkOutlined, 'Ссылка'],
     [PropertyType.USER]: [PersonOutline, 'Пользователь'],
     [PropertyType.USER_ID]: [PersonSearchOutlined, 'Идентификатор пользователя'],
     [PropertyType.UUID]: [FingerprintOutlined, 'Уникальный идентификатор']

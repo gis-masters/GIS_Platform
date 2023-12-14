@@ -1,49 +1,20 @@
 import { LibraryRecord } from '../data/library/library.models';
-import { schemaService } from '../data/schema/schema.service';
-import { Schema } from '../data/schema/schema.models';
-import { featureExtractRejectionTemplate } from './templates/featureExtractRejection';
-import { rawDataTemplate } from './templates/rawData';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
 
-export interface PrintTemplate {
-  name: string;
-  title: string;
-  margin: [number, number, number, number];
-  orientation: 'p' | 'portrait' | 'l' | 'landscape';
-  format: string | number[];
-  print(document: LibraryRecord, schema: Schema): string;
-}
+import { PrintTemplate } from './templates/PrintTemplate';
+import { rawDocumentData } from './templates/document/rawDocumentData';
+import { featureExtract } from './templates/feature/featureExtract';
+import { rawFeatureData } from './templates/feature/rawFeatureData';
 
-export const printTemplates: PrintTemplate[] = [featureExtractRejectionTemplate, rawDataTemplate];
+export const documentPrintTemplates: PrintTemplate<LibraryRecord>[] = [rawDocumentData];
+export const featurePrintTemplates: PrintTemplate<WfsFeature>[] = [rawFeatureData, featureExtract];
 
 export async function printDocument(document: LibraryRecord, templateName: string): Promise<void> {
-  const template = printTemplates.find(({ name }) => name === templateName);
-  const schema = await schemaService.getSchema(document.schemaId);
+  const template = documentPrintTemplates.find(({ name }) => name === templateName);
 
   if (!template) {
     throw `Не найден шаблон печати "${templateName}"`;
   }
 
-  const { default: jsPDF } = await import('jspdf');
-  const doc = new jsPDF(template.orientation, 'px', template.format);
-  doc.addFileToVFS('roboto.ttf', await getFont());
-  doc.addFont('roboto.ttf', 'roboto', 'normal');
-  doc.setFont('roboto');
-
-  await doc.html(template.print(document, schema), {
-    callback: pdf => {
-      pdf.save(document.title + '.pdf');
-    },
-    margin: template.margin
-  });
-}
-
-let font: string;
-
-async function getFont() {
-  if (!font) {
-    const response = await fetch('/assets/fonts/Roboto/Roboto-Regular.ttf.base64');
-    font = await response.text();
-  }
-
-  return font;
+  await template.print(document);
 }

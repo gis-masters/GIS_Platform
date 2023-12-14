@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { UtilityDialogInfo, utilityDialogsStore } from '../stores/UtilityDialogs.store';
 import { UtilityDialogCloseEventDetail, communicationService } from './communication.service';
+import { SimpleSchema } from './data/schema/schema.models';
 import { sleep } from './util/sleep';
 
 // диалог с сообщением, аналог alert
@@ -50,6 +51,21 @@ export async function prompto({
   const { value } = await doDialog({ id: uuid(), type: 'prompto', title, message, defaultValue, multiline });
 
   return value ?? null;
+}
+
+// диалог с формой, prompt на стероидах
+export async function formPrompt<T>({
+  title,
+  message,
+  schema
+}: {
+  title?: ReactNode;
+  message?: ReactNode;
+  schema?: SimpleSchema;
+}): Promise<T> {
+  const { formValue } = await doDialog({ id: uuid(), type: 'formPrompt', title, message, schema });
+
+  return formValue as T;
 }
 
 function doDialog(dialogData: UtilityDialogInfo) {

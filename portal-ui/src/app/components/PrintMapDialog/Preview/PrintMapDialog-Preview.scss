@@ -49,5 +49,12 @@
     &_a5 {
       --PrintMapDialogPreviewFormatFactor: 2px;
     }
+
+    &_square {
+      width: calc(var(--PrintMapDialogPreviewSizeFactor) * 240px);
+      height: calc(var(--PrintMapDialogPreviewSizeFactor) * 240px);
+
+      --PrintMapDialogPreviewFormatFactor: 1px;
+    }
   }
 }

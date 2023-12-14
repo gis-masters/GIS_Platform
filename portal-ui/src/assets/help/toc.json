@@ -222,11 +222,6 @@
             "contentUrl": "/assets/help/map/dataEdit/5addDocumentObject/05addDocumentObject.html"
           },
           {
-            "id": "featureExtract",
-            "title": "Создание документа-выписки об объекте",
-            "contentUrl": "/assets/help/map/dataEdit/12excerpt/12excerpt.html"
-          },
-          {
             "id": "deleteObject",
             "title": "Удаление объекта",
             "contentUrl": "/assets/help/map/dataEdit/6deleteObject/06deleteObject.html"

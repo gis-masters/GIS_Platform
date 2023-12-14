@@ -4,19 +4,25 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { printSettings } from '../../../stores/PrintSettings.store';
-import { PropertySchemaFile } from '../../../services/data/schema/schema.models';
-import { createFile } from '../../../services/data/files/files.service';
-import { FileInfo } from '../../../services/data/files/files.models';
-import { FormControlProps } from '../../Form/Control/Form-Control';
-import { PrintMapDialog } from '../../PrintMapDialog/PrintMapDialog';
-import { Button } from '../../Button/Button';
-import { Files } from '../../Files/Files';
+import { printSettings } from '../../stores/PrintSettings.store';
+import { PropertySchemaFile } from '../../services/data/schema/schema.models';
+import { createFile } from '../../services/data/files/files.service';
+import { FileInfo } from '../../services/data/files/files.models';
+import { FormControlProps } from '../Form/Control/Form-Control';
+import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
+import { Button } from '../Button/Button';
+import { Files } from '../Files/Files';
 
-const cnFeatureExtractMapSelector = cn('FeatureExtract', 'MapSelector');
+const cnPrintMapFileControl = cn('PrintMapFileControl');
+
+/**
+ * Этот компонент используется для отображения файла карты в форме.
+ *
+ * @deprecated — не используется, перед использованием отрефакторить, убрав дублирование кода с PrintMapImageControl
+ */
 
 @observer
-export class FeatureExtractMapSelector extends Component<FormControlProps> {
+export default class PrintMapFileControl extends Component<FormControlProps> {
   @observable private printDialogOpen = false;
   @observable private mapLoading = false;
 
@@ -39,7 +45,7 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
           />
         ) : (
           <Button
-            className={cnFeatureExtractMapSelector()}
+            className={cnPrintMapFileControl()}
             onClick={this.openPrintDialog}
             loading={this.mapLoading || printSettings.printingInProcess}
           >
@@ -47,7 +53,12 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
           </Button>
         )}
 
-        <PrintMapDialog onClose={this.closePrintDialog} open={this.printDialogOpen} onPrint={this.handlePrint} />
+        <PrintMapDialog
+          onClose={this.closePrintDialog}
+          open={this.printDialogOpen}
+          onPrint={this.handlePrint}
+          allowPdf
+        />
       </>
     );
   }
@@ -57,14 +68,14 @@ export class FeatureExtractMapSelector extends Component<FormControlProps> {
     const { onChange, property } = this.props;
     this.setMapLoading(true);
     const { id, size, title } = await createFile(new File([pdf], 'map.pdf'));
-    onChange({ value: [{ id, size, title }], propertyName: property.name });
+    onChange?.({ value: [{ id, size, title }], propertyName: property.name });
     this.setMapLoading(false);
   }
 
   @boundMethod
   private handleChange(value: FileInfo[]) {
     const { onChange, property } = this.props;
-    onChange({ value, propertyName: property.name });
+    onChange?.({ value, propertyName: property.name });
   }
 
   @action

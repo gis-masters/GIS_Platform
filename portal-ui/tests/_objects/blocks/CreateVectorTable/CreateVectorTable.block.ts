@@ -12,13 +12,12 @@ class CreateVectorTableBlock extends Block {
   async createTable(tableName: string): Promise<void> {
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.clickCreateLayerBtn();
-    await createVectorTableDialogBlock.waitForFormDialogDisplayed();
+    await createVectorTableDialogBlock.waitForVisible();
     await createVectorTableDialogBlock.setStringFieldValue('Наименование*', tableName);
     await createVectorTableDialogBlock.setChoiceFieldValue(
       'Координатная система*',
       'Pulkovo 1942 / Gauss-Kruger zone 6'
     );
-    await createVectorTableDialogBlock.waitForFormDialogClickable();
     await createVectorTableDialogBlock.openSchemaSelection();
     await selectSchemaControlDialogBlock.waitForSelectSchemaTableDisplay();
     await selectSchemaControlDialogBlock.clickSelectSchemaFirstOption();

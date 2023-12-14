@@ -3,9 +3,12 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { default as OlFeature } from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import * as DOMPurify from 'dompurify';
+import moment from 'moment';
 
 import { AppModule } from './app/app.module';
 import { environment, EnvironmentData } from './app/services/environment';
+
+moment.locale('ru');
 
 declare module 'react' {
   export interface CSSProperties {

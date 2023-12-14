@@ -31,7 +31,7 @@ export class PrintMapButton extends Component {
           </IconButton>
         </Tooltip>
 
-        <PrintMapDialog onClose={this.closeDialog} open={this.dialogOpen} directlyPrint allowJpg />
+        <PrintMapDialog onClose={this.closeDialog} open={this.dialogOpen} directlyPrint allowPdf allowJpg />
 
         <Loading className={cnPrintMapButton('Loading')} visible={printSettings.printingInProcess} />
       </>

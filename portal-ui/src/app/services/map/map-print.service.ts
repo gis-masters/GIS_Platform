@@ -47,8 +47,14 @@ export async function printMap(directly: boolean): Promise<Blob> {
   return pdf.output('blob');
 }
 
-export async function exportMap(): Promise<void> {
-  saveAsBlob('map.jpg', await getMapImage({ hideScaleDigits: true }));
+export async function exportMap(directly = false): Promise<string> {
+  const mapImage = await getMapImage({ hideScaleDigits: true });
+
+  if (directly) {
+    saveAsBlob('map.jpg', mapImage);
+  }
+
+  return mapImage;
 }
 
 export async function prepareMapCopying(): Promise<HTMLDivElement> {
@@ -393,7 +399,8 @@ async function getLegendImageSrc(resolution?: number): Promise<string> {
     rules: printSettings.legend.items,
     forPrint: true,
     resolution: resolution || printSettings.resolution,
-    resize: printSettings.legendSize * 1.3
+    resize: printSettings.legendSize * 1.3,
+    cleanDuplicates: true
   });
   root.render(reactElement);
   await sleep(0);

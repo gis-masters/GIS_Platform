@@ -10,9 +10,9 @@ export interface StyleRuleExtended extends StyleRule {
   layerTitle: string;
 }
 
-interface PageFormat {
+export interface PrintFormat {
   id: string;
-  name: string;
+  name?: string;
   width: number;
   height: number;
 }
@@ -28,7 +28,7 @@ export const resolutions = [72, 150, 300];
 
 export const scales = [500_000, 200_000, 100_000, 50_000, 25_000, 10_000, 5000, 2000, 1000, 500];
 
-export const pageFormats: PageFormat[] = [
+export const pageFormats: PrintFormat[] = [
   {
     id: 'a3',
     name: 'A3',
@@ -46,6 +46,11 @@ export const pageFormats: PageFormat[] = [
     name: 'A5',
     width: 210,
     height: 148
+  },
+  {
+    id: 'square',
+    width: 220,
+    height: 220
   }
 ];
 
@@ -100,24 +105,24 @@ const defaultPrintSettings: PrintSettings = {
 };
 
 class PrintSettingsStore implements PrintSettings {
-  @observable pageFormatId: string;
-  @observable resolution: number;
-  @observable scale: number;
-  @observable orientation: Orientation = 'l';
-  @observable printingInProcess: boolean;
+  @observable pageFormatId: string = defaultPrintSettings.pageFormatId;
+  @observable resolution: number = defaultPrintSettings.resolution;
+  @observable scale: number = defaultPrintSettings.scale;
+  @observable orientation: Orientation = defaultPrintSettings.orientation;
+  @observable printingInProcess: boolean = defaultPrintSettings.printingInProcess;
   @observable printingResolution = 0;
   @observable margin: {
     top: number;
     right: number;
     bottom: number;
     left: number;
-  };
-  @observable windRose: boolean;
-  @observable border: boolean;
-  @observable date: boolean;
-  @observable legend: LegendOptions;
-  @observable legendSize: number;
-  @observable showSystemLayers: { draft: boolean; measure: boolean };
+  } = defaultPrintSettings.margin;
+  @observable windRose: boolean = defaultPrintSettings.windRose;
+  @observable border: boolean = defaultPrintSettings.border;
+  @observable date: boolean = defaultPrintSettings.date;
+  @observable legend: LegendOptions = defaultPrintSettings.legend;
+  @observable legendSize: number = defaultPrintSettings.legendSize;
+  @observable showSystemLayers: { draft: boolean; measure: boolean } = defaultPrintSettings.showSystemLayers;
   @observable rotation = 0;
   @observable allLegend: StyleRuleExtended[] = [];
 
@@ -129,7 +134,6 @@ class PrintSettingsStore implements PrintSettings {
 
   private constructor() {
     makeObservable(this);
-    this.reset();
   }
 
   @computed
@@ -147,8 +151,14 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   @computed
-  get pageFormat(): PageFormat {
-    return pageFormats.find(({ id }) => id === this.pageFormatId);
+  get pageFormat(): PrintFormat {
+    const format = pageFormats.find(({ id }) => id === this.pageFormatId);
+
+    if (!format) {
+      throw new Error(`Неизвестный формат страницы: ${this.pageFormatId}`);
+    }
+
+    return format;
   }
 
   @computed
@@ -181,7 +191,7 @@ class PrintSettingsStore implements PrintSettings {
   }
 
   @action
-  setPrintingStatus(printingInProcess: boolean, printingResolution?: number) {
+  setPrintingStatus(printingInProcess: boolean, printingResolution = 0) {
     this.printingInProcess = printingInProcess;
     this.printingResolution = printingResolution;
   }

@@ -228,6 +228,7 @@
         "allowed": ["alphanumeric", "а-я", "А-Я", "А-я"]
       }
     ],
+    "regexp/strict": "off",
 
     // https://github.com/danielnixon/eslint-plugin-total-functions
     "total-functions/require-strict-mode": "off",

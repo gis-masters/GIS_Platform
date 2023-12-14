@@ -18,20 +18,6 @@ import { Toast } from '../../components/Toast/Toast';
 })
 export class RegisterComponent implements OnDestroy {
   errorMsg: string;
-  registrationForm = this.fb.group(
-    {
-      company: [null, Validators.required],
-      contactPhone: [null, Validators.required],
-      lastName: [null, Validators.required],
-      firstName: [null, Validators.required],
-      email: [null, [Validators.required, Validators.email]],
-      password: [null, [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]],
-      password_: [null, Validators.required]
-    },
-    {
-      validator: this.passwordMatch('password', 'password_')
-    }
-  );
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -44,6 +30,26 @@ export class RegisterComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  get registrationForm(): UntypedFormGroup {
+    return this.fb.group(
+      {
+        company: [null, Validators.required],
+        contactPhone: [null, Validators.required],
+        lastName: [null, Validators.required],
+        firstName: [null, Validators.required],
+        email: [null, [Validators.required, Validators.email]],
+        password: [
+          null,
+          [Validators.required, Validators.pattern('^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$')]
+        ],
+        password_: [null, Validators.required]
+      },
+      {
+        validator: this.passwordMatch('password', 'password_')
+      }
+    );
   }
 
   async onSubmit(): Promise<void> {

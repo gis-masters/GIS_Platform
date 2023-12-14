@@ -23,6 +23,7 @@ export interface UtilityDialogCloseEventDetail {
   id: string;
   answer?: boolean;
   value?: string;
+  formValue?: unknown;
 }
 
 class CommunicationService {
