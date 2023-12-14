@@ -51,6 +51,7 @@ public class CrgLayerValidator implements Validator {
             case "shp":
                 validateAsShp(errors, dto);
                 break;
+            case "tab":
             case "dxf":
                 validateAsDxf(errors, dto);
                 break;

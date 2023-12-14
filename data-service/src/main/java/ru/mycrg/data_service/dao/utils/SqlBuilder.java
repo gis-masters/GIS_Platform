@@ -191,41 +191,11 @@ public class SqlBuilder {
     }
 
     @NotNull
-    public static String buildFtsQuery(ResourceQualifier qualifier,
-                                       String ecqlFilter,
-                                       float bound,
-                                       @Nullable List<String> requestedTables,
-                                       @Nullable Pageable pageable) {
-        String ftsWhere = (requestedTables != null)
-                ? buildFtsWhere(ecqlFilter, bound, requestedTables)
-                : buildFtsWhere(ecqlFilter, bound);
-
-        String pQuery = "";
-        if (pageable != null) {
-            pQuery = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
-        }
-
-        String query = "" +
-                "SELECT " +
-                "  d.concatenated_data OPERATOR (public.<->) :searchedText as dist," +
-                "  d.schema," +
-                "  d.table," +
-                "  d.id " +
-                "FROM " + qualifier.getTableQualifier() + " AS d " +
-                " " + ftsWhere + " " +
-                "ORDER BY dist" +
-                pQuery;
-
-        return query;
-    }
-
-    @NotNull
-    public static String buildFtsQuery2(ResourceQualifier qualifier,
-                                        String ecqlFilter,
-                                        float bound,
-                                        @Nullable List<String> requestedTables,
-                                        @NotNull Set<String> words,
-                                        @Nullable Pageable pageable) {
+    public static String buildFtsLayersQuery(String ecqlFilter,
+                                             float bound,
+                                             @Nullable List<String> requestedTables,
+                                             @NotNull Set<String> words,
+                                             @Nullable Pageable pageable) {
         String ftsWhere = (requestedTables != null)
                 ? buildFtsWhere2(ecqlFilter, bound, requestedTables)
                 : buildFtsWhere2(ecqlFilter, bound);
@@ -257,9 +227,47 @@ public class SqlBuilder {
     }
 
     @NotNull
-    public static String buildLikeQuery(ResourceQualifier qualifier,
-                                        List<String> resources) {
-        String whereSection = "WHERE concatenated_data LIKE :searchedText";
+    public static String buildFtsDocumentsQuery(String ecqlFilter,
+                                                float bound,
+                                                @Nullable List<String> requestedTables,
+                                                @NotNull Set<String> words) {
+        String ftsWhere = (requestedTables != null)
+                ? buildFtsWhere2(ecqlFilter, bound, requestedTables)
+                : buildFtsWhere2(ecqlFilter, bound);
+
+        String query = "" +
+                "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+                "       subquery.schema, " +
+                "       subquery.table, " +
+                "       subquery.id," +
+                "       subquery.concatenated_data " +
+                "FROM (" +
+                "       SELECT ts_rank(d.vector_data, query) AS _rank_, " +
+                "              d.schema, " +
+                "              d.table, " +
+                "              d.id, " +
+                "              d.concatenated_data " +
+                "       FROM data.fts_documents AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
+                "   " + ftsWhere + " " +
+                "       ORDER BY _rank_ DESC" +
+                "     ) AS subquery " +
+                "ORDER BY dist ";
+
+        return query;
+    }
+
+    @NotNull
+    public static String buildCadastrNumberQuery(ResourceQualifier qualifier,
+                                                 List<String> resources,
+                                                 @Nullable String ecqlFilter,
+                                                 Pageable pageable) {
+        String whereSection = buildWhereSection(ecqlFilter);
+        if (whereSection.isBlank()) {
+            whereSection = "WHERE concatenated_data LIKE :searchedText";
+        } else {
+            whereSection = whereSection + " AND concatenated_data LIKE :searchedText";
+        }
+
         if (!resources.isEmpty()) {
             List<String> asString = resources.stream()
                                              .map(s -> "'" + s + "'")
@@ -268,15 +276,14 @@ public class SqlBuilder {
             whereSection = whereSection + " AND \"table\" IN (" + String.join(",", asString) + ")";
         }
 
-        return "SELECT * FROM data.fts_layers " + whereSection;
-    }
+        String pageSection = "";
+        if (pageable != null) {
+            pageSection = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
+        }
 
-    @NotNull
-    public static String buildFtsQuery(ResourceQualifier qualifier,
-                                       String ecqlFilter,
-                                       float bound,
-                                       List<String> requestedLibraryIds) {
-        return buildFtsQuery(qualifier, ecqlFilter, bound, requestedLibraryIds, null);
+        return "SELECT * FROM " + qualifier.getTableQualifier() + " "
+                + whereSection
+                + pageSection;
     }
 
     public static String buildFtsWhere(String ecqlFilter, float bound, List<String> resources) {

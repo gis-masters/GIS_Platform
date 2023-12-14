@@ -14,7 +14,6 @@ import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
-import ru.mycrg.data_service.dao.FtsDictionaryDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsDictionaryItem;
 import ru.mycrg.data_service.dto.FtsItem;
@@ -48,23 +47,23 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     private final TableService tableService;
     private final DatasetService datasetService;
     private final SchemaExtractor schemaExtractor;
-    private final FtsDictionaryDao ftsDictionaryDao;
     private final SpatialRecordsDao spatialRecordsDao;
+    private final FtsDictionaryService ftsDictionaryService;
     private final IAuthenticationFacade authenticationFacade;
 
     public FeatureSearchEngine(FtsDao ftsDao,
                                TableService tableService,
                                DatasetService datasetService,
                                SchemaExtractor schemaExtractor,
-                               FtsDictionaryDao ftsDictionaryDao,
                                SpatialRecordsDao spatialRecordsDao,
+                               FtsDictionaryService ftsDictionaryService,
                                IAuthenticationFacade authenticationFacade) {
         this.ftsDao = ftsDao;
         this.tableService = tableService;
         this.datasetService = datasetService;
         this.schemaExtractor = schemaExtractor;
-        this.ftsDictionaryDao = ftsDictionaryDao;
         this.spatialRecordsDao = spatialRecordsDao;
+        this.ftsDictionaryService = ftsDictionaryService;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -94,21 +93,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         // TODO: пустой список безсмысленен - запрос ничего не найдет.
         // Надо или искать по другому или возвращать return new PageImpl<>(new ArrayList<>(), pageable, 0);
         if (dictionaryWords == null) {
-            StopWatch wordsWatcher = new StopWatch();
-            wordsWatcher.start();
-
-            dictionaryWords = collectWordsFromDictionary(text)
-                    .stream()
-                    .filter(item -> item.getTypeId().equals(1))
-                    .map(FtsDictionaryItem::getWord)
-                    .collect(Collectors.toSet());
-
-            wordsWatcher.stop();
-            double totalTimeSeconds = wordsWatcher.getTotalTimeSeconds();
-            log.info("Для поискового запроса: '{}' в словаре найдены: \n" +
-                             "--- для поиска в слоях слова: {} \n" +
-                             "--- затраченное на поиск по словарю время: {} сек",
-                     text, dictionaryWords, totalTimeSeconds);
+            dictionaryWords = ftsDictionaryService.collectWordsForFeatures(text);
         }
 
         // Собственно основной поиск
@@ -119,7 +104,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                               null,
                                               text,
                                               dictionaryWords,
-                                              getBound(dto),
+                                              0f,
                                               pageable);
         foundWatcher.stop();
         double totalTimeSeconds = foundWatcher.getTotalTimeSeconds();
@@ -303,22 +288,5 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                          "geometryType", schema.getGeometryType().getType(),
                                          "schema", schema.getName()),
                                   feature.getProperties());
-    }
-
-    private Set<FtsDictionaryItem> collectWordsFromDictionary(String text) {
-        String trimedText = text.trim();
-        List<String> splitedText = Arrays.stream(trimedText.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
-                                         .collect(Collectors.toList());
-
-        if (splitedText.size() == 1) {
-            return new HashSet<>(ftsDictionaryDao.search(trimedText));
-        }
-
-        Set<FtsDictionaryItem> words = new HashSet<>();
-        for (String word: splitedText) {
-            words.addAll(ftsDictionaryDao.search(word, 6));
-        }
-
-        return words;
     }
 }

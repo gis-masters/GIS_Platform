@@ -130,7 +130,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     const { layer, schema } = this.props;
     const properties: PropertySchema[] = [...crgLayerSchema.properties];
 
-    if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.SHP) {
+    if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.SHP || layer.type === CrgLayerType.TAB) {
       properties.push({
         propertyType: PropertyType.CHOICE,
         name: 'styleName',

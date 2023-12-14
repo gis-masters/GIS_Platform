@@ -34,20 +34,27 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 @Component
 public class DocumentSearchEngine implements IFullTextSearchEngine {
 
+    private static final ResourceQualifier DOCUMENTS = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
+                                                                             "fts_documents",
+                                                                             LIBRARY);
+
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 
     private final FtsDao ftsDao;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DocumentLibraryService librariesService;
+    private final FtsDictionaryService ftsDictionaryService;
     private final IAuthenticationFacade authenticationFacade;
 
     public DocumentSearchEngine(FtsDao ftsDao,
                                 SpatialRecordsDao spatialRecordsDao,
                                 DocumentLibraryService librariesService,
+                                FtsDictionaryService ftsDictionaryService,
                                 IAuthenticationFacade authenticationFacade) {
         this.ftsDao = ftsDao;
         this.spatialRecordsDao = spatialRecordsDao;
         this.librariesService = librariesService;
+        this.ftsDictionaryService = ftsDictionaryService;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -63,25 +70,29 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
             return searchAsCadastrNumber(request);
         }
 
+        if (dictionaryWords == null) {
+            dictionaryWords = ftsDictionaryService.collectWordsForDocuments(text);
+        }
+
         List<FtsItem> byAllLibraries = new ArrayList<>();
+        Set<String> fDictionaryWords = dictionaryWords;
         getAllowedLibraries(dto)
                 .map(ResourceQualifier::libraryQualifier)
                 .forEach(libraryQualifier -> {
                     try {
                         log.debug("Поиск по библиотеке: [{}]", libraryQualifier);
 
-                        List<FtsItem> temp;
-                        if (authenticationFacade.isOrganizationAdmin()) {
-                            temp = ftsDao.searchWithPermissions(libraryQualifier, dto, getBound(dto));
-                        } else {
-                            RegistryData registryData = librariesService.prepareDataForRegistry(libraryQualifier);
-
-                            temp = ftsDao.searchWithPermissions(libraryQualifier,
-                                                                dto.getEcqlFilter(),
-                                                                text,
-                                                                getBound(dto),
-                                                                registryData);
+                        RegistryData registryData = null;
+                        if (!authenticationFacade.isOrganizationAdmin()) {
+                            registryData = librariesService.prepareDataForRegistry(libraryQualifier);
                         }
+
+                        List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
+                                                                          dto.getEcqlFilter(),
+                                                                          text,
+                                                                          0f,
+                                                                          fDictionaryWords,
+                                                                          registryData);
 
                         byAllLibraries.addAll(temp);
                     } catch (Exception e) {
@@ -109,8 +120,17 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     @Override
     public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
         Pageable pageable = request.getPageable();
+        FtsRequestDto dto = request.getFtsRequestDto();
 
-        return new PageImpl<>(new ArrayList<>(), pageable, pageable.getPageNumber());
+        List<String> allowedLibraries = getAllowedLibraries(dto).collect(Collectors.toList());
+        if (allowedLibraries.isEmpty()) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        List<FtsItem> founded = ftsDao.searchCadastrNumber(DOCUMENTS, allowedLibraries, null, dto.getText(), pageable);
+        List<FtsResponseDto> result = fetchEntities(founded).collect(Collectors.toList());
+
+        return new PageImpl<>(result, pageable, pageable.getPageNumber());
     }
 
     @Override

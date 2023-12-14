@@ -86,7 +86,7 @@ export function isDxfFile(file: FileInfo): boolean {
 export function isFileWithProjection(file: FileInfo): boolean {
   const ext = normalizeExtension(getFileExtension(file.title));
 
-  return ext === 'dxf' || ext === 'shp';
+  return ext === 'dxf' || ext === 'shp' || ext === 'tab';
 }
 
 export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] {

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
-import ru.mycrg.data_service.dao.FtsDictionaryDao;
-import ru.mycrg.data_service.dto.FtsDictionaryItem;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,16 +22,16 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
 
     private final Logger log = LoggerFactory.getLogger(AllPlaceSearchEngine.class);
 
-    private final FtsDictionaryDao ftsDictionaryDao;
     private final FeatureSearchEngine featureSearchEngine;
     private final DocumentSearchEngine documentSearchEngine;
+    private final FtsDictionaryService ftsDictionaryService;
 
-    public AllPlaceSearchEngine(FtsDictionaryDao ftsDictionaryDao,
-                                DocumentSearchEngine documentSearchEngine,
-                                FeatureSearchEngine featureSearchEngine) {
-        this.ftsDictionaryDao = ftsDictionaryDao;
+    public AllPlaceSearchEngine(DocumentSearchEngine documentSearchEngine,
+                                FeatureSearchEngine featureSearchEngine,
+                                FtsDictionaryService ftsDictionaryService) {
         this.documentSearchEngine = documentSearchEngine;
         this.featureSearchEngine = featureSearchEngine;
+        this.ftsDictionaryService = ftsDictionaryService;
     }
 
     @Override
@@ -45,32 +45,11 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
             return searchAsCadastrNumber(request);
         }
 
-        // Search words in dictionary
-        StopWatch wordsWatcher = new StopWatch();
-        wordsWatcher.start();
-
-        Set<FtsDictionaryItem> words = collectWordsFromDictionary(text);
-        Set<String> docWords = words.stream()
-                                    .filter(item -> item.getTypeId().equals(2))
-                                    .map(FtsDictionaryItem::getWord)
-                                    .collect(Collectors.toSet());
-        Set<String> layerWords = words.stream()
-                                      .filter(item -> item.getTypeId().equals(1))
-                                      .map(FtsDictionaryItem::getWord)
-                                      .collect(Collectors.toSet());
-
-        wordsWatcher.stop();
-        double totalTimeSeconds = wordsWatcher.getTotalTimeSeconds();
-        log.info("Для поискового запроса: '{}' в словаре найдены: \n" +
-                         "--- для поиска в слоях слова: {} \n" +
-                         "--- для поиска в документах слова: {}\n" +
-                         "--- затраченное на поиск по словарю время: {} сек",
-                 text, layerWords, docWords, totalTimeSeconds);
-
         // Search by documents
         StopWatch docWatcher = new StopWatch();
         docWatcher.start();
 
+        Set<String> docWords = ftsDictionaryService.collectWordsForDocuments(text);
         Page<FtsResponseDto> documents = documentSearchEngine.search(request, docWords);
 
         docWatcher.stop();
@@ -81,6 +60,7 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
         StopWatch layerWatcher = new StopWatch();
         layerWatcher.start();
 
+        Set<String> layerWords = ftsDictionaryService.collectWordsForFeatures(text);
         Page<FtsResponseDto> features = featureSearchEngine.search(request, layerWords);
 
         layerWatcher.stop();
@@ -117,22 +97,5 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
                                               .collect(Collectors.toList());
 
         return new PageImpl<>(result, pageable, documents.getTotalElements() + features.getTotalElements());
-    }
-
-    private Set<FtsDictionaryItem> collectWordsFromDictionary(String text) {
-        String trimedText = text.trim();
-        List<String> splitedText = Arrays.stream(trimedText.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
-                                         .collect(Collectors.toList());
-
-        if (splitedText.size() == 1) {
-            return new HashSet<>(ftsDictionaryDao.search(trimedText));
-        }
-
-        Set<FtsDictionaryItem> words = new HashSet<>();
-        for (String word: splitedText) {
-            words.addAll(ftsDictionaryDao.search(word, 6));
-        }
-
-        return words;
     }
 }

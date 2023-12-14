@@ -66,5 +66,5 @@ export function generateNextLayerId(): number {
 }
 
 export function isVectorFromFile(type: CrgLayerType): boolean {
-  return type === CrgLayerType.DXF || type === CrgLayerType.SHP;
+  return type === CrgLayerType.DXF || type === CrgLayerType.SHP || type === CrgLayerType.TAB;
 }

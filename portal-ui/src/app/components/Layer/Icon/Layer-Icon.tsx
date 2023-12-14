@@ -41,6 +41,11 @@ export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded
 
         break;
       }
+      case CrgLayerType.TAB: {
+        iconType = 'tab';
+
+        break;
+      }
       case CrgLayerType.SHP: {
         iconType = 'shp';
 

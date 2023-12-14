@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.PrincipalService;
@@ -82,7 +81,7 @@ public class FtsDao {
                                 @NotNull Set<String> words,
                                 float bound,
                                 Pageable pageable) {
-        String query = buildFtsQuery2(qualifier, ecqlFilter, 0f, requestedTables, words, pageable);
+        String query = buildFtsLayersQuery(ecqlFilter, bound, requestedTables, words, pageable);
 
         log.debug("fts v2 query by '{}': [{}]", qualifier.getQualifier(), query);
 
@@ -97,7 +96,7 @@ public class FtsDao {
                                              @Nullable String ecqlFilter,
                                              String text,
                                              Pageable pageable) {
-        String query = buildLikeQuery(qualifier, requestedTables);
+        String query = buildCadastrNumberQuery(qualifier, requestedTables, ecqlFilter, pageable);
 
         log.debug("Search cadastr number query: [{}]", query);
 
@@ -107,22 +106,19 @@ public class FtsDao {
         return pJdbcTemplate.query(query, parameters, new BeanPropertyRowMapper<>(FtsItem.class));
     }
 
-    public List<FtsItem> searchWithPermissions(ResourceQualifier qualifier, FtsRequestDto dto, float bound) {
-        return searchWithPermissions(qualifier, dto.getEcqlFilter(), dto.getText(), bound, null);
-    }
-
     public List<FtsItem> searchWithPermissions(ResourceQualifier libraryQualifier,
                                                String ecqlFilter,
                                                String text,
                                                float bound,
+                                               @NotNull Set<String> words,
                                                @Nullable RegistryData registryData) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return new ArrayList<>();
         }
 
-        String ftsQuery = buildFtsQuery(DOCUMENTS, ecqlFilter, bound, List.of(libraryQualifier.getTable()));
-        String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, ecqlFilter);
+        String ftsQuery = buildFtsDocumentsQuery(ecqlFilter, bound, List.of(libraryQualifier.getTable()), words);
+        String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, ecqlFilter, registryData);
 
         String resultQuery = "" +
                 "SELECT result.dist, result.schema, result.table, result.id " +

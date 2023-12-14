@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.publication.dxf.gis_layer;
+package ru.mycrg.integration_service.bpmn.publication.tab.gis_layer;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
+import ru.mycrg.integration_service.bpmn.publication.dxf.gis_layer.DxfLayer;
 import ru.mycrg.integration_service.bpmn.publication.dxf.store.CreateGeoserverStoreDto;
 
 import java.net.URL;
@@ -20,24 +21,26 @@ import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
-@Service("gisCreateDxfLayerDelegate")
-public class GisCreateDxfLayerDelegate implements JavaDelegate {
+@Service("gisCreateTabLayerDelegate")
+public class GisCreateTabLayerDelegate implements JavaDelegate {
 
-    private final Logger log = LoggerFactory.getLogger(GisCreateDxfLayerDelegate.class);
+    private final Logger log = LoggerFactory.getLogger(GisCreateTabLayerDelegate.class);
 
     private final BaseHttpService baseHttpService;
 
-    public GisCreateDxfLayerDelegate(BaseHttpService baseHttpService) {
+    public GisCreateTabLayerDelegate(BaseHttpService baseHttpService) {
         this.baseHttpService = baseHttpService;
     }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        log.debug("execute gisCreateDxfLayerDelegate");
+        log.debug("execute GisCreateTabLayerDelegate");
 
         try {
             String token = (String) execution.getVariable(TOKEN_VAR_NAME);
             DxfLayer dto = (DxfLayer) execution.getVariable("DxfLayer");
+            dto.setType("tab");
+
             CreateGeoserverStoreDto storeDto =
                     (CreateGeoserverStoreDto) execution.getVariable("CreateGeoserverStoreDto");
             dto.setDataStoreName(storeDto.getStoreName());
@@ -50,7 +53,7 @@ public class GisCreateDxfLayerDelegate implements JavaDelegate {
 
             Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
-                log.debug("Successfully created DXF layer with params: [{}]", dto);
+                log.debug("Successfully created TAB layer with params: [{}]", dto);
 
                 execution.setVariable(IS_CREATED_VAR_NAME, true);
             } else {
@@ -61,7 +64,7 @@ public class GisCreateDxfLayerDelegate implements JavaDelegate {
                 execution.setVariable(FAIL_REASON, failMsg);
             }
         } catch (Exception e) {
-            log.error(format("Failed to execute step: 'gisCreateDxfLayerDelegate'. Cause: %s", e.getMessage()), e);
+            log.error(format("Failed to execute step: 'gisCreateTabLayerDelegate'. Cause: %s", e.getMessage()), e);
 
             execution.setVariable(IS_CREATED_VAR_NAME, false);
             execution.setVariable(FAIL_REASON, baseFailMsg());
@@ -70,6 +73,6 @@ public class GisCreateDxfLayerDelegate implements JavaDelegate {
 
     @NotNull
     private String baseFailMsg() {
-        return "Не удалось создать DXF слой на gis сервисе";
+        return "Не удалось создать TAB слой на gis сервисе";
     }
 }

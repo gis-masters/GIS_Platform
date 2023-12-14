@@ -9,7 +9,8 @@ public enum BpmnProcessKey {
     CLEAR_GROUP_PERMISSIONS("integration_clearGroupPermissionProcess"),
     REFERENCE_LAYER_DELETION_PROCESS("integration_layerDeleteProcess"),
     DXF_PLACEMENT_PROCESS("integration_dxfPlacementProcess"),
-    SHP_PLACEMENT_PROCESS("integration_shpPlacementProcess");
+    SHP_PLACEMENT_PROCESS("integration_shpPlacementProcess"),
+    TAB_PLACEMENT_PROCESS("integration_tabPlacementProcess");
 
     private final String value;
 

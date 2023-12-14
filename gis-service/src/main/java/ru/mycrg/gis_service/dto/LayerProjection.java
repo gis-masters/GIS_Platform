@@ -27,6 +27,7 @@ public class LayerProjection {
     private final String view;
     private final String errorText;
     private final String style;
+    private final String photoMode;
 
     public LayerProjection(Layer layer, String orgWorkspaceName) {
         this.id = layer.getId();
@@ -52,6 +53,7 @@ public class LayerProjection {
         this.view = layer.getView();
         this.errorText = layer.getErrorText();
         this.style = layer.getStyle();
+        this.photoMode = layer.getPhotoMode();
     }
 
     public Long getId() {
@@ -144,5 +146,9 @@ public class LayerProjection {
 
     public String getStyle() {
         return style;
+    }
+
+    public String getPhotoMode() {
+        return photoMode;
     }
 }

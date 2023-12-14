@@ -10,8 +10,8 @@ import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
-import ru.mycrg.data_service_contract.queue.request.PlaceDxfFileEvent;
-import ru.mycrg.data_service_contract.queue.response.DxfPlacedSucceededEvent;
+import ru.mycrg.data_service_contract.queue.request.PlaceTabFileEvent;
+import ru.mycrg.data_service_contract.queue.response.TabPlacedSucceededEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
@@ -19,20 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
-import static ru.mycrg.data_service.service.processes.FileType.DXF;
+import static ru.mycrg.data_service.service.processes.FileType.TAB;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Service
-public class DxfPlacedSucceededEventHandler implements IEventHandler {
+public class TabPlacedSucceededEventHandler implements IEventHandler {
 
-    private final Logger log = LoggerFactory.getLogger(DxfPlacedSucceededEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(TabPlacedSucceededEventHandler.class);
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
-    public DxfPlacedSucceededEventHandler(ProcessService processService,
+    public TabPlacedSucceededEventHandler(ProcessService processService,
                                           WsNotificationService wsNotificationService) {
         this.processService = processService;
         this.wsNotificationService = wsNotificationService;
@@ -40,14 +40,14 @@ public class DxfPlacedSucceededEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return DxfPlacedSucceededEvent.class.getSimpleName();
+        return TabPlacedSucceededEvent.class.getSimpleName();
     }
 
     @Override
     public void handle(IMessageBusEvent mqEvent) {
         try {
-            DxfPlacedSucceededEvent event = (DxfPlacedSucceededEvent) mqEvent;
-            PlaceDxfFileEvent requestEvent = event.getPlaceDxfFileEvent();
+            TabPlacedSucceededEvent event = (TabPlacedSucceededEvent) mqEvent;
+            PlaceTabFileEvent requestEvent = event.getPlaceTabFileEvent();
 
             ImportLayerReport layerReport = new ImportLayerReport(requestEvent.getFeatureName());
             layerReport.setSuccess(true);
@@ -62,7 +62,7 @@ public class DxfPlacedSucceededEventHandler implements IEventHandler {
             importReport.setImportLayerReports(reports);
 
             wsNotificationService.send(
-                    new WsMessageDto<>(join(IMPORT.name(), DXF.name()),
+                    new WsMessageDto<>(join(IMPORT.name(), TAB.name()),
                                        new WsImportModel(requestEvent.getWsMsgId(), DONE, importReport, "Успех")),
                     requestEvent.getWsUiId()
             );
@@ -72,7 +72,7 @@ public class DxfPlacedSucceededEventHandler implements IEventHandler {
 
             log.debug("Процесс успешно завершен");
         } catch (Exception e) {
-            log.error("Не удалось корректно обработать DxfPlacedSucceededEventHandler. Причина: {}", e.getMessage());
+            log.error("Не удалось корректно обработать TabPlacedSucceededEventHandler. Причина: {}", e.getMessage());
         }
     }
 }

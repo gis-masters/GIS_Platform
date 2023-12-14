@@ -4,6 +4,7 @@ import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
 export enum CrgLayerType {
   VECTOR = 'vector',
   DXF = 'dxf',
+  TAB = 'tab',
   SHP = 'shp',
   RASTER = 'raster',
   EXTERNAL = 'external',

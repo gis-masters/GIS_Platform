@@ -7,7 +7,9 @@ import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public interface IFullTextSearchEngine {
@@ -19,6 +21,12 @@ public interface IFullTextSearchEngine {
     float DEFAULT_BOUND = 0.93f;
 
     String CADASTR_NUMBER_PATTERN = "\\d{2}:\\d{2}:\\d{6,7}:\\d+";
+
+    Set<String> stopWords = new HashSet<>() {{
+        add("ул");
+    }};
+
+    Predicate<String> notInStopWords = o -> !stopWords.contains(o);
 
     Comparator<FtsResponseDto> ftsBoundComparator = (i1, i2) -> Float.compare(i1.getValue(), i2.getValue());
 

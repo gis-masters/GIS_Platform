@@ -33,7 +33,7 @@ public class PlaceDxfFileEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "PlaceDxfFileEvent";
+        return PlaceDxfFileEvent.class.getSimpleName();
     }
 
     @Override

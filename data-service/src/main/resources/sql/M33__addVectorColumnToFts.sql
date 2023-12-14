@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS data.fts_dictionary
 (
     word    character varying NOT NULL,
     type_id smallint          NOT NULL,
-    CONSTRAINT unique_words UNIQUE (word),
+    CONSTRAINT unique_words UNIQUE (word, type_id),
     CONSTRAINT pk_dictionary_type_id FOREIGN KEY (type_id)
         REFERENCES data.fts_dictionary_types (id) MATCH SIMPLE
         ON UPDATE NO ACTION

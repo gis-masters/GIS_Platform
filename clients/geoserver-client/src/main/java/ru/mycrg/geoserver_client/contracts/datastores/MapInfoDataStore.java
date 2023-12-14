@@ -6,7 +6,8 @@ import java.util.Map;
 public class MapInfoDataStore extends BaseParameterizedDataStore<Map<String, Object>> {
 
     /**
-     * Create MapInfo dataStore with default connection parameters.
+     * Create
+     * MapInfo dataStore with default connection parameters.
      *
      * @param name       Data store name
      * @param pathToFile inner path to file like "/opt/geoserver/data_dir/some.mid".
