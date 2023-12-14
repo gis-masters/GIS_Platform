@@ -467,6 +467,24 @@
 
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>egrn_cadastrial_plans_1_1_2</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/egrn_cadastrial_plans_1_1_2/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
+
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 

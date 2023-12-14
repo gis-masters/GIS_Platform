@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
+import ru.mycrg.data_service.service.smev3.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsRequestService;
@@ -25,11 +26,15 @@ public class Smev3RequestController {
 
     private final ReceiptRnsRequestService receiptRnsService;
     private final RegisterRnsRequestService registerRnsService;
+    private final GetCadastrialPlanRequestService getCadastrialPlanRequestService;
     private final SmevMessageService storageService;
 
-    public Smev3RequestController(ReceiptRnsRequestService receiptRnsService, RegisterRnsRequestService registerRnsService, SmevMessageService storageService) {
+    public Smev3RequestController(ReceiptRnsRequestService receiptRnsService, RegisterRnsRequestService registerRnsService,
+                                  GetCadastrialPlanRequestService getCadastrialPlanRequestService,
+                                  SmevMessageService storageService) {
         this.receiptRnsService = receiptRnsService;
         this.registerRnsService = registerRnsService;
+        this.getCadastrialPlanRequestService = getCadastrialPlanRequestService;
         this.storageService = storageService;
     }
 
@@ -39,6 +44,22 @@ public class Smev3RequestController {
     @GetMapping("/request/meta/{id}")
     public ResponseEntity<XmlBuildMeta> getMeta(@PathVariable UUID id) {
         return ResponseEntity.ok(storageService.getMeta(id));
+    }
+
+    /**
+     * Отправить запрос в ЕГРН для получения КПТ
+     */
+    @GetMapping("/request/egrn")
+    public ResponseEntity<XmlBuildMeta> getCadastrialPlan(@RequestParam String requestFilename,
+                                                          @RequestParam String appFilename,
+                                                          @RequestParam String passportFilename,
+                                                          @RequestParam String archiveFilename) {
+        var response = getCadastrialPlanRequestService
+                .request(requestFilename,
+                        appFilename,
+                        passportFilename,
+                        archiveFilename);
+        return ResponseEntity.ok(response);
     }
 
     /**
