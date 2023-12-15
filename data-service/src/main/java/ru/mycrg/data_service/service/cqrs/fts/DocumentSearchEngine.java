@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
@@ -63,7 +64,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         log.info("Document searcher: {}, with dictionary: [{}]", request, dictionaryWords);
 
         FtsRequestDto dto = request.getFtsRequestDto();
-        String text = dto.getText().trim();
+        String text = getSearchedText(request);
         if (isCadastrNumber(text)) {
             log.debug("Поиск в документах кадастрового номера: '{}'", text);
 
@@ -73,6 +74,9 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         if (dictionaryWords == null) {
             dictionaryWords = ftsDictionaryService.collectWordsForDocuments(text);
         }
+
+        StopWatch docWatcher = new StopWatch();
+        docWatcher.start();
 
         List<FtsItem> byAllLibraries = new ArrayList<>();
         Set<String> fDictionaryWords = dictionaryWords;
@@ -100,6 +104,10 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                                   libraryQualifier.getQualifier(), e.getMessage());
                     }
                 });
+
+        docWatcher.stop();
+        double docTotal = docWatcher.getTotalTimeSeconds();
+        log.debug("Поиск по документам занял: {} сек", docTotal);
 
         List<FtsResponseDto> allSortedEntities = fetchEntities(byAllLibraries)
                 .sorted(ftsBoundComparator)

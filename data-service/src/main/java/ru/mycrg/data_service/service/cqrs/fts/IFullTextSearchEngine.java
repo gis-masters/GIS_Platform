@@ -24,11 +24,17 @@ public interface IFullTextSearchEngine {
 
     Set<String> stopWords = new HashSet<>() {{
         add("ул");
+        add("90");
     }};
 
     Predicate<String> notInStopWords = o -> !stopWords.contains(o);
 
     Comparator<FtsResponseDto> ftsBoundComparator = (i1, i2) -> Float.compare(i1.getValue(), i2.getValue());
+
+    default String getSearchedText(FtsRequest request) {
+        return request.getFtsRequestDto().getText()
+                      .replaceAll("[^A-Za-zА-Яа-я0-9:]", "");
+    }
 
     default float getBound(FtsRequestDto dto) {
         return dto.getBound() != null ? dto.getBound() : DEFAULT_BOUND;

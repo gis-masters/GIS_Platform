@@ -38,34 +38,27 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
     public Page<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
         log.info("AllPlaceSearcher: {}", request);
 
-        String text = request.getFtsRequestDto().getText().trim();
+        String text = getSearchedText(request);
         if (isCadastrNumber(text)) {
             log.debug("Поисковый запрос: '{}' определен как кадастровый номер", request.getFtsRequestDto().getText());
 
             return searchAsCadastrNumber(request);
         }
 
-        // Search by documents
-        StopWatch docWatcher = new StopWatch();
-        docWatcher.start();
+        StopWatch watcher = new StopWatch();
+        watcher.start();
 
+        // Search by documents
         Set<String> docWords = ftsDictionaryService.collectWordsForDocuments(text);
         Page<FtsResponseDto> documents = documentSearchEngine.search(request, docWords);
 
-        docWatcher.stop();
-        double docTotal = docWatcher.getTotalTimeSeconds();
-        log.debug("Поиск по документам занял: {} сек", docTotal);
-
         // Search by layers
-        StopWatch layerWatcher = new StopWatch();
-        layerWatcher.start();
-
-        Set<String> layerWords = ftsDictionaryService.collectWordsForFeatures(text);
+         Set<String> layerWords = ftsDictionaryService.collectWordsForFeatures(text);
         Page<FtsResponseDto> features = featureSearchEngine.search(request, layerWords);
 
-        layerWatcher.stop();
-        double layerTotal = layerWatcher.getTotalTimeSeconds();
-        log.debug("Поиск по слоям занял: {} сек", layerTotal);
+        watcher.stop();
+        double docTotal = watcher.getTotalTimeSeconds();
+        log.debug("Общий поиск занял: {} сек", docTotal);
 
         return combineResults(request.getPageable(), documents, features);
     }

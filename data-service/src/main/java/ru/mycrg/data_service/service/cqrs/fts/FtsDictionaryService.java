@@ -17,6 +17,8 @@ import static ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine.notIn
 @Service
 public class FtsDictionaryService {
 
+    public static final int LIMIT = 8;
+
     private final Logger log = LoggerFactory.getLogger(FtsDictionaryService.class);
 
     private final FtsDictionaryDao ftsDictionaryDao;
@@ -59,14 +61,30 @@ public class FtsDictionaryService {
                                          .collect(Collectors.toList());
 
         if (splitedText.size() == 1) {
-            return new HashSet<>(ftsDictionaryDao.search(trimedText));
+            return new HashSet<>(ftsDictionaryDao.search(trimedText, LIMIT));
         }
 
         Set<FtsDictionaryItem> words = new HashSet<>();
         for (String word: splitedText) {
-            words.addAll(ftsDictionaryDao.search(word, 6));
+            List<FtsDictionaryItem> allFound = ftsDictionaryDao.search(word, LIMIT);
+            if (hazAbsoluteWords(allFound)) {
+                List<FtsDictionaryItem> onlyAbsolute = allFound.stream()
+                                                                      .filter(item -> item.getDist().equals(0f))
+                                                                      .collect(Collectors.toList());
+
+                words.addAll(onlyAbsolute);
+            } else {
+                words.addAll(allFound);
+            }
         }
 
         return words;
+    }
+
+    /**
+     * Проверим есть ли в выборке элементы с точным совпадением - это те у которых dist = 0
+     */
+    private boolean hazAbsoluteWords(List<FtsDictionaryItem> dictionaryItems) {
+        return dictionaryItems.get(0).getDist().equals(0f);
     }
 }

@@ -6,6 +6,7 @@ public class FtsDictionaryItem {
 
     private String word;
     private Integer typeId;
+    private Float dist;
 
     public FtsDictionaryItem() {
         // Required
@@ -25,6 +26,14 @@ public class FtsDictionaryItem {
 
     public void setTypeId(Integer typeId) {
         this.typeId = typeId;
+    }
+
+    public Float getDist() {
+        return dist;
+    }
+
+    public void setDist(float dist) {
+        this.dist = dist;
     }
 
     @Override
@@ -48,7 +57,8 @@ public class FtsDictionaryItem {
     public String toString() {
         return "{" +
                 "\"word\":" + (word == null ? "null" : "\"" + word + "\"") + ", " +
-                "\"typeId\":" + (typeId == null ? "null" : "\"" + typeId + "\"") +
+                "\"typeId\":" + (typeId == null ? "null" : "\"" + typeId + "\"") + ", " +
+                "\"dist\":\"" + dist + "\"" +
                 "}";
     }
 }

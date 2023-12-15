@@ -15,7 +15,6 @@ import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dto.FtsDictionaryItem;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -73,7 +72,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         log.info("FeatureSearcher: {}, with dictionary: [{}]", request, dictionaryWords);
 
         FtsRequestDto dto = request.getFtsRequestDto();
-        String text = dto.getText().trim();
+        String text = getSearchedText(request);
 
         // Если кадастровый номер, то все упростим
         if (isCadastrNumber(text)) {
@@ -108,7 +107,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                               pageable);
         foundWatcher.stop();
         double totalTimeSeconds = foundWatcher.getTotalTimeSeconds();
-        log.debug("Поиск выполнен за: {} сек", totalTimeSeconds);
+        log.debug("Поиск по слоям выполнен за: {} сек", totalTimeSeconds);
 
         // Long total = ftsDao.countTotal(LAYERS, allowedTables, null, text, getBound(dto));
 

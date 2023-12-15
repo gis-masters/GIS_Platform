@@ -281,9 +281,18 @@ public class SqlBuilder {
             pageSection = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
         }
 
-        return "SELECT * FROM " + qualifier.getTableQualifier() + " "
-                + whereSection
-                + pageSection;
+        String subSelect = "SELECT * FROM " + qualifier.getTableQualifier() + " " + whereSection;
+
+        return "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+                "      subquery.schema," +
+                "      subquery.table," +
+                "      subquery.id " +
+                "FROM " +
+                "  (" +
+                "    " + subSelect +
+                "  ) AS subquery " +
+                "ORDER BY dist " +
+                pageSection;
     }
 
     public static String buildFtsWhere(String ecqlFilter, float bound, List<String> resources) {
