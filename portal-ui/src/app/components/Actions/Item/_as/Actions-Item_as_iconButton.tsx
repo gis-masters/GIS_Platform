@@ -17,7 +17,8 @@ const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
   download,
   onClick,
   submenu,
-  loading
+  loading,
+  size
 }) => (
   <Tooltip title={title} enterDelay={600}>
     {submenu ? (
@@ -33,6 +34,7 @@ const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
         href={url}
         download={download}
         loading={loading}
+        size={size}
       >
         {icon}
       </IconButton>

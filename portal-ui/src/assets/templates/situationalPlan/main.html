@@ -1,0 +1,33 @@
+<table width="100%" >
+  <tr style="font-size: 10px; text-align: center">
+    <th>
+      <span style="color: gray">Схема расположения объектов</span>
+      ({{title}})
+    </th>
+  </tr>
+  <tr>
+    <th style="text-align: right; font-size: 10px">{{currentDate}}</th>
+  </tr>
+  <tr>
+    <td>
+      <img style="margin: 3px 0 0 24px; width: 560px; height: auto" src="{{image}}" alt="" />
+    </td>
+  </tr>
+  <tr>
+    <th style="font-size: 10px">
+      <span style="color: gray">Список объектов</span>
+      ({{title}})
+    </th>
+  </tr>
+  <tr>
+    <td>
+      <table style="font-size: 7px" border="1" cellspacing="0">
+        <tr>
+          <td></td>
+          {{tableHeaders}}
+        </tr>
+        {{tableRows}}
+      </table>
+    </td>
+  </tr>
+</table>

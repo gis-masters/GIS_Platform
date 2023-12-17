@@ -2,6 +2,8 @@ import React, { FC, ReactNode } from 'react';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 
+import { IconButtonProps } from '../../IconButton/IconButton';
+
 export const cnActionsItem = cn('Actions', 'Item');
 
 export type ActionsItemVariant = 'button' | 'iconButton' | 'menu';
@@ -18,6 +20,7 @@ export interface ActionsItemProps extends IClassNameProps {
   onClick?(): void;
   submenu?: ReactNode[];
   menuOpen?: boolean;
+  size?: IconButtonProps['size']
 }
 
 export const ActionsItemBase: FC<ActionsItemProps> = () => <></>;

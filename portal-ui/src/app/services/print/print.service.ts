@@ -5,9 +5,11 @@ import { PrintTemplate } from './templates/PrintTemplate';
 import { rawDocumentData } from './templates/document/rawDocumentData';
 import { featureExtract } from './templates/feature/featureExtract';
 import { rawFeatureData } from './templates/feature/rawFeatureData';
+import { situationalPlan } from './templates/featuresCollection/situationalPlan';
 
 export const documentPrintTemplates: PrintTemplate<LibraryRecord>[] = [rawDocumentData];
 export const featurePrintTemplates: PrintTemplate<WfsFeature>[] = [rawFeatureData, featureExtract];
+export const featuresCollectionPrintTemplates: PrintTemplate<WfsFeature[]>[] = [situationalPlan];
 
 export async function printDocument(document: LibraryRecord, templateName: string): Promise<void> {
   const template = documentPrintTemplates.find(({ name }) => name === templateName);

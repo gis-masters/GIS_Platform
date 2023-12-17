@@ -51,7 +51,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
               color={allowPdf ? 'secondary' : 'primary'}
               type={allowPdf ? 'button' : 'submit'}
             >
-              {directlyPrint ? 'Экспорт в JPG' : 'Выбор (JPG)'}
+              {directlyPrint ? 'Экспорт в JPG' : 'Выбор'}
             </Button>
           )}
           {allowPdf && (

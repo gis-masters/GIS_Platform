@@ -9,6 +9,7 @@ import { cn } from '@bem-react/classname';
 import { PrintTemplate } from '../../services/print/templates/PrintTemplate';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
+import { IconButtonProps } from '../IconButton/IconButton';
 
 import { PrintActionDialog } from './Dialog/PrintAction-Dialog';
 
@@ -18,6 +19,7 @@ interface PrintActionProps<T> extends IClassNameProps {
   entity: T;
   templates: PrintTemplate<T>[];
   as: ActionsItemVariant;
+  size?: IconButtonProps['size'];
 }
 
 @observer
@@ -31,18 +33,19 @@ export class PrintAction<T> extends Component<PrintActionProps<T>> {
   }
 
   render() {
-    const { as, className, templates, entity } = this.props;
+    const { as, size, className, templates, entity } = this.props;
     const title = (templates.length === 1 ? templates[0].title : 'Печать') + ' (PDF)';
 
     return (
       <>
         <ActionsItem
-          icon={this.selectTemplateDialogOpen ? <Print /> : <PrintOutlined />}
+          icon={this.selectTemplateDialogOpen ? <Print fontSize={size} /> : <PrintOutlined fontSize={size} />}
           className={cnPrintAction(null, [className])}
           title={title}
           as={as}
           loading={this.busy}
           disabled={this.busy}
+          size={size}
           onClick={this.handlePrintButtonClick}
         />
 

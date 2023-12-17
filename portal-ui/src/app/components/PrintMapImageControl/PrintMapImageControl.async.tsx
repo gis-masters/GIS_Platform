@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { printSettings } from '../../stores/PrintSettings.store';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { PropertySchemaCustom } from '../../services/data/schema/schema.models';
 import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
+import { FormControlProps } from '../Form/Control/Form-Control';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapImageControl.scss';
@@ -24,7 +25,8 @@ export default class PrintMapImageControl extends Component<FormControlProps> {
   }
 
   render() {
-    const { fieldValue } = this.props;
+    const { fieldValue, property } = this.props;
+    const { format } = property as PropertySchemaCustom;
 
     return (
       <>
@@ -49,7 +51,7 @@ export default class PrintMapImageControl extends Component<FormControlProps> {
           onClose={this.closePrintDialog}
           open={this.printDialogOpen}
           onExport={this.handleExport}
-          format='square'
+          format={typeof format === 'string' ? format : 'square'}
           allowJpg
         />
       </>

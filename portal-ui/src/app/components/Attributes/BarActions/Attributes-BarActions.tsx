@@ -7,22 +7,25 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
 
-import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
-import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { mapStore } from '../../../stores/Map.store';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
+import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
 import { mapService } from '../../../services/map/map.service';
-import { IconButton } from '../../IconButton/IconButton';
 import { PageOptions } from '../../../services/models';
+import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
+import { PrintAction } from '../../PrintAction/PrintAction';
 import { XTableColumn } from '../../XTable/XTable.models';
+import { IconButton } from '../../IconButton/IconButton';
 import { Button } from '../../Button/Button';
+
+import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
+import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';
 
@@ -94,13 +97,22 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
           </>
         )}
         {!!featuresTotal && (
-          <AttributesBarActionExport
-            layer={layer}
-            cols={cols}
-            pageOptions={pageOptions}
-            featuresTotal={featuresTotal}
-            getData={getData}
-          />
+          <>
+            <AttributesBarActionExport
+              layer={layer}
+              cols={cols}
+              pageOptions={pageOptions}
+              featuresTotal={featuresTotal}
+              getData={getData}
+            />
+
+            <PrintAction<WfsFeature[]>
+              as='iconButton'
+              entity={this.selectedFeatures}
+              templates={featuresCollectionPrintTemplates}
+              size='small'
+            />
+          </>
         )}
         <Dialog open={this.multipleDeleteDialogOpen} onClose={this.closeMultipleDeleteDialog}>
           <DialogContent>
