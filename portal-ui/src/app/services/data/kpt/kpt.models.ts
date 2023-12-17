@@ -3,3 +3,7 @@ export interface KptTaskInfo {
   folder: boolean;
   content: Record<string, string>;
 }
+
+export interface KptRequestInfo {
+  clientId: string;
+}

@@ -27,6 +27,7 @@ import { ExplorerService } from '../../Explorer.service';
 import { ExplorerStore } from '../../Explorer.store';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
+import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -214,6 +215,7 @@ export class ExplorerAdapterTypeFolder {
 
     return (
       <>
+        {currentItem.libraryTableName === 'dl_data_kpt' && <LibraryKptRequest path={path} />}
         {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
         {store.explorerRole === 'dm' && (
           <>
