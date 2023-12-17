@@ -17,14 +17,18 @@ import { Button, ButtonProps } from '../Button/Button';
 import { FormRole } from '../Form/Form.async';
 import { FormProps } from '../Form/Form';
 
+import '!style-loader!css-loader!sass-loader!./FormDialog.scss';
+
 const cnFormDialog = cn('FormDialog');
 
 export interface FormDialogProps<T> extends IClassNameProps {
   title?: ReactNode;
+  subtitle?: ReactNode;
   schema: Schema | SimpleSchema;
   value?: Partial<T>;
   open: boolean;
   unclosable?: boolean;
+  disabled?: boolean;
   afterForm?: ReactNode;
   formRole?: FormRole;
   onClose(): void;
@@ -60,9 +64,11 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
   render() {
     const {
       title,
+      subtitle,
       className,
       open,
       unclosable = false,
+      disabled = false,
       schema,
       formRole,
       value = getDefaultValues(schema.properties),
@@ -84,6 +90,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
         maxWidth='md'
       >
         {title && <DialogTitle>{title}</DialogTitle>}
+        {subtitle && <div className={cnFormDialog('Subtitle')}>{subtitle}</div>}
         <DialogContent className='scroll'>
           <RegistryConsumer id='common'>
             {({ Form }: CommonDiRegistry) => (
@@ -108,7 +115,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
         <DialogActions>
           <ActionsLeft>{additionalAction}</ActionsLeft>
           <ActionsRight>
-            <Button form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
+            <Button disabled={disabled} form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
               {actionButtonProps.children || 'Отправить'}
             </Button>
             {!unclosable && (

@@ -33,6 +33,7 @@ import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentAction
 import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
 import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActionsCreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
+import { LibraryDocumentActionsImportKpt } from './ImportKpt/LibraryDocumentActions-ImportKpt';
 
 export const cnLibraryDocumentActions = cn('LibraryDocumentActions');
 
@@ -81,6 +82,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
 
     return (
       <Actions className={cnLibraryDocumentActions({ forDialog }, [className])} as={as}>
+        {canEdit && <LibraryDocumentActionsImportKpt document={this.document || document} as={as} />}
         {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
         {!isNew && canEdit && (

@@ -245,8 +245,17 @@ async function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier:
   return isAllowedWithTable(datasetIdentifier, tableIdentifier, TablePermissionPoint.READ_FEATURES);
 }
 
-function isFeaturesUpdateAllowed(dataset: string, table: string, schemaId: string): Promise<boolean> {
-  return isAllowedWithTable(dataset, table, TablePermissionPoint.UPDATE_FEATURES, schemaId);
+export function isFeaturesUpdateAllowed(
+  datasetIdentifier: string,
+  tableIdentifier: string,
+  schemaIdForReadonlyCheck?: string
+): Promise<boolean> {
+  return isAllowedWithTable(
+    datasetIdentifier,
+    tableIdentifier,
+    TablePermissionPoint.UPDATE_FEATURES,
+    schemaIdForReadonlyCheck
+  );
 }
 
 function isAllowedWithProject(project: CrgProject, targetPoint: ProjectPermissionPoint): boolean {

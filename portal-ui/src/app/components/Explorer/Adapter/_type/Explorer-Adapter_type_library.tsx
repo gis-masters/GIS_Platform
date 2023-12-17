@@ -21,6 +21,7 @@ import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryR
 import { formatDate } from '../../../../services/util/date.util';
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
+import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
 
 import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
@@ -213,6 +214,7 @@ export class ExplorerAdapterTypeLibrary {
     return (
       store.explorerRole === 'dm' && (
         <>
+          <LibraryKptRequest library={currentItem} />
           {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />

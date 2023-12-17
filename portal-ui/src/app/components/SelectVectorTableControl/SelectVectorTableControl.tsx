@@ -5,11 +5,12 @@ import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
+import { isFeaturesUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { FormControlProps } from '../Form/Control/Form-Control';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { FormControlProps } from '../Form/Control/Form-Control';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
 
@@ -23,7 +24,8 @@ interface Datasource {
 }
 
 interface SelectVectorTableControlProps extends FormControlProps {
-  usedVectorTables: VectorTable[];
+  usedVectorTables?: VectorTable[];
+  writableOnly?: boolean;
 }
 
 @observer
@@ -145,6 +147,10 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
     if (item.type === ExplorerItemType.TABLE) {
       const table = item.payload as VectorTable;
 
+      if (this.props.writableOnly) {
+        return !isFeaturesUpdateAllowed(table.dataset, table.identifier);
+      }
+
       if (!table.schemaId) {
         return true;
       }
@@ -158,7 +164,7 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
         return true;
       }
 
-      return this.props.usedVectorTables.some(({ id, dataset }) => id === table.id && dataset === table.dataset);
+      return this.props.usedVectorTables?.some(({ id, dataset }) => id === table.id && dataset === table.dataset);
     }
 
     return false;
