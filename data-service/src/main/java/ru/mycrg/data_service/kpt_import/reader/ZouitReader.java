@@ -28,13 +28,13 @@ public class ZouitReader extends CommonKptXmlElementReader<ZouitElement,
     }
 
     @Override
-    public ZouitElement read(XMLStreamReader reader) {
+    public List<ZouitElement> read(XMLStreamReader reader) {
         ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r;
         try {
             r = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения ЗОУИТ: " + ex.getMessage());
-            return new ZouitElement(Collections.emptyMap());
+            log.warn("Ошибка чтения ЗОУИТ: ", ex);
+            return Collections.emptyList();
         }
 
         Map<String, Object> content = new HashMap<>();
@@ -58,7 +58,7 @@ public class ZouitReader extends CommonKptXmlElementReader<ZouitElement,
             content.put("boundary_1", extractBoundary_1(r));
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());
         }
-        return new ZouitElement(content);
+        return Collections.singletonList(new ZouitElement(content));
     }
 
     private String extractNumber(ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r) {

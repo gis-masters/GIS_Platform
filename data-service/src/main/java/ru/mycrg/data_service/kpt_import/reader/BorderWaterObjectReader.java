@@ -10,6 +10,7 @@ import ru.mycrg.data_service.kpt_import.model.generated.CoastlineBoundariesType;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class BorderWaterObjectReader extends CommonKptXmlElementReader<BorderWaterObjectElement,
@@ -27,13 +28,13 @@ public class BorderWaterObjectReader extends CommonKptXmlElementReader<BorderWat
     }
 
     @Override
-    public BorderWaterObjectElement read(XMLStreamReader reader) {
+    public List<BorderWaterObjectElement> read(XMLStreamReader reader) {
         CoastlineBoundariesType.CoastlineRecord r;
         try {
             r = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения береговой линии: " + ex.getMessage());
-            return new BorderWaterObjectElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
         return factory.fromCoastlineRecord(r);

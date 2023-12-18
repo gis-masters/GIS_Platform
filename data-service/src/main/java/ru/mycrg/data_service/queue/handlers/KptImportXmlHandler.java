@@ -40,6 +40,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -72,7 +75,9 @@ public class KptImportXmlHandler implements IEventHandler {
      * Соответствие названия схем таблиц БД с тэгами xml
      */
     private final Map<String, Set<String>> schemaNameTags = new HashMap<>();
-    /** Флаг выполнения импорта для обеспечения возможности отмены операции */
+    /**
+     * Флаг выполнения импорта для обеспечения возможности отмены операции
+     */
     private final AtomicBoolean running = new AtomicBoolean(false);
 
     public KptImportXmlHandler(List<KptXmlElementReader<? extends KptElement>> readers,
@@ -121,6 +126,8 @@ public class KptImportXmlHandler implements IEventHandler {
 
     @Override
     public void handle(IMessageBusEvent event) {
+        StopWatch importTimer = new StopWatch();
+        importTimer.start();
         log.info("Получено событие импорта КПТ из XML id: {}", event.getId());
         KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
         String dbName = importEvent.getDbName();
@@ -136,8 +143,6 @@ public class KptImportXmlHandler implements IEventHandler {
                                                             .collect(Collectors.toList());
         Map<Class<? extends KptElement>, KptElementWriter> requiredWriters = chooseWriters(requiredSchemas);
         Set<String> requiredTags = getRequiredTags(requiredSchemas);
-
-        boolean validate = importEvent.getValidationSettings() != null;
 
         try {
             tmpTablesCreator.createIfNotExists(dbName, requiredSchemas);
@@ -156,62 +161,91 @@ public class KptImportXmlHandler implements IEventHandler {
                          "Не удалось очистить временные таблицы");
             return;
         }
-
-        for (ImportSourceFileDto file: importEvent.getSourceFiles()) {
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-            try {
-                if (!running.get()) {
-                    return;
-                }
-                importFile(file, requiredTags, requiredSchemas, requiredWriters, importEvent.getInitiatorLogin(),
-                           dbName, importEvent.getValidationSettings().getDateOrderCompletion());
-            } catch (XMLStreamException | IOException ex) {
-                log.error("Ошибка чтения xml файла " + file.getPath(), ex);
-                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
-                             String.format("Не прочитать файл КПТ %s: %s", file.getPath(), ex.getMessage()));
-                continue;
-            } catch (Exception ex) {
-                log.error("Ошибка импорта КПТ kptId={} из файла {}", file.getDocument().getId(), file.getPath(), ex);
-                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
-                             String.format("Непредвиденная ошибка импорта файла КПТ %s: %s", file.getPath(),
-                                           ex.getMessage())
-                );
-                continue;
-            }
-
-            if (validate) {
-                validationService.validate(file.getDocument().getTitle(),
-                                           importEvent.getValidationSettings(),
-                                           targetTables,
-                                           dbName,
-                                           importEvent.getTaskId()
-                );
-            }
-
-            for (KptImportTableDto table: targetTables) {
-                if (!running.get()) {
-                    return;
-                }
-                try {
-                    copyData(table.getSchemaDto(),
-                             new ResourceQualifier(table.getResourceQualifierDto().getDataset(),
-                                                   table.getResourceQualifierDto().getTable()),
-                             file.getDocument().getTitle(),
-                             importEvent.getDbName()
-                    );
-                } catch (Exception e) {
-                    log.error("Ошибка переноса данных из временной таблицы в "
-                                      + table.getResourceQualifierDto().getTable(), e);
-                }
-
-            }
-
-            stopWatch.stop();
-            log.debug("Файл {} полностью импортирован за {} сек",
-                      file.getDocument().getTitle(), stopWatch.getTotalTimeSeconds());
-            tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
+        CountDownLatch latch = new CountDownLatch(importEvent.getSourceFiles().size());
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        for (int i = 0; i < importEvent.getSourceFiles().size(); ++i) {
+            int finalI = i;
+            executorService.execute(() -> executeFile(importEvent.getSourceFiles().get(finalI),
+                                                      requiredTags,
+                                                      requiredSchemas,
+                                                      requiredWriters,
+                                                      importEvent,
+                                                      dbName,
+                                                      targetTables,
+                                                      latch)
+            );
         }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            log.error("Прервано ожидание импорта КПТ", e);
+        }
+
+        tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
+        importTimer.stop();
+        log.info("Импорт {} выполнен за {} сек", importEvent.getId(), importTimer.getTotalTimeSeconds());
+    }
+
+    private void executeFile(ImportSourceFileDto file, Set<String> requiredTags,
+                             Collection<SchemaDto> requiredSchemas,
+                             Map<Class<? extends KptElement>, KptElementWriter> requiredWriters,
+                             KptImportXmlRequestEvent importEvent, String dbName,
+                             List<KptImportTableDto> targetTables, CountDownLatch latch) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        boolean validate = importEvent.getValidationSettings() != null;
+
+        if (!running.get()) {
+            latch.countDown();
+            return;
+        }
+
+        try {
+            importFile(file, requiredTags, requiredSchemas, requiredWriters, importEvent.getInitiatorLogin(),
+                       dbName, importEvent.getValidationSettings().getDateOrderCompletion());
+        } catch (XMLStreamException | IOException ex) {
+            log.error("Ошибка чтения xml файла " + file.getPath(), ex);
+            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                         String.format("Не прочитать файл КПТ %s: %s", file.getPath(), ex.getMessage()));
+            latch.countDown();
+            return;
+        } catch (Exception ex) {
+            log.error("Ошибка импорта КПТ kptId={} из файла {}", file.getDocument().getId(), file.getPath(), ex);
+            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                         String.format("Непредвиденная ошибка импорта файла КПТ %s: %s", file.getPath(),
+                                       ex.getMessage())
+            );
+            latch.countDown();
+            return;
+        }
+
+        if (validate) {
+            validationService.validate(file.getDocument().getTitle(),
+                                       importEvent.getValidationSettings(),
+                                       targetTables,
+                                       dbName,
+                                       importEvent.getTaskId()
+            );
+        }
+
+        for (KptImportTableDto table: targetTables) {
+            if (!running.get()) {
+                break;
+            }
+            try {
+                copyData(table.getSchemaDto(),
+                         new ResourceQualifier(table.getResourceQualifierDto().getDataset(),
+                                               table.getResourceQualifierDto().getTable()),
+                         file.getDocument().getTitle(),
+                         importEvent.getDbName()
+                );
+            } catch (Exception e) {
+                log.error("Ошибка переноса данных из временной таблицы в "
+                                  + table.getResourceQualifierDto().getTable(), e);
+            }
+        }
+        latch.countDown();
     }
 
     public void cancelImport() {
@@ -250,9 +284,7 @@ public class KptImportXmlHandler implements IEventHandler {
 
             try {
                 log.info("Импорт КПТ {} из {}/{}", file.getDocument().getTitle(), filePath, xmlFile.getName());
-                List<KptElement> batch = new LinkedList<>();
-                SchemaDto batchSchema = null;
-                KptElementWriter batchWriter = null;
+                Map<KptElementWriter, List<KptElement>> toWrite = new HashMap<>();
 
                 while (streamReader.hasNext()) {
                     if (!running.get()) {
@@ -280,51 +312,32 @@ public class KptImportXmlHandler implements IEventHandler {
                         continue;
                     }
 
-                    KptElement kptElement;
+                    List<? extends KptElement> kptElements;
                     try {
-                        kptElement = tagReader.read(streamReader);
+                        kptElements = tagReader.read(streamReader);
                     } catch (Exception e) {
                         log.error("Ошибка чтения элемента в " + tagReader.getClass().getSimpleName(), e);
                         continue;
                     }
 
-                    if (!kptElement.hasGeometry()) {
-                        continue;
-                    }
-
-                    KptElementWriter writer = requiredWriters.get(kptElement.getClass());
-                    if (writer == null) {
-                        continue;
-                    }
-
-                    if (!Objects.equals(batchWriter, writer) || batch.size() >= BATCH_INSERT_SIZE) {
-                        if (!batch.isEmpty()) {
-                            try {
-                                batchWriter.writeBatch(batch, batchSchema, databaseName);
-                            } catch (Exception e) {
-                                log.error("Ошибка сохранения данных слоя " + batchWriter.getSchemaName(), e);
-                            }
-                            batch.clear();
-                        }
-                        if (!Objects.equals(batchWriter, writer)) {
-                            batchWriter = writer;
-                            batchSchema = getKptElementSchema(writer, requiredSchemas);
-                        }
-                    }
-
-                    fillContentWithCommonData(kptElement.getContent(), initiator, file.getDocument(), acsepAt);
-                    batch.add(kptElement);
+                    persistKptElements(kptElements, requiredWriters, toWrite, requiredSchemas, databaseName,
+                                       initiator, file.getDocument(), acsepAt);
                 }
 
-                if (!batch.isEmpty()) {
-                    batchWriter.writeBatch(batch, batchSchema, databaseName);
+                for (KptElementWriter writer: toWrite.keySet()) {
+                    List<KptElement> batch = toWrite.get(writer);
+                    if (!batch.isEmpty()) {
+                        writeBatch(writer, batch, getKptElementSchema(writer, requiredSchemas), databaseName);
+                    }
                 }
 
                 if (!kvartalElement.getContent().isEmpty()) {
                     fillContentWithCommonData(kvartalElement.getContent(), initiator, file.getDocument(), acsepAt);
                     KptElementWriter kvartalWriter = requiredWriters.get(KvartalElement.class);
                     SchemaDto schema = getKptElementSchema(kvartalWriter, requiredSchemas);
-                    kvartalWriter.writeBatch(Collections.singletonList(kvartalElement), schema, databaseName);
+                    List<KptElement> list = new ArrayList<>();
+                    list.add(kvartalElement);
+                    writeBatch(kvartalWriter, list, schema, databaseName);
                 }
 
                 timer.stop();
@@ -360,7 +373,7 @@ public class KptImportXmlHandler implements IEventHandler {
         content.put("acsept_at", acseptAt);
         content.put(CREATED_BY.getName(), initiator);
         content.put(CREATED_AT.getName(), LocalDateTime.now());
-        content.put("source_doc", document.toString());
+        content.put("source_doc", String.format("[%s]", document.toString()));
     }
 
     private SchemaDto getKptElementSchema(KptElementWriter writer,
@@ -425,5 +438,42 @@ public class KptImportXmlHandler implements IEventHandler {
 
     private boolean taskCancelled(String dbName, long taskId) {
         return tasksDetachedDao.getTaskStatus(dbName, taskId) == TaskStatus.CANCELED;
+    }
+
+    private void persistKptElements(List<? extends KptElement> kptElements,
+                                    Map<Class<? extends KptElement>, KptElementWriter> requiredWriters,
+                                    Map<KptElementWriter, List<KptElement>> toWrite,
+                                    Collection<SchemaDto> requiredSchemas,
+                                    String databaseName,
+                                    String initiator,
+                                    TypeDocumentData document,
+                                    String acsepAt) {
+        for (KptElement kptElement: kptElements) {
+            if (!kptElement.hasGeometry()) {
+                continue;
+            }
+
+            KptElementWriter writer = requiredWriters.get(kptElement.getClass());
+            if (writer == null) {
+                continue;
+            }
+
+            List<KptElement> batch = toWrite.computeIfAbsent(writer, k -> new LinkedList<>());
+
+            if (batch.size() >= BATCH_INSERT_SIZE) {
+                writeBatch(writer, batch, getKptElementSchema(writer, requiredSchemas), databaseName);
+            }
+            fillContentWithCommonData(kptElement.getContent(), initiator, document, acsepAt);
+            batch.add(kptElement);
+        }
+    }
+
+    private void writeBatch(KptElementWriter writer, List<KptElement> batch, SchemaDto schemaDto, String databaseName) {
+        try {
+            writer.writeBatch(batch, schemaDto, databaseName);
+        } catch (Exception e) {
+            log.error("Ошибка сохранения данных слоя " + writer.getSchemaName(), e);
+        }
+        batch.clear();
     }
 }

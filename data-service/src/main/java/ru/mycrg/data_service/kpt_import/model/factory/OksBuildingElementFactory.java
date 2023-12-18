@@ -30,11 +30,9 @@ public class OksBuildingElementFactory extends OksElementFactory {
 
         List<SpatialElementOKSOut> spatialElements = extractSpatialElements(extractContours(xmlRecord.getContours()));
 
-        Map<String, Object> content;
-        List<SpatialElementOKSOut> polygonSpatialElements = filterSpatialElementsPolygon(spatialElements);
-        if (!polygonSpatialElements.isEmpty()) {
-            content = buildPolygonContent(xmlRecord);
-            parseMultiPolygon(polygonSpatialElements, content);
+        if (!spatialElements.isEmpty()) {
+            Map<String, Object> content = buildPolygonContent(xmlRecord);
+            parseMultiPolygon(spatialElements, content);
             return new OksBuildingPolygonElement(content);
         }
 

@@ -28,13 +28,13 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
     }
 
     @Override
-    public ZuElement read(XMLStreamReader reader) {
+    public List<ZuElement> read(XMLStreamReader reader) {
         LandRecord lr;
         try {
             lr = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения земельного участка: " + ex.getMessage());
-            return new ZuElement(Collections.emptyMap());
+            log.warn("Ошибка чтения земельного участка!", ex);
+            return Collections.emptyList();
         }
         Map<String, Object> content = new HashMap<>();
         String cadastralNumber = extractCadastralNumber(lr);
@@ -60,7 +60,7 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());
             content.put("area_doc_2", extractAreaDoc(lr));
         }
-        return new ZuElement(content);
+        return Collections.singletonList(new ZuElement(content));
     }
 
     private String extractCadastralNumber(LandRecord lr) {

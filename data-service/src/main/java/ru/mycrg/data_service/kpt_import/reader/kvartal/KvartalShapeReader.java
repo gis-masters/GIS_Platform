@@ -27,7 +27,7 @@ public class KvartalShapeReader extends KvartalPartialDataReader<KvartalShapeEle
     }
 
     @Override
-    public KvartalShapeElement read(XMLStreamReader reader) {
+    public List<KvartalShapeElement> read(XMLStreamReader reader) {
         try {
             SpatialDataType spatialData = unmarshall(reader);
 
@@ -38,10 +38,10 @@ public class KvartalShapeReader extends KvartalPartialDataReader<KvartalShapeEle
 
             Optional<Polygon> shape = geometryParser.createPolygon(spatialElements);
 
-            return shape.map(polygon -> new KvartalShapeElement(Map.of("shape", polygon)))
-                        .orElseGet(() -> new KvartalShapeElement(Collections.emptyMap()));
+            return shape.map(polygon -> Collections.singletonList(new KvartalShapeElement(Map.of("shape", polygon))))
+                        .orElseGet(Collections::emptyList);
         } catch (JAXBException e) {
-            return new KvartalShapeElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
     }
 }

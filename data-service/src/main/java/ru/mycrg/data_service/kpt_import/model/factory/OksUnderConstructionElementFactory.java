@@ -9,10 +9,7 @@ import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionPolygonEle
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionPolylineElement;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class OksUnderConstructionElementFactory extends OksElementFactory {
@@ -21,36 +18,38 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
         super(geometryParser);
     }
 
-    public OksUnderConstructionElement fromObjectUnderConstructionRecord(ObjectUnderConstructionRecord xmlRecord) {
+    public List<OksUnderConstructionElement> fromObjectUnderConstructionRecord(
+            ObjectUnderConstructionRecord xmlRecord) {
         if (xmlRecord.getContours() == null) {
-            return new OksUnderConstructionElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
         List<SpatialElementOKSOut> spatialElements = extractSpatialElements(extractContours(xmlRecord.getContours()));
+        List<List<SpatialElementOKSOut>> spElsByType = splitSpatialElementsByGeometryType(spatialElements);
+        List<SpatialElementOKSOut> polygonSpatialElements = spElsByType.get(0);
+        List<SpatialElementOKSOut> polylineSpatialElements = spElsByType.get(1);
+        List<SpatialElementOKSOut> pointSpatialElements = spElsByType.get(2);
 
-        Map<String, Object> content;
-        List<SpatialElementOKSOut> polygonSpatialElements = filterSpatialElementsPolygon(spatialElements);
+        List<OksUnderConstructionElement> result = new LinkedList<>();
         if (!polygonSpatialElements.isEmpty()) {
-            content = buildPolygonContent(xmlRecord);
+            Map<String, Object> content = buildPolygonContent(xmlRecord);
             parseMultiPolygon(polygonSpatialElements, content);
-            return new OksUnderConstructionPolygonElement(content);
+            result.add(new OksUnderConstructionPolygonElement(content));
         }
 
-        List<SpatialElementOKSOut> polylineSpatialElements = filterSpatialElementsPolyline(spatialElements);
         if (!polylineSpatialElements.isEmpty()) {
-            content = buildPolylineContent(xmlRecord);
+            Map<String, Object> content = buildPolylineContent(xmlRecord);
             parseMultilineString(polylineSpatialElements, content);
-            return new OksUnderConstructionPolylineElement(content);
+            result.add(new OksUnderConstructionPolylineElement(content));
         }
 
-        List<SpatialElementOKSOut> pointSpatialElements = filterSpatialElementsPoint(spatialElements);
         if (!pointSpatialElements.isEmpty()) {
-            content = buildPointContent(xmlRecord);
+            Map<String, Object> content = buildPointContent(xmlRecord);
             parsePoint(pointSpatialElements, content);
-            return new OksUnderConstructionPointElement(content);
+            result.add(new OksUnderConstructionPointElement(content));
         }
 
-        return new OksUnderConstructionElement(Collections.emptyMap());
+        return result;
     }
 
     @Override

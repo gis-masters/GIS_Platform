@@ -10,9 +10,10 @@ import ru.mycrg.data_service.kpt_import.model.oks.OksBuildingElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
+import java.util.List;
 
 @Component
-public class OksBuildingReader extends CommonKptXmlElementReader<OksBuildingElement, BuildRecord>{
+public class OksBuildingReader extends CommonKptXmlElementReader<OksBuildingElement, BuildRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(OksBuildingReader.class);
 
@@ -24,15 +25,15 @@ public class OksBuildingReader extends CommonKptXmlElementReader<OksBuildingElem
     }
 
     @Override
-    public OksBuildingElement read(XMLStreamReader reader) {
+    public List<OksBuildingElement> read(XMLStreamReader reader) {
         BuildRecord r;
         try {
             r = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения здания: " + ex.getMessage());
-            return new OksBuildingElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
-        return oksBuildingElementFactory.fromBuildRecord(r);
+        return Collections.singletonList(oksBuildingElementFactory.fromBuildRecord(r));
     }
 }

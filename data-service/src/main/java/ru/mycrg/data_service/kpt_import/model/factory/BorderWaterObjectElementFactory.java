@@ -13,7 +13,6 @@ import ru.mycrg.data_service.kpt_import.model.generated.*;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasSameNum;
@@ -30,29 +29,37 @@ public class BorderWaterObjectElementFactory {
         this.geometryParser = geometryParser;
     }
 
-    public BorderWaterObjectElement fromCoastlineRecord(CoastlineBoundariesType.CoastlineRecord xmlRecord) {
+    public List<BorderWaterObjectElement> fromCoastlineRecord(CoastlineBoundariesType.CoastlineRecord xmlRecord) {
         if (xmlRecord.getBContoursLocation() == null) {
-            return new BorderWaterObjectElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
         List<BoundContourOut> contours = extractContours(xmlRecord);
+        List<BoundContourOut> polygonContours = new LinkedList<>();
+        List<BoundContourOut> polylineContours = new LinkedList<>();
 
-        Map<String, Object> content;
-        List<BoundContourOut> polygonContours = filterPolygonContours(contours);
+        for (BoundContourOut contour: contours) {
+            if (isPolygonContour(contour)) {
+                polygonContours.add(contour);
+            } else if (isPolylineContour(contour)) {
+                polylineContours.add(contour);
+            }
+        }
+
+        List<BorderWaterObjectElement> result = new LinkedList<>();
         if (!polygonContours.isEmpty()) {
-            content = buildContent(xmlRecord);
+            Map<String, Object> content = buildContent(xmlRecord);
             parseMultiPolygon(polygonContours, content);
-            return new BorderWaterObjectPolygonElement(content);
+            result.add(new BorderWaterObjectPolygonElement(content));
         }
 
-        List<BoundContourOut> polylineContours = filterPolylineContours(contours);
         if (!polylineContours.isEmpty()) {
-            content = buildContent(xmlRecord);
+            Map<String, Object> content = buildContent(xmlRecord);
             parseMultiLineString(polylineContours, content);
-            return new BorderWaterObjectPolylineElement(content);
+            result.add(new BorderWaterObjectPolylineElement(content));
         }
 
-        return new BorderWaterObjectElement(Collections.emptyMap());
+        return result;
     }
 
     private void parseMultiPolygon(List<BoundContourOut> polygonContours, Map<String, Object> content) {
@@ -79,18 +86,6 @@ public class BorderWaterObjectElementFactory {
         }
 
         shape.ifPresent(multiLineString -> content.put(DEFAULT_GEOMETRY_COLUMN_NAME, multiLineString));
-    }
-
-    private List<BoundContourOut> filterPolygonContours(List<BoundContourOut> contours) {
-        return contours.stream()
-                       .filter(this::isPolygonContour)
-                       .collect(Collectors.toList());
-    }
-
-    private List<BoundContourOut> filterPolylineContours(List<BoundContourOut> contours) {
-        return contours.stream()
-                       .filter(this::isPolylineContour)
-                       .collect(Collectors.toList());
     }
 
     private List<BoundContourOut> extractContours(CoastlineBoundariesType.CoastlineRecord xmlRecord) {

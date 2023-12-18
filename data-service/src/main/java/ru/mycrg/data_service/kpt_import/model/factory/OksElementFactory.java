@@ -19,8 +19,6 @@ import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
 public abstract class OksElementFactory {
 
     private static final Logger log = LoggerFactory.getLogger(OksElementFactory.class);
-    private static final List<Class<?>> xmlClasses = Arrays.asList(BuildRecord.class, ConstructionRecord.class,
-                                                                   ObjectUnderConstructionRecord.class);
 
     private final OksGeometryParser geometryParser;
 
@@ -98,33 +96,7 @@ public abstract class OksElementFactory {
                        .orElse(Collections.emptyList());
     }
 
-    protected List<SpatialElementOKSOut> filterSpatialElementsPolygon(List<SpatialElementOKSOut> spatialElements) {
-        return spatialElements.stream()
-                       .filter(this::isSpatialElementPolygon)
-                       .collect(Collectors.toList());
-    }
-
-    protected List<SpatialElementOKSOut> filterSpatialElementsPolyline(List<SpatialElementOKSOut> spatialElements) {
-        return spatialElements.stream()
-                       .filter(this::isSpatialElementPolyline)
-                       .collect(Collectors.toList());
-    }
-
-    protected List<SpatialElementOKSOut> filterSpatialElementsPoint(List<SpatialElementOKSOut> spatialElements) {
-        return spatialElements.stream()
-                .filter(this::isSpatialElementPoint)
-                .collect(Collectors.toList());
-    }
-
     protected boolean isOrdinatesPolygon(List<OrdinateOKSOut> ordinates) {
-        if (ordinates.isEmpty()) {
-            return false;
-        }
-
-        if (ordinates.size() == 1 && isCircle(ordinates.get(0))) {
-            return false; //circle
-        }
-
         if (ordinates.size() < 3) {
             return false;
         }
@@ -158,14 +130,9 @@ public abstract class OksElementFactory {
         return isOrdinatesPoint(extractOrdinates(spatialElement));
     }
 
-    protected boolean isCircle(OrdinateOKSOut ordinate) {
-        return ordinate.getR() != null;
-    }
-
     protected boolean isOrdinatesPoint(List<OrdinateOKSOut> ordinates) {
         return ordinates.size() == 1
-                && ordinates.get(0).getX() != null && ordinates.get(0).getY() != null
-                && !isCircle(ordinates.get(0));
+                && ordinates.get(0).getX() != null && ordinates.get(0).getY() != null;
     }
 
     protected Map<String, Object> buildPolygonContent(Object xmlRecord) {
@@ -210,7 +177,7 @@ public abstract class OksElementFactory {
         content.put("purpose", extractPurpose(xmlRecord));
         content.put("objecttype", extractObjectType(objectType));
         content.put("usage", extractUsage(xmlRecord));
-        content.put("readablead", extractReadableAddress(xmlRecord));
+        content.put("raddress", extractReadableAddress(xmlRecord));
         content.put("cost", extractCostValue(xmlRecord));
 
         return content;
@@ -236,6 +203,24 @@ public abstract class OksElementFactory {
     protected BigDecimal extractCostValue(Object xmlRecord) {
         Cost cost = extractCost(xmlRecord);
         return cost == null ? null : cost.getValue();
+    }
+
+    protected List<List<SpatialElementOKSOut>> splitSpatialElementsByGeometryType(List<SpatialElementOKSOut> spEls) {
+        List<SpatialElementOKSOut> polygonSpatialElements = new LinkedList<>();
+        List<SpatialElementOKSOut> polylineSpatialElements = new LinkedList<>();
+        List<SpatialElementOKSOut> pointSpatialElements = new LinkedList<>();
+
+        for (SpatialElementOKSOut spatialElement : spEls) {
+            if (isSpatialElementPolygon(spatialElement)) {
+                polygonSpatialElements.add(spatialElement);
+            } else if (isSpatialElementPolyline(spatialElement)) {
+                polylineSpatialElements.add(spatialElement);
+            } else if (isSpatialElementPoint(spatialElement)) {
+                pointSpatialElements.add(spatialElement);
+            }
+        }
+
+        return Arrays.asList(polygonSpatialElements, polylineSpatialElements, pointSpatialElements);
     }
 
     protected abstract String extractReadableAddress(Object xmlRecord);

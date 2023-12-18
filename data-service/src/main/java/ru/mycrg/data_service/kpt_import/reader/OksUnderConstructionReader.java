@@ -10,6 +10,7 @@ import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnderConstructionElement,
@@ -27,13 +28,13 @@ public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnd
     }
 
     @Override
-    public OksUnderConstructionElement read(XMLStreamReader reader) {
+    public List<OksUnderConstructionElement> read(XMLStreamReader reader) {
         ObjectUnderConstructionRecord r;
         try {
             r = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения сооружения : " + ex.getMessage());
-            return new OksUnderConstructionElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
         return oksUnderConstructionElementFactory.fromObjectUnderConstructionRecord(r);

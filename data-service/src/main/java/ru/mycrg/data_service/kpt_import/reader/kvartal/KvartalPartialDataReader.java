@@ -6,6 +6,7 @@ import ru.mycrg.data_service.kpt_import.reader.CommonKptXmlElementReader;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
+import java.util.List;
 
 public abstract class KvartalPartialDataReader<T extends KvartalPartialDataElement, X> extends CommonKptXmlElementReader<T, X> {
 
@@ -14,7 +15,9 @@ public abstract class KvartalPartialDataReader<T extends KvartalPartialDataEleme
     }
 
     public void readKvartalData(XMLStreamReader reader, KvartalElement kvartalElement) {
-        KvartalPartialDataElement partialData = read(reader);
-        kvartalElement.getContent().putAll(partialData.getContent());
+        List<T> partialDataList = read(reader);
+        if (!partialDataList.isEmpty()) {
+            kvartalElement.getContent().putAll(partialDataList.get(0).getContent());
+        }
     }
 }

@@ -7,6 +7,7 @@ import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalAreaElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -17,12 +18,12 @@ public class KvartalAreaReader extends KvartalPartialDataReader<KvartalAreaEleme
     }
 
     @Override
-    public KvartalAreaElement read(XMLStreamReader reader) {
+    public List<KvartalAreaElement> read(XMLStreamReader reader) {
         try {
             AreaQuarter areaQuarter = unmarshall(reader);
-            return new KvartalAreaElement(Map.of("aria_total", areaQuarter.getArea()));
+            return Collections.singletonList(new KvartalAreaElement(Map.of("aria_total", areaQuarter.getArea())));
         } catch (JAXBException e) {
-            return new KvartalAreaElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
     }
 }

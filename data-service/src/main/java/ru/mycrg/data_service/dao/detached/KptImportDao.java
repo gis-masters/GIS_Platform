@@ -23,7 +23,7 @@ import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCreateTableQuery;
 public class KptImportDao {
 
     private static final Logger log = LoggerFactory.getLogger(KptImportDao.class);
-    private static final String CADASTRAL_SQARE_FILTER_TEMPLATE = "(source_doc::json)->>'title' = ?";
+    private static final String CADASTRAL_SQARE_FILTER_TEMPLATE = "(source_doc::json)->0->>'title' = ?";
 
     private final DatasourceFactory datasourceFactory;
     private final DdlTablesBase ddlTablesBase;
@@ -53,7 +53,7 @@ public class KptImportDao {
         String query = String.format(
                 "SELECT dl.date_order_completion " + "FROM %s.%s d " +
                         "JOIN data.dl_data_kpt dl ON ((d.source_doc::json)->>'id')::int = dl.id " +
-                        "AND (d.source_doc::json)->>'title' = ? AND date_order_completion IS NOT NULL " +
+                        "AND (d.source_doc::json)->0->>'title' = ? AND date_order_completion IS NOT NULL " +
                         "ORDER BY dl.date_order_completion DESC " +
                         "LIMIT 1",
                 tableQualifier.getSchema(), tableQualifier.getTable()

@@ -30,13 +30,13 @@ public class MunicipalityBoundaryReader extends CommonKptXmlElementReader<Munici
     }
 
     @Override
-    public MunicipalityBoundaryElement read(XMLStreamReader reader) {
+    public List<MunicipalityBoundaryElement> read(XMLStreamReader reader) {
         InhabitedLocalityBoundariesType.InhabitedLocalityBoundaryRecord r;
         try {
             r = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения границы населенного пункта: " + ex.getMessage());
-            return new MunicipalityBoundaryElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
 
         String number = extractRegNumBorder(r);
@@ -59,7 +59,7 @@ public class MunicipalityBoundaryReader extends CommonKptXmlElementReader<Munici
             content.put("registrationdate", extractRegistrationDate(r));
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());
         }
-        return new MunicipalityBoundaryElement(content);
+        return Collections.singletonList(new MunicipalityBoundaryElement(content));
     }
 
     private String extractRegNumBorder(InhabitedLocalityBoundariesType.InhabitedLocalityBoundaryRecord r) {

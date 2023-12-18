@@ -6,6 +6,7 @@ import ru.mycrg.data_service.kpt_import.model.kvartal.KvartalCadNumElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamReader;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -16,12 +17,12 @@ public class KvartalCadastralNumberReader extends KvartalPartialDataReader<Kvart
     }
 
     @Override
-    public KvartalCadNumElement read(XMLStreamReader reader) {
+    public List<KvartalCadNumElement> read(XMLStreamReader reader) {
         try {
             String cadNum =  unmarshall(reader);
-            return new KvartalCadNumElement(Map.of("cadastralnum", cadNum));
+            return Collections.singletonList(new KvartalCadNumElement(Map.of("cadastralnum", cadNum)));
         } catch (JAXBException e) {
-            return new KvartalCadNumElement(Collections.emptyMap());
+            return Collections.emptyList();
         }
     }
 }
