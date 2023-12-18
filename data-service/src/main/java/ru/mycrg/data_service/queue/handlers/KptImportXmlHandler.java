@@ -62,6 +62,8 @@ public class KptImportXmlHandler implements IEventHandler {
     private static final Logger log = LoggerFactory.getLogger(KptImportXmlHandler.class);
     private static final int BATCH_INSERT_SIZE = 50;
     private static final String KVARTAL_SCHEMA = "kvartal_kpt";
+    private static final String CADASTRALNUM_PROPERTY = "cadastralnum";
+    private static final String REGNUMBORD_PROPERTY = "regnumbord";
 
     private final KptImportValidatorService validationService;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
@@ -135,6 +137,7 @@ public class KptImportXmlHandler implements IEventHandler {
         if (taskCancelled(dbName, importEvent.getTaskId())) {
             return;
         }
+        tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.IN_PROGRESS);
         running.set(true);
 
         List<KptImportTableDto> targetTables = importEvent.getTables();
@@ -161,8 +164,10 @@ public class KptImportXmlHandler implements IEventHandler {
                          "Не удалось очистить временные таблицы");
             return;
         }
+
+        int threadsCount = Math.min(4, importEvent.getSourceFiles().size());
         CountDownLatch latch = new CountDownLatch(importEvent.getSourceFiles().size());
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
         for (int i = 0; i < importEvent.getSourceFiles().size(); ++i) {
             int finalI = i;
             executorService.execute(() -> executeFile(importEvent.getSourceFiles().get(finalI),
@@ -182,7 +187,10 @@ public class KptImportXmlHandler implements IEventHandler {
             log.error("Прервано ожидание импорта КПТ", e);
         }
 
-        tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
+        if (running.get()) {
+            tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
+        }
+
         importTimer.stop();
         log.info("Импорт {} выполнен за {} сек", importEvent.getId(), importTimer.getTotalTimeSeconds());
     }
@@ -233,10 +241,13 @@ public class KptImportXmlHandler implements IEventHandler {
             if (!running.get()) {
                 break;
             }
+
+            ResourceQualifier rq = new ResourceQualifier(table.getResourceQualifierDto().getDataset(),
+                                                         table.getResourceQualifierDto().getTable());
+
             try {
                 copyData(table.getSchemaDto(),
-                         new ResourceQualifier(table.getResourceQualifierDto().getDataset(),
-                                               table.getResourceQualifierDto().getTable()),
+                         rq,
                          file.getDocument().getTitle(),
                          importEvent.getDbName()
                 );
@@ -244,6 +255,8 @@ public class KptImportXmlHandler implements IEventHandler {
                 log.error("Ошибка переноса данных из временной таблицы в "
                                   + table.getResourceQualifierDto().getTable(), e);
             }
+
+            deduplicateData(dbName, table.getSchemaDto(), rq);
         }
         latch.countDown();
     }
@@ -475,5 +488,26 @@ public class KptImportXmlHandler implements IEventHandler {
             log.error("Ошибка сохранения данных слоя " + writer.getSchemaName(), e);
         }
         batch.clear();
+    }
+
+    private void deduplicateData(String dbName, SchemaDto schemaDto, ResourceQualifier resourceQualifier) {
+        List<String> properties = schemaDto.getProperties().stream().map(SimplePropertyDto::getName).collect(
+                Collectors.toList());
+        boolean hasCadastralnum = properties.stream().anyMatch(CADASTRALNUM_PROPERTY::equals);
+        boolean hasRegnumbodr = properties.stream().anyMatch(REGNUMBORD_PROPERTY::equals);
+
+        if (!hasCadastralnum && !hasRegnumbodr) {
+            log.error("Невозможно дедуплицировать строки для таблицы {} - нет полей cadastralnum/regnumbord для " +
+                              "группировки", resourceQualifier);
+            return;
+        }
+
+        String groupByProperty = hasCadastralnum ? CADASTRALNUM_PROPERTY : REGNUMBORD_PROPERTY;
+
+        try {
+            kptImportDao.deduplicateData(dbName, resourceQualifier, groupByProperty, "created_at");
+        } catch (Exception e) {
+            log.error("Ошибка дедупликации данных!", e);
+        }
     }
 }

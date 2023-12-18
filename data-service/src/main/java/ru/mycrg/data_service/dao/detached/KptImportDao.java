@@ -109,7 +109,7 @@ public class KptImportDao {
      * @param dbName           название БД
      */
     public void deleteAllByCadatstralSquare(String dbName, ResourceQualifier tableQualifier,
-                                              String cadasttralSquare) {
+                                            String cadasttralSquare) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
         String query = String.format("DELETE FROM %s.%s WHERE %s",
                                      tableQualifier.getSchema(), tableQualifier, CADASTRAL_SQARE_FILTER_TEMPLATE);
@@ -128,5 +128,22 @@ public class KptImportDao {
                                       CADASTRAL_SQARE_FILTER_TEMPLATE, Collections.emptyMap());
         log.debug("Copy cadastral square query: [{}]", query);
         jdbcTemplate.update(query, cadastralSquare);
+    }
+
+    public void deduplicateData(String dbName, ResourceQualifier table, String groupByProperty, String maxByProperty) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
+
+        String tablePath = table.getSchema() + "." + table.getTable();
+        String query = String.format(
+                "DELETE FROM %s " +
+                        "WHERE (%s, %s) NOT IN ( " +
+                        "SELECT %s, MAX(%s) " +
+                        "FROM %s " +
+                        "GROUP BY %s)",
+                tablePath, groupByProperty, maxByProperty, groupByProperty, maxByProperty, tablePath, groupByProperty
+        );
+        log.debug("KPT deduplication query: " + query);
+
+        jdbcTemplate.update(query);
     }
 }
