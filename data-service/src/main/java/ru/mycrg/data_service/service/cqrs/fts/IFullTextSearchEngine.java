@@ -33,7 +33,7 @@ public interface IFullTextSearchEngine {
 
     default String getSearchedText(FtsRequest request) {
         return request.getFtsRequestDto().getText()
-                      .replaceAll("[^A-Za-zА-Яа-я0-9:]", "");
+                      .replaceAll("[^A-Za-zА-Яа-я0-9:]", " ").trim();
     }
 
     default float getBound(FtsRequestDto dto) {

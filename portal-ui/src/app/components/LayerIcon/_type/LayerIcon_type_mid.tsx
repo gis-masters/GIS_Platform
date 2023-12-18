@@ -2,15 +2,15 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
-import { TypeTabPolygon } from '../../Icons/TypeTabPolygon';
+import { TypeMidPolygon } from '../../Icons/TypeMidPolygon';
 
-export const withTypeTab = withBemMod<LayerIconProps, LayerIconProps>(
+export const withTypeMid = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),
-  { type: 'tab' },
+  { type: 'mid' },
   () =>
     ({ className, colorized, size }) => {
       return (
-        <TypeTabPolygon
+        <TypeMidPolygon
           className={cnLayerIcon(null, [className])}
           fontSize={size}
           color={colorized ? 'primary' : 'inherit'}

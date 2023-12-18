@@ -10,7 +10,8 @@ public enum BpmnProcessKey {
     REFERENCE_LAYER_DELETION_PROCESS("integration_layerDeleteProcess"),
     DXF_PLACEMENT_PROCESS("integration_dxfPlacementProcess"),
     SHP_PLACEMENT_PROCESS("integration_shpPlacementProcess"),
-    TAB_PLACEMENT_PROCESS("integration_tabPlacementProcess");
+    TAB_PLACEMENT_PROCESS("integration_tabPlacementProcess"),
+    MID_PLACEMENT_PROCESS("integration_midPlacementProcess");
 
     private final String value;
 

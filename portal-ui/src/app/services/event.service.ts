@@ -76,6 +76,7 @@ class EventService {
       msg.type === 'IMPORT_GML' ||
       msg.type === 'IMPORT_DXF' ||
       msg.type === 'IMPORT_TAB' ||
+      msg.type === 'IMPORT_MID' ||
       msg.type === 'IMPORT_SHP' ||
       msg.type === 'IMPORT_RASTER'
     ) {
@@ -129,6 +130,7 @@ class EventService {
         (type === 'IMPORT_GML' ||
           type === 'IMPORT_DXF' ||
           type === 'IMPORT_TAB' ||
+          type === 'IMPORT_MID' ||
           type === 'IMPORT_SHP' ||
           type === 'IMPORT_RASTER') &&
         (payload.status === 'DONE' || payload.status === 'ERROR')

@@ -54,14 +54,13 @@ public class FtsDictionaryService {
     }
 
     public Set<FtsDictionaryItem> collectWords(String text) {
-        String trimedText = text.trim();
-        List<String> splitedText = Arrays.stream(trimedText.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
+        List<String> splitedText = Arrays.stream(text.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
                                          .filter(s -> !s.isBlank() && s.length() > 1)
                                          .filter(notInStopWords)
                                          .collect(Collectors.toList());
 
         if (splitedText.size() == 1) {
-            return new HashSet<>(ftsDictionaryDao.search(trimedText, LIMIT));
+            return new HashSet<>(ftsDictionaryDao.search(text, LIMIT));
         }
 
         Set<FtsDictionaryItem> words = new HashSet<>();

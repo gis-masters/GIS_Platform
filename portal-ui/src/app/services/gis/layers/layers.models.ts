@@ -5,6 +5,7 @@ export enum CrgLayerType {
   VECTOR = 'vector',
   DXF = 'dxf',
   TAB = 'tab',
+  MID = 'mid',
   SHP = 'shp',
   RASTER = 'raster',
   EXTERNAL = 'external',

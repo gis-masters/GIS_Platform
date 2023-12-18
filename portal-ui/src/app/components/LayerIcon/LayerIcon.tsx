@@ -7,7 +7,7 @@ import { CrgLayer } from '../../services/gis/layers/layers.models';
 
 export const cnLayerIcon = cn('LayerIcon');
 
-export type LayerIconType = 'vector' | 'dxf' | 'tab' | 'shp' | 'raster' | 'group' | 'error' | 'unknown';
+export type LayerIconType = 'vector' | 'dxf' | 'tab' | 'mid' | 'shp' | 'raster' | 'group' | 'error' | 'unknown';
 
 export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;

@@ -8,12 +8,14 @@ import { withTypeVector } from './_type/LayerIcon_type_vector';
 import { withTypeDxf } from './_type/LayerIcon_type_dxf';
 import { withTypeShp } from './_type/LayerIcon_type_shp';
 import { withTypeTab } from './_type/LayerIcon_type_tab';
+import { withTypeMid } from './_type/LayerIcon_type_mid';
 
 export const LayerIcon = composeU(
   withTypeVector,
   withTypeDxf,
   withTypeShp,
   withTypeTab,
+  withTypeMid,
   withTypeRaster,
   withTypeError,
   withTypeGroup
