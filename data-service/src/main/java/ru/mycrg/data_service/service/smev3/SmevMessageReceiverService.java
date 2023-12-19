@@ -85,7 +85,7 @@ public class SmevMessageReceiverService {
     private void process(ISmevMessageConsumer consumer, IRecord originalMessageRecord, String body) {
         try {
             log.debug("Try to process message {}", body);
-            var processResult = consumer.processAdapterMessage(body);
+            var processResult = consumer.consumeAdapterMessage(body);
             messageService.saveIncoming(processResult, originalMessageRecord);
             log.info("Success process");
         } catch (Exception e) {

@@ -11,6 +11,7 @@ import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
 import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.ISmevMessageConsumer;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
@@ -62,7 +63,7 @@ public class RegisterRnsRequestService implements ISmevMessageConsumer {
                     attachmentService
             ).run(dto.getRecId(), dto.getStubFields(), dto.getStubAttachments());
             log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendQueue(buildMeta, dto.getSendToSmev());
+            messageService.sendQueue(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
             return buildMeta;
         } catch (Exception e) {
             log.error("SMEV. push to queue error: {}", e.getMessage());
@@ -76,7 +77,7 @@ public class RegisterRnsRequestService implements ISmevMessageConsumer {
     }
 
     @Override
-    public ProcessAdapterMessageResult processAdapterMessage(String messageBody) {
+    public ProcessAdapterMessageResult consumeAdapterMessage(String messageBody) {
         try {
             var queryResult = marshaller.unmarshall(messageBody, QueryResult.class);
 

@@ -39,10 +39,10 @@ public class SmevMessageSenderService {
 
 
     @Transactional
-    public void sendQueue(XmlBuildMeta buildMeta, Boolean sendQueue) {
+    public void sendQueue(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
         try {
             log.debug("Try to save and send: " + buildMeta.toString());
-            messageService.saveOutgoing(buildMeta);
+            messageService.saveOutgoing(buildMeta, userTo);
             // TODO sendQueue - временное явление
             if (sendQueue) {
                 log.info("message send to queue");

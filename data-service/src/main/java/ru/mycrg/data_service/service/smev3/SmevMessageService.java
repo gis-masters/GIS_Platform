@@ -73,7 +73,11 @@ public class SmevMessageService {
             reestrMessage.setDateOut(LocalDateTime.now());
             reestrMessage.setStatus(processResult.getStatus());
             reestrMessage.setSystem(Systems.GISOGR_RK);
-            reestrMessage.setUserFrom(Systems.EIS_JS);
+            if (processResult.getXmlBuildMeta().getXmlString().contains("RRTR02")) {
+                reestrMessage.setUserFrom(Systems.FGIS_EGRN);
+            } else {
+                reestrMessage.setUserFrom(Systems.EIS_JS);
+            }
             incomingService.save(reestrMessage);
 
             var smevMessage = SmevMessageMetaEntity.createIncoming(
@@ -96,7 +100,7 @@ public class SmevMessageService {
         }
     }
 
-    public void saveOutgoing(XmlBuildMeta buildMeta) {
+    public void saveOutgoing(XmlBuildMeta buildMeta, String userTo) {
         try {
             var reestrMessage = new ReestrOutgoing();
             reestrMessage.setId(UUID.randomUUID());
@@ -104,7 +108,7 @@ public class SmevMessageService {
             reestrMessage.setDateOut(LocalDateTime.now());
             reestrMessage.setStatus(ReestrStatus.SEND_QUEUE.getTitle());
             reestrMessage.setSystem(Systems.GISOGR_RK);
-            reestrMessage.setUserTo(Systems.EIS_JS);
+            reestrMessage.setUserTo(userTo);
             outgoingService.save(reestrMessage);
 
             var smevMessage = SmevMessageMetaEntity.createOutgoing(

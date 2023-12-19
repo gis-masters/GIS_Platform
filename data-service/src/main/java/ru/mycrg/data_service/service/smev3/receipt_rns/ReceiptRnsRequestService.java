@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 
@@ -37,7 +38,7 @@ public class ReceiptRnsRequestService {
                     smev3Config
             ).run(dto);
             log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendQueue(buildMeta, dto.getSendToSmev());
+            messageService.sendQueue(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
             return buildMeta;
         } catch (Exception e) {
             throw new SmevRequestException("push to queue error :" + e.getMessage());

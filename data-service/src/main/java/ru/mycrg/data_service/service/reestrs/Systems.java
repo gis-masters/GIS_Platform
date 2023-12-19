@@ -6,4 +6,5 @@ package ru.mycrg.data_service.service.reestrs;
 public class Systems {
     public static final String GISOGR_RK = "ГИСОГД РК";
     public static final String EIS_JS = "ЕИС ЖС";
+    public static final String FGIS_EGRN = "ФГИС ЕГРН";
 }
