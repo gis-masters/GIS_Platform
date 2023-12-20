@@ -123,7 +123,8 @@ public class FtsDao {
         String resultQuery = "" +
                 "SELECT result.dist, result.schema, result.table, result.id " +
                 "FROM (" + ftsQuery + ") AS result " +
-                "JOIN (" + findAllowedQuery + ") AS document ON result.id = document.id";
+                "JOIN (" + findAllowedQuery + ") AS document ON result.id = document.id " +
+                "ORDER BY dist LIMIT 10";
 
         log.debug("fts query for document-library: [{}]", resultQuery);
 

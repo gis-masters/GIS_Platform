@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine.notInStopWords;
+import static ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine.stopWords;
 
 @Service
 public class FtsDictionaryService {
@@ -59,17 +60,13 @@ public class FtsDictionaryService {
                                          .filter(notInStopWords)
                                          .collect(Collectors.toList());
 
-        if (splitedText.size() == 1) {
-            return new HashSet<>(ftsDictionaryDao.search(text, LIMIT));
-        }
-
         Set<FtsDictionaryItem> words = new HashSet<>();
         for (String word: splitedText) {
             List<FtsDictionaryItem> allFound = ftsDictionaryDao.search(word, LIMIT);
             if (hazAbsoluteWords(allFound)) {
                 List<FtsDictionaryItem> onlyAbsolute = allFound.stream()
-                                                                      .filter(item -> item.getDist().equals(0f))
-                                                                      .collect(Collectors.toList());
+                                                               .filter(item -> item.getDist().equals(0f))
+                                                               .collect(Collectors.toList());
 
                 words.addAll(onlyAbsolute);
             } else {
@@ -77,7 +74,9 @@ public class FtsDictionaryService {
             }
         }
 
-        return words;
+        return words.stream()
+                    .filter(item -> !stopWords.contains(item.getWord()))
+                    .collect(Collectors.toSet());
     }
 
     /**
