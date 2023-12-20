@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static java.sql.Types.VARCHAR;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildSearchByDictionaryQuery;
 
 @Repository
 public class FtsDictionaryDao {
@@ -36,20 +37,7 @@ public class FtsDictionaryDao {
         StopWatch searchWatch = new StopWatch();
         searchWatch.start();
 
-        String typeSection = "";
-        if (type != null) {
-            typeSection = "AND type_id = " + type;
-        }
-
-        String query = "" +
-                "SELECT wd.dist, d.* " +
-                "FROM ( " +
-                "        SELECT word, type_id, word OPERATOR (public.<->) :searchedText as dist " +
-                "        FROM data.fts_dictionary " +
-                "    ) AS wd " +
-                "    JOIN data.fts_dictionary AS d ON wd.word = d.word AND wd.type_id = d.type_id " +
-                "WHERE wd.dist < 0.9 " + typeSection +
-                "ORDER BY wd.dist LIMIT " + limit;
+        String query = buildSearchByDictionaryQuery(limit, type);
 
         log.debug("Search in dictionary query: [{}]", query);
 

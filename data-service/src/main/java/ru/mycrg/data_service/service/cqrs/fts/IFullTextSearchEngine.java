@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.service.cqrs.fts;
 
 import org.springframework.data.domain.Page;
-import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
@@ -16,9 +15,9 @@ public interface IFullTextSearchEngine {
 
     Page<FtsResponseDto> search(FtsRequest dto, Set<String> dictionaryWords);
 
-    FtsType getType();
+    Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest dto);
 
-    float DEFAULT_BOUND = 0.93f;
+    FtsType getType();
 
     String CADASTR_NUMBER_PATTERN = "\\d{2}:\\d{2}:\\d{6,7}:\\d+";
 
@@ -36,15 +35,9 @@ public interface IFullTextSearchEngine {
                       .replaceAll("[^A-Za-zА-Яа-я0-9:]", " ").trim();
     }
 
-    default float getBound(FtsRequestDto dto) {
-        return dto.getBound() != null ? dto.getBound() : DEFAULT_BOUND;
-    }
-
     default boolean isCadastrNumber(String input) {
         return Pattern.compile(CADASTR_NUMBER_PATTERN)
                       .matcher(input)
                       .matches();
     }
-
-    Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest dto);
 }

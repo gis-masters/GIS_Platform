@@ -206,7 +206,7 @@ public class SqlBuilder {
         }
 
         String query = "" +
-                "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "       subquery.schema, " +
                 "       subquery.table, " +
                 "       subquery.id " +
@@ -236,7 +236,7 @@ public class SqlBuilder {
                 : buildFtsWhere2(ecqlFilter, bound);
 
         String query = "" +
-                "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "       subquery.schema, " +
                 "       subquery.table, " +
                 "       subquery.id," +
@@ -283,7 +283,7 @@ public class SqlBuilder {
 
         String subSelect = "SELECT * FROM " + qualifier.getTableQualifier() + " " + whereSection;
 
-        return "SELECT subquery.concatenated_data OPERATOR (public.<->) :searchedText as dist, " +
+        return "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "      subquery.schema," +
                 "      subquery.table," +
                 "      subquery.id " +
@@ -310,7 +310,7 @@ public class SqlBuilder {
     }
 
     public static String buildFtsWhere(String ecqlFilter, float bound) {
-        String ftsCondition = String.format("(d.concatenated_data OPERATOR (public.<->) :searchedText < %s)", bound);
+        String ftsCondition = String.format("(:searchedText OPERATOR (public.<<<->) d.concatenated_data < %s)", bound);
 
         String filter = buildWhereSection(ecqlFilter);
 
@@ -386,6 +386,23 @@ public class SqlBuilder {
         }
 
         return result.toString();
+    }
+
+    @NotNull
+    public static String buildSearchByDictionaryQuery(@NotNull Integer limit, @Nullable Integer type) {
+        String typeSection = "";
+        if (type != null) {
+            typeSection = "AND type_id = " + type;
+        }
+
+        return "SELECT wd.dist, d.* " +
+                "FROM ( " +
+                "        SELECT word, type_id, word OPERATOR (public.<->) :searchedText as dist " +
+                "        FROM data.fts_dictionary " +
+                "    ) AS wd " +
+                "    JOIN data.fts_dictionary AS d ON wd.word = d.word AND wd.type_id = d.type_id " +
+                "WHERE wd.dist < 0.9 " + typeSection +
+                "ORDER BY wd.dist LIMIT " + limit;
     }
 
     @NotNull

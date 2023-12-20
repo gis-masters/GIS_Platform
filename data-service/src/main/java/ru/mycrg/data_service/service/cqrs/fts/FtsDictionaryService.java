@@ -7,7 +7,6 @@ import ru.mycrg.data_service.dao.FtsDictionaryDao;
 import ru.mycrg.data_service.dto.FtsDictionaryItem;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,35 +53,22 @@ public class FtsDictionaryService {
         return result;
     }
 
-    public Set<FtsDictionaryItem> collectWords(String text) {
-        List<String> splitedText = Arrays.stream(text.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
-                                         .filter(s -> !s.isBlank() && s.length() > 1)
-                                         .filter(notInStopWords)
-                                         .collect(Collectors.toList());
-
-        Set<FtsDictionaryItem> words = new HashSet<>();
-        for (String word: splitedText) {
-            List<FtsDictionaryItem> allFound = ftsDictionaryDao.search(word, LIMIT);
-            if (hazAbsoluteWords(allFound)) {
-                List<FtsDictionaryItem> onlyAbsolute = allFound.stream()
-                                                               .filter(item -> item.getDist().equals(0f))
-                                                               .collect(Collectors.toList());
-
-                words.addAll(onlyAbsolute);
-            } else {
-                words.addAll(allFound);
-            }
-        }
-
-        return words.stream()
-                    .filter(item -> !stopWords.contains(item.getWord()))
-                    .collect(Collectors.toSet());
+    private Set<FtsDictionaryItem> collectWords(String text) {
+        return Arrays.stream(text.replaceAll("[^a-zA-Z0-9а-яА-Я ]", " ").split(" "))
+                     .filter(s -> !s.isBlank() && s.length() > 1)
+                     .filter(notInStopWords)
+                     .flatMap(word -> getOnlyAbsolute(ftsDictionaryDao.search(word, LIMIT)).stream())
+                     .filter(item -> !stopWords.contains(item.getWord()))
+                     .collect(Collectors.toSet());
     }
 
-    /**
-     * Проверим есть ли в выборке элементы с точным совпадением - это те у которых dist = 0
-     */
-    private boolean hazAbsoluteWords(List<FtsDictionaryItem> dictionaryItems) {
-        return dictionaryItems.get(0).getDist().equals(0f);
+    private List<FtsDictionaryItem> getOnlyAbsolute(List<FtsDictionaryItem> all) {
+        List<FtsDictionaryItem> onlyAbsolute = all.stream()
+                                                  .filter(item -> item.getDist().equals(0f))
+                                                  .collect(Collectors.toList());
+
+        return onlyAbsolute.isEmpty()
+                ? all
+                : onlyAbsolute;
     }
 }
