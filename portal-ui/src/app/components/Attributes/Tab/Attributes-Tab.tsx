@@ -6,17 +6,16 @@ import { Close } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../../stores/Map.store';
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
 import { communicationService } from '../../../services/communication.service';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { IconButton } from '../../IconButton/IconButton';
-
-import { AttributesTabInner } from '../TabInner/Attributes-TabInner';
-import { AttributesTabTitle } from '../TabTitle/Attributes-TabTitle';
-import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
+import { mapStore } from '../../../stores/Map.store';
+import { TabTitle } from '../../TabTitle/TabTitle';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';
+import { TabInner } from '../../TabInner/TabInner';
 
 const cnAttributesTab = cn('Attributes', 'Tab');
 const cnAttributesTabClose = cn('Attributes', 'TabClose');
@@ -44,8 +43,8 @@ export class AttributesTab extends Component<AttributesTabProps> {
         className={cnAttributesTab({ grade, selected }, [className])}
         onClick={this.clickHandler}
         label={
-          <AttributesTabInner>
-            <AttributesTabTitle selected={selected}>{layer.title}</AttributesTabTitle>
+          <TabInner>
+            <TabTitle selected={selected}>{layer.title}</TabTitle>
 
             {!!this.selectedFeaturesCount && <>&nbsp;({this.selectedFeaturesCount})</>}
 
@@ -63,7 +62,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
             >
               <Close fontSize='small' />
             </IconButton>
-          </AttributesTabInner>
+          </TabInner>
         }
         {...props}
       />

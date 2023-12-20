@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Menu, MenuItem, ListItemIcon } from '@mui/material';
+import { Menu, MenuItem, ListItemIcon, Tooltip } from '@mui/material';
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -9,6 +9,8 @@ import { cn } from '@bem-react/classname';
 import { authService } from '../../services/auth/auth/auth.service';
 import { Button } from '../Button/Button';
 import { currentUser } from '../../stores/CurrentUser.store';
+
+import '!style-loader!css-loader!sass-loader!./User.scss';
 
 const cnUser = cn('User');
 
@@ -24,16 +26,16 @@ export class User extends Component {
   render() {
     return (
       <>
-        <Button
-          className={cnUser()}
-          onClick={this.toggleMenu}
-          endIcon={<AccountCircle />}
-          color='inherit'
-          variant='text'
-          size='large'
-        >
-          {currentUser.login}
-        </Button>
+        <Tooltip title={currentUser.login}>
+          <Button
+            className={cnUser()}
+            onClick={this.toggleMenu}
+            endIcon={<AccountCircle />}
+            color='inherit'
+            variant='text'
+            size='large'
+          />
+        </Tooltip>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.toggleMenu} anchorEl={this.anchorEl}>
           <MenuItem onClick={this.logout}>

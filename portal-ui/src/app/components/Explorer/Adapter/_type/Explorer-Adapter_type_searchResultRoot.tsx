@@ -25,7 +25,7 @@ export class ExplorerAdapterTypeSearchResultRoot {
   }
 
   static getTitle(): string {
-    return 'Результаты поиска';
+    return 'Поиск';
   }
 
   static getDescription(): string {

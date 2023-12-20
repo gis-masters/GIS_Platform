@@ -421,7 +421,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         sidebars.setFeaturesEdited(false);
         if (this.viewFeatures) {
           mapSelectionService.selectFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
-          sidebars.openFeaturesSidebar();
+          sidebars.openSelectedFeaturesSidebar();
         } else {
           sidebars.closeEdit();
         }
@@ -452,6 +452,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   async close(): Promise<void> {
     if (sidebars.memorizedViewFeatures) {
       mapSelectionService.selectFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
+      sidebars.openSelectedFeaturesSidebar();
+    } else if (sidebars.foundBySearchFeatureEdited) {
       sidebars.openFeaturesSidebar();
     } else {
       await services.provided;

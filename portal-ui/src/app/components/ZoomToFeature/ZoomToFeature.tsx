@@ -5,6 +5,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { projectsService } from '../../services/gis/projects/projects.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 
@@ -33,6 +35,9 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   @boundMethod
   private clickHandler() {
     const { feature, onClick } = this.props;
+
+    const layer = getLayerByFeatureInCurrentProject(feature);
+    projectsService.enableLayersByTableNames([layer.tableName]);
 
     mapService.positionToFeature(feature);
     this.btnRef.current.blur();

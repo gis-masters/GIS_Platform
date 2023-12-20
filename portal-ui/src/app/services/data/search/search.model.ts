@@ -21,6 +21,15 @@ export interface SearchSourceForFeature {
   geometryType: GeometryType;
 }
 
+export interface SearchSourcesForFeature {
+  dataset: string;
+  table: string;
+}
+
+export interface SearchSourcesForDocument {
+  library: string;
+}
+
 export interface SearchItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
@@ -30,7 +39,7 @@ export interface SearchItemDataTypeFeature extends FtsResponseDto {
 export interface SearchRawItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
-  payload: Record<string, unknown>;
+  payload: { properties: Record<string, unknown> };
 }
 
 interface SearchItemDataTypeDocument extends FtsResponseDto {
@@ -41,3 +50,4 @@ interface SearchItemDataTypeDocument extends FtsResponseDto {
 
 export type SearchItemData = SearchItemDataTypeDocument | SearchItemDataTypeFeature;
 export type SearchRawItemData = SearchItemDataTypeDocument | SearchRawItemDataTypeFeature;
+export type SearchItemDataSource = SearchSourcesForFeature | SearchSourcesForDocument;

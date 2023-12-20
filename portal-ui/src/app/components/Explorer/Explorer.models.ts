@@ -1,13 +1,14 @@
 import { ReactNode } from 'react';
 
+import { SearchItemDataSource } from '../../services/data/search/search.model';
 import { DataChangeEventDetail } from '../../services/communication.service';
 import { FtsType } from '../../../server-types/common-contracts';
 import { FilterQuery } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
 import { Emitter } from '../../services/common/Emitter';
 
-import { ExplorerStore } from './Explorer.store';
 import { ExplorerService } from './Explorer.service';
+import { ExplorerStore } from './Explorer.store';
 
 export type ExplorerRole =
   | 'SelectVectorTable'
@@ -75,6 +76,7 @@ export interface ExplorerSearchValue {
   searchValue?: string;
   path?: ExplorerItemData[];
   breadcrumbSearchValue?: string;
+  source?: SearchItemDataSource[];
   type?: FtsType;
 }
 

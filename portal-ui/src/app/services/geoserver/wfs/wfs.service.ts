@@ -170,7 +170,7 @@ export async function makeXmlPolygonIntersect(
   selectionType: MapSelectionTypes
 ): Promise<string> {
   const tableName = complexName.split(':')[1];
-  const layer = currentProject.getLayerByTableName(tableName);
+  const layer = currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);

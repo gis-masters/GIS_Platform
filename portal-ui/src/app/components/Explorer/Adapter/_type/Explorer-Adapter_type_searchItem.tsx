@@ -24,8 +24,13 @@ declare module '../../Explorer.models' {
 @staticImplements<Adapter<SearchItemData>>()
 export class ExplorerAdapterTypeSearchItem {
   static getId(item: ExplorerItemData<SearchItemData>): string {
-    if (item.payload.type === 'DOCUMENT' || item.payload.type === 'FEATURE') {
-      return String(item.payload.payload.id);
+    const searchItem = item.payload;
+    if (searchItem.type === 'DOCUMENT') {
+      return String(searchItem.payload.id) + searchItem.source.library;
+    }
+
+    if (searchItem.type === 'FEATURE') {
+      return searchItem.payload.id + searchItem.source.table + searchItem.source.dataset;
     }
 
     throw new Error('id элемента не найдено');
@@ -46,12 +51,12 @@ export class ExplorerAdapterTypeSearchItem {
   static getDescription(item: ExplorerItemData<SearchItemData>): ReactNode {
     let createdAt: string;
 
-    if (item.payload.type === 'DOCUMENT') {
+    if (item.payload.type === 'DOCUMENT' && item.payload.payload.created_at) {
       createdAt = item.payload.payload.created_at;
     }
 
-    if (item.payload.type === 'FEATURE') {
-      createdAt = String(item.payload.payload.properties.created_at);
+    if (item.payload.type === 'FEATURE' && item.payload.payload.properties.created_at) {
+      createdAt = item.payload.payload.properties.created_at as string;
     }
 
     return (

@@ -176,7 +176,7 @@ class MapSelectionService {
         await this.selectFeaturesByCoordinates(MapSelectionTypes.REPLACE, mapService.getBufferByCoordinates(e.detail));
 
         sidebars.clearFeaturesWithError();
-        sidebars.openFeaturesSidebar();
+        sidebars.openSelectedFeaturesSidebar();
       }
     }, this);
   }

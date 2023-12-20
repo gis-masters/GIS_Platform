@@ -6,6 +6,7 @@ import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FeatureError } from '../services/map/map-link-following.service';
 import { Properties } from '../components/edit-feature/edit-feature.component';
+import { SearchInfo } from '../components/GlobalSearch/GlobalSearch';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',
@@ -46,11 +47,14 @@ class Sidebars {
   @observable deletedLayers?: FeatureError[];
   @observable editFeaturesData?: EditFeaturesData;
   @observable featuresWithErrors?: number;
+  @observable foundBySearchFeatureEdited?: boolean;
+  @observable selectedFeaturesEdited?: boolean;
   @observable featuresEdited: boolean;
   @observable featuresClosingConfirmationOpen: boolean;
   @observable featuresClosingConfirmationCallback?: () => void;
   @observable bugReportOpen: boolean;
   @observable infoOpen: boolean;
+  @observable searchValue: SearchInfo;
 
   private static _instance: Sidebars;
 
@@ -84,13 +88,23 @@ class Sidebars {
   }
 
   @action.bound
+  setSearchValue(searchValue: SearchInfo) {
+    this.searchValue = searchValue;
+  }
+
+  @action.bound
   openFeaturesSidebar() {
-    if (this.needEditConfirmation(this.openFeaturesSidebar.bind(this))) {
-      return;
-    }
     this.closeBugReport();
     this.closeEdit();
     this.featuresSidebarOpen = true;
+  }
+
+  @action.bound
+  openSelectedFeaturesSidebar() {
+    if (this.needEditConfirmation(this.openSelectedFeaturesSidebar.bind(this))) {
+      return;
+    }
+    this.openFeaturesSidebar();
 
     if (!this.featuresWithErrors && mapStore.selectedFeatures.length === 1) {
       this.closeFeaturesSidebar();
@@ -103,9 +117,9 @@ class Sidebars {
     if (
       mapStore.selectedFeatures.length === 0 &&
       !this.featuresWithErrors &&
-      !this.deletedFeatures.length &&
-      !this.featuresWithNoAccess.length &&
-      !this.deletedLayers.length
+      !this.deletedFeatures?.length &&
+      !this.featuresWithNoAccess?.length &&
+      !this.deletedLayers?.length
     ) {
       this.closeFeaturesSidebar();
       this.closeEdit();
@@ -121,6 +135,16 @@ class Sidebars {
   closeSidebar() {
     this.closeFeaturesSidebar();
     this.closeEdit();
+  }
+
+  @action
+  setFoundBySearchFeatureEdited(foundBySearchFeatureEdited: boolean) {
+    this.foundBySearchFeatureEdited = foundBySearchFeatureEdited;
+  }
+
+  @action
+  setSelectedFeaturesEdited(selectedFeaturesEdited: boolean) {
+    this.selectedFeaturesEdited = selectedFeaturesEdited;
   }
 
   @action

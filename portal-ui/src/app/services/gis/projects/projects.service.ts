@@ -47,12 +47,7 @@ class ProjectsService {
     reaction(
       () => Object.keys(mapStore.selectedFeaturesByTableName),
       tableNames => {
-        currentProject.layers?.forEach(layer => {
-          if (layer.tableName && tableNames.includes(layer.tableName)) {
-            currentProject.patchLayer(layer.id, { enabled: true });
-            this.enableGroupAndAncestors(layer.parentId);
-          }
-        });
+        this.enableLayersByTableNames(tableNames);
       },
       { fireImmediately: true }
     );
@@ -244,6 +239,15 @@ class ProjectsService {
         throw error;
       }
     }
+  }
+
+  enableLayersByTableNames(tableNames: string[]) {
+    currentProject.layers?.forEach(layer => {
+      if (layer.tableName && tableNames.includes(layer.tableName)) {
+        currentProject.patchLayer(layer.id, { enabled: true });
+        this.enableGroupAndAncestors(layer.parentId);
+      }
+    });
   }
 }
 

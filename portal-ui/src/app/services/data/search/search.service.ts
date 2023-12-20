@@ -17,9 +17,10 @@ export async function getSearchResults(
         const schema = await schemaService.getSchema(source.schema);
         const wfsFeature: WfsFeature = {
           type: 'Feature',
-          id: `${source.table}.${String(payload.objectid)}`,
+          id: `${source.table}.${String(payload.properties.objectid)}`,
+          geometry: { coordinates: [], type: source.geometryType },
           geometry_name: getGeometryFieldName(schema),
-          properties: { ...payload }
+          properties: { ...payload.properties }
         };
 
         delete wfsFeature.properties.objectid;

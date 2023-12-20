@@ -1,5 +1,6 @@
 import { CrgProject } from './gis/projects/projects.models';
 import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
+import { ExplorerSearchValue } from '../components/Explorer/Explorer.models';
 import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
 import { Library, LibraryRecord } from './data/library/library.models';
 import { Basemap } from './data/basemaps/basemaps.models';
@@ -42,6 +43,7 @@ class CommunicationService {
   editBugObject = new Emitter<ObjectDto[]>();
   beforeMapDestroy = new Emitter();
   drawOff = new Emitter();
+  openGlobalSearchResults = new Emitter<ExplorerSearchValue>();
   openAttributesBar = new Emitter<CrgVectorLayer>();
   utilityDialogClosed = new Emitter<UtilityDialogCloseEventDetail>();
 

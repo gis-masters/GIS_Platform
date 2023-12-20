@@ -1,0 +1,20 @@
+body .GlobalSearch {
+  display: inline-flex;
+
+  &.Form {
+    width: auto;
+    padding: 0;
+  }
+
+  &-SearchField .MuiInputBase-input,
+  &-SearchField .MuiInputBase-root {
+    color: var(--white);
+
+    &:hover,
+    &::before,
+    &:hover::before {
+      color: var(--white);
+      border-color: var(--white);
+    }
+  }
+}

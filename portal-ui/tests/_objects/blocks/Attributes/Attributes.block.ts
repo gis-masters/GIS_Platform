@@ -94,7 +94,7 @@ class AttributesBlock extends Block {
 
   async clickTab(layerTitle: string) {
     const $attributesTabs = await this.$('attributesTabs');
-    const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
+    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`);
     await $tabTitle.click();
   }
 
@@ -126,7 +126,7 @@ class AttributesBlock extends Block {
     const $attributesTabs = await this.$('attributesTabs');
     await $attributesTabs.waitForDisplayed();
 
-    return await extractText(await $attributesTabs.$$('.Attributes-TabTitle'));
+    return await extractText(await $attributesTabs.$$('.TabTitle'));
   }
 
   async getAllRowsLength() {
@@ -137,7 +137,7 @@ class AttributesBlock extends Block {
 
   async closeTab(layerTitle: string) {
     const $attributesTabs = await this.$('attributesTabs');
-    const $tabTitle = await $attributesTabs.$(`.Attributes-TabTitle=${layerTitle}`);
+    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`);
     const $attributeTab = await $tabTitle.parentElement();
     const $closeIcon = await $attributeTab.$('.Attributes-TabClose');
     await $closeIcon.waitForClickable();

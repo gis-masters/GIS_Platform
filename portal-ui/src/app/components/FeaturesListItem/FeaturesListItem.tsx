@@ -15,6 +15,7 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
 import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 
@@ -31,6 +32,7 @@ interface FeaturesListItemProps {
   errorData?: FeatureError;
   message?: string;
   style?: CSSProperties;
+  isSearchList?: boolean;
 }
 
 @observer
@@ -109,12 +111,14 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @computed
   private get layer(): CrgLayer | undefined {
-    const { feature } = this.props;
+    const { feature, isSearchList } = this.props;
 
     if (feature) {
       const tableName = this.extractTableName(feature?.id);
 
-      return currentProject.getLayerByTableName(tableName);
+      return isSearchList
+        ? currentProject.getLayerByTableNameFromAllVectorLayers(tableName)
+        : currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
     }
   }
 
@@ -123,6 +127,10 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     if (!this.props.errorData) {
       const { onSelect, feature } = this.props;
       onSelect(feature);
+    }
+
+    if (this.layer) {
+      projectsService.enableLayersByTableNames([this.layer.tableName]);
     }
   }
 

@@ -286,6 +286,6 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                          "tableTitle", table.getTitle(),
                                          "geometryType", schema.getGeometryType().getType(),
                                          "schema", schema.getName()),
-                                  feature.getProperties());
+                                  feature);
     }
 }

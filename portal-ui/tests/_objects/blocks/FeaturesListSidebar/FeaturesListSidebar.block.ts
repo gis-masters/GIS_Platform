@@ -5,7 +5,7 @@ import { FeaturesListItemBlock } from '../FeaturesListItem/FeaturesListItem.bloc
 class FeaturesListSidebarBlock extends Block {
   selectors = {
     container: '.FeaturesListSidebar',
-    closeIcon: '.FeaturesListSidebar-Close',
+    closeIcon: '.FeaturesListSidebarFeatures-Close',
     item: '.FeaturesListSidebar .FeaturesListItem',
     title: '.FeaturesListSidebar .FeaturesListItem-Title'
   };

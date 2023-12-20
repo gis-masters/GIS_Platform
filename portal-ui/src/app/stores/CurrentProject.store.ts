@@ -248,14 +248,24 @@ class CurrentProject implements CrgProjectData {
     };
   }
 
-  public getLayerByTableName(tableName: string): CrgLayer {
-    const layer = this.visibleVectorLayers
-      .filter(item => {
-        return item.payload.tableName === tableName;
-      })
-      .map(item => item.payload)[0];
+  getLayerByTableNameFromVisibleVectorLayers(tableName: string): CrgLayer {
+    return this.getLayerByTableNameFromLayers(
+      tableName,
+      this.visibleVectorLayers.map(item => item.payload)
+    );
+  }
+
+  getLayerByTableNameFromAllVectorLayers(tableName: string): CrgLayer {
+    if (tableName && this.vectorLayers.length) {
+      return this.getLayerByTableNameFromLayers(tableName, this.vectorLayers);
+    }
+  }
+
+  private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {
+    const layer = layers.find(item => item.tableName === tableName);
+
     if (!layer) {
-      throw new Error('В проекте, среди visibleVectorLayers не удалось найти слой по имени таблицы: ' + tableName);
+      throw new Error('В проекте, среди layers не удалось найти слой по имени таблицы: ' + tableName);
     }
 
     return layer;

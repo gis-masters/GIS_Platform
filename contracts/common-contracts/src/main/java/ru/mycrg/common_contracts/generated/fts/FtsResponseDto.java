@@ -7,13 +7,13 @@ public class FtsResponseDto {
     FtsType type;
     Float value;
     Map<String, Object> source;
-    Map<String, Object> payload;
+    Object payload;
 
     public FtsResponseDto() {
         // Required
     }
 
-    public FtsResponseDto(FtsType type, Float value, Map<String, Object> source, Map<String, Object> payload) {
+    public FtsResponseDto(FtsType type, Float value, Map<String, Object> source, Object payload) {
         this.type = type;
         this.value = value;
         this.source = source;
@@ -36,7 +36,7 @@ public class FtsResponseDto {
         this.source = source;
     }
 
-    public Map<String, Object> getPayload() {
+    public Object getPayload() {
         return payload;
     }
 

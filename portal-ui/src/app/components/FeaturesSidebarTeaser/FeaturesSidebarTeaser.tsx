@@ -61,7 +61,7 @@ export class FeaturesSidebarTeaser extends Component {
           className={cnFeaturesSidebarTeaser({ hidden: !count })}
           style={{ '--FeaturesSidebarTeaserBadgeDigits': Math.min(String(count).length, 5) }}
         >
-          <IconButton onClick={sidebars.openFeaturesSidebar}>
+          <IconButton onClick={sidebars.openSelectedFeaturesSidebar}>
             <Badge
               badgeContent={count}
               anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
