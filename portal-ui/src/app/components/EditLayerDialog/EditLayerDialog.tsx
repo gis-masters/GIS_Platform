@@ -143,15 +143,21 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         options: [
           ...this.defaultStylesOptions,
           ...this.simpleStylesOptions,
-          {
-            startIcon: <EditLayerDialogStyleIcon styleName={CUSTOM_STYLE_NAME} layerComplexName={layer.complexName} />,
-            title: 'Настраиваемый',
-            value: CUSTOM_STYLE_NAME
-          }
+          ...(schema?.geometryType
+            ? [
+                {
+                  startIcon: (
+                    <EditLayerDialogStyleIcon styleName={CUSTOM_STYLE_NAME} layerComplexName={layer.complexName} />
+                  ),
+                  title: 'Настраиваемый',
+                  value: CUSTOM_STYLE_NAME
+                }
+              ]
+            : [])
         ]
       });
 
-      if ({ ...layer, ...this.currentFormValue }.styleName === CUSTOM_STYLE_NAME) {
+      if ({ ...layer, ...this.currentFormValue }.styleName === CUSTOM_STYLE_NAME && schema?.geometryType) {
         properties.push({
           name: 'style',
           title: 'Настройки стиля',

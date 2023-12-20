@@ -7,15 +7,15 @@ import { cn } from '@bem-react/classname';
 import { buildCustomSld, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
 import { CustomStyleDescription } from '../../services/geoserver/styles/styles.models';
 import { getSupGeometryType } from '../../services/geoserver/styles/styles.service';
-import { schemaService } from '../../services/data/schema/schema.service';
+import { getLegendGraphic } from '../../services/geoserver/wms/wms.service';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
+import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 import { CustomStyleControlForm } from './Form/CustomStyleControl-Form.composed';
-import { getLegendGraphic } from '../../services/geoserver/wms/wms.service';
 
 import '!style-loader!css-loader!sass-loader!./CustomStyleControl.scss';
-import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 
 const cnCustomStyleControl = cn('CustomStyleControl');
 
@@ -57,13 +57,13 @@ export class CustomStyleControl extends Component<FormControlProps> {
 
   async componentDidMount() {
     const { formValue, onChange } = this.props;
-    const { schemaId, style, complexName } = formValue as CrgLayer;
+    const layer = formValue as CrgLayer;
 
-    if (!schemaId || !complexName) {
-      throw new Error('Некорректный слой');
+    if (!layer.complexName) {
+      throw new Error('Некорректный слой: отсутствует complexName');
     }
 
-    const schema = await schemaService.getSchema(schemaId);
+    const schema = await getLayerSchema(layer);
 
     if (!schema.geometryType) {
       throw new Error('Некорректная схема слоя: отсутствует geometryType');
@@ -71,10 +71,10 @@ export class CustomStyleControl extends Component<FormControlProps> {
 
     this.setType(getSupGeometryType(schema.geometryType));
 
-    if (!style && this.type && onChange) {
+    if (!layer.style && this.type && onChange) {
       onChange({
         propertyName: 'style',
-        value: buildCustomSld(complexName, defaultCustomStyles[this.type])
+        value: buildCustomSld(layer.complexName, defaultCustomStyles[this.type])
       });
     }
 
