@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
 
 public abstract class KptElementDBWriter implements KptElementWriter {
+
     private final Logger log = LoggerFactory.getLogger(KptElementDBWriter.class);
     private final DetachedRecordsDao recordsDao;
     private final ResourceQualifier resourceQualifier;
@@ -28,7 +29,7 @@ public abstract class KptElementDBWriter implements KptElementWriter {
     public void writeBatch(List<KptElement> kptElements, SchemaDto tableSchemaDto, String databaseName) {
         Map<String, Object>[] batch = kptElements.stream().map(KptElement::getContent).toArray(Map[]::new);
         try {
-            recordsDao.addRecordsAsBatch(resourceQualifier, batch, tableSchemaDto, databaseName);
+            recordsDao.addRecordsAsBatch(resourceQualifier, batch, tableSchemaDto, databaseName, DS_ID, DS_POOL_SIZE);
         } catch (CrgDaoException e) {
             log.error("Ошибка при добавлении batch записей в таблицу " + resourceQualifier, e);
         }

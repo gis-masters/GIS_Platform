@@ -2,6 +2,7 @@ package ru.mycrg.data_service.dao.detached;
 
 import org.hsqldb.types.Types;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -40,27 +41,36 @@ public class DetachedRecordsDao {
                                   @NotNull IContent content,
                                   @NotNull SchemaDto schema,
                                   @NotNull String databaseName) throws CrgDaoException {
-        this.addRecordsAsBatch(qualifier, content.asBatch(), schema, databaseName);
+        this.addRecordsAsBatch(qualifier, content.asBatch(), schema, databaseName, null, null);
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
                                   @NotNull Map<String, Object>[] body,
                                   @NotNull SchemaDto schema,
-                                  @NotNull String databaseName) throws CrgDaoException {
+                                  @NotNull String databaseName,
+                                  @Nullable String datasourceId,
+                                  @Nullable Integer poolSize) throws CrgDaoException {
         try {
-            NamedParameterJdbcTemplate jdbcTemplate =
-                    new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+            NamedParameterJdbcTemplate jdbcTemplate;
+            if (datasourceId == null || poolSize == null) {
+                jdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+            } else {
+                jdbcTemplate = new NamedParameterJdbcTemplate(
+                        datasourceFactory.getNamedDataSource(databaseName, datasourceId, poolSize)
+                );
+            }
+
             Feature firstFeature = new Feature(body[0]);
             String query = buildParameterizedInsertQuery(qualifier, firstFeature, false);
             MapSqlParameterSource[] parameterSource = Arrays.stream(body)
-                .map(b -> {
-                    MapSqlParameterSource source =
-                            sqlParameterSourceFactory.buildParameterizedSource(
-                            new Feature(b), schema);
-                    source.registerSqlType("source_doc", Types.OTHER);
-                    return source;
-                })
-                .toArray(MapSqlParameterSource[]::new);
+                                                            .map(b -> {
+                                                                MapSqlParameterSource source =
+                                                                        sqlParameterSourceFactory.buildParameterizedSource(
+                                                                                new Feature(b), schema);
+                                                                source.registerSqlType("source_doc", Types.OTHER);
+                                                                return source;
+                                                            })
+                                                            .toArray(MapSqlParameterSource[]::new);
 
             log.debug("BATCH(size = {}) INSERT QUERY: [{}]", body.length, query);
             jdbcTemplate.batchUpdate(query, parameterSource);

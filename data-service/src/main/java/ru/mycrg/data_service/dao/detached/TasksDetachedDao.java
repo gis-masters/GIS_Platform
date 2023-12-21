@@ -48,7 +48,7 @@ public class TasksDetachedDao {
         jdbcTemplate.update("UPDATE data.tasks " +
                                     "SET status = ?, last_modified = now() " +
                                     "WHERE id = ?", newStatus.toString(), taskId);
-        log.debug("Закрыта задача " + taskId);
+        log.debug("Задача {} переведена в статус {}", taskId, newStatus);
     }
 
     public TaskStatus getTaskStatus(String databaseName, Long taskId) {

@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_POOL_SIZE;
+
 /**
  * Сервис, управляющей валидацией импортируемых КПТ
  */
@@ -38,7 +41,8 @@ public class KptImportValidatorService {
         for (String tableName: results.keySet()) {
             List<KptImportValidationResult> tableResults = results.get(tableName);
             for (KptImportValidationResult tableResult: tableResults) {
-                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), tableResult);
+                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), tableResult,
+                                                 DS_ID, DS_POOL_SIZE);
             }
         }
         return results;

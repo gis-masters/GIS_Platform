@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,16 +33,22 @@ public class DatasourceFactory {
     }
 
     public synchronized HikariDataSource getDataSource(String dbName) {
-        log.trace("getDataSource for: {}", dbName);
+        return getNamedDataSource(dbName, null, HIKARI_POOL_SIZE);
+    }
 
-        if (dataSources.containsKey(dbName)) {
+    public synchronized HikariDataSource getNamedDataSource(String dbName, @Nullable String datasourceId,
+                                                            int poolSize) {
+        String datasourceName = buildDatasourceKey(dbName, datasourceId);
+        log.trace("getDataSource for: {}", datasourceName);
+
+        if (dataSources.containsKey(datasourceName)) {
             log.trace("get from pool");
 
-            return dataSources.get(dbName);
+            return dataSources.get(datasourceName);
         } else {
-            HikariDataSource dataSource = getDataSource(dbName, SYSTEM_SCHEMA_NAME, HIKARI_POOL_SIZE);
+            HikariDataSource dataSource = getDataSource(dbName, SYSTEM_SCHEMA_NAME, poolSize);
 
-            dataSources.put(dbName, dataSource);
+            dataSources.put(datasourceName, dataSource);
             log.debug("Created new one. Current pool size: {}", dataSources.size());
 
             return dataSource;
@@ -67,6 +74,16 @@ public class DatasourceFactory {
         return environment.getRequiredProperty("spring.datasource.password");
     }
 
+    public void closeDatasource(String dbName, String datasourceId) {
+        String key = buildDatasourceKey(dbName, datasourceId);
+        HikariDataSource datasource = dataSources.get(key);
+        if (datasource != null) {
+            dataSources.remove(key);
+            datasource.close();
+            log.info("Закрыт datasource " + key);
+        }
+    }
+
     private HikariDataSource getDataSource(String dbName, String schemaName, int poolSize) {
         HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
@@ -89,5 +106,9 @@ public class DatasourceFactory {
                 defaultUri.getScheme() + "://" +
                 defaultUri.getHost() + ":" + defaultUri.getPort() +
                 "/" + dbName;
+    }
+
+    private String buildDatasourceKey(String dbName, @Nullable String datasourceId) {
+        return datasourceId == null ? dbName : datasourceId + dbName;
     }
 }

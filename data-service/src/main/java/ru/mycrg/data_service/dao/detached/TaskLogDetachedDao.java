@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.dao.detached;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.jetbrains.annotations.Nullable;
 import org.postgresql.util.PGobject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,8 @@ public class TaskLogDetachedDao {
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void createTaskLog(String dbName, TaskLogDto taskLogDto, Object body) {
+    public void createTaskLog(String dbName, TaskLogDto taskLogDto, Object body, @Nullable String datasourceId,
+                              @Nullable Integer poolSize) {
         PGobject message = new PGobject();
         message.setType("jsonb");
 
@@ -41,8 +43,16 @@ public class TaskLogDetachedDao {
         String eventTypeField = "event_type";
         String messageField = "message";
         String createdAtField = "created_at";
-        NamedParameterJdbcTemplate pJdbcTemplate = new NamedParameterJdbcTemplate(
-                datasourceFactory.getDataSource(dbName));
+
+        NamedParameterJdbcTemplate pJdbcTemplate;
+        if (datasourceId == null || poolSize == null) {
+            pJdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(dbName));
+        } else {
+            pJdbcTemplate = new NamedParameterJdbcTemplate(
+                    datasourceFactory.getNamedDataSource(dbName, datasourceId, poolSize)
+            );
+        }
+
         String query = String.format(
                 "INSERT INTO data.tasks_log (%s,%s,%s,%s) values (:%s,:%s,:%s,:%s)",
                 taskIdField, eventTypeField, messageField, createdAtField,
