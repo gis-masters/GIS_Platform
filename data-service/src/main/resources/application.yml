@@ -72,6 +72,7 @@ crg-options:
     smev3:
       enabled: true
       mnemonic: U629301
+      transportMnemonic: U629301
       targetDb: database_1
       s3:
         endpoint: http://10.10.10.32:9000

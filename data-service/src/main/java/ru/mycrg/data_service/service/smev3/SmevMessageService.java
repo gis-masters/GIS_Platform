@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
-import ru.mycrg.data_service.dao.detached.DetachedBaseDao;
+import ru.mycrg.data_service.dao.SchemaDao;
 import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
-import ru.mycrg.data_service.dao.detached.DetachedSchemaDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
@@ -18,6 +17,7 @@ import ru.mycrg.data_service.entity.reestrs.ReestrOutgoing;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.mappers.SchemaMapper;
+import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
 import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.reestrs.ReestrOutgoingService;
 import ru.mycrg.data_service.service.reestrs.Systems;
@@ -44,26 +44,24 @@ public class SmevMessageService {
     private final Smev3Config smev3Config;
     private final ReestrIncomingService incomingService;
     private final ReestrOutgoingService outgoingService;
-    private final DetachedBaseDao detachedBaseDao;
-    private final DetachedSchemaDao detachedSchemaDao;
     private final DetachedRecordsDao detachedRecordsDao;
+    private final SchemaDao schemaDao;
     private final BaseDao baseDao;
 
-    public SmevMessageService(Smev3Config smev3Config, ReestrIncomingService incomingService,
+    public SmevMessageService(Smev3Config smev3Config,
+                              ReestrIncomingService incomingService,
                               ReestrOutgoingService outgoingService,
-                              DetachedBaseDao detachedBaseDao,
-                              DetachedSchemaDao detachedSchemaDao,
-                              DetachedRecordsDao detachedRecordsDao,
+                              DetachedRecordsDao detachedRecordsDao, SchemaDao schemaDao,
                               BaseDao baseDao) {
         this.smev3Config = smev3Config;
         this.incomingService = incomingService;
         this.outgoingService = outgoingService;
-        this.detachedBaseDao = detachedBaseDao;
-        this.detachedSchemaDao = detachedSchemaDao;
         this.detachedRecordsDao = detachedRecordsDao;
+        this.schemaDao = schemaDao;
         this.baseDao = baseDao;
     }
 
+    @Transactional
     public void saveIncoming(ProcessAdapterMessageResult processResult, IRecord originalMessageRecord) {
         try {
             var reestrMessage = new ReestrIncoming();
@@ -100,6 +98,7 @@ public class SmevMessageService {
         }
     }
 
+    @Transactional
     public void saveOutgoing(XmlBuildMeta buildMeta, String userTo) {
         try {
             var reestrMessage = new ReestrOutgoing();
@@ -130,9 +129,10 @@ public class SmevMessageService {
         }
     }
 
+    @NoContextTransaction(dbProperty = "crg-options.integration.smev3.targetDb")
     public IRecord getByClientId(UUID clientId) {
         var byClientId = "client_id = '" + clientId.toString() + "'";
-        return detachedBaseDao.baseData(smev3Config.getTargetDb())
+        return baseDao
                 .findBy(resourceQualifier, byClientId)
                 .orElseThrow(() -> new SmevRequestException("record not found"));
     }
@@ -141,7 +141,8 @@ public class SmevMessageService {
     public XmlBuildMeta getMeta(UUID id) {
         log.debug("get meta by {}", id);
 
-        var message = baseDao.findById(new ResourceQualifier(resourceQualifier, id, ResourceType.TABLE))
+        var message = baseDao
+                .findById(new ResourceQualifier(resourceQualifier, id, ResourceType.TABLE))
                 .orElseThrow(() -> new SmevRequestException("record not found"));
 
         return new XmlBuildMeta(
@@ -157,8 +158,7 @@ public class SmevMessageService {
     }
 
     private void saveMessage(SmevMessageMetaEntity smevMessage) throws CrgDaoException {
-        var schema = detachedSchemaDao.schemaDao(smev3Config.getTargetDb())
-                .find(FieldsSmevMessageMetaEntity.SCHEMA_NAME);
+        var schema = schemaDao.find(FieldsSmevMessageMetaEntity.SCHEMA_NAME);
         detachedRecordsDao.addRecordsAsBatch(
                 resourceQualifier,
                 smevMessage,

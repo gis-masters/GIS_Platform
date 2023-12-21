@@ -81,6 +81,7 @@ public class MessageBusProperties {
 
     // SMEV 3 adapter
     public static final String SMEV3_RECEIVE_QUEUE = "_QUEUE_RECEIVE";
+    public static final String SMEV3_RECEIVE_FAIL_QUEUE = "_QUEUE_RECEIVE_FAIL";
     public static final String SMEV3_SEND_QUEUE = "_QUEUE_SEND";
 
     // Импорт КПТ

@@ -50,7 +50,7 @@ public class GetCadastrialPlanRequestService implements ISmevMessageConsumer {
                     smev3Config
             ).run(requestFilename, appFilename, passportFilename, archiveFilename);
             log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendQueue(buildMeta, true, Systems.FGIS_EGRN);
+            messageService.sendMessage(buildMeta, true, Systems.FGIS_EGRN);
             return buildMeta;
         } catch (Exception e) {
             throw new SmevRequestException("push to queue error :" + e.getMessage());

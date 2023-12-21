@@ -76,12 +76,17 @@ public class RabbitConfiguration {
 
     @Bean
     public Queue adapterReceiveQueue(Smev3Config smev3Config) {
-        return new Queue(smev3Config.getMnemonicIS() + SMEV3_RECEIVE_QUEUE);
+        return new Queue(smev3Config.getTransportMnemonic() + SMEV3_RECEIVE_QUEUE);
+    }
+
+    @Bean
+    public Queue adapterReceiveFailQueue(Smev3Config smev3Config) {
+        return new Queue(smev3Config.getTransportMnemonic() + SMEV3_RECEIVE_FAIL_QUEUE);
     }
 
     @Bean
     public Queue adapterSendQueue(Smev3Config smev3Config) {
-        return new Queue(smev3Config.getMnemonicIS() + SMEV3_SEND_QUEUE);
+        return new Queue(smev3Config.getTransportMnemonic() + SMEV3_SEND_QUEUE);
     }
 
     //Импорт КПТ

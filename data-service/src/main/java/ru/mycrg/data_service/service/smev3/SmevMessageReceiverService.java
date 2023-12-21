@@ -1,12 +1,14 @@
 package ru.mycrg.data_service.service.smev3;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -27,20 +29,30 @@ import java.util.UUID;
 public class SmevMessageReceiverService {
     private final Logger log = LoggerFactory.getLogger(SmevMessageReceiverService.class);
     private final SmevMessageService messageService;
+    private final RabbitTemplate rabbitTemplate;
     private final Queue adapterReceiveQueue;
+    private final Queue adapterReceiveFailQueue;
     private final List<ISmevMessageConsumer> iSmevMessageConsumers;
 
-    public SmevMessageReceiverService(SmevMessageService messageService, Queue adapterReceiveQueue, List<ISmevMessageConsumer> iSmevMessageConsumers) {
+    public SmevMessageReceiverService(SmevMessageService messageService,
+                                      RabbitTemplate rabbitTemplate,
+                                      Queue adapterReceiveQueue,
+                                      Queue adapterReceiveFailQueue,
+                                      List<ISmevMessageConsumer> iSmevMessageConsumers) {
         this.messageService = messageService;
+        this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveQueue = adapterReceiveQueue;
+        this.adapterReceiveFailQueue = adapterReceiveFailQueue;
         this.iSmevMessageConsumers = iSmevMessageConsumers;
     }
 
-    @RabbitListener(containerFactory = "smevRabbitContainerFactory", queues = "#{adapterReceiveQueue}")
-    public void processQueue(Message message) {
+    /**
+     * Обработка пришедшего из СМЭВ ответа
+     */
+    @Transactional
+    public void processReceiveMessage(@NotNull Message message) {
+        var body = new String(message.getBody());
         try {
-            log.info("Received from queue: " + message);
-            var body = new String(message.getBody());
             var originalMessageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("not found original message"));
@@ -57,7 +69,7 @@ public class SmevMessageReceiverService {
                     );
         } catch (Exception e) {
             log.info("Process adapter message fail: " + e.getMessage());
-            throw new SmevRequestException("process adapter message fail " + e.getMessage());
+            receiveFail(body);
         }
     }
 
@@ -90,6 +102,18 @@ public class SmevMessageReceiverService {
             log.info("Success process");
         } catch (Exception e) {
             throw new SmevRequestException("Message save error :" + e.getMessage());
+        }
+    }
+
+    /**
+     * Сохранить сообщение, в случае ошибки обработки
+     */
+    private void receiveFail(@NotNull String body) {
+        try {
+            log.error("Send to 'receive fail' queue: " + body);
+            rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), body);
+        } catch (Exception e) {
+            log.error("Fail to send to 'receive fail' queue. {}", e.getMessage());
         }
     }
 }

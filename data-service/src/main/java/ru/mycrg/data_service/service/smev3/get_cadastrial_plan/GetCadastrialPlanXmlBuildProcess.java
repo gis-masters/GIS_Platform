@@ -110,7 +110,7 @@ public class GetCadastrialPlanXmlBuildProcess {
             RequestMessageType requestMessageType = new RequestMessageType();
             requestMessageType.setRequestMetadata(requestMetadataType);
             requestMessageType.setRequestContent(requestContentType);
-            clientMessage.setItSystem(smev3Config.getMnemonicIS());
+            clientMessage.setItSystem(smev3Config.getSystemMnemonic());
             clientMessage.setRequestMessage(requestMessageType);
 
             xmlObject = clientMessage;

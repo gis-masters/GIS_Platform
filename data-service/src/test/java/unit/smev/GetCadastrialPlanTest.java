@@ -11,7 +11,7 @@ public class GetCadastrialPlanTest {
     @Test
     public void getEgrnCadastrialPlans_1_1_2(){
         var smev3Config = new Smev3Config();
-        smev3Config.setMnemonicIS("mnemonic");
+        smev3Config.setSystemMnemonic("mnemonic");
         var meta = new GetCadastrialPlanXmlBuildProcess(smev3Config)
                 .run("request.xml",
                         "app_1.xml",

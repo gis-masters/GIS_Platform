@@ -23,7 +23,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
         var marshaller = new XmlMarshaller(ReceiptRnsXmlBuildProcess.namespacePrefixMapper);
 
         var smev3Config = new Smev3Config();
-        smev3Config.setMnemonicIS("mnemonic");
+        smev3Config.setSystemMnemonic("mnemonic");
 
         var dto = new ReceiptRnsRequestDto();
         dto.setConstPermitDateFrom(LocalDate.of(2022, 1, 1));

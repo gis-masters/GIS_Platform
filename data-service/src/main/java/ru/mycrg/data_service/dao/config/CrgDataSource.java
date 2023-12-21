@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.no_context_transaction.NoContextTransactionAspect.threadDbConnections;
 
 /**
  * Наш декоратор над DataSource.
@@ -36,13 +37,20 @@ public class CrgDataSource extends DatasourceFactory implements DataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        Long orgId = authenticationFacade.getOrganizationId((Authentication) httpServletRequest.getUserPrincipal());
         String dbName;
-        if (orgId < 1) {
-            dbName = INITIAL_DB_NAME;
-            log.info("Selected initial db: {}", dbName);
+
+        // Пробуем достать имя БД для подключения из контекста потока
+        if (threadDbConnections.get(Thread.currentThread()) != null) {
+            dbName = threadDbConnections.get(Thread.currentThread());
         } else {
-            dbName = getDefaultDatabaseName(orgId);
+            Long orgId = authenticationFacade.getOrganizationId((Authentication) httpServletRequest.getUserPrincipal());
+
+            if (orgId < 1) {
+                dbName = INITIAL_DB_NAME;
+                log.info("Selected initial db: {}", dbName);
+            } else {
+                dbName = getDefaultDatabaseName(orgId);
+            }
         }
 
         return getDataSource(dbName).getConnection();

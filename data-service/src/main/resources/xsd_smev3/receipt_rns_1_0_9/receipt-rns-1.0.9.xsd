@@ -6,7 +6,7 @@
            targetNamespace="urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9"
            elementFormDefault="qualified">
     <xs:import namespace="urn://x-artefacts-uishc.domrf.ru/receipt-rns/commons/1.0.9"
-               schemaLocation="commons/receipt-rns-common-types-1.0.9.xsd"/>
+               schemaLocation="./commons/receipt-rns-common-types-1.0.9.xsd"/>
     <xs:import namespace="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0"
                schemaLocation="./commons/smev-supplementary-commons-1.3.0.xsd"/>
     <!-- Основные элементы Вида сведений -->

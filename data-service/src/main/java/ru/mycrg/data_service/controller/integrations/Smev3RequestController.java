@@ -4,11 +4,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService;
+import ru.mycrg.data_service.service.smev3.receipt_rnv.ReceiptRnvRequestService;
 import ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsRequestService;
 
 import java.util.UUID;
@@ -24,15 +26,19 @@ import java.util.UUID;
         matchIfMissing = true)
 public class Smev3RequestController {
 
-    private final ReceiptRnsRequestService receiptRnsService;
+    private final ReceiptRnsRequestService rnsRequestService;
+    private final ReceiptRnvRequestService rnvRequestService;
     private final RegisterRnsRequestService registerRnsService;
     private final GetCadastrialPlanRequestService getCadastrialPlanRequestService;
     private final SmevMessageService storageService;
 
-    public Smev3RequestController(ReceiptRnsRequestService receiptRnsService, RegisterRnsRequestService registerRnsService,
+    public Smev3RequestController(ReceiptRnsRequestService rnsRequestService,
+                                  ReceiptRnvRequestService rnvRequestService,
+                                  RegisterRnsRequestService registerRnsService,
                                   GetCadastrialPlanRequestService getCadastrialPlanRequestService,
                                   SmevMessageService storageService) {
-        this.receiptRnsService = receiptRnsService;
+        this.rnsRequestService = rnsRequestService;
+        this.rnvRequestService = rnvRequestService;
         this.registerRnsService = registerRnsService;
         this.getCadastrialPlanRequestService = getCadastrialPlanRequestService;
         this.storageService = storageService;
@@ -63,11 +69,21 @@ public class Smev3RequestController {
     }
 
     /**
+     * urn://x-artefacts-uishc.domrf.ru/receipt-rnv
+     */
+    @PostMapping("/request/receipt-rnv")
+    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto dto) {
+        var response = rnvRequestService.request(dto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
      * urn://x-artefacts-uishc.domrf.ru/receipt-rns
      */
     @PostMapping("/request/receipt-rns")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
-        var response = receiptRnsService.request(rnsRequestDto);
+    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto dto) {
+        var response = rnsRequestService.request(dto);
 
         return ResponseEntity.ok(response);
     }

@@ -7,16 +7,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.entity.reestrs.ReestrOutgoing;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.reestrs.ReestrOutgoingService;
-import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.smev3.model.ReestrStatus;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @ConditionalOnProperty(
@@ -26,20 +18,20 @@ import java.util.UUID;
 public class SmevMessageSenderService {
     private final Logger log = LoggerFactory.getLogger(SmevMessageSenderService.class);
     private final RabbitTemplate rabbitTemplate;
-    private final ReestrOutgoingService outgoingService;
     private final Queue adapterSendQueue;
     private final SmevMessageService messageService;
 
-    public SmevMessageSenderService(RabbitTemplate rabbitSmevAdapterTemplate, ReestrOutgoingService outgoingService, Queue adapterSendQueue, SmevMessageService messageService) {
+    public SmevMessageSenderService(RabbitTemplate rabbitSmevAdapterTemplate,
+                                    Queue adapterSendQueue,
+                                    SmevMessageService messageService) {
         this.rabbitTemplate = rabbitSmevAdapterTemplate;
-        this.outgoingService = outgoingService;
         this.adapterSendQueue = adapterSendQueue;
         this.messageService = messageService;
     }
 
 
     @Transactional
-    public void sendQueue(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
+    public void sendMessage(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
         try {
             log.debug("Try to save and send: " + buildMeta.toString());
             messageService.saveOutgoing(buildMeta, userTo);

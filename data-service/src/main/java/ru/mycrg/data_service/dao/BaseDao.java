@@ -46,11 +46,9 @@ public class BaseDao {
         System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
     }
 
-    private final SqlParameterSourceFactory sqlParameterSourceFactory;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
-    public BaseDao(SqlParameterSourceFactory sqlParameterSourceFactory, NamedParameterJdbcTemplate parameterJdbcTemplate) {
-        this.sqlParameterSourceFactory = sqlParameterSourceFactory;
+    public BaseDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 

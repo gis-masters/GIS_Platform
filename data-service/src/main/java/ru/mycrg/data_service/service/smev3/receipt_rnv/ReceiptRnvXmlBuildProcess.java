@@ -1,46 +1,45 @@
-package ru.mycrg.data_service.service.smev3.receipt_rns;
+package ru.mycrg.data_service.service.smev3.receipt_rnv;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.receipt_rns_1_0_9.*;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
-import static ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService.MNEMONIC;
-import static ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService.MNEMONIC_VERSION;
+import static ru.mycrg.data_service.service.smev3.receipt_rnv.ReceiptRnvRequestService.MNEMONIC;
+import static ru.mycrg.data_service.service.smev3.receipt_rnv.ReceiptRnvRequestService.MNEMONIC_VERSION;
 import static ru.mycrg.data_service.service.smev3.support_classes.XmlMapper.mapCalendar;
 
+public class ReceiptRnvXmlBuildProcess {
 
-public class ReceiptRnsXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnsXmlBuildProcess.class);
+    private final Logger log = LoggerFactory.getLogger(ReceiptRnvXmlBuildProcess.class);
     private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
     private final Smev3Config smev3Config;
     private UUID clientId;
     private ClientMessage xmlObject;
     private String xmlText;
 
-    public ReceiptRnsXmlBuildProcess(Smev3Config smev3Config) {
+    public ReceiptRnvXmlBuildProcess(Smev3Config smev3Config) {
         this.smev3Config = smev3Config;
     }
 
-    public XmlBuildMeta run(@NotNull ReceiptRnsRequestDto rnsRequestDto) {
+    public XmlBuildMeta run(@NotNull ReceiptRnvRequestDto rnvRequestDto) {
         this.clientId = UUID.randomUUID();
 
         try {
-            var receiptConstruction = new ReceiptListConstructionType();
-            receiptConstruction.setConstPermitDateFrom(mapCalendar(rnsRequestDto.getConstPermitDateFrom()));
-            receiptConstruction.setConstPermitDateTo(mapCalendar(rnsRequestDto.getConstPermitDateTo()));
+            var receiptExploitationType = new ReceiptExploitationType();
+            receiptExploitationType.setPermitDate(mapCalendar(rnvRequestDto.getPermitDate()));
 
             var request = new RequestType();
-            request.setReceiptListConstruction(receiptConstruction);
+            request.setReceiptExploitation(receiptExploitationType);
 
             var messagePrimaryContent = new MessagePrimaryContent();
             messagePrimaryContent.setRequest(request);
@@ -81,15 +80,16 @@ public class ReceiptRnsXmlBuildProcess {
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }
+
     }
 
     public static final NamespacePrefixMapper namespacePrefixMapper = new NamespacePrefixMapper() {
         @Override
         public String getPreferredPrefix(String urn, String s1, boolean b) {
             switch (urn) {
-                case "urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9":
+                case "urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9":
                     return "tns";
-                case "urn://x-artefacts-uishc.domrf.ru/receipt-rns/commons/1.0.9":
+                case "urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9":
                     return "com";
                 case "urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0":
                     return "smev";

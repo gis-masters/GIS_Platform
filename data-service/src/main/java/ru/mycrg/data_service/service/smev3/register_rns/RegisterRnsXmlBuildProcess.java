@@ -75,7 +75,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
             messageType.setRequestContent(contentType);
 
             xmlObject = new ClientMessage();
-            xmlObject.setItSystem(smev3Config.getMnemonicIS());
+            xmlObject.setItSystem(smev3Config.getSystemMnemonic());
             xmlObject.setRequestMessage(messageType);
 
             //TODO временная мера

@@ -434,6 +434,24 @@
                     </execution>
 
                     <execution>
+                        <id>receipt_rnv_1_0_9</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/receipt_rnv_1_0_9/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.receipt_rnv_1_0_9</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
+
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>register_rns_1_0_10</id>
                         <goals>
                             <goal>xjc</goal>
