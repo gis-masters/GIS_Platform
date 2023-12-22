@@ -46,18 +46,24 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
         } catch (Exception e) {
             log.warn("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
             try {
-                log.debug("Try as LocalDate '{}'", SYSTEM_DATE_PATTERN);
-
-                dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
-                                    .atTime(0, 0, 0);
+                log.debug("Try as LocalDateTime 'yyyy-MM-ddTHH:mm:ss'");
+                dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ISO_LOCAL_DATE_TIME).withNano(0);
             } catch (Exception e1) {
-                log.warn("Not a LocalDate '{}'", SYSTEM_DATE_PATTERN);
+                log.debug("Not a LocalDateTime 'yyyy-MM-ddTHH:mm:ss'");
                 try {
-                    log.debug("Try as Zoned(ISO_ZONED_DATE_TIME) 'yyyy-MM-dd'T'HH:mm:ssZ'. Use ONE format plz!");
+                    log.debug("Try as LocalDate '{}'", SYSTEM_DATE_PATTERN);
 
-                    dateTime = ZonedDateTime.parse(asString).toLocalDateTime();
+                    dateTime = LocalDate.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATE_PATTERN))
+                            .atTime(0, 0, 0);
                 } catch (Exception e2) {
-                    log.error("Not supported DateTime format: {}", asString);
+                    log.warn("Not a LocalDate '{}'", SYSTEM_DATE_PATTERN);
+                    try {
+                        log.debug("Try as Zoned(ISO_ZONED_DATE_TIME) 'yyyy-MM-dd'T'HH:mm:ssZ'. Use ONE format plz!");
+
+                        dateTime = ZonedDateTime.parse(asString).toLocalDateTime();
+                    } catch (Exception e3) {
+                        log.error("Not supported DateTime format: {}", asString);
+                    }
                 }
             }
         }

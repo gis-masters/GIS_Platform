@@ -68,7 +68,7 @@ public class SmevMessageService {
             reestrMessage.setId(UUID.randomUUID());
             reestrMessage.setResponseTo(originalMessageRecord.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_REFERENCE_REESTR_OUTGOING));
             reestrMessage.setBody(processResult.getXmlBuildMeta().getXmlString());
-            reestrMessage.setDateOut(LocalDateTime.now());
+            reestrMessage.setDateIn(LocalDateTime.now());
             reestrMessage.setStatus(processResult.getStatus());
             reestrMessage.setSystem(Systems.GISOGR_RK);
             if (processResult.getXmlBuildMeta().getXmlString().contains("RRTR02")) {
@@ -89,7 +89,7 @@ public class SmevMessageService {
                     )
                     .setRecords(processResult.getXmlBuildMeta().getSources())
                     .setAttachments(processResult.getXmlBuildMeta().getAttachments())
-                    .setCreatedAt(reestrMessage.getDateOut());
+                    .setCreatedAt(reestrMessage.getDateIn());
 
             saveMessage(smevMessage);
             log.info("save smev message. id:{}", smevMessage.getId());
