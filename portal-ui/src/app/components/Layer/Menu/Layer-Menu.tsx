@@ -127,7 +127,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             <LayerTransparency entity={entity} />
           </MenuItem>
 
-          {!editMode && (this.isVectorLayer || this.isVectorFromFileLayer) && (
+          {!editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
             <MenuItem onClick={this.openAttributeTable}>
               <ListItemIcon>
                 <ListAlt />
@@ -312,6 +312,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
     }
 
     return !isGroup && isVectorFromFile(type);
+  }
+
+  @computed
+  private get isVectorFromFileWithPaginationLayer(): boolean {
+    const { entity, isGroup } = this.props;
+    const { type } = entity as CrgLayer;
+
+    if (!type) {
+      return false;
+    }
+
+    return !isGroup && type === CrgLayerType.SHP;
   }
 
   @computed

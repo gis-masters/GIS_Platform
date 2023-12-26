@@ -60,7 +60,9 @@ export async function applyMapStateFromNavigator(): Promise<void> {
 
         const response = await http.get<WfsFeatureCollection>(getWfsUrl(), { params });
 
-        features.push(...response.features);
+        if (response.features) {
+          features.push(...response.features);
+        }
       } catch {
         services.logger.warn('Не найдены связанные объекты в слоях ' + layers.join(','));
       }
@@ -116,8 +118,8 @@ function showNotAllowedLayersError(allLayers: CrgLayer[]) {
   }
 
   const allNotAllowedLayers = getNotAllowedLayers(enabledLayers, allLayers);
-  let detailsNotAllowedLayers: string;
-  let detailsNotExistLayers: string;
+  let detailsNotAllowedLayers: string = '';
+  let detailsNotExistLayers: string = '';
 
   const { notAllowedLayers, notExistLayers } = allNotAllowedLayers;
 
@@ -146,7 +148,10 @@ function getNotAllowedLayers(layers: number[], allLayers: CrgLayer[]): Record<st
       !currentProject.tree.some(visibleTreeLayer => visibleTreeLayer.id === id) &&
       allLayers.some(layer => layer.id === id)
     ) {
-      notAllowedLayers.push(allLayers.find(layer => layer.id === id).title);
+      const layer = allLayers.find(layer => layer.id === id);
+      if (layer) {
+        notAllowedLayers.push(layer.title);
+      }
     }
 
     if (
@@ -182,7 +187,7 @@ async function restoreRecentOpenedFeatures() {
         layer => layer.tableName === tableName && layer.dataset === dataset
       );
 
-      if (currentLayer) {
+      if (currentLayer?.complexName) {
         const schema = applyView(await schemaService.getSchema(currentLayer.schemaId), currentLayer.view);
         const featuresIds = featuresCutIds.map(cutId => `${currentLayer.tableName}.${cutId}`);
         const layerFeatures = await getFeaturesById(featuresIds, currentLayer.complexName, schema?.definitionQuery);

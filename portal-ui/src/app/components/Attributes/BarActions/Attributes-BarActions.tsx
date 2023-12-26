@@ -97,22 +97,21 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
           </>
         )}
         {!!featuresTotal && (
-          <>
-            <AttributesBarActionExport
-              layer={layer}
-              cols={cols}
-              pageOptions={pageOptions}
-              featuresTotal={featuresTotal}
-              getData={getData}
-            />
-
-            <PrintAction<WfsFeature[]>
-              as='iconButton'
-              entity={this.selectedFeatures}
-              templates={featuresCollectionPrintTemplates}
-              size='small'
-            />
-          </>
+          <AttributesBarActionExport
+            layer={layer}
+            cols={cols}
+            pageOptions={pageOptions}
+            featuresTotal={featuresTotal}
+            getData={getData}
+          />
+        )}
+        {!!count && (
+          <PrintAction<WfsFeature[]>
+            as='iconButton'
+            entity={this.selectedFeatures}
+            templates={featuresCollectionPrintTemplates}
+            size='small'
+          />
         )}
         <Dialog open={this.multipleDeleteDialogOpen} onClose={this.closeMultipleDeleteDialog}>
           <DialogContent>
