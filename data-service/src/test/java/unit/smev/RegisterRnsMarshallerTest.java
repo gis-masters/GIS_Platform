@@ -3,7 +3,7 @@ package unit.smev;
 import org.junit.Test;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
 import ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsXmlBuildProcess;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

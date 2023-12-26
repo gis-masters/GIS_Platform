@@ -28,4 +28,8 @@ public class CrgDaoException extends Exception {
 	public boolean hasErrors() {
 		return !errors.isEmpty();
 	}
+
+	public static CrgDaoException recordNotFound(String table, Object recId) {
+		return new CrgDaoException(String.format("record not found %s %s", table, recId));
+	}
 }

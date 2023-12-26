@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.fields.FieldsSmevMessageMetaEntity;
+import ru.mycrg.data_service.fields.FieldsSmevMessageMetaEntity;
 import ru.mycrg.data_service.service.smev3.support_classes.Mnemonic;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,18 +30,15 @@ public class SmevMessageReceiverService {
     private final Logger log = LoggerFactory.getLogger(SmevMessageReceiverService.class);
     private final SmevMessageService messageService;
     private final RabbitTemplate rabbitTemplate;
-    private final Queue adapterReceiveQueue;
     private final Queue adapterReceiveFailQueue;
     private final List<ISmevMessageConsumer> iSmevMessageConsumers;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
                                       RabbitTemplate rabbitTemplate,
-                                      Queue adapterReceiveQueue,
                                       Queue adapterReceiveFailQueue,
                                       List<ISmevMessageConsumer> iSmevMessageConsumers) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
-        this.adapterReceiveQueue = adapterReceiveQueue;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
         this.iSmevMessageConsumers = iSmevMessageConsumers;
     }
@@ -53,18 +50,18 @@ public class SmevMessageReceiverService {
     public void processReceiveMessage(@NotNull Message message) {
         var body = new String(message.getBody());
         try {
-            var originalMessageEntity = replyToClientId(message)
+            var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("not found original message"));
             var consumerId = Mnemonic.id(
-                    originalMessageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC),
-                    originalMessageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC_VERSION)
+                    messageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC),
+                    messageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC_VERSION)
             );
             iSmevMessageConsumers.stream()
                     .filter(iSmevMessageConsumer -> iSmevMessageConsumer.consumerId().equals(consumerId))
                     .findFirst()
                     .ifPresentOrElse(
-                            iSmevMessageConsumer -> process(iSmevMessageConsumer, originalMessageEntity, body),
+                            iSmevMessageConsumer -> process(iSmevMessageConsumer, messageEntity, body),
                             () -> log.warn("consumer not found {}", consumerId)
                     );
         } catch (Exception e) {

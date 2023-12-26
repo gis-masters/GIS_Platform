@@ -1,6 +1,4 @@
-package ru.mycrg.data_service.service.smev3.fields;
-
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
+package ru.mycrg.data_service.fields;
 
 public class FieldsSmevMessageMetaEntity {
     public static final String TABLE = "smev_message_meta";

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
+import ru.mycrg.data_service.fields.FieldsFiles;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 

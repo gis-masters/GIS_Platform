@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.fields;
+package ru.mycrg.data_service.fields;
 
 public class FieldsLandplot {
     public static final String WORKSPACE = "workspace_789";

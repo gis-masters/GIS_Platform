@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
@@ -91,6 +92,13 @@ public class SchemaService {
         return schemaRepository.findBySpecificProperty(property).stream()
                                .map(SchemaMapper::mapToDto)
                                .collect(Collectors.toList());
+    }
+
+    /**
+     * TODO стоит поменять нейминг местами  foundSchemaByName и getSchemaByName
+     */
+    public SchemaDto foundSchemaByName(@NotNull String name) throws CrgDaoException {
+        return getSchemaByName(name).orElseThrow(() -> new CrgDaoException("not schema found " + name));
     }
 
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {

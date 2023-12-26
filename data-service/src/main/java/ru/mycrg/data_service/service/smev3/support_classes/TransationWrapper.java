@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3;
+package ru.mycrg.data_service.service.smev3.support_classes;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;

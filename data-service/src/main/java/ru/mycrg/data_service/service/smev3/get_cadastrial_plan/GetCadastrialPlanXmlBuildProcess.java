@@ -20,7 +20,7 @@ import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.TStructuredAttachmentFo
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.TValidatedStructuredAttachmentFormat;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;

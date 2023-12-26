@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.fields;
+package ru.mycrg.data_service.fields;
 
 public class FieldsSection {
     public static final String TABLE_13 = "dl_data_section13";

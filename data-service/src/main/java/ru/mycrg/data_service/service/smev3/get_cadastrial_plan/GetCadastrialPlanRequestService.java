@@ -14,7 +14,7 @@ import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.support_classes.Mnemonic;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;

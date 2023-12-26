@@ -6,8 +6,8 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.receipt_rns_1_0_9.ClientMessage;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
 import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsXmlBuildProcess;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMapper;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMapper;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.time.LocalDate;
 

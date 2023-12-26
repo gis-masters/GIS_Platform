@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.fields;
+package ru.mycrg.data_service.fields;
 
 public class FieldsFiles {
     public static final String TABLE = "files";

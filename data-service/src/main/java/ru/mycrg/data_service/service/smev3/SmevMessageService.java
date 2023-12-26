@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
-import ru.mycrg.data_service.dao.SchemaDao;
-import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
@@ -16,13 +13,13 @@ import ru.mycrg.data_service.entity.reestrs.ReestrIncoming;
 import ru.mycrg.data_service.entity.reestrs.ReestrOutgoing;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.mappers.SchemaMapper;
+import ru.mycrg.data_service.fields.FieldsSmevMessageMetaEntity;
 import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
+import ru.mycrg.data_service.repository.SmevMessageMetaRepository;
 import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.reestrs.ReestrOutgoingService;
 import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.smev3.fields.FieldsSmevMessageMetaEntity;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.ReestrStatus;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
@@ -41,23 +38,18 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 public class SmevMessageService {
     private static final Logger log = LoggerFactory.getLogger(SmevMessageService.class);
     private static final ResourceQualifier resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, FieldsSmevMessageMetaEntity.TABLE);
-    private final Smev3Config smev3Config;
     private final ReestrIncomingService incomingService;
     private final ReestrOutgoingService outgoingService;
-    private final DetachedRecordsDao detachedRecordsDao;
-    private final SchemaDao schemaDao;
+    private final SmevMessageMetaRepository messageMetaRepository;
     private final BaseDao baseDao;
 
-    public SmevMessageService(Smev3Config smev3Config,
-                              ReestrIncomingService incomingService,
+    public SmevMessageService(ReestrIncomingService incomingService,
                               ReestrOutgoingService outgoingService,
-                              DetachedRecordsDao detachedRecordsDao, SchemaDao schemaDao,
+                              SmevMessageMetaRepository messageMetaRepository,
                               BaseDao baseDao) {
-        this.smev3Config = smev3Config;
         this.incomingService = incomingService;
         this.outgoingService = outgoingService;
-        this.detachedRecordsDao = detachedRecordsDao;
-        this.schemaDao = schemaDao;
+        this.messageMetaRepository = messageMetaRepository;
         this.baseDao = baseDao;
     }
 
@@ -91,7 +83,8 @@ public class SmevMessageService {
                     .setAttachments(processResult.getXmlBuildMeta().getAttachments())
                     .setCreatedAt(reestrMessage.getDateIn());
 
-            saveMessage(smevMessage);
+            messageMetaRepository.save(smevMessage);
+
             log.info("save smev message. id:{}", smevMessage.getId());
         } catch (Exception e) {
             throw new SmevRequestException("saveIncoming error :" + e.getMessage());
@@ -122,7 +115,8 @@ public class SmevMessageService {
                     .setAttachments(buildMeta.getAttachments())
                     .setCreatedAt(reestrMessage.getDateOut());
 
-            saveMessage(smevMessage);
+            messageMetaRepository.save(smevMessage);
+
             log.info("save smev message. id:{}", smevMessage.getId());
         } catch (Exception e) {
             throw new SmevRequestException("saveOutgoing error :" + e.getMessage());
@@ -140,30 +134,21 @@ public class SmevMessageService {
     @Transactional
     public XmlBuildMeta getMeta(UUID id) {
         log.debug("get meta by {}", id);
+        try {
+            var message = baseDao.getById(new ResourceQualifier(resourceQualifier, id, ResourceType.TABLE));
 
-        var message = baseDao
-                .findById(new ResourceQualifier(resourceQualifier, id, ResourceType.TABLE))
-                .orElseThrow(() -> new SmevRequestException("record not found"));
-
-        return new XmlBuildMeta(
-                message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC),
-                message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC_VERSION),
-                UUID.fromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_CLIENT_ID)),
-                null,
-                JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_XML_OBJECT)),
-                message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_XML_STRING),
-                JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_RECORDS)),
-                JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_ATTACHMENTS))
-        );
-    }
-
-    private void saveMessage(SmevMessageMetaEntity smevMessage) throws CrgDaoException {
-        var schema = schemaDao.find(FieldsSmevMessageMetaEntity.SCHEMA_NAME);
-        detachedRecordsDao.addRecordsAsBatch(
-                resourceQualifier,
-                smevMessage,
-                SchemaMapper.mapToDto(schema),
-                smev3Config.getTargetDb()
-        );
+            return new XmlBuildMeta(
+                    message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC),
+                    message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC_VERSION),
+                    UUID.fromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_CLIENT_ID)),
+                    null,
+                    JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_XML_OBJECT)),
+                    message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_XML_STRING),
+                    JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_RECORDS)),
+                    JsonConverter.toJsonNodeFromString(message.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_ATTACHMENTS))
+            );
+        } catch (CrgDaoException e) {
+            throw SmevRequestException.crgDaoException(e);
+        }
     }
 }

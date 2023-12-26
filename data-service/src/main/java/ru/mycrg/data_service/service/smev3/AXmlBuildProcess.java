@@ -3,13 +3,14 @@ package ru.mycrg.data_service.service.smev3;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.fields.FieldsFiles;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
@@ -112,28 +113,40 @@ public abstract class AXmlBuildProcess {
                 );
     }
 
-    protected IRecord getRecordById(ResourceType resourceType, String workspace, String schemaId, String libId, Object recordId) {
-        var recordData = new RecordData(libId, recordId);
-        if (!sourceRecords.containsKey(recordData)) {
-            var schemaDto = ofNullable(schemaId)
-                    .flatMap(this::getSchema)
-                    .orElse(null);
-            var record = baseDao.findById(
-                            new ResourceQualifier(
-                                    workspace,
-                                    libId,
-                                    recordId,
-                                    resourceType
-                            ),
-                            schemaDto
-                    )
-                    .orElseThrow(() -> SmevRequestException.recordNotFound(schemaId, libId));
-            sourceRecords.put(recordData, record);
+    protected IRecord getRecordById(ResourceType resourceType,
+                                    String workspace,
+                                    String schemaId,
+                                    String libId,
+                                    Object recordId) {
+        try {
+            var recordData = new RecordData(libId, recordId);
+            if (!sourceRecords.containsKey(recordData)) {
+                var schemaDto = ofNullable(schemaId)
+                        .flatMap(this::getSchema)
+                        .orElse(null);
+                var record = baseDao.getById(
+                        new ResourceQualifier(
+                                workspace,
+                                libId,
+                                recordId,
+                                resourceType
+                        ),
+                        schemaDto
+                );
+                sourceRecords.put(recordData, record);
+            }
+            return sourceRecords.get(recordData);
+        } catch (CrgDaoException e) {
+            throw SmevRequestException.crgDaoException(e);
         }
-        return sourceRecords.get(recordData);
     }
 
-    protected IRecord getRecordByJsonIdValue(ResourceType resourceType, String workspace, String schemaId, String libId, String jsonFieldName, Long jsonIdValue) {
+    protected IRecord getRecordByJsonIdValue(ResourceType resourceType,
+                                             String workspace,
+                                             String schemaId,
+                                             String libId,
+                                             String jsonFieldName,
+                                             Long jsonIdValue) {
         var record = getSchema(schemaId)
                 .flatMap(schemaDto -> baseDao.findByJson(
                         ResourceJsonCondition.byJsonIdValue(

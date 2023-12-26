@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,27 +13,18 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
-import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
-import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.geo_json.Feature;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
 
 @Transactional
 @Repository
@@ -89,6 +79,20 @@ public class BaseDao {
         return findBy(qualifier, ecqlFilter, null);
     }
 
+    public IRecord getById(ResourceQualifier qualifier) throws CrgDaoException {
+        return getById(qualifier, null);
+    }
+
+    public IRecord getById(ResourceQualifier qualifier,
+                           @Nullable SchemaDto schema) throws CrgDaoException {
+        return findById(qualifier, schema)
+                .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(), qualifier.getRecordId()));
+    }
+
+    public Optional<IRecord> findById(ResourceQualifier qualifier) {
+        return findById(qualifier, null);
+    }
+
     public Optional<IRecord> findById(ResourceQualifier qualifier,
                                       @Nullable SchemaDto schema) {
         String fieldId = getIdField(qualifier);
@@ -104,13 +108,20 @@ public class BaseDao {
                             .findFirst();
     }
 
+    public IRecord getByJson(ResourceJsonCondition qualifier,
+                             @Nullable SchemaDto schema) throws CrgDaoException {
+        return findByJson(qualifier, schema)
+                .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(), qualifier.getJsonIdValue()));
+    }
+
     /**
      * Пример запроса:
      *
      * @code SELECT * FROM workspace_789.landplot_1627_2d2b WHERE jsonb_path_exists(file::jsonb, '$[*] ? (@.id ==
      * $idvalue )', '{"idvalue":26410}');
      */
-    public Optional<IRecord> findByJson(ResourceJsonCondition qualifier, @Nullable SchemaDto schema) {
+    public Optional<IRecord> findByJson(ResourceJsonCondition qualifier,
+                                        @Nullable SchemaDto schema) {
         var query = String.format(
                 "SELECT * FROM %s WHERE jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
                 qualifier.getTableQualifier(),
@@ -126,10 +137,6 @@ public class BaseDao {
         return records.isEmpty()
                 ? Optional.empty()
                 : Optional.of(records.get(0));
-    }
-
-    public Optional<IRecord> findById(ResourceQualifier qualifier) {
-        return findById(qualifier, null);
     }
 
     public <T> List<T> findAll(ResourceQualifier qualifier,

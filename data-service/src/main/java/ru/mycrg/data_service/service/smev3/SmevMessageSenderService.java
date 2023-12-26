@@ -29,7 +29,6 @@ public class SmevMessageSenderService {
         this.messageService = messageService;
     }
 
-
     @Transactional
     public void sendMessage(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
         try {

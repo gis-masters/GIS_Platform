@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.support_classes;
+package ru.mycrg.data_service.util.xml;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 

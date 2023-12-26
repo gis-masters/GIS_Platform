@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.fields;
+package ru.mycrg.data_service.fields;
 
 public class FieldsRsoksPart {
     public static final String TABLE = "dl_data_rsoks_part";

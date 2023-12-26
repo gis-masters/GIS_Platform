@@ -9,14 +9,14 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
 import static ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService.MNEMONIC;
 import static ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService.MNEMONIC_VERSION;
-import static ru.mycrg.data_service.service.smev3.support_classes.XmlMapper.mapCalendar;
+import static ru.mycrg.data_service.util.xml.XmlMapper.mapCalendar;
 
 
 public class ReceiptRnsXmlBuildProcess {

@@ -9,14 +9,14 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.smev3.AXmlBuildProcess;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMapper;
-import ru.mycrg.data_service.service.smev3.support_classes.XmlMarshaller;
+import ru.mycrg.data_service.util.xml.XmlMapper;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.math.BigInteger;
@@ -372,7 +372,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
         asString(citizenRecord, FieldsCitizen.PROPERTY_SNILS)
                 .ifPresent(personInfoType::setSNILS);
         asString(citizenRecord, FieldsCitizen.PROPERTY_TITLE)
-                .map(XmlMapper::mapFio)
+                .map(RegisterRnsXmlBuildProcess::mapFio)
                 .ifPresent(personInfoType::setRecipientFIO);
 
         var recipientInfoType = new RecipientInfoType();
@@ -839,6 +839,29 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                             throw new SmevRequestException("document status is undefined :" + s);
                     }
                 });
+    }
+
+    /**
+     * Порядок "фамилия имя отчество"
+     */
+    private static FIOType mapFio(String source) {
+        if (source == null) {
+            return null;
+        }
+
+        // Разбиваем на
+        var strArr = new ArrayList<>(Arrays.asList(source.split(" ")));
+
+        // добавляем недостающих элементов
+        while (strArr.size() < 3) {
+            strArr.add("_");
+        }
+
+        var fioType = new FIOType();
+        fioType.setSurname(strArr.get(0));
+        fioType.setName(strArr.get(1));
+        fioType.setMiddleName(strArr.get(2));
+        return fioType;
     }
 
     /**

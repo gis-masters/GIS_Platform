@@ -38,13 +38,6 @@ public class DetachedRecordsDao {
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
-                                  @NotNull IContent content,
-                                  @NotNull SchemaDto schema,
-                                  @NotNull String databaseName) throws CrgDaoException {
-        this.addRecordsAsBatch(qualifier, content.asBatch(), schema, databaseName, null, null);
-    }
-
-    public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
                                   @NotNull Map<String, Object>[] body,
                                   @NotNull SchemaDto schema,
                                   @NotNull String databaseName,
