@@ -120,7 +120,8 @@ public class GmlImporter {
 
                 String epsg = nonNull(epsgFromLayer) && !epsgFromLayer.isEmpty() ? epsgFromLayer : bboxCrs;
                 ImportLayerReport importLayerReport = importLayer(featureData, epsg, schema, datasetIdentifier);
-                importLayerReport.setStyleName(schema.getStyleName());
+                String styleName = schema.getStyleName();
+                importLayerReport.setStyleName((styleName != null) ? styleName : schema.getName());
 
                 importLayerReports.add(importLayerReport);
             });

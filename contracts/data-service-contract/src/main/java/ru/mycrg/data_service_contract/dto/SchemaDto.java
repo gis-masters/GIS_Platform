@@ -9,8 +9,6 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Objects.nonNull;
-
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class SchemaDto {
 
@@ -168,7 +166,7 @@ public class SchemaDto {
     }
 
     public String getStyleName() {
-        return nonNull(styleName) ? styleName : name;
+        return styleName;
     }
 
     public void setStyleName(String styleName) {

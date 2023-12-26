@@ -80,7 +80,7 @@ public class ImportService {
 
             ImportMqTask importMqTask = new ImportMqTask(
                     layerName,
-                    schemaDto.getStyleName(),
+                    (schemaDto.getStyleName() != null) ? schemaDto.getStyleName() : schemaDto.getName(),
                     getScratchWorkspaceName(orgId),
                     projectId,
                     schemaDto,

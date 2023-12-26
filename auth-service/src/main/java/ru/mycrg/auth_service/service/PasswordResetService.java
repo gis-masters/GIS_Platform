@@ -67,21 +67,21 @@ public class PasswordResetService {
     }
 
     public String activateToken(PasswordResetDto dto) {
-        Optional<PasswordResetToken> resetTokenOpt = tokenRepository.findByToken(dto.getToken());
-        if (resetTokenOpt.isPresent()) {
-            PasswordResetToken token = resetTokenOpt.get();
-
-            throwIfTokenExpired(token);
-
-            User user = token.getUser();
-            user.setPassword(encoder.encode(dto.getPassword()));
-
-            tokenRepository.removeByUser(user);
-
-            return user.getLogin();
-        } else {
+        Optional<PasswordResetToken> oResetToken = tokenRepository.findByToken(dto.getToken());
+        if (oResetToken.isEmpty()) {
             throw new BadRequestException("Token invalid or expired");
         }
+
+        PasswordResetToken token = oResetToken.get();
+
+        throwIfTokenExpired(token);
+
+        User user = token.getUser();
+        user.setPassword(encoder.encode(dto.getPassword()));
+
+        tokenRepository.removeByUser(user);
+
+        return user.getLogin();
     }
 
     public boolean isExist(String token) {
@@ -95,7 +95,7 @@ public class PasswordResetService {
         if (token.getCreatedAt().plusMinutes(tokenExpirationTime).isBefore(now())) {
             tokenRepository.removeByUser(token.getUser());
 
-            throw new BadRequestException("Token invalid or expired");
+            throw new BadRequestException("Токен не корректен или его срок действия истёк");
         }
     }
 
