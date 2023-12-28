@@ -209,7 +209,8 @@ public class SqlBuilder {
                 "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "       subquery.schema, " +
                 "       subquery.table, " +
-                "       subquery.id " +
+                "       subquery.id, " +
+                "       subquery.concatenated_data " +
                 "FROM (" +
                 "        SELECT ts_rank(d.vector_data, query) AS _rank_," +
                 "               d.schema," +
@@ -286,7 +287,8 @@ public class SqlBuilder {
         return "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "      subquery.schema," +
                 "      subquery.table," +
-                "      subquery.id " +
+                "      subquery.id, " +
+                "      subquery.concatenated_data " +
                 "FROM " +
                 "  (" +
                 "    " + subSelect +
@@ -485,6 +487,23 @@ public class SqlBuilder {
         String whereSection = String.format(" WHERE %s = :%s ", primaryKey, primaryKey);
 
         return prepareUpdateQuery(feature, qualifier, whereSection);
+    }
+
+    public static String buildHeadlinesQuery(String baseWord,
+                                             Set<String> words) {
+        String values = words.stream()
+                             .map(word -> "('" + word + "')")
+                             .collect(Collectors.joining(", "));
+
+        return " WITH temp_table AS (" +
+                "    VALUES " + values +
+                ") " +
+                "SELECT " +
+                "    column1 AS data, " +
+                "    column1::text OPERATOR (public.<->) '" + baseWord + "'::text AS dist " +
+                "FROM temp_table " +
+                "WHERE column1::text OPERATOR (public.<->) '" + baseWord + "'::text < 0.9 " +
+                "ORDER BY dist";
     }
 
     @NotNull

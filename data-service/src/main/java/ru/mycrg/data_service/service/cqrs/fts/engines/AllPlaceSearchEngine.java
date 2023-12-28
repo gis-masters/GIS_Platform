@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.fts;
+package ru.mycrg.data_service.service.cqrs.fts.engines;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
+import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 
 import java.util.ArrayList;

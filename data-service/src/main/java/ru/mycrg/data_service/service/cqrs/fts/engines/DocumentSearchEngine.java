@@ -1,6 +1,7 @@
-package ru.mycrg.data_service.service.cqrs.fts;
+package ru.mycrg.data_service.service.cqrs.fts.engines;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,13 +19,15 @@ import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
+import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
+import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,17 +45,20 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 
     private final FtsDao ftsDao;
+    private final HeadlineService headlineService;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DocumentLibraryService librariesService;
     private final FtsDictionaryService ftsDictionaryService;
     private final IAuthenticationFacade authenticationFacade;
 
     public DocumentSearchEngine(FtsDao ftsDao,
+                                HeadlineService headlineService,
                                 SpatialRecordsDao spatialRecordsDao,
                                 DocumentLibraryService librariesService,
                                 FtsDictionaryService ftsDictionaryService,
                                 IAuthenticationFacade authenticationFacade) {
         this.ftsDao = ftsDao;
+        this.headlineService = headlineService;
         this.spatialRecordsDao = spatialRecordsDao;
         this.librariesService = librariesService;
         this.ftsDictionaryService = ftsDictionaryService;
@@ -109,7 +115,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         double docTotal = docWatcher.getTotalTimeSeconds();
         log.debug("Поиск по документам занял: {} сек", docTotal);
 
-        List<FtsResponseDto> allSortedEntities = fetchEntities(byAllLibraries)
+        List<FtsResponseDto> allSortedEntities = fetchEntities(byAllLibraries, fDictionaryWords)
                 .sorted(ftsBoundComparator)
                 .collect(Collectors.toList());
 
@@ -136,7 +142,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         }
 
         List<FtsItem> founded = ftsDao.searchCadastrNumber(DOCUMENTS, allowedLibraries, null, dto.getText(), pageable);
-        List<FtsResponseDto> result = fetchEntities(founded).collect(Collectors.toList());
+        List<FtsResponseDto> result = fetchEntities(founded, Set.of(dto.getText())).collect(Collectors.toList());
 
         return new PageImpl<>(result, pageable, pageable.getPageNumber());
     }
@@ -179,7 +185,8 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                                .filter(s -> !s.isBlank());
     }
 
-    private Stream<FtsResponseDto> fetchEntities(List<FtsItem> items) {
+    private Stream<FtsResponseDto> fetchEntities(List<FtsItem> items,
+                                                 @Nullable Set<String> dictionaryWords) {
         // Перегруппируем данные, чтобы доставать сущности из отдельных библиотек одним запросом.
         Map<String, List<Long>> featuresByLibrary = new HashMap<>();
         items.forEach(ftsItem -> {
@@ -197,7 +204,12 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
             List<FtsResponseDto> features = spatialRecordsDao
                     .findByIds(qualifier, schema, recordIds)
                     .stream()
-                    .map(toResponseDto(libraryName, libraryTitle, schema.getName(), items))
+                    .map(feature -> mapToFtsResponseDto(items,
+                                                        dictionaryWords,
+                                                        feature,
+                                                        libraryName,
+                                                        libraryTitle,
+                                                        schema.getName()))
                     .collect(Collectors.toList());
 
             result.addAll(features);
@@ -206,22 +218,32 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
         return result.stream();
     }
 
-    @NotNull
-    private static Function<Feature, FtsResponseDto> toResponseDto(String libraryName,
-                                                                   String libraryTitle,
-                                                                   String schemaName,
-                                                                   List<FtsItem> items) {
-        return feature -> {
-            Optional<FtsItem> oItem = items.stream()
-                                           .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
-                                           .findFirst();
+    private FtsResponseDto mapToFtsResponseDto(List<FtsItem> items,
+                                               Set<String> dictionaryWords,
+                                               Feature feature,
+                                               String libraryName,
+                                               String libraryTitle,
+                                               String schemaName) {
+        Optional<FtsItem> oItem = items.stream()
+                                       .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
+                                       .findFirst();
+        if (oItem.isEmpty()) {
+            return new FtsResponseDto();
+        }
 
-            return new FtsResponseDto(DOCUMENT,
-                                      oItem.map(FtsItem::getDist).orElse(0f),
-                                      Map.of("library", libraryName,
-                                             "schema", schemaName,
-                                             "title", libraryTitle),
-                                      feature.getProperties());
-        };
+        Set<String> headlines = new HashSet<>();
+        if (dictionaryWords != null && !dictionaryWords.isEmpty()) {
+            headlines = headlineService.fetchHeadlines(oItem.get().getConcatenatedData(), dictionaryWords);
+
+            log.debug("Headlines: {}", headlines);
+        }
+
+        return new FtsResponseDto(DOCUMENT,
+                                  oItem.map(FtsItem::getDist).orElse(0f),
+                                  Map.of("library", libraryName,
+                                         "schema", schemaName,
+                                         "title", libraryTitle),
+                                  feature.getProperties(),
+                                  headlines);
     }
 }

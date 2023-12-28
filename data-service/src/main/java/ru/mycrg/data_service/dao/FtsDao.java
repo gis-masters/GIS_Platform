@@ -9,30 +9,27 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.dto.FtsHeadline;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.sql.Types.VARCHAR;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.util.StringUtil.removeSpecificChars;
 
 @Repository
 public class FtsDao {
 
     private final Logger log = LoggerFactory.getLogger(FtsDao.class);
-
-    private static final ResourceQualifier DOCUMENTS = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                             "fts_documents",
-                                                                             LIBRARY);
 
     private final PrincipalService principalService;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
@@ -121,7 +118,7 @@ public class FtsDao {
         String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, ecqlFilter, registryData);
 
         String resultQuery = "" +
-                "SELECT result.dist, result.schema, result.table, result.id " +
+                "SELECT result.dist, result.schema, result.table, result.id, result.concatenated_data " +
                 "FROM (" + ftsQuery + ") AS result " +
                 "JOIN (" + findAllowedQuery + ") AS document ON result.id = document.id " +
                 "ORDER BY dist LIMIT 10";
@@ -132,6 +129,23 @@ public class FtsDao {
         parameters.addValue("searchedText", text, VARCHAR);
 
         return pJdbcTemplate.query(resultQuery, parameters, new BeanPropertyRowMapper<>(FtsItem.class));
+    }
+
+    public Set<FtsHeadline> searchHeadlines(@NotNull String baseWord,
+                                            @NotNull String text) {
+        Set<String> preparedText = Arrays.stream(removeSpecificChars(text).split(" "))
+                                         .filter(w -> w.length() > 1)
+                                         .filter(w -> !w.contains(ROOT_FOLDER_PATH))
+                                         .collect(Collectors.toSet());
+        String query = buildHeadlinesQuery(baseWord, preparedText);
+
+        log.debug("Query for search selection: [{}]", query);
+
+        List<FtsHeadline> headlines = pJdbcTemplate
+                .getJdbcTemplate()
+                .query(query, (rs, rowNum) -> new FtsHeadline(rs.getString(1), rs.getFloat(2)));
+
+        return new HashSet<>(headlines);
     }
 
     public Long countTotal(ResourceQualifier qualifier,

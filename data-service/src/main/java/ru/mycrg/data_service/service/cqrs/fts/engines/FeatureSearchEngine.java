@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.fts;
+package ru.mycrg.data_service.service.cqrs.fts.engines;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +19,9 @@ import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.service.SchemaExtractor;
+import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
+import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
+import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -45,6 +48,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     private final FtsDao ftsDao;
     private final TableService tableService;
     private final DatasetService datasetService;
+    private final HeadlineService headlineService;
     private final SchemaExtractor schemaExtractor;
     private final SpatialRecordsDao spatialRecordsDao;
     private final FtsDictionaryService ftsDictionaryService;
@@ -53,6 +57,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     public FeatureSearchEngine(FtsDao ftsDao,
                                TableService tableService,
                                DatasetService datasetService,
+                               HeadlineService headlineService,
                                SchemaExtractor schemaExtractor,
                                SpatialRecordsDao spatialRecordsDao,
                                FtsDictionaryService ftsDictionaryService,
@@ -60,6 +65,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         this.ftsDao = ftsDao;
         this.tableService = tableService;
         this.datasetService = datasetService;
+        this.headlineService = headlineService;
         this.schemaExtractor = schemaExtractor;
         this.spatialRecordsDao = spatialRecordsDao;
         this.ftsDictionaryService = ftsDictionaryService;
@@ -111,7 +117,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
 
         // Long total = ftsDao.countTotal(LAYERS, allowedTables, null, text, getBound(dto));
 
-        List<FtsResponseDto> result = fetchEntities(founded);
+        List<FtsResponseDto> result = fetchEntities(founded, dictionaryWords);
 
         return new PageImpl<>(result, pageable, pageable.getPageNumber());
     }
@@ -127,7 +133,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         }
 
         List<FtsItem> founded = ftsDao.searchCadastrNumber(LAYERS, allowedTables, null, dto.getText(), pageable);
-        List<FtsResponseDto> result = fetchEntities(founded);
+        List<FtsResponseDto> result = fetchEntities(founded, Set.of(dto.getText()));
 
         return new PageImpl<>(result, pageable, pageable.getPageNumber());
     }
@@ -219,7 +225,9 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         return result;
     }
 
-    private List<FtsResponseDto> fetchEntities(List<FtsItem> tables) {
+    @NotNull
+    private List<FtsResponseDto> fetchEntities(List<FtsItem> tables,
+                                               @Nullable Set<String> dictionaryWords) {
         StopWatch fetchEntitiesWatcher = new StopWatch();
         fetchEntitiesWatcher.start();
 
@@ -248,12 +256,13 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                 List<FtsResponseDto> features = spatialRecordsDao
                         .findByIds(tableQualifier, schema, recordIds)
                         .stream()
-                        .map(feature -> mapToResponseDto(feature, tableQualifier, schema, tables))
+                        .map(feature -> mapToFtsResponseDto(tables, dictionaryWords, feature, tableQualifier, schema))
                         .collect(Collectors.toList());
 
                 result.addAll(features);
             } catch (Exception e) {
-                log.error("Не удалось достать объекты: {} из: {}", recordIds, complexName);
+                log.error("Не удалось достать объекты: {} из: {}. По причине: {}",
+                          recordIds, complexName, e.getMessage());
             }
         });
 
@@ -267,25 +276,42 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private FtsResponseDto mapToResponseDto(Feature feature,
-                                            ResourceQualifier tableQualifier,
-                                            SchemaDto schema,
-                                            List<FtsItem> items) {
+    private FtsResponseDto mapToFtsResponseDto(List<FtsItem> tables,
+                                               Set<String> dictionaryWords,
+                                               Feature feature,
+                                               ResourceQualifier tableQualifier,
+                                               SchemaDto schema) {
+        Optional<FtsItem> oItem = tables.stream()
+                                        .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
+                                        .findFirst();
+        if (oItem.isEmpty()) {
+            return new FtsResponseDto();
+        }
+
+        Float dist = oItem.map(FtsItem::getDist).orElse(0f);
+
         IResourceModel dataset = datasetService.getInfo(tableQualifier.getSchema());
         IResourceModel table = tableService.getInfo(tableQualifier);
 
-        Optional<FtsItem> oItem = items.stream()
-                                       .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
-                                       .findFirst();
+        Set<String> headlines = new HashSet<>();
+        if (dictionaryWords != null && !dictionaryWords.isEmpty()) {
+            headlines = headlineService.fetchHeadlines(oItem.get().getConcatenatedData(), dictionaryWords);
+
+            log.debug("Headlines: {}", headlines);
+        }
 
         return new FtsResponseDto(FEATURE,
-                                  oItem.map(FtsItem::getDist).orElse(0f),
-                                  Map.of("dataset", dataset.getIdentifier(),
-                                         "datasetTitle", dataset.getTitle(),
+                                  dist,
+                                  Map.of("dataset",
+                                         dataset.getIdentifier(),
+                                         "datasetTitle",
+                                         dataset.getTitle(),
                                          "table", table.getIdentifier(),
                                          "tableTitle", table.getTitle(),
-                                         "geometryType", schema.getGeometryType().getType(),
+                                         "geometryType",
+                                         schema.getGeometryType().getType(),
                                          "schema", schema.getName()),
-                                  feature);
+                                  feature,
+                                  headlines);
     }
 }

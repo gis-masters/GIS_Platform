@@ -44,6 +44,14 @@ public class StringUtil {
         return result.toString().trim();
     }
 
+    public static String removeSpecificChars(String input) {
+        return input.replaceAll("[.(\"'\\[\\]{}),]", " ");
+    }
+
+    public static String removePunctuation(String input) {
+        return input.replaceAll("\\p{Punct}", "");
+    }
+
     private static String joinAndQuoteMark(Collection<String> ids,
                                            String quoteMark,
                                            String delimiter) {

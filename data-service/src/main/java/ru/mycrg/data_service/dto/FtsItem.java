@@ -11,6 +11,7 @@ public class FtsItem {
     private String schema;
     private String table;
     private Long id;
+    private String concatenatedData;
 
     public FtsItem() {
         // Required
@@ -46,6 +47,14 @@ public class FtsItem {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getConcatenatedData() {
+        return concatenatedData;
+    }
+
+    public void setConcatenatedData(String concatenatedData) {
+        this.concatenatedData = concatenatedData;
     }
 
     @Override
