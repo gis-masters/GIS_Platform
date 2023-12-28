@@ -1,42 +1,103 @@
 body .Carousel {
-  &-Slide {
-    display: flex;
-    justify-content: center;
-
-    height: 700px;
-    padding: 46px;
+  &-Paper {
+    &_height_fullHeight {
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
 
-  &-Slide_height_fullHeight {
+  .swiper {
+    width: 100%;
+    height: 100%;
+    min-height: 40px;
+
+    &-wrapper {
+      align-items: center;
+    }
+
+    &-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-pagination {
+      text-align: center;
+    }
+  }
+
+  &-Wrapper {
+    display: flex;
+    flex-direction: column;
+
     height: 100%;
   }
 
-  &-Image {
-    max-width: 100%;
+  &-Title {
+    margin-top: 20px;
 
-    object-fit: contain;
+    text-align: center;
+
+    font-size: 20px;
   }
 
-  &-Right {
-    position: absolute;
-    top: calc(50% - 43px);
-    right: 20px;
+  &-MainSwiper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 80%;
+
+    &_type_document {
+      overflow: auto;
+    }
   }
 
-  &-Left {
-    position: absolute;
-    top: calc(50% - 43px);
-    left: 0;
+  &-AdditionSwiper {
+    box-sizing: border-box;
+    height: 20%;
+    padding: 10px 0;
+
+    & .swiper-slide {
+      width: 25%;
+      height: 100%;
+
+      opacity: 0.4;
+    }
+
+    & .swiper-slide-thumb-active {
+      opacity: 1;
+    }
   }
 
   &-Document {
     width: 100%;
 
     canvas {
+      overflow: initial;
+
       width: 100% !important;
       max-width: 100%;
       height: auto !important;
     }
+  }
+
+  &-MainImage {
+    max-width: 100%;
+    max-height: 50vh;
+    padding: 0 40px 40px;
+
+    object-fit: contain;
+  }
+
+  &-AdditionImage {
+    display: block;
+
+    width: 100%;
+    height: 15vh;
+
+    object-fit: cover;
   }
 
   &-OpenInFull {

@@ -34,9 +34,9 @@ import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
 import { sleep } from '../../services/util/sleep';
 import { Lookup } from '../Lookup/Lookup';
+import { Carousel } from '../Carousel/Carousel';
 
 import { FilesCompoundItem } from './CompoundItem/Files-CompoundItem';
-import { Carousel } from '../Carousel/Carousel';
 import { FilesItem } from './Item/Files-Item';
 import { Toast } from '../Toast/Toast';
 
@@ -142,7 +142,7 @@ export default class Files extends Component<FilesProps> {
           <Carousel
             open={this.previewOpen}
             onClose={this.onPreviewClose}
-            allImages={this.allImages}
+            images={this.allImages}
             startingImageForPreview={this.startingImageForPreview}
           />
         )}

@@ -46,7 +46,7 @@ const MAX_PAGE_SIZE = 10_000;
 
 /**
  * Get features by wfs
- * @returns {Promise<[WfsFeature[], number, number, number]} features, total pages, features matched, features total
+ * @returns {Promise<[WfsFeature[], number, number, number]>} features, total pages, features matched, features total
  */
 export async function getFeatures(
   layer: CrgVectorLayer,

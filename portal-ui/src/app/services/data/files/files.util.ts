@@ -1,3 +1,6 @@
+import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { LibraryRecord } from '../library/library.models';
 
 import {
@@ -102,6 +105,27 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
     })
     .filter(value => Array.isArray(value) && value.every(isFileInfo))
     .flat() as FileInfo[];
+}
+
+export function getPhotoModeFeaturesFiles(features: WfsFeature[]): FileInfo[] {
+  return Object.values(features)
+    .flatMap(feature => {
+      const layer = getLayerByFeatureInCurrentProject(feature);
+      const propertyValue = feature.properties[layer?.photoMode];
+
+      if (layer?.photoMode) {
+        if (typeof propertyValue === 'string') {
+          try {
+            return JSON.parse(propertyValue) as FileInfo[];
+          } catch {
+            // do nothing
+          }
+        } else if (Array.isArray(propertyValue)) {
+          return propertyValue as FileInfo[];
+        }
+      }
+    })
+    .filter(notFalsyFilter);
 }
 
 const zipFileTypes = new Set([

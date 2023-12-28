@@ -1,10 +1,12 @@
 import { observable, action, reaction, makeObservable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
 import { mapStore } from './Map.store';
 import { route, Pages } from './Route.store';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FeatureError } from '../services/map/map-link-following.service';
+import { FileInfo } from '../services/data/files/files.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
 import { SearchInfo } from '../components/GlobalSearch/GlobalSearch';
 
@@ -25,22 +27,23 @@ export interface EditFeaturesData {
 const defaultValues: Partial<Sidebars> = {
   leftOpen: true,
   featuresSidebarOpen: false,
-  memorizedViewFeatures: null,
-  deletedFeatures: null,
-  editFeaturesData: null,
-  featuresWithErrors: null,
+  memorizedViewFeatures: undefined,
+  deletedFeatures: undefined,
+  editFeaturesData: undefined,
+  featuresWithErrors: undefined,
   editOpen: false,
   featuresEdited: false,
   featuresClosingConfirmationOpen: false,
-  featuresClosingConfirmationCallback: null,
+  featuresClosingConfirmationCallback: undefined,
   bugReportOpen: false,
-  infoOpen: false
+  infoOpen: false,
+  photoLayerOpen: false
 };
 
 class Sidebars {
-  @observable leftOpen: boolean;
-  @observable featuresSidebarOpen: boolean;
-  @observable editOpen: boolean;
+  @observable leftOpen?: boolean;
+  @observable featuresSidebarOpen?: boolean;
+  @observable editOpen?: boolean;
   @observable memorizedViewFeatures?: WfsFeature[];
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
@@ -49,12 +52,14 @@ class Sidebars {
   @observable featuresWithErrors?: number;
   @observable foundBySearchFeatureEdited?: boolean;
   @observable selectedFeaturesEdited?: boolean;
-  @observable featuresEdited: boolean;
-  @observable featuresClosingConfirmationOpen: boolean;
   @observable featuresClosingConfirmationCallback?: () => void;
-  @observable bugReportOpen: boolean;
-  @observable infoOpen: boolean;
-  @observable searchValue: SearchInfo;
+  @observable searchValue?: SearchInfo;
+  @observable featuresEdited?: boolean;
+  @observable featuresClosingConfirmationOpen?: boolean;
+  @observable bugReportOpen?: boolean;
+  @observable infoOpen?: boolean;
+  @observable photoLayerOpen: boolean = false;
+  @observable imagesForPhotoMode: FileInfo[] = [];
 
   private static _instance: Sidebars;
 
@@ -87,6 +92,11 @@ class Sidebars {
     this.leftOpen = false;
   }
 
+  openPhotoLayers(files: FileInfo[]) {
+    this.openPhotoModePreviewer(files);
+    this.openSelectedFeaturesSidebar();
+  }
+
   @action.bound
   setSearchValue(searchValue: SearchInfo) {
     this.searchValue = searchValue;
@@ -96,17 +106,25 @@ class Sidebars {
   openFeaturesSidebar() {
     this.closeBugReport();
     this.closeEdit();
-    this.featuresSidebarOpen = true;
+    if (!this.photoLayerOpen) {
+      this.featuresSidebarOpen = true;
+    }
   }
 
-  @action.bound
+  @boundMethod
   openSelectedFeaturesSidebar() {
     if (this.needEditConfirmation(this.openSelectedFeaturesSidebar.bind(this))) {
       return;
     }
     this.openFeaturesSidebar();
+    if (this.needEditConfirmation(this.openFeaturesSidebar.bind(this))) {
+      return;
+    }
 
-    if (!this.featuresWithErrors && mapStore.selectedFeatures.length === 1) {
+    this.closeBugReport();
+    this.closeEdit();
+
+    if (!this.featuresWithErrors && mapStore.selectedFeatures.length === 1 && !this.photoLayerOpen) {
       this.closeFeaturesSidebar();
       this.openEdit({
         features: mapStore.selectedFeatures,
@@ -153,6 +171,13 @@ class Sidebars {
   }
 
   @action
+  openPhotoModePreviewer(files: FileInfo[]) {
+    this.imagesForPhotoMode = files;
+
+    this.photoLayerOpen = true;
+  }
+
+  @action
   openEdit(data: EditFeaturesData) {
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
@@ -164,13 +189,18 @@ class Sidebars {
   }
 
   @action.bound
+  closePhotoModePreviewer() {
+    this.photoLayerOpen = false;
+  }
+
+  @action.bound
   closeEdit() {
     if (this.needEditConfirmation(this.closeEdit)) {
       return;
     }
     this.editOpen = false;
     this.featuresEdited = false;
-    this.editFeaturesData = null;
+    this.editFeaturesData = undefined;
   }
 
   @action.bound
@@ -233,7 +263,7 @@ class Sidebars {
   @action.bound
   closeEditFeatureConfirmation() {
     this.featuresClosingConfirmationOpen = false;
-    this.featuresClosingConfirmationCallback = null;
+    this.featuresClosingConfirmationCallback = undefined;
   }
 
   @action

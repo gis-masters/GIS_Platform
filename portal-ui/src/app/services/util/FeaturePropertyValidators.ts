@@ -122,6 +122,18 @@ export class FeaturePropertyValidators {
         case ValueType.LOOKUP: {
           break;
         }
+        case ValueType.FILE: {
+          //иначе сыпятся ошибки в консоли
+          break;
+        }
+        case ValueType.DOCUMENT: {
+          //иначе сыпятся ошибки в консоли
+          break;
+        }
+        case ValueType.DATETIME: {
+          //иначе сыпятся ошибки в консоли
+          break;
+        }
         default: {
           console.error('Unsupported ValueType:', propertySchema.valueType);
 

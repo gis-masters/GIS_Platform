@@ -75,6 +75,7 @@ import { EditFeatureActionsComponent } from './components/edit-feature-actions/e
 import { MessagesRegistryComponent } from './components/messages-registry/messages-registry.component';
 import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
 import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
+import { PhotoModePreviewerComponent } from './components/photo-mode-previewer/photo-mode-previewer.component';
 
 @NgModule({
   declarations: [
@@ -138,7 +139,8 @@ import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/u
     EditFeatureActionsComponent,
     MessagesRegistryComponent,
     TasksJournalComponent,
-    UtilityDialogsRootComponent
+    UtilityDialogsRootComponent,
+    PhotoModePreviewerComponent
   ],
   imports: [
     HttpClientModule,

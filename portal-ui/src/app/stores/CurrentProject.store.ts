@@ -205,7 +205,8 @@ class CurrentProject implements CrgProjectData {
       'styleName',
       'style',
       'minZoom',
-      'maxZoom'
+      'maxZoom',
+      'photoMode'
     ];
 
     return {

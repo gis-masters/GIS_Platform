@@ -13,6 +13,7 @@ import { setSelectedFeaturesToUrl } from './map-url.service';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { mapService } from './map.service';
 import { services } from '../services';
+import { getPhotoModeFeaturesFiles } from '../data/files/files.util';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -276,6 +277,11 @@ class MapSelectionService {
       this.selectFeatures(features, selectionType);
     } else if (selectionType === MapSelectionTypes.REPLACE) {
       this.selectFeatures([]);
+    }
+
+    const photoModeFiles = getPhotoModeFeaturesFiles(features);
+    if (photoModeFiles.length) {
+      sidebars.openPhotoLayers(photoModeFiles);
     }
   }
 

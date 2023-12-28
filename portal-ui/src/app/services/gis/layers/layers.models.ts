@@ -44,6 +44,7 @@ export interface CrgVectorLayer extends CrgBaseLayer {
   style?: string;
   dataset: string;
   view?: string;
+  photoMode?: string;
 }
 
 export interface CrgExternalLayer extends CrgBaseLayer {

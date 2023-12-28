@@ -97,6 +97,17 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   }
 
   @computed
+  private get propertiesTypeFileOptions(): PropertyOption[] {
+    if (!this.props.schema) {
+      return [];
+    }
+
+    return this.props.schema.properties
+      .filter(({ propertyType, hidden }) => propertyType === PropertyType.FILE && !hidden)
+      .map(({ title, name }) => ({ title, value: name }));
+  }
+
+  @computed
   private get defaultStylesOptions(): PropertyOption[] {
     const { layer } = this.props;
 
@@ -177,6 +188,16 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       }
     }
 
+    if (this.propertiesTypeFileOptions.length) {
+      properties.push({
+        name: 'photoMode',
+        title: 'Фотослой',
+        propertyType: PropertyType.CHOICE,
+        defaultValue: layer.photoMode || '',
+        options: [{ title: 'Не выбрано', value: '' }, ...this.propertiesTypeFileOptions]
+      });
+    }
+
     return { properties };
   }
 
@@ -203,6 +224,10 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       layer.style = patch.style;
     }
 
+    if (patch.photoMode !== undefined) {
+      layer.photoMode = patch.photoMode;
+    }
+
     communicationService.layerUpdated.emit({ type: 'update', data: layer });
   }
 
@@ -215,7 +240,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     const stylesList = await getSimpleStylesListForGeometryType(this.props.geometryType);
     const stylesListOptions: PropertyOption[] = await Promise.all(
       stylesList.map(async styleName => {
-        let title = styleName;
+        let title: string = styleName;
         try {
           const sldStyle = await getStyleSld(styleName);
           title = getStyleTitle(sldStyle);

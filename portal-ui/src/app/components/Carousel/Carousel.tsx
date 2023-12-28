@@ -1,185 +1,204 @@
-import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
-import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
-import { Breakpoint, Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
-import { ChevronLeft, ChevronRight, OpenInFull, CloseFullscreen } from '@mui/icons-material';
+/* eslint-disable react/jsx-no-bind -- эксперимент для сложных функциональных компонентов */
+import React, { FC, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { cn } from '@bem-react/classname';
+import { action, observable } from 'mobx';
+import { observer, useLocalObservable } from 'mobx-react';
+import { Breakpoint, Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/material';
+import { CloseFullscreen, OpenInFull, PictureAsPdfOutlined } from '@mui/icons-material';
+import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
+import { FreeMode, Navigation, Pagination, Thumbs } from 'swiper/modules';
+import '!style-loader!css-loader!swiper/css';
+import '!style-loader!css-loader!swiper/css/pagination';
+import '!style-loader!css-loader!swiper/css/navigation';
+import '!style-loader!css-loader!swiper/css/thumbs';
 
 import { filesClient } from '../../services/data/files/files.client';
 import { FileInfo } from '../../services/data/files/files.models';
-import { isPdfFile } from '../../services/data/files/files.util';
-import { IconButton } from '../IconButton/IconButton';
+import { getFileBaseName, isPdfFile } from '../../services/data/files/files.util';
+
 import { Loading } from '../Loading/Loading';
 import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./Carousel.scss';
+
+type CarouselProps = {
+  open: boolean;
+  images?: FileInfo[];
+  startingImageForPreview?: FileInfo;
+  onClose(): void;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 pdfjs.GlobalWorkerOptions.workerSrc = '../../../assets/pdf-worker/pdf.worker.min.js';
 
 const cnCarousel = cn('Carousel');
 
-interface CarouselProps {
-  open: boolean;
-  onClose: () => void;
-  allImages?: FileInfo[];
-  startingImageForPreview?: FileInfo;
-}
+type CarouselStore = {
+  currentImage: FileInfo | undefined;
+  busy: boolean;
+  pages: unknown[];
+  expanded: boolean;
+  setCurrentImage(image: FileInfo): void;
+  setBusy(arg: boolean): void;
+  setPages(pages: unknown[]): void;
+  setExpanded(expanded: boolean): void;
+};
 
-@observer
-export class Carousel extends Component<CarouselProps> {
-  @observable private url: string;
-  @observable private currentImage: FileInfo;
-  @observable private busy = true;
-  @observable private pages: undefined[];
-  @observable private expandHandler = false;
+export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, startingImageForPreview }) => {
+  // @TODO: Update Typescript/Dependencies #1284
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass>();
 
-  constructor(props: CarouselProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.setCurrentImage(this.props.startingImageForPreview);
-    this.fileUrl(this.props.startingImageForPreview?.id);
-  }
-
-  render() {
-    const { onClose, allImages } = this.props;
-
-    return (
-      <>
-        <Dialog open={this.props.open} onClose={onClose} maxWidth={this.maxWidth} fullWidth className={cnCarousel()}>
-          <DialogContent className={cnCarousel('Slide', { height: this.expandHandler && 'fullHeight' }, ['scroll'])}>
-            {this.currentImage && isPdfFile(this.currentImage) ? (
-              <Document
-                className={cnCarousel('Document')}
-                file={this.url}
-                loading='Загрузка pdf'
-                onLoadSuccess={this.onDocumentLoad}
-              >
-                {this.pages?.map((_, index) => <Page key={index} pageNumber={index + 1} />)}
-              </Document>
-            ) : (
-              <>
-                <img
-                  className={cnCarousel('Image')}
-                  src={this.url}
-                  alt={this.currentImage?.title}
-                  onLoad={this.onLoad}
-                />
-                <Loading visible={this.busy} />
-              </>
-            )}
-            {this.currentImage && isPdfFile(this.currentImage) && (
-              <Tooltip title={this.expandHandler ? 'Свернуть' : 'Развернуть'}>
-                <IconButton className={cnCarousel('OpenInFull')} onClick={this.setExpandHandler}>
-                  {this.expandHandler ? <CloseFullscreen /> : <OpenInFull />}
-                </IconButton>
-              </Tooltip>
-            )}
-          </DialogContent>
-          <DialogActions>
-            {allImages.length !== 1 && (
-              <>
-                <IconButton className={cnCarousel('Right')} edge='end' onClick={this.nextHandler}>
-                  <ChevronRight fontSize='large' />
-                </IconButton>
-                <IconButton className={cnCarousel('Left')} edge='end' onClick={this.prevHandler}>
-                  <ChevronLeft fontSize='large' />
-                </IconButton>
-              </>
-            )}
-
-            <Button onClick={onClose}>Закрыть</Button>
-          </DialogActions>
-        </Dialog>
-      </>
-    );
-  }
-
-  private fileUrl(id: string) {
-    this.setUrl(filesClient.getFileDownloadUrl(id));
-  }
-
-  @boundMethod
-  private onDocumentLoad({ numPages }) {
-    this.setPages([...(Array(numPages) as undefined[])]);
-    this.setBusy(false);
-  }
-
-  @boundMethod
-  private onLoad() {
-    this.setBusy(false);
-  }
-
-  @boundMethod
-  private prevHandler() {
-    this.setBusy(true);
-    const { allImages: images } = this.props;
-    let prevImageIndex: number;
-
-    images.forEach((img, i) => {
-      if (img.id === this.currentImage.id) {
-        prevImageIndex = i === 0 ? images.length - 1 : i - 1;
+  const store = useLocalObservable(
+    (): CarouselStore => ({
+      currentImage: startingImageForPreview || undefined,
+      busy: true,
+      pages: [],
+      expanded: false,
+      setCurrentImage(this: CarouselStore, image: FileInfo | undefined): void {
+        this.currentImage = image;
+      },
+      setBusy(this: CarouselStore, busy: boolean): void {
+        this.busy = busy;
+      },
+      setPages(this: CarouselStore, pages: unknown[]): void {
+        this.pages = pages;
+      },
+      setExpanded(this: CarouselStore, expanded: boolean): void {
+        this.expanded = expanded;
       }
-    });
-    const currentImage = images[prevImageIndex];
+    }),
+    {
+      currentImage: observable,
+      busy: observable,
+      pages: observable,
+      expanded: observable,
+      setCurrentImage: action.bound,
+      setBusy: action.bound,
+      setPages: action.bound,
+      setExpanded: action.bound
+    }
+  );
 
-    this.setCurrentImage(currentImage);
-    this.fileUrl(currentImage.id);
-  }
+  const { currentImage, setCurrentImage, busy, setBusy, pages, setPages, expanded, setExpanded } = store;
 
-  @boundMethod
-  private nextHandler() {
-    this.setBusy(true);
-    const { allImages: images } = this.props;
-    let nextImageIndex: number;
+  const imagesWithUrls = images?.map(image => {
+    return { ...image, url: filesClient.getFileDownloadUrl(image.id) };
+  });
 
-    images.forEach((img, i) => {
-      if (img.id === this.currentImage.id) {
-        nextImageIndex = i === images.length - 1 ? 0 : i + 1;
-      }
-    });
-
-    const currentImage = images[nextImageIndex];
-
-    this.setCurrentImage(currentImage);
-    this.fileUrl(currentImage.id);
-  }
-
-  @action
-  private setUrl(url: string) {
-    this.url = url;
-  }
-
-  @action
-  private setCurrentImage(currentImage: FileInfo) {
-    this.currentImage = currentImage;
-  }
-
-  @action
-  private setBusy(busy: boolean) {
-    this.busy = busy;
-  }
-
-  @action
-  private setPages(pages: undefined[]) {
-    this.pages = pages;
-  }
-
-  @action.bound
-  private setExpandHandler() {
-    this.expandHandler = !this.expandHandler;
-  }
-
-  private get maxWidth(): false | Breakpoint {
-    if (!this.expandHandler) {
-      return this.currentImage && isPdfFile(this.currentImage) ? 'xl' : 'md';
+  const maxWidth = (): false | Breakpoint => {
+    if (!expanded) {
+      return currentImage && isPdfFile(currentImage) ? 'xl' : 'md';
     }
 
     return false;
-  }
-}
+  };
+
+  const onDocumentLoad = ({ numPages }) => {
+    setPages([...(Array(numPages) as unknown[])]);
+    setBusy(false);
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth={maxWidth()}
+      className={cnCarousel()}
+      fullWidth
+      PaperProps={{ className: cnCarousel('Paper', { height: expanded && 'fullHeight' }) }}
+    >
+      {currentImage && <div className={cnCarousel('Title')}>{getFileBaseName(currentImage.title)}</div>}
+      <DialogContent className={cnCarousel('Wrapper')}>
+        {!currentImage && !busy && 'Файлы отсутствуют'}
+        {currentImage && (
+          <Swiper
+            className={cnCarousel('MainSwiper', { type: isPdfFile(currentImage) && 'document' })}
+            onSlideChange={(swiper: SwiperClass) => {
+              /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+              /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+              // @TODO: Update Typescript/Dependencies #1284
+              const activeIndex: number = swiper.activeIndex;
+              if (images) {
+                setCurrentImage(images[activeIndex]);
+              }
+            }}
+            pagination={{
+              type: 'fraction'
+            }}
+            navigation
+            thumbs={{ swiper: thumbsSwiper }}
+            modules={[Pagination, FreeMode, Navigation, Thumbs]}
+          >
+            {imagesWithUrls?.map(imageWithUrl => (
+              <SwiperSlide key={imageWithUrl.id}>
+                {isPdfFile(currentImage) ? (
+                  <Document
+                    className={cnCarousel('Document')}
+                    file={imageWithUrl.url}
+                    loading='Загрузка pdf'
+                    onLoadSuccess={onDocumentLoad}
+                  >
+                    {pages?.map((_, index) => <Page key={index} pageNumber={index + 1} />)}
+                  </Document>
+                ) : (
+                  <img
+                    onLoad={() => {
+                      setBusy(false);
+                    }}
+                    onError={() => {
+                      setBusy(false);
+                    }}
+                    className={cnCarousel('MainImage')}
+                    src={imageWithUrl.url}
+                    alt={imageWithUrl.title}
+                    loading='lazy'
+                  />
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
+        {images && images.length > 1 && (
+          <Swiper
+            className={cnCarousel('AdditionSwiper')}
+            onSwiper={setThumbsSwiper}
+            spaceBetween={10}
+            slidesPerView={4}
+            freeMode
+            watchSlidesProgress
+            modules={[FreeMode, Navigation, Thumbs]}
+          >
+            {imagesWithUrls &&
+              imagesWithUrls.map(el => (
+                <SwiperSlide key={el.id}>
+                  {currentImage && isPdfFile(currentImage) ? (
+                    <PictureAsPdfOutlined />
+                  ) : (
+                    <img className={cnCarousel('AdditionImage')} src={el.url} alt={el.title} loading='lazy' />
+                  )}
+                </SwiperSlide>
+              ))}
+          </Swiper>
+        )}
+        {currentImage && isPdfFile(currentImage) && (
+          <Tooltip title={expanded ? 'Свернуть' : 'Развернуть'}>
+            <IconButton
+              className={cnCarousel('OpenInFull')}
+              onClick={() => {
+                setExpanded(!expanded);
+              }}
+            >
+              {expanded ? <CloseFullscreen /> : <OpenInFull />}
+            </IconButton>
+          </Tooltip>
+        )}
+        <Loading visible={busy} />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Закрыть</Button>
+      </DialogActions>
+    </Dialog>
+  );
+});

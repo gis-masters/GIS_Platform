@@ -83,12 +83,16 @@ export class FeaturesSidebarTeaser extends Component {
       return;
     }
 
+    let updatingAllowed: boolean = false;
+
     const feature = mapStore.selectedFeatures[0];
     const operationId = Symbol();
     this.testingFeatureUpdateabilityOperationId = operationId;
 
     const layer = getLayerByFeatureInCurrentProject(feature);
-    const updatingAllowed = await isUpdateAllowed(layer);
+    if (layer) {
+      updatingAllowed = await isUpdateAllowed(layer);
+    }
 
     if (this.testingFeatureUpdateabilityOperationId === operationId) {
       this.setFeatureUpdateability(updatingAllowed);
