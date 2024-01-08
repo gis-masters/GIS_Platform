@@ -73,12 +73,10 @@ public class FtsDao {
 
     public List<FtsItem> search(ResourceQualifier qualifier,
                                 List<String> requestedTables,
-                                String ecqlFilter,
                                 String text,
                                 @NotNull Set<String> words,
-                                float bound,
                                 Pageable pageable) {
-        String query = buildFtsLayersQuery(ecqlFilter, bound, requestedTables, words, pageable);
+        String query = buildFtsLayersQuery(requestedTables, words, pageable);
 
         log.debug("fts v2 query by '{}': [{}]", qualifier.getQualifier(), query);
 
@@ -106,7 +104,6 @@ public class FtsDao {
     public List<FtsItem> searchWithPermissions(ResourceQualifier libraryQualifier,
                                                String ecqlFilter,
                                                String text,
-                                               float bound,
                                                @NotNull Set<String> words,
                                                @Nullable RegistryData registryData) {
         List<String> allPrincipalIds = principalService.getAllIds();
@@ -114,7 +111,7 @@ public class FtsDao {
             return new ArrayList<>();
         }
 
-        String ftsQuery = buildFtsDocumentsQuery(ecqlFilter, bound, List.of(libraryQualifier.getTable()), words);
+        String ftsQuery = buildFtsDocumentsQuery(ecqlFilter, List.of(libraryQualifier.getTable()), words);
         String findAllowedQuery = buildFindAllowedForRegistryQuery(libraryQualifier, ecqlFilter, registryData);
 
         String resultQuery = "" +

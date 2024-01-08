@@ -100,7 +100,6 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                         List<FtsItem> temp = ftsDao.searchWithPermissions(libraryQualifier,
                                                                           dto.getEcqlFilter(),
                                                                           text,
-                                                                          0f,
                                                                           fDictionaryWords,
                                                                           registryData);
 

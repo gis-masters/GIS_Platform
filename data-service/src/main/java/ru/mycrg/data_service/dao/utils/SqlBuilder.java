@@ -81,12 +81,6 @@ public class SqlBuilder {
 
     @NotNull
     public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
-                                                          String ecqlFilter) {
-        return buildFindAllowedForRegistryQuery(qualifier, ecqlFilter, null, null);
-    }
-
-    @NotNull
-    public static String buildFindAllowedForRegistryQuery(ResourceQualifier qualifier,
                                                           String ecqlFilter,
                                                           @Nullable RegistryData registryData) {
         return buildFindAllowedForRegistryQuery(qualifier, ecqlFilter, registryData, null);
@@ -191,70 +185,22 @@ public class SqlBuilder {
     }
 
     @NotNull
-    public static String buildFtsLayersQuery(String ecqlFilter,
-                                             float bound,
-                                             @Nullable List<String> requestedTables,
+    public static String buildFtsLayersQuery(@Nullable List<String> requestedTables,
                                              @NotNull Set<String> words,
                                              @Nullable Pageable pageable) {
-        String ftsWhere = (requestedTables != null)
-                ? buildFtsWhere2(ecqlFilter, bound, requestedTables)
-                : buildFtsWhere2(ecqlFilter, bound);
-
         String pQuery = "";
         if (pageable != null) {
             pQuery = " OFFSET " + pageable.getOffset() + " LIMIT " + pageable.getPageSize();
         }
 
-        String query = "" +
-                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
-                "       subquery.schema, " +
-                "       subquery.table, " +
-                "       subquery.id, " +
-                "       subquery.concatenated_data " +
-                "FROM (" +
-                "        SELECT ts_rank(d.vector_data, query) AS _rank_," +
-                "               d.schema," +
-                "               d.table," +
-                "               d.id," +
-                "               d.concatenated_data " +
-                "        FROM data.fts_layers AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
-                "    " + ftsWhere + " " +
-                "        ORDER BY _rank_ DESC" +
-                "    ) AS subquery " +
-                "ORDER BY dist " +
-                pQuery;
-
-        return query;
+        return buildFtsDocumentsQuery("fts_layers", null, requestedTables, words) + pQuery;
     }
 
     @NotNull
     public static String buildFtsDocumentsQuery(String ecqlFilter,
-                                                float bound,
                                                 @Nullable List<String> requestedTables,
                                                 @NotNull Set<String> words) {
-        String ftsWhere = (requestedTables != null)
-                ? buildFtsWhere2(ecqlFilter, bound, requestedTables)
-                : buildFtsWhere2(ecqlFilter, bound);
-
-        String query = "" +
-                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
-                "       subquery.schema, " +
-                "       subquery.table, " +
-                "       subquery.id," +
-                "       subquery.concatenated_data " +
-                "FROM (" +
-                "       SELECT ts_rank(d.vector_data, query) AS _rank_, " +
-                "              d.schema, " +
-                "              d.table, " +
-                "              d.id, " +
-                "              d.concatenated_data " +
-                "       FROM data.fts_documents AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
-                "   " + ftsWhere + " " +
-                "       ORDER BY _rank_ DESC" +
-                "     ) AS subquery " +
-                "ORDER BY dist ";
-
-        return query;
+        return buildFtsDocumentsQuery("fts_documents", ecqlFilter, requestedTables, words);
     }
 
     @NotNull
@@ -326,8 +272,8 @@ public class SqlBuilder {
         return result;
     }
 
-    public static String buildFtsWhere2(String ecqlFilter, float bound) {
-        String ftsCondition = "ts_rank(d.vector_data, query) > " + bound;
+    public static String buildFtsWhere2(String ecqlFilter) {
+        String ftsCondition = "ts_rank(d.vector_data, query) > 0.0";
 
         String filter = buildWhereSection(ecqlFilter);
 
@@ -341,8 +287,8 @@ public class SqlBuilder {
         return result;
     }
 
-    public static String buildFtsWhere2(String ecqlFilter, float bound, List<String> resources) {
-        String result = buildFtsWhere2(ecqlFilter, bound);
+    public static String buildFtsWhere2(String ecqlFilter, List<String> resources) {
+        String result = buildFtsWhere2(ecqlFilter);
 
         if (!resources.isEmpty()) {
             List<String> asString = resources.stream()
@@ -731,6 +677,64 @@ public class SqlBuilder {
             return updateQuery + setPartSection + whereSection;
         } else {
             return "";
+        }
+    }
+
+    @NotNull
+    private static String buildFtsDocumentsQuery(String ftsTable,
+                                                 String ecqlFilter,
+                                                 @Nullable List<String> requestedTables,
+                                                 @NotNull Set<String> words) {
+        String ftsWhere = (requestedTables != null)
+                ? buildFtsWhere2(ecqlFilter, requestedTables)
+                : buildFtsWhere2(ecqlFilter);
+
+        // В данном запросе внутренний SELECT это первое сужение всего набора данных - выборка по найденным словам в
+        // словаре, с ранжированием и ограничением с плавающим лимитом.
+        // Результат этой выборки передается на обработку нечетким поиском оператором <<<->.
+        // Проблема в том что при поиске с большим кол-вом слов или по "неудачным" словам, сужение данных практически
+        // не происходит, что ведет за собой очень долгую работу неточного поиска, что недопустимо.
+        // Ориентир такой, что по объему в 128к записей неточный поиск выполняется за примерно 5 сек.
+        // По идее лимита записей, ранжированных первичной функцией, вполне себе хватает - актуальные объекты ищутся.
+        // Но особо уменьшать лимит не имеет смысла, гораздо важнее сокращать список слов.
+        int limit = generateLimit(words);
+
+        String query = "" +
+                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
+                "       subquery.schema, " +
+                "       subquery.table, " +
+                "       subquery.id, " +
+                "       subquery.concatenated_data " +
+                "FROM (" +
+                "       SELECT ts_rank(d.vector_data, query) AS _rank_," +
+                "              d.schema," +
+                "              d.table," +
+                "              d.id," +
+                "              d.concatenated_data " +
+                "       FROM data." + ftsTable + " AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
+                "   " + ftsWhere + " " +
+                "       ORDER BY _rank_ DESC LIMIT " + limit +
+                "     ) AS subquery " +
+                "ORDER BY dist ";
+
+        return query;
+    }
+
+    private static int generateLimit(Set<String> words) {
+        int BASE_LIMIT = 512_000;
+
+        if (words == null || words.isEmpty()) {
+            return BASE_LIMIT;
+        } else if (words.size() < 3) {
+            return BASE_LIMIT / 2;
+        } else if (words.size() < 6) {
+            return BASE_LIMIT / 4;
+        } else if (words.size() < 8) {
+            return BASE_LIMIT / 8;
+        } else if (words.size() <= 10) {
+            return BASE_LIMIT / 16;
+        } else {
+            return BASE_LIMIT / 32;
         }
     }
 }

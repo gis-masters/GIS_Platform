@@ -106,10 +106,8 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         foundWatcher.start();
         List<FtsItem> founded = ftsDao.search(LAYERS,
                                               allowedTables,
-                                              null,
                                               text,
                                               dictionaryWords,
-                                              0f,
                                               pageable);
         foundWatcher.stop();
         double totalTimeSeconds = foundWatcher.getTotalTimeSeconds();
