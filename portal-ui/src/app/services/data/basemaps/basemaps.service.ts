@@ -11,7 +11,7 @@ export async function getBasemap(id: number): Promise<Basemap> {
 export async function getBasemaps(pageOptions: PageOptions): Promise<[Basemap[], number]> {
   const response = await basemapsClient.getBasemaps(pageOptions);
 
-  return [(response._embedded && response._embedded.basemaps) || [], response.page.totalPages];
+  return [response.content || [], response.page.totalPages];
 }
 
 export async function getBasemapsByIds(ids: number[]): Promise<Basemap[]> {

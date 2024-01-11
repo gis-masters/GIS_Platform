@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.config;
 
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -13,22 +12,22 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-    private final HttpServletRequest request;
+    private final HttpServletRequest httpServletRequest;
     private final DatasourceFactory datasourceFactory;
     private final IAuthenticationFacade authenticationFacade;
 
-    public DataSourceConfig(HttpServletRequest request,
+    public DataSourceConfig(HttpServletRequest httpServletRequest,
                             DatasourceFactory datasourceFactory,
                             IAuthenticationFacade authenticationFacade) {
-        this.request = request;
+        this.httpServletRequest = httpServletRequest;
         this.datasourceFactory = datasourceFactory;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Bean
     public DataSource getDataSource() {
-        HikariDataSource initialDataSource = datasourceFactory.getInitialDataSource();
-
-        return new CrgDataSource(initialDataSource, request, authenticationFacade);
+        return new CrgDataSource(datasourceFactory.getInitialDataSource(),
+                                 httpServletRequest,
+                                 authenticationFacade);
     }
 }

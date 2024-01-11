@@ -8,7 +8,7 @@ export async function getDatasetByTitle(title: string): Promise<Dataset> {
     pageSize: 1,
     filter: { title }
   });
-  const dataset = response?._embedded?.datasets[0];
+  const dataset = response?.content[0];
 
   if (response.page.totalElements !== 1 || !dataset) {
     throw new Error(`Ошибка получения набора данных "${title}"`);

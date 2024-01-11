@@ -1,6 +1,6 @@
 import { InternalAxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
+import { LibraryRecordRaw } from '../../../src/app/services/data/library/library.models';
 import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 import { libraryRecords } from '../data/libraryRecords';
 import { SyntheticController } from './_master';

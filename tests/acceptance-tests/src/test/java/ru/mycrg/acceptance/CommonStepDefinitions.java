@@ -31,7 +31,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     @And("В ответе есть пункт {string}")
     public void isThereField(String checkField) {
         jsonPath = response.jsonPath();
-        List<String> entities = jsonPath.get(String.format("_embedded.%s", checkField));
+        List<String> entities = jsonPath.get("content");
 
         assertNotNull(entities);
         assertFalse(entities.isEmpty());
@@ -43,25 +43,6 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         List<String> entities = jsonPath.get("content");
 
         assertTrue(entities.size() >= 1);
-    }
-
-    @Then("Ответ имеет стандартное тело с паджинацией")
-    public void isPagingStructureCorrect() {
-        jsonPath = response.jsonPath();
-
-        Map<String, String> presentedData = jsonPath.getMap("");
-        Map<String, String> links = jsonPath.getMap("_links");
-        Map<String, String> page = jsonPath.getMap("page");
-
-        assertTrue(presentedData.containsKey("_links"));
-        assertTrue(presentedData.containsKey("page"));
-
-        assertTrue(links.containsKey("self"));
-
-        assertTrue(page.containsKey("size"));
-        assertTrue(page.containsKey("totalElements"));
-        assertTrue(page.containsKey("totalPages"));
-        assertTrue(page.containsKey("number"));
     }
 
     @Then("Ответ имеет стандартное тело с пагинацией")
@@ -97,7 +78,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         jsonPath = response.jsonPath();
         List<Object> sorted;
         try {
-            sorted = jsonPath.getList(String.format("_embedded.%s.%s", entity, sortingType));
+            sorted = jsonPath.getList(String.format("content.%s", sortingType));
             if (sorted.isEmpty()) {
                 sorted = jsonPath.get(sortingType);
             }

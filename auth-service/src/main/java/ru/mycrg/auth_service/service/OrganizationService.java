@@ -1,6 +1,8 @@
 package ru.mycrg.auth_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -65,6 +67,12 @@ public class OrganizationService {
         this.authService = authService;
         this.encoder = encoder;
         this.settingService = settingService;
+    }
+
+    public Page<OrganizationFullProjection> getPaged(Pageable pageable) {
+        return organizationRepository
+                .findAll(pageable)
+                .map(org -> projectionFactory.createProjection(OrganizationFullProjection.class, org));
     }
 
     /**

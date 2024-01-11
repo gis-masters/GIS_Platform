@@ -8,8 +8,8 @@ public class KptImportUtils {
 
     private static final String CADASTRAL_NUM_SEPARATOR = ":";
     private static final String TMP_TABLE_PREFIX = "kpt_";
+
     public static final int SRID = 7829;
-    public static final int DS_POOL_SIZE = 10;
     public static final String DS_ID = "kpt_import_";
 
     public static String extractNumberFromCadastralNum(String cadastralnum) {

@@ -198,7 +198,7 @@ public class BaseStepsDefinitions {
     }
 
     public void checkPagesCount(String entityType, String entitiesPerPage) {
-        getAllAndFillEntityCount(entityType);
+        getAllAndFillEntityCount();
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -225,19 +225,6 @@ public class BaseStepsDefinitions {
         totalPages = jsonPath.get("page.totalPages");
 
         assertEquals(totalPages, estimatedPages);
-    }
-
-    public void checkSomethingOnPages(String checkType, String entitiesPerPage) {
-        for (int i = 0; i < totalPages; i++) {
-            response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
-
-            jsonPath = response.jsonPath();
-            List<String> entitiesIds = response.jsonPath().getList(String.format("_embedded.%s.id", checkType));
-
-            assertNotEquals(0, entitiesIds.size());
-        }
     }
 
     public void checkSomethingOnPages(String entitiesPerPage) {
@@ -344,27 +331,9 @@ public class BaseStepsDefinitions {
                         get(String.format("/?sort=%s,%s&%s", field, direction, "size=1000"));
     }
 
-    public void getAllAndFillEntityCount(String entity) {
-        getAllEntities();
-        entityCount = getEntitiesCount(entity);
-    }
-
     public void getAllAndFillEntityCount() {
         getAllEntities();
         entityCount = getEntitiesCount();
-    }
-
-    public int getEntitiesCount(String entity) {
-        jsonPath = response.jsonPath();
-
-        final List<Object> list = jsonPath.getList(String.format("_embedded.%s.id", entity));
-        if (list == null) { // Вложенных сущностей("_embedded") может и не быть
-            System.out.println(jsonPath.prettify());
-
-            return 0;
-        }
-
-        return list.size();
     }
 
     public int getEntitiesCount() {

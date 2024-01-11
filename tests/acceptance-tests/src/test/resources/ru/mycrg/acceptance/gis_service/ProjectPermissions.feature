@@ -5,18 +5,6 @@ Feature: Права на проекты
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     Given Авторизируемся владельцем организации
 
-  Scenario Outline: При отсутствии данных "_embedded" не передается
-    Given Существует проект "<projectName>"
-    Given Существует пользователь
-      | <userName> | <userSurname> | <userEmail> | testtestQ1 |
-    When Авторизируемся пользователем
-    When Пользователь делает запрос на все проекты организации
-    Then Сервер отвечает со статус-кодом 200
-    And  В ответе сервера для сущности "projects" отсутствует пункт "_embedded"
-    Examples:
-      | projectName | userName  | userSurname | userEmail |
-      | STRING_10   | STRING_10 | STRING_10   | EMAIL_15  |
-
   Scenario Outline: Проверка проекта, где нет разрешений
     Given Существует проект "<projectName>"
     When  Администратор делает запрос на проверку правил текущего проекта

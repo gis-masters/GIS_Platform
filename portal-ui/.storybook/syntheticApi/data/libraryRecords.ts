@@ -1,5 +1,5 @@
-import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
 import { Role } from '../../../src/app/services/data/permissions/permissions.models';
+import { LibraryRecordRaw } from '../../../src/app/services/data/library/library.models';
 
 interface LocalLibraryRecord extends LibraryRecordRaw {
   _role?: Role;
@@ -33,7 +33,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:06:31',
       inbox_data_key: null,
@@ -59,7 +58,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:06:19',
       inbox_data_key: null,
@@ -85,7 +83,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:05:56',
       inbox_data_key: null,
@@ -111,7 +108,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:05:43',
       inbox_data_key: null,
@@ -137,7 +133,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:05:22',
       inbox_data_key: null,
@@ -163,7 +158,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:05:07',
       inbox_data_key: null,
@@ -189,7 +183,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:04:56',
       inbox_data_key: null,
@@ -215,7 +208,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:04:44',
       inbox_data_key: null,
@@ -241,7 +233,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:03:42',
       inbox_data_key: null,
@@ -267,7 +258,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:03:10',
       inbox_data_key: null,
@@ -293,7 +283,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:02:31',
       inbox_data_key: null,
@@ -319,7 +308,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:02:09',
       inbox_data_key: null,
@@ -345,7 +333,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:00:52',
       inbox_data_key: null,
@@ -371,7 +358,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:00:13',
       inbox_data_key: null,
@@ -397,7 +383,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 15:00:00',
       inbox_data_key: null,
@@ -423,7 +408,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 14:59:33',
       inbox_data_key: null,
@@ -449,7 +433,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 14:59:19',
       inbox_data_key: null,
@@ -475,7 +458,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 14:59:11',
       inbox_data_key: null,
@@ -501,7 +483,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: null,
       doc_num: null,
       created_at: '2021-04-29 14:59:00',
       inbox_data_key: null,
@@ -531,7 +512,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       id: 12353,
       title: 'Разрешение на строительство №333 от 32.05.2000',
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -598,7 +578,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       id: 12352,
       title: 'Ж1',
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -638,7 +617,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       id: 12351,
       title: 'Ж2',
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -678,7 +656,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       id: 12350,
       title: 'Ж3',
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -719,7 +696,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       title:
         'Документ с длинным-предлинным никуда не помещающимся названием с множеством разных никому не интересных и всё же абсолютно обязательных к написанию слов',
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -757,7 +733,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -797,7 +772,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -837,7 +811,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -877,7 +850,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -917,7 +889,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -956,7 +927,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: null,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -995,7 +965,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1034,7 +1003,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1073,7 +1041,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1112,7 +1079,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1151,7 +1117,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1191,7 +1156,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       file_path: null,
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1230,7 +1194,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1269,7 +1232,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,
@@ -1308,7 +1270,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     },
     {
       note: null,
-      parent: 282,
       doc_value: null,
       doc_num: null,
       status_type: null,

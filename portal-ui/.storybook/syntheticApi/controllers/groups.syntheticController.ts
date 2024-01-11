@@ -1,16 +1,16 @@
 import { InternalAxiosRequestConfig } from 'axios';
 
 import { CrgGroup } from '../../../src/app/services/auth/groups/groups.models';
+import { PageableResources } from '../../../src/server-types/common-contracts';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { groups } from '../data/groups';
 import { SyntheticController } from './_master';
 import { err404, parsePageOptions } from '../utils';
-import { PageableResponse } from '../../../src/app/services/models';
 
 class GroupsSyntheticController implements SyntheticController {
   pattern = /^.*\/groups$/;
 
-  get(config: InternalAxiosRequestConfig): PageableResponse<CrgGroup> {
+  get(config: InternalAxiosRequestConfig): PageableResources<CrgGroup> {
     if (!config.url) {
       throw err404(config);
     }
@@ -21,9 +21,7 @@ class GroupsSyntheticController implements SyntheticController {
       Math.floor(groups.length / pageOptions.pageSize) + Number(Boolean(groups.length % pageOptions.pageSize));
 
     return {
-      _embedded: {
-        groups: result
-      },
+      content: result,
       page: {
         size: pageOptions.pageSize,
         totalElements: groups.length,

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
-import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -41,15 +40,14 @@ public class DetachedRecordsDao {
                                   @NotNull Map<String, Object>[] body,
                                   @NotNull SchemaDto schema,
                                   @NotNull String databaseName,
-                                  @Nullable String datasourceId,
-                                  @Nullable Integer poolSize) throws CrgDaoException {
+                                  @Nullable String datasourceId) throws CrgDaoException {
         try {
             NamedParameterJdbcTemplate jdbcTemplate;
-            if (datasourceId == null || poolSize == null) {
+            if (datasourceId == null) {
                 jdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
             } else {
                 jdbcTemplate = new NamedParameterJdbcTemplate(
-                        datasourceFactory.getNamedDataSource(databaseName, datasourceId, poolSize)
+                        datasourceFactory.getNamedDataSource(databaseName, datasourceId)
                 );
             }
 
@@ -66,6 +64,7 @@ public class DetachedRecordsDao {
                                                             .toArray(MapSqlParameterSource[]::new);
 
             log.debug("BATCH(size = {}) INSERT QUERY: [{}]", body.length, query);
+
             jdbcTemplate.batchUpdate(query, parameterSource);
         } catch (DataAccessException e) {
             String msg = String.format("Не удалось выполнить вставку(batch) в таблицу: '%s'. %s",

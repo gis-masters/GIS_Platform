@@ -19,7 +19,6 @@ import java.util.List;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyQuery;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCreateTableQuery;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_POOL_SIZE;
 
 @Repository
 public class KptImportDao {
@@ -38,7 +37,7 @@ public class KptImportDao {
     public Integer countRecordsByCadastralSquare(String cadastralSquare,
                                                  String dbName,
                                                  ResourceQualifier tableQualifier) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = String.format(
                 "SELECT COUNT(*) FROM %s.%s WHERE %s",
                 tableQualifier.getSchema(), tableQualifier.getTable(), CADASTRAL_SQARE_FILTER_TEMPLATE
@@ -51,7 +50,7 @@ public class KptImportDao {
     public LocalDateTime latestOrderCompletionDateByCadastralSquare(String dbName,
                                                                     String cadastralSquare,
                                                                     ResourceQualifier tableQualifier) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = String.format(
                 "SELECT dl.date_order_completion " + "FROM %s.%s d " +
                         "JOIN data.dl_data_kpt dl ON ((d.source_doc::json)->>'id')::int = dl.id " +
@@ -76,7 +75,7 @@ public class KptImportDao {
      */
     public List<String> findKptTablesByNames(String dbName, Collection<String> tableNames) {
         NamedParameterJdbcTemplate pJdbcTemplate =
-                new NamedParameterJdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+                new NamedParameterJdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         MapSqlParameterSource params = new MapSqlParameterSource("names", tableNames);
 
         String query = "SELECT t.table_name FROM information_schema.tables t " +
@@ -92,7 +91,7 @@ public class KptImportDao {
                             String tableName,
                             List<SimplePropertyDto> properties,
                             String primaryKeyName) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = buildCreateTableQuery(schemaName,
                                              tableName,
                                              primaryKeyName,
@@ -112,7 +111,7 @@ public class KptImportDao {
      */
     public void deleteAllByCadatstralSquare(String dbName, ResourceQualifier tableQualifier,
                                             String cadasttralSquare) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = String.format("DELETE FROM %s.%s WHERE %s",
                                      tableQualifier.getSchema(), tableQualifier, CADASTRAL_SQARE_FILTER_TEMPLATE);
         log.debug("Delete by cadastral square query: [{}]", query);
@@ -125,7 +124,7 @@ public class KptImportDao {
                                     List<SimplePropertyDto> sourceProps,
                                     List<SimplePropertyDto> targetProps,
                                     String cadastralSquare) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = buildCopyQuery(source.getTableQualifier(), target.getTableQualifier(), sourceProps, targetProps,
                                       CADASTRAL_SQARE_FILTER_TEMPLATE, Collections.emptyMap());
         log.debug("Copy cadastral square query: [{}]", query);
@@ -133,7 +132,7 @@ public class KptImportDao {
     }
 
     public void deduplicateData(String dbName, ResourceQualifier table, String groupByProperty, String maxByProperty) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID, DS_POOL_SIZE));
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
         String tablePath = table.getSchema() + "." + table.getTable();
         String query = String.format(

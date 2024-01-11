@@ -1,7 +1,7 @@
 import { DataEntityType } from '../../../src/app/services/data/vectorData/vectorData.models';
-import { DocumentLibrary } from '../../../src/app/services/data/docLibrary/docLibrary.models';
+import { Library } from '../../../src/app/services/data/library/library.models';
 
-export const libraries: Omit<DocumentLibrary, 'role'>[] = [
+export const libraries: Omit<Library, 'role'>[] = [
   {
     id: 103,
     title: 'Библиотека ЗУ',
@@ -9,6 +9,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_zu',
     schemaId: 'dl_zu_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-06-08T16:09:19.811232'
   },
   {
@@ -18,6 +20,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section5',
     schemaId: 'dl_data_section5_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.528988'
   },
   {
@@ -26,6 +30,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_projects_geoplan',
     schemaId: 'dl_data_projects_geoplan_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529002'
   },
   {
@@ -35,6 +41,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section3',
     schemaId: 'dl_data_section3_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529022'
   },
   {
@@ -44,6 +52,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section8',
     schemaId: 'dl_data_section8_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529048'
   },
   {
@@ -53,6 +63,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section16',
     schemaId: 'dl_data_section16_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529072'
   },
   {
@@ -62,6 +74,8 @@ export const libraries: Omit<DocumentLibrary, 'role'>[] = [
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section7',
     schemaId: 'dl_data_section7_schema',
+    versioned: false,
+    readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529090'
   }
 ];

@@ -32,8 +32,8 @@ export async function getProjectPermissions(url: string): Promise<RoleAssignment
   return await permissionsClient.getProjectPermissions(url);
 }
 
-export async function getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
-  return await permissionsClient.getTablePermissions(url);
+export async function getAllPermissions(url: string): Promise<RoleAssignmentBody[]> {
+  return await permissionsClient.getAllPermissions(url);
 }
 
 export async function addEntityPermission(

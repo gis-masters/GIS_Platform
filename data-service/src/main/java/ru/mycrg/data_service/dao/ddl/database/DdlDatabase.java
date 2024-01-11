@@ -3,6 +3,7 @@ package ru.mycrg.data_service.dao.ddl.database;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -25,8 +26,10 @@ public class DdlDatabase {
     private final DatasourceFactory datasourceFactory;
     private final NamedParameterJdbcTemplate parameterJdbcTemplate;
     private final EpsgCodes epsgCodes;
+    private final String owner;
 
-    public DdlDatabase(JdbcTemplate jdbcTemplate,
+    public DdlDatabase(Environment environment,
+                       JdbcTemplate jdbcTemplate,
                        DatasourceFactory datasourceFactory,
                        NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,6 +37,8 @@ public class DdlDatabase {
         this.parameterJdbcTemplate = parameterJdbcTemplate;
 
         this.epsgCodes = new EpsgCodes();
+
+        this.owner = environment.getRequiredProperty("spring.datasource.username");
     }
 
     /**
@@ -47,7 +52,7 @@ public class DdlDatabase {
             log.debug("Try create db: {}", dbName);
 
             final String sql = "CREATE DATABASE " + dbName + " WITH " +
-                    " OWNER = " + datasourceFactory.getInitialUser() +
+                    " OWNER = " + owner +
                     " ENCODING = 'UTF8'" +
                     " LC_COLLATE = 'en_US.UTF-8'" +
                     " LC_CTYPE = 'en_US.UTF-8'" +
@@ -56,9 +61,9 @@ public class DdlDatabase {
                     " TEMPLATE template0";
 
             jdbcTemplate.execute(sql);
-            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + datasourceFactory.getInitialUser());
+            jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + owner);
 
-            // Подсоединяемся к только что созданной БД и создаем расширние postgis
+            // Подсоединяемся к только что созданной БД и создаем расширение postgis
             newDataSource = datasourceFactory.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME);
 
             JdbcTemplate newDbJdbcTemplate = new JdbcTemplate(newDataSource);

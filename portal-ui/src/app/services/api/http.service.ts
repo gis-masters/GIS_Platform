@@ -1,14 +1,14 @@
+import { action, makeObservable, observable } from 'mobx';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import { PageQueryParams } from '../models';
 import { CustomCache, CustomCacheConfig } from './CustomCache';
 import { communicationService } from '../communication.service';
-import { PageableResponse, PageQueryParams } from '../models';
-import { replaceUrl } from './server-urls.service';
-import { Mime } from '../util/Mime';
-
-import { getPayloadFromPageableResponse, stringifyParams } from './http.utils';
 import { PageableResources } from '../../../server-types/common-contracts';
-import { action, makeObservable, observable } from 'mobx';
+
+import { Mime } from '../util/Mime';
+import { replaceUrl } from './server-urls.service';
+import { stringifyParams } from './http.utils';
 
 const ITEMS_PER_PAGE = 300;
 
@@ -87,28 +87,6 @@ class Http {
     }
   }
 
-  async getPagedOld<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
-    let result: T[] = [];
-    let totalPages = 0;
-    let page = 0;
-
-    config.params = config.params || {};
-    config.params.size = config.params.size || ITEMS_PER_PAGE;
-
-    do {
-      config.params.page = page;
-      const response = await this.get<PageableResponse<T>>(url, config);
-      totalPages = response.page.totalPages;
-      page = response.page.number + 1;
-
-      if (response._embedded) {
-        result = [...result, ...getPayloadFromPageableResponse(response, true)];
-      }
-    } while (page < totalPages);
-
-    return result;
-  }
-
   async getPaged<T>(url: string, config: RequestConfigWithCache = {}): Promise<T[]> {
     let result: T[] = [];
     let totalPages = 0;
@@ -133,16 +111,13 @@ class Http {
     url: string,
     pageParams: PageQueryParams,
     objectRecognizer: (o: T) => boolean,
-    config: RequestConfigWithCache = {},
-    withOldPageableResponse: boolean
+    config: RequestConfigWithCache = {}
   ): Promise<[T[], number /* totalPages */, number /* pageNumber */] | undefined> {
     const optimisticConfig = { ...config, params: { ...config.params, ...pageParams } };
     // поначалу попытаемся найти объект на указанной странице
-    const optimisticResponse = withOldPageableResponse
-      ? await this.get<PageableResponse<T>>(url, optimisticConfig)
-      : await this.get<PageableResources<T>>(url, optimisticConfig);
+    const optimisticResponse = await this.get<PageableResources<T>>(url, optimisticConfig);
     const { number: pageNumber, totalElements, totalPages } = optimisticResponse.page;
-    const optimisticPage = getPayloadFromPageableResponse(optimisticResponse, withOldPageableResponse);
+    const optimisticPage = optimisticResponse.content || [];
 
     if (optimisticPage.some(objectRecognizer)) {
       return [optimisticPage, totalPages, pageNumber];
@@ -160,11 +135,11 @@ class Http {
 
     for (let i = 0; i < scanTotalPages; i++) {
       scanPageParams.page = String(i);
-      const scanResponse = await this.get<PageableResponse<T>>(url, {
+      const scanResponse = await this.get<PageableResources<T>>(url, {
         ...config,
         params: { ...config.params, ...scanPageParams }
       });
-      const currentScanPage = getPayloadFromPageableResponse(scanResponse, withOldPageableResponse);
+      const currentScanPage = scanResponse.content || [];
       const foundIndex = currentScanPage.findIndex(objectRecognizer);
 
       if (foundIndex === -1) {
@@ -179,11 +154,12 @@ class Http {
       const nextPage: T[] = [];
       if (ITEMS_PER_PAGE - foundIndex < Number(pageParams.size) - positionOnPage && i < scanTotalPages - 1) {
         scanPageParams.page = String(i + 1);
-        const nextScanPageResponse = await this.get<PageableResponse<T>>(url, {
+        const nextScanPageResponse = await this.get<PageableResources<T>>(url, {
           ...config,
           params: { ...config.params, ...scanPageParams }
         });
-        nextPage.push(...getPayloadFromPageableResponse(nextScanPageResponse, withOldPageableResponse));
+        const nextScanPage = nextScanPageResponse.content || [];
+        nextPage.push(...nextScanPage);
       }
       const resultPage = [...previousScanPage, ...currentScanPage, ...nextPage].slice(
         previousScanPage.length + foundIndex - positionOnPage,

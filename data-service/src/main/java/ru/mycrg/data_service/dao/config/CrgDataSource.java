@@ -16,8 +16,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.no_context_transaction.NoContextTransactionAspect.threadDbConnections;
 
 /**
- * Наш декоратор над DataSource.
- * В нем мы подменяем базу данных исходя из инфы в токене пользователя.
+ * Наш декоратор над DataSource. В нем мы подменяем базу данных исходя из инфы в токене пользователя.
  */
 public class CrgDataSource extends DatasourceFactory implements DataSource {
 

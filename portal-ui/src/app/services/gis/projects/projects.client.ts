@@ -1,12 +1,13 @@
 import { boundClass } from 'autobind-decorator';
 
 import { GisClient } from '../GisClient';
+import { PageOptions } from '../../models';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageableResponse, PageOptions } from '../../models';
 import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 
 import { CrgProject } from './projects.models';
+import { PageableResources } from '../../../../server-types/common-contracts';
 
 @boundClass
 class ProjectsClient extends GisClient {
@@ -28,8 +29,8 @@ class ProjectsClient extends GisClient {
     return http.get<CrgProject>(this.getProjectUrl(id));
   }
 
-  async getProjects(pageOptions: PageOptions): Promise<PageableResponse<CrgProject>> {
-    return http.get<PageableResponse<CrgProject>>(this.getProjectsUrl(), {
+  async getProjects(pageOptions: PageOptions): Promise<PageableResources<CrgProject>> {
+    return http.get<PageableResources<CrgProject>>(this.getProjectsUrl(), {
       params: preparePageOptions(pageOptions)
     });
   }
@@ -42,13 +43,12 @@ class ProjectsClient extends GisClient {
       this.getProjectsUrl(),
       preparePageOptions(pageOptions),
       (item: CrgProject) => item.id === Number(id),
-      {},
-      true
+      {}
     );
   }
 
   async getAllProjects(): Promise<CrgProject[]> {
-    return http.getPagedOld<CrgProject>(this.getProjectsUrl(), { cache: { disabled: true } });
+    return http.getPaged<CrgProject>(this.getProjectsUrl(), { cache: { disabled: true } });
   }
 
   async createProject(projectName: string): Promise<CrgProject> {

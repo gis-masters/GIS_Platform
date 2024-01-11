@@ -169,7 +169,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах подложек {string} есть {string}")
     public void isBaseMapsOnPages(String checkType, String entitiesPerPage) {
-        super.checkSomethingOnPages(checkType, entitiesPerPage);
+        super.checkSomethingOnPages(entitiesPerPage);
     }
 
     @And("В ответе на подложки есть упоминание ID")

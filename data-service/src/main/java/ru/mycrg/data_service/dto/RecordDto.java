@@ -8,8 +8,6 @@ import java.util.Map;
 /**
  * Dto нужна, чтобы обозначить relation как records при возврате сущностей.
  * <p>
- * {@code "_embedded": { "records": [] }}
- * <p>
  * Чтобы в будущем избавиться от "content" в каждом объекте, необходимо, исходя из схемы, генерить на лету класс.
  */
 @Relation(collectionRelation = "records")

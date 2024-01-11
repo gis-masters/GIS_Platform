@@ -2,7 +2,6 @@ package ru.mycrg.data_service.controller.table;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +17,9 @@ import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 public class TablesController {
@@ -60,17 +59,10 @@ public class TablesController {
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<Object> getTables(@PathVariable String datasetId,
                                             @RequestParam(name = "filter", required = false) String ecqlFilter,
-                                            Pageable pageable,
-                                            PagedResourcesAssembler<IResourceModel> pageAssembler) {
+                                            Pageable pageable) {
         Page<IResourceModel> tables = tableService.getPaged(datasetId, ecqlFilter, pageable);
 
-        var pagedResources = pageAssembler.toResource(
-                tables,
-                linkTo(TablesController.class)
-                        .slash("/api/data/datasets/" + datasetId + "/tables")
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(pageFromList(tables, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

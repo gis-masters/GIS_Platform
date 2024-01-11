@@ -63,7 +63,7 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         get(currentDatasetIdentifier + "/roleAssignment");
 
-        Integer firstPermissionId = response.jsonPath().get("_embedded.permissions[0].id");
+        Integer firstPermissionId = response.jsonPath().get("content[0].id");
 
         deletePermissionForCurrentDataset(firstPermissionId);
     }
@@ -91,7 +91,7 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Количество правил соответствует ожидаемому: {string}")
     public void checkPermissionsSize(String permissionsSize) {
-        int realCount = getEntitiesCount("permissions");
+        int realCount = getEntitiesCount();
 
         assertEquals(Integer.parseInt(permissionsSize), realCount);
     }

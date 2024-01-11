@@ -193,7 +193,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Количество наборов данных соответствует ожидаемому: {string}")
     public void checkDatasetsSize(String datasetsSize) {
-        int realCount = getEntitiesCount("datasets");
+        int realCount = getEntitiesCount();
 
         assertEquals(Integer.parseInt(datasetsSize), realCount);
     }

@@ -5,26 +5,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.security.access.prepost.PreAuthorize;
-import ru.mycrg.data_service.dto.BaseMapProjection;
 import ru.mycrg.data_service.entity.BaseMap;
 
 import java.util.Collection;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-
-@PreAuthorize(HAS_ANY_AUTHORITY)
-@RepositoryRestResource(collectionResourceRel = "basemaps",
-                        path = "basemaps",
-                        excerptProjection = BaseMapProjection.class)
+@RepositoryRestResource(collectionResourceRel = "basemaps", exported = false)
 public interface BaseMapRepository extends PagingAndSortingRepository<BaseMap, Long> {
 
-    // Do not remove. Method used: "/api/data/basemaps/search/findByIdIn?ids="
     Page<BaseMap> findByIdIn(@Param("ids") Collection<Long> ids, Pageable p);
 
     Page<BaseMap> findBaseMapByLayerNameNotNull(Pageable pageable);
 
-    // Do not remove. Method used: "/basemaps/search/findBaseMapByPluggableToNewProjectIsTrue"
     List<BaseMap> findBaseMapByPluggableToNewProjectIsTrue();
 }

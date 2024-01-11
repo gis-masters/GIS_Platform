@@ -29,7 +29,7 @@ public abstract class KptElementDBWriter implements KptElementWriter {
     public void writeBatch(List<KptElement> kptElements, SchemaDto tableSchemaDto, String databaseName) {
         Map<String, Object>[] batch = kptElements.stream().map(KptElement::getContent).toArray(Map[]::new);
         try {
-            recordsDao.addRecordsAsBatch(resourceQualifier, batch, tableSchemaDto, databaseName, DS_ID, DS_POOL_SIZE);
+            recordsDao.addRecordsAsBatch(resourceQualifier, batch, tableSchemaDto, databaseName, DS_ID);
         } catch (CrgDaoException e) {
             log.error("Ошибка при добавлении batch записей в таблицу " + resourceQualifier, e);
         }

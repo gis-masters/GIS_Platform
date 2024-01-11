@@ -59,7 +59,7 @@ public class PasswordResetService {
                           tokenRepository.save(resetToken);
 
                           // Clear expired tokens
-                          tokenRepository.deleteByCreatedAtBefore(now().minusMinutes(tokenExpirationTime));
+                          tokenRepository.deleteExpiredTokens(now().minusMinutes(tokenExpirationTime));
 
                           // Send email
                           emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOrigin());
@@ -86,7 +86,7 @@ public class PasswordResetService {
 
     public boolean isExist(String token) {
         // Clear expired tokens
-        tokenRepository.deleteByCreatedAtBefore(now().minusMinutes(tokenExpirationTime));
+        tokenRepository.deleteExpiredTokens(now().minusMinutes(tokenExpirationTime));
 
         return tokenRepository.findByToken(token).isPresent();
     }

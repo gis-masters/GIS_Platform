@@ -18,7 +18,7 @@ export function getDataset(identifier: string): Promise<Dataset> {
 export async function getDatasets(pageOptions: PageOptions): Promise<[Dataset[], number]> {
   const response = await vectorDataClient.getDatasets(pageOptions);
 
-  return [(response._embedded && response._embedded.datasets) || [], response.page.totalPages];
+  return [response.content || [], response.page.totalPages];
 }
 
 export async function getDatasetsWithParticularOne(
@@ -58,7 +58,7 @@ export async function getVectorTables(
   pageOptions: PageOptions
 ): Promise<[VectorTable[], number]> {
   const response = await vectorDataClient.getVectorTables(datasetIdentifier, pageOptions);
-  const vectorTables: VectorTable[] = (response._embedded?.tables || []).map(table => ({
+  const vectorTables: VectorTable[] = (response.content || []).map(table => ({
     ...table,
     dataset: datasetIdentifier
   }));

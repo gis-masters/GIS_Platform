@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { PageableResources } from '../../../../server-types/common-contracts';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageableResponse, PageOptions } from '../../models';
+import { PageOptions } from '../../models';
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
@@ -85,8 +85,7 @@ class LibraryClient extends Client {
       this.getDocLibrariesUrl(),
       preparePageOptions(pageOptions, true),
       (item: Library) => item.table_name === libraryTableName,
-      {},
-      false
+      {}
     );
   }
 
@@ -101,7 +100,7 @@ class LibraryClient extends Client {
   async getLibraryPermissions(libraryTableName: string): Promise<RoleAssignmentBody[]> {
     const url = this.getDocumentLibraryRoleAssignmentUrl(libraryTableName);
 
-    return await http.getPagedOld<RoleAssignmentBody>(url);
+    return await http.getPaged<RoleAssignmentBody>(url);
   }
 
   async getLibraryRecord(libraryTableName: string, recordId: number): Promise<LibraryRecordRaw> {
@@ -111,17 +110,17 @@ class LibraryClient extends Client {
   async getLibraryRecords(
     libraryTableName: string,
     pageOptions: PageOptions
-  ): Promise<PageableResponse<{ content: LibraryRecordRaw }>> {
+  ): Promise<PageableResources<{ content: LibraryRecordRaw }>> {
     const url = this.getDocLibraryRecordsUrl(libraryTableName);
     const requestOptions = { params: preparePageOptions(pageOptions, true) };
 
-    return http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
+    return http.get<PageableResources<{ content: LibraryRecordRaw }>>(url, requestOptions);
   }
 
   async getAllLibraryRecords(libraryTableName: string): Promise<{ content: LibraryRecord }[]> {
     const url = this.getDocLibraryRecordsUrl(libraryTableName);
 
-    return http.getPagedOld<{ content: LibraryRecord }>(url);
+    return http.getPaged<{ content: LibraryRecord }>(url);
   }
 
   async getDocumentVersions(libraryTableName: string, docId: number): Promise<[DocumentVersion]> {
@@ -133,11 +132,11 @@ class LibraryClient extends Client {
   async getLibraryRecordsAsRegistry(
     libraryTableName: string,
     pageOptions: PageOptions
-  ): Promise<PageableResponse<{ content: LibraryRecordRaw }>> {
+  ): Promise<PageableResources<{ content: LibraryRecordRaw }>> {
     const url = this.getDocLibraryRecordsAsRegistryUrl(libraryTableName);
     const requestOptions = { params: preparePageOptions(pageOptions, true) };
 
-    return http.get<PageableResponse<{ content: LibraryRecordRaw }>>(url, requestOptions);
+    return http.get<PageableResources<{ content: LibraryRecordRaw }>>(url, requestOptions);
   }
 
   async getAllLibraryRecordsAsRegistry(
@@ -147,7 +146,7 @@ class LibraryClient extends Client {
     const url = this.getDocLibraryRecordsAsRegistryUrl(libraryTableName);
     const requestOptions = { params: preparePageOptions({ ...pageOptions, pageSize: 0 }, true) };
 
-    return http.getPagedOld<{ content: LibraryRecordRaw }>(url, requestOptions);
+    return http.getPaged<{ content: LibraryRecordRaw }>(url, requestOptions);
   }
 
   async getLibraryRecordsWithParticularOne(
@@ -161,8 +160,7 @@ class LibraryClient extends Client {
       this.getDocLibraryRecordsUrl(libraryTableName),
       preparePageOptions(pageOptions, true),
       objectRecognizer,
-      {},
-      true
+      {}
     );
   }
 
@@ -207,7 +205,7 @@ class LibraryClient extends Client {
   async getDocumentPermissions(libraryTableName: string, recordId: number): Promise<RoleAssignmentBody[]> {
     const url = this.getDocumentLibraryRecordRoleAssignmentUrl(libraryTableName, recordId);
 
-    return await http.getPagedOld<RoleAssignmentBody>(url);
+    return await http.getPaged<RoleAssignmentBody>(url);
   }
 
   async sendToSed(libraryTableName: string, recordId: number): Promise<void> {

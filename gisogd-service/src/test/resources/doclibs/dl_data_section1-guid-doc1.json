@@ -1,51 +1,44 @@
 {
-  "_embedded": {
-    "records": [
-      {
-        "content": {
-          "gisogdrf_sync_status": "Не синхронизирован",
-          "note": "Отсутствует",
-          "doc_num": "45",
-          "created_at": "2023-08-16 13:46:18",
-          "title": "Документ РФ",
-          "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
-          "path": "/root",
-          "is_deleted": false,
-          "doc_name": "СТП РК ",
-          "inbox_data_key_data_connection": "[{\"id\":2,\"title\":\"ДжанкойЗемСтрой\",\"libraryTableName\":\"dl_data_inbox_data\"}]",
-          "id": 9,
-          "org_name": "НИИ ГПТ",
-          "stp_name": "4",
-          "last_modified": "2023-08-16 13:46:18",
-          "fias__id": 95252034,
-          "guid_doc_previous_version": "[{\"id\":8,\"title\":\"Пример ГИСОГД\",\"libraryTableName\":\"dl_data_section1\"}]",
-          "is_folder": false,
-          "content_type_id": "doc_1.01",
-          "fias__oktmo": "35703000",
-          "created_by": "arh_grad_rk@mail.ru",
-          "doc_status": "0С.2",
-          "doc_date": "2023-08-02 00:00:00",
-          "regdate": "2023-08-17 00:00:00",
-          "supplier_data_connection": "[{\"id\":1,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_supplier\"}]",
-          "files": [
-            {
-              "id": "4f9704a8-6be8-40ac-8cf2-6837f04b4218",
-              "title": "coordinates.csv",
-              "size": 2944
-            }
-          ],
-          "guid": "9d1b2f14-1eaf-4350-af7f-4aa29922fee9",
-          "regnum": "35703000-1-2023-1",
-          "fias__address": "г.о. Алушта"
-        }
+  "content": [
+    {
+      "content": {
+        "gisogdrf_sync_status": "Не синхронизирован",
+        "note": "Отсутствует",
+        "doc_num": "45",
+        "created_at": "2023-08-16 13:46:18",
+        "title": "Документ РФ",
+        "supplieremploey_data_connection": "[{\"id\":131,\"title\":\"arh_grad_rk@mail.ru\",\"libraryTableName\":\"users_after_trigger\"}]",
+        "path": "/root",
+        "is_deleted": false,
+        "doc_name": "СТП РК ",
+        "inbox_data_key_data_connection": "[{\"id\":2,\"title\":\"ДжанкойЗемСтрой\",\"libraryTableName\":\"dl_data_inbox_data\"}]",
+        "id": 9,
+        "org_name": "НИИ ГПТ",
+        "stp_name": "4",
+        "last_modified": "2023-08-16 13:46:18",
+        "fias__id": 95252034,
+        "guid_doc_previous_version": "[{\"id\":8,\"title\":\"Пример ГИСОГД\",\"libraryTableName\":\"dl_data_section1\"}]",
+        "is_folder": false,
+        "content_type_id": "doc_1.01",
+        "fias__oktmo": "35703000",
+        "created_by": "arh_grad_rk@mail.ru",
+        "doc_status": "0С.2",
+        "doc_date": "2023-08-02 00:00:00",
+        "regdate": "2023-08-17 00:00:00",
+        "supplier_data_connection": "[{\"id\":1,\"title\":\"ООО \\\"ГИСОГД\\\"\",\"libraryTableName\":\"dl_data_supplier\"}]",
+        "files": [
+          {
+            "id": "4f9704a8-6be8-40ac-8cf2-6837f04b4218",
+            "title": "coordinates.csv",
+            "size": 2944
+          }
+        ],
+        "guid": "9d1b2f14-1eaf-4350-af7f-4aa29922fee9",
+        "regnum": "35703000-1-2023-1",
+        "fias__address": "г.о. Алушта"
       }
-    ]
-  },
-  "_links": {
-    "self": {
-      "href": "http://10.10.10.58:8100/api/data/api/data/document-libraries/dl_data_section1/records"
     }
-  },
+  ],
   "page": {
     "size": 20,
     "totalElements": 1,

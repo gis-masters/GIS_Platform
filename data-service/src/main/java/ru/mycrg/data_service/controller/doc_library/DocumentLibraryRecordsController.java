@@ -4,9 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -35,10 +32,10 @@ import java.util.List;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
@@ -73,8 +70,7 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> getAll(@PathVariable String docLibId,
                                          @RequestParam(required = false) Long parent,
                                          @RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
-                                         Pageable pageable,
-                                         PagedResourcesAssembler<RecordDto> pageAssembler) {
+                                         Pageable pageable) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
@@ -84,7 +80,7 @@ public class DocumentLibraryRecordsController {
                                                    .getPaged(lQualifier, newPageable, parent, ecqlFilter)
                                                    .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
-        return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
+        return ResponseEntity.ok(pageFromList(page, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -93,8 +89,7 @@ public class DocumentLibraryRecordsController {
             @PathVariable String docLibId,
             @RequestParam(name = "filter", required = false) @EcqlFilter String filter,
             @RequestParam(name = "recordId", required = false) List<Long> recordId,
-            Pageable pageable,
-            PagedResourcesAssembler<RecordDto> pageAssembler) {
+            Pageable pageable) {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
@@ -106,7 +101,7 @@ public class DocumentLibraryRecordsController {
                                                    .getAsRegistry(lQualifier, newPageable, ecqlFilter)
                                                    .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
-        return ResponseEntity.ok(asPagedResources(docLibId, pageAssembler, page));
+        return ResponseEntity.ok(pageFromList(page, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -235,16 +230,6 @@ public class DocumentLibraryRecordsController {
         } catch (IOException e) {
             throw new BadRequestException("Incorrect body: " + jsonString);
         }
-    }
-
-    @NotNull
-    private PagedResources<Resource<RecordDto>> asPagedResources(String docLibId,
-                                                                 PagedResourcesAssembler<RecordDto> pageAssembler,
-                                                                 Page<RecordDto> result) {
-        return pageAssembler.toResource(result,
-                                        linkTo(DocumentLibraryRecordsController.class)
-                                                .slash("/api/data/document-libraries/" + docLibId + "/records")
-                                                .withSelfRel());
     }
 
     @NotNull

@@ -9,7 +9,7 @@ export async function getVectorTableByTitle(datasetIdentifier: string, tableTitl
     filter: { title: tableTitle }
   });
 
-  const vectorTables: VectorTable[] = (response._embedded?.tables || []).map(table => ({
+  const vectorTables: VectorTable[] = (response.content || []).map(table => ({
     ...table,
     dataset: datasetIdentifier
   }));

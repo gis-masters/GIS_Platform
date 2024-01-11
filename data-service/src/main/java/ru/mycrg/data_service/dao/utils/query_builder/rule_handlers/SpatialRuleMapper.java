@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.geotools.referencing.crs.DefaultGeographicCRS.WGS84;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
 import static ru.mycrg.data_service.dto.styles.SpatialLiteralType.MULTIPOLYGON;
 
 public class SpatialRuleMapper implements RuleMapper {
@@ -27,7 +29,7 @@ public class SpatialRuleMapper implements RuleMapper {
 
     public SpatialRuleMapper() throws FactoryException {
         this.geometryFactory = new GeometryFactory();
-        this.mathTransform = CRS.findMathTransform(CRS.decode("EPSG:3857"), WGS84);
+        this.mathTransform = CRS.findMathTransform(CRS.decode(DEFAULT_EPSG_METRE), WGS84);
     }
 
     @Override
@@ -43,11 +45,12 @@ public class SpatialRuleMapper implements RuleMapper {
         final MultiPolygon multiPolygon = geometryFactory.createMultiPolygon(polygons);
 
         final Geometry transformed = JTS.transform(multiPolygon, mathTransform);
-        transformed.setSRID(4326);
+        transformed.setSRID(Integer.parseInt(DEFAULT_SRID_DEGREE));
 
         return new CustomCondition(
                 new CustomSql(
-                        "public.st_intersects('SRID=4326;" + transformed + "', public.st_transform(shape, 4326))"));
+                        String.format("public.st_intersects('SRID=%s;%s', public.st_transform(shape, %s))",
+                                      DEFAULT_SRID_DEGREE, transformed, DEFAULT_SRID_DEGREE)));
     }
 
     private Polygon[] extractPolygons(List<List<List<Object>>> dataPolygons) {

@@ -128,7 +128,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("в выборке отсутствуют недоступные пользователю файлы")
     public void checkAllowedFiles() {
-        List<Map<String, Object>> records = response.jsonPath().getList("_embedded.records.content");
+        List<Map<String, Object>> records = response.jsonPath().getList("content.content");
 
         if (nonNull(records)) {
             boolean isFileExist = records
@@ -603,7 +603,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Удалённая запись НЕ возвращается в теле ответа")
     public void checkThatCurrentDeletedDocumentNotInResponse() {
-        List<Integer> recordIds = response.jsonPath().get("_embedded.records.content.id");
+        List<Integer> recordIds = response.jsonPath().get("content.content.id");
         if (Objects.nonNull(recordIds) && !recordIds.isEmpty()) {
             recordIds.forEach(id -> assertNotEquals(currentDocumentId, id));
         }
@@ -636,7 +636,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Удалённая запись возвращается в теле ответа")
     public void checkThatCurrentDeletedDocumentInResponse() {
-        List<Integer> recordIds = response.jsonPath().get("_embedded.records.content.id");
+        List<Integer> recordIds = response.jsonPath().get("content.content.id");
         if (Objects.nonNull(recordIds) && !recordIds.isEmpty()) {
             long idCount = recordIds.stream().filter(id -> id.equals(deletedDocumentId)).count();
             assertEquals(1L, idCount);
@@ -648,7 +648,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String folderContentType = "folder_v1";
 
         jsonPath = response.jsonPath();
-        List<String> sortedContentTypes = jsonPath.getList("_embedded.records.content.content_type_id");
+        List<String> sortedContentTypes = jsonPath.getList("content.content.content_type_id");
 
         if (sortedContentTypes.contains(folderContentType)) {
             for (int i = 0; i < sortedContentTypes.size(); ) {
@@ -677,7 +677,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         List<HashMap<String, Object>> records;
         List<HashMap<String, Object>> folders = new ArrayList<>();
 
-        records = jsonPath.getList(String.format("_embedded.%s", entity));
+        records = jsonPath.getList("content");
 
         records.stream()
                .filter(record -> record.containsKey(contentTypeIdKey))

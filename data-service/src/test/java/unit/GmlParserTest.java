@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 
 public class GmlParserTest {
 
@@ -78,7 +79,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithPolygonPatch.gml");
         schema.setGeometryType(GeometryType.MULTI_POLYGON);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -96,7 +97,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithPolygon.gml");
         schema.setGeometryType(GeometryType.MULTI_POLYGON);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -114,7 +115,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithPoint.gml");
         schema.setGeometryType(GeometryType.POINT);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -132,7 +133,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithLineString.gml");
         schema.setGeometryType(GeometryType.MULTI_LINE_STRING);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -150,7 +151,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithMultiCurve.gml");
         schema.setGeometryType(GeometryType.MULTI_LINE_STRING);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -168,7 +169,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithCurve.gml");
         schema.setGeometryType(GeometryType.MULTI_LINE_STRING);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());
@@ -186,7 +187,7 @@ public class GmlParserTest {
         FileSystemResource file = new FileSystemResource("src/test/resources/geometryWithMultiSurface.gml");
         schema.setGeometryType(GeometryType.MULTI_POLYGON);
 
-        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, "EPSG:3857");
+        FeatureData parseAttributes = gmlParser.parseAttributes(file, schema, false, DEFAULT_EPSG_METRE);
 
         assertNotNull(parseAttributes);
         assertFalse(parseAttributes.getObjects().isEmpty());

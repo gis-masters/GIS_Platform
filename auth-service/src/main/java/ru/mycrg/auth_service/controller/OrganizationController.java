@@ -3,6 +3,8 @@ package ru.mycrg.auth_service.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +22,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 @RequestMapping(value = "/organizations")
@@ -32,6 +35,14 @@ public class OrganizationController {
     @Autowired
     public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;
+    }
+
+    @GetMapping
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> getAllOrganizations(Pageable pageable) {
+        Page<OrganizationFullProjection> page = organizationService.getPaged(pageable);
+
+        return ResponseEntity.ok(pageFromList(page, pageable));
     }
 
     @PostMapping("/init")

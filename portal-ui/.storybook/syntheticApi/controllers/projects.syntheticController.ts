@@ -4,16 +4,16 @@ import { queryObjects } from '../../../src/app/services/util/queryObjects';
 import { projects } from '../data/projects';
 import { SyntheticController } from './_master';
 import { err404, parsePageOptions } from '../utils';
-import { PageableResponse } from '../../../src/app/services/models';
 import { CrgProject } from '../../../src/app/services/gis/projects/projects.models';
 import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 import { validateFieldValue } from '../../../src/app/services/formValidation.service';
 import { PropertySchemaString, PropertyType } from '../../../src/app/services/data/schema/schema.models';
+import { PageableResources } from '../../../src/server-types/common-contracts';
 
 class ProjectsSyntheticController implements SyntheticController {
   pattern = /^.*\/projects$/;
 
-  get(config: InternalAxiosRequestConfig): PageableResponse<CrgProject> {
+  get(config: InternalAxiosRequestConfig): PageableResources<CrgProject> {
     if (!config.url) {
       throw err404(config);
     }
@@ -24,9 +24,7 @@ class ProjectsSyntheticController implements SyntheticController {
       Math.floor(projects.length / pageOptions.pageSize) + Number(Boolean(projects.length % pageOptions.pageSize));
 
     return {
-      _embedded: {
-        projects: result
-      },
+      content: result,
       page: {
         size: pageOptions.pageSize,
         totalElements: projects.length,

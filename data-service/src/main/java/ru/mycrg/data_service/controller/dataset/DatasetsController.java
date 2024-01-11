@@ -2,7 +2,6 @@ package ru.mycrg.data_service.controller.dataset;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,8 @@ import ru.mycrg.mediator.Mediator;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 public class DatasetsController {
@@ -37,17 +36,10 @@ public class DatasetsController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets")
     public ResponseEntity<Object> getDatasets(@RequestParam(name = "filter", required = false) String ecqlFilter,
-                                              Pageable pageable,
-                                              PagedResourcesAssembler<IResourceModel> pageAssembler) {
+                                              Pageable pageable) {
         Page<IResourceModel> datasets = datasetService.getPaged(ecqlFilter, pageable);
 
-        var pagedResources = pageAssembler.toResource(
-                datasets,
-                linkTo(DatasetsController.class)
-                        .slash("/api/data/datasets")
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(pageFromList(datasets, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

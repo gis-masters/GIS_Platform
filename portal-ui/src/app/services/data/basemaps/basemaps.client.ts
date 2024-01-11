@@ -1,9 +1,10 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResponse, PageOptions } from '../../models';
-import { preparePageOptions } from '../../api/http.utils';
-import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
+import { PageOptions } from '../../models';
+import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { PageableResources } from '../../../../server-types/common-contracts';
 
 import { Basemap } from './basemaps.models';
 
@@ -31,16 +32,16 @@ class BasemapsClient extends Client {
     return await http.get(this.getBasemapUrl(id));
   }
 
-  async getBasemaps(pageOptions: PageOptions): Promise<PageableResponse<Basemap>> {
+  async getBasemaps(pageOptions: PageOptions): Promise<PageableResources<Basemap>> {
     const params = preparePageOptions(pageOptions);
 
-    return await http.get<PageableResponse<Basemap>>(this.getBasemapsUrl(), { params });
+    return await http.get<PageableResources<Basemap>>(this.getBasemapsUrl(), { params });
   }
 
   async getBasemapsByIds(ids: number[]): Promise<Basemap[]> {
     const params = { ids: ids.join(', ') };
 
-    return await http.getPagedOld<Basemap>(this.getBasemapsByIdsUrl(), { params });
+    return await http.getPaged<Basemap>(this.getBasemapsByIdsUrl(), { params });
   }
 
   async betBasemapsWithParticularOne(
@@ -51,8 +52,7 @@ class BasemapsClient extends Client {
       this.getBasemapsUrl(),
       preparePageOptions(pageOptions),
       (item: Basemap) => item.id === id,
-      {},
-      true
+      {}
     );
   }
 

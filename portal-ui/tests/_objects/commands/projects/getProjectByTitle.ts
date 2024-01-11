@@ -9,7 +9,7 @@ export async function getProjectByTitle(title: string): Promise<CrgProject> {
     filter: { name: title }
   });
 
-  const projects = result._embedded?.projects;
+  const projects = result.content;
 
   if (projects?.length !== 1) {
     throw new Error(`Ошибка получения проекта "${title}"`);

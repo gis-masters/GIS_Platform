@@ -8,18 +8,16 @@ export async function mockProjects(browser: WebdriverIO.Browser) {
     url: /.*\/projects.*/,
     status: 200,
     response: JSON.stringify({
-      _embedded: {
-        projects: [
-          {
-            id: 39,
-            name: 'Название проекта',
-            internalName: 'workspace_39',
-            createdAt: '2021-07-30T13:10:53.506597',
-            organizationId: 10,
-            default: false
-          }
-        ]
-      },
+      content: [
+        {
+          id: 39,
+          name: 'Название проекта',
+          internalName: 'workspace_39',
+          createdAt: '2021-07-30T13:10:53.506597',
+          organizationId: 10,
+          default: false
+        }
+      ],
       page: {
         size: 300,
         totalElements: 1,

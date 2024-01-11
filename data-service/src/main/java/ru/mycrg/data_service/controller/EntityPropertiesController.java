@@ -2,7 +2,6 @@ package ru.mycrg.data_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
@@ -14,8 +13,8 @@ import ru.mycrg.schemas.properties.EntityPropertyResponseModel;
 
 import javax.validation.Valid;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 public class EntityPropertiesController {
@@ -36,17 +35,10 @@ public class EntityPropertiesController {
 
     @GetMapping("/entity-properties")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getAll(Pageable pageable,
-                                         PagedResourcesAssembler<EntityPropertyResponseModel> pageAssembler) {
-        final Page<EntityPropertyResponseModel> properties = entityPropertiesService.getPaged(pageable);
+    public ResponseEntity<Object> getAll(Pageable pageable) {
+        Page<EntityPropertyResponseModel> properties = entityPropertiesService.getPaged(pageable);
 
-        var pagedResult = pageAssembler.toResource(
-                properties,
-                linkTo(EntityPropertiesController.class)
-                        .slash("/api/data/entity-properties")
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResult);
+        return ResponseEntity.ok(pageFromList(properties, pageable));
     }
 
     @PostMapping("/entity-properties")

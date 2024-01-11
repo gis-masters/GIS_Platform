@@ -1,8 +1,8 @@
 import { InternalAxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../src/app/services/data/docLibrary/docLibrary.models';
+import { LibraryRecordRaw } from '../../../src/app/services/data/library/library.models';
+import { PageableResources } from '../../../src/server-types/common-contracts';
 import { queryObjects } from '../../../src/app/services/util/queryObjects';
-import { PageableResponse } from '../../../src/app/services/models';
 import { libraryRecords } from '../data/libraryRecords';
 import { SyntheticController } from './_master';
 import { parsePageOptions } from '../utils';
@@ -10,7 +10,7 @@ import { parsePageOptions } from '../utils';
 class LibraryRecordsSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records.*$/;
 
-  get(config: InternalAxiosRequestConfig): PageableResponse<{ content: LibraryRecordRaw }> {
+  get(config: InternalAxiosRequestConfig): PageableResources<{ content: LibraryRecordRaw }> {
     const match = config.url?.match(this.pattern);
     const libraryTableName = match?.at(1) || '';
     const pageOptions = parsePageOptions(config);
@@ -19,9 +19,7 @@ class LibraryRecordsSyntheticController implements SyntheticController {
       Math.floor(records.length / pageOptions.pageSize) + Number(Boolean(records.length % pageOptions.pageSize));
 
     return {
-      _embedded: {
-        records: records.map(record => ({ content: record }))
-      },
+      content: records.map(record => ({ content: record })),
       page: {
         size: pageOptions.pageSize,
         totalElements: records.length,

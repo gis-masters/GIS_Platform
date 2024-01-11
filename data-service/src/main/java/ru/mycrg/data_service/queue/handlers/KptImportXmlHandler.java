@@ -50,7 +50,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 
@@ -443,8 +444,7 @@ public class KptImportXmlHandler implements IEventHandler {
                 dbName,
                 new TaskLogDto("Импорт КПТ", taskId),
                 new KptImportValidationResult(lvl, message),
-                DS_ID,
-                DS_POOL_SIZE
+                DS_ID
         );
     }
 

@@ -2,7 +2,6 @@ package ru.mycrg.gis_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +17,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 public class ResourcesController {
@@ -33,15 +33,14 @@ public class ResourcesController {
     @GetMapping("/resources/{resourceType}/entities")
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> getAllResources(@PathVariable String resourceType,
-                                                  Pageable pageable,
-                                                  PagedResourcesAssembler<IResource> pageAssembler) {
+                                                  Pageable pageable) {
         IResourceQueryService resourceQueryService = queryServices.get(resourceType);
         if (resourceQueryService == null) {
             throw new NotFoundException("Не найден query service для ресурса: " + resourceType);
         }
 
-        final Page<IResource> resources = resourceQueryService.getResources(pageable);
+        Page<IResource> resources = resourceQueryService.getResources(pageable);
 
-        return ResponseEntity.ok(pageAssembler.toResource(resources));
+        return ResponseEntity.ok(pageFromList(resources, pageable));
     }
 }

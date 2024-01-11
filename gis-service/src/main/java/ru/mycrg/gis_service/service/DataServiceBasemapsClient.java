@@ -1,6 +1,7 @@
 package ru.mycrg.gis_service.service;
 
 import okhttp3.Request;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.http_client.ResponseModel;
-import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,15 +42,11 @@ public class DataServiceBasemapsClient {
                     .get()
                     .build();
 
-            ResponseModel<HashMap> response = httpClient.handleRequest(request, HashMap.class);
+            ResponseModel<List> response = httpClient.handleRequest(request, List.class);
             if (response.isSuccessful()) {
-                Map<String, Object> body = response.getBody();
-                Map<String, Object> elements = (Map<String, Object>) body.get("_embedded");
-                List<Map<String, Object>> basemaps = (List<Map<String, Object>>) elements.get("basemaps");
-
-                return convertMapToBaseMap(basemaps);
+                return convertMapToBaseMap(response.getBody());
             }
-        } catch (HttpClientException | MalformedURLException e) {
+        } catch (Exception e) {
             String msg = String.format("Ошибка при получении подложек, включённых в проект. Причина: %s",
                                        e.getMessage());
             log.error(msg);
@@ -61,8 +57,12 @@ public class DataServiceBasemapsClient {
         return baseMaps;
     }
 
-    private List<BaseMapCreateDto> convertMapToBaseMap(List<Map<String, Object>> basemapsToConvert) {
+    private List<BaseMapCreateDto> convertMapToBaseMap(@Nullable List<Map<String, Object>> basemapsToConvert) {
         List<BaseMapCreateDto> baseMaps = new ArrayList<>();
+        if (basemapsToConvert == null || basemapsToConvert.isEmpty()) {
+            return baseMaps;
+        }
+
         basemapsToConvert.forEach(baseMap -> {
             BaseMapCreateDto dto = new BaseMapCreateDto();
             if (baseMap.containsKey("id")) {

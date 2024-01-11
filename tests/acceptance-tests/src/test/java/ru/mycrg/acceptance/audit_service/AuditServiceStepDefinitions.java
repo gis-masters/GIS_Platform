@@ -80,7 +80,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @And("Отображаются события всех организаций")
     public void displayedAllOrganizationsEvents() {
-        List<String> entitiesIds = response.jsonPath().getList("_embedded.events.organizationId");
+        List<String> entitiesIds = response.jsonPath().getList("content.organizationId");
         Set<String> uniqOrgId = new HashSet<>(entitiesIds);
 
         assertTrue(uniqOrgId.size() > 1);
@@ -115,7 +115,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         statusCode(SC_OK).
                         extract().jsonPath().
-                        getList("_embedded.events");
+                        getList("content");
 
         assertTrue(data.toString().contains("eventDateTime"));
         assertTrue(data.toString().contains("eventDateTime"));
@@ -130,7 +130,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает постраничный запрос на события аудита")
     public void getAuditEventCount() {
-        super.getAllAndFillEntityCount(EVENTS);
+        super.getAllAndFillEntityCount();
     }
 
     @And("Количество страниц событий аудита пропорционально {string}")
@@ -140,7 +140,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах событий аудита есть {string}")
     public void areAuditEventsOnPages(String entitiesPerPage) {
-        checkSomethingOnPages(EVENTS, entitiesPerPage);
+        checkSomethingOnPages(entitiesPerPage);
     }
 
     @Given("Существует заданное кол-во событий аудита: {int}")
@@ -311,7 +311,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
                 getEventsByFilter(actionType, entityType.name(), tableName);
 
-                List<AuditEventDto> lists = response.jsonPath().getList("_embedded.events", AuditEventDto.class);
+                List<AuditEventDto> lists = response.jsonPath().getList("content", AuditEventDto.class);
 
                 boolean result = false;
                 for (AuditEventDto list: lists) {

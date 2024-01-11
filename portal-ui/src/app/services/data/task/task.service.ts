@@ -29,10 +29,6 @@ export async function getTasks(pageOptions: PageOptions): Promise<[Task[], numbe
   return [response.content || [], response.page.totalPages];
 }
 
-export async function getTasksByIds(ids: number[]): Promise<Task[]> {
-  return await taskClient.getTasksByIds(ids);
-}
-
 export async function updateTask(id: number, patch: Partial<Task>): Promise<void> {
   await taskClient.updateTask(id, patch);
   communicationService.taskUpdated.emit();

@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.controller.dataset;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
@@ -43,19 +44,16 @@ public class DatasetPermissionsController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/roleAssignment")
     public ResponseEntity<Object> getDatasetPermissions(@PathVariable String datasetId,
-                                                        Pageable pageable,
-                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+                                                        Pageable pageable) {
         IResourceModel dataset = datasetService.getInfo(datasetId);
         ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
                                                              datasetId,
                                                              dataset.getId(),
                                                              DATASET);
 
-        var permissions = permissionsService.getAllByResourceId(dQualifier, pageable);
+        Page<PermissionProjection> permissions = permissionsService.getAllByResourceId(dQualifier, pageable);
 
-        var pagedResources = pageAssembler.toResource(permissions);
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(pageFromList(permissions, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

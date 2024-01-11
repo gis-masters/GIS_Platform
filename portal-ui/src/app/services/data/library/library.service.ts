@@ -52,7 +52,7 @@ export async function getLibraryRecords(
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
   const response = await libraryClient.getLibraryRecords(libraryTableName, pageOptions);
-  const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryTableName, schemaId);
+  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName, schemaId);
 
   return [libraryRecords, response.page.totalPages];
 }
@@ -67,7 +67,7 @@ export async function getLibraryRecordsAsRegistry(
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
   const response = await libraryClient.getLibraryRecordsAsRegistry(libraryTableName, pageOptions);
-  const libraryRecords = enrichLibraryRecordsResponse(response._embedded?.records || [], libraryTableName, schemaId);
+  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName, schemaId);
 
   return [libraryRecords, response.page.totalPages];
 }

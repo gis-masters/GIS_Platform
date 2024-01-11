@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
+import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectOneQueryWithBbox;
+import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectQueryWithBbox;
 import static ru.mycrg.data_service.dto.styles.ComparisonRuleOperator.IS_EQUAL_TO;
 
 public class GetActualLegendByStyleRulesTest {
@@ -33,10 +35,10 @@ public class GetActualLegendByStyleRulesTest {
         // ASSERT
         assertEquals(
                 "SELECT DISTINCT " + propertyName + " FROM " + tQualifier.getQualifier() + " " +
-                        "WHERE ((" + propertyName + " = '" + value + "') AND (public.st_intersects('SRID=4326;" +
+                        "WHERE ((" + propertyName + " = '" + value + "') AND (public.st_intersects('SRID=" + DEFAULT_SRID_DEGREE + ";" +
                         "MULTIPOLYGON (((33.28094828570004 44.92255682261622, 37.06168842777256 44.92255682261622, " +
                         "37.06168842777256 45.54747161613013, 33.28094828570004 45.54747161613013, " +
-                        "33.28094828570004 44.92255682261622)))', public.st_transform(shape, 4326))))",
+                        "33.28094828570004 44.92255682261622)))', public.st_transform(shape, " + DEFAULT_SRID_DEGREE + "))))",
                 resultQuery);
     }
 
@@ -54,10 +56,10 @@ public class GetActualLegendByStyleRulesTest {
         // ASSERT
         assertEquals(
                 "SELECT * FROM " + tQualifier.getQualifier() +
-                        " WHERE (public.st_intersects('SRID=4326;MULTIPOLYGON (((33.28094828570004 44.92255682261622, " +
+                        " WHERE (public.st_intersects('SRID=" + DEFAULT_SRID_DEGREE + ";MULTIPOLYGON (((33.28094828570004 44.92255682261622, " +
                         "37.06168842777256 44.92255682261622, 37.06168842777256 45.54747161613013, " +
                         "33.28094828570004 45.54747161613013, 33.28094828570004 44.92255682261622)))', " +
-                        "public.st_transform(shape, 4326))) LIMIT 1",
+                        "public.st_transform(shape, " + DEFAULT_SRID_DEGREE + "))) LIMIT 1",
                 resultQuery);
     }
 

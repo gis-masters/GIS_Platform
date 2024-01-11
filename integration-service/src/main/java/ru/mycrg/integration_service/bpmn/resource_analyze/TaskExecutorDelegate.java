@@ -46,10 +46,10 @@ public class TaskExecutorDelegate implements JavaDelegate {
         final Optional<PageModel<ResourcesModel>> oPage = fetchResources(currentTask);
         if (oPage.isPresent()) {
             final PageModel<ResourcesModel> page = oPage.get();
-            if (page.getEmbedded() == null) {
+            if (page.getContent() == null) {
                 completeTask(execution, currentTask, startOfTask);
             } else {
-                execution.setVariable(RESOURCES.name(), page.getEmbedded());
+                execution.setVariable(RESOURCES.name(), page.getContent());
                 execution.setVariable(IS_TASK_COMPLETE.name(), false);
             }
         } else {

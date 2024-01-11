@@ -100,7 +100,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private boolean isNonContainsEntityPermissions(Integer entityId) {
-        return !response.jsonPath().getList("_embedded.resources.permissions.principalId").contains(entityId);
+        return !response.jsonPath().getList("content.permissions.principalId").contains(entityId);
     }
 
     private boolean isNonContainsProjectPermissionsRole(String role) {

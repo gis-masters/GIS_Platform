@@ -28,8 +28,10 @@ public class TaskLogDetachedDao {
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void createTaskLog(String dbName, TaskLogDto taskLogDto, Object body, @Nullable String datasourceId,
-                              @Nullable Integer poolSize) {
+    public void createTaskLog(String dbName,
+                              TaskLogDto taskLogDto,
+                              Object body,
+                              @Nullable String datasourceId) {
         PGobject message = new PGobject();
         message.setType("jsonb");
 
@@ -44,14 +46,9 @@ public class TaskLogDetachedDao {
         String messageField = "message";
         String createdAtField = "created_at";
 
-        NamedParameterJdbcTemplate pJdbcTemplate;
-        if (datasourceId == null || poolSize == null) {
-            pJdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(dbName));
-        } else {
-            pJdbcTemplate = new NamedParameterJdbcTemplate(
-                    datasourceFactory.getNamedDataSource(dbName, datasourceId, poolSize)
-            );
-        }
+        NamedParameterJdbcTemplate pJdbcTemplate = (datasourceId == null)
+                ? new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(dbName))
+                : new NamedParameterJdbcTemplate(datasourceFactory.getNamedDataSource(dbName, datasourceId));
 
         String query = String.format(
                 "INSERT INTO data.tasks_log (%s,%s,%s,%s) values (:%s,:%s,:%s,:%s)",

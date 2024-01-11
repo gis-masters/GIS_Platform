@@ -160,12 +160,11 @@ public class DocumentRoute extends RouteBuilder {
 
                 .setBody(exchange -> {
                     Map<String, Object> body = exchange.getIn().getBody(Map.class);
-                    Map<String, Object> embedded = (Map<String, Object>) body.get("_embedded");
-                    if (embedded == null) {
+                    List<Map<String, Object>> records = (List<Map<String, Object>>) body.get("content");
+                    if (records == null) {
                         return null;
                     }
 
-                    List<Map<String, Object>> records = (List<Map<String, Object>>) embedded.get("records");
                     Map<String, Object> content = (Map<String, Object>) records.get(0).get("content");
 
                     exchange.getIn().setHeader("objectId", content.get("id"));

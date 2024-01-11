@@ -53,8 +53,7 @@ class MessagesRegistriesClient extends Client {
       this.getMessagesRegistriesUrl(),
       preparePageOptions(pageOptions, true),
       objectRecognizer,
-      { params },
-      false
+      { params }
     );
   }
 

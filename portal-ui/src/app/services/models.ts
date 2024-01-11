@@ -4,18 +4,6 @@ import { OldSchema } from './data/schema/schemaOld.models';
 import { GeometryType } from './geoserver/wfs/wfs.models';
 import { FilterQuery } from './util/filterObjects';
 
-export interface PageablePage {
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-}
-
-export interface PageableResponse<T> {
-  _embedded?: Record<string, T[]>;
-  page: PageablePage;
-}
-
 export interface ApiLink {
   href: string;
   templated: boolean;
@@ -68,12 +56,6 @@ export interface PageOptions {
   sortOrder?: SortOrder;
   filter?: FilterQuery;
   queryParams?: { [key: string]: string | number };
-}
-
-export interface GeoserverException {
-  code: string;
-  locator: string;
-  text: string;
 }
 
 export interface PageQueryParams {

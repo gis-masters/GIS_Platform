@@ -112,6 +112,11 @@
             <artifactId>auth-facade</artifactId>
             <version>1.2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>common-utils</artifactId>
+            <version>1.3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

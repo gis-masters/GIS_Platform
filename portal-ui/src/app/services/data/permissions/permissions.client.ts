@@ -49,12 +49,12 @@ class PermissionsClient extends DataClient {
     return http.get<RoleAssignmentBody[]>(url);
   }
 
-  async getTablePermissions(url: string): Promise<RoleAssignmentBody[]> {
-    return http.getPagedOld<RoleAssignmentBody>(url);
+  async getAllPermissions(url: string): Promise<RoleAssignmentBody[]> {
+    return http.getPaged<RoleAssignmentBody>(url);
   }
 
   async getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
-    return await http.getPagedOld<ResourcePermissions>(this.getAllPermissionsUrl());
+    return await http.getPaged<ResourcePermissions>(this.getAllPermissionsUrl());
   }
 
   async addEntityPermission(payload: RoleAssignmentBody, url: string): Promise<void> {

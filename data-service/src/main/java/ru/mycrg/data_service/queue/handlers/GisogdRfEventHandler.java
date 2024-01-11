@@ -29,6 +29,8 @@ public class GisogdRfEventHandler implements IEventHandler {
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfEventHandler.class);
 
+    private static final String GISOGD_SOURCE_ID = "gisogd_";
+
     private final DatasourceFactory datasourceFactory;
 
     public GisogdRfEventHandler(DatasourceFactory datasourceFactory) {
@@ -53,7 +55,8 @@ public class GisogdRfEventHandler implements IEventHandler {
 
             String databaseName = getDefaultDatabaseName(event.getOrgId());
             NamedParameterJdbcTemplate jdbcTemplate =
-                    new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+                    new NamedParameterJdbcTemplate(
+                            datasourceFactory.getNamedDataSource(databaseName, GISOGD_SOURCE_ID));
             ParameterizedBaseDao parameterizedBaseDao = new ParameterizedBaseDao(jdbcTemplate);
 
             Status status = event.getStatus();

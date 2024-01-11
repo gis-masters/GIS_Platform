@@ -206,7 +206,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void checkCurrentProjectIsPresentInResponse() {
         jsonPath = response.jsonPath();
 
-        final List<String> names = jsonPath.getList("_embedded.projects.name");
+        final List<String> names = jsonPath.getList("content.name");
 
         names.forEach(s -> System.out.println("PROJECT NAME : " + s));
 
@@ -361,12 +361,12 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @And("На всех страницах проектов {string} есть {string}")
     public void areProjectsOnPages(String checkType, String entitiesPerPage) {
-        super.checkSomethingOnPages(checkType, entitiesPerPage);
+        super.checkSomethingOnPages(entitiesPerPage);
     }
 
-    @When("Администратор делает постраничный запрос на проекты {string}")
-    public void getProjectCount(String entity) {
-        getAllAndFillEntityCount(entity);
+    @When("Администратор делает постраничный запрос на проекты")
+    public void getProjectCount() {
+        getAllAndFillEntityCount();
     }
 
     @And("Пользователь является владельцем проекта")

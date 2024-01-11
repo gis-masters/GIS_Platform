@@ -2204,7 +2204,7 @@
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="UserCountExtractor" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">users</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.._embedded.users..[1:]id</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$..content..[1:]id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
               <stringProp name="JSONPostProcessor.defaultValues">noUsers</stringProp>
             </JSONPostProcessor>
@@ -2334,7 +2334,7 @@
             <hashTree/>
             <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="GroupCountExtractor" enabled="true">
               <stringProp name="JSONPostProcessor.referenceNames">groups</stringProp>
-              <stringProp name="JSONPostProcessor.jsonPathExprs">$.._embedded.groups..[?(@.description)]id</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$..content..[?(@.description)]id</stringProp>
               <stringProp name="JSONPostProcessor.match_numbers">-1</stringProp>
               <stringProp name="JSONPostProcessor.defaultValues">noGroups</stringProp>
             </JSONPostProcessor>
@@ -3835,7 +3835,7 @@
                           <hashTree/>
                           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="ProjectCountExtractor" enabled="true">
                             <stringProp name="JSONPostProcessor.referenceNames">projects</stringProp>
-                            <stringProp name="JSONPostProcessor.jsonPathExprs">$._embedded.projects..id</stringProp>
+                            <stringProp name="JSONPostProcessor.jsonPathExprs">$.content..id</stringProp>
                             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
                             <stringProp name="JSONPostProcessor.defaultValues">noProjects</stringProp>
                           </JSONPostProcessor>
@@ -3968,7 +3968,7 @@
                           <hashTree/>
                           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="UserCountExtractor" enabled="true">
                             <stringProp name="JSONPostProcessor.referenceNames">users</stringProp>
-                            <stringProp name="JSONPostProcessor.jsonPathExprs">$.._embedded.users..id</stringProp>
+                            <stringProp name="JSONPostProcessor.jsonPathExprs">$..content..id</stringProp>
                             <stringProp name="JSONPostProcessor.match_numbers">2</stringProp>
                             <stringProp name="JSONPostProcessor.defaultValues">noUsers</stringProp>
                           </JSONPostProcessor>
@@ -4101,7 +4101,7 @@
                           <hashTree/>
                           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="GroupCountExtractor" enabled="true">
                             <stringProp name="JSONPostProcessor.referenceNames">groups</stringProp>
-                            <stringProp name="JSONPostProcessor.jsonPathExprs">$.._embedded.groups..[?(@.description)]id</stringProp>
+                            <stringProp name="JSONPostProcessor.jsonPathExprs">$..content..[?(@.description)]id</stringProp>
                             <stringProp name="JSONPostProcessor.match_numbers">0</stringProp>
                             <stringProp name="JSONPostProcessor.defaultValues">noGroups</stringProp>
                           </JSONPostProcessor>

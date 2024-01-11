@@ -7,16 +7,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PreAuthorize;
-import ru.mycrg.auth_service.dto.OrganizationCommonProjection;
 import ru.mycrg.auth_service.entity.Organization;
 
 import java.util.Optional;
 
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 
-@RepositoryRestResource(collectionResourceRel = "organizations",
-                        path = "organizations",
-                        excerptProjection = OrganizationCommonProjection.class)
+@RepositoryRestResource(collectionResourceRel = "organizations", exported = false)
 public interface OrganizationRepository extends PagingAndSortingRepository<Organization, Long> {
 
     @Override

@@ -15,7 +15,7 @@ import {
   roles,
   rolesTitles
 } from '../../services/data/permissions/permissions.models';
-import { getProjectPermissions, getTablePermissions } from '../../services/data/permissions/permissions.service';
+import { getProjectPermissions, getAllPermissions } from '../../services/data/permissions/permissions.service';
 import { communicationService } from '../../services/communication.service';
 import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../services/auth/groups/groups.models';
@@ -202,13 +202,14 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @boundMethod
   private async fetchPermissions() {
     const { url, title, itemEntityType } = this.props;
+
     this.setPermissions([], true);
 
     try {
       const permissions =
         itemEntityType === ExplorerItemEntityTypeTitle.PROJECT
           ? await getProjectPermissions(url)
-          : await getTablePermissions(url);
+          : await getAllPermissions(url);
       // тут так надо
       // eslint-disable-next-line unicorn/consistent-destructuring
       if (url === this.props.url) {

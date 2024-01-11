@@ -36,10 +36,6 @@ class TasksClient extends Client {
     return `${this.getTasksUrl()}/${id}/${status}`;
   }
 
-  private getTaskByIdsUrl(): string {
-    return this.getTasksUrl() + '/search/findByIdIn';
-  }
-
   async getTask(id: number): Promise<Task> {
     return await http.get(this.getTaskUrl(id));
   }
@@ -52,12 +48,6 @@ class TasksClient extends Client {
     const params = preparePageOptions(pageOptions, true);
 
     return await http.get<PageableResources<Task>>(this.getTasksUrl(), { params });
-  }
-
-  async getTasksByIds(ids: number[]): Promise<Task[]> {
-    const params = { ids: ids.join(', ') };
-
-    return await http.getPagedOld<Task>(this.getTaskByIdsUrl(), { params });
   }
 
   async createTask(task: Task): Promise<Task> {

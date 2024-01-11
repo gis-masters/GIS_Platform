@@ -15,6 +15,7 @@ import ru.mycrg.data_service.service.resources.TableService;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
@@ -43,7 +44,7 @@ public class GisogdRfController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> send(@RequestParam String entityName,
                                        @RequestParam Long entityId,
-                                       @RequestParam(defaultValue = "4326", required = false) Integer srid) {
+                                       @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
         long taskId = -314L;
         gisogdRfPublisher.publish(taskId, makeQualifier(entityName, entityId), srid);
 
@@ -53,7 +54,7 @@ public class GisogdRfController {
     @PostMapping("/publish")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> publish(@RequestParam(defaultValue = "100") Long limit,
-                                          @RequestParam(defaultValue = "4326", required = false) Integer srid) {
+                                          @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
         Long taskId = gisogdRfPublisher.fullPublication(limit, srid);
 
         return ResponseEntity.status(CREATED).body(taskId);

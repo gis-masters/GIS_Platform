@@ -2,8 +2,7 @@ package ru.mycrg.data_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,23 +18,18 @@ import java.security.Principal;
 import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
 @RestController
 @RequestMapping(value = "/processes")
 public class ProcessesController {
 
-    private final EntityLinks links;
     private final ProcessService processService;
     private final ProcessHandler processHandler;
-    private final PagedResourcesAssembler<Process> assembler;
 
     public ProcessesController(ProcessService processService,
-                               ProcessHandler processHandler,
-                               PagedResourcesAssembler<Process> assembler,
-                               EntityLinks links) {
-        this.links = links;
-        this.assembler = assembler;
+                               ProcessHandler processHandler) {
         this.processService = processService;
         this.processHandler = processHandler;
     }
@@ -73,10 +67,7 @@ public class ProcessesController {
     public ResponseEntity<Object> getProcesses(Pageable pageable, Principal principal) {
         Page<Process> processes = processService.findAll(pageable, principal);
 
-        Link pageSelfLink = links.linkFor(Process.class).withSelfRel();
-        PagedResources<?> pagedResources = assembler.toResource(processes, this::toResource, pageSelfLink);
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(pageFromList(processes, pageable));
     }
 
     @GetMapping("/{processId}")
@@ -89,12 +80,5 @@ public class ProcessesController {
         resource.add(linkTo(ProcessesController.class).slash(process.getId()).withRel("process"));
 
         return resource;
-    }
-
-    private ResourceSupport toResource(Process process) {
-        Link processLink = links.linkForSingleResource(process).withRel("process");
-        Link selfLink = links.linkForSingleResource(process).withSelfRel();
-
-        return new Resource<>(process, processLink, selfLink);
     }
 }

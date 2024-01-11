@@ -176,7 +176,7 @@ class ProjectsService {
   async getProjects(pageOptions: PageOptions): Promise<[CrgProject[], number]> {
     const response = await projectsClient.getProjects(pageOptions);
 
-    return [response._embedded?.projects || [], response.page.totalPages];
+    return [response.content || [], response.page.totalPages];
   }
 
   async getProjectsWithParticularOne(

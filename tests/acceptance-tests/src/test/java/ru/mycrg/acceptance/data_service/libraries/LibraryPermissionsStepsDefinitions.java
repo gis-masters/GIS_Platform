@@ -422,22 +422,22 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         // На самом верхнем уровне доступна одна папка: folder_1
         getBaseRequestWithCurrentCookie()
                 .when().get(String.format("/%s/records", DEFAULT_LIBRARY))
-                .then().body("_embedded.records.content.id", IsCollectionWithSize.hasSize(1));
+                .then().body("content.content.id", IsCollectionWithSize.hasSize(1));
 
         // В папке: folder_1 доступна одна папка: folder_1_1
         getBaseRequestWithCurrentCookie()
                 .when().get(String.format("/%s/records?parent=%d", DEFAULT_LIBRARY, folder1Id))
-                .then().body("_embedded.records.content.id", IsCollectionWithSize.hasSize(1));
+                .then().body("content.content.id", IsCollectionWithSize.hasSize(1));
 
         // В папке: folder_1_1 доступна одна папка: folder_1_1_1
         getBaseRequestWithCurrentCookie()
                 .when().get(String.format("/%s/records?parent=%d", DEFAULT_LIBRARY, folder11Id))
-                .then().body("_embedded.records.content.id", IsCollectionWithSize.hasSize(1));
+                .then().body("content.content.id", IsCollectionWithSize.hasSize(1));
 
         // В папке: folder_1_1_1 доступна один файл: file_1_1_1_2
         getBaseRequestWithCurrentCookie()
                 .when().get(String.format("/%s/records?parent=%d", DEFAULT_LIBRARY, folder111Id))
-                .then().body("_embedded.records.content.id", IsCollectionWithSize.hasSize(1));
+                .then().body("content.content.id", IsCollectionWithSize.hasSize(1));
     }
 
     @When("Пользователь пытается добавить правило для библиотеки: {string}")

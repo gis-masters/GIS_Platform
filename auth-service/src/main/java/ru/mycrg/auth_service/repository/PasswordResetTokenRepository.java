@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,9 @@ public interface PasswordResetTokenRepository extends CrudRepository<PasswordRes
 
     void removeByUser(User user);
 
-    void deleteByCreatedAtBefore(LocalDateTime createdAt);
+    @Modifying
+    @Query(value = "DELETE FROM PasswordResetToken WHERE createdAt < :dateTime")
+    void deleteExpiredTokens(@Param("dateTime") LocalDateTime dateTime);
 
     @Query(value = "SELECT * FROM password_reset_tokens AS tokens " +
             "WHERE tokens.user_id = :userId " +

@@ -2,7 +2,6 @@ package ru.mycrg.audit_service.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,17 +17,15 @@ import java.net.URI;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
 public class AuditController {
 
     private final AuditEventService auditEventService;
-    private final PagedResourcesAssembler<EventFullProjection> assembler;
 
-    public AuditController(AuditEventService auditEventService,
-                           PagedResourcesAssembler<EventFullProjection> assembler) {
+    public AuditController(AuditEventService auditEventService) {
         this.auditEventService = auditEventService;
-        this.assembler = assembler;
     }
 
     @PostMapping(value = "/events")
@@ -57,7 +54,7 @@ public class AuditController {
             Pageable pageable) {
         Page<EventFullProjection> events = auditEventService.getAllEvents(pageable, actionType, entityName, entityType);
 
-        return ResponseEntity.ok(assembler.toResource(events));
+        return ResponseEntity.ok(pageFromList(events, pageable));
     }
 
     @PutMapping(value = "/events/{id}")

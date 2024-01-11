@@ -1,10 +1,11 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResponse, PageOptions } from '../../models';
-import { preparePageOptions } from '../../api/http.utils';
-import { http } from '../../api/http.service';
-import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { PageOptions } from '../../models';
 import { DataClient } from '../DataClient';
+import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { PageableResources } from '../../../../server-types/common-contracts';
 
 import { Dataset, NewDataset, VectorTable, VectorTableConnection, NewVectorTable } from './vectorData.models';
 
@@ -39,10 +40,10 @@ class VectorDataClient extends DataClient {
     return http.get<Dataset>(this.getDatasetUrl(identifier));
   }
 
-  async getDatasets(pageOptions: PageOptions): Promise<PageableResponse<Dataset>> {
+  async getDatasets(pageOptions: PageOptions): Promise<PageableResources<Dataset>> {
     const params = preparePageOptions(pageOptions, true);
 
-    return http.get<PageableResponse<Dataset>>(this.getDatasetsUrl(), { params });
+    return http.get<PageableResources<Dataset>>(this.getDatasetsUrl(), { params });
   }
 
   async getDatasetsWithParticularOne(
@@ -53,13 +54,12 @@ class VectorDataClient extends DataClient {
       this.getDatasetsUrl(),
       preparePageOptions(pageOptions, true),
       (item: Dataset) => item.identifier === identifier,
-      {},
-      true
+      {}
     );
   }
 
   async getAllDatasets(): Promise<Dataset[]> {
-    return http.getPagedOld<Dataset>(this.getDatasetsUrl());
+    return http.getPaged<Dataset>(this.getDatasetsUrl());
   }
 
   async createDataset(newDataset: NewDataset): Promise<Dataset> {
@@ -83,11 +83,11 @@ class VectorDataClient extends DataClient {
   async getVectorTables(
     datasetIdentifier: string,
     pageOptions: PageOptions
-  ): Promise<PageableResponse<Omit<VectorTable, 'dataset'>>> {
+  ): Promise<PageableResources<Omit<VectorTable, 'dataset'>>> {
     const url = this.getVectorTablesUrl(datasetIdentifier);
     const params = preparePageOptions(pageOptions, true);
 
-    return http.get<PageableResponse<Omit<VectorTable, 'dataset'>>>(url, { params });
+    return http.get<PageableResources<Omit<VectorTable, 'dataset'>>>(url, { params });
   }
 
   async getVectorTablesWithParticularOne(
@@ -99,13 +99,12 @@ class VectorDataClient extends DataClient {
       this.getVectorTablesUrl(datasetIdentifier),
       preparePageOptions(pageOptions, true),
       (item: VectorTable) => item.identifier === vectorTableIdentifier,
-      {},
-      true
+      {}
     );
   }
 
   async getAllVectorTablesInDataset(datasetIdentifier: string): Promise<Omit<VectorTable, 'dataset'>[]> {
-    return http.getPagedOld<Omit<VectorTable, 'dataset'>>(this.getVectorTablesUrl(datasetIdentifier), {
+    return http.getPaged<Omit<VectorTable, 'dataset'>>(this.getVectorTablesUrl(datasetIdentifier), {
       params: { sort: 'title,asc' }
     });
   }

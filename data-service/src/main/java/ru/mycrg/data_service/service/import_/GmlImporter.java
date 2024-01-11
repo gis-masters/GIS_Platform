@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.util.SchemaUtil.getPropertiesWithCalculatedFunctions;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
@@ -104,7 +105,7 @@ public class GmlImporter {
                 FeatureData featureData;
                 String epsgFromLayer;
                 try {
-                    String defaultCrs = nonNull(bboxCrs) ? bboxCrs : "EPSG:3857";
+                    String defaultCrs = nonNull(bboxCrs) ? bboxCrs : DEFAULT_EPSG_METRE;
 
                     featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates, defaultCrs);
                     epsgFromLayer = getEpsgFromFeature(oLayerEpsg, featureData);

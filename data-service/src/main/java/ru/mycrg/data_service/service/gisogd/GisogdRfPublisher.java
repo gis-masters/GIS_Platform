@@ -262,8 +262,8 @@ public class GisogdRfPublisher {
         try {
             data = mapper.readValue(Files.readAllBytes(pathToFile), HashMap.class);
         } catch (Exception e) {
-            String msg = String.format("Не удалось считать данные из файла: [%s] По причине: %s",
-                                       pathToFile, e.getMessage());
+            String msg = format("Не удалось считать данные из файла: [%s] По причине: %s",
+                                pathToFile, e.getMessage());
             log.error(msg, e);
 
             return documentContent;
@@ -346,18 +346,10 @@ public class GisogdRfPublisher {
             }
 
             for (SimplePropertyDto documentProperty: documentProperties) {
-                String asString = (String) content.get(documentProperty.getName());
-                if (asString == null) {
-                    continue;
-                }
-
-                List<TypeDocumentData> records = mapper.readValue(asString,
-                                                                  new TypeReference<List<TypeDocumentData>>() {
-                                                                  });
-                log.debug("For property {} found joined {} documents", documentProperty.getName(), records.size());
-                for (TypeDocumentData data: records) {
-                    Long id = data.getId();
-                    String library = data.getLibraryTableName();
+                List<TypeDocumentData> documents = getDocuments(content, documentProperty);
+                for (TypeDocumentData document: documents) {
+                    Long id = document.getId();
+                    String library = document.getLibraryTableName();
 
                     ResourceQualifier childQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, library, id, LIBRARY);
                     try {
@@ -387,6 +379,32 @@ public class GisogdRfPublisher {
             log.debug(msg);
 
             throw new DataServiceException(msg);
+        }
+    }
+
+    @NotNull
+    private List<TypeDocumentData> getDocuments(Map<String, Object> content,
+                                                SimplePropertyDto property) {
+        String name = property.getName();
+        String asString = null;
+        try {
+            asString = (String) content.get(name);
+            if (asString == null) {
+                return new ArrayList<>();
+            }
+
+            List<TypeDocumentData> records = mapper.readValue(asString,
+                                                              new TypeReference<List<TypeDocumentData>>() {
+                                                              });
+
+            log.debug("Для свойства: '{}' найдено {} документ(ов)", name, records.size());
+
+            return records;
+        } catch (Exception e) {
+            log.warn("Для поля: '{}' не удалось распарсить данные по связанным документам. " +
+                             "Строка: '{}' не соответствует формату DOCUMENT !!!", name, asString);
+
+            return new ArrayList<>();
         }
     }
 

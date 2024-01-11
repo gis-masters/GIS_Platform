@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +21,7 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 
 @RestController
@@ -30,13 +30,10 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final OrgSettingsKeeper orgSettingsKeeper;
-    private final PagedResourcesAssembler<ProjectProjection> assembler;
 
     public ProjectController(ProjectService projectService,
-                             OrgSettingsKeeper orgSettingsKeeper,
-                             PagedResourcesAssembler<ProjectProjection> assembler) {
+                             OrgSettingsKeeper orgSettingsKeeper) {
         this.orgSettingsKeeper = orgSettingsKeeper;
-        this.assembler = assembler;
         this.projectService = projectService;
     }
 
@@ -46,7 +43,7 @@ public class ProjectController {
                                               Pageable pageable) {
         Page<ProjectProjection> projects = projectService.getPaged(name, pageable);
 
-        return ResponseEntity.ok(assembler.toResource(projects));
+        return ResponseEntity.ok(pageFromList(projects, pageable));
     }
 
     @GetMapping("/{id}")
@@ -90,7 +87,7 @@ public class ProjectController {
                 TypeReference<List<Double>> type = new TypeReference<>() {
                 };
                 List<Double> coordinates = objectMapper.readValue(bbox, type);
-                if (!coordinates.isEmpty() && coordinates.size() != 4 ) {
+                if (!coordinates.isEmpty() && coordinates.size() != 4) {
                     throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
                 }
             } catch (IOException e) {

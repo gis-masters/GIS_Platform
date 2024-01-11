@@ -1,13 +1,11 @@
 package ru.mycrg.data_service.controller.doc_library;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.controller.dataset.DatasetPermissionsController;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
@@ -22,8 +20,8 @@ import ru.mycrg.mediator.Mediator;
 import javax.validation.Valid;
 import java.net.URI;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
@@ -45,20 +43,13 @@ public class DocumentLibraryPermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/document-libraries/{docLibId}/roleAssignment")
     public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
-                                                        Pageable pageable,
-                                                        PagedResourcesAssembler<PermissionProjection> pageAssembler) {
+                                                        Pageable pageable) {
         IResourceModel dl = librariesService.getInfo(docLibId);
 
         ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
         var permissions = permissionsService.getAllByResourceId(dlQualifier, dl.getId(), pageable);
 
-        var pagedResources = pageAssembler.toResource(
-                permissions,
-                linkTo(DatasetPermissionsController.class)
-                        .slash("/api/data/document-libraries/" + docLibId)
-                        .withSelfRel());
-
-        return ResponseEntity.ok(pagedResources);
+        return ResponseEntity.ok(pageFromList(permissions, pageable));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

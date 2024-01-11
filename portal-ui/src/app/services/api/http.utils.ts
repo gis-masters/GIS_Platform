@@ -1,5 +1,4 @@
-import { PageableResources } from '../../../server-types/common-contracts';
-import { PageableResponse, PageOptions, PageQueryParams } from '../models';
+import { PageOptions, PageQueryParams } from '../models';
 import { cqlBuild } from '../util/cqlBuild';
 
 export function preparePageOptions(
@@ -17,24 +16,6 @@ export function preparePageOptions(
     ...filter,
     ...queryParams
   };
-}
-
-export function getPayloadFromPageableResponse<T>(
-  response: PageableResponse<T> | PageableResources<T>,
-  withOldPageableResponse: boolean
-): T[] {
-  if (withOldPageableResponse) {
-    const embedded = (response as PageableResponse<T>)._embedded;
-    if (!embedded) {
-      return [];
-    }
-
-    const key = Object.keys(embedded)[0];
-
-    return embedded[key];
-  }
-
-  return (response as PageableResources<T>).content || [];
 }
 
 export function stringifyParams(params: Record<string, string | number>): Record<string, string> {
