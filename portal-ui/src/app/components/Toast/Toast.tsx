@@ -7,11 +7,11 @@ import nl2br from 'react-nl2br';
 import { IconButton } from '@mui/material';
 import { CheckCircle, Error, Info, Warning, Close } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material/SvgIcon/';
-import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
 
 import { sendTelegramError } from '../../services/telegram.service';
 import { environment } from '../../services/environment';
 
+import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
 
 const cnToast = cn('Toast');
@@ -19,6 +19,7 @@ const cnToast = cn('Toast');
 interface ToastOpts extends ToastOptions {
   message?: ReactNode;
   details?: ReactNode;
+  duration?: number;
 }
 
 interface ToastErrorOpts extends ToastOpts {
@@ -101,6 +102,7 @@ export class Toast extends Component<ToastProps> {
   static success(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     this.show({
       ...this.normalizeOpts(message, opts),
+      autoClose: opts?.duration || Toast.defaultDuration,
       type: 'success'
     } as ToastOpts);
   }
