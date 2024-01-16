@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { XTable, XTableProps } from './../XTable';
 import { XTableColumn } from './../XTable.models';
@@ -8,7 +8,7 @@ import { TemplateWide } from './XTable-Filter-story-template';
 export default {
   title: 'XTable/Filter',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
 interface TestData {
   id: number;
@@ -53,7 +53,7 @@ const multipleFiltersCols: XTableColumn<TestData>[] = [
   }
 ];
 
-export const MultipleStringFilters = TemplateWide.bind({}) as ComponentStory<XTableForTestData>;
+export const MultipleStringFilters = TemplateWide.bind({}) as StoryFn<XTableForTestData>;
 MultipleStringFilters.args = {
   data: multipleFiltersData,
   cols: multipleFiltersCols,

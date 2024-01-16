@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentMeta, ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { Button } from '../Button/Button';
 import { Toast } from './Toast';
@@ -7,9 +7,9 @@ import { Toast } from './Toast';
 export default {
   title: 'Toast',
   component: Toast
-} as ComponentMeta<typeof Toast>;
+};
 
-const Template: ComponentStory<typeof Button> = args => <Button {...args} className='ToastStoryButton' />;
+const Template: StoryFn<typeof Button> = args => <Button {...args} className='ToastStoryButton' />;
 
 export const Error = Template.bind({});
 Error.args = {

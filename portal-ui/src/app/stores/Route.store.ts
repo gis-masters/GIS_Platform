@@ -1,11 +1,4 @@
-import {
-  ActivatedRouteSnapshot,
-  RoutesRecognized,
-  UrlSegment,
-  ParamMap,
-  RouterEvent,
-  ChildActivationStart
-} from '@angular/router';
+import { ActivatedRouteSnapshot, RoutesRecognized, UrlSegment, ParamMap, ChildActivationStart } from '@angular/router';
 import { observable, action, makeObservable } from 'mobx';
 
 import { services } from '../services/services';
@@ -71,7 +64,7 @@ class Route {
 
     this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
 
-    services.router.events.subscribe((e: RouterEvent) => {
+    services.router.events.subscribe(e => {
       this.setRoute(this.getDeepestChildren(services.router.routerState.snapshot.root));
 
       if (e instanceof ChildActivationStart) {

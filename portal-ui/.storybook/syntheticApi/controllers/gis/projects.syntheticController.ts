@@ -1,14 +1,14 @@
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-import { queryObjects } from '../../../src/app/services/util/queryObjects';
-import { projects } from '../data/projects';
-import { SyntheticController } from './_master';
-import { err404, parsePageOptions } from '../utils';
-import { CrgProject } from '../../../src/app/services/gis/projects/projects.models';
-import { Role } from '../../../src/app/services/data/permissions/permissions.models';
-import { validateFieldValue } from '../../../src/app/services/formValidation.service';
-import { PropertySchemaString, PropertyType } from '../../../src/app/services/data/schema/schema.models';
-import { PageableResources } from '../../../src/server-types/common-contracts';
+import { queryObjects } from '../../../../src/app/services/util/queryObjects';
+import { projects } from '../../data/projects';
+import { SyntheticController } from '../masterController';
+import { err404, parsePageOptions } from '../../utils';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { Role } from '../../../../src/app/services/data/permissions/permissions.models';
+import { validateFieldValue } from '../../../../src/app/services/formValidation.service';
+import { PropertySchemaString, PropertyType } from '../../../../src/app/services/data/schema/schema.models';
+import { PageableResources } from '../../../../src/server-types/common-contracts';
 
 class ProjectsSyntheticController implements SyntheticController {
   pattern = /^.*\/projects$/;

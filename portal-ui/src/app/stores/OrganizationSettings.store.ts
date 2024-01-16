@@ -13,10 +13,10 @@ export interface OrgSettings {
 export class OrganizationSettings {
   private static _instance: OrganizationSettings;
 
-  @observable settingsError: boolean;
-  @observable orgSettings: OrgSettings;
-  @observable systemSettings: OrgSettings[];
-  @observable availableOrgsSettings: Record<string, string>;
+  @observable settingsError?: boolean;
+  @observable orgSettings?: OrgSettings;
+  @observable systemSettings?: OrgSettings[];
+  @observable availableOrgsSettings?: Record<string, string>;
 
   static get instance(): OrganizationSettings {
     return this._instance || (this._instance = new this());
@@ -49,12 +49,12 @@ export class OrganizationSettings {
 
   @computed
   get createProject(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.createProject, this.orgSettings.organization?.createProject);
+    return this.allowedToUse(this.orgSettings?.system?.createProject, this.orgSettings?.organization?.createProject);
   }
 
   @computed
   get dataManagement(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.dataManagement, this.orgSettings.organization?.dataManagement);
+    return this.allowedToUse(this.orgSettings?.system?.dataManagement, this.orgSettings?.organization?.dataManagement);
   }
 
   @computed
@@ -80,23 +80,23 @@ export class OrganizationSettings {
 
   @computed
   get downloadFiles(): boolean {
-    return this.allowedToUse(this.orgSettings.system?.downloadFiles, this.orgSettings.organization?.downloadFiles);
+    return this.allowedToUse(this.orgSettings?.system?.downloadFiles, this.orgSettings?.organization?.downloadFiles);
   }
 
   @computed
   get downloadXml(): boolean {
-    return this.allowedToUse(this.orgSettings.system?.downloadXml, this.orgSettings.organization?.downloadXml);
+    return this.allowedToUse(this.orgSettings?.system?.downloadXml, this.orgSettings?.organization?.downloadXml);
   }
 
   @computed
   get SEDDialog(): boolean {
-    return this.allowedToUse(this.orgSettings.system?.sedDialog, this.orgSettings.organization?.sedDialog);
+    return this.allowedToUse(this.orgSettings?.system?.sedDialog, this.orgSettings?.organization?.sedDialog);
   }
 
-  private allowedToUse(systemSetting: boolean, orgSetting: boolean): boolean {
+  private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {
     const setting = systemSetting ? orgSetting : systemSetting;
 
-    return currentUser.isAdmin || setting;
+    return Boolean(currentUser.isAdmin || setting);
   }
 }
 

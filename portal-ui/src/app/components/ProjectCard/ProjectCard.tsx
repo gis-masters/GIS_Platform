@@ -12,9 +12,9 @@ import '!style-loader!css-loader!sass-loader!./ProjectCard.scss';
 const cnProjectCard = cn('ProjectCard');
 
 interface ProjectCardProps {
-  project?: CrgProject;
+  project: CrgProject;
   className?: string;
-  cardRef: RefObject<HTMLDivElement>;
+  cardRef?: RefObject<HTMLDivElement>;
 }
 
 export const ProjectCard: FC<ProjectCardProps> = ({ className, project, cardRef }) => (

@@ -1,7 +1,6 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
-import { organizationSettings, OrgSettings } from '../../../../stores/OrganizationSettings.store';
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { Form } from '../../Form';
@@ -9,7 +8,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/file',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 interface TestData extends Record<string, unknown> {
   certificate?: FileInfo[];
@@ -100,39 +99,7 @@ const valueMultipleScroll: TestData = { photos: [...multipleFilesData, ...multip
 const completedCompoundValue: TestData = { files: completedCompoundFilesData };
 const notCompletedCompoundFilesDataValue: TestData = { files: notCompletedCompoundFilesData };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
-
-const settings: OrgSettings = {
-  id: 10,
-  organization: {
-    createLibraryItem: true,
-    createProject: true,
-    dataManagement: true,
-    downloadFiles: true,
-    downloadXml: true,
-    editProjectLayer: true
-  },
-  system: {
-    createLibraryItem: true,
-    createProject: true,
-    dataManagement: true,
-    downloadFiles: true,
-    downloadXml: true,
-    editProjectLayer: true
-  }
-};
-
-const availableOrgsSettings: Record<string, string> = {
-  downloadXml: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
-  createLibraryItem: 'Создание элементов в библиотеке',
-  editProjectLayer: 'Настройка слоев проекта',
-  dataManagement: 'Управление данными',
-  createProject: 'Создание проекта',
-  downloadFiles: 'Скачать документ'
-};
-
-organizationSettings.setSettings(settings);
-organizationSettings.setAvailableSettings(availableOrgsSettings);
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const SingleEditable = Template.bind({});
 SingleEditable.args = {

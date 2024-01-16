@@ -1,9 +1,9 @@
 import { InternalAxiosRequestConfig } from 'axios';
 
-import { OldSchema } from '../../../src/app/services/data/schema/schemaOld.models';
-import { SyntheticController } from './_master';
-import { schemas } from '../data/schemas';
-import { err404 } from '../utils';
+import { OldSchema } from '../../../../src/app/services/data/schema/schemaOld.models';
+import { SyntheticController } from '../masterController';
+import { schemas } from '../../data/schemas';
+import { err404 } from '../../utils';
 
 class SchemasSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/schemas$/;

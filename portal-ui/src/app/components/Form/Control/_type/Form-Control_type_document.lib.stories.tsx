@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
@@ -7,7 +7,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/document/lib',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const field: PropertySchema = {
   propertyType: PropertyType.DOCUMENT,
@@ -15,7 +15,7 @@ const field: PropertySchema = {
   title: 'Регламенты'
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const AnyLibrary = Template.bind({});
 AnyLibrary.args = {

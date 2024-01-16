@@ -122,15 +122,17 @@ export default class Projects extends Component {
     const containerElem = this.thisRef.current;
     const projectElem = this.newProjectRef.current;
 
-    if (containerElem.scrollTop < projectElem.offsetTop + projectElem.offsetHeight) {
-      containerElem.scrollTo({ top: projectElem.offsetTop + projectElem.offsetHeight, behavior: 'smooth' });
-    }
-    if (containerElem.scrollTop > projectElem.offsetTop) {
-      containerElem.scrollTo({ top: projectElem.offsetTop - projectElem.offsetHeight, behavior: 'smooth' });
+    if (containerElem) {
+      if (containerElem.scrollTop < projectElem.offsetTop + projectElem.offsetHeight) {
+        containerElem.scrollTo({ top: projectElem.offsetTop + projectElem.offsetHeight, behavior: 'smooth' });
+      }
+      if (containerElem.scrollTop > projectElem.offsetTop) {
+        containerElem.scrollTo({ top: projectElem.offsetTop - projectElem.offsetHeight, behavior: 'smooth' });
+      }
     }
 
     await sleep(2000);
-    this.setNewProjectId(null);
+    this.setNewProjectId(0);
   }
 
   @action

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
 
 import { projectsService } from './gis/projects/projects.service';
 import { allProjects } from '../stores/AllProjects.store';
@@ -8,7 +7,7 @@ import { services } from './services';
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectsGuardService implements CanActivate {
+export class ProjectsGuardService {
   async canActivate(): Promise<boolean> {
     try {
       await projectsService.initAllProjectsStore();

@@ -2,7 +2,7 @@ import { AxiosAdapter, AxiosError } from 'axios';
 
 import { http } from '../../src/app/services/api/http.service';
 import { sleep } from '../../src/app/services/util/sleep';
-import { SyntheticController, selectController } from './controllers/_master';
+import { SyntheticController, selectController } from './controllers/masterController';
 
 export function initSyntheticApi() {
   http.axios.interceptors.request.use(async config => {
@@ -17,7 +17,9 @@ export function initSyntheticApi() {
         });
       }
 
-      await sleep(Math.random() * 500);
+      if (!config.url.includes('organizations/known-settings') && !config.url.includes('organizations/settings')) {
+        await sleep(Math.random() * 500);
+      }
 
       const controller = selectController(config.url);
       const method = config.method?.toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete';

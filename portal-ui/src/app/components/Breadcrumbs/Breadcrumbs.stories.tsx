@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Slider } from '@mui/material';
 import { AllInclusive, HomeOutlined, SvgIconComponent, WidthFull, WidthNormal, WidthWide } from '@mui/icons-material';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { cn } from '@bem-react/classname';
 
 import { Breadcrumbs, BreadcrumbsItemData } from './Breadcrumbs';
@@ -13,7 +13,7 @@ const cnBreadcrumbsStory = cn('BreadcrumbsStory');
 export default {
   title: 'Breadcrumbs',
   component: Breadcrumbs
-} as ComponentMeta<typeof Breadcrumbs>;
+};
 
 const MIN = 80;
 const MAX = 1000;
@@ -22,7 +22,7 @@ function minMax(value: number) {
   return Math.max(Math.min(value, MAX), MIN);
 }
 
-const Template: ComponentStory<typeof Breadcrumbs> = props => {
+const Template: StoryFn<typeof Breadcrumbs> = props => {
   const [maxWidth, setMaxWidth] = useState(MAX);
   let Icon: SvgIconComponent = AllInclusive;
 

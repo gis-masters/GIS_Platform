@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AxiosError } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
@@ -9,7 +9,7 @@ import { projectsService } from './gis/projects/projects.service';
 @Injectable({
   providedIn: 'root'
 })
-export class WorkflowGuardService implements CanActivate {
+export class WorkflowGuardService {
   constructor(
     private logger: NGXLogger,
     private router: Router
@@ -18,7 +18,7 @@ export class WorkflowGuardService implements CanActivate {
   async canActivate(route: ActivatedRouteSnapshot): Promise<boolean> {
     try {
       const id = (route.params as Record<string, string>)?.projectId;
-      await projectsService.fetchCurrent(id && Number(id));
+      await projectsService.fetchCurrent(Number(id));
 
       if (currentProject.id) {
         return true;

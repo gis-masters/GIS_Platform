@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { DocumentInfo } from '../../../Documents/Documents';
@@ -8,7 +8,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/document/view',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 interface TestData extends Record<string, unknown> {
   permissive_document?: string;
@@ -53,7 +53,7 @@ const valueMultipleScroll: TestData = {
   reglaments: JSON.stringify([...multipleDocumentsData, ...multipleDocumentsData])
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const SingleEditable = Template.bind({});
 SingleEditable.args = {

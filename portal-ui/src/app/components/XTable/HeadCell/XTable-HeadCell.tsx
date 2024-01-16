@@ -119,7 +119,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
         {filterable && (
           <FilterComponent
             className={col.CustomFilterComponent && cnXTableFilter({ type: 'custom' })}
-            field={col.field as string}
+            field={col.field}
             type={type}
             options={col.settings?.options}
             filterQuery={filterQuery}

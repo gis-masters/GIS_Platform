@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
@@ -7,7 +7,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/choice',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const emptyValue = {};
 
@@ -32,7 +32,7 @@ const choiceField: PropertySchemaChoice[] = [
 const value = { address: 'address1' };
 const longValue = { address: 'address3' };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const LongValueEditable = Template.bind({});
 LongValueEditable.args = {

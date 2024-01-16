@@ -294,7 +294,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
     return cols.filter(
       ({ field, hidden }) =>
-        !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field as string)
+        !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field)
     );
   }
 

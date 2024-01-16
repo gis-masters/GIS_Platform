@@ -20,7 +20,7 @@ export interface ActionsItemProps extends IClassNameProps {
   onClick?(): void;
   submenu?: ReactNode[];
   menuOpen?: boolean;
-  size?: IconButtonProps['size']
+  size?: IconButtonProps['size'];
 }
 
 export const ActionsItemBase: FC<ActionsItemProps> = () => <></>;

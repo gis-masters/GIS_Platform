@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Resolve } from '@angular/router';
 
 import { usersService } from '../auth/users/users.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CurrentUserResolver implements Resolve<void> {
+export class CurrentUserResolver {
   /**
    * Сходим за инфой пользователя/организации перед загрузкой страницы
    */

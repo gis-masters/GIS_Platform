@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { Form } from '../../Form';
 import { MinimizedCrgUser } from '../../../../services/auth/users/users.models';
@@ -9,7 +9,7 @@ import { PropertySchema, PropertyType } from '../../../../services/data/schema/s
 export default {
   title: 'Form/Field/user',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const fieldsSingle: PropertySchema[] = [
   {
@@ -64,7 +64,7 @@ const valueMultipleScroll = {
   bosses: JSON.stringify([...multipleUsersData, ...multipleUsersData, ...multipleUsersData])
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const SingleEditable = Template.bind({});
 SingleEditable.args = {

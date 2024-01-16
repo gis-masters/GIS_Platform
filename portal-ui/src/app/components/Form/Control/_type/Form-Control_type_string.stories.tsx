@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchemaString, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
@@ -7,7 +7,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/string',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const emptyValue = {};
 
@@ -25,7 +25,7 @@ const longValue = {
   zu: 'очень длинное описание земельного участка которое содержит чрезмерное количество ненужной информации, которая тем не менее может быть нужной только лишь для того, что бы использовать её в различных тестах и прочей возможно нужной ереси, и еще очень длинное описание земельного участка которое содержит чрезмерное количество ненужной информации, которая тем не менее может быть нужной только лишь для того, что бы использовать её в различных тестах и прочей возможно нужной ереси'
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const LongValueEditable = Template.bind({});
 LongValueEditable.args = {

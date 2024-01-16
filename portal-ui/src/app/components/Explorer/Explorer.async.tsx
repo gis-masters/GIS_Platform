@@ -3,7 +3,7 @@ import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NavigationStart, RouterEvent } from '@angular/router';
+import { NavigationStart } from '@angular/router';
 import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
 import { chunk, cloneDeep, isEqual } from 'lodash';
@@ -97,7 +97,7 @@ export default class Explorer extends Component<ExplorerProps> {
 
     // назад и вперёд по истории браузера
     if (urlChangeEnabled) {
-      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async (event: RouterEvent) => {
+      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(async event => {
         if (event instanceof NavigationStart && !this.store.restoringFromUrl && !this.savingToUrl) {
           const url = new URL(location.origin + event.url);
           await this.restoreStateFromUrl(url);

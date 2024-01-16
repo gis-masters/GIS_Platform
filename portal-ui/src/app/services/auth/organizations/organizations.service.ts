@@ -2,15 +2,16 @@ import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
 
 import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
-import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
+import { PropertySchema, PropertyType, SimpleSchema } from '../../data/schema/schema.models';
 import { Toast } from '../../../components/Toast/Toast';
 
 import { organizationsClient } from './organizations.client';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;
 
-  async fetch() {
+  async loadSettings() {
     try {
       const settings = await organizationsClient.getOrganizationSettings();
       organizationSettings.setSettings(settings);
@@ -29,25 +30,27 @@ class OrganizationsService {
 
   async setOrganizationSettings(settings: OrgSettings): Promise<void> {
     await organizationsClient.setOrganizationSettings(settings);
-    await this.fetch();
+    await this.loadSettings();
   }
 
   async deleteOrganization(orgId: number): Promise<void> {
     await organizationsClient.deleteOrganization(orgId);
-    await this.fetch();
+    await this.loadSettings();
   }
 
   @boundMethod
   async __clearAllTestOrganizations(): Promise<void> {
-    for (const org of organizationSettings.systemSettings) {
-      if (org.name?.startsWith('Hogwarts') || org.name?.startsWith('Другая организация')) {
-        try {
-          await this.deleteOrganization(org.id);
-          // eslint-disable-next-line no-console
-          console.log(`Тестовая организация "${org.name}" удалена`);
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(`Ошибка удаления тестовой организации "${org.name}"`, error);
+    if (organizationSettings.systemSettings) {
+      for (const org of organizationSettings.systemSettings) {
+        if (org.name?.startsWith('Hogwarts') || org.name?.startsWith('Другая организация')) {
+          try {
+            await this.deleteOrganization(org.id);
+            // eslint-disable-next-line no-console
+            console.log(`Тестовая организация "${org.name}" удалена`);
+          } catch (error) {
+            // eslint-disable-next-line no-console
+            console.log(`Ошибка удаления тестовой организации "${org.name}"`, error);
+          }
         }
       }
     }
@@ -57,16 +60,18 @@ class OrganizationsService {
     const settingsKeys = Object.keys(settings);
 
     return {
-      properties: settingsKeys.map(item => {
-        if (organizationSettings.availableOrgsSettings[item]) {
-          return {
-            name: item,
-            title: organizationSettings.availableOrgsSettings[item],
-            propertyType: PropertyType.BOOL,
-            hidden: systemManagement ? false : !organizationSettings.orgSettings?.system[item]
-          };
-        }
-      })
+      properties: settingsKeys
+        .map((item): PropertySchema | undefined => {
+          if (organizationSettings.availableOrgsSettings?.[item]) {
+            return {
+              name: item,
+              title: organizationSettings.availableOrgsSettings[item],
+              propertyType: PropertyType.BOOL,
+              hidden: systemManagement ? false : !organizationSettings.orgSettings?.system?.[item]
+            };
+          }
+        })
+        .filter(notFalsyFilter)
     };
   }
 

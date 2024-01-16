@@ -1,6 +1,6 @@
 import React from 'react';
 import { action, observable } from 'mobx';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 
@@ -20,7 +20,7 @@ import { FormStoryActions, cnFormStoryActions } from '../FormStoryActions/FormSt
 export default {
   title: 'Form',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 interface TestData {
   name: string;
@@ -319,7 +319,7 @@ const storyActions = (
   </FormStoryActions>
 );
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const ContentOnly = Template.bind({});
 ContentOnly.args = {

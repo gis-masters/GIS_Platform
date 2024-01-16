@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { XTable, XTableProps } from './../../XTable';
 import { XTableColumn, XTableExtraColumnType } from './../../XTable.models';
@@ -8,7 +8,7 @@ import { Template } from '../XTable-Filter-story-template';
 export default {
   title: 'XTable/Cols',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
 interface TestData {
   id: number;
@@ -28,7 +28,7 @@ const cols: XTableColumn<TestData>[] = [
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const TypeId = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeId = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeId.args = {
   data,
   cols,

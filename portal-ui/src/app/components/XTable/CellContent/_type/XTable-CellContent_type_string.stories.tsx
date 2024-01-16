@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { XTable, XTableProps } from './../../XTable';
 
@@ -18,7 +18,7 @@ interface TestData {
 export default {
   title: 'XTable/CellContent',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
 const testDataForTextOverflowInTables = [
   {
@@ -39,7 +39,7 @@ const cols: XTableColumn<TestData>[] = [
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const TypeStringOverflow = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeStringOverflow = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeStringOverflow.args = {
   data: testDataForTextOverflowInTables,
   cols

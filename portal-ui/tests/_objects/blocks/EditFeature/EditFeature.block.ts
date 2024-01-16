@@ -71,7 +71,7 @@ class EditFeatureBlock extends Block {
   async openGeometryTab(): Promise<void> {
     const $container = await editFeatureBlock.$('container');
 
-    const $geometryTab = await $container.$('.mat-tab-label=Геометрия');
+    const $geometryTab = await $container.$('.mdc-tab__text-label=Геометрия');
     await $geometryTab.waitForClickable();
     await $geometryTab.click();
     await sleep(500); // Анимация перелистывания ангуларовского таба

@@ -92,7 +92,7 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
         coordinates.push(...entity.geometry.coordinates[0][0]);
       }
       const coordinatesRows = await Promise.all(
-        coordinates.map(([x, y], n) => this.renderFragment('oneCoordinate', { n, x, y }))
+        coordinates.map(([x, y], n) => this.renderFragment('oneCoordinate', { n: n + 1, x, y }))
       );
       const coordinatesRowsFragment = coordinatesRows.join('');
       coordinatesFragment = await this.renderFragment('coordinates', { coordinates: coordinatesRowsFragment });

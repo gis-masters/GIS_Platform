@@ -115,7 +115,14 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
         <DialogActions>
           <ActionsLeft>{additionalAction}</ActionsLeft>
           <ActionsRight>
-            <Button disabled={disabled} form={htmlId} color='primary' loading={this.busy} type='submit' {...actionButtonProps}>
+            <Button
+              disabled={disabled}
+              form={htmlId}
+              color='primary'
+              loading={this.busy}
+              type='submit'
+              {...actionButtonProps}
+            >
               {actionButtonProps.children || 'Отправить'}
             </Button>
             {!unclosable && (

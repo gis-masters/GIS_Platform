@@ -127,3 +127,9 @@
 .not-editable-form-fields {
   height: 58px;
 }
+
+.close-button {
+  padding: 6px;
+
+  --mdc-icon-button-state-layer-size: 36px;
+}

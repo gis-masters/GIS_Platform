@@ -21,7 +21,7 @@
         *ngIf="updatingAllowed && !isNew && mode !== 'multipleEdit'"
         class="del-button"
         mat-stroked-button
-        color="error"
+        color="warn"
         (click)="deleteFeature()"
       >
         Удалить
@@ -37,7 +37,7 @@
     <crg-loading *ngIf="isSaveInProgress"></crg-loading>
 
     <ng-container *ngIf="mode === 'single'; else editAttrsForm">
-      <mat-tab-group class="tabs" [(selectedIndex)]="selectTab">
+      <mat-tab-group class="tabs" [(selectedIndex)]="selectTab" mat-stretch-tabs="false">
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
         </mat-tab>

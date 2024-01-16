@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 
@@ -8,7 +8,7 @@ import { Form } from '../Form';
 export default {
   title: 'Form/Field/_withRelations',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 interface TestData extends Record<string, unknown> {
   name: string;
@@ -36,7 +36,7 @@ const value: TestData = {
   name: 'Терентий'
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const Editable = Template.bind({});
 Editable.args = {

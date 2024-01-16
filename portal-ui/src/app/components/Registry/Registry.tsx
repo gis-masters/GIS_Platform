@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { NavigationEnd, RouterEvent } from '@angular/router';
+import { NavigationEnd } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 import { XTable, XTableProps } from '../XTable/XTable';
@@ -59,7 +59,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
     }
 
     if (this.props.urlChangeEnabled) {
-      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe((e: RouterEvent) => {
+      services.router.events.pipe(takeUntil(this.unsubscribe$)).subscribe(e => {
         if (e instanceof NavigationEnd) {
           if (this.selfInitedNavigationIds.includes(e.id)) {
             this.selfInitedNavigationIds.splice(this.selfInitedNavigationIds.indexOf(e.id), 1);

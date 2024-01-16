@@ -13,7 +13,7 @@ export interface UtilityDialogInfo {
   open?: boolean;
   okText?: string;
   cancelText?: string;
-  schema?: SimpleSchema
+  schema?: SimpleSchema;
 }
 
 class UtilityDialogsStore {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 
@@ -8,7 +8,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/userId',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const properties: PropertySchema[] = [
   {
@@ -21,7 +21,7 @@ const properties: PropertySchema[] = [
 
 const value = { boss: 3 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const Editable = Template.bind({});
 Editable.args = {

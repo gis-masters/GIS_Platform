@@ -1,10 +1,10 @@
 import { InternalAxiosRequestConfig } from 'axios';
 
-import { LibraryRecordRaw } from '../../../src/app/services/data/library/library.models';
-import { Role } from '../../../src/app/services/data/permissions/permissions.models';
-import { libraryRecords } from '../data/libraryRecords';
-import { SyntheticController } from './_master';
-import { err404 } from '../utils';
+import { LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
+import { Role } from '../../../../src/app/services/data/permissions/permissions.models';
+import { libraryRecords } from '../../data/libraryRecords';
+import { SyntheticController } from '../masterController';
+import { err404 } from '../../utils';
 
 class LibraryRecordSyntheticController implements SyntheticController {
   pattern = /^.*\/api\/data\/document-libraries\/([^?\/#]*)\/records\/(\d*)$/;

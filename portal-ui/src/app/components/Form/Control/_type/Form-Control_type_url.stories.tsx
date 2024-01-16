@@ -1,10 +1,10 @@
 import React from 'react';
-import { action, observable } from 'mobx';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { IObservableArray, action, observable } from 'mobx';
+import { StoryFn } from '@storybook/react';
 import { Biotech } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
-import { validateFormValue } from '../../../../services/formValidation.service';
+import { FieldErrors, validateFormValue } from '../../../../services/formValidation.service';
 import { Form } from '../../Form';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
@@ -13,7 +13,7 @@ import { FormStoryActions, cnFormStoryActions } from '../../../FormStoryActions/
 export default {
   title: 'Form/Field/url',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 interface TestData extends Record<string, unknown> {
   documents: string;
@@ -22,8 +22,8 @@ interface TestData extends Record<string, unknown> {
 const emptyValue: Partial<TestData> = {};
 
 const errors = observable([]);
-const errorsField = observable([]);
-const emptyField = observable([]);
+const errorsField: IObservableArray<FieldErrors> = observable<FieldErrors>([]);
+const emptyField: IObservableArray<FieldErrors> = observable<FieldErrors>([]);
 
 const testFields: PropertySchema[] = [
   {
@@ -160,7 +160,7 @@ const validateEmptyFields = action(() => {
   emptyField.splice(0, emptyField.length, ...validateFormValue(value, emptyFields));
 });
 
-const actionFunction = async (formValue: TestData) => {
+const actionFunction = async (formValue: unknown) => {
   await sleep(2000 * Math.random());
   const errors = validateFormValue(formValue, testFields);
 
@@ -173,7 +173,7 @@ const setFormValue = action((changedValue: Partial<TestData> = {}) => {
   Object.assign(value, emptyValue, changedValue);
 });
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const EditableUrl = Template.bind({});
 EditableUrl.args = {

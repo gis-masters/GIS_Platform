@@ -1,5 +1,5 @@
-import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 import { LibraryRecordRaw } from '../../../src/app/services/data/library/library.models';
+import { Role } from '../../../src/app/services/data/permissions/permissions.models';
 
 interface LocalLibraryRecord extends LibraryRecordRaw {
   _role?: Role;
@@ -37,7 +37,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:06:31',
       inbox_data_key: null,
       title: 'Советский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 51,
@@ -52,8 +51,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35652000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -62,7 +60,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:06:19',
       inbox_data_key: null,
       title: 'Симферопольский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 19,
@@ -77,8 +74,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35647000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -87,7 +83,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:05:56',
       inbox_data_key: null,
       title: 'Сакский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 8,
@@ -102,8 +97,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35643000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -112,7 +106,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:05:43',
       inbox_data_key: null,
       title: 'Раздольненский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 7,
@@ -127,8 +120,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35639000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -137,7 +129,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:05:22',
       inbox_data_key: null,
       title: 'Первомайский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 6,
@@ -152,8 +143,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35635000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -162,7 +152,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:05:07',
       inbox_data_key: null,
       title: 'Нижнегорский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 18,
@@ -177,8 +166,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35631000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -187,7 +175,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:04:56',
       inbox_data_key: null,
       title: 'Ленинский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 115,
@@ -202,8 +189,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35627000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -212,7 +198,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:04:44',
       inbox_data_key: null,
       title: 'Красноперекопский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 114,
@@ -227,8 +212,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35623000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -237,7 +221,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:03:42',
       inbox_data_key: null,
       title: 'Красногвардейский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 113,
@@ -252,8 +235,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35620000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -262,7 +244,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:03:10',
       inbox_data_key: null,
       title: 'Кировский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 94,
@@ -277,8 +258,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35616000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -287,7 +267,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:02:31',
       inbox_data_key: null,
       title: 'Джанкойский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 93,
@@ -302,8 +281,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35611000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -312,7 +290,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:02:09',
       inbox_data_key: null,
       title: 'Белогорский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 92,
@@ -327,8 +304,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35607000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -337,7 +313,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:00:52',
       inbox_data_key: null,
       title: 'Бахчисарайский муниципальный район',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 91,
@@ -352,8 +327,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35604000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -362,7 +336,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:00:13',
       inbox_data_key: null,
       title: 'г. Ялта',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 23,
@@ -377,8 +350,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35729000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -387,7 +359,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 15:00:00',
       inbox_data_key: null,
       title: 'г. Феодосия',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 22,
@@ -402,8 +373,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35726000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -412,7 +382,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 14:59:33',
       inbox_data_key: null,
       title: 'г. Судак',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 21,
@@ -427,8 +396,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35723000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -437,7 +405,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 14:59:19',
       inbox_data_key: null,
       title: 'г. Симферополь',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 20,
@@ -452,8 +419,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35701000001',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -462,7 +428,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 14:59:11',
       inbox_data_key: null,
       title: 'г. Саки',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 61,
@@ -477,8 +442,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35721000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     },
     {
       file_path: null,
@@ -487,7 +451,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_at: '2021-04-29 14:59:00',
       inbox_data_key: null,
       title: 'г. Красноперекопск',
-      type: null,
       path: '/root',
       doc_name: null,
       id: 60,
@@ -502,8 +465,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       size: null,
       oktmo: '35718000',
       doc_status: null,
-      territory_key: null,
-      inner_path: null
+      territory_key: null
     }
   ],
 
@@ -569,7 +531,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null,
       inner_path: '/opt/file_storage/b726dcb0-1aa2.gml'
@@ -591,7 +552,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       org_name: null,
       last_modified: '2022-08-05 12:19:08',
       approve_date: '2022-08-07 00:00:00',
@@ -609,7 +569,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -648,7 +607,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -669,7 +627,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       org_name: null,
       last_modified: '2022-08-05 12:07:02',
       approve_date: '2022-08-07 00:00:00',
@@ -687,7 +644,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -709,7 +665,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       org_name: null,
       last_modified: '2022-08-05 12:05:10',
       approve_date: '2022-08-07 00:00:00',
@@ -727,7 +682,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -747,7 +701,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12348,
       org_name: null,
       last_modified: '2022-08-05 11:46:43',
@@ -766,7 +719,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -786,7 +738,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12347,
       org_name: null,
       last_modified: '2022-08-04 14:26:36',
@@ -805,7 +756,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -825,7 +775,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12346,
       org_name: null,
       last_modified: '2022-08-03 13:54:59',
@@ -844,7 +793,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -864,7 +812,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12345,
       org_name: null,
       last_modified: '2022-08-03 13:51:31',
@@ -883,7 +830,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -896,14 +842,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'тест',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12332,
       org_name: null,
       last_modified: '2022-06-22 16:00:21',
@@ -917,11 +861,9 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_by: 'arh_grad_rk@mail.ru',
       classid: null,
       size: null,
-      oktmo: null,
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -934,14 +876,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Орлиновское участковое лесничество',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 12328,
       org_name: null,
       last_modified: '2022-06-16 15:29:45',
@@ -955,11 +895,9 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       created_by: 'arh_grad_rk@mail.ru',
       classid: null,
       size: null,
-      oktmo: null,
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -972,14 +910,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Черноморский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 281,
       org_name: null,
       last_modified: '2021-04-29 15:06:45',
@@ -997,7 +933,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1010,14 +945,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Советский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 280,
       org_name: null,
       last_modified: '2021-04-29 15:06:31',
@@ -1035,7 +968,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1048,14 +980,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Симферопольский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 279,
       org_name: null,
       last_modified: '2021-04-29 15:06:19',
@@ -1073,7 +1003,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1086,14 +1015,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Сакский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 278,
       org_name: null,
       last_modified: '2021-04-29 15:05:56',
@@ -1111,7 +1038,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1124,14 +1050,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Раздольненский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 277,
       org_name: null,
       last_modified: '2021-04-29 15:05:43',
@@ -1149,7 +1073,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1163,14 +1086,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Первомайский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 276,
       org_name: null,
       last_modified: '2021-04-29 15:05:22',
@@ -1188,7 +1109,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1201,14 +1121,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Нижнегорский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 275,
       org_name: null,
       last_modified: '2021-04-29 15:05:07',
@@ -1226,7 +1144,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1239,14 +1156,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Ленинский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 274,
       org_name: null,
       last_modified: '2021-04-29 15:04:56',
@@ -1264,7 +1179,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     },
@@ -1277,14 +1191,12 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       scale: null,
       inbox_data_key: null,
       title: 'Красноперекопский муниципальный район',
-      type: null,
       test_value: null,
       path: '/root',
       number: null,
       letter_number: null,
       method_sending: null,
       doc_name: null,
-      details: null,
       id: 273,
       org_name: null,
       last_modified: '2021-04-29 15:04:44',
@@ -1302,7 +1214,6 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       sender: null,
       doc_status: null,
       territory_key: null,
-      native_crs: null,
       is_public: false,
       developer: null
     }

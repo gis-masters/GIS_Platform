@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { DebouncedFunc, debounce } from 'lodash';
 import { AxiosError } from 'axios';
 
 import { allUsers } from '../../../stores/AllUsers.store';
@@ -13,7 +13,7 @@ import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
 class UsersService {
   private static _instance: UsersService;
   private usersListStoreInited = false;
-  private debouncedFetchUsersListStore: () => Promise<void>;
+  private debouncedFetchUsersListStore: DebouncedFunc<() => Promise<void>>;
   private allUsersRequest?: Promise<void> | null;
 
   private constructor() {
@@ -42,7 +42,7 @@ class UsersService {
       }
     }
 
-    await organizationsService.fetch();
+    await organizationsService.loadSettings();
   }
 
   async getAll(): Promise<CrgUser[]> {

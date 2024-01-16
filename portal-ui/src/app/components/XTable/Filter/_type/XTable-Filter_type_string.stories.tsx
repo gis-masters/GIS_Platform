@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { SortParams } from '../../../../services/util/sortObjects';
 
@@ -10,7 +10,7 @@ import { Template } from '../XTable-Filter-story-template';
 export default {
   title: 'XTable/Cols',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
 interface TestData {
   id: number;
@@ -110,7 +110,7 @@ const defaultSort: SortParams<TestData> = { field: 'title', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const TypeString = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeString = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeString.args = {
   data,
   cols,

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
@@ -16,9 +16,9 @@ import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
 export default {
   title: 'XTable',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
-const Template: ComponentStory<typeof XTable> = args => <XTable {...args} />;
+const Template: StoryFn<typeof XTable> = args => <XTable {...args} />;
 
 export interface TestData {
   id: number;
@@ -139,7 +139,7 @@ async function getData({
   return [paged, Math.ceil(filtered.length / pageSize)];
 }
 
-export const Small = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const Small = Template.bind({}) as StoryFn<XTableForTestData>;
 Small.args = {
   title: 'Таблица маленькая',
   data: smallData,
@@ -148,7 +148,7 @@ Small.args = {
   secondarySortField: 'id'
 };
 
-export const Standard = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const Standard = Template.bind({}) as StoryFn<XTableForTestData>;
 Standard.args = {
   title: 'Таблица с локальными данными',
   data: testDataForTables,
@@ -158,7 +158,7 @@ Standard.args = {
   filterable: true
 };
 
-export const Async = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const Async = Template.bind({}) as StoryFn<XTableForTestData>;
 Async.args = {
   title: 'Таблица с данными с сервера',
   getData,
@@ -169,7 +169,7 @@ Async.args = {
   filtersAlwaysEnabled: true
 };
 
-export const FilterPanel = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const FilterPanel = Template.bind({}) as StoryFn<XTableForTestData>;
 FilterPanel.args = {
   data: testDataForTables,
   cols: colsWithDocuments,
@@ -180,7 +180,7 @@ FilterPanel.args = {
   filtersAlwaysEnabled: true
 };
 
-export const Compact = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const Compact = Template.bind({}) as StoryFn<XTableForTestData>;
 Compact.args = {
   title: 'Компактная таблица с локальными данными',
   data: testDataForTables,
@@ -192,7 +192,7 @@ Compact.args = {
   singleLineContent: true
 };
 
-export const RedundantColWidth = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const RedundantColWidth = Template.bind({}) as StoryFn<XTableForTestData>;
 RedundantColWidth.args = {
   title: 'Таблица с избыточной шириной колонки',
   data: testDataForTables,

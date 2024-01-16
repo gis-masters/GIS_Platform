@@ -232,7 +232,7 @@ const routes: AppRoutes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule],
   providers: [WorkflowGuardService, ProjectsGuardService, OrgAdminGuardService]
 })

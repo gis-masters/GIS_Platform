@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
@@ -11,7 +11,7 @@ export default {
   component: SchemaDialog
 };
 
-const Template: ComponentStory<typeof SchemaDialog> = args => <SchemaDialog {...args} />;
+const Template: StoryFn<typeof SchemaDialog> = args => <SchemaDialog {...args} />;
 
 export const SchemaDialogPreview = Template.bind({});
 SchemaDialogPreview.args = {

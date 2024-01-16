@@ -1,7 +1,14 @@
 module.exports = {
   stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: ['@storybook/addon-links', '@storybook/addon-essentials'],
-  framework: '@storybook/react',
+
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {}
+  },
+
+  staticDirs: [{ from: '../src/assets', to: '/assets' }],
+
   webpackFinal: async (config, { configType }) => {
     /* @graphql-tools uses mjs modules, but storybook's webpack config doesn't
      * support them. This adds support. Once this is supported out of the box,
@@ -13,9 +20,11 @@ module.exports = {
       include: /node_modules/,
       type: 'javascript/auto'
     });
+
     return config;
   },
-  core: {
-    builder: 'webpack5'
+
+  docs: {
+    autodocs: false
   }
 };

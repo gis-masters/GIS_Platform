@@ -1,14 +1,14 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { FileIcon } from './FileIcon';
 
 export default {
   title: 'FileIcon',
   component: FileIcon
-} as ComponentMeta<typeof FileIcon>;
+};
 
-const Template: ComponentStory<typeof FileIcon> = args => <FileIcon {...args} />;
+const Template: StoryFn<typeof FileIcon> = args => <FileIcon {...args} />;
 
 export const Filled = Template.bind({});
 Filled.args = {

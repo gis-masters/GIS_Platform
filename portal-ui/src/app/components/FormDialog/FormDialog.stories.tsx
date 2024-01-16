@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { SaveOutlined } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
@@ -13,7 +13,7 @@ import { FormDialog } from './FormDialog';
 export default {
   title: 'FormDialog',
   component: FormDialog
-} as ComponentMeta<typeof FormDialog>;
+};
 
 interface TestData extends Record<string, unknown> {
   title: string;
@@ -41,7 +41,7 @@ const testFields: PropertySchema[] = [
   }
 ];
 
-const actionFunction = async (formValue: TestData) => {
+const actionFunction = async (formValue: unknown) => {
   await sleep(2000 * Math.random());
   const errors = validateFormValue(formValue, testFields);
 
@@ -50,7 +50,7 @@ const actionFunction = async (formValue: TestData) => {
   }
 };
 
-const Template: ComponentStory<typeof FormDialog> = args => <FormDialog {...args} />;
+const Template: StoryFn<typeof FormDialog> = args => <FormDialog {...args} />;
 
 export const Create = Template.bind({});
 Create.args = {

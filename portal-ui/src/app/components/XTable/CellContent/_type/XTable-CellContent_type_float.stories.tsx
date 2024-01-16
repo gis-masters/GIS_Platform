@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { ReactElement } from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
@@ -12,7 +12,7 @@ import { Template } from '../../Filter/XTable-Filter-story-template';
 export default {
   title: 'XTable/CellContent',
   component: XTable
-} as ComponentMeta<typeof XTable>;
+};
 
 interface TestData {
   id: number;
@@ -89,7 +89,7 @@ const defaultSort: SortParams<TestData> = { field: 'weight', asc: true };
 
 type XTableForTestData = (p: XTableProps<TestData>) => ReactElement;
 
-export const TypeFloat = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeFloat = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloat.args = {
   data,
   cols,
@@ -100,7 +100,7 @@ TypeFloat.args = {
   filtersAlwaysEnabled: true
 };
 
-export const TypeFloatWithPrecision3 = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeFloatWithPrecision3 = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloatWithPrecision3.args = {
   data,
   cols: colsWithPresicion3,
@@ -111,7 +111,7 @@ TypeFloatWithPrecision3.args = {
   filtersAlwaysEnabled: true
 };
 
-export const TypeFloatWithPrecision0 = Template.bind({}) as ComponentStory<XTableForTestData>;
+export const TypeFloatWithPrecision0 = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloatWithPrecision0.args = {
   data,
   cols: colsWithPresicion0,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 import { Send } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType, SimpleSchema } from '../../../../services/data/schema/schema.models';
@@ -13,7 +13,7 @@ import { Form } from '../../Form';
 export default {
   title: 'Form/Field/fias',
   component: Form
-} as ComponentMeta<typeof Form>;
+};
 
 const addressValue = {
   fias__address: 'Респ Крым, г.о. Алушта, г Алушта, ул Западная, д.12',
@@ -48,9 +48,9 @@ const schemaOktmoWithDefaultValue: SimpleSchema = {
   properties: [{ ...testField, searchMode: 'oktmo', defaultValue: fieldOktmoValue }]
 };
 
-const Template: ComponentStory<typeof Form> = args => <Form {...args} />;
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
-const actionFunction = async (val: Record<string, unknown>) => {
+const actionFunction = async (val: unknown) => {
   await sleep(Math.random() * 500);
   Toast.success(JSON.stringify(val, null, 2));
 };

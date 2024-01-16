@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { StoryFn } from '@storybook/react';
 
 import { ChooseXTableDialog } from './ChooseXTableDialog';
 import { PropertyType } from '../../services/data/schema/schema.models';
@@ -10,7 +10,7 @@ import { testDataForTables } from '../XTable/testDataForTables';
 export default {
   title: 'ChooseXTableDialog',
   component: ChooseXTableDialog
-} as ComponentMeta<typeof ChooseXTableDialog>;
+};
 
 const cols: XTableColumn<TestData>[] = [
   {
@@ -34,7 +34,7 @@ const cols: XTableColumn<TestData>[] = [
   }
 ];
 
-const Template: ComponentStory<typeof ChooseXTableDialog<TestData>> = args => <ChooseXTableDialog {...args} />;
+const Template: StoryFn<typeof ChooseXTableDialog<TestData>> = args => <ChooseXTableDialog {...args} />;
 
 export const Single = Template.bind({});
 Single.args = {

@@ -25,7 +25,7 @@
               "src/assets",
               "src/reglaments",
               {
-                "glob": "*",
+                "glob": "**",
                 "input": "bl",
                 "output": "bl/"
               }
@@ -84,18 +84,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gis-portal:build"
+            "buildTarget": "gis-portal:build"
           },
           "configurations": {
             "dev": {
-              "browserTarget": "gis-portal:build:dev"
+              "buildTarget": "gis-portal:build:dev"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gis-portal:build"
+            "buildTarget": "gis-portal:build"
           }
         },
         "test": {

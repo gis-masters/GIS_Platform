@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { usersService } from './auth/users/users.service';
 import { currentUser } from '../stores/CurrentUser.store';
@@ -7,7 +7,7 @@ import { currentUser } from '../stores/CurrentUser.store';
 @Injectable({
   providedIn: 'root'
 })
-export class SystemAdminGuardService implements CanActivate {
+export class SystemAdminGuardService {
   constructor(private router: Router) {}
 
   async canActivate(): Promise<boolean> {

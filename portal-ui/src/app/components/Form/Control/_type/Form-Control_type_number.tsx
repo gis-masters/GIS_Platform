@@ -74,7 +74,11 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
 
     const { maxValue } = property as PropertySchemaNumber;
 
-    if (typeof maxValue === 'number' && value > maxValue) {
+    if (
+      typeof maxValue === 'number' &&
+      (typeof value === 'number' || (typeof value === 'string' && !Number.isNaN(Number(value)))) &&
+      Number(value) > maxValue
+    ) {
       value = maxValue;
     }
 
