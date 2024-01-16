@@ -8,7 +8,7 @@ import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FeatureError } from '../services/map/map-link-following.service';
 import { FileInfo } from '../services/data/files/files.models';
 import { Properties } from '../components/edit-feature/edit-feature.component';
-import { SearchInfo } from '../components/GlobalSearch/GlobalSearch';
+import { SearchInfo } from '../components/SearchField/SearchField';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',

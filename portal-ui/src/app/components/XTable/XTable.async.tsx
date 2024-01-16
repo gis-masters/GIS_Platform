@@ -40,6 +40,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerless?: boolean;
   footerless?: boolean;
   showFiltersPanel?: boolean;
+  customActionFirst?: boolean;
   size?: 'small' | 'medium';
   singleLineContent?: boolean;
   cols: XTableColumn<T>[];
@@ -172,6 +173,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       size,
       loading = false,
       singleLineContent = false,
+      customActionFirst = false,
       containerProps,
       showFiltersPanel,
       getRowId = defaultRowIdGetter,
@@ -205,6 +207,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
               filterable={Boolean(filterable && !filtersAlwaysEnabled)}
               onChangePageSize={this.setPageSize}
               onToggleFilter={this.toggleFilter}
+              customActionFirst={customActionFirst}
               pageSize={this.pageSize}
             >
               {headerActions}

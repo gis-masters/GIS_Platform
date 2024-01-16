@@ -1,15 +1,19 @@
 import React, { ReactNode } from 'react';
+import { ViewListOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
+
 import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
+import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { currentUser } from '../../../../stores/CurrentUser.store';
+import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { formatDate } from '../../../../services/util/date.util';
+import { services } from '../../../../services/services';
+import { Link } from '../../../Link/Link';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
-import { Link } from '../../../Link/Link';
 
 declare module '../../Explorer.models' {
   export interface ExplorerItemPayloads {
@@ -62,10 +66,30 @@ export class ExplorerAdapterTypeTable {
   }
 
   static isFolder(): boolean {
-    return false;
+    return true;
   }
 
   static getActions(item: ExplorerItemData<VectorTable>): ReactNode {
     return <VectorTableActions vectorTable={item.payload} />;
+  }
+
+  static customOpenActionIcon(): ReactNode {
+    return (
+      <Tooltip title='Перейти в табличный вид'>
+        <ViewListOutlined />
+      </Tooltip>
+    );
+  }
+
+  static async customOpenAction(item: ExplorerItemData<VectorTable>): Promise<void> {
+    await services.provided;
+
+    services.ngZone.run(() => {
+      setTimeout(() => {
+        void services.router.navigateByUrl(
+          `/data-management/dataset/${item.payload.dataset}/vectorTable/${item.payload.identifier}/registry`
+        );
+      }, 0);
+    });
   }
 }

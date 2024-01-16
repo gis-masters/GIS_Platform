@@ -5,33 +5,34 @@ import { MapOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { Badge, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { getVectorTableConnections } from '../../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { FeatureInProjects } from '../../FeaturesInProjects/FeaturesInProjects';
-import { FileConnection } from '../../../services/data/files/files.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Loading } from '../../Loading/Loading';
-import { Button } from '../../Button/Button';
-import { IconButton } from '../../IconButton/IconButton';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
+import { FileConnection } from '../../services/data/files/files.models';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
+import { IconButton } from '../IconButton/IconButton';
+import { Loading } from '../Loading/Loading';
+import { Button } from '../Button/Button';
 
-const cnLibrarySearchItemActionsConnections = cn('LibrarySearchItemActions', 'Connections');
-const cnLibrarySearchItemActionsConnectionsDialog = cn('LibrarySearchItemActions', 'ConnectionsDialog');
+const cnFeatureConnections = cn('FeatureConnections', 'Connections');
+const cnFeatureConnectionsDialog = cn('FeatureConnections', 'ConnectionsDialog');
 
-interface LibrarySearchItemActionsConnectionsProps {
+interface FeatureConnectionsProps {
   featureId: string;
   vectorTable: VectorTable;
   as: ActionsItemVariant;
 }
 
 @observer
-export class LibrarySearchItemActionsConnections extends Component<LibrarySearchItemActionsConnectionsProps> {
+export class FeatureConnections extends Component<FeatureConnectionsProps> {
   @observable private dialogOpen = false;
   @observable private loading = false;
   @observable private connections: FileConnection[] = [];
+
   private currentVectorTableId = '';
 
-  constructor(props: LibrarySearchItemActionsConnectionsProps) {
+  constructor(props: FeatureConnectionsProps) {
     super(props);
     makeObservable(this);
   }
@@ -40,7 +41,7 @@ export class LibrarySearchItemActionsConnections extends Component<LibrarySearch
     await this.fetchConnections();
   }
 
-  async componentDidUpdate(prevProps: LibrarySearchItemActionsConnectionsProps) {
+  async componentDidUpdate(prevProps: FeatureConnectionsProps) {
     if (this.props.vectorTable.identifier !== prevProps.vectorTable.identifier) {
       this.dropConnections();
       await this.fetchConnections();
@@ -53,7 +54,7 @@ export class LibrarySearchItemActionsConnections extends Component<LibrarySearch
     return (
       <>
         <ActionsItem
-          className={cnLibrarySearchItemActionsConnections()}
+          className={cnFeatureConnections()}
           title='Размещено в проектах'
           as={as}
           icon={
@@ -73,7 +74,7 @@ export class LibrarySearchItemActionsConnections extends Component<LibrarySearch
         <Dialog
           open={this.dialogOpen}
           onClose={this.closeDialog}
-          PaperProps={{ className: cnLibrarySearchItemActionsConnectionsDialog() }}
+          PaperProps={{ className: cnFeatureConnectionsDialog() }}
           maxWidth='sm'
           fullWidth
         >

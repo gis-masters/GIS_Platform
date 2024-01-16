@@ -8,9 +8,9 @@ import { boundMethod } from 'autobind-decorator';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
 import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { SearchInProject } from '../../SearchInProject/SearchInProject';
 import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
 import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
-import { GlobalSearch } from '../../GlobalSearch/GlobalSearch';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { route, Pages } from '../../../stores/Route.store';
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -25,7 +25,7 @@ export class WorkspaceHeaderButtons extends Component {
   render() {
     return (
       <div className={cnWorkspaceHeaderButtons()}>
-        {route.data.page === Pages.MAP && <GlobalSearch />}
+        {route.data.page === Pages.MAP && <SearchInProject />}
         {route.data.page === Pages.DATA_MANAGEMENT && <CalculatorButton />}
         <CopyUrlButton inHeader />
         {route.data.page === Pages.MAP && <PrintMapButton />}

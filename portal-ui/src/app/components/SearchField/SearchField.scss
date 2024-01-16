@@ -1,4 +1,4 @@
-body .GlobalSearch {
+body .SearchField {
   display: inline-flex;
 
   &.Form {
@@ -6,8 +6,8 @@ body .GlobalSearch {
     padding: 0;
   }
 
-  &-SearchField .MuiInputBase-input,
-  &-SearchField .MuiInputBase-root {
+  &-Input_whiteStyle .MuiInputBase-input,
+  &-Input_whiteStyle .MuiInputBase-root {
     color: var(--white);
 
     &:hover,

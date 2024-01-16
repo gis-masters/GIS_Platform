@@ -27,6 +27,7 @@ import { SystemAdminGuardService } from './services/system-admin-guard.service';
 import { MessagesRegistryPageComponent } from './pages/messages-registry/messages-registry-page.component';
 import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
 import { TasksJournalPageComponent } from './pages/tasks-journal/tasks-journal-page.component';
+import { VectorTableRegistryPageComponent } from './pages/vector-table-registry/vector-table-registry-page.component';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -184,6 +185,15 @@ const routes: AppRoutes = [
     data: { page: Pages.REGISTRY }
   },
   {
+    path: 'data-management/dataset/:dataset/vectorTable/:vectorTable/registry',
+    component: VectorTableRegistryPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.REGISTRY }
+  },
+  {
     path: 'data-management/messages-registries/:tableName/registry',
     component: MessagesRegistryPageComponent,
     canActivate: [SystemAdminGuardService],
@@ -241,6 +251,7 @@ export const routingComponents = [
   SystemManagementPageComponent,
   DataManagementPageComponent,
   LibraryRegistryPageComponent,
+  VectorTableRegistryPageComponent,
   LibraryDocumentPageComponent,
   ServicesCalculatorPageComponent,
   RestorePasswordFormPageComponent,

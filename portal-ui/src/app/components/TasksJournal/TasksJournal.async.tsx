@@ -13,7 +13,7 @@ import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { communicationService } from '../../services/communication.service';
 import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
-import { TasksJournalSettings } from './Settings/TasksJournal-Settings';
+import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
 import { calculateValues } from '../../services/formValidation.service';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { Schema } from '../../services/data/schema/schema.models';
@@ -39,8 +39,8 @@ const cnTasksJournal = cn('TasksJournal');
 @observer
 export default class TasksJournal extends Component {
   @observable private hiddenFields: string[] = [];
-  @observable private schema: Schema;
-  @observable private primalSchema: Schema;
+  @observable private schema?: Schema;
+  @observable private primalSchema?: Schema;
   private defaultSort: SortParams<Task> = { field: 'id', asc: true };
   private defaultFilter: FilterQuery = registryDefaultFilter;
   private tableInvoke: XTableProps<Task>['invoke'] = {};
@@ -94,17 +94,19 @@ export default class TasksJournal extends Component {
               invoke={this.tableInvoke}
               headerActions={
                 <>
-                  <TasksJournalSettings
+                  <RegistrySettings
                     properties={this.schema?.properties || []}
                     hiddenFields={this.hiddenFields}
                     onChangeHiddenFields={this.setHiddenFields}
                   />
 
-                  <TasksJournalCreateButton
-                    icon={<PlaylistAdd />}
-                    schema={this.primalSchema}
-                    contentTypes={this.primalSchema.contentTypes}
-                  />
+                  {this.primalSchema?.contentTypes && (
+                    <TasksJournalCreateButton
+                      icon={<PlaylistAdd />}
+                      schema={this.primalSchema}
+                      contentTypes={this.primalSchema.contentTypes}
+                    />
+                  )}
                 </>
               }
             />
@@ -120,6 +122,10 @@ export default class TasksJournal extends Component {
 
   @computed
   private get cols(): XTableColumn<Task>[] {
+    if (!this.schema) {
+      return [];
+    }
+
     const actions: XTableColumn<Task> = {
       CellContent: this.renderActions,
       align: 'center',
@@ -162,14 +168,18 @@ export default class TasksJournal extends Component {
   }
 
   @boundMethod
-  private renderActions({ rowData }: { rowData: Task }): ReactElement {
+  private renderActions({ rowData }: { rowData: Task }): ReactElement | undefined {
+    if (!this.schema) {
+      return;
+    }
+
     return <TasksJournalActions schema={this.schema} className={cnTasksJournal('Actions')} task={rowData} as='menu' />;
   }
 
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[Task[], number]> {
     // костыль для корректной работы задач (+ починить заскипаные тесты если это нужно)
-    if (pageOptions.filter.is_folder) {
+    if (pageOptions?.filter?.is_folder) {
       delete pageOptions.filter.is_folder;
     }
 
@@ -193,7 +203,7 @@ export default class TasksJournal extends Component {
 
     return [
       tasks.map(task => {
-        const properties = this.primalSchema.properties;
+        const properties = this.primalSchema?.properties || [];
         const taskCalculated = calculateValues<Task>(task, properties) as Task & Record<string, ValueOf<Task>>;
         for (const property of properties) {
           taskCalculated[property.name] = convertToComplexField(property, task) as ValueOf<Task>;
@@ -214,7 +224,7 @@ export default class TasksJournal extends Component {
       this.getStorageKey(),
       JSON.stringify({
         hiddenFields: this.hiddenFields || [],
-        content_type_id: this.schema.appliedContentType || null
+        content_type_id: this.schema?.appliedContentType || null
       })
     );
   }
@@ -229,7 +239,7 @@ export default class TasksJournal extends Component {
       this.setHiddenFields(settings.hiddenFields);
     }
 
-    if (settings.content_type_id) {
+    if (settings.content_type_id && this.primalSchema) {
       this.setSchema(applyContentType(this.primalSchema, settings.content_type_id));
     }
   }
@@ -238,8 +248,12 @@ export default class TasksJournal extends Component {
   private updateSchema(pageOptions: PageOptions) {
     const { filter } = pageOptions;
     // костыль для корректной работы задач (+ починить заскипаные тесты если это нужно)
-    if (filter.is_folder) {
+    if (filter?.is_folder) {
       delete filter.is_folder;
+    }
+
+    if (!this.primalSchema) {
+      return;
     }
 
     const contentTypeId = getFieldFilterValue(filter, 'content_type_id') as FilterQuery;
@@ -255,7 +269,7 @@ export default class TasksJournal extends Component {
       const newContentType = mergeContentTypes(this.primalSchema, contentTypeId.$in as string[]);
       const newSchema = cloneDeep(this.primalSchema);
 
-      newSchema.contentTypes.push(newContentType);
+      newSchema.contentTypes?.push(newContentType);
 
       this.setSchema(applyContentType(newSchema, newContentType.id));
     }

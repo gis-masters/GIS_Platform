@@ -14,6 +14,7 @@ const cnXTableTitleBarActions = cn('XTable', 'TitleBarActions');
 interface XTableTitleBarActionsProps extends ChildrenProps {
   filterable: boolean;
   filterActive: boolean;
+  customActionFirst?: boolean;
   pageSize: number;
   onToggleFilter(): void;
   onChangePageSize(size: number): void;
@@ -22,15 +23,17 @@ interface XTableTitleBarActionsProps extends ChildrenProps {
 export const XTableTitleBarActions: FC<XTableTitleBarActionsProps> = ({
   children,
   filterActive,
+  customActionFirst,
   filterable,
   pageSize,
   onToggleFilter,
   onChangePageSize
 }) => (
   <div className={cnXTableTitleBarActions()}>
+    {customActionFirst && children}
     <XTablePageSize pageSize={pageSize} onChange={onChangePageSize} />
     <ToolbarDivider />
     {filterable && <FilterButton filterActive={filterActive} onClick={onToggleFilter} />}
-    {children}
+    {!customActionFirst && children}
   </div>
 );

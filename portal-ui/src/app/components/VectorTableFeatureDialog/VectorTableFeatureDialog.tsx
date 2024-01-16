@@ -3,11 +3,12 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { cn } from '@bem-react/classname';
 
 import { SearchSourceForFeature } from '../../services/data/search/search.model';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { VectorTableFeature } from '../VectorTableFeature/VectorTableFeature';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { FeatureActions } from '../FeatureActions/FeatureActions';
 import { TextBadge } from '../TextBadge/TextBadge';
-import { Button } from '../Button/Button';
 
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 
@@ -17,12 +18,19 @@ const cnVectorTableFeatureDialog = cn('VectorTableFeatureDialog');
 
 interface VectorTableFeatureProps {
   feature: WfsFeature;
+  vectorTable: VectorTable;
   open: boolean;
   onClose(): void;
   source?: SearchSourceForFeature;
 }
 
-export const VectorTableFeatureDialog: FC<VectorTableFeatureProps> = ({ feature, open, source, onClose }) => (
+export const VectorTableFeatureDialog: FC<VectorTableFeatureProps> = ({
+  feature,
+  open,
+  vectorTable,
+  source,
+  onClose
+}) => (
   <Dialog
     open={open}
     onClose={onClose}
@@ -45,7 +53,7 @@ export const VectorTableFeatureDialog: FC<VectorTableFeatureProps> = ({ feature,
     </DialogContent>
 
     <DialogActions>
-      <Button onClick={onClose}>Закрыть</Button>
+      <FeatureActions vectorTable={vectorTable} featureId={feature.id} onDialogClose={onClose} as='iconButton' />
     </DialogActions>
   </Dialog>
 );

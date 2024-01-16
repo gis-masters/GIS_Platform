@@ -20,6 +20,7 @@ export interface RegistryProps<T> {
   className?: string;
   secondarySortField?: keyof T;
   urlChangeEnabled?: boolean;
+  customActionFirst?: boolean;
   inDialog?: boolean;
   filtersAlwaysEnabled?: boolean;
   showFiltersPanel?: boolean;
@@ -81,8 +82,18 @@ export class Registry<T> extends Component<RegistryProps<T>> {
   }
 
   render() {
-    const { cols, id, getData, defaultSort, className, inDialog, headerActions, secondarySortField, invoke } =
-      this.props;
+    const {
+      cols,
+      id,
+      getData,
+      defaultSort,
+      className,
+      inDialog,
+      customActionFirst,
+      headerActions,
+      secondarySortField,
+      invoke
+    } = this.props;
 
     return (
       <XTable<T>
@@ -93,6 +104,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
         defaultSort={defaultSort}
         filtersAlwaysEnabled
         showFiltersPanel
+        customActionFirst={customActionFirst}
         secondarySortField={secondarySortField}
         defaultFilter={this.defaultFilter}
         invoke={invoke}

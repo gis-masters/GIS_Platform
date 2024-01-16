@@ -32,7 +32,9 @@ export async function getSearchRequest(search: ExplorerSearchValue): Promise<Sea
   if (search.type === 'FEATURE') {
     const dataset = search.path?.find(item => item.type === 'dataset')?.payload as Dataset;
 
-    if (dataset) {
+    if (search.source) {
+      searchRequest.sources = search.source;
+    } else if (dataset) {
       const tables = await getAllVectorTablesInDataset(dataset);
       const sources = tables.map(table => {
         return {

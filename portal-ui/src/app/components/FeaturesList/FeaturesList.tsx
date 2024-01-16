@@ -14,7 +14,7 @@ import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapService } from '../../services/map/map.service';
-import { SearchInfo } from '../GlobalSearch/GlobalSearch';
+import { SearchInfo } from '../SearchField/SearchField';
 import { services } from '../../services/services';
 import { mapStore } from '../../stores/Map.store';
 import { Loading } from '../Loading/Loading';

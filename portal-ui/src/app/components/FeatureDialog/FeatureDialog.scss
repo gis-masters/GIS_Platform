@@ -1,0 +1,14 @@
+.FeatureDialog {
+  &-TypeIcon {
+    position: relative;
+    top: -1px;
+
+    display: inline;
+
+    margin-right: 8px;
+  }
+
+  &-Feature {
+    max-height: calc(100vh - 200px);
+  }
+}

@@ -7,7 +7,7 @@ import { IReactionDisposer, reaction } from 'mobx';
 
 import { communicationService } from '../../services/communication.service';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
-import { SearchInfo } from '../GlobalSearch/GlobalSearch';
+import { SearchInfo } from '../SearchField/SearchField';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { mapStore } from '../../stores/Map.store';

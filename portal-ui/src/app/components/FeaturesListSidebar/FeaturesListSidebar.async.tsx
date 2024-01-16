@@ -8,7 +8,7 @@ import { IReactionDisposer, action, makeObservable, observable, reaction } from 
 
 import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
 import { communicationService } from '../../services/communication.service';
-import { SearchInfo } from '../GlobalSearch/GlobalSearch';
+import { SearchInfo } from '../SearchField/SearchField';
 import { sidebars } from '../../stores/Sidebars.store';
 import { mapStore } from '../../stores/Map.store';
 import { TabInner } from '../TabInner/TabInner';

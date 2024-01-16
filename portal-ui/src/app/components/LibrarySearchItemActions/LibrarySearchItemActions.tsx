@@ -13,8 +13,8 @@ import { LibraryRecord } from '../../services/data/library/library.models';
 import { SearchItemData } from '../../services/data/search/search.model';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 
-import { LibrarySearchItemActionsConnections } from './Connections/LibrarySearchItemActions-Connections';
 import { LibrarySearchItemActionsOpen } from './Open/LibrarySearchItemActions-Open';
+import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { Actions } from '../Actions/Actions.composed';
 
@@ -57,7 +57,7 @@ export class LibrarySearchItemActions extends Component<LibrarySearchItemActions
             <LibrarySearchItemActionsOpen item={item} libraryRecord={this.libraryRecord} as={as} />
 
             {item.type === 'FEATURE' && this.vectorTable && (
-              <LibrarySearchItemActionsConnections
+              <FeatureConnections
                 featureId={String(extractFeatureId(item.payload.id))}
                 vectorTable={this.vectorTable}
                 as={as}

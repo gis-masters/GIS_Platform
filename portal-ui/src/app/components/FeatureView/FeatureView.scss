@@ -1,0 +1,17 @@
+body .FeatureView {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  height: 100%;
+
+  &-FeatureCard {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+  }
+
+  &-Breadcrumbs {
+    margin-bottom: 10px;
+  }
+}

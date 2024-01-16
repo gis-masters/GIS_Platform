@@ -76,6 +76,7 @@ import { MessagesRegistryComponent } from './components/messages-registry/messag
 import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
 import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
 import { PhotoModePreviewerComponent } from './components/photo-mode-previewer/photo-mode-previewer.component';
+import { VectorTableRegistryComponent } from './components/vector-table-registry/vector-table-registry.component';
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { PhotoModePreviewerComponent } from './components/photo-mode-previewer/p
     FooterNgComponent,
     ImportGmlResultButtonComponent,
     LibraryRegistryComponent,
+    VectorTableRegistryComponent,
     LibraryDocumentPageContainerComponent,
     FormControlComponent,
     ServicesCalculatorComponent,

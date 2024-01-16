@@ -14,7 +14,7 @@ When('в диалоговом окне выбора источника данн�
 
 When('в диалоговом окне выбора источника данных я выбираю векторную таблицу {string}', async (datatable: string) => {
   const explorerBlock = new ExplorerBlock();
-  await explorerBlock.openExplorerItem(datatable);
+  await explorerBlock.selectExplorerItem(datatable);
 });
 
 When('я открываю созданный набор данных', async function (this: ScenarioScope) {
@@ -30,7 +30,7 @@ When('в созданной библиотеке документов я зах�
 
 When('в наборах данных я выбираю векторную таблицу {string}', async (datatable: string) => {
   const explorerBlock = new ExplorerBlock();
-  await explorerBlock.openExplorerItem(datatable);
+  await explorerBlock.selectExplorerItem(datatable);
 });
 
 When('я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы', async () => {
