@@ -17,7 +17,7 @@ import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
 import ru.mycrg.data_service.service.parsers.GmlParser;

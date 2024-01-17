@@ -4,7 +4,7 @@ import org.junit.Test;
 import ru.mycrg.auth_facade.AuthenticationFacade;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -6,8 +6,8 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.mappers.FeatureMapper;
-import ru.mycrg.data_service.service.CustomRuleCalculator;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -53,7 +53,7 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         throwIfNotMatchTableColumns(feature.getPropertyNames(),
                                     allColumnNames);
 
-        customRuleCalculator.culculate(schema, feature.getProperties())
+        customRuleCalculator.calculate(schema, feature.getProperties())
                             .forEach(feature::setProperty);
 
         Map<String, Object> modifiedProps = systemAttributeHandler

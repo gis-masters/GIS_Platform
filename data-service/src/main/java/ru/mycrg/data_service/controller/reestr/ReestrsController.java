@@ -12,7 +12,7 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
 import ru.mycrg.data_service.service.reestrs.ReestrService;
 import ru.mycrg.data_service.service.reestrs.ReestrsService;

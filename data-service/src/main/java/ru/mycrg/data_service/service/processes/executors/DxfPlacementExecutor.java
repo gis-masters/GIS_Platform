@@ -169,7 +169,7 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         String striped = StringUtils.stripFilenameExtension(filePath);
         String filename = StringUtils.getFilename(filePath);
         String encoding = "_as1251";
-        if (nonNull(filename) && !filename.contains(encoding)) {
+        if (!filename.contains(encoding)) {
             String fileEncoding = getFileEncoding(filePath);
             try {
                 if ("UTF-8".equalsIgnoreCase(fileEncoding)) {
@@ -183,13 +183,11 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                     log.debug("Нет необходимости в конвертации к кодировке 1251");
                 }
             } catch (IOException e) {
-                String msg = "Failed to convert to encoding 1251";
-                log.error(msg, e.getMessage(), e);
+                log.error("Не удалось конвертировать в кодировку 1251. По причине: {}", e.getMessage(), e);
 
                 throw new DataServiceException("Не удалось обработать файл");
             } catch (StorageException e) {
-                String msg = "Failed to delete temp file";
-                log.error(msg, e.getMessage(), e);
+                log.error("Не удалось удалить временный файл. По причине: {}", e.getMessage(), e);
 
                 throw new DataServiceException("Не удалось обработать файл");
             }

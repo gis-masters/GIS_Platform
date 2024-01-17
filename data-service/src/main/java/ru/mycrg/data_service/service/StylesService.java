@@ -12,6 +12,7 @@ import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.StorageException;
@@ -28,15 +29,20 @@ public class FileStorageService {
 
     private final Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
-    private final Path fileStoragePath;
     private final Path fileTrashPath;
+    private final Path fileStoragePath;
+    private final Path exportStoragePath;
 
     @Autowired
     public FileStorageService(Environment environment) {
         String path = environment.getRequiredProperty("crg-options.fileStoragePath");
+        String exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
 
-        fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
-        fileTrashPath = Paths.get(path + "/trash").toAbsolutePath().normalize();
+        this.fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
+        this.fileTrashPath = Paths.get(path + "/trash").toAbsolutePath().normalize();
+        this.exportStoragePath = Paths.get(exportStoragePath)
+                                      .toAbsolutePath()
+                                      .normalize();
 
         try {
             Files.createDirectories(fileTrashPath);
@@ -83,6 +89,26 @@ public class FileStorageService {
         }
     }
 
+    public Resource load(String fileName) {
+        try {
+            Path filePath = exportStoragePath.resolve(fileName).normalize();
+            log.debug("Try load file: {}", filePath);
+
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                log.debug("Success loaded");
+
+                return resource;
+            } else {
+                log.error("Resource not exist");
+                throw new NotFoundException(fileName);
+            }
+        } catch (MalformedURLException e) {
+            log.error("File not found", e);
+            throw new NotFoundException(fileName);
+        }
+    }
+
     public Resource loadAsResource(String path) throws MalformedURLStorageException, NoSuchFileStorageException {
         try {
             Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
@@ -97,11 +123,11 @@ public class FileStorageService {
         }
     }
 
-    public boolean deleteIfExists(String path) throws StorageException {
+    public void deleteIfExists(String path) throws StorageException {
         try {
             Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
 
-            return Files.deleteIfExists(filePath);
+            Files.deleteIfExists(filePath);
         } catch (IOException e) {
             throw new StorageException("Cant delete file: " + path, e);
         }
@@ -149,7 +175,7 @@ public class FileStorageService {
 
     @NotNull
     private String addDefaultExtension(String path) {
-        // если имя файла без расширения то добавить .blob
+        // если имя файла без расширения, то добавить .blob
         // как временный кастыль со времен когда в БД хранилось имя файла без расширения
         String filenameExtension = StringUtils.getFilenameExtension(path);
         if (filenameExtension == null) {

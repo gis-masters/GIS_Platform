@@ -17,7 +17,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.CsvHandler;
 import ru.mycrg.data_service.util.JsonConverter;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

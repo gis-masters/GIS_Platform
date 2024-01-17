@@ -15,7 +15,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Optional.ofNullable;
 
-
 @Aspect
 @Component
 public class NoContextTransactionAspect {
@@ -40,14 +39,16 @@ public class NoContextTransactionAspect {
                 });
     }
 
-    @AfterReturning(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)", returning = "f")
+    @AfterReturning(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)",
+                    returning = "f")
     void after(JoinPoint joinPoint, Object f) {
         if (threadDbConnections.get(Thread.currentThread()) != null) {
             threadDbConnections.remove(Thread.currentThread());
         }
     }
 
-    @AfterThrowing(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)", throwing = "ex")
+    @AfterThrowing(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)",
+                   throwing = "ex")
     void throwing(JoinPoint joinPoint, Exception ex) {
         if (threadDbConnections.get(Thread.currentThread()) != null) {
             threadDbConnections.remove(Thread.currentThread());

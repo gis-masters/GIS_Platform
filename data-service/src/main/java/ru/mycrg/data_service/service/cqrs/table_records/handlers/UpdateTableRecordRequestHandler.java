@@ -6,8 +6,8 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.CustomRuleCalculator;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -70,7 +70,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         oldProperties.putAll(preparedNewProps);
 
         // path feature by calculated values
-        customRuleCalculator.culculate(schema, oldProperties)
+        customRuleCalculator.calculate(schema, oldProperties)
                             .forEach(newFeature::setProperty);
 
         try {

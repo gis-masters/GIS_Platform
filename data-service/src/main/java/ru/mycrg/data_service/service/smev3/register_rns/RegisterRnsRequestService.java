@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.ISmevMessageConsumer;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;

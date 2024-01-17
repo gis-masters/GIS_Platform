@@ -9,7 +9,7 @@ import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 

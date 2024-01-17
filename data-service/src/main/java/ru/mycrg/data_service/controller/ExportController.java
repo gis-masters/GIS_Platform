@@ -14,9 +14,9 @@ import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.StorageService;
 import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.export.LayerValidationReportService;
+import ru.mycrg.data_service.service.storage.FileStorageService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -31,16 +31,16 @@ public class ExportController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(ExportController.class);
 
     private final List<Exporter> exporters;
-    private final StorageService storageService;
+    private final FileStorageService fileStorageService;
     private final LayerValidationReportService reporter;
 
     @Autowired
-    public ExportController(StorageService storageService,
+    public ExportController(FileStorageService fileStorageService,
                             LayerValidationReportService reporter,
                             List<Exporter> exporters) {
         this.exporters = exporters;
         this.reporter = reporter;
-        this.storageService = storageService;
+        this.fileStorageService = fileStorageService;
     }
 
     @PostMapping("/export")
@@ -68,7 +68,7 @@ public class ExportController extends BaseController {
     public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
         log.debug("Request to download file: {}", fileName);
 
-        Resource res = storageService.load(fileName);
+        Resource res = fileStorageService.load(fileName);
 
         return ResponseEntity
                 .ok()

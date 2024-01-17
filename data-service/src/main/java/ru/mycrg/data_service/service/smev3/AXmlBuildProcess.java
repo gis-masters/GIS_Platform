@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.fields.FieldsFiles;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.smev3.model.RecordData;

@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;

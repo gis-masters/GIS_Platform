@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dto.ExportRequestModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.TableService;

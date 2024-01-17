@@ -2,7 +2,6 @@ package ru.mycrg.data_service.dao.migrations;
 
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +25,8 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,14 +57,14 @@ public class CrgMigrationHandler {
 
     public void handle() {
         try {
-            log.info("Handle migrations");
+            log.info("*** Handle migrations ***");
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getInitialDataSource());
 
-            String selectAllOrganizationsDb = "SELECT datname FROM pg_database WHERE datname like '" +
-                    getDefaultDatabaseName() + "%'";
+            String selectAllOrganizationsDbNamesQuery = "SELECT datname FROM pg_database " +
+                    "WHERE datname like '" + getDefaultDatabaseName() + "%'";
 
-            jdbcTemplate.queryForList(selectAllOrganizationsDb, String.class)
+            jdbcTemplate.queryForList(selectAllOrganizationsDbNamesQuery, String.class)
                         .forEach(this::performInitialMigrations);
         } catch (DataAccessException e) {
             log.error("Error handle migrations: {}", e.getMessage());
@@ -71,58 +72,53 @@ public class CrgMigrationHandler {
     }
 
     public void performInitialMigrations(String dbName) {
+        log.debug("====== Выполняем миграции для БД: [{}] ======", dbName);
+
         // Устанавливаем расширения
         try (HikariDataSource dsForPublicSchema =
                      datasourceFactory.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME)) {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(dsForPublicSchema);
 
+            log.debug("====== Устанавливаем расширения ======");
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS postgis");
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm");
+
+            log.debug("====== Создаем служебную схему '{}' ======", SYSTEM_SCHEMA_NAME);
+            jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + SYSTEM_SCHEMA_NAME);
         } catch (Exception e) {
             log.error("Не удалось установить расширения для базы: {} По причине: {}", dbName, e.getMessage());
         }
 
         try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME)) {
-            // Выполняем основные миграции
             try (final Connection connection = tempDataSource.getConnection()) {
-                ScriptUtils.executeSqlScript(connection, getResource("M1__initServiceTables.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M2__initOldSchemas.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M3__initDefaultBasemaps.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M7__initDefaultLibrary.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M8__addSrid314and315.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M10__delete_unused_tables.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M11__updateDocLibraries.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M12__addFileEntity.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M13__addTestSchemaForTables.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M15__updateSchemasAndTables_V2.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M16__updateBaseMaps.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M18__fixSchemas.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M19__addReestrSchemas.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M20__addTaskAndLog.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M21__wideTasks.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M22__initNewSchemas_123.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M23__updateDocLibraries.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M24__addColumnDeletedToLibraries.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M25__tasks2.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M26__addGisogdPublicationOrder.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M27__lowercaseAllPropNames.sql"));
+                // Выполняем основные миграции
+                log.debug("====== Выполняем основные миграции ======");
+
+                Arrays.stream(ctx.getResources("classpath:sql/common/**"))
+                      .filter(resource -> !noFileName(resource.getFilename()))
+                      .sorted(comparatorBySequenceNumber())
+                      .forEach(resource -> executeMigration(connection, resource));
+
+                // Выполняем "особенные" миграции
                 ScriptUtils.executeSqlScript(
                         connection,
-                        new EncodedResource(getResource("M28__createFunctionForFts.sql")),
+                        new EncodedResource(ctx.getResource("classpath:sql/createFunctionForFts.sql")),
                         false,
                         false,
                         ScriptUtils.DEFAULT_COMMENT_PREFIX,
                         ";;",
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER,
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
-                ScriptUtils.executeSqlScript(connection, getResource("M29__addFtsTables.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M30__addIndexesForPermissions.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M31__addSmevMessageTable.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M32__update_for_reests.sql"));
-                ScriptUtils.executeSqlScript(connection, getResource("M33__addVectorColumnToFts.sql"));
+
+                // Выполняем миграции схем
+                log.debug("====== Выполняем миграции схем ======");
+                Arrays.stream(ctx.getResources("classpath:sql/schemas/**"))
+                      .filter(resource -> !noFileName(resource.getFilename()))
+                      .forEach(resource -> executeMigration(connection, resource));
             }
 
             if (initFullTextSearch) {
+                log.debug("====== FTS: [ Для всех таблиц включаем полнотекстовый поиск ]");
                 initFtsForAll(tempDataSource);
             }
         } catch (Exception e) {
@@ -132,8 +128,6 @@ public class CrgMigrationHandler {
     }
 
     private void initFtsForAll(HikariDataSource dataSource) {
-        log.debug("====== FTS: [ Для всех таблиц включаем полнотекстовый поиск ]");
-
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         initForLibraries(jdbcTemplate);
@@ -280,8 +274,27 @@ public class CrgMigrationHandler {
         return new Gson().fromJson(schema.getClassRule().textValue(), SchemaDto.class);
     }
 
-    @NotNull
-    private Resource getResource(String fileName) {
-        return ctx.getResource("classpath:sql/" + fileName);
+    private static Comparator<Resource> comparatorBySequenceNumber() {
+        return Comparator.comparingInt(resource -> {
+            String fileName = resource.getFilename();
+            String numberAsString = fileName.split("__")[0].replace("M", "");
+
+            return numberAsString.isBlank()
+                    ? 0
+                    : Integer.parseInt(numberAsString);
+        });
+    }
+
+    private void executeMigration(Connection connection, Resource resource) {
+        try {
+            ScriptUtils.executeSqlScript(connection, resource);
+        } catch (Exception e) {
+            log.warn("Не удалось развернуть миграции из файла: '{}'\n По причине: {}",
+                     resource.getFilename(), e.getMessage(), e.getCause());
+        }
+    }
+
+    private boolean noFileName(String fileName) {
+        return fileName == null || fileName.isBlank();
     }
 }

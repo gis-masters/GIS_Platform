@@ -1,26 +1,29 @@
 package ru.mycrg.data_service.controller.table;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.SchemaService;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.*;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 
 @RestController
@@ -42,6 +45,16 @@ public class TableRecordsController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/datasets/{datasetId}/tables/{tableId}/records")
+    public ResponseEntity<Object> getTableRecords(@PathVariable String datasetId,
+                                                  @PathVariable String tableId,
+                                                  Pageable pageable) {
+        ResourceQualifier qualifier = new ResourceQualifier(datasetId, tableId);
+
+        return ResponseEntity.ok(pageFromList(new PageImpl<>(new ArrayList<>()), pageable));
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables/{tableId}/records/{recordIds}")
     public ResponseEntity<List<Feature>> getTableRecords(@PathVariable String datasetId,
                                                          @PathVariable String tableId,
@@ -54,7 +67,7 @@ public class TableRecordsController {
 
         List<Feature> features = spatialRecordsDao.findByIds(qualifier, schema, recordIds);
 
-        return new ResponseEntity<>(features, OK);
+        return ResponseEntity.ok(features);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

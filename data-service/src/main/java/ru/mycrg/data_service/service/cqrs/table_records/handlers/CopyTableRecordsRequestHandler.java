@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.service.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CopyTableRecordsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
@@ -133,7 +133,7 @@ public class CopyTableRecordsRequestHandler implements IRequestHandler<CopyTable
 
             Map<String, Object> oldProperties = oldFeature.getProperties();
 
-            customRuleCalculator.culculate(schema, oldProperties)
+            customRuleCalculator.calculate(schema, oldProperties)
                                 .forEach(newFeature::setProperty);
 
             newFeature.setProperty(PRIMARY_KEY, oldFeature.getId());

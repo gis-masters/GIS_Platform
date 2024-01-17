@@ -28,7 +28,7 @@ import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
-import ru.mycrg.data_service.service.records.RecordServiceFactory;
+import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;

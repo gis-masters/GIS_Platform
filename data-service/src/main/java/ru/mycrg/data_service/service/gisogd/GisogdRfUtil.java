@@ -3,8 +3,8 @@ package ru.mycrg.data_service.service.gisogd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.service.DocumentLibraryService;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 

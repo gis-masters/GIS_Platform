@@ -16,7 +16,7 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.service.SystemAttributeHandler;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -26,7 +26,6 @@ import java.util.*;
 import static com.google.common.primitives.Longs.asList;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
-import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @Repository

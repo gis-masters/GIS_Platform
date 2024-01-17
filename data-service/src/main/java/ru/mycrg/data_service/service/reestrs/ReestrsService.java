@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.reestrs.ReestrProjection;
 import ru.mycrg.data_service.entity.reestrs.Reestr;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.reestrs.ReestrRepository;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 

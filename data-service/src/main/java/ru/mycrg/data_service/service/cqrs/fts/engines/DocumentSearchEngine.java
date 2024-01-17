@@ -18,7 +18,7 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RegistryData;
-import ru.mycrg.data_service.service.DocumentLibraryService;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
 import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;

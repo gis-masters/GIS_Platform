@@ -11,7 +11,7 @@ import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.ValidationResponseDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.SchemaService;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.io.IOException;
