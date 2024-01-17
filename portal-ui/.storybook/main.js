@@ -21,6 +21,10 @@ module.exports = {
       type: 'javascript/auto'
     });
 
+    config.resolve.alias['../../services/data/files/files.client'] = require.resolve(
+      '../src/app/components/Carousel/__mocks__/files.client.ts'
+    );
+
     return config;
   },
 

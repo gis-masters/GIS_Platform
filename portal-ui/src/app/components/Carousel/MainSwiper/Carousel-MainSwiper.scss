@@ -1,0 +1,14 @@
+body .Carousel {
+  &-MainSwiper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    &_type_document {
+      height: 100%;
+    }
+  }
+}

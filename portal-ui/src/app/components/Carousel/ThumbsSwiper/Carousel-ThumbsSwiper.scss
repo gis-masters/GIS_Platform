@@ -1,0 +1,18 @@
+body .Carousel {
+  &-ThumbsSwiper {
+    box-sizing: border-box;
+    height: 20%;
+    padding: 10px 0;
+
+    & .swiper-slide {
+      width: 25%;
+      height: 100%;
+
+      opacity: 0.4;
+    }
+
+    & .swiper-slide-thumb-active {
+      opacity: 1;
+    }
+  }
+}

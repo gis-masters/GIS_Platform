@@ -34,7 +34,7 @@ import { LookupAdd } from '../Lookup/Add/Lookup-Add';
 import { FileInput } from '../FileInput/FileInput';
 import { sleep } from '../../services/util/sleep';
 import { Lookup } from '../Lookup/Lookup';
-import { Carousel } from '../Carousel/Carousel';
+import { Carousel, CarouselImageInfo } from '../Carousel/Carousel';
 
 import { FilesCompoundItem } from './CompoundItem/Files-CompoundItem';
 import { FilesItem } from './Item/Files-Item';
@@ -66,7 +66,7 @@ export default class Files extends Component<FilesProps> {
   private uploadPool: FileInfo[] = [];
   @observable private newbies: NewbieFile[] = [];
   @observable private previewOpen = false;
-  @observable private startingImageForPreview?: FileInfo;
+  @observable private startingImageForPreview?: CarouselImageInfo;
 
   constructor(props: FilesProps) {
     super(props);
@@ -143,7 +143,7 @@ export default class Files extends Component<FilesProps> {
             open={this.previewOpen}
             onClose={this.onPreviewClose}
             images={this.allImages}
-            startingImageForPreview={this.startingImageForPreview}
+            startingImage={this.startingImageForPreview}
           />
         )}
       </>
@@ -184,7 +184,7 @@ export default class Files extends Component<FilesProps> {
   @action.bound
   private previewHandler(item: FileInfo) {
     this.previewOpen = true;
-    this.startingImageForPreview = item;
+    this.startingImageForPreview = { file: item, title: item.title };
   }
 
   @action.bound
@@ -193,13 +193,13 @@ export default class Files extends Component<FilesProps> {
   }
 
   @computed
-  private get allImages(): FileInfo[] | undefined {
+  private get allImages(): CarouselImageInfo[] | undefined {
     const { value } = this.props;
     if (value.length) {
       return value
         .map(item => {
           if (isPreviewAllowed(item)) {
-            return item;
+            return { file: item, title: item.title };
           }
         })
         .filter(notFalsyFilter);

@@ -25,6 +25,11 @@ class EditLayerPropertiesDialogBlock extends Block {
     await muiSelect.selectOptionByTitle(optionTitle);
   }
 
+  async layerPropertyDialogSelectPhotoLayer(optionTitle: string): Promise<void> {
+    const muiSelect = new MuiSelectBlock(this.selectors.container);
+    await muiSelect.selectOptionByTitle(optionTitle);
+  }
+
   async saveLayerProperty(): Promise<void> {
     const $layerPropertySaveBtn = await this.$('formDialogLayerPropertySaveBtn');
     await $layerPropertySaveBtn.waitForClickable({ timeout: 1000 });

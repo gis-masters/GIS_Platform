@@ -12,6 +12,7 @@ import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
+import { photoLayer } from './testSchemas/photoLayer';
 import { createDocumentsSource } from './testSchemas/createDocumentsSource';
 import { createDocumentsTarget } from './testSchemas/createDocumentsTarget';
 import { withSimpleContentType } from './testSchemas/withSimpleContentType';
@@ -21,6 +22,7 @@ import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned
 import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { dlDataWithSimpleContentType } from './testSchemas/dlDataWithSimpleContentType';
+
 import { withFile } from './testSchemas/withFiles';
 
 const testSchemas: Schema[] = [
@@ -45,7 +47,8 @@ const testSchemas: Schema[] = [
   withFile,
   withViews,
   createDocumentsSource,
-  createDocumentsTarget
+  createDocumentsTarget,
+  photoLayer
 ];
 
 export function getTestSchema(title: string): Schema {

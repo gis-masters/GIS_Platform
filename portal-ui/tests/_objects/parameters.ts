@@ -11,7 +11,7 @@ defineParameterType({
 
 defineParameterType({
   name: 'schema',
-  regexp: /"[\d A-Za-zА-я]+"/,
+  regexp: /"[\d ,A-Za-zА-я]+"/,
   transformer: schemaTitleWithQuotes => getTestSchema(schemaTitleWithQuotes.slice(1, -1))
 });
 

@@ -27,3 +27,12 @@ export function extractFeatureId(featureId: string): number {
 
   throw new Error(errMsg);
 }
+
+export const extractFeatureTableName = (id: string): string => {
+  const [tableName] = id.split('.');
+  if (!tableName) {
+    throw new Error('Не верный объект координат: ' + id);
+  }
+
+  return tableName;
+};

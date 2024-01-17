@@ -1,6 +1,6 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
-import { notFalsyFilter } from '../../util/NotFalsyFilter';
+
 import { LibraryRecord } from '../library/library.models';
 
 import {
@@ -107,25 +107,34 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
     .flat() as FileInfo[];
 }
 
-export function getPhotoModeFeaturesFiles(features: WfsFeature[]): FileInfo[] {
-  return Object.values(features)
-    .flatMap(feature => {
-      const layer = getLayerByFeatureInCurrentProject(feature);
-      const propertyValue = feature.properties[layer?.photoMode];
+export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {
+  return features.some(feature => {
+    const photoMode = getLayerByFeatureInCurrentProject(feature)?.photoMode;
 
-      if (layer?.photoMode) {
-        if (typeof propertyValue === 'string') {
-          try {
-            return JSON.parse(propertyValue) as FileInfo[];
-          } catch {
-            // do nothing
-          }
-        } else if (Array.isArray(propertyValue)) {
-          return propertyValue as FileInfo[];
-        }
+    return typeof photoMode === 'string' && feature.properties[photoMode];
+  });
+}
+
+export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
+  const layer = getLayerByFeatureInCurrentProject(feature);
+  if (typeof layer?.photoMode !== 'string') {
+    return [];
+  }
+  const propertyValue = feature.properties[layer?.photoMode];
+
+  if (layer?.photoMode) {
+    if (typeof propertyValue === 'string') {
+      try {
+        return JSON.parse(propertyValue) as FileInfo[];
+      } catch {
+        // do nothing
       }
-    })
-    .filter(notFalsyFilter);
+    } else if (Array.isArray(propertyValue)) {
+      return propertyValue as FileInfo[];
+    }
+  }
+
+  return [];
 }
 
 const zipFileTypes = new Set([

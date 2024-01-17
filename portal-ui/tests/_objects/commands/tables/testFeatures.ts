@@ -16,6 +16,7 @@ import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { getTestUser } from '../auth/testUsers';
 import { getUserByEmail } from '../auth/getUserByEmail';
+import { forPhotoLayer } from './testFeatures/forPhotoLayer';
 
 const KEY = 'тестовые данные';
 
@@ -111,6 +112,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'для простой фильтрации': {
       return forSimpleFiltering;
+    }
+    case 'для фотослоя': {
+      return forPhotoLayer;
     }
     case 'данные для тестирования сортировки с пагинацией': {
       return generateByTemplate('тестовые данные 27', schema);
