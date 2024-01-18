@@ -1,18 +1,18 @@
 package unit.smev;
 
 import org.junit.Test;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
+import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RegisterRnsMarshallerTest extends AMarshallerTest {
+public class RegisterRnvMarshallerTest extends AMarshallerTest {
 
     @Test
     public void response() throws Exception {
-        var fileContent = readFile("register_rns_1_0_10/response_reject.xml");
+        var fileContent = readFile("register_rnv_1_0_8/response_reject.xml");
         var queryResult = MnemonicEnum
-                .REGISTER_RNS_1_0_10
+                .REGISTER_RNV_1_0_8
                 .getMarshaller()
                 .unmarshall(fileContent, QueryResult.class);
 

@@ -1,7 +1,8 @@
-package ru.mycrg.data_service.service.smev3;
+package ru.mycrg.data_service.service.smev3.request;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -11,9 +12,11 @@ import ru.mycrg.data_service.fields.FieldsFiles;
 import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
+import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -33,17 +36,47 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
 public abstract class AXmlBuildProcess {
-
+    protected final RequestProcessor requestProcessor;
     protected final BaseDao baseDao;
     protected final SchemaService schemaService;
-
     protected final Map<RecordData, IRecord> sourceRecords = new HashMap<>();
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
     protected final Map<String, SmevAttachment> attachments = new HashMap<>();
+    protected final UUID clientId;
 
-    public AXmlBuildProcess(BaseDao baseDao, SchemaService schemaService) {
+    public AXmlBuildProcess(RequestProcessor requestProcessor,
+                            BaseDao baseDao,
+                            SchemaService schemaService) {
+        this.requestProcessor = requestProcessor;
         this.baseDao = baseDao;
         this.schemaService = schemaService;
+        this.clientId = UUID.randomUUID();
+    }
+
+    protected XmlBuildMeta buildMeta(Object message,
+                                     String messageXml) {
+        var sourceJson = of(sourceRecords)
+                .map(map -> map.isEmpty() ? null : map.entrySet())
+                .map(Collection::stream)
+                .map(stream -> stream.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getContent())))
+                .map(JsonConverter::toJsonNode)
+                .orElse(null);
+
+        var attachmentsJson = of(attachments)
+                .map(object -> object.isEmpty() ? null : object.values())
+                .map(ArrayList::new)
+                .map(JsonConverter::toJsonNode)
+                .orElse(null);
+
+        return new XmlBuildMeta(
+                requestProcessor.mnemonicEnum(),
+                clientId,
+                null,
+                JsonConverter.toJsonNode(message),
+                messageXml,
+                sourceJson,
+                attachmentsJson
+        );
     }
 
     protected Optional<Boolean> asBoolean(IRecord record, String fieldName) {
@@ -65,6 +98,11 @@ public abstract class AXmlBuildProcess {
                 .map(Integer::parseInt);
     }
 
+    protected Optional<Double> asDouble(IRecord record, String fieldName) {
+        return asString(record, fieldName)
+                .map(Double::parseDouble);
+    }
+
     protected Optional<LocalDateTime> asLocalDateTime(IRecord record, String fieldName) {
         return asString(record, fieldName)
                 .map(s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
@@ -80,14 +118,12 @@ public abstract class AXmlBuildProcess {
                 .map(value -> refType(tableName, fieldName, value));
     }
 
-    protected Optional<IRecord> asRefRecord(IRecord record, String fieldName) {
+    protected Optional<IRecord> asRefRecord(@NotNull IRecord record, @NotNull String fieldName) {
         return asString(record, fieldName)
-                .map(jsonString -> {
-                    var jsonNode = of(jsonString)
-                            .map(JsonConverter::toJsonNodeFromString)
-                            .map(JsonNode::iterator)
-                            .map(Iterator::next)
-                            .get();
+                .map(JsonConverter::toJsonNodeFromString)
+                .map(JsonNode::iterator)
+                .map(Iterator::next)
+                .map(jsonNode -> {
                     var table = jsonNode.get("libraryTableName").asText();
                     var id = jsonNode.get("id").asLong();
                     return getRecordById(LIBRARY_RECORD, SYSTEM_SCHEMA_NAME, table, table, id);
@@ -119,7 +155,7 @@ public abstract class AXmlBuildProcess {
                                     String libId,
                                     Object recordId) {
         try {
-            var recordData = new RecordData(libId, recordId);
+            var recordData = RecordData.byId(libId, recordId);
             if (!sourceRecords.containsKey(recordData)) {
                 var schemaDto = ofNullable(schemaId)
                         .flatMap(this::getSchema)
@@ -147,8 +183,13 @@ public abstract class AXmlBuildProcess {
                                              String libId,
                                              String jsonFieldName,
                                              Long jsonIdValue) {
-        var record = getSchema(schemaId)
-                .flatMap(schemaDto -> baseDao.findByJson(
+        try {
+            var recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
+            if (!sourceRecords.containsKey(recordData)) {
+                var schemaDto = ofNullable(schemaId)
+                        .flatMap(this::getSchema)
+                        .orElse(null);
+                var record = baseDao.getByJson(
                         ResourceJsonCondition.byJsonIdValue(
                                 workspace,
                                 libId,
@@ -157,13 +198,13 @@ public abstract class AXmlBuildProcess {
                                 resourceType
                         ),
                         schemaDto
-                ))
-                .orElseThrow(() -> SmevRequestException.recordNotFound(schemaId, libId));
-        var recordData = new RecordData(libId, record.getId());
-        if (!sourceRecords.containsKey(recordData)) {
-            sourceRecords.put(recordData, record);
+                );
+                sourceRecords.put(recordData, record);
+            }
+            return sourceRecords.get(recordData);
+        } catch (CrgDaoException e) {
+            throw SmevRequestException.crgDaoException(e);
         }
-        return sourceRecords.get(recordData);
     }
 
     protected RefType refType(String tableName, String field, String strValue) {

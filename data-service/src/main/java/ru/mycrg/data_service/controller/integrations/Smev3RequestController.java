@@ -6,18 +6,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService;
-import ru.mycrg.data_service.service.smev3.receipt_rnv.ReceiptRnvRequestService;
-import ru.mycrg.data_service.service.smev3.register_rns.RegisterRnsRequestService;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
+import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
+import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
+import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 
 import java.util.UUID;
 
-/**
- * TODO скорее всего это временный контроллер, так как целевая картинка не подразумевает его наличия
- */
 @RestController
 @RequestMapping("/integration/smev3")
 @ConditionalOnProperty(
@@ -29,17 +28,20 @@ public class Smev3RequestController {
     private final ReceiptRnsRequestService rnsRequestService;
     private final ReceiptRnvRequestService rnvRequestService;
     private final RegisterRnsRequestService registerRnsService;
+    private final RegisterRnvRequestService registerRnvService;
     private final GetCadastrialPlanRequestService getCadastrialPlanRequestService;
     private final SmevMessageService storageService;
 
     public Smev3RequestController(ReceiptRnsRequestService rnsRequestService,
                                   ReceiptRnvRequestService rnvRequestService,
                                   RegisterRnsRequestService registerRnsService,
+                                  RegisterRnvRequestService registerRnvService,
                                   GetCadastrialPlanRequestService getCadastrialPlanRequestService,
                                   SmevMessageService storageService) {
         this.rnsRequestService = rnsRequestService;
         this.rnvRequestService = rnvRequestService;
         this.registerRnsService = registerRnsService;
+        this.registerRnvService = registerRnvService;
         this.getCadastrialPlanRequestService = getCadastrialPlanRequestService;
         this.storageService = storageService;
     }
@@ -94,6 +96,16 @@ public class Smev3RequestController {
     @PostMapping("/request/register-rns")
     public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody RegisterRnsRequestDto rnsRequestDto) {
         var response = registerRnsService.request(rnsRequestDto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * urn://x-artefacts-uishc.domrf.ru/register-rnv
+     */
+    @PostMapping("/request/register-rnv")
+    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
+        var response = registerRnvService.request(rnvRequestDto);
 
         return ResponseEntity.ok(response);
     }

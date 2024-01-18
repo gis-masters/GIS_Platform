@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsRequestService;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 
 /**
  * Скорее всего временный класс, пока адаптеры СМЭВ не использует общую инфрастуктуру

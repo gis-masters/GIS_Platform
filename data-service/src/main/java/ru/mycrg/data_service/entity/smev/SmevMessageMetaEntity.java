@@ -8,8 +8,10 @@ import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.config.CrgCommonConfig;
 import ru.mycrg.data_service.entity.IContent;
+import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -174,8 +176,12 @@ public class SmevMessageMetaEntity implements IContent {
         return this;
     }
 
-    public static SmevMessageMetaEntity createIncoming(@NotNull String mnemonic,
-                                                       @NotNull String mnemonicVersion,
+    @Nullable
+    public MnemonicEnum mnemonicEnum() {
+        return MnemonicEnum.fromStringPair(mnemonic, mnemonicVersion);
+    }
+
+    public static SmevMessageMetaEntity createIncoming(@NotNull MnemonicEnum mnemonic,
                                                        @NotNull UUID clientId,
                                                        @NotNull UUID referenceClientId,
                                                        @NotNull UUID referenceReestrIncoming,
@@ -186,16 +192,15 @@ public class SmevMessageMetaEntity implements IContent {
         message.setDirection(MessageDirection.INCOMING);
         message.setClientId(clientId);
         message.setReferenceClientId(referenceClientId);
-        message.setMnemonic(mnemonic);
-        message.setMnemonicVersion(mnemonicVersion);
+        message.setMnemonic(mnemonic.getMnemonic());
+        message.setMnemonicVersion(mnemonic.getVersion());
         message.setReferenceReestrIncoming(referenceReestrIncoming);
         message.setXmlObject(xmlObject);
         message.setXmlString(xmlString);
         return message;
     }
 
-    public static SmevMessageMetaEntity createOutgoing(@NotNull String mnemonic,
-                                                       @NotNull String mnemonicVersion,
+    public static SmevMessageMetaEntity createOutgoing(@NotNull MnemonicEnum mnemonic,
                                                        @NotNull UUID clientId,
                                                        @NotNull UUID referenceReestrOutgoing,
                                                        @NotNull JsonNode xmlObject,
@@ -204,8 +209,8 @@ public class SmevMessageMetaEntity implements IContent {
         message.setId(UUID.randomUUID());
         message.setDirection(MessageDirection.OUTGOING);
         message.setClientId(clientId);
-        message.setMnemonic(mnemonic);
-        message.setMnemonicVersion(mnemonicVersion);
+        message.setMnemonic(mnemonic.getMnemonic());
+        message.setMnemonicVersion(mnemonic.getVersion());
         message.setReferenceReestrOutgoing(referenceReestrOutgoing);
         message.setXmlObject(xmlObject);
         message.setXmlString(xmlString);

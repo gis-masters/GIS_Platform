@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 
 import java.util.UUID;
 
@@ -8,8 +9,7 @@ import java.util.UUID;
  * Мета информация по запросу
  */
 public class XmlBuildMeta {
-    private String mnemonic;
-    private String mnemonicVersion;
+    private MnemonicEnum mnemonic;
     private UUID clientId;
     private UUID referenceClientId;
     private JsonNode xmlObject;
@@ -18,17 +18,14 @@ public class XmlBuildMeta {
     private JsonNode attachments;
 
     public XmlBuildMeta(
-            String mnemonic,
-            String mnemonicVersion,
+            MnemonicEnum mnemonic,
             UUID clientId,
             UUID referenceClientId,
             JsonNode xmlObject,
             String xmlString,
             JsonNode sources,
-            JsonNode attachments
-    ) {
+            JsonNode attachments) {
         this.mnemonic = mnemonic;
-        this.mnemonicVersion = mnemonicVersion;
         this.clientId = clientId;
         this.referenceClientId = referenceClientId;
         this.xmlObject = xmlObject;
@@ -38,75 +35,31 @@ public class XmlBuildMeta {
 
     }
 
-    public String getMnemonic() {
+    public MnemonicEnum getMnemonic() {
         return mnemonic;
-    }
-
-    public XmlBuildMeta setMnemonic(String mnemonic) {
-        this.mnemonic = mnemonic;
-        return this;
-    }
-
-    public String getMnemonicVersion() {
-        return mnemonicVersion;
-    }
-
-    public XmlBuildMeta setMnemonicVersion(String mnemonicVersion) {
-        this.mnemonicVersion = mnemonicVersion;
-        return this;
     }
 
     public UUID getClientId() {
         return clientId;
     }
 
-    public XmlBuildMeta setClientId(UUID clientId) {
-        this.clientId = clientId;
-        return this;
-    }
-
     public UUID getReferenceClientId() {
         return referenceClientId;
-    }
-
-    public XmlBuildMeta setReferenceClientId(UUID referenceClientId) {
-        this.referenceClientId = referenceClientId;
-        return this;
     }
 
     public JsonNode getXmlObject() {
         return xmlObject;
     }
 
-    public XmlBuildMeta setXmlObject(JsonNode xmlObject) {
-        this.xmlObject = xmlObject;
-        return this;
-    }
-
     public String getXmlString() {
         return xmlString;
-    }
-
-    public XmlBuildMeta setXmlString(String xmlString) {
-        this.xmlString = xmlString;
-        return this;
     }
 
     public JsonNode getSources() {
         return sources;
     }
 
-    public XmlBuildMeta setSources(JsonNode sources) {
-        this.sources = sources;
-        return this;
-    }
-
     public JsonNode getAttachments() {
         return attachments;
-    }
-
-    public XmlBuildMeta setAttachments(JsonNode attachments) {
-        this.attachments = attachments;
-        return this;
     }
 }

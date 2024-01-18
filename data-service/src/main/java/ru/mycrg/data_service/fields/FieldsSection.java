@@ -10,6 +10,7 @@ public class FieldsSection {
     public static final String PROPERTY_VALID_UNTIL = "validuntil";
     public static final String PROPERTY_DEVELOPER_DATA_CONNECTION = "developer_data_connection";
     public static final String PROPERTY_SUPPLIER_DATA_CONNECTION = "supplier_data_connection";
+    public static final String PROPERTY_ISSUE_PERSON_CONNECTION = "issue_person_connection";
     public static final String PROPERTY_CONSTRUCTION_TYPE = "constructiontype";
     public static final String PROPERTY_PERMISSION_TYPE = "const_permission_type";
     public static final String PROPERTY_NAME_FROM_P_D = "namefrompd";
@@ -22,4 +23,9 @@ public class FieldsSection {
     public static final String PROPERTY_CONTENT_TYPE_ID = "content_type_id";
     public static final String PROPERTY_ADMINISTRATIVE_DOC_TYPE = "administrative_doc_type";
     public static final String PROPERTY_FILE = "file";
+    public static final String PROPERTY_OBJECT_KIND = "object_kind";
+    public static final String PROPERTY_OBJECT_PURPOSE = "object_purpose";
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL = "object_purpose_functional";
+    public static final String PROPERTY_BUILD_CAPITAL_TYPE = "build_capital_type";
+    public static final String PROPERTY_LACOTEAN = "lacotean";
 }

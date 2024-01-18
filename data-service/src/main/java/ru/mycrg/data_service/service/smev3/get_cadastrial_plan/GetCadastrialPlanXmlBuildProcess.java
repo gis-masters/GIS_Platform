@@ -1,44 +1,26 @@
 package ru.mycrg.data_service.service.smev3.get_cadastrial_plan;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.AttachmentHeaderList;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.AttachmentHeaderType;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.AttachmentRequestType;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.ClientMessage;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.Content;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.MessagePrimaryContent;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.Request;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.RequestContentType;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.RequestMessageType;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.RequestMetadataType;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.SenderTypes;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.TStructuredAttachmentFormat;
-import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.TValidatedStructuredAttachmentFormat;
+import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
 
 public class GetCadastrialPlanXmlBuildProcess {
-
     private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanXmlBuildProcess.class);
-    private static final String MNEMONIC = "get-cadastrial-plan";
-    private static final String MNEMONIC_VERSION = "1.1.2";
-    private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
-    private final Smev3Config smev3Config;
+    private final RequestProcessor requestProcessor;
     private UUID clientId;
     private ClientMessage xmlObject;
     private String xmlText;
 
-    public GetCadastrialPlanXmlBuildProcess(Smev3Config smev3Config) {
-        this.smev3Config = smev3Config;
+    public GetCadastrialPlanXmlBuildProcess(RequestProcessor requestProcessor) {
+        this.requestProcessor = requestProcessor;
     }
 
     public XmlBuildMeta run(@NotNull String requestFilename,
@@ -110,17 +92,18 @@ public class GetCadastrialPlanXmlBuildProcess {
             RequestMessageType requestMessageType = new RequestMessageType();
             requestMessageType.setRequestMetadata(requestMetadataType);
             requestMessageType.setRequestContent(requestContentType);
-            clientMessage.setItSystem(smev3Config.getSystemMnemonic());
+            clientMessage.setItSystem(requestProcessor.getSmev3Config().getSystemMnemonic());
             clientMessage.setRequestMessage(requestMessageType);
 
             xmlObject = clientMessage;
-            xmlText = marshaller.marshall(clientMessage, ClientMessage.class);
+            xmlText = requestProcessor
+                    .xmlMarshaller()
+                    .marshall(clientMessage, ClientMessage.class);
 
             log.debug("SMEV3. request: {}", xmlText);
 
             return new XmlBuildMeta(
-                    MNEMONIC,
-                    MNEMONIC_VERSION,
+                    requestProcessor.mnemonicEnum(),
                     clientId,
                     null,
                     JsonConverter.toJsonNode(xmlObject),
@@ -132,14 +115,4 @@ public class GetCadastrialPlanXmlBuildProcess {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }
     }
-
-    public static final NamespacePrefixMapper namespacePrefixMapper = new NamespacePrefixMapper() {
-        @Override
-        public String getPreferredPrefix(String urn, String s1, boolean b) {
-            if ("urn://x-artefacts-rosreestr-gov-ru/virtual-services/egrn-statement/1.1.2".equals(urn)) {
-                return "req";
-            }
-            return "typ";
-        }
-    };
 }

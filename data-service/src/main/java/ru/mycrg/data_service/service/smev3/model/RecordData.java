@@ -1,53 +1,44 @@
 package ru.mycrg.data_service.service.smev3.model;
 
+import java.util.Objects;
+
 public class RecordData {
-    private String libId;
+    private final String libId;
+    private final String jsonFieldName;
+    private final Object id;
 
-    private Object recordId;
-
-    public RecordData(String libId, Object recordId) {
+    public RecordData(String libId, String jsonFieldName, Object id) {
         this.libId = libId;
-        this.recordId = recordId;
+        this.jsonFieldName = jsonFieldName;
+        this.id = id;
     }
 
-    public String getLibId() {
-        return libId;
+    public static RecordData byId(String libId, Object id) {
+        return new RecordData(libId, null, id);
     }
 
-    public RecordData setLibId(String libId) {
-        this.libId = libId;
-        return this;
-    }
-
-    public Object getRecordId() {
-        return recordId;
-    }
-
-    public RecordData setRecordId(Object recordId) {
-        this.recordId = recordId;
-        return this;
+    public static RecordData byJsonId(String libId, String jsonFieldName, Object id) {
+        return new RecordData(libId, jsonFieldName, id);
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        RecordData that = (RecordData) object;
+        RecordData that = (RecordData) o;
 
         if (!libId.equals(that.libId)) return false;
-        return recordId.equals(that.recordId);
+        if (!Objects.equals(jsonFieldName, that.jsonFieldName))
+            return false;
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
         int result = libId.hashCode();
-        result = 31 * result + recordId.hashCode();
+        result = 31 * result + (jsonFieldName != null ? jsonFieldName.hashCode() : 0);
+        result = 31 * result + id.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return libId + "_" + recordId;
     }
 }

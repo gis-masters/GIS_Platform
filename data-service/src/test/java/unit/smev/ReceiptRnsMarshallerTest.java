@@ -5,9 +5,10 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.receipt_rns_1_0_9.ClientMessage;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
-import ru.mycrg.data_service.service.smev3.receipt_rns.ReceiptRnsXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsXmlBuildProcess;
 import ru.mycrg.data_service.util.xml.XmlMapper;
-import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.time.LocalDate;
 
@@ -20,18 +21,22 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
     @Test
     public void request() throws Exception {
-        var marshaller = new XmlMarshaller(ReceiptRnsXmlBuildProcess.namespacePrefixMapper);
 
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
+
+        var processor = new RequestProcessor(MnemonicEnum.RECEIPT_RNS_1_0_9, null, smev3Config);
 
         var dto = new ReceiptRnsRequestDto();
         dto.setConstPermitDateFrom(LocalDate.of(2022, 1, 1));
         dto.setConstPermitDateTo(LocalDate.of(2022, 1, 1));
 
-        var meta = new ReceiptRnsXmlBuildProcess(smev3Config).run(dto);
+        var meta = new ReceiptRnsXmlBuildProcess(processor).run(dto);
 
-        var clientMessageUnmarshal = marshaller.unmarshall(meta.getXmlString(), ClientMessage.class);
+        var clientMessageUnmarshal = MnemonicEnum
+                .RECEIPT_RNS_1_0_9
+                .getMarshaller()
+                .unmarshall(meta.getXmlString(), ClientMessage.class);
 
         var receiptListConstruction = clientMessageUnmarshal
                 .getRequestMessage()
@@ -47,9 +52,11 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
     @Test
     public void response() throws Exception {
-        var marshaller = new XmlMarshaller(ReceiptRnsXmlBuildProcess.namespacePrefixMapper);
         var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+        var queryResult = MnemonicEnum
+                .RECEIPT_RNS_1_0_9
+                .getMarshaller()
+                .unmarshall(fileContent, QueryResult.class);
 
         var smevMeta = queryResult.getSmevMetadata();
         assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());

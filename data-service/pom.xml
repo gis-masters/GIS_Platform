@@ -469,6 +469,23 @@
                     </execution>
 
                     <execution>
+                        <id>register_rnv_1_0_8</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/register_rnv_1_0_8/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.register_rnv_1_0_8</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>kpt_import</id>
                         <goals>
                             <goal>xjc</goal>

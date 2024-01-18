@@ -10,10 +10,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.fields.FieldsSmevMessageMetaEntity;
-import ru.mycrg.data_service.service.smev3.support_classes.Mnemonic;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
@@ -31,16 +29,16 @@ public class SmevMessageReceiverService {
     private final SmevMessageService messageService;
     private final RabbitTemplate rabbitTemplate;
     private final Queue adapterReceiveFailQueue;
-    private final List<ISmevMessageConsumer> iSmevMessageConsumers;
+    private final List<RequestProcessor> requestProcessors;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
                                       RabbitTemplate rabbitTemplate,
                                       Queue adapterReceiveFailQueue,
-                                      List<ISmevMessageConsumer> iSmevMessageConsumers) {
+                                      List<RequestProcessor> requestProcessors) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
-        this.iSmevMessageConsumers = iSmevMessageConsumers;
+        this.requestProcessors = requestProcessors;
     }
 
     /**
@@ -53,16 +51,12 @@ public class SmevMessageReceiverService {
             var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("not found original message"));
-            var consumerId = Mnemonic.id(
-                    messageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC),
-                    messageEntity.getAsString(FieldsSmevMessageMetaEntity.PROPERTY_MNEMONIC_VERSION)
-            );
-            iSmevMessageConsumers.stream()
-                    .filter(iSmevMessageConsumer -> iSmevMessageConsumer.consumerId().equals(consumerId))
+            requestProcessors.stream()
+                    .filter(processor -> processor.mnemonicEnum() == messageEntity.mnemonicEnum())
                     .findFirst()
                     .ifPresentOrElse(
-                            iSmevMessageConsumer -> process(iSmevMessageConsumer, messageEntity, body),
-                            () -> log.warn("consumer not found {}", consumerId)
+                            processor -> process(processor, messageEntity, body),
+                            () -> log.warn("consumer not found {}", messageEntity.mnemonicEnum())
                     );
         } catch (Exception e) {
             log.info("Process adapter message fail: " + e.getMessage());
@@ -70,6 +64,10 @@ public class SmevMessageReceiverService {
         }
     }
 
+
+    /**
+     * Достаем ИД сообщения, ответом на которое, является это сообщение
+     */
     private Optional<UUID> replyToClientId(Message message) throws Exception {
         var builder = DocumentBuilderFactory
                 .newInstance()
@@ -91,10 +89,10 @@ public class SmevMessageReceiverService {
     }
 
 
-    private void process(ISmevMessageConsumer consumer, IRecord originalMessageRecord, String body) {
+    private void process(RequestProcessor consumer, SmevMessageMetaEntity originalMessageRecord, String body) {
         try {
             log.debug("Try to process message {}", body);
-            var processResult = consumer.consumeAdapterMessage(body);
+            var processResult = consumer.processMessageFromSmev(body);
             messageService.saveIncoming(processResult, originalMessageRecord);
             log.info("Success process");
         } catch (Exception e) {

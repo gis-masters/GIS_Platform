@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.get_cadastrial_plan;
+package ru.mycrg.data_service.service.smev3.request.register_rnv;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -7,9 +7,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
+import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
 import ru.mycrg.data_service.service.reestrs.Systems;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -19,34 +22,49 @@ import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
+
+/**
+ * urn://x-artefacts-uishc.domrf.ru/register-rnv/1.0.8
+ */
 @Service
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class GetCadastrialPlanRequestService extends RequestProcessor {
-    private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
+public class RegisterRnvRequestService extends RequestProcessor {
+    private final Logger log = LoggerFactory.getLogger(RegisterRnvRequestService.class);
+    private final BaseDao baseDao;
+    private final SchemaService schemaService;
     private final SmevMessageSenderService messageService;
 
-    public GetCadastrialPlanRequestService(Smev3Config smev3Config,
-                                           ResourceLoader resourceLoader,
-                                           SmevMessageSenderService messageService) {
-        super(MnemonicEnum.GET_CADASTRIAL_PLAN_1_1_2, resourceLoader, smev3Config);
+    public RegisterRnvRequestService(Smev3Config smev3Config,
+                                     BaseDao baseDao,
+                                     SchemaService schemaService,
+                                     ResourceLoader resourceLoader,
+                                     SmevMessageSenderService messageService) {
+        super(MnemonicEnum.REGISTER_RNV_1_0_8, resourceLoader, smev3Config);
+        this.baseDao = baseDao;
+        this.schemaService = schemaService;
         this.messageService = messageService;
     }
 
-    public XmlBuildMeta request(@NotNull String requestFilename,
-                                @NotNull String appFilename,
-                                @NotNull String passportFilename,
-                                @NotNull String archiveFilename) {
+    public XmlBuildMeta request(@NotNull RegisterRnvRequestDto dto) {
+        log.info("SMEV3 | {}  recId {}", mnemonicEnum(), dto.getRecId());
         try {
-            var buildMeta = new GetCadastrialPlanXmlBuildProcess(
-                    this
-            ).run(requestFilename, appFilename, passportFilename, archiveFilename);
+            var buildMeta = new RegisterRnvXmlBuildProcess(
+                    this,
+                    baseDao,
+                    schemaService
+            )
+                    .run(dto);
+
+            validate(buildMeta.getXmlString());
+
             log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendMessage(buildMeta, true, Systems.FGIS_EGRN);
+            messageService.sendMessage(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
             return buildMeta;
         } catch (Exception e) {
+            log.error("SMEV. push to queue error: {}", e.getMessage());
             throw new SmevRequestException("push to queue error :" + e.getMessage());
         }
     }
@@ -54,8 +72,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     @Override
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
-            var queryResult = xmlMarshaller()
-                    .unmarshall(messageBody, QueryResult.class);
+            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
             var XmlBuildMeta = new XmlBuildMeta(
                     mnemonicEnum(),

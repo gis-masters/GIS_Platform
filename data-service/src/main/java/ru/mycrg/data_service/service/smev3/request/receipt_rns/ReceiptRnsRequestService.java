@@ -1,58 +1,53 @@
-package ru.mycrg.data_service.service.smev3.receipt_rnv;
+package ru.mycrg.data_service.service.smev3.request.receipt_rns;
+
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
+import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
+import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
 import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.smev3.ISmevMessageConsumer;
+import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.service.smev3.support_classes.Mnemonic;
-import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
-import static ru.mycrg.data_service.service.smev3.receipt_rnv.ReceiptRnvXmlBuildProcess.namespacePrefixMapper;
-
 
 /**
- * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
+ * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
  */
 @Service
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class ReceiptRnvRequestService implements ISmevMessageConsumer {
-    static final String MNEMONIC = "receipt-rnv";
-    static final String MNEMONIC_VERSION = "1.0.9";
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnvRequestService.class);
-    private final XmlMarshaller marshaller = new XmlMarshaller(namespacePrefixMapper);
-    private final Smev3Config smev3Config;
+public class ReceiptRnsRequestService extends RequestProcessor {
+    private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
     private final SmevMessageSenderService messageService;
 
-    public ReceiptRnvRequestService(Smev3Config smev3Config,
+    public ReceiptRnsRequestService(Smev3Config smev3Config,
+                                    ResourceLoader resourceLoader,
                                     SmevMessageSenderService messageService) {
-        this.smev3Config = smev3Config;
+        super(MnemonicEnum.RECEIPT_RNS_1_0_9, resourceLoader, smev3Config);
         this.messageService = messageService;
     }
 
-    @NoContextTransaction(dbProperty = "crg-options.integration.smev3.targetDb")
-    public XmlBuildMeta request(@NotNull ReceiptRnvRequestDto dto) {
-        log.info("SMEV3. {} {}", consumerId(), dto);
+    public XmlBuildMeta request(@NotNull ReceiptRnsRequestDto dto) {
+        log.info("SMEV3. {} {}", mnemonicEnum(), dto);
         try {
-            var buildMeta = new ReceiptRnvXmlBuildProcess(smev3Config).run(dto);
+            var buildMeta = new ReceiptRnsXmlBuildProcess(this).run(dto);
             log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
             messageService.sendMessage(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
+
             return buildMeta;
         } catch (Exception e) {
             throw new SmevRequestException("push to queue error :" + e.getMessage());
@@ -60,18 +55,12 @@ public class ReceiptRnvRequestService implements ISmevMessageConsumer {
     }
 
     @Override
-    public String consumerId() {
-        return Mnemonic.id(MNEMONIC, MNEMONIC_VERSION);
-    }
-
-    @Override
-    public ProcessAdapterMessageResult consumeAdapterMessage(String messageBody) {
+    public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
-            var queryResult = marshaller.unmarshall(messageBody, QueryResult.class);
+            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
             var XmlBuildMeta = new XmlBuildMeta(
-                    MNEMONIC,
-                    MNEMONIC_VERSION,
+                    mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     JsonConverter.toJsonNode(queryResult),
