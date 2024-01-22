@@ -107,10 +107,11 @@ class ProjectsBlock extends Block {
   async waitForProjectCardVisible(name: string) {
     await loadingBlock.waitForGlobalHidden();
 
-    const id = await browser.execute(function (name) {
-      return [...window.document.querySelectorAll('.Projects-Card')]
-        .find(card => card.querySelector('.ProjectCard-Name')?.innerHTML === name)
-        ?.getAttribute('data-id');
+    const id = await browser.execute<string, [string]>(function (name) {
+      const cards = [...window.document.querySelectorAll('.Projects-Card')];
+      const card = cards.find(card => card.querySelector('.ProjectCard-Name')?.innerHTML === name);
+
+      return card?.getAttribute('data-id') || '0';
     }, name);
 
     if (id) {

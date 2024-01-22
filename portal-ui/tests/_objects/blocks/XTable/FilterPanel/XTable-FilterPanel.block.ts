@@ -150,7 +150,7 @@ class XTableFilterPanelBlock extends Block {
   }
 
   async getFirstColValues(): Promise<string[]> {
-    const $$contents = await this.$$('firstColCellContent');
+    const $$contents = [...(await this.$$('firstColCellContent'))];
 
     return Promise.all(
       $$contents.map(async $content => {

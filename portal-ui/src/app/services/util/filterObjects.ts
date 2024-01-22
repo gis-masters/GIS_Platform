@@ -3,14 +3,7 @@ import sift from 'sift';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { escapeStringRegexp } from './escapeStringRegexp';
 
-export type FilterQueryValue =
-  | string
-  | number
-  | boolean
-  | (string | number | boolean | null)[]
-  | RegExp
-  | string[]
-  | null;
+export type FilterQueryValue = string | number | boolean | RegExp | FilterQueryValue[] | null;
 
 export interface FilterQuery {
   [key: string]: FilterQueryValue | FilterQuery | FilterQuery[];

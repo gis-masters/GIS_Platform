@@ -49,7 +49,7 @@ class VectorDataClient extends DataClient {
   async getDatasetsWithParticularOne(
     identifier: string,
     pageOptions: PageOptions
-  ): Promise<[Dataset[], number, number]> {
+  ): Promise<[Dataset[], number, number] | undefined> {
     return http.getPageWithObject<Dataset>(
       this.getDatasetsUrl(),
       preparePageOptions(pageOptions, true),

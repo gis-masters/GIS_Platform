@@ -2,7 +2,7 @@ import { Given } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
 
 import { getSchema } from '../schemas/getSchema';
-import { CrgLayer, CrgLayerType } from '../../../../src/app/services/gis/layers/layers.models';
+import { CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { createLayer } from './createLayer';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
@@ -17,7 +17,7 @@ Given(
 
     const schema = await getSchema(latestVectorTable.schemaId);
 
-    const layer: CrgLayer = {
+    const layer: NewCrgLayer = {
       type: CrgLayerType.VECTOR,
       title: layerTitle,
       dataset: latestDataset.identifier,

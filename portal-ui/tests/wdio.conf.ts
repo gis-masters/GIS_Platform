@@ -1,6 +1,20 @@
 import type { Options } from '@wdio/types';
 import { networkInterfaces } from 'node:os';
 
+import { EnvironmentData } from '../src/app/services/environment';
+
+declare global {
+  const _environmentRaw: EnvironmentData;
+
+  interface ObjectConstructor {
+    keys<T>(obj: T): Array<keyof T>;
+  }
+
+  interface NodeListOf<TNode extends Node> extends NodeList {
+    [Symbol.iterator](): IterableIterator<TNode>;
+  }
+}
+
 export function getMyOfficeIp(): string {
   const nets = networkInterfaces();
   const officeSubnet = /^(?:10\.){3}\d{1,3}$/;
@@ -47,20 +61,20 @@ export const config: Options.Testrunner = {
   // environment variables for ts-node or use wdio config's autoCompileOpts section.
   //
 
-  autoCompileOpts: {
-    autoCompile: true,
+  // autoCompileOpts: {
+    // autoCompile: true,
     // see https://github.com/TypeStrong/ts-node#cli-and-programmatic-options
     // for all available options
-    tsNodeOpts: {
-      transpileOnly: true,
-      project: 'tests/tsconfig.json'
-    }
+    // tsNodeOpts: {
+    //   transpileOnly: true,
+    //   project: 'tests/tsconfig.json'
+    // }
     // tsconfig-paths is only used if "tsConfigPathsOpts" are provided, if you
     // do please make sure "tsconfig-paths" is installed as dependency
     // tsConfigPathsOpts: {
     //     baseUrl: './'
     // }
-  },
+  // },
   //
   // =====================
   // Server Configurations
@@ -170,7 +184,7 @@ export const config: Options.Testrunner = {
   // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
   // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
   // gets prepended directly.
-  baseUrl: 'http://10.10.10.121',
+  baseUrl: 'http://10.10.10.62',
   //
   // Default timeout for all waitFor* commands.
   waitforTimeout: 3000,
@@ -243,6 +257,8 @@ export const config: Options.Testrunner = {
     backtrace: false,
     // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
     requireModule: [],
+    // <boolean> Treat ambiguous definitions as errors
+    failAmbiguousDefinitions: true,
     // <boolean> invoke formatters without executing steps
     dryRun: false,
     // <boolean> abort the run on first failure
@@ -254,7 +270,7 @@ export const config: Options.Testrunner = {
     // <boolean> fail if there are any undefined or pending steps
     strict: true,
     // <string> (expression) only execute the features or scenarios with tags matching the expression
-    // tagExpression: 'not @skip',
+    // tags: 'not @skip',
     // <number> timeout for step definitions
     timeout: 240_000,
     // <boolean> Enable this config to treat undefined definitions as warnings.

@@ -1,4 +1,4 @@
-import { CrgLayerType, CrgRasterLayer } from '../../../../src/app/services/gis/layers/layers.models';
+import { CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
@@ -16,7 +16,7 @@ export async function placeTifFile(
   const { path, id, title } = await requestAsAdmin(filesClient.getFile, file.id);
 
   if (path) {
-    const rasterLayer: CrgRasterLayer = {
+    const rasterLayer: NewCrgLayer = {
       title: getFileBaseName(title),
       type: CrgLayerType.RASTER,
       mode: 'full',

@@ -1,5 +1,6 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
 
 import { LibraryRecord } from '../library/library.models';
 
@@ -152,11 +153,11 @@ export function isZipFile(file: File): boolean {
 function isFileInfo(object: Partial<FileInfo>): boolean {
   // используем утиную типизацию, чтобы не делать асинхронный запрос схемы
   return (
-    object.id &&
+    Boolean(object.id) &&
     typeof object.id === 'string' &&
-    object.size &&
+    Boolean(object.size) &&
     typeof object.size === 'number' &&
-    object.title &&
+    Boolean(object.title) &&
     typeof object.title === 'string'
   );
 }
@@ -173,7 +174,7 @@ export function getMissingCompoundFileTypes(files: FileInfo[]): CompoundFileType
           return type;
         }
       })
-      .filter(Boolean);
+      .filter(notFalsyFilter);
   } else if (tabRequiredFilesTypes.includes(fileExtension)) {
     missingTypes = tabRequiredFilesTypes
       .map(type => {
@@ -181,7 +182,7 @@ export function getMissingCompoundFileTypes(files: FileInfo[]): CompoundFileType
           return type;
         }
       })
-      .filter(Boolean);
+      .filter(notFalsyFilter);
   } else if (midMifRequiredFilesTypes.includes(fileExtension)) {
     missingTypes = midMifRequiredFilesTypes
       .map(type => {
@@ -189,7 +190,7 @@ export function getMissingCompoundFileTypes(files: FileInfo[]): CompoundFileType
           return type;
         }
       })
-      .filter(Boolean);
+      .filter(notFalsyFilter);
   }
 
   return missingTypes;

@@ -21,7 +21,7 @@ interface CrgProjectData extends CrgProject {
   layersErrors: { [key: string]: string[] };
 }
 
-const emptyProject: CrgProjectData = {
+const emptyProject: Required<CrgProjectData> & { layers: CrgLayer[]; groups: CrgLayersGroup[] } = {
   id: 0,
   bbox: '',
   createdAt: '',
@@ -33,29 +33,29 @@ const emptyProject: CrgProjectData = {
   layers: [],
   layersErrors: {},
   groups: [],
-  role: undefined
+  role: Role.VIEWER
 };
 
 class CurrentProject implements CrgProjectData {
   private static _instance: CurrentProject;
 
-  @observable bbox: string;
-  @observable createdAt: string;
-  @observable description: string;
-  @observable id: number;
-  @observable name: string;
-  @observable order: number;
-  @observable organizationId: number;
-  @observable default: boolean;
-  @observable layers: CrgLayer[];
-  @observable groups: CrgLayersGroup[];
-  @observable primalLayers: CrgLayer[];
-  @observable primalGroups: CrgLayersGroup[];
-  @observable layersErrors: Record<string, string[]>;
-  @observable rawLayersFromApi: CrgLayer[];
-  @observable role: Role;
+  @observable bbox: string = emptyProject.bbox;
+  @observable createdAt: string = emptyProject.createdAt;
+  @observable description: string = emptyProject.description;
+  @observable id: number = emptyProject.id;
+  @observable name: string = emptyProject.name;
+  @observable order: number = emptyProject.order;
+  @observable organizationId: number = emptyProject.organizationId;
+  @observable default: boolean = emptyProject.default;
+  @observable layers: CrgLayer[] = emptyProject.layers;
+  @observable groups: CrgLayersGroup[] = emptyProject.groups;
+  @observable primalLayers: CrgLayer[] = [];
+  @observable primalGroups: CrgLayersGroup[] = [];
+  @observable layersErrors: Record<string, string[]> = emptyProject.layersErrors;
+  @observable rawLayersFromApi: CrgLayer[] = [];
+  @observable role: Role = emptyProject.role;
 
-  @observable viewZoom: number;
+  @observable viewZoom: number = 0;
 
   private constructor() {
     makeObservable(this);
@@ -77,7 +77,7 @@ class CurrentProject implements CrgProjectData {
         id: layer.id,
         payload: layer,
         isGroup: false,
-        errors: this.layersErrors[layer.complexName]
+        errors: layer.complexName ? this.layersErrors[layer.complexName] : undefined
       })),
       ...this.rasterLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false })),
       ...this.externalLayers.map(layer => ({ id: layer.id, payload: layer, isGroup: false }))
@@ -104,7 +104,7 @@ class CurrentProject implements CrgProjectData {
         if (!item.errors && (item.payload as NewCrgLayer).complexName) {
           const itemPayload = item.payload as NewCrgLayer;
 
-          if (this.layersErrors[itemPayload.complexName]) {
+          if (itemPayload.complexName && this.layersErrors[itemPayload.complexName]) {
             item.errors = this.layersErrors[itemPayload.complexName];
           }
         }
@@ -141,7 +141,7 @@ class CurrentProject implements CrgProjectData {
     return this.visibleOnMapLayers.filter(item => {
       const { type } = item.payload;
 
-      return type === CrgLayerType.VECTOR || isVectorFromFile(type);
+      return type === CrgLayerType.VECTOR || (type && isVectorFromFile(type));
     });
   }
 
@@ -162,7 +162,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get vectorFromFileLayers(): CrgVectorLayer[] {
-    return (this.layers?.filter(l => isVectorFromFile(l.type)) || []) as CrgVectorLayer[];
+    return (this.layers?.filter(l => l.type && isVectorFromFile(l.type)) || []) as CrgVectorLayer[];
   }
 
   @computed
@@ -217,10 +217,13 @@ class CurrentProject implements CrgProjectData {
       groupsToPatch: this.groups
         .map(group => [group, this.primalGroups.find(primalGroup => primalGroup.id === group.id)])
         .filter(([, primalGroup]) => primalGroup)
-        .map(
-          ([group, primalGroup]) =>
-            [group.id, getPatch(group, primalGroup, groupsMeaningfulFields)] as [number, Partial<CrgLayersGroup>]
-        )
+        .map(([group, primalGroup]): [number, Partial<CrgLayersGroup>] => {
+          if (!group || !primalGroup) {
+            throw new Error('невероятно!');
+          }
+
+          return [group.id, getPatch(group, primalGroup, groupsMeaningfulFields)];
+        })
         .filter(([, patch]) => Object.keys(patch).length),
 
       layersToCreate: this.tree
@@ -230,10 +233,13 @@ class CurrentProject implements CrgProjectData {
       layersToPatch: this.layers
         .map(layer => [layer, this.primalLayers.find(primalLayer => primalLayer.id === layer.id)])
         .filter(([, primalLayer]) => primalLayer)
-        .map(
-          ([layer, primalLayer]) =>
-            [layer.id, getPatch(layer, primalLayer, layersMeaningfulFields)] as [number, Partial<CrgLayer>]
-        )
+        .map(([layer, primalLayer]): [number, Partial<CrgLayer>] => {
+          if (!layer || !primalLayer) {
+            throw new Error('невероятно!');
+          }
+
+          return [layer.id, getPatch(layer, primalLayer, layersMeaningfulFields)];
+        })
         .filter(([, patch]) => Object.keys(patch).length),
 
       layersToDelete: this.primalLayers.filter(primalLayer => this.isLayerDeleted(primalLayer)).map(({ id }) => id),
@@ -260,6 +266,8 @@ class CurrentProject implements CrgProjectData {
     if (tableName && this.vectorLayers.length) {
       return this.getLayerByTableNameFromLayers(tableName, this.vectorLayers);
     }
+
+    throw new Error('В проекте нет векторных слоев');
   }
 
   private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {
@@ -306,10 +314,13 @@ class CurrentProject implements CrgProjectData {
 
   @action
   patchGroup(groupId: number, patch: Partial<CrgLayersGroup>): CrgLayersGroup {
-    return Object.assign(
-      this.groups.find(({ id }) => id === groupId),
-      patch
-    );
+    const group = this.groups.find(({ id }) => id === groupId);
+
+    if (!group) {
+      throw new Error('Не удалось найти группу с id ' + groupId);
+    }
+
+    return Object.assign(group, patch);
   }
 
   @action
@@ -354,7 +365,7 @@ class CurrentProject implements CrgProjectData {
   }
 
   private getGenusVisibility(item: TreeItem): boolean {
-    return item.payload.enabled && (item.parent ? this.getGenusVisibility(item.parent) : true);
+    return Boolean(item.payload.enabled && (item.parent ? this.getGenusVisibility(item.parent) : true));
   }
 
   @boundMethod
@@ -367,22 +378,28 @@ class CurrentProject implements CrgProjectData {
   }
 
   private sortSiblings(a: TreeItem, b: TreeItem): number {
-    const { payload: payloadA, isGroup: aGroup } = a;
-    const { payload: payloadB, isGroup: bGroup } = b;
+    const {
+      payload: { position: positionA = 0, id: idA },
+      isGroup: aGroup
+    } = a;
+    const {
+      payload: { position: positionB = 0, id: idB },
+      isGroup: bGroup
+    } = b;
 
-    return payloadA.position - payloadB.position || payloadA.id - payloadB.id || Number(bGroup) - Number(aGroup);
+    return positionA - positionB || idA - idB || Number(bGroup) - Number(aGroup);
   }
 
   private sortCommonAncestorsChildren(a: TreeItem, b: TreeItem, depth?: number): number {
     if (depth === undefined) {
-      depth = Math.min(a.depth, b.depth);
+      depth = Math.min(a.depth || 0, b.depth || 0);
     }
 
     const ax = this.getGenusAtDept(a, depth);
     const bx = this.getGenusAtDept(b, depth);
 
     if (ax === bx) {
-      return a.depth - b.depth;
+      return (a.depth || 0) - (b.depth || 0);
     }
 
     if (ax.parent === bx.parent) {
@@ -392,15 +409,18 @@ class CurrentProject implements CrgProjectData {
     return this.sortCommonAncestorsChildren(ax, bx, depth - 1);
   }
 
-  private getGenusAtDept(item: TreeItem, depth: number): TreeItem {
-    return item.depth === depth ? item : this.getGenusAtDept(item.parent, depth);
+  private getGenusAtDept(item: TreeItem | undefined, depth: number): TreeItem {
+    return item?.depth === depth ? item : this.getGenusAtDept(item?.parent, depth);
   }
 
   private getActualTransparency(item: TreeItem, value?: number): number {
-    value = value || item.payload.transparency;
+    value = value || item.payload.transparency || 100;
 
     if (item.parent) {
-      return this.getActualTransparency(item.parent, Math.round(value * (item.parent.payload.transparency / 100)));
+      return this.getActualTransparency(
+        item.parent,
+        Math.round(value * ((item.parent.payload.transparency || 100) / 100))
+      );
     }
 
     return value;
@@ -442,7 +462,7 @@ class CurrentProject implements CrgProjectData {
       return false;
     }
 
-    const { minZoom, maxZoom } = treeItem.payload as CrgLayer;
+    const { minZoom = 0, maxZoom = 40 } = treeItem.payload as CrgLayer;
 
     return this.viewZoom < minZoom || (Boolean(maxZoom) && this.viewZoom > maxZoom);
   }
@@ -466,7 +486,7 @@ class CurrentProject implements CrgProjectData {
   }
 
   getClosestCommonAncestor(a: TreeItem, b: TreeItem): TreeItem<CrgLayersGroup> | null {
-    const depth = Math.min(a.depth, b.depth);
+    const depth = Math.min(a.depth || 0, b.depth || 0);
 
     if (a.id === b.parent?.id) {
       return a as TreeItem<CrgLayersGroup>;
@@ -482,6 +502,10 @@ class CurrentProject implements CrgProjectData {
 
     const genusA = this.getGenusAtDept(a, depth);
     const genusB = this.getGenusAtDept(b, depth);
+
+    if (!genusA.parent || !genusB.parent) {
+      return null;
+    }
 
     return genusA.parent.id === genusB.parent.id
       ? genusA.parent

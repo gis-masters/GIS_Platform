@@ -18,9 +18,13 @@ export function preparePageOptions(
   };
 }
 
-export function stringifyParams(params: Record<string, string | number>): Record<string, string> {
+export function stringifyParams(params: Record<string, string | number | undefined>): Record<string, string> {
   const stringParams: Record<string, string> = {};
   for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) {
+      continue;
+    }
+
     stringParams[key] = String(value);
   }
 

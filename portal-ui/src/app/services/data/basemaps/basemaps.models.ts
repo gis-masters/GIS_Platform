@@ -8,7 +8,7 @@ export enum SourceType {
 }
 
 export interface Basemap {
-  id?: number;
+  id: number;
   name?: string;
 
   title: string;

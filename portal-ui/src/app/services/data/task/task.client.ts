@@ -50,7 +50,7 @@ class TasksClient extends Client {
     return await http.get<PageableResources<Task>>(this.getTasksUrl(), { params });
   }
 
-  async createTask(task: Task): Promise<Task> {
+  async createTask(task: Omit<Task, 'id'>): Promise<Task> {
     return await http.post(this.getTasksUrl(), task);
   }
 

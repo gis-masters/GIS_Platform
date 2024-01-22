@@ -35,9 +35,5 @@ export const config: Options.Testrunner = {
 
   async beforeStep() {
     await getEnvironment();
-  },
-
-  async afterScenario() {
-    await browser.reloadSession();
   }
 };

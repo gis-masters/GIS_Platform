@@ -1,4 +1,4 @@
-import { Then, When } from '@wdio/cucumber-framework';
+import { Given, Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
 
 import { projectsBlock, sortDirections } from './Projects.block';
@@ -69,7 +69,7 @@ When('на странице проектов я выбираю направле�
   await projectsBlock.selectProjectSortingDescending(sortDirections[direction]);
 });
 
-When('в текущий проект подключена пустая подложка', async function (this: ScenarioScope) {
+Given('в текущий проект подключена пустая подложка', async function (this: ScenarioScope) {
   const whiteBasemap = {
     id: 1,
     name: 'empty',
@@ -100,7 +100,7 @@ Then(/^в списке проектов отображаются проекты:
 
 Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
-  const newNames = names.replace(/^.|.$/g, '');
+  const newNames = names.replaceAll(/^.|.$/g, '');
 
   await expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
 });

@@ -3,6 +3,7 @@ import { Dialog, DialogActions } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
+import { printSettings } from '../../stores/PrintSettings.store';
 import { exportMap, printMap } from '../../services/map/map-print.service';
 import { Button } from '../Button/Button';
 
@@ -12,7 +13,6 @@ import { PrintMapDialogForm } from './Form/PrintMapDialog-Form';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog.scss';
 import '!style-loader!css-loader!sass-loader!./JpegButton/PrintMapDialog-JpegButton.scss';
-import { printSettings } from '../../stores/PrintSettings.store';
 
 const cnPrintMapDialog = cn('PrintMapDialog');
 
@@ -35,7 +35,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
   }
 
   render() {
-    const { open, onClose, directlyPrint, format, allowJpg, allowPdf } = this.props;
+    const { open, directlyPrint, format, allowJpg, allowPdf, onClose } = this.props;
 
     return (
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnPrintMapDialog() }}>

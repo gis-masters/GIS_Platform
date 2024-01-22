@@ -78,6 +78,9 @@ class PermissionsClient extends DataClient {
     datasetIdentifier: string,
     tableIdentifier: string
   ): Promise<void> {
+    if (!payload.id) {
+      throw new Error('Payload id is required');
+    }
     await http.delete(this.getTableRoleAssignmentUrl(payload.id, datasetIdentifier, tableIdentifier));
   }
 

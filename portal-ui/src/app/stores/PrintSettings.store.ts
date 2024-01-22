@@ -80,7 +80,7 @@ export interface PrintSettings {
   showSystemLayers: { draft: boolean; measure: boolean };
 }
 
-const defaultPrintSettings: PrintSettings = {
+export const defaultPrintSettings: PrintSettings = {
   pageFormatId: pageFormats[1].id,
   resolution: resolutions[1],
   scale: scales[7],

@@ -711,11 +711,12 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
     }
 
     services.logger.warn('Unknown geometry type: ', geometryAttribute.binding, attributes);
-  } else {
-    services.logger.error(error);
 
-    throw new Error(error);
+    return GeometryType.MULTI_POLYGON;
   }
+  services.logger.error(error);
+
+  throw new Error(error);
 }
 
 function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {

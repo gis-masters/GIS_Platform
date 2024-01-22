@@ -59,7 +59,7 @@ export interface PageOptions {
 }
 
 export interface PageQueryParams {
-  [key: string]: string;
+  [key: string]: string | undefined;
   page: string;
   size: string;
   sort?: string;

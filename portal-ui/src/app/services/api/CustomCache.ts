@@ -37,7 +37,7 @@ export class CustomCache<T = unknown> {
   }
 
   add(key: string, payload: T, config: CustomCacheConfig = {}): void {
-    const { disabled, maxAge }: CustomCacheConfig = { ...this.config, ...config };
+    const { disabled, maxAge = 0 }: CustomCacheConfig = { ...this.config, ...config };
 
     if (config.clear) {
       this.clear();

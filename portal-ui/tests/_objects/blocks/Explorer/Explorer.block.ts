@@ -97,7 +97,7 @@ export class ExplorerBlock extends Block {
   async getListTitles(): Promise<string[]> {
     const $title = await this.$('title');
     await $title.waitForDisplayed();
-    const $$titles = await this.$$('title');
+    const $$titles = [...(await this.$$('title'))];
 
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }

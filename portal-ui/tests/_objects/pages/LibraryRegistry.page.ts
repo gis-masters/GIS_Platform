@@ -10,7 +10,7 @@ export class LibraryRegistryPage extends Page {
   deletedDocumentsLibraryUrl = '?filter=%7B%22is_deleted%22%3Atrue%7D';
 
   constructor(libraryTableName: string) {
-    super(true);
+    super();
     this.url = `/data-management/library/${libraryTableName}/registry`;
   }
 

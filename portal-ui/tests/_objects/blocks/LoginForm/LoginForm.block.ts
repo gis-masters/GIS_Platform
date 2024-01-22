@@ -53,7 +53,7 @@ class LoginFormBlock extends Block {
   async getOrganizations(): Promise<string[]> {
     const $$organizationsListItems = await this.$$('organizationsListItem');
 
-    return await Promise.all($$organizationsListItems.map(async $item => await $item.getText()));
+    return await Promise.all([...$$organizationsListItems].map(async $item => await $item.getText()));
   }
 }
 

@@ -13,7 +13,7 @@ import { stringifyParams } from './http.utils';
 const ITEMS_PER_PAGE = 300;
 
 interface RequestConfig extends AxiosRequestConfig {
-  params?: Record<string, string | number>;
+  params?: Record<string, string | number | undefined>;
   headers?: Record<string, string>;
 }
 

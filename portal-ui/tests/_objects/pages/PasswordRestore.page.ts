@@ -9,4 +9,4 @@ export class PasswordRestorePage extends Page {
   };
 }
 
-export const passwordRestore = new PasswordRestorePage();
+export const passwordRestorePage = new PasswordRestorePage();

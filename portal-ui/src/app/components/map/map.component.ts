@@ -111,7 +111,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     fromMobx(() => sidebars.featuresSidebarOpen, true)
       .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(featuresOpen => {
-        this.isFeaturesSidebarActive = featuresOpen;
+        this.isFeaturesSidebarActive = Boolean(featuresOpen);
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);
@@ -120,7 +120,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     fromMobx(() => sidebars.editOpen, true)
       .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(editOpen => {
-        this.isEditSidebarActive = editOpen;
+        this.isEditSidebarActive = Boolean(editOpen);
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);
@@ -129,7 +129,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     fromMobx(() => sidebars.bugReportOpen, true)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(bugReportOpen => {
-        this.isBugReportSidebarActive = bugReportOpen;
+        this.isBugReportSidebarActive = Boolean(bugReportOpen);
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);

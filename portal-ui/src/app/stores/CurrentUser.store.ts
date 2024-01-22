@@ -20,17 +20,17 @@ const emptyOrgInfo: OrgInfo = {
 class CurrentUser implements OrgInfo {
   private static _instance: CurrentUser;
 
-  @observable id: number;
-  @observable email: string;
-  @observable name: string;
-  @observable surname: string;
-  @observable login: string;
-  @observable geoserverLogin: string;
-  @observable enabled: boolean;
-  @observable authorities: BuiltInRole[];
-  @observable createdAt: string;
-  @observable orgName: string;
-  @observable orgId: number;
+  @observable id: number = emptyOrgInfo.id;
+  @observable email: string = emptyOrgInfo.email;
+  @observable name: string = emptyOrgInfo.name;
+  @observable surname: string = emptyOrgInfo.surname;
+  @observable login: string = emptyOrgInfo.login;
+  @observable geoserverLogin: string = emptyOrgInfo.geoserverLogin;
+  @observable enabled: boolean = emptyOrgInfo.enabled;
+  @observable authorities: BuiltInRole[] = emptyOrgInfo.authorities;
+  @observable createdAt: string = emptyOrgInfo.createdAt;
+  @observable orgName: string = emptyOrgInfo.orgName;
+  @observable orgId: number = emptyOrgInfo.orgId;
 
   static get instance() {
     return this._instance || (this._instance = new this());

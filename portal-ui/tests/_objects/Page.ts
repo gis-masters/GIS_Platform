@@ -2,18 +2,9 @@ import { Block } from './Block';
 
 declare const window: { navigate(url: string): void };
 
-export const pagesRegistry: Record<string, Page> = {};
-
 export abstract class Page extends Block {
   abstract url: string;
   abstract title: string;
-
-  constructor(isPageNotGoInRegistry = false) {
-    super();
-    if (!isPageNotGoInRegistry) {
-      pagesRegistry[this.constructor.name] = this;
-    }
-  }
 
   async testUrl(): Promise<void> {
     await expect(browser).toHaveUrlContaining(this.url);

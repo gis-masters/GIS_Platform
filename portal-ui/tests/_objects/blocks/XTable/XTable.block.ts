@@ -193,17 +193,17 @@ export class XTableBlock extends Block {
   }
 
   private async getCellsByTitle(title: string): Promise<WebdriverIO.Element[]> {
-    const headerTitles = await extractText(await this.$$('colTitle'));
+    const headerTitles = await extractText([...(await this.$$('colTitle'))]);
 
     const index = headerTitles.indexOf(title);
 
     const $container = await this.$('container');
 
-    return $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`);
+    return [...(await $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`))];
   }
 
   async getRowByFieldValue(value: string, field: string): Promise<WebdriverIO.Element> {
-    const headerTitles = await extractText(await this.$$('colTitle'));
+    const headerTitles = await extractText([...(await this.$$('colTitle'))]);
     const index = headerTitles.indexOf(field);
     const $$rows = await this.$$('rows');
 
@@ -225,7 +225,7 @@ export class XTableBlock extends Block {
     return $$rows.slice(0, rows);
   }
 
-  async getAllRows(): Promise<WebdriverIO.Element[]> {
+  async getAllRows(): Promise<WebdriverIO.ElementArray> {
     return await this.$$('rows');
   }
 }

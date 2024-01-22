@@ -24,7 +24,7 @@ export class Emitter<T = unknown> {
         (!channel || channel === item.channel) &&
         (!listeners || listeners.includes(item.listener))
       ) {
-        Emitter.target.removeEventListener(item.channel, item.listener);
+        Emitter.target.removeEventListener(item.channel, item.listener as EventListener);
 
         return false;
       }
@@ -41,21 +41,21 @@ export class Emitter<T = unknown> {
     if (scope) {
       this.scopeOff(scope, [listener]);
     } else {
-      Emitter.target.removeEventListener(this.channel, listener);
+      Emitter.target.removeEventListener(this.channel, listener as EventListener);
     }
   }
 
   on(listener: Listener<T>, scope?: unknown): void {
-    Emitter.target.addEventListener(this.channel, listener);
+    Emitter.target.addEventListener(this.channel, listener as EventListener);
     if (scope) {
-      Emitter.scoped.push({ channel: this.channel, scope, listener });
+      Emitter.scoped.push({ channel: this.channel, scope, listener: listener as EventListener });
     }
   }
 
   once(listener: Listener<T>, scope?: unknown): void {
-    Emitter.target.addEventListener(this.channel, listener, { once: true });
+    Emitter.target.addEventListener(this.channel, listener as EventListener, { once: true });
     if (scope) {
-      Emitter.scoped.push({ channel: this.channel, scope, listener });
+      Emitter.scoped.push({ channel: this.channel, scope, listener: listener as EventListener });
     }
   }
 

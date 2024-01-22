@@ -29,7 +29,7 @@ export abstract class Block<S extends Selectors = Selectors> {
     return $parent.$(this.selectors[key]);
   }
 
-  protected async $$(key: keyof this['selectors']): Promise<WebdriverIO.Element[]> {
+  protected async $$(key: keyof this['selectors']): Promise<WebdriverIO.ElementArray> {
     const $parent = await this.getParentOrContainer();
 
     return $parent.$$(this.selectors[key]);

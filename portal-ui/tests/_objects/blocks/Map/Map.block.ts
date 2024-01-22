@@ -27,6 +27,12 @@ class MapBlock extends Block {
     await sleep(300); // жду подгрузки объектов
     await $map.click();
   }
+
+  async moveToMap(): Promise<void> {
+    const $map = await this.$('map');
+    await $map.waitForDisplayed();
+    await $map.moveTo();
+  }
 }
 
 export const mapBlock = new MapBlock();

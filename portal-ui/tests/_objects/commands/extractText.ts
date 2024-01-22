@@ -1,4 +1,4 @@
-export async function extractText($$elements: WebdriverIO.Element[]): Promise<string[]> {
+export async function extractText($$elements: WebdriverIO.Element[] | WebdriverIO.ElementArray): Promise<string[]> {
   const contents: string[] = [];
   for (const $element of $$elements) {
     contents.push(await $element.getText());

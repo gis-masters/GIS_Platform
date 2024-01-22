@@ -86,7 +86,7 @@ class EditFeatureBlock extends Block {
   async getGeometryInEditMode(): Promise<string[]> {
     const $container = await editFeatureBlock.$('container');
 
-    return await extractValues(await $container.$$('.EditFeatureGeometry-CoordInput input'));
+    return await extractValues([...(await $container.$$('.EditFeatureGeometry-CoordInput input'))]);
   }
 
   async waitForEditFeatureForm(): Promise<void> {

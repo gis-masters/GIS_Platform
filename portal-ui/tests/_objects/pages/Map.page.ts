@@ -9,7 +9,7 @@ export class MapPage extends Page {
   url: string;
 
   constructor(projectId: number) {
-    super(true);
+    super();
     this.url = `projects/${projectId}/map`;
   }
 

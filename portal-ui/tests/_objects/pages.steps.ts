@@ -3,7 +3,7 @@ import { Given, Then, When } from '@wdio/cucumber-framework';
 import { blPage } from './pages/BL.page';
 import { root } from './blocks/Root/Root';
 import { MapPage } from './pages/Map.page';
-import { Page, pagesRegistry } from './Page';
+import { Page } from './Page';
 import { ScenarioScope } from './ScenarioScope';
 import { TestUser } from './commands/auth/testUsers';
 import { dataManagementPage } from './pages/DataManagement.page';
@@ -13,11 +13,15 @@ import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryB
 import { Schema } from '../../src/app/services/data/schema/schema.models';
 import { tasksJournalPage } from './pages/TasksJournal.page';
 import { OrgAdminPage } from './pages/OrgAdmin';
+import { sleep } from '../../src/app/services/util/sleep';
+import { pagesRegistry } from './pages/_pagesRegistry';
+import { mapBlock } from './blocks/Map/Map.block';
 
-function findPage(title: string): Page {
-  const page = Object.values(pagesRegistry).find(page => page.title === title);
+async function findPage(title: string): Promise<Page> {
+  const page = pagesRegistry.find(page => page.title === title);
   if (!page) {
-    throw new Error(`Нет страницы "${title}"${JSON.stringify(Object.keys(pagesRegistry))}`);
+    await sleep(500);
+    throw new Error(`Нет страницы "${title}" ${JSON.stringify(pagesRegistry.map(({ title }) => title))}`);
   }
 
   return page;
@@ -26,24 +30,24 @@ function findPage(title: string): Page {
 // common
 
 Given('я на странице {string}', async (title: string) => {
-  const page = findPage(title);
+  const page = await findPage(title);
   await page.open();
 });
 
 When('я перехожу на страницу {string}', async (title: string) => {
-  const page = findPage(title);
+  const page = await findPage(title);
   await browser.url(page.url);
   await root.waitForExist();
 });
 
 Then('открылась страница {string}', async (title: string) => {
-  const page = findPage(title);
+  const page = await findPage(title);
   await page.waitForVisible();
   await page.testUrl();
 });
 
 When('я жду открытия страницы {string}', async (title: string) => {
-  const page = findPage(title);
+  const page = await findPage(title);
   await page.waitForVisible();
   await page.testUrl();
 });
@@ -51,7 +55,8 @@ When('я жду открытия страницы {string}', async (title: strin
 When(
   'я перехожу на страницу {string} с гостевыми логином-паролем пользователя {user}',
   async (pageTitle: string, user: TestUser) => {
-    await browser.url(findPage(pageTitle).url + `/?guestName=${user.email}&guestPass=${user.password}`);
+    const page = await findPage(pageTitle);
+    await browser.url(page.url + `/?guestName=${user.email}&guestPass=${user.password}`);
     await root.waitForExist();
   }
 );
@@ -87,6 +92,7 @@ Given(
       latestVectorTable.identifier,
       ids
     );
+    await mapBlock.waitForVisible();
   }
 );
 

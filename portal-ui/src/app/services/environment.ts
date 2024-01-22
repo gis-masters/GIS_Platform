@@ -18,7 +18,7 @@ interface ProtocolsBoolean {
   https: boolean;
 }
 
-const emptyEnv = {
+const emptyEnv: EnvironmentData = {
   platform: 'simf',
   production: true,
   server: {
@@ -30,9 +30,9 @@ const emptyEnv = {
     wsPort: ''
   },
   scratchWorkspaceName: '',
-  flags: null,
-  logo: null,
-  favicon: null,
+  flags: undefined,
+  logo: undefined,
+  favicon: undefined,
   suppressToastErrors: {
     http: false,
     https: false
@@ -69,10 +69,10 @@ export class Environment implements EnvironmentData {
 
   inited = false;
 
-  platform: Platform;
-  production: boolean;
-  server: EnvironmentServer;
-  scratchWorkspaceName: string;
+  platform: Platform = emptyEnv.platform;
+  production: boolean = emptyEnv.production;
+  server: EnvironmentServer = emptyEnv.server;
+  scratchWorkspaceName: string = emptyEnv.scratchWorkspaceName;
   flags?: FlagsList;
   logo?: string;
   title?: string;
@@ -85,8 +85,8 @@ export class Environment implements EnvironmentData {
   registration?: string;
   background?: string;
   favicon?: string;
-  suppressToastErrors: ProtocolsBoolean;
-  sendErrorsToTG: ProtocolsBoolean;
+  suppressToastErrors: ProtocolsBoolean = emptyEnv.suppressToastErrors;
+  sendErrorsToTG: ProtocolsBoolean = emptyEnv.sendErrorsToTG;
 
   static get instance(): Environment {
     return this._instance || (this._instance = new this());
