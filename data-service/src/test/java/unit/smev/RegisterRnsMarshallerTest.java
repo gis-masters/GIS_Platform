@@ -3,18 +3,18 @@ package unit.smev;
 import org.junit.Test;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegisterRnsMarshallerTest extends AMarshallerTest {
 
+    private final XmlMarshaller marshaller = new XmlMarshaller(MnemonicEnum.REGISTER_RNS_1_0_10.getPrefixMapper());
+
     @Test
     public void response() throws Exception {
         var fileContent = readFile("register_rns_1_0_10/response_reject.xml");
-        var queryResult = MnemonicEnum
-                .REGISTER_RNS_1_0_10
-                .getMarshaller()
-                .unmarshall(fileContent, QueryResult.class);
+        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
 
         var smevMeta = queryResult.getSmevMetadata();
         assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());

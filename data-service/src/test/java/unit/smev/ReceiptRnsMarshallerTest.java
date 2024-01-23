@@ -3,12 +3,13 @@ package unit.smev;
 import org.junit.Test;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
-import ru.mycrg.data_service.receipt_rns_1_0_9.ClientMessage;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
+import ru.mycrg.data_service.receipt_rns_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsXmlBuildProcess;
 import ru.mycrg.data_service.util.xml.XmlMapper;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.time.LocalDate;
 
@@ -18,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
  */
 public class ReceiptRnsMarshallerTest extends AMarshallerTest {
+    private final XmlMarshaller marshaller = new XmlMarshaller(MnemonicEnum.RECEIPT_RNS_1_0_9.getPrefixMapper());
 
     @Test
     public void request() throws Exception {
-
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
 
@@ -33,18 +34,13 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
         var meta = new ReceiptRnsXmlBuildProcess(processor).run(dto);
 
-        var clientMessageUnmarshal = MnemonicEnum
-                .RECEIPT_RNS_1_0_9
-                .getMarshaller()
-                .unmarshall(meta.getXmlString(), ClientMessage.class);
+        // to xml
+        var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
 
-        var receiptListConstruction = clientMessageUnmarshal
-                .getRequestMessage()
-                .getRequestContent()
-                .getContent()
-                .getMessagePrimaryContent()
-                .getRequest()
-                .getReceiptListConstruction();
+        // to object
+        var requestObject = marshaller.unmarshall(requestXmlStrong, Request.class);
+
+        var receiptListConstruction = requestObject.getReceiptListConstruction();
 
         assertEquals(dto.getConstPermitDateFrom(), XmlMapper.mapLocalDate(receiptListConstruction.getConstPermitDateFrom()));
         assertEquals(dto.getConstPermitDateTo(), XmlMapper.mapLocalDate(receiptListConstruction.getConstPermitDateTo()));
@@ -53,10 +49,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
     @Test
     public void response() throws Exception {
         var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
-        var queryResult = MnemonicEnum
-                .RECEIPT_RNS_1_0_9
-                .getMarshaller()
-                .unmarshall(fileContent, QueryResult.class);
+        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
 
         var smevMeta = queryResult.getSmevMetadata();
         assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());

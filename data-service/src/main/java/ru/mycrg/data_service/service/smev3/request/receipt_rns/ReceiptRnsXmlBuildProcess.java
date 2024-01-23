@@ -5,71 +5,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.receipt_rns_1_0_9.*;
+import ru.mycrg.data_service.receipt_rns_1_0_9.AttachmentHeaderType;
+import ru.mycrg.data_service.receipt_rns_1_0_9.ReceiptListConstructionType;
+import ru.mycrg.data_service.receipt_rns_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
-import ru.mycrg.data_service.util.JsonConverter;
-
-import java.util.UUID;
+import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
 
 import static ru.mycrg.data_service.util.xml.XmlMapper.mapCalendar;
 
 
-public class ReceiptRnsXmlBuildProcess {
+public class ReceiptRnsXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsXmlBuildProcess.class);
-    private final RequestProcessor requestProcessor;
 
     public ReceiptRnsXmlBuildProcess(RequestProcessor requestProcessor) {
-        this.requestProcessor = requestProcessor;
+        super(requestProcessor, null, null);
     }
 
-    public XmlBuildMeta run(@NotNull ReceiptRnsRequestDto rnsRequestDto) {
-        UUID clientId = UUID.randomUUID();
-
+    public BuildRequestAndSources<Request> run(@NotNull ReceiptRnsRequestDto rnsRequestDto) {
         try {
             var receiptConstruction = new ReceiptListConstructionType();
             receiptConstruction.setConstPermitDateFrom(mapCalendar(rnsRequestDto.getConstPermitDateFrom()));
             receiptConstruction.setConstPermitDateTo(mapCalendar(rnsRequestDto.getConstPermitDateTo()));
 
-            var request = new RequestType();
+            var request = new Request();
             request.setReceiptListConstruction(receiptConstruction);
 
-            var messagePrimaryContent = new MessagePrimaryContent();
-            messagePrimaryContent.setRequest(request);
-
-            var content = new Content();
-            content.setMessagePrimaryContent(messagePrimaryContent);
-
-            var requestContent = new RequestContentType();
-            requestContent.setContent(content);
-
-            //clientId
-            var requestMetadata = new RequestMetadataType();
-            requestMetadata.setClientId(clientId.toString());
-
-            var requestMessage = new RequestMessageType();
-            requestMessage.setRequestMetadata(requestMetadata);
-            requestMessage.setRequestContent(requestContent);
-
-            var clientMessage = new ClientMessage();
-            clientMessage.setItSystem(requestProcessor.getSmev3Config().getSystemMnemonic());
-            clientMessage.setRequestMessage(requestMessage);
-
-            String xmlText = requestProcessor
-                    .xmlMarshaller()
-                    .marshall(clientMessage, ClientMessage.class);
-
-            log.debug("SMEV3. request: {}", xmlText);
-
-            return new XmlBuildMeta(
-                    requestProcessor.mnemonicEnum(),
-                    clientId,
-                    null,
-                    JsonConverter.toJsonNode(clientMessage),
-                    xmlText,
-                    null,
-                    null
-            );
+            return buildRequest(request);
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }

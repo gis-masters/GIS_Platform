@@ -45,11 +45,11 @@ public class SmevMessageService {
             var reestrMessage = new ReestrIncoming();
             reestrMessage.setId(UUID.randomUUID());
             reestrMessage.setResponseTo(originalMessageRecord.getReferenceReestrOutgoing().toString());
-            reestrMessage.setBody(processResult.getXmlBuildMeta().getXmlString());
+            reestrMessage.setBody(processResult.getXmlBuildMeta().getRequestXmlString());
             reestrMessage.setDateIn(LocalDateTime.now());
             reestrMessage.setStatus(processResult.getStatus());
             reestrMessage.setSystem(Systems.GISOGR_RK);
-            if (processResult.getXmlBuildMeta().getXmlString().contains("RRTR02")) {
+            if (processResult.getXmlBuildMeta().getRequestXmlString().contains("RRTR02")) {
                 reestrMessage.setUserFrom(Systems.FGIS_EGRN);
             } else {
                 reestrMessage.setUserFrom(Systems.EIS_JS);
@@ -61,8 +61,8 @@ public class SmevMessageService {
                             processResult.getXmlBuildMeta().getClientId(),
                             processResult.getXmlBuildMeta().getReferenceClientId(),
                             reestrMessage.getId(),
-                            processResult.getXmlBuildMeta().getXmlObject(),
-                            processResult.getXmlBuildMeta().getXmlString()
+                            processResult.getXmlBuildMeta().getRequestJson(),
+                            processResult.getXmlBuildMeta().getRequestXmlString()
                     )
                     .setRecords(processResult.getXmlBuildMeta().getSources())
                     .setAttachments(processResult.getXmlBuildMeta().getAttachments())
@@ -81,7 +81,7 @@ public class SmevMessageService {
         try {
             var reestrMessage = new ReestrOutgoing();
             reestrMessage.setId(UUID.randomUUID());
-            reestrMessage.setBody(buildMeta.getXmlString());
+            reestrMessage.setBody(buildMeta.getRequestXmlString());
             reestrMessage.setDateOut(LocalDateTime.now());
             reestrMessage.setStatus(ReestrStatus.SEND_QUEUE.getTitle());
             reestrMessage.setSystem(Systems.GISOGR_RK);
@@ -92,8 +92,8 @@ public class SmevMessageService {
                             buildMeta.getMnemonic(),
                             buildMeta.getClientId(),
                             reestrMessage.getId(),
-                            buildMeta.getXmlObject(),
-                            buildMeta.getXmlString()
+                            buildMeta.getRequestJson(),
+                            buildMeta.getRequestXmlString()
                     )
                     .setRecords(buildMeta.getSources())
                     .setAttachments(buildMeta.getAttachments())
@@ -122,8 +122,8 @@ public class SmevMessageService {
                 message.mnemonicEnum(),
                 message.getClientId(),
                 null,
-                message.getXmlObject(),
                 message.getXmlString(),
+                message.getXmlObject(),
                 message.getRecords(),
                 message.getAttachments()
         );

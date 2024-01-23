@@ -10,7 +10,7 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
+import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
@@ -21,6 +21,8 @@ import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 
 
 /**
@@ -51,19 +53,38 @@ public class RegisterRnvRequestService extends RequestProcessor {
     public XmlBuildMeta request(@NotNull RegisterRnvRequestDto dto) {
         log.info("SMEV3 | {}  recId {}", mnemonicEnum(), dto.getRecId());
         try {
-            var buildMeta = new RegisterRnvXmlBuildProcess(
+            var buildRequest = new RegisterRnvXmlBuildProcess(
                     this,
                     baseDao,
                     schemaService
-            )
-                    .run(dto);
+            ).run(dto);
 
-            validate(buildMeta.getXmlString());
+            // валидация бизнес части запроса
+            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
+                throw new SmevRequestException("validation fail: " + s);
+            });
 
-            log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendMessage(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
-            return buildMeta;
+            var clientMessage = clientMessage(buildRequest.getRequest());
+
+            var xmlMeta = new XmlBuildMeta(
+                    mnemonicEnum(),
+                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
+                    null,
+                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                    JsonConverter.toJsonNode(clientMessage),
+                    buildRequest.getSourcesJson(),
+                    buildRequest.getAttachmentsJson()
+            );
+
+            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
+            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
+
+            return xmlMeta;
         } catch (Exception e) {
+            if (e instanceof SmevRequestException) {
+                throw (SmevRequestException) e;
+            }
+
             log.error("SMEV. push to queue error: {}", e.getMessage());
             throw new SmevRequestException("push to queue error :" + e.getMessage());
         }
@@ -78,8 +99,8 @@ public class RegisterRnvRequestService extends RequestProcessor {
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    JsonConverter.toJsonNode(queryResult),
                     messageBody,
+                    JsonConverter.toJsonNode(queryResult),
                     null,
                     null
             );
@@ -102,5 +123,30 @@ public class RegisterRnvRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+
+    private ClientMessage clientMessage(Request request) {
+        var primaryContent = new MessagePrimaryContent();
+        primaryContent.setRequest(request);
+
+        var content = new Content();
+        content.setMessagePrimaryContent(primaryContent);
+
+        var contentType = new RequestContentType();
+        contentType.setContent(content);
+
+        var metadataType = new RequestMetadataType();
+        metadataType.setClientId(UUID.randomUUID().toString());
+
+        var messageType = new RequestMessageType();
+        messageType.setRequestMetadata(metadataType);
+        messageType.setRequestContent(contentType);
+
+        var clientMessage = new ClientMessage();
+        clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
+        clientMessage.setRequestMessage(messageType);
+
+        return clientMessage;
     }
 }

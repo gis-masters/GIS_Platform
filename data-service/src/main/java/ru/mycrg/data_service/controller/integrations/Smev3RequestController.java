@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
-import ru.mycrg.data_service.service.smev3.get_cadastrial_plan.GetCadastrialPlanRequestService;
+import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;

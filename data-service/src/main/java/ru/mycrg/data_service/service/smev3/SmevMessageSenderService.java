@@ -37,7 +37,7 @@ public class SmevMessageSenderService {
             // TODO sendQueue - временное явление
             if (sendQueue) {
                 log.info("message send to queue");
-                rabbitTemplate.convertAndSend(adapterSendQueue.getName(), buildMeta.getXmlString());
+                rabbitTemplate.convertAndSend(adapterSendQueue.getName(), buildMeta.getRequestXmlString());
             }
             log.info("Success save and send");
         } catch (Exception e) {

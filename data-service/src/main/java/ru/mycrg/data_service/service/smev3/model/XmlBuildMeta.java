@@ -12,27 +12,25 @@ public class XmlBuildMeta {
     private MnemonicEnum mnemonic;
     private UUID clientId;
     private UUID referenceClientId;
-    private JsonNode xmlObject;
-    private String xmlString;
+    private String requestXmlString;
+    private JsonNode requestJson;
     private JsonNode sources;
     private JsonNode attachments;
 
-    public XmlBuildMeta(
-            MnemonicEnum mnemonic,
-            UUID clientId,
-            UUID referenceClientId,
-            JsonNode xmlObject,
-            String xmlString,
-            JsonNode sources,
-            JsonNode attachments) {
+    public XmlBuildMeta(MnemonicEnum mnemonic,
+                        UUID clientId,
+                        UUID referenceClientId,
+                        String requestXmlString,
+                        JsonNode requestJson,
+                        JsonNode sources,
+                        JsonNode attachments) {
         this.mnemonic = mnemonic;
         this.clientId = clientId;
         this.referenceClientId = referenceClientId;
-        this.xmlObject = xmlObject;
-        this.xmlString = xmlString;
+        this.requestXmlString = requestXmlString;
+        this.requestJson = requestJson;
         this.sources = sources;
         this.attachments = attachments;
-
     }
 
     public MnemonicEnum getMnemonic() {
@@ -47,12 +45,12 @@ public class XmlBuildMeta {
         return referenceClientId;
     }
 
-    public JsonNode getXmlObject() {
-        return xmlObject;
+    public String getRequestXmlString() {
+        return requestXmlString;
     }
 
-    public String getXmlString() {
-        return xmlString;
+    public JsonNode getRequestJson() {
+        return requestJson;
     }
 
     public JsonNode getSources() {

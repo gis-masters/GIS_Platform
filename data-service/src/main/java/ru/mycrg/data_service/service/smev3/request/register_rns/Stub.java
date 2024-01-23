@@ -11,14 +11,9 @@ public class Stub {
     /**
      * временно заполняем того чего нет
      */
-    public static void fillStubFields(ClientMessage xmlObject, RegisterRnsXmlBuildProcess.ReusableElements reusable) {
-        var request = xmlObject
-                .getRequestMessage()
-                .getRequestContent()
-                .getContent()
-                .getMessagePrimaryContent()
-                .getRequest()
-                .getRegisterNewConstruction();
+    public static void fillStubFields(Request request,
+                                      RegisterRnsXmlBuildProcess.ReusableElements reusable) {
+        var registerNewConstruction = request.getRegisterNewConstruction();
 
         // MailingAddress
         var addressElementTypeCity = new AddressElementType();
@@ -44,26 +39,26 @@ public class Stub {
         addressFullType.setOKTMO("46771000001");
         addressFullType.setElementPlanStructure(refBookTypeRaion);
 
-        request.getRecipientInfo().setMailingAddress(addressFullType);
+        registerNewConstruction.getRecipientInfo().setMailingAddress(addressFullType);
 
         //IssueOrgan
         var organizationInfoType = new OrganizationInfoType();
         organizationInfoType.setOGRN("1185053037476");
         organizationInfoType.setINN("5024190060");
-        request.setIssueOrgan(organizationInfoType);
+        registerNewConstruction.setIssueOrgan(organizationInfoType);
 
         // IssuePerson
         var fioType = new FIOType();
         fioType.setMiddleName("Степанов");
         fioType.setName("Степанов");
         fioType.setSurname("Степанов");
-        request.setIssuePerson(fioType);
+        registerNewConstruction.setIssuePerson(fioType);
 
         // IssuePersonPosition
-        request.setIssuePersonPosition("Сотрудник");
+        registerNewConstruction.setIssuePersonPosition("Сотрудник");
 
         // ObjectInfo
-        var objectInfo = request.getObjectInfo().get(0);
+        var objectInfo = registerNewConstruction.getObjectInfo().get(0);
 
         // ObjectInfo - ObjectName
         objectInfo.setObjectAddress(addressFullType);

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
+import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
@@ -20,6 +20,8 @@ import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 
 
 /**
@@ -44,11 +46,31 @@ public class ReceiptRnsRequestService extends RequestProcessor {
     public XmlBuildMeta request(@NotNull ReceiptRnsRequestDto dto) {
         log.info("SMEV3. {} {}", mnemonicEnum(), dto);
         try {
-            var buildMeta = new ReceiptRnsXmlBuildProcess(this).run(dto);
-            log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendMessage(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
+            var buildRequest = new ReceiptRnsXmlBuildProcess(
+                    this
+            ).run(dto);
 
-            return buildMeta;
+            // валидация бизнес части запроса
+            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
+                throw new SmevRequestException("validation fail: " + s);
+            });
+
+            var clientMessage = clientMessage(buildRequest.getRequest());
+
+            var xmlMeta = new XmlBuildMeta(
+                    mnemonicEnum(),
+                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
+                    null,
+                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                    JsonConverter.toJsonNode(clientMessage),
+                    buildRequest.getSourcesJson(),
+                    buildRequest.getAttachmentsJson()
+            );
+
+            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
+            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
+
+            return xmlMeta;
         } catch (Exception e) {
             throw new SmevRequestException("push to queue error :" + e.getMessage());
         }
@@ -63,8 +85,8 @@ public class ReceiptRnsRequestService extends RequestProcessor {
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    JsonConverter.toJsonNode(queryResult),
                     messageBody,
+                    JsonConverter.toJsonNode(queryResult),
                     null,
                     null
             );
@@ -87,5 +109,29 @@ public class ReceiptRnsRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+    private ClientMessage clientMessage(Request request) {
+        var primaryContent = new MessagePrimaryContent();
+        primaryContent.setRequest(request);
+
+        var content = new Content();
+        content.setMessagePrimaryContent(primaryContent);
+
+        var contentType = new RequestContentType();
+        contentType.setContent(content);
+
+        var metadataType = new RequestMetadataType();
+        metadataType.setClientId(UUID.randomUUID().toString());
+
+        var messageType = new RequestMessageType();
+        messageType.setRequestMetadata(metadataType);
+        messageType.setRequestContent(contentType);
+
+        var clientMessage = new ClientMessage();
+        clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
+        clientMessage.setRequestMessage(messageType);
+
+        return clientMessage;
     }
 }

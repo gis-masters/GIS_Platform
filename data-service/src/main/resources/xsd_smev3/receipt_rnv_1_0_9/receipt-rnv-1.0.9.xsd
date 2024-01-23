@@ -9,10 +9,27 @@
     <xs:import namespace="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0"
                schemaLocation="./commons/smev-supplementary-commons-1.3.0.xsd"/>
     <!-- Основные элементы Вида сведений -->
-    <xs:element name="Request" type="tns:RequestType">
+    <xs:element name="Request">
         <xs:annotation>
             <xs:documentation>Запрос на получение сведений о РНВ (Разрешение на ввод в эксплуатацию)</xs:documentation>
         </xs:annotation>
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>Тип Запрос с бизнес-данными</xs:documentation>
+            </xs:annotation>
+            <xs:choice>
+                <xs:element name="ReceiptExploitation" type="tns:ReceiptExploitationType">
+                    <xs:annotation>
+                        <xs:documentation>Получение РНВ (разрешение на строительство)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ReceiptListExploitation" type="tns:ReceiptListExploitationType">
+                    <xs:annotation>
+                        <xs:documentation>Получение списка РНВ</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
     </xs:element>
     <xs:element name="Response" type="tns:ResponseType">
         <xs:annotation>
@@ -20,23 +37,7 @@
         </xs:annotation>
     </xs:element>
     <!-- Сведения о запросе -->
-    <xs:complexType name="RequestType">
-        <xs:annotation>
-            <xs:documentation>Тип Запрос с бизнес-данными</xs:documentation>
-        </xs:annotation>
-        <xs:choice>
-            <xs:element name="ReceiptExploitation" type="tns:ReceiptExploitationType">
-                <xs:annotation>
-                    <xs:documentation>Получение РНВ (разрешение на строительство)</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-            <xs:element name="ReceiptListExploitation" type="tns:ReceiptListExploitationType">
-                <xs:annotation>
-                    <xs:documentation>Получение списка РНВ</xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:choice>
-    </xs:complexType>
+
     <!-- Описание запроса -->
     <!-- Получение ЭД РНВ -->
     <xs:complexType name="ReceiptExploitationType">

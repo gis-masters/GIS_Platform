@@ -112,54 +112,55 @@
 	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/exract-notice-lack-info-who-received-info-about-property"-->
 	<!--schemaLocation="extract_v01/extract_notice_lack_info_who_received_info_about_property_v01.xsd"/>-->
 	<!--Для валидации запроса/ответа на уровне СМЭВ3-->
-	<xs:element name="Request" type="req:Request">
+	<xs:element name="Request">
 		<xs:annotation>
 			<xs:documentation>Запрос на предоставление услуг Росреестра в электронном виде</xs:documentation>
 		</xs:annotation>
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>Тип запроса на предоставление услуг Росреестра в электронном виде</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element name="region" type="das:dRegionsRF">
+					<xs:annotation>
+						<xs:documentation>
+							Код региона
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="externalNumber" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Номер обращения в информационной системе отправителя
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="senderType" type="req:senderTypes">
+					<xs:annotation>
+						<xs:documentation>
+							Тип информационной системы Потребителя
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="actionCode" type="dAcC:DActionCode" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Код учетно-регистрационного действия (дополнительный, для тестирования в режиме эмуляции)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Attachment" type="req:AttachmentRequestType">
+					<xs:annotation>
+						<xs:documentation>Блок описания вложения</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
 	</xs:element>
 	<xs:element name="Response" type="req:responseType">
 		<xs:annotation>
 			<xs:documentation>Ответ из Росреестра с номером заявки</xs:documentation>
 		</xs:annotation>
 	</xs:element>
-	<xs:complexType name="Request">
-		<xs:annotation>
-			<xs:documentation>Тип запроса на предоставление услуг Росреестра в электронном виде</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="region" type="das:dRegionsRF">
-				<xs:annotation>
-					<xs:documentation>
-							Код региона
-						</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="externalNumber" type="xs:string">
-				<xs:annotation>
-					<xs:documentation>
-						Номер обращения в информационной системе отправителя
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="senderType" type="req:senderTypes">
-				<xs:annotation>
-					<xs:documentation>
-						Тип информационной системы Потребителя
-					</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="actionCode" type="dAcC:DActionCode" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation>Код учетно-регистрационного действия (дополнительный, для тестирования в режиме эмуляции)</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="Attachment" type="req:AttachmentRequestType">
-				<xs:annotation>
-					<xs:documentation>Блок описания вложения</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
+
 	<xs:complexType name="responseType">
 		<xs:annotation>
 			<xs:documentation>Тип ответа на предоставление услуг Росреестра в электронном виде</xs:documentation>

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.get_cadastrial_plan;
+package ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -7,8 +7,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
+import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
 import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
@@ -18,6 +19,8 @@ import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 @ConditionalOnProperty(
@@ -40,12 +43,31 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                                 @NotNull String passportFilename,
                                 @NotNull String archiveFilename) {
         try {
-            var buildMeta = new GetCadastrialPlanXmlBuildProcess(
+            var buildRequest = new GetCadastrialPlanXmlBuildProcess(
                     this
-            ).run(requestFilename, appFilename, passportFilename, archiveFilename);
-            log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendMessage(buildMeta, true, Systems.FGIS_EGRN);
-            return buildMeta;
+            ).run(requestFilename, appFilename, passportFilename);
+
+            // валидация бизнес части запроса
+            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
+                throw new SmevRequestException("validation fail: " + s);
+            });
+
+            var clientMessage = clientMessage(buildRequest.getRequest(), archiveFilename);
+
+            var xmlMeta = new XmlBuildMeta(
+                    mnemonicEnum(),
+                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
+                    null,
+                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                    JsonConverter.toJsonNode(clientMessage),
+                    buildRequest.getSourcesJson(),
+                    buildRequest.getAttachmentsJson()
+            );
+
+            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
+            messageService.sendMessage(xmlMeta, true, Systems.FGIS_EGRN);
+
+            return xmlMeta;
         } catch (Exception e) {
             throw new SmevRequestException("push to queue error :" + e.getMessage());
         }
@@ -54,6 +76,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     @Override
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
+            //TODO тут ошибка, так как импорт некорректного класса
             var queryResult = xmlMarshaller()
                     .unmarshall(messageBody, QueryResult.class);
 
@@ -61,8 +84,8 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    JsonConverter.toJsonNode(queryResult),
                     messageBody,
+                    JsonConverter.toJsonNode(queryResult),
                     null,
                     null
             );
@@ -85,5 +108,29 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+    private ClientMessage clientMessage(Request request, String archiveFilename) {
+        ClientMessage clientMessage = new ClientMessage();
+        MessagePrimaryContent messagePrimaryContent = new MessagePrimaryContent();
+        messagePrimaryContent.setRequest(request);
+        Content content = new Content();
+        AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
+        AttachmentHeaderType attachmentHeaderType = new AttachmentHeaderType();
+        attachmentHeaderType.setFilePath(archiveFilename);
+        attachmentHeaderList.getAttachmentHeader().add(attachmentHeaderType);
+        content.setAttachmentHeaderList(attachmentHeaderList);
+        content.setMessagePrimaryContent(messagePrimaryContent);
+        RequestContentType requestContentType = new RequestContentType();
+        requestContentType.setContent(content);
+        RequestMetadataType requestMetadataType = new RequestMetadataType();
+        requestMetadataType.setClientId(UUID.randomUUID().toString());
+        RequestMessageType requestMessageType = new RequestMessageType();
+        requestMessageType.setRequestMetadata(requestMetadataType);
+        requestMessageType.setRequestContent(requestContentType);
+        clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
+        clientMessage.setRequestMessage(requestMessageType);
+
+        return clientMessage;
     }
 }

@@ -10,19 +10,23 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.reestrs.Systems;
+import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
+import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/register-rns/1.0.10
@@ -55,20 +59,34 @@ public class RegisterRnsRequestService extends RequestProcessor {
     public XmlBuildMeta request(@NotNull RegisterRnsRequestDto dto) {
         log.info("SMEV3 | {}  recId {}", mnemonicEnum(), dto.getRecId());
         try {
-            var buildMeta = new RegisterRnsXmlBuildProcess(
+            var buildRequest = new RegisterRnsXmlBuildProcess(
                     this,
                     baseDao,
                     schemaService,
                     attachmentService
-            )
-                    .run(dto);
+            ).run(dto);
 
-            validate(buildMeta.getXmlString());
+            // валидация бизнес части запроса
+            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
+                throw new SmevRequestException("validation fail: " + s);
+            });
 
-            log.info("SMEV3. ClientId: {}", buildMeta.getClientId());
-            messageService.sendMessage(buildMeta, dto.getSendToSmev(), Systems.EIS_JS);
+            var clientMessage = clientMessage(buildRequest);
 
-            return buildMeta;
+            var xmlMeta = new XmlBuildMeta(
+                    mnemonicEnum(),
+                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
+                    null,
+                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                    JsonConverter.toJsonNode(clientMessage),
+                    buildRequest.getSourcesJson(),
+                    buildRequest.getAttachmentsJson()
+            );
+
+            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
+            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
+
+            return xmlMeta;
         } catch (Exception e) {
             log.error("SMEV. push to queue error: {}", e.getMessage());
             throw new SmevRequestException("push to queue error :" + e.getMessage());
@@ -84,8 +102,8 @@ public class RegisterRnsRequestService extends RequestProcessor {
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    JsonConverter.toJsonNode(queryResult),
                     messageBody,
+                    JsonConverter.toJsonNode(queryResult),
                     null,
                     null
             );
@@ -108,5 +126,49 @@ public class RegisterRnsRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+
+    private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
+        var content = new Content();
+
+        // PrimaryContent
+        var primaryContent = new MessagePrimaryContent();
+        primaryContent.setRequest(buildRequestAndSources.getRequest());
+        content.setMessagePrimaryContent(primaryContent);
+
+        // AttachmentHeaderList
+        var attachmentHeaderTypeList = buildRequestAndSources.getAttachmentsMap()
+                .values()
+                .stream()
+                .map(smevAttachment -> {
+                    var type = new AttachmentHeaderType();
+                    type.setId(smevAttachment.getAttachmentId().toString());
+                    type.setFilePath(smevAttachment.getS3fileName());
+                    return type;
+                })
+                .collect(Collectors.toList());
+
+        if (!attachmentHeaderTypeList.isEmpty()) {
+            var attachmentHeaderList = new AttachmentHeaderList();
+            attachmentHeaderList.getAttachmentHeader().addAll(attachmentHeaderTypeList);
+            content.setAttachmentHeaderList(attachmentHeaderList);
+        }
+
+        var contentType = new RequestContentType();
+        contentType.setContent(content);
+
+        var metadataType = new RequestMetadataType();
+        metadataType.setClientId(UUID.randomUUID().toString());
+
+        var messageType = new RequestMessageType();
+        messageType.setRequestMetadata(metadataType);
+        messageType.setRequestContent(contentType);
+
+        var clientMessage = new ClientMessage();
+        clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
+        clientMessage.setRequestMessage(messageType);
+
+        return clientMessage;
     }
 }

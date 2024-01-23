@@ -69,7 +69,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST,
-                                                     "Not readable request body. Reason: " + ex.getMessage());
+                "Not readable request body. Reason: " + ex.getMessage());
 
         return handleExceptionInternal(ex, errorModel, headers, errorModel.getStatus(), request);
     }
@@ -80,7 +80,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
                                                         final HttpStatus status,
                                                         final WebRequest request) {
         String errorMsg = String.format("%s value for %s should be of type %s",
-                                        ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
+                ex.getValue(), ex.getPropertyName(), ex.getRequiredType());
 
         ErrorInfo error = new ErrorInfo(ex.getPropertyName(), errorMsg);
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage(), error);
@@ -188,7 +188,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
                                                             final WebRequest request) {
         List<ErrorInfo> errors = new ArrayList<>();
-        for (ConstraintViolation<?> violation: ex.getConstraintViolations()) {
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             Path propertyPath = violation.getPropertyPath();
             String currentProp = ((PathImpl) propertyPath).getLeafNode().toString();
 
@@ -253,7 +253,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         BindingErrorsException bindEx = (BindingErrorsException) ex;
 
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, bindEx.getMessage(),
-                                                     mapBindingErrors(bindEx.getBindingResult()));
+                mapBindingErrors(bindEx.getBindingResult()));
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
@@ -296,6 +296,12 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> multipartExceptionHandler(final MaxUploadSizeExceededException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, ex.getLocalizedMessage());
 
+        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+    }
+
+    @ExceptionHandler(SmevRequestException.class)
+    public ResponseEntity<Object> smevRequestExceptionHandler(final SmevRequestException ex) {
+        var errorModel = new ApiErrorModel(BAD_REQUEST, ex.getMessage(), List.of());
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 

@@ -13,7 +13,7 @@ import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
@@ -39,46 +39,17 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
         this.attachmentService = attachmentService;
     }
 
-    public XmlBuildMeta run(@NotNull RegisterRnsRequestDto dto) {
+    public BuildRequestAndSources<Request> run(@NotNull RegisterRnsRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
-
-            var primaryContent = new MessagePrimaryContent();
-            primaryContent.setRequest(requestType());
-
-            var content = new Content();
-            content.setMessagePrimaryContent(primaryContent);
-
-            var contentType = new RequestContentType();
-            contentType.setContent(content);
-
-            var metadataType = new RequestMetadataType();
-            metadataType.setClientId(this.clientId.toString());
-
-            var messageType = new RequestMessageType();
-            messageType.setRequestMetadata(metadataType);
-            messageType.setRequestContent(contentType);
-
-            var clientMessage = new ClientMessage();
-            clientMessage.setItSystem(requestProcessor.getSmev3Config().getSystemMnemonic());
-            clientMessage.setRequestMessage(messageType);
-
-            var attachmentHeaderTypeList = attachmentHeaderTypeList();
-
-            var attachmentHeaderList = new AttachmentHeaderList();
-            attachmentHeaderList.getAttachmentHeader().addAll(attachmentHeaderTypeList);
-            content.setAttachmentHeaderList(attachmentHeaderList);
+            var request = requestType();
 
             // TODO временная мера
             if (dto.getStubFields()) {
-                Stub.fillStubFields(clientMessage, rue);
+                Stub.fillStubFields(request, rue);
             }
 
-            var clientMessageXml = requestProcessor
-                    .xmlMarshaller()
-                    .marshall(clientMessage, ClientMessage.class);
-
-            return buildMeta(clientMessage, clientMessageXml);
+            return buildRequest(request);
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }
@@ -193,7 +164,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     /**
      * Корневая сущность
      */
-    private RequestType requestType() {
+    private Request requestType() {
         var type = new ConstructionType();
         asString(rue.section13Record, FieldsSection.PROPERTY_DOC_NUM)
                 .ifPresent(type::setConstPermitNumber);
@@ -233,7 +204,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
         type.setRecipientInfo(recipientInfo());
         type.getObjectInfo().add(objectInfo());
 
-        var request = new RequestType();
+        var request = new Request();
         request.setRegisterNewConstruction(type);
 
         return request;
@@ -244,11 +215,11 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .stream()
                 .map(record -> {
                     var fileId = record.getAsString(FieldsFiles.PROPERTY_ID);
-                    if (!attachments.containsKey(fileId)) {
+                    if (!attachmentsMap.containsKey(fileId)) {
                         var smevAttachment = attachmentService.pushAttachment(record);
-                        attachments.put(smevAttachment.getFileId(), smevAttachment);
+                        attachmentsMap.put(smevAttachment.getFileId(), smevAttachment);
                     }
-                    var existsAttachment = attachments.get(fileId);
+                    var existsAttachment = attachmentsMap.get(fileId);
 
                     var attachmentRef = new AttachmentRefType();
                     attachmentRef.setAttachmentId(existsAttachment.getAttachmentId().toString());
@@ -651,24 +622,6 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
 //        }
 
         return type;
-    }
-
-
-    private List<AttachmentHeaderType> attachmentHeaderTypeList() {
-        var attachmentHeaderTypeList = attachments
-                .values()
-                .stream()
-                .map(smevAttachment -> {
-                    var type = new AttachmentHeaderType();
-                    type.setId(smevAttachment.getAttachmentId().toString());
-                    type.setFilePath(smevAttachment.getS3fileName());
-                    return type;
-                }).collect(Collectors.toList());
-        if (!attachmentHeaderTypeList.isEmpty()) {
-            return attachmentHeaderTypeList;
-        } else {
-            return null;
-        }
     }
 
     private Optional<RefBookType> asRefBookType(IRecord record,

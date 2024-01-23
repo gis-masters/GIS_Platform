@@ -28,4 +28,19 @@ public class FieldsSection {
     public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL = "object_purpose_functional";
     public static final String PROPERTY_BUILD_CAPITAL_TYPE = "build_capital_type";
     public static final String PROPERTY_LACOTEAN = "lacotean";
+
+    //Иное
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_1 = "1";
+
+    // Производственный объект
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_2 = "2";
+
+    // Жилое здание
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_3 = "3";
+
+    // Социальный объект
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_4 = "4";
+
+    // Линейный объект
+    public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5 = "5";
 }

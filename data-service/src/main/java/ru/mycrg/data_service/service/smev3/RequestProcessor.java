@@ -10,6 +10,8 @@ import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.MarshalException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -18,10 +20,11 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class RequestProcessor {
-    private final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
-    private final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    private static final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
+    private static final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     private final MnemonicEnum mnemonicEnum;
     private final ResourceLoader resourceLoader;
+    private final XmlMarshaller marshaller;
     private final Smev3Config smev3Config;
     private final Schema schema;
 
@@ -31,7 +34,8 @@ public class RequestProcessor {
         this.mnemonicEnum = mnemonicEnum;
         this.resourceLoader = resourceLoader;
         this.smev3Config = smev3Config;
-        this.schema = loadSchema();
+        this.marshaller = new XmlMarshaller(mnemonicEnum.getPrefixMapper());
+        this.schema = loadSchema(mnemonicEnum.getSchemaPath());
     }
 
     public MnemonicEnum mnemonicEnum() {
@@ -39,35 +43,42 @@ public class RequestProcessor {
     }
 
     public XmlMarshaller xmlMarshaller() {
-        return mnemonicEnum.getMarshaller();
+        return marshaller;
     }
 
     public Smev3Config getSmev3Config() {
         return smev3Config;
     }
 
+    public Schema getSchema() {
+        return schema;
+    }
+
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         throw new NotImplementedException("not implemented");
     }
 
-    protected void validate(String xmlString) {
-        log.info("validation: " + xmlString);
+    protected <T> String validate(T request, Class<T> tClass) {
+        log.info("validation: " + request);
         try {
+            var str = xmlMarshaller().marshall(request, tClass);
+
             schema
                     .newValidator()
-                    .validate(new StreamSource(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))));
+                    .validate(new StreamSource(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8))));
             log.info("validation successful!");
-        } catch (Exception e) {
-            log.warn("validation fail: " + e.getMessage());
-            //TODO Пока не смог понять почему не проходит валидация. Оставить как тех долг
-            //throw new SmevRequestException("xmlString validate fail " + e.getMessage());
+
+            return null;
+        } catch (SAXException | IOException | JAXBException e) {
+            log.error("validation fail: " + e.getMessage());
+            return e.toString();
         }
     }
 
-    private Schema loadSchema() {
+    private Schema loadSchema(String schemaPath) {
         try {
             if (resourceLoader == null) return null;
-            var xmlUrl = resourceLoader.getResource("classpath:" + mnemonicEnum.getSchemaPath()).getURL();
+            var xmlUrl = resourceLoader.getResource("classpath:" + schemaPath).getURL();
             return schemaFactory.newSchema(xmlUrl);
         } catch (SAXException | IOException e) {
             throw new RuntimeException(e);

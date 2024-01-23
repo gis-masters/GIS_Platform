@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.smev3;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.Arrays;
 
@@ -12,6 +11,7 @@ public enum MnemonicEnum {
             "get-cadastrial-plan",
             "1.1.2",
             "xsd_smev3/egrn_cadastrial_plans_1_1_2/core/service-adapter-types.xsd",
+            "xsd_smev3/egrn_cadastrial_plans_1_1_2/egrn_cadastrial_plans_1_1_2.xsd",
             new NamespacePrefixMapper() {
                 @Override
                 public String getPreferredPrefix(String urn, String s1, boolean b) {
@@ -26,6 +26,7 @@ public enum MnemonicEnum {
             "receipt-rns",
             "1.0.9",
             "xsd_smev3/receipt_rns_1_0_9/core/service-adapter-types.xsd",
+            "xsd_smev3/receipt_rns_1_0_9/receipt-rns-1.0.9.xsd",
             new NamespacePrefixMapper() {
                 @Override
                 public String getPreferredPrefix(String urn, String s1, boolean b) {
@@ -46,6 +47,7 @@ public enum MnemonicEnum {
             "register-rns",
             "1.0.10",
             "xsd_smev3/register_rns_1_0_10/core/service-adapter-types.xsd",
+            "xsd_smev3/register_rns_1_0_10/register-rns-1.0.10.xsd",
             new NamespacePrefixMapper() {
                 @Override
                 public String getPreferredPrefix(String urn, String s1, boolean b) {
@@ -66,6 +68,7 @@ public enum MnemonicEnum {
             "receipt-rnv",
             "1.0.9",
             "xsd_smev3/receipt_rnv_1_0_9/core/service-adapter-types.xsd",
+            "xsd_smev3/receipt_rnv_1_0_9/receipt-rnv-1.0.9.xsd",
             new NamespacePrefixMapper() {
                 @Override
                 public String getPreferredPrefix(String urn, String s1, boolean b) {
@@ -86,6 +89,7 @@ public enum MnemonicEnum {
             "register-rnv",
             "1.0.8",
             "xsd_smev3/register_rnv_1_0_8/core/service-adapter-types.xsd",
+            "xsd_smev3/register_rnv_1_0_8/register-rnv-1.0.8.xsd",
             new NamespacePrefixMapper() {
                 @Override
                 public String getPreferredPrefix(String urn, String s1, boolean b) {
@@ -105,7 +109,8 @@ public enum MnemonicEnum {
     private final String mnemonic;
     private final String version;
     private final String schemaPath;
-    private final XmlMarshaller marshaller;
+    private final String rootSchemaPath;
+    private final NamespacePrefixMapper prefixMapper;
 
     public String getMnemonic() {
         return mnemonic;
@@ -119,18 +124,24 @@ public enum MnemonicEnum {
         return schemaPath;
     }
 
-    public XmlMarshaller getMarshaller() {
-        return marshaller;
+    public String getRootSchemaPath() {
+        return rootSchemaPath;
+    }
+
+    public NamespacePrefixMapper getPrefixMapper() {
+        return prefixMapper;
     }
 
     MnemonicEnum(String mnemonic,
                  String version,
+                 String rootSchemaPath,
                  String schemaPath,
                  NamespacePrefixMapper namespacePrefixMapper) {
         this.mnemonic = mnemonic;
         this.version = version;
-        this.marshaller = new XmlMarshaller(namespacePrefixMapper);
+        this.rootSchemaPath = rootSchemaPath;
         this.schemaPath = schemaPath;
+        this.prefixMapper = namespacePrefixMapper;
     }
 
     @Nullable

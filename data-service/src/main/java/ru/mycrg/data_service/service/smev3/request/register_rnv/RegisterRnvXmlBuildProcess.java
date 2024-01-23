@@ -12,7 +12,7 @@ import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.fields.FieldsSection.*;
 
 public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(RegisterRnvXmlBuildProcess.class);
@@ -34,35 +35,14 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         super(requestProcessor, baseDao, schemaService);
     }
 
-    public XmlBuildMeta run(@NotNull RegisterRnvRequestDto dto) {
+    public BuildRequestAndSources<Request> run(@NotNull RegisterRnvRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 
-            var primaryContent = new MessagePrimaryContent();
-            primaryContent.setRequest(requestType());
+            // бизнес часть запроса
+            var request = requestType();
 
-            var content = new Content();
-            content.setMessagePrimaryContent(primaryContent);
-
-            var contentType = new RequestContentType();
-            contentType.setContent(content);
-
-            var metadataType = new RequestMetadataType();
-            metadataType.setClientId(clientId.toString());
-
-            var messageType = new RequestMessageType();
-            messageType.setRequestMetadata(metadataType);
-            messageType.setRequestContent(contentType);
-
-            var clientMessage = new ClientMessage();
-            clientMessage.setItSystem(requestProcessor.getSmev3Config().getSystemMnemonic());
-            clientMessage.setRequestMessage(messageType);
-
-            var clientMessageXml = requestProcessor
-                    .xmlMarshaller()
-                    .marshall(clientMessage, ClientMessage.class);
-
-            return buildMeta(clientMessage, clientMessageXml);
+            return buildRequest(request);
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }
@@ -205,7 +185,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     /**
      * Корневая сущность
      */
-    private RequestType requestType() {
+    private Request requestType() {
         var type = new ExploitationType();
 
         // section13Record
@@ -242,7 +222,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         type.setConstPermitIssueOrgan(constPermitIssueOrgan());
         type.getObjectInfo().add(objectInfo());
 
-        var request = new RequestType();
+        var request = new Request();
         request.setRegisterNewExploitation(type);
 
         return request;
@@ -377,11 +357,35 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     private ObjectDescriptionType objectDescriptionType() {
         var type = new ObjectDescriptionType();
         type.setOverallPerformance(overallPerformanceType());
-        type.setUnlivingObjects(unlivingObjectsType());
-        type.setLivingObjects(livingObjectsType());
-        type.setProductiveObjects(productiveObjectsType());
-        type.setLongObjects(longObjectsType());
         type.setEnergyEfficiency(energyEfficiencyType());
+
+        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL)
+                .ifPresentOrElse(objecPpurposeFunctional -> {
+                    switch (objecPpurposeFunctional) {
+                        case PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_4: {
+                            type.setUnlivingObjects(unlivingObjectsType());
+                        }
+                        break;
+                        case PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_3: {
+                            type.setLivingObjects(livingObjectsType());
+                        }
+                        break;
+                        case PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_2: {
+                            type.setProductiveObjects(productiveObjectsType());
+                        }
+                        break;
+                        case PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5: {
+                            type.setLongObjects(longObjectsType());
+                        }
+                        break;
+                        default: {
+                            // ничего не заполняем
+                        }
+                    }
+                }, () -> {
+                    throw new SmevRequestException("field 'object_purpose_functional' is empty");
+                });
+
         return type;
     }
 

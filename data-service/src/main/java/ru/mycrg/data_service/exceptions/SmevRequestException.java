@@ -9,6 +9,7 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
  */
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 public class SmevRequestException extends RuntimeException {
+
     public SmevRequestException(String message) {
         super("smev. " + message);
     }
