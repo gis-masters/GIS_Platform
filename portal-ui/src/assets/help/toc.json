@@ -151,6 +151,11 @@
             "id": "changesStyle",
             "title": "Выбор стиля для слоя",
             "contentUrl": "/assets/help/map/2projectManagement/10changesStyle/10changesStyle.html"
+          },
+          {
+            "id": "photoLayer",
+            "title": "Фотослой",
+            "contentUrl": "/assets/help/map/2projectManagement/11photoLayer/11photoLayer.html"
           }
         ]
       },
@@ -189,6 +194,18 @@
             "title": "Копирование ссылки на объект",
             "platforms": ["conv"],
             "contentUrl": "/assets/help/map/dataWork/8copy/08copy.html"
+          },
+          {
+            "id": "schemaDisposition",
+            "title": "Схема расположения объектов",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/13schemaDisposition/13schemaDisposition_1.html"
+          },
+          {
+            "id": "objectStatement",
+            "title": "Выписка об объекте",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/14objectStatement/14objectStatement_1.html"
           }
         ]
       },
@@ -429,6 +446,18 @@
             "id": "moveDocument",
             "title": "Перемещение документов",
             "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
+          },
+
+          {
+            "id": "kptOrder",
+            "title": "Заказ КПТ",
+            "contentUrl": "/assets/help/5dataManagement/19kptOrder/19kptOrder.html"
+          },
+
+          {
+            "id": "importKpt",
+            "title": "Импорт КПТ",
+            "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
           }
         ]
       },
