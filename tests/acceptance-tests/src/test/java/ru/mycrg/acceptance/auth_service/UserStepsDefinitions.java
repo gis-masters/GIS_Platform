@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
-    private static final int RETRY_DELAY = 1000;
+    private static final int RETRY_DELAY = 2000;
     private static final int MAX_RETRY_ATTEMPT = 10;
 
     public static Integer userId;

@@ -5,8 +5,19 @@ import java.util.List;
 
 public class Authorities {
 
+    /**
+     * Администратор системы.
+     */
     public static final String SYSTEM_ADMIN = "SYSTEM_ADMIN";
+
+    /**
+     * Владелец организации.
+     */
     public static final String ORG_ADMIN = "ORG_ADMIN";
+
+    /**
+     * Рядовой пользователь.
+     */
     public static final String USER = "USER";
 
     public static final String SYSTEM_ADMIN_AUTHORITY = "hasAuthority('" + SYSTEM_ADMIN + "')";
