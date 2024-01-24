@@ -23,5 +23,7 @@ public interface DataSchemaRepository extends PagingAndSortingRepository<Schema,
 
     @Query(value = "SELECT * FROM schemas WHERE class_rule \\:\\:text ILIKE %:property%",
            nativeQuery = true)
-    List<Schema> findBySpecificProperty(@Param("property") String property);
+    List<Schema> findBySpecificPropertyName(@Param("property") String property);
+
+    boolean existsByName(String name);
 }

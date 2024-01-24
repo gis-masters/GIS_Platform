@@ -1,6 +1,10 @@
-package ru.mycrg.data_service.util;
+package ru.mycrg.data_service.service.schemas;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
@@ -15,15 +19,44 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 public class SchemaUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(SchemaUtil.class);
 
     private static final List<ValueType> typesReadyForFts = List.of(STRING, DATETIME, DOCUMENT, CHOICE, FILE, FIAS,
                                                                     LOOKUP, UUID, USER, TEXT, URL);
 
     private SchemaUtil() {
         throw new IllegalStateException("Utility class");
+    }
+
+    @NotNull
+    public static Map<String, Object> excludeUnknownProperties(SchemaDto schema, Map<String, Object> props) {
+        Map<String, Object> result = new HashMap<>();
+        props.forEach((key, value) -> {
+            if (isPropertyExist(schema, key)) {
+                result.put(key, value);
+            } else {
+                log.warn("Параметр: [{}] был исключен при создании, поле не описано в схеме!", key);
+            }
+        });
+
+        return result;
+    }
+
+    @NotNull
+    public static Map<String, Object> excludeNullProperties(@NotNull Map<String, Object> props) {
+        Map<String, Object> result = new HashMap<>();
+        props.forEach((key, value) -> {
+            if (value != null) {
+                result.put(key, value);
+            }
+        });
+
+        return result;
     }
 
     public static boolean isPropertyExist(SchemaDto schema, String key) {
@@ -121,6 +154,52 @@ public class SchemaUtil {
 
             return targetType.equals(sourceValueType);
         };
+    }
+
+    public static void enrichPropsBySystemAttributes(List<SimplePropertyDto> schemaProperties) {
+        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
+                                                          .collect(Collectors.toList());
+
+        if (!schemaPropertyName.contains(CREATED_BY.getName())) {
+            SimplePropertyDto createdBy = new SimplePropertyDto();
+            createdBy.setName(CREATED_BY.getName());
+            createdBy.setValueType(ValueType.STRING);
+
+            schemaProperties.add(createdBy);
+        }
+
+        if (!schemaPropertyName.contains(CREATED_AT.getName())) {
+            SimplePropertyDto createdAt = new SimplePropertyDto();
+            createdAt.setName(CREATED_AT.getName());
+            createdAt.setValueType(ValueType.DATETIME);
+
+            schemaProperties.add(createdAt);
+        }
+
+        if (!schemaPropertyName.contains(UPDATED_BY.getName())) {
+            SimplePropertyDto updatedBy = new SimplePropertyDto();
+            updatedBy.setName(UPDATED_BY.getName());
+            updatedBy.setValueType(ValueType.STRING);
+
+            schemaProperties.add(updatedBy);
+        }
+
+        if (!schemaPropertyName.contains(LAST_MODIFIED.getName())) {
+            SimplePropertyDto lastModified = new SimplePropertyDto();
+            lastModified.setName(LAST_MODIFIED.getName());
+            lastModified.setValueType(ValueType.DATETIME);
+
+            schemaProperties.add(lastModified);
+        }
+    }
+
+    public static void throwIfNotMatchSchema(SchemaDto schema, Map<String, Object> props) {
+        props.keySet().forEach(key -> {
+            if (!isPropertyExist(schema, key)) {
+                throw new BadRequestException("Свойства не соответствуют схеме",
+                                              new ErrorInfo(key, "Данное свойство отсутствует в схеме"));
+            }
+        });
     }
 
     @NotNull

@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.postgis.PGgeometry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_utils.CrgScriptEngine;
@@ -17,7 +18,7 @@ import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
 import ru.mycrg.data_service.service.parsers.GmlParser;
@@ -41,7 +42,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertiesWithCalculatedFunctions;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertiesWithCalculatedFunctions;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
@@ -50,7 +51,7 @@ public class GmlImporter {
     private static final Logger log = LoggerFactory.getLogger(GmlImporter.class);
 
     private final RecordsDao recordsDao;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final GeometryDao geometryDao;
     private final GmlParser gmlParser;
     private final ValidationService validationService;
@@ -59,7 +60,7 @@ public class GmlImporter {
     private final FileStorageService fileStorageService;
 
     public GmlImporter(RecordsDao recordsDao,
-                       SchemaService schemaService,
+                       @Qualifier("schemaServiceBase") ISchemaService schemaService,
                        GeometryDao geometryDao,
                        GmlParser gmlParser,
                        ValidationService validationService,

@@ -2,9 +2,10 @@ package ru.mycrg.data_service.service.gisogd;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -21,11 +22,11 @@ public class GisogdRfUtil {
     private final Logger log = LoggerFactory.getLogger(GisogdRfUtil.class);
 
     private final TableService tableService;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final DocumentLibraryService dlService;
 
     public GisogdRfUtil(TableService tableService,
-                        SchemaService schemaService,
+                        @Qualifier("schemaServiceBase") ISchemaService schemaService,
                         DocumentLibraryService dlService) {
         this.tableService = tableService;
         this.schemaService = schemaService;
@@ -72,4 +73,6 @@ public class GisogdRfUtil {
 
         return gisogdData;
     }
+
+
 }

@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static ru.mycrg.data_service.service.parsers.utils.XmlParserUtils.*;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertyNameByType;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyNameByType;
 
 @Service
 public class XmlParser {

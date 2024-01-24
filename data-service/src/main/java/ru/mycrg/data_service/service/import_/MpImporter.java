@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.import_;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.dao.RecordsDao;
@@ -14,7 +15,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.TransformationException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.import_.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.parsers.XmlParser;
@@ -38,7 +39,7 @@ public class MpImporter implements Importer<Long> {
 
     private final RecordsDao recordsDao;
     private final XmlParser xmlParser;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final TableService tableService;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final SystemAttributeHandler systemAttributeHandler;
@@ -47,7 +48,7 @@ public class MpImporter implements Importer<Long> {
 
     public MpImporter(RecordsDao recordsDao,
                       XmlParser xmlParser,
-                      SchemaService schemaService,
+                      @Qualifier("schemaServiceBase") ISchemaService schemaService,
                       TableService tableService,
                       DdlTablesSpecial ddlTablesSpecial,
                       SystemAttributeHandler systemAttributeHandler) {

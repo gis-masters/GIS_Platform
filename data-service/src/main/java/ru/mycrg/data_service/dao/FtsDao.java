@@ -23,7 +23,7 @@ import static java.sql.Types.VARCHAR;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.StringUtil.removeSpecificChars;
 
 @Repository

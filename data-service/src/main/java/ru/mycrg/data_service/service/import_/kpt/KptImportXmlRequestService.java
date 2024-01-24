@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.import_.kpt;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -12,7 +13,7 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
@@ -52,14 +53,14 @@ public class KptImportXmlRequestService {
     private static final String TASK_CONTENT_TYPE = "common_task_kpt_import";
 
     private final IMessageBusProducer messageBus;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final KptSourceFilesService kptSourceFilesService;
     private final Mediator mediator;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public KptImportXmlRequestService(IMessageBusProducer messageBus,
-                                      SchemaService schemaService,
+                                      @Qualifier("schemaServiceBase") ISchemaService schemaService,
                                       IAuthenticationFacade authenticationFacade,
                                       KptSourceFilesService kptSourceFilesService,
                                       Mediator mediator,

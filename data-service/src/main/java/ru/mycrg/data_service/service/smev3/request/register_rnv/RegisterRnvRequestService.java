@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.smev3.request.register_rnv;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -34,14 +35,15 @@ import static java.util.Optional.ofNullable;
         havingValue = "true",
         matchIfMissing = true)
 public class RegisterRnvRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(RegisterRnvRequestService.class);
     private final BaseDao baseDao;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final SmevMessageSenderService messageService;
 
     public RegisterRnvRequestService(Smev3Config smev3Config,
                                      BaseDao baseDao,
-                                     SchemaService schemaService,
+                                     @Qualifier("schemaServiceBase") ISchemaService schemaService,
                                      ResourceLoader resourceLoader,
                                      SmevMessageSenderService messageService) {
         super(MnemonicEnum.REGISTER_RNV_1_0_8, resourceLoader, smev3Config);

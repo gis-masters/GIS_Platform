@@ -11,7 +11,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
 public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibraryRequest, Voidy> {
@@ -34,13 +34,13 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
 
     private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final IMasterResourceProtector resourceProtector;
     private final DocumentLibraryRepository libraryRepository;
 
     public UpdateLibraryRequestHandler(FtsDao ftsDao,
                                        DdlTriggers ddlTriggers,
-                                       SchemaService schemaService,
+                                       ISchemaService schemaService,
                                        MasterResourceProtector resourceProtector,
                                        DocumentLibraryRepository libraryRepository) {
         this.ftsDao = ftsDao;

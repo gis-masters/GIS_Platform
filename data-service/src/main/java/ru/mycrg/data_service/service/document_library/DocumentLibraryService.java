@@ -15,7 +15,7 @@ import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -34,13 +34,13 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 @Service
 public class DocumentLibraryService {
 
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final DocumentLibraryDao libraryDao;
     private final IAuthenticationFacade authenticationFacade;
     private final DocumentLibraryRepository libraryRepository;
     private final BasePermissionsRepository permissionsRepository;
 
-    public DocumentLibraryService(SchemaService schemaService,
+    public DocumentLibraryService(ISchemaService schemaService,
                                   DocumentLibraryDao libraryDao,
                                   IAuthenticationFacade authenticationFacade,
                                   DocumentLibraryRepository libraryRepository,

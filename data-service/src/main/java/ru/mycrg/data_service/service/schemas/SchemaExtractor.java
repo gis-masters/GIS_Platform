@@ -20,11 +20,11 @@ public class SchemaExtractor {
 
     private final Logger log = LoggerFactory.getLogger(SchemaExtractor.class);
 
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final DocumentLibraryService libraryService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public SchemaExtractor(SchemaService schemaService,
+    public SchemaExtractor(ISchemaService schemaService,
                            DocumentLibraryService documentLibraryService,
                            SchemasAndTablesRepository schemasAndTablesRepository) {
         this.schemaService = schemaService;

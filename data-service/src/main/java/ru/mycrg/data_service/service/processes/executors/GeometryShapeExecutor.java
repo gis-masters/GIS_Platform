@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.processes.executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,7 +11,7 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
@@ -49,7 +50,7 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
     private GeometryFromShapePlacementPayloadModel payload;
     private final IAuthenticationFacade authenticationFacade;
     private final TableService tableService;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final TableProtector tableProtector;
 
     public GeometryShapeExecutor(IMessageBusProducer messageBus,
@@ -57,7 +58,8 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
                                  Environment environment,
                                  IAuthenticationFacade authenticationFacade,
                                  TableService tableService,
-                                 SchemaService schemaService, TableProtector tableProtector) {
+                                 @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                                 TableProtector tableProtector) {
         this.messageBus = messageBus;
         this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;

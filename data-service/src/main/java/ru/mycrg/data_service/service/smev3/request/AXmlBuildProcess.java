@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.smev3.request;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -11,7 +12,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.fields.FieldsFiles;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
@@ -35,16 +36,17 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
 public abstract class AXmlBuildProcess {
+
     protected final RequestProcessor requestProcessor;
     protected final BaseDao baseDao;
-    protected final SchemaService schemaService;
+    protected final ISchemaService schemaService;
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
     protected final Map<RecordData, IRecord> sourceRecordsMap = new HashMap<>();
     protected final Map<String, SmevAttachment> attachmentsMap = new HashMap<>();
 
     public AXmlBuildProcess(RequestProcessor requestProcessor,
                             BaseDao baseDao,
-                            SchemaService schemaService) {
+                            @Qualifier("schemaServiceBase") ISchemaService schemaService) {
         this.requestProcessor = requestProcessor;
         this.baseDao = baseDao;
         this.schemaService = schemaService;

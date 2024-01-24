@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.smev3.request.register_rns;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.MnemonicEnum;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -37,15 +38,16 @@ import static java.util.Optional.ofNullable;
         havingValue = "true",
         matchIfMissing = true)
 public class RegisterRnsRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
     private final BaseDao baseDao;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final SmevMessageSenderService messageService;
     private final SmevOutgoingAttachmentService attachmentService;
 
     public RegisterRnsRequestService(Smev3Config smev3Config,
                                      BaseDao baseDao,
-                                     SchemaService schemaService,
+                                     @Qualifier("schemaServiceBase") ISchemaService schemaService,
                                      ResourceLoader resourceLoader,
                                      SmevMessageSenderService messageService,
                                      SmevOutgoingAttachmentService attachmentService) {
@@ -128,7 +130,6 @@ public class RegisterRnsRequestService extends RequestProcessor {
         }
     }
 
-
     private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
         var content = new Content();
 
@@ -139,15 +140,16 @@ public class RegisterRnsRequestService extends RequestProcessor {
 
         // AttachmentHeaderList
         var attachmentHeaderTypeList = buildRequestAndSources.getAttachmentsMap()
-                .values()
-                .stream()
-                .map(smevAttachment -> {
-                    var type = new AttachmentHeaderType();
-                    type.setId(smevAttachment.getAttachmentId().toString());
-                    type.setFilePath(smevAttachment.getS3fileName());
-                    return type;
-                })
-                .collect(Collectors.toList());
+                                                             .values()
+                                                             .stream()
+                                                             .map(smevAttachment -> {
+                                                                 var type = new AttachmentHeaderType();
+                                                                 type.setId(
+                                                                         smevAttachment.getAttachmentId().toString());
+                                                                 type.setFilePath(smevAttachment.getS3fileName());
+                                                                 return type;
+                                                             })
+                                                             .collect(Collectors.toList());
 
         if (!attachmentHeaderTypeList.isEmpty()) {
             var attachmentHeaderList = new AttachmentHeaderList();

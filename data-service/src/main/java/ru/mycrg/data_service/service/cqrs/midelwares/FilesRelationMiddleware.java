@@ -11,7 +11,7 @@ import ru.mycrg.data_service.service.cqrs.files.IUpdateFilesRelation;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
 
-import static ru.mycrg.data_service.util.SchemaUtil.isFilePropertyExist;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.isFilePropertyExist;
 
 @Component
 public class FilesRelationMiddleware implements IRequestMiddleware {

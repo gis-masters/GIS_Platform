@@ -17,7 +17,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
@@ -41,7 +41,7 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
@@ -49,7 +49,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final Logger log = LoggerFactory.getLogger(CreateTableRequestHandler.class);
 
     private final DdlTriggers ddlTriggers;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final IResourceProtector datasetProtector;
     private final PermissionsService permissionsService;
@@ -57,7 +57,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
     public CreateTableRequestHandler(DdlTriggers ddlTriggers,
-                                     SchemaService schemaService,
+                                     ISchemaService schemaService,
                                      DdlTablesSpecial ddlTablesSpecial,
                                      IResourceProtector datasetProtector,
                                      PermissionsService permissionsService,

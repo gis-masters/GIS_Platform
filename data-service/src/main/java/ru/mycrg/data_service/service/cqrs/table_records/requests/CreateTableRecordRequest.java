@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.cqrs.table_records.requests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.data_service.entity.IRecord;
@@ -13,6 +12,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
@@ -23,17 +23,18 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
 
     private final SchemaDto schema;
 
-    @Nullable
-    private IRecord record;
     private Feature feature;
     private ResourceQualifier rQualifier;
+    private final boolean strictMode;
 
     public CreateTableRecordRequest(SchemaDto schemaDto,
                                     ResourceQualifier rQualifier,
-                                    Feature feature) {
+                                    Feature feature,
+                                    boolean strictMode) {
         this.schema = schemaDto;
         this.rQualifier = rQualifier;
         this.feature = feature;
+        this.strictMode = strictMode;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
                                  "CREATE",
                                  entityName,
                                  FEATURE.name(),
-                                 record != null ? record.getId() : 1L);
+                                 feature.getId() != null ? feature.getId() : 1L);
     }
 
     @Override
@@ -72,9 +73,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
             properties.put(ID.getName(), feature.getId());
         }
 
-        return record == null
-                ? new RecordEntity(properties)
-                : record;
+        return new RecordEntity((properties != null) ? properties : new HashMap<>());
     }
 
     @Override
@@ -88,7 +87,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
         rQualifier = new ResourceQualifier(rQualifier, feature.getId(), FEATURE);
     }
 
-    public void setRecord(@Nullable IRecord record) {
-        this.record = record;
+    public boolean isStrictMode() {
+        return strictMode;
     }
 }

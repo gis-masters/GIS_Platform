@@ -10,7 +10,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
@@ -33,7 +33,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
 
     public RegisterRnsXmlBuildProcess(RequestProcessor requestProcessor,
                                       BaseDao baseDao,
-                                      SchemaService schemaService,
+                                      ISchemaService schemaService,
                                       SmevOutgoingAttachmentService attachmentService) {
         super(requestProcessor, baseDao, schemaService);
         this.attachmentService = attachmentService;

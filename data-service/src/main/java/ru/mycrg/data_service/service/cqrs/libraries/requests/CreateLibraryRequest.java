@@ -12,8 +12,8 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateLibraryRequest implements IRequest<LibraryModel>, Auditable {
 
-    private LibraryCreateDto libraryCreateDto;
     private LibraryModel libraryModel;
+    private final LibraryCreateDto libraryCreateDto;
 
     public CreateLibraryRequest(LibraryCreateDto libraryCreateDto) {
         this.libraryCreateDto = libraryCreateDto;
@@ -27,10 +27,10 @@ public class CreateLibraryRequest implements IRequest<LibraryModel>, Auditable {
     @Override
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(libraryCreateDto, JsonNode.class),
-                "CREATE",
-                libraryModel.getTableName() == null ? "unknown" : libraryModel.getTableName(),
-                LIBRARY.name(),
-                libraryModel.getId() == null ? -1 : libraryModel.getId());
+                                 "CREATE",
+                                 libraryModel.getTableName() == null ? "unknown" : libraryModel.getTableName(),
+                                 LIBRARY.name(),
+                                 libraryModel.getId() == null ? -1 : libraryModel.getId());
     }
 
     public LibraryCreateDto getLibraryCreateDto() {

@@ -11,7 +11,7 @@ import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryProtector;
@@ -29,7 +29,7 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Component
@@ -37,13 +37,13 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
     private final DdlTriggers ddlTriggers;
     private final DdlTablesBase ddlTablesBase;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final DocLibraryProtector docLibraryProtector;
     private final IAuthenticationFacade authenticationFacade;
     private final DocumentLibraryRepository libraryRepository;
 
     public CreateLibraryRequestHandler(DdlTriggers ddlTriggers,
-                                       SchemaService schemaService,
+                                       ISchemaService schemaService,
                                        DdlTablesBase ddlTablesBase,
                                        DocumentLibraryRepository libraryRepository,
                                        IAuthenticationFacade authenticationFacade,

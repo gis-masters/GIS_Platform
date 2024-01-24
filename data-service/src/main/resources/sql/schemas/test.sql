@@ -4,6 +4,9 @@ SELECT 'dl_default_schema',
   "name": "dl_default_schema",
   "title": "Документы ГПЗУ",
   "description": "documents_schema_v1",
+  "tags": [
+    "system", "Приказ 10"
+  ],
   "tableName": "dl_default",
   "properties": [
     {

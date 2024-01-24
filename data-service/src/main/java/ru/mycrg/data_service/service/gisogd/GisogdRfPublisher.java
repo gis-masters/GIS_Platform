@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -16,8 +17,8 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.schemas.SchemaExtractor;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -77,14 +78,14 @@ public class GisogdRfPublisher {
     private final IAuthenticationFacade authenticationFacade;
 
     private final GisogdRfUtil gisogdRfUtil;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final SchemaExtractor schemaExtractor;
 
     public GisogdRfPublisher(BaseDao baseDao,
                              Mediator mediator,
                              GisogdRfDao gisogdRfDao,
                              GisogdRfUtil gisogdRfUtil,
-                             SchemaService schemaService,
+                             @Qualifier("schemaServiceBase") ISchemaService schemaService,
                              IMessageBusProducer messageBus,
                              SchemaExtractor schemaExtractor,
                              SpatialRecordsDao spatialRecordsDao,

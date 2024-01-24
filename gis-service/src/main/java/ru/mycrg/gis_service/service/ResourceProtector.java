@@ -37,8 +37,8 @@ public class ResourceProtector {
                                                       .map(Permission::getPrincipalId)
                                                       .collect(Collectors.toList());
 
-        log.warn("Try define best role for project: {}. Collected user permissions: {}",
-                 project.getId(), userPermissionIds);
+        log.debug("Try define best role for project: {}. Collected user permissions: {}",
+                  project.getId(), userPermissionIds);
         if (userPermissionIds.isEmpty()) {
             return Optional.empty();
         }

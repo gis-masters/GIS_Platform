@@ -5,11 +5,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.FeaturesCopyModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CopyTableRecordsRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
@@ -26,9 +26,9 @@ public class RecordsCopyController {
 
     private final Mediator mediator;
     private final TableService tableService;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
 
-    public RecordsCopyController(Mediator mediator, TableService tableService, SchemaService schemaService) {
+    public RecordsCopyController(Mediator mediator, TableService tableService, ISchemaService schemaService) {
         this.mediator = mediator;
         this.tableService = tableService;
         this.schemaService = schemaService;

@@ -44,7 +44,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(schemasQuantity, schemasCount);
     }
 
-    @Then("В выборке схем отстутсвуют схемы с тэгом {string}")
+    @Then("В выборке схем отсутствуют схемы с тэгом {string}")
     public void checkThatNoSchemasWithTag(String tag) {
         List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
 
@@ -195,7 +195,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 SchemaDto schemaWithOrder10 = prepareSchemaWithTags();
                 schemaWithOrder10.setName("schemaWithTagsOrder10");
                 schemaWithOrder10.setTitle("с тэгом 'Приказ 10'");
-                schemaWithOrder10.setTags(List.of("Приказ 10"));
+                schemaWithOrder10.setTags(List.of("Приказ 10", "system"));
 
                 createSchema(schemaWithOrder10);
 
@@ -204,9 +204,27 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 SchemaDto schemaWithOrder123 = prepareSchemaTarget();
                 schemaWithOrder123.setName("schemaWithTagsOrder123");
                 schemaWithOrder123.setTitle("с тэгом 'Приказ 123");
-                schemaWithOrder123.setTags(List.of("Приказ 123"));
+                schemaWithOrder123.setTags(List.of("Приказ 123", "system"));
 
                 createSchema(schemaWithOrder123);
+
+                break;
+            case "с тэгами 'Приказ 10' и 'Приказ 123'":
+                SchemaDto schemaBoth = prepareSchemaWithTags();
+                schemaBoth.setName("schema_with_both_tags");
+                schemaBoth.setTitle("Схема с тегами 'Приказ 10', 'Приказ 123'");
+                schemaBoth.setTags(List.of("Приказ 10", "Приказ 123", "system"));
+
+                createSchema(schemaBoth);
+
+                break;
+            case "с тэгом 'Схема доярки'":
+                SchemaDto schemaDoyarka = prepareSchemaWithTags();
+                schemaDoyarka.setName("schemaDoyarkaV1");
+                schemaDoyarka.setTitle("Схема доярки 1");
+                schemaDoyarka.setTags(List.of("Схема доярки"));
+
+                createSchema(schemaDoyarka);
 
                 break;
             case "с полем типа UUID, в котором указан параметр 'defaultValueWellKnownFormula'":

@@ -32,7 +32,7 @@ import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
-import static ru.mycrg.data_service.util.SchemaUtil.*;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
 import static ru.mycrg.data_service.util.StringUtil.join;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_DELETED;

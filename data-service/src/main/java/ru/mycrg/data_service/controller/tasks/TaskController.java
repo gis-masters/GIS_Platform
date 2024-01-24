@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
@@ -28,6 +28,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.StringUtil.camelCaseToSnakeCaseForEcqlFilter;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
@@ -37,9 +38,9 @@ public class TaskController {
 
     private final Mediator mediator;
     private final TaskService taskService;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
 
-    public TaskController(Mediator mediator, TaskService taskService, SchemaService schemaService) {
+    public TaskController(Mediator mediator, TaskService taskService, ISchemaService schemaService) {
         this.mediator = mediator;
         this.taskService = taskService;
         this.schemaService = schemaService;
@@ -70,7 +71,7 @@ public class TaskController {
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
-        Map<String, Object> props = schemaService.excludeUnknownProperties(tasksSchema, body);
+        Map<String, Object> props = excludeUnknownProperties(tasksSchema, body);
 
         IRecord record = mediator.execute(
                 new CreateTaskRequest(tasksSchema,

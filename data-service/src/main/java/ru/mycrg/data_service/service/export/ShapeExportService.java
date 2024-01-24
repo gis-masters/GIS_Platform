@@ -1,11 +1,12 @@
 package ru.mycrg.data_service.service.export;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.ExportRequestModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.TableService;
@@ -25,14 +26,14 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 public class ShapeExportService implements Exporter {
 
     private final TableService tableService;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final ProcessService processService;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
 
     public ShapeExportService(TableService tableService,
-                              SchemaService schemaService,
+                              @Qualifier("schemaServiceBase") ISchemaService schemaService,
                               ProcessService processService,
                               IMessageBusProducer messageBus,
                               IAuthenticationFacade authenticationFacade,

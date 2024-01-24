@@ -16,7 +16,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
 public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableRequest, Voidy> {
@@ -37,7 +37,7 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
     private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
@@ -45,7 +45,7 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
     public UpdateTableRequestHandler(FtsDao ftsDao,
                                      DdlTriggers ddlTriggers,
-                                     SchemaService schemaService,
+                                     ISchemaService schemaService,
                                      PermissionsService permissionsService,
                                      IAuthenticationFacade authenticationFacade,
                                      SchemasAndTablesRepository schemasAndTablesRepository,

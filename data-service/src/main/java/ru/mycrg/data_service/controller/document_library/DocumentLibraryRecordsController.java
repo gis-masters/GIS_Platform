@@ -15,12 +15,13 @@ import ru.mycrg.data_service.dto.RecordDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.*;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
@@ -38,6 +39,8 @@ import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.throwIfNotMatchSchema;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
@@ -47,12 +50,12 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 public class DocumentLibraryRecordsController {
 
     private final Mediator mediator;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final OrgSettingsKeeper orgSettingsKeeper;
     private final DocumentLibraryService libraryService;
     private final RecordServiceFactory recordServiceFactory;
 
-    public DocumentLibraryRecordsController(SchemaService schemaService,
+    public DocumentLibraryRecordsController(ISchemaService schemaService,
                                             DocumentLibraryService libraryService,
                                             RecordServiceFactory recordServiceFactory,
                                             Mediator mediator,
@@ -92,12 +95,11 @@ public class DocumentLibraryRecordsController {
         ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
 
         checkSortedFields(docLibId, pageable);
-        Pageable newPageable = fetchFoldersFirst(pageable);
 
         String ecqlFilter = EcqlRecordIdHandler.joinAsIn(filter, recordId);
 
         Page<RecordDto> page = recordServiceFactory.get()
-                                                   .getAsRegistry(lQualifier, newPageable, ecqlFilter)
+                                                   .getAsRegistry(lQualifier, pageable, ecqlFilter)
                                                    .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
         return ResponseEntity.ok(pageFromList(page, pageable));
@@ -136,7 +138,7 @@ public class DocumentLibraryRecordsController {
 
         Map<String, Object> body = deserializeBody(jsonBody);
         SchemaDto schema = libraryService.getSchema(docLibId);
-        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, body);
+        Map<String, Object> props = excludeUnknownProperties(schema, body);
 
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
@@ -153,7 +155,7 @@ public class DocumentLibraryRecordsController {
                                                @RequestBody Map<String, Object> payload) {
         if (!payload.isEmpty()) {
             SchemaDto schema = libraryService.getSchema(docLibId);
-            schemaService.throwIfNotMatchSchema(schema, payload);
+            throwIfNotMatchSchema(schema, payload);
 
             ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
             mediator.execute(
@@ -216,7 +218,11 @@ public class DocumentLibraryRecordsController {
 
         String schemaId = libraryService.getInfo(docLibId).getSchemaId();
 
-        schemaService.throwIfNotMatchSchema(schemaId, body);
+        schemaService.getSchemaByName(schemaId)
+                     .ifPresentOrElse(schema -> throwIfNotMatchSchema(schema, body),
+                                      () -> {
+                                          throw new NotFoundException("Не найдена схема: " + schemaId);
+                                      });
     }
 
     private Map<String, Object> deserializeBody(@Nullable String jsonString) {

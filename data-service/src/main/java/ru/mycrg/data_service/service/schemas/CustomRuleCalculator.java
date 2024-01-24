@@ -10,7 +10,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertiesWithCalculatedFunctions;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertiesWithCalculatedFunctions;
 
 @Service
 public class CustomRuleCalculator {

@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.export;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,8 @@ import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.CsvHandler;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.util.JsonConverter;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -35,8 +36,8 @@ import java.util.concurrent.CompletableFuture;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
-import static ru.mycrg.data_service.util.SchemaUtil.getEnumerationTitleByValue;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getEnumerationTitleByValue;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.VALIDATION_REPORT;
 
@@ -55,12 +56,12 @@ public class LayerValidationReportService {
     private ValidationResultDao validationResultDao;
 
     private final DatasourceFactory datasourceFactory;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
 
-    public LayerValidationReportService(SchemaService schemaService,
+    public LayerValidationReportService(@Qualifier("schemaServiceBase") ISchemaService schemaService,
                                         Environment environment,
                                         IAuthenticationFacade authenticationFacade,
                                         ProcessService processService,

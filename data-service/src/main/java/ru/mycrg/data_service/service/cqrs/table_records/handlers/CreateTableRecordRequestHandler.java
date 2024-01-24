@@ -4,20 +4,19 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.mappers.FeatureMapper;
-import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -50,8 +49,9 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
         excludeSystemPropertiesFromFeature(feature);
 
-        throwIfNotMatchTableColumns(feature.getPropertyNames(),
-                                    allColumnNames);
+        if (request.isStrictMode()) {
+            throwIfNotMatchTableColumns(feature.getPropertyNames(), allColumnNames);
+        }
 
         customRuleCalculator.calculate(schema, feature.getProperties())
                             .forEach(feature::setProperty);
@@ -73,6 +73,16 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         } catch (CrgDaoException e) {
             String msg = "Не удалось создать фичу в таблице: " + qualifier.getTable();
             logError(msg, e);
+
+            Map<String, String> initialErrors = e.getErrors();
+            if (initialErrors != null && !initialErrors.isEmpty()) {
+                List<ErrorInfo> errors = new ArrayList<>();
+                initialErrors.forEach((k, v) -> {
+                    errors.add(new ErrorInfo(k, v));
+                });
+
+                throw new BadRequestException(msg, errors);
+            }
 
             throw new DataServiceException(msg);
         }

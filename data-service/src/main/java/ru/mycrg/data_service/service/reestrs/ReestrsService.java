@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.reestrs;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,7 @@ import ru.mycrg.data_service.dto.reestrs.ReestrProjection;
 import ru.mycrg.data_service.entity.reestrs.Reestr;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.reestrs.ReestrRepository;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -30,12 +31,12 @@ public class ReestrsService {
     private static final String COMMON_SCHEMA_NAME = "reestr_common_schema";
 
     private final RecordsDao recordsDao;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final ReestrRepository reestrRepository;
     private final ProjectionFactory projectionFactory;
 
     public ReestrsService(RecordsDao recordsDao,
-                          SchemaService schemaService,
+                          @Qualifier("schemaServiceBase") ISchemaService schemaService,
                           ReestrRepository reestrRepository,
                           ProjectionFactory projectionFactory) {
         this.recordsDao = recordsDao;

@@ -35,7 +35,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyDataToFtsLayersQuery;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
-import static ru.mycrg.data_service.util.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.TableUtils.getParentId;
 
 @Service
@@ -91,15 +91,13 @@ public class CrgMigrationHandler {
 
         try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME)) {
             try (final Connection connection = tempDataSource.getConnection()) {
-                // Выполняем основные миграции
                 log.debug("====== Выполняем основные миграции ======");
-
                 Arrays.stream(ctx.getResources("classpath:sql/common/**"))
-                      .filter(resource -> !noFileName(resource.getFilename()))
-                      .sorted(comparatorBySequenceNumber())
+                      .filter(resource -> isFile(resource.getFilename()))
+                      .sorted(bySequenceNumber())
                       .forEach(resource -> executeMigration(connection, resource));
 
-                // Выполняем "особенные" миграции
+                log.debug("====== Выполняем 'особенные' миграции ======");
                 ScriptUtils.executeSqlScript(
                         connection,
                         new EncodedResource(ctx.getResource("classpath:sql/createFunctionForFts.sql")),
@@ -110,11 +108,13 @@ public class CrgMigrationHandler {
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_START_DELIMITER,
                         ScriptUtils.DEFAULT_BLOCK_COMMENT_END_DELIMITER);
 
-                // Выполняем миграции схем
                 log.debug("====== Выполняем миграции схем ======");
                 Arrays.stream(ctx.getResources("classpath:sql/schemas/**"))
-                      .filter(resource -> !noFileName(resource.getFilename()))
+                      .filter(resource -> isFile(resource.getFilename()))
                       .forEach(resource -> executeMigration(connection, resource));
+
+                log.debug("====== Выполняем временные миграции ======");
+                ScriptUtils.executeSqlScript(connection, ctx.getResource("classpath:sql/temp.sql"));
             }
 
             if (initFullTextSearch) {
@@ -274,7 +274,7 @@ public class CrgMigrationHandler {
         return new Gson().fromJson(schema.getClassRule().textValue(), SchemaDto.class);
     }
 
-    private static Comparator<Resource> comparatorBySequenceNumber() {
+    private static Comparator<Resource> bySequenceNumber() {
         return Comparator.comparingInt(resource -> {
             String fileName = resource.getFilename();
             String numberAsString = fileName.split("__")[0].replace("M", "");
@@ -294,7 +294,7 @@ public class CrgMigrationHandler {
         }
     }
 
-    private boolean noFileName(String fileName) {
-        return fileName == null || fileName.isBlank();
+    private boolean isFile(String fileName) {
+        return fileName != null && !fileName.isBlank();
     }
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 
 @Component
 public class SqlParameterSourceFactory {

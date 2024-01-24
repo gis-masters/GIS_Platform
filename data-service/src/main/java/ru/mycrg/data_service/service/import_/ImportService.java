@@ -2,13 +2,14 @@ package ru.mycrg.data_service.service.import_;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -33,14 +34,14 @@ public class ImportService {
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final Environment environment;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
     private final IMessageBusProducer messageBus;
     private final ProcessService processService;
     private final IAuthenticationFacade authenticationFacade;
 
     public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
-                         SchemaService schemaService,
+                         @Qualifier("schemaServiceBase") ISchemaService schemaService,
                          ProcessService processService,
                          IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;

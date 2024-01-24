@@ -12,7 +12,6 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.data_service.service.schemas.SchemaService;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
 import ru.mycrg.data_service.service.reestrs.ReestrService;
 import ru.mycrg.data_service.service.reestrs.ReestrsService;
@@ -26,6 +25,7 @@ import java.util.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 
 @RestController
 public class ReestrsController {
@@ -33,18 +33,15 @@ public class ReestrsController {
     private final Mediator mediator;
     private final ReestrService reestrService;
     private final ReestrsService reestrsService;
-    private final SchemaService schemaService;
     private final OrgSettingsKeeper orgSettingsKeeper;
 
     public ReestrsController(Mediator mediator,
                              ReestrService reestrService,
                              ReestrsService reestrsService,
-                             SchemaService schemaService,
                              OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.reestrService = reestrService;
         this.reestrsService = reestrsService;
-        this.schemaService = schemaService;
         this.orgSettingsKeeper = orgSettingsKeeper;
     }
 
@@ -116,7 +113,7 @@ public class ReestrsController {
     public ResponseEntity<Object> create(@PathVariable String tableName,
                                          @RequestBody Map<String, Object> body) {
         SchemaDto schema = reestrsService.getSchema(tableName);
-        Map<String, Object> props = schemaService.excludeUnknownProperties(schema, body);
+        Map<String, Object> props = excludeUnknownProperties(schema, body);
 
         validateRequired(schema.getProperties(), props);
 

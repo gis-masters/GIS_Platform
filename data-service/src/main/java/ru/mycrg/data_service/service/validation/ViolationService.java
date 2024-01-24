@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.validation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ExportResourceModel;
@@ -11,7 +12,7 @@ import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.ValidationResponseDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.SchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.io.IOException;
@@ -30,9 +31,10 @@ public class ViolationService {
     private final Logger log = LoggerFactory.getLogger(ViolationService.class);
 
     private final JdbcTemplate jdbcTemplate;
-    private final SchemaService schemaService;
+    private final ISchemaService schemaService;
 
-    public ViolationService(SchemaService schemaService, JdbcTemplate jdbcTemplate) {
+    public ViolationService(@Qualifier("schemaServiceBase") ISchemaService schemaService,
+                            JdbcTemplate jdbcTemplate) {
         this.schemaService = schemaService;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -71,7 +73,7 @@ public class ViolationService {
     /**
      * Выборка общей инфы по провалидированным слоям
      *
-     * @param request   Список слоев {@link ValidationRequestDto}
+     * @param request Список слоев {@link ValidationRequestDto}
      *
      * @return list of {@link ValidationInfo}
      */

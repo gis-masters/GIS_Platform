@@ -24,7 +24,7 @@ import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.SchemaUtil.getPropertyByName;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 public class BySchemaRowMapper {
