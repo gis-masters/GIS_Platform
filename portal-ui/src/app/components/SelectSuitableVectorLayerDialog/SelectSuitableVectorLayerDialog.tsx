@@ -130,6 +130,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   private isCompatibleByGeometry(features: WfsFeature[], geometryType: GeometryType): boolean {
     return features?.every(
       ({ geometry }) =>
+        !geometry?.type ||
         geometry.type === geometryType ||
         isLinear(geometryType, geometry.type) ||
         isPolygonal(geometryType, geometry.type) ||

@@ -17,6 +17,7 @@ import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { getTestUser } from '../auth/testUsers';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { forPhotoLayer } from './testFeatures/forPhotoLayer';
+import { forCopy } from './testFeatures/forCopy';
 
 const KEY = 'тестовые данные';
 
@@ -121,6 +122,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'данные в количестве 628 для тестирования фильтрации': {
       return generateByTemplate('тестовые данные 628', schema);
+    }
+    case 'для копирования (в том числе без геометрии)': {
+      return forCopy;
     }
     default: {
       if (key.includes(KEY)) {

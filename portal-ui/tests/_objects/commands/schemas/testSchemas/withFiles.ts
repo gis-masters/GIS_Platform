@@ -24,7 +24,7 @@ export const withFile: Schema = {
     },
     {
       name: 'path',
-      title: 'Полный путь, отражающий иерархию обьектов',
+      title: 'Полный путь, отражающий иерархию объектов',
       hidden: true,
       propertyType: PropertyType.STRING
     },

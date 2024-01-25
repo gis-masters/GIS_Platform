@@ -4,7 +4,6 @@ import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.
 export const dlDataWithSimpleContentType: Schema = {
   name: 'dl_data_documents_with_simple_content_type_schema',
   title: 'документы с простым контент типом в новой библиотеке',
-  readOnly: false,
   tableName: 'dl_data_documents_with_simple_content_type',
   styleName: 'generic',
   geometryType: GeometryType.MULTI_POLYGON,
