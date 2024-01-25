@@ -13,7 +13,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${CRG_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
-    mem_limit: ${RABBITMQ_MEM_LIMIT:-150}m
+    mem_limit: ${RABBITMQ_MEM_LIMIT:-250}m
 
   postgis:
     container_name: postgis
@@ -32,7 +32,7 @@ services:
       POSTGRES_USER: ${CRG_USER}
       POSTGRES_PASS: ${DB_PASS}
       RECREATE_DATADIR: ${RECREATE_DATADIR}
-    mem_limit: ${POSTGIS_MEM_LIMIT:-750}m
+    mem_limit: ${POSTGIS_MEM_LIMIT:-1500}m
 
   geoserver:
     container_name: geoserver
@@ -59,7 +59,7 @@ services:
       MAXIMUM_MEMORY: ${JAVA_XMX_SIZE}
       STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
       COMMUNITY_EXTENSIONS: ogr-datastore-plugin
-    mem_limit: ${GEOSERVER_MEM_LIMIT:-8400}m
+    mem_limit: ${GEOSERVER_MEM_LIMIT:-7400}m
 
 
   auth-service:
@@ -86,12 +86,12 @@ services:
 
       ESIA_URL: https://esia.gosuslugi.ru
       ESIA_CLIENT_ID: GISOGD_CRIMEA
-      ESIA_CLIENT_CERTIFICATE_HASH: 624B4BC01310B68566F9493262FC584805EF25915F406D4EADD055D1F45E9421
+      ESIA_CLIENT_CERTIFICATE_HASH: ${ESIA_CLIENT_CERTIFICATE_HASH:-A36D6A216A23D945484AD96DE11AED862F950AC88165A6A9D1D2F8F583D6DA4C}
       ESIA_ORG_ID: 1
       ESIA_GROUP_ID: ${ESIA_GROUP_ID:-314314}
       ESIA_KEY_STORE_PATH: /opt/key_storage/esia_store.pfx
       ESIA_KEY_STORE_PASS: ${ESIA_KEY_STORE_PASS:-314314}
-      ESIA_KEY_STORE_ALIAS: ${ESIA_KEY_STORE_ALIAS:-fpy}
+      ESIA_KEY_STORE_ALIAS: ${ESIA_KEY_STORE_ALIAS:-1}
       ESIA_KEY_STORE_SIGN_ALG: GOST3411-2012-256WITHECGOST3410-2012-256
 
       SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: ${JWT_ACCESS_TOKEN_VALIDITY_SECONDS:-}
@@ -103,7 +103,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${AUTH_MEM_LIMIT:-600}m
+    mem_limit: ${AUTH_MEM_LIMIT:-500}m
 
   integration-service:
     container_name: crg-integration-service
@@ -130,7 +130,7 @@ services:
       - "8338:8338"
     volumes:
       - /opt/logs:/opt/logs
-    mem_limit: ${INTEGRATION_MEM_LIMIT:-600}m
+    mem_limit: ${INTEGRATION_MEM_LIMIT:-400}m
 
   data-service:
     container_name: crg-data-service
@@ -183,7 +183,7 @@ services:
       - /opt/spatial_data:/opt/spatial_data
     ports:
       - "8084:8084"
-    mem_limit: ${DATA_MEM_LIMIT:-1050}m
+    mem_limit: ${DATA_MEM_LIMIT:-950}m
 
   gis-service:
     container_name: crg-gis-service
@@ -222,7 +222,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GIS_MEM_LIMIT:-1050}m
+    mem_limit: ${GIS_MEM_LIMIT:-950}m
 
   gateway:
     container_name: crg-gateway
@@ -247,7 +247,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GATEWAY_MEM_LIMIT:-600}m
+    mem_limit: ${GATEWAY_MEM_LIMIT:-500}m
 
   geo-wrapper:
     container_name: geo-wrapper
@@ -281,7 +281,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${WRAPPER_MEM_LIMIT:-600}m
+    mem_limit: ${WRAPPER_MEM_LIMIT:-500}m
 
   portal-ui:
     container_name: crg-ui
@@ -318,7 +318,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    mem_limit: ${UI_MEM_LIMIT:-300}m
+    mem_limit: ${UI_MEM_LIMIT:-250}m
 
   audit-service:
     container_name: crg-audit-service
@@ -342,7 +342,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${AUDIT_MEM_LIMIT:-450}m
+    mem_limit: ${AUDIT_MEM_LIMIT:-400}m
 
   gisogd-service:
     container_name: crg-gisogd-service
@@ -368,4 +368,4 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GISOGD_MEM_LIMIT:-450}m
+    mem_limit: ${GISOGD_MEM_LIMIT:-400}m
