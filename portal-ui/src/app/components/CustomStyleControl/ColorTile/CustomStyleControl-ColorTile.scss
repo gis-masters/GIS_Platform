@@ -1,6 +1,8 @@
-.CustomStyleControl-ColorTile {
-  width: 20px;
-  height: 20px;
+.CustomStyleControl {
+  &-ColorTile {
+    width: 20px;
+    height: 20px;
 
-  background-color: var(--CustomStyleControlColor);
+    background-color: var(--CustomStyleControlColor);
+  }
 }

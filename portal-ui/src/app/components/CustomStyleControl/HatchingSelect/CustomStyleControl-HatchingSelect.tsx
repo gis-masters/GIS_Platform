@@ -3,7 +3,8 @@ import { SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { PolygonRule, customStyleHatches } from '../../../services/geoserver/styles/styles.models';
+import { PolygonRule, customStyleHatches, transparent } from '../../../services/geoserver/styles/styles.models';
+
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
 
 import { CustomStyleControlHatchingTile } from '../HatchingTile/CustomStyleControl-HatchingTile';
@@ -32,22 +33,24 @@ export class CustomStyleControlHatchingSelect extends Component<CustomStyleContr
     return (
       <CustomStyleControlSubControl className={cnCustomStyleControlHatchingSelect()}>
         {label && <CustomStyleControlLabel>{label}</CustomStyleControlLabel>}
-        <TiledSelect
-          value={hatchingIndex}
-          dropdownColumns={6}
-          options={customStyleHatches.map((hatch, i) => ({
-            tile: (
-              <CustomStyleControlHatchingTile
-                color={color}
-                size={hatch?.size}
-                type={hatch?.type}
-                strokeWidth={hatch?.strokeWidth}
-              />
-            ),
-            value: i
-          }))}
-          onChange={this.changeHandler}
-        />
+        {color !== transparent && (
+          <TiledSelect
+            value={hatchingIndex}
+            dropdownColumns={6}
+            options={customStyleHatches.map((hatch, i) => ({
+              tile: (
+                <CustomStyleControlHatchingTile
+                  color={color}
+                  size={hatch?.size}
+                  type={hatch?.type}
+                  strokeWidth={hatch?.strokeWidth}
+                />
+              ),
+              value: i
+            }))}
+            onChange={this.changeHandler}
+          />
+        )}
       </CustomStyleControlSubControl>
     );
   }

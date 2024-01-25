@@ -55,6 +55,15 @@ const checkeredOrangePolygon: CustomStyleDescription = {
   }
 };
 
+const polygonWithoutFill: CustomStyleDescription = {
+  type: 'polygon',
+  rule: {
+    strokeColor: '#0000bb',
+    strokeWidth: 2,
+    fillColor: '#ffffffff'
+  }
+};
+
 const pointRedCircleSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ff0000</SvgParameter></Fill></Mark><Size>10</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
@@ -69,6 +78,9 @@ const redPolygonSld =
 
 const checkeredOrangePolygonSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><GraphicFill><Graphic><Mark><WellKnownName>shape://times</WellKnownName><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>6</Size></Graphic></GraphicFill></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-dasharray">4 4</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+
+const withoutFillSld =
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><SvgParameter name="fill">#ffffffff</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 describe('утилита создания SLD-стилей buildCustomSld', () => {
   test('красная круглая точка', () => {
@@ -89,6 +101,10 @@ describe('утилита создания SLD-стилей buildCustomSld', () =
 
   test('оранжевый полигон в клеточку', () => {
     expect(buildCustomSld('dummy:complex_name', checkeredOrangePolygon)).toEqual(checkeredOrangePolygonSld);
+  });
+
+  test('полигон без заливки', () => {
+    expect(buildCustomSld('dummy:complex_name', polygonWithoutFill)).toEqual(withoutFillSld);
   });
 });
 

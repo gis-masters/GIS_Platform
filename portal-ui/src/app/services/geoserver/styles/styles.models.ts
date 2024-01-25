@@ -162,6 +162,8 @@ export const customStyleStrokeColors: string[] = [
   '#000000'
 ];
 
+export const transparent = '#ffffffff';
+
 export const customStyleFillColors: string[] = [
   '#80ffff',
   '#00ff00',
@@ -182,7 +184,8 @@ export const customStyleFillColors: string[] = [
   '#999999',
   '#666666',
   '#333333',
-  '#000000'
+  '#000000',
+  transparent
 ];
 
 export const customStyleStrokes: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>[] = [

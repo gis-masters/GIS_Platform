@@ -10,7 +10,9 @@ import { CustomStyleControlColorTile } from '../ColorTile/CustomStyleControl-Col
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 
-const cnCustomStyleControlColorSelect = cn('CustomStyleControl', 'ColorSelect');
+import '!style-loader!css-loader!sass-loader!../MenuList/CustomStyleControl-MenuList.scss';
+
+const cnCustomStyleControl = cn('CustomStyleControl');
 
 interface CustomStyleControlColorSelectProps extends IClassNameProps {
   label?: string;
@@ -24,10 +26,15 @@ export class CustomStyleControlColorSelect extends Component<CustomStyleControlC
     const { value, label, colors, className } = this.props;
 
     return (
-      <CustomStyleControlSubControl className={cnCustomStyleControlColorSelect(null, [className])}>
+      <CustomStyleControlSubControl className={cnCustomStyleControl('ColorSelect', [className])}>
         {label && <CustomStyleControlLabel>{label}</CustomStyleControlLabel>}
         <TiledSelect
           value={value}
+          MenuProps={{
+            MenuListProps: {
+              className: cnCustomStyleControl('MenuList')
+            }
+          }}
           dropdownColumns={6}
           options={colors.map(color => ({
             tile: <CustomStyleControlColorTile color={color} />,

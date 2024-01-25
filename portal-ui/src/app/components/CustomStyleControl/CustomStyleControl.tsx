@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { buildCustomSld, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
-import { CustomStyleDescription } from '../../services/geoserver/styles/styles.models';
+import { CustomStyleDescription, transparent } from '../../services/geoserver/styles/styles.models';
 import { getSupGeometryType } from '../../services/geoserver/styles/styles.service';
 import { getLegendGraphic } from '../../services/geoserver/wms/wms.service';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
@@ -38,7 +38,7 @@ const defaultCustomStyles: Record<CustomStyleDescription['type'], CustomStyleDes
   polygon: {
     type: 'polygon',
     rule: {
-      fillColor: '#ffff80',
+      fillColor: '#80ff80',
       strokeColor: '#0f5c1a',
       strokeWidth: 2
     }
@@ -113,6 +113,7 @@ export class CustomStyleControl extends Component<FormControlProps> {
   @boundMethod
   private onFormChange(value: CustomStyleDescription) {
     const { onChange, property, formValue } = this.props;
+
     const complexName = (formValue as CrgLayer).complexName;
 
     if (!complexName) {
@@ -120,6 +121,10 @@ export class CustomStyleControl extends Component<FormControlProps> {
     }
 
     if (onChange) {
+      if (value.type === 'polygon' && value.rule.fillColor === transparent) {
+        value.rule.fillGraphic = undefined;
+      }
+
       onChange({
         propertyName: property.name,
         value: buildCustomSld(complexName, value)
