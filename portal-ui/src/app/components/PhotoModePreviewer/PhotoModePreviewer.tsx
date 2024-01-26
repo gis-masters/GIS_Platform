@@ -46,6 +46,7 @@ export const PhotoModePreviewer: FC = observer(() => {
             const layer =
               currentProject.getLayerByTableNameFromAllVectorLayers(tableName) ||
               currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
+
             const schema = await getLayerSchema(layer);
 
             return {

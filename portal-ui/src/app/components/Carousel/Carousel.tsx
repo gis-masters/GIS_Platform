@@ -1,9 +1,4 @@
-// @TODO: Update Typescript/Dependencies #1284
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable react/jsx-no-bind -- эксперимент для сложных функциональных компонентов */
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, useCallback } from 'react';
 import { pdfjs } from 'react-pdf';
 import { cn } from '@bem-react/classname';
 import { SwiperClass } from 'swiper/react';
@@ -100,14 +95,14 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
     setZoomed
   } = store;
 
-  const zoomedHandler = () => {
+  const zoomedHandler = useCallback(() => {
     setZoomed(!zoomed);
     if (zoomed) {
       mainSwiper.zoom.in(ratio || 5);
     } else {
       mainSwiper.zoom.out();
     }
-  };
+  }, [setZoomed, zoomed]);
 
   const imagesWithUrls = images.map(image => ({ ...image, url: filesClient.getFileDownloadUrl(image.file.id) }));
 

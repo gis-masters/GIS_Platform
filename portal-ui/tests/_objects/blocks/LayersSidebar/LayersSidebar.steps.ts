@@ -9,6 +9,7 @@ When('в списке слоёв на карте я нажимаю кнопку 
 
 When('в списке слоёв на карте я нажимаю кнопку `Сохранить для всех пользователей`', async () => {
   await layersSidebarBlock.clickSaveButton();
+  await layersSidebarBlock.waitForLoadingHide();
 });
 
 When(

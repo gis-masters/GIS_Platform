@@ -60,7 +60,8 @@ export function getFieldFilterPart(filter: FilterQuery, field: string): FilterQu
     const entry: FilterQuery | undefined = and.find(
       filterEntry =>
         filterEntry[field] !== undefined ||
-        (filterEntry.$or && filterEntry.$or[0] && (filterEntry.$or[0] as FilterQuery)[field]) !== undefined
+        (filterEntry.$or && (filterEntry.$or as FilterQuery[])[0] && (filterEntry.$or as FilterQuery[])[0][field]) !==
+          undefined
     );
 
     if (entry) {
@@ -70,7 +71,7 @@ export function getFieldFilterPart(filter: FilterQuery, field: string): FilterQu
 
   if (
     filter[field] !== undefined ||
-    (filter.$or && filter.$or[0] && (filter.$or[0] as FilterQuery)[field]) !== undefined
+    (filter.$or && (filter.$or as FilterQuery[])[0] && (filter.$or as FilterQuery[])[0][field]) !== undefined
   ) {
     return filter;
   }
@@ -92,7 +93,8 @@ export function getFilterRootAnd(filter: FilterQuery, field = ''): [FilterQuery[
   const and: FilterQuery[] | undefined = filter.$and as FilterQuery[];
   const index = and?.findIndex(
     entry =>
-      entry[field] !== undefined || (entry.$or && entry.$or[0] && (entry.$or[0] as FilterQuery)[field]) !== undefined
+      entry[field] !== undefined ||
+      (entry.$or && (entry.$or as FilterQuery[])[0] && (entry.$or as FilterQuery[])[0][field]) !== undefined
   );
 
   return [and, index === undefined ? -1 : index];

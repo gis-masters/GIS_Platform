@@ -11,26 +11,26 @@ describe('feature util', () => {
   test('Некорректные параметры отклоняются с ошибкой', () => {
     expect(() => {
       extractFeatureId('');
-    }).toThrow("Передан некорректный идентификатор фичи: ''");
+    }).toThrow("Передан некорректный идентификатор объекта: ''");
 
     expect(() => {
       extractFeatureId('  ');
-    }).toThrow("Передан некорректный идентификатор фичи: '  '");
+    }).toThrow("Передан некорректный идентификатор объекта: '  '");
 
     expect(() => {
       extractFeatureId(null);
-    }).toThrow("Передан некорректный идентификатор фичи: 'null'");
+    }).toThrow("Передан некорректный идентификатор объекта: 'null'");
 
     expect(() => {
       extractFeatureId('feature');
-    }).toThrow("Передан некорректный идентификатор фичи: 'feature'");
+    }).toThrow("Передан некорректный идентификатор объекта: 'feature'");
 
     expect(() => {
       extractFeatureId('feature:1');
-    }).toThrow("Передан некорректный идентификатор фичи: 'feature:1'");
+    }).toThrow("Передан некорректный идентификатор объекта: 'feature:1'");
 
     expect(() => {
       extractFeatureId('feature.some');
-    }).toThrow("Передан некорректный идентификатор фичи: 'feature.some'");
+    }).toThrow("Передан некорректный идентификатор объекта: 'feature.some'");
   });
 });

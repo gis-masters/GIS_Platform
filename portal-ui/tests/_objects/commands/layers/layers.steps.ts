@@ -1,14 +1,17 @@
-import { Given } from '@wdio/cucumber-framework';
+import { Given, Then } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
 
 import { getSchema } from '../schemas/getSchema';
-import { CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
+import { CrgLayer, CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { createLayer } from './createLayer';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
 import { updateLayer } from './updateLayer';
+import { getLayer } from './getLayer';
+
+const errorSchemaOrId = 'У слоя не указана схема или идентификатор';
 
 Given(
   'в созданном проекте создан слой {string} на основе созданных набора данных и таблицы',
@@ -37,7 +40,7 @@ Given('у данного слоя включено представление {s
   const { latestLayer, latestProject } = this;
 
   if (!latestLayer.schemaId || !latestLayer.id) {
-    throw new Error('У слоя не указана схема или идентификатор');
+    throw new Error(errorSchemaOrId);
   }
 
   const schema = await getSchema(latestLayer.schemaId);
@@ -48,6 +51,23 @@ Given('у данного слоя включено представление {s
   }
 
   await updateLayer(latestLayer.id, { view: view.id }, latestProject.id);
+});
+
+Given('у данного слоя включен фоторежим по полю {string}', async function (this: ScenarioScope, fieldTitle: string) {
+  const { latestLayer, latestProject } = this;
+
+  if (!latestLayer.schemaId || !latestLayer.id) {
+    throw new Error(errorSchemaOrId);
+  }
+
+  const schema = await getSchema(latestLayer.schemaId);
+  const property = schema.properties?.find(({ title }) => title === fieldTitle);
+
+  if (!property) {
+    throw new Error(`Свойство ${fieldTitle} не найдено`);
+  }
+
+  await updateLayer(latestLayer.id, { photoMode: property.name }, latestProject.id);
 });
 
 Given('в созданном проекте существует внешний слой', async function (this: ScenarioScope, table: DataTable) {
@@ -87,3 +107,18 @@ Given('существует слой с параметрами:', async function
 
   await createLayer(project.id, layer);
 });
+
+Then(
+  'на сервере у данного слоя в поле {string} значение {string}',
+  async function (this: ScenarioScope, fieldName: keyof CrgLayer, fieldValue: string) {
+    const { latestLayer, latestProject } = this;
+
+    if (!latestLayer.schemaId || !latestLayer.id) {
+      throw new Error('У слоя не указана схема или идентификатор');
+    }
+
+    const layer = await getLayer(latestLayer.id, latestProject.id);
+
+    await expect(layer[fieldName]).toBe(fieldValue);
+  }
+);

@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable react/jsx-no-bind */
 import React, { FC, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { DialogContent, Tooltip } from '@mui/material';

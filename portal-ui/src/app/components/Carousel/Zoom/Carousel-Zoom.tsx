@@ -1,8 +1,3 @@
-// @TODO: Update Typescript/Dependencies #1284
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-
 import React, { FC } from 'react';
 
 import { cn } from '@bem-react/classname';

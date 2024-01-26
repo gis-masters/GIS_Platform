@@ -196,7 +196,9 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
           'Если опция включена, при выделении на карте объектов этого слоя открываются фотографии из этих объектов',
         propertyType: PropertyType.CHOICE,
         defaultValue: layer.photoMode || '',
-        options: [{ title: 'Не выбрано', value: '' }, ...this.propertiesTypeFileOptions]
+        options: this.propertiesTypeFileOptions.some(property => property.title === 'Не выбрано')
+          ? this.propertiesTypeFileOptions
+          : [{ title: 'Не выбрано', value: '' }, ...this.propertiesTypeFileOptions]
       });
     }
 

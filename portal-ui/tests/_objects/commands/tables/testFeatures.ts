@@ -14,9 +14,9 @@ import { forOtherFiltering } from './testFeatures/forOtherFiltering';
 import { forOtherFiltering2 } from './testFeatures/forOtherFiltering2';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
+import { forPhotoLayerWithMultipleObjects } from './testFeatures/forPhotoLayerWithMultipleObjects';
 import { getTestUser } from '../auth/testUsers';
 import { getUserByEmail } from '../auth/getUserByEmail';
-import { forPhotoLayer } from './testFeatures/forPhotoLayer';
 import { forCopy } from './testFeatures/forCopy';
 
 const KEY = 'тестовые данные';
@@ -114,8 +114,8 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     case 'для простой фильтрации': {
       return forSimpleFiltering;
     }
-    case 'для фотослоя': {
-      return forPhotoLayer;
+    case 'для фотослоя с несколькими объектами': {
+      return forPhotoLayerWithMultipleObjects;
     }
     case 'данные для тестирования сортировки с пагинацией': {
       return generateByTemplate('тестовые данные 27', schema);

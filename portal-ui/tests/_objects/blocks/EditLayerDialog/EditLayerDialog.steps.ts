@@ -11,10 +11,6 @@ When('в диалоговом окне `Свойства слоя` в поле `
   await editLayerPropertiesDialogBlock.layerPropertyDialogSelectOptionByTitle(view);
 });
 
-When('в диалоговом окне `Свойства слоя` в поле `Фотослой` выбираю пункт {string}', async (view: string) => {
-  await editLayerPropertiesDialogBlock.layerPropertyDialogSelectPhotoLayer(view);
-});
-
 When('в диалоговом окне `Свойства слоя` нажимаю `Изменить`', async () => {
   await editLayerPropertiesDialogBlock.saveLayerProperty();
 

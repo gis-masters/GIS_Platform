@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable react/jsx-no-bind */
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { FreeMode, Navigation, Pagination, Thumbs, Zoom } from 'swiper/modules';
@@ -48,46 +44,62 @@ export const CarouselMainSwiper: FC<CarouselMainSwiperProps> = ({
   onImageLoad,
   onMainSwiperReady,
   onZoomed
-}) => (
-  <Swiper
-    className={cnCarousel('MainSwiper', { type: isPdfFile(currentImage.file) && 'document' })}
-    onSwiper={e => {
+}) => {
+  const mainSwiperReadyHandler = useCallback(
+    (e: SwiperClass) => {
       onMainSwiperReady(e);
       onZoomed(e.zoom.scale === 1);
-    }}
-    data-swiper-zoom={{ maxRatio: ratio, minRatio: 1 }}
-    onZoomChange={() => {
-      onZoomed(!zoomed);
-    }}
-    onSlideChange={(swiper: SwiperClass) => {
+    },
+    [onMainSwiperReady, onZoomed]
+  );
+
+  const zoomedHandler = useCallback(() => {
+    onZoomed(!zoomed);
+  }, [onZoomed, zoomed]);
+
+  const swiperChangeHadler = useCallback(
+    (swiper: SwiperClass) => {
       const activeIndex: number = swiper.activeIndex;
       if (imagesWithUrls) {
         onImageChange(imagesWithUrls[activeIndex]);
       }
-    }}
-    pagination={{
-      type: 'fraction'
-    }}
-    navigation
-    zoom
-    thumbs={{ swiper: thumbsSwiper }}
-    onClick={() => {
-      if (mainSwiper) {
-        mainSwiper.zoom.in(ratio);
-      }
-    }}
-    modules={[Pagination, FreeMode, Navigation, Thumbs, Zoom]}
-  >
-    {imagesWithUrls.map(imageWithUrl => (
-      <SwiperSlide key={imageWithUrl.file.id}>
-        {isPdfFile(currentImage.file) ? (
-          <CarouselDocument imageWithUrl={imageWithUrl} onLoad={onImageLoad} />
-        ) : (
-          <div className='swiper-zoom-container'>
-            <CarouselMainImage imageWithUrl={imageWithUrl} onLoad={onImageLoad} />
-          </div>
-        )}
-      </SwiperSlide>
-    ))}
-  </Swiper>
-);
+    },
+    [imagesWithUrls, onImageChange]
+  );
+
+  const mainSwiperClickHandler = useCallback(() => {
+    if (mainSwiper) {
+      mainSwiper.zoom.in(ratio);
+    }
+  }, [mainSwiper, ratio]);
+
+  return (
+    <Swiper
+      className={cnCarousel('MainSwiper', { type: isPdfFile(currentImage.file) && 'document' })}
+      onSwiper={mainSwiperReadyHandler}
+      data-swiper-zoom={{ maxRatio: ratio, minRatio: 1 }}
+      onZoomChange={zoomedHandler}
+      onSlideChange={swiperChangeHadler}
+      pagination={{
+        type: 'fraction'
+      }}
+      navigation
+      zoom
+      thumbs={{ swiper: thumbsSwiper }}
+      onClick={mainSwiperClickHandler}
+      modules={[Pagination, FreeMode, Navigation, Thumbs, Zoom]}
+    >
+      {imagesWithUrls.map(imageWithUrl => (
+        <SwiperSlide key={imageWithUrl.file.id}>
+          {isPdfFile(currentImage.file) ? (
+            <CarouselDocument imageWithUrl={imageWithUrl} onLoad={onImageLoad} />
+          ) : (
+            <div className='swiper-zoom-container'>
+              <CarouselMainImage imageWithUrl={imageWithUrl} onLoad={onImageLoad} />
+            </div>
+          )}
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};

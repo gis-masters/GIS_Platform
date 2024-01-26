@@ -64,6 +64,18 @@ Given(
 
 Given('таблица наполнена данными {string}', async function (this: ScenarioScope, key: string) {
   this.latestFeatures = await getTestFeatures(key, this.latestSchema);
+
+  for (const feature of this.latestFeatures) {
+    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
+  }
+});
+
+Given('таблица наполнена данными для фотослоя c несколькими объектами', async function (this: ScenarioScope) {
+  this.latestFeatures = await getTestFeatures('для фотослоя с несколькими объектами', this.latestSchema);
+  if (this.latestFeatures?.every(feature => feature.properties.photo)) {
+    this.latestFeatures.map(feature => (feature.properties.photo = this.latestUploadedFiles));
+  }
+
   for (const feature of this.latestFeatures) {
     await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
   }

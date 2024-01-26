@@ -27,6 +27,10 @@ class LayersClient extends GisClient {
   async updateLayer(layerId: number, patch: Partial<CrgLayer>, projectId: number): Promise<void> {
     return http.patch(this.getProjectLayerUrl(projectId, layerId), patch);
   }
+
+  async getLayer(layerId: number, projectId: number): Promise<CrgLayer> {
+    return http.get(this.getProjectLayerUrl(projectId, layerId));
+  }
 }
 
 export const layersClient = LayersClient.instance;

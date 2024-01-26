@@ -1,5 +1,5 @@
 export function extractFeatureId(featureId: string): number {
-  const errMsg = `Передан некорректный идентификатор фичи: '${featureId}'`;
+  const errMsg = `Передан некорректный идентификатор объекта: '${featureId}'`;
 
   if (!featureId) {
     throw new Error(errMsg);
@@ -31,7 +31,7 @@ export function extractFeatureId(featureId: string): number {
 export const extractFeatureTableName = (id: string): string => {
   const [tableName] = id.split('.');
   if (!tableName) {
-    throw new Error('Не верный объект координат: ' + id);
+    throw new Error('Передан некорректный идентификатор объекта: ' + id);
   }
 
   return tableName;
