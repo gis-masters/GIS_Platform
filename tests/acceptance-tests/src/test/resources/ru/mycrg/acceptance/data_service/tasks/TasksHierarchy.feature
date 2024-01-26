@@ -9,7 +9,7 @@ Feature: Доступность и управление задачами сог�
   # fiz5          пользователь-5 без начальника                 1             1
 
   #  Задачи:
-  #  |owner| ownerName| type   | description     |
+  #  |   owner  | ownerName| type   | description     |
   #  | orgOwner | orgOwner | CUSTOM | orgOwner task 1 |
   #  | orgOwner | orgOwner | CUSTOM | orgOwner task 2 |
   #  | fiz1     | fiz1     | CUSTOM | fiz1 task 1     |

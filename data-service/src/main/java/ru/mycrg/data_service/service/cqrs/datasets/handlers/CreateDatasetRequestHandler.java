@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.datasets.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
@@ -23,6 +25,8 @@ import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND
 
 @Component
 public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatasetRequest, DatasetModel> {
+
+    private final Logger log = LoggerFactory.getLogger(CreateDatasetRequestHandler.class);
 
     private final DdlSchemas ddlSchemas;
     private final DataStoreClient dataStoreClient;
@@ -49,8 +53,12 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
         ResourceQualifier dQualifier = new ResourceQualifier(datasetName);
         datasetProtector.throwIfExists(dQualifier);
 
+        log.debug("Создаем набор данных с квалификатором: {} и title: {}",
+                  dQualifier.getQualifier(), request.getDatasetDto().getTitle());
+
         // Create schema
         ddlSchemas.create(dQualifier);
+        log.debug("Создана схема в БД: {}", dQualifier.getQualifier());
 
         // Add record to schemasAndTables table
         SchemasAndTables dataset = new SchemasAndTables(DATASET,
@@ -62,6 +70,8 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
         // Create OWNER permission
         Permission ownerPermission = permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER,
                                                                            newEntity.getId());
+        log.debug("Запись о наборе данных создана(schemas_and_tables), права на владение даны. ID: {}",
+                  newEntity.getId());
 
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
         if (!responseModel.isSuccessful()) {
@@ -69,8 +79,10 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
             ddlSchemas.drop(dQualifier);
             permissionsService.delete(ownerPermission);
 
-            throw new DataServiceException("Не удалось создать хранилище на gis-service", responseModel);
+            throw new DataServiceException("Не удалось создать хранилище на геосервере", responseModel);
         }
+
+        log.debug("Хранилище: {} создано на геосервере", datasetName);
 
         DatasetModel datasetModel = new DatasetModel(newEntity, OWNER.name(), 0);
         request.setDatasetModel(datasetModel);

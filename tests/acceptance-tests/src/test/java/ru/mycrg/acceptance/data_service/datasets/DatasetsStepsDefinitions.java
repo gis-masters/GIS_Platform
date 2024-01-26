@@ -5,6 +5,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -129,7 +130,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     public void shouldReturnCorrectDatasetLocation() {
         String url = response.getHeader("Location");
 
-        String datasetName = extractDatasetName();
+        String datasetName = extractDatasetName(response);
         assertThat(url, equalTo(makeDatasetUrl(datasetName)));
     }
 
@@ -264,6 +265,8 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createDataset(DatasetCreateDto dto) {
+        System.out.println("Try create dataset: " + dto.getTitle());
+
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
@@ -272,19 +275,29 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         post();
 
-        currentDatasetIdentifier = extractDatasetIdentifier();
+        currentDatasetIdentifier = extractDatasetName(response);
 
         datasetsPool.put(currentDatasetIdentifier, dto);
     }
 
-    private String extractDatasetName() {
-        return response.getHeader("Location")
-                       .split("/datasets/")[1];
-    }
+    private String extractDatasetName(Response response) {
+        String location = response.getHeader("Location");
+        if (location == null || location.isBlank()) {
+            response.prettyPrint();
 
-    private String extractDatasetIdentifier() {
-        return response.getHeader("Location")
-                       .split("/datasets/")[1];
+            throw new IllegalArgumentException("Header Location отсутствует!");
+        }
+
+        System.out.println("Dataset location: " + location);
+
+        String[] split = location.split("/datasets/");
+        if (split.length < 1) {
+            response.prettyPrint();
+
+            throw new IllegalArgumentException("Вернулся не корректный location");
+        }
+
+        return split[1];
     }
 
     private String makeDatasetUrl(String datasetName) {

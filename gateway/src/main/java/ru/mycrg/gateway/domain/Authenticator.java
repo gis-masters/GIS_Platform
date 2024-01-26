@@ -62,9 +62,7 @@ public class Authenticator {
             log.debug("Access token expired");
 
             if (token.getRefresh_token() == null) {
-                log.warn("Refresh token not passed");
-
-                return new AuthConclusion(null, "refreshTokenExpired");
+                return new AuthConclusion(null, "refreshTokenNotPassed");
             } else {
                 log.debug("Try restore from refresh");
             }

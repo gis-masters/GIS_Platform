@@ -143,10 +143,24 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         get(format("/projects/%d/layers/", projectId));
 
-        List<LinkedHashMap<Integer, Object>> layers = response.jsonPath().get();
+        JsonPath path = response.jsonPath();
+        List<LinkedHashMap<Integer, Object>> layers = path.get();
 
-        tableName = response.jsonPath().getList("tableName").get(0).toString();
-        schemaId = response.jsonPath().getList("schemaId").get(0).toString();
+        List<Object> tableNames = path.getList("tableName");
+        if (tableNames == null || tableNames.isEmpty()) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Не корректное тело ответа, не найден tableName");
+        }
+        tableName = tableNames.get(0).toString();
+
+        List<Object> schemaIds = path.getList("schemaId");
+        if (schemaIds == null || schemaIds.isEmpty()) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Не корректное тело ответа, не найден schemaId");
+        }
+        schemaId = schemaIds.get(0).toString();
 
         assertThat(layers.isEmpty(), is(not(true)));
 

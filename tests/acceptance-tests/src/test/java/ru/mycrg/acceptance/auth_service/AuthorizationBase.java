@@ -18,27 +18,38 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     public static final String AUTH_COOKIE = "crgAuthCookie";
     public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
 
+    public static int authCounter;
+    public static int authCacheUsedCounter;
+
+    public static Map<String, Response> authorizationCache = new HashMap<>();
+
     public void loginAsRoot() {
+        System.out.println("login as root");
         Response response = authorizeUser(rootUserName, rootPassword, "root");
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAsOwner() {
-        Response response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "owner");
+        loginAsOwner(true);
+    }
+
+    public void loginAsOwner(boolean cachable) {
+        System.out.println("login as owner: " + orgDto.getOwner().getEmail());
+        response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "owner", cachable);
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAsCurrentUser() {
         System.out.println("login as current user: " + userDto.getEmail());
-
-        Response response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current_user");
+        response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current user");
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAs(String email, String password) {
+        System.out.println("login as user: " + email);
         response = authorizeUser(email, password, "user");
 
         checkCookieAndWriteAsCurrent(response);
@@ -56,6 +67,16 @@ public class AuthorizationBase extends BaseStepsDefinitions {
     }
 
     private Response authorizeUser(String login, String password, String user) {
+        return authorizeUser(login, password, user, true);
+    }
+
+    private Response authorizeUser(String login, String password, String user, boolean cachable) {
+        if (cachable && authorizationCache.containsKey(login)) {
+            authCacheUsedCounter++;
+
+            return authorizationCache.get(login);
+        }
+
         try {
             Response authResponse;
 
@@ -77,6 +98,9 @@ public class AuthorizationBase extends BaseStepsDefinitions {
                                 post("/oauth/token");
 
                 if (authResponse.statusCode() == SC_OK) {
+                    authCounter++;
+                    authorizationCache.put(login, authResponse);
+
                     return authResponse;
                 } else {
                     sleep(RETRY_DELAY);

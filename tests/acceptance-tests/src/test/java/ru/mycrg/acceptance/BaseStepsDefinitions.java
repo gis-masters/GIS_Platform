@@ -133,7 +133,6 @@ public class BaseStepsDefinitions {
         Matcher matcher = pattern.matcher(target);
 
         Integer id = null;
-
         while (matcher.find()) {
             id = Integer.parseInt(matcher.group());
         }

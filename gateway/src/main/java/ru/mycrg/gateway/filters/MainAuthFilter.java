@@ -167,6 +167,13 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             response.addCookie(cookieProducer.makeFromJwtToken(token));
 
             gotoNextFilter(request, response, chain);
+        } else if ("refreshTokenNotPassed".equals(authConclusion.getCause())) {
+            log.warn("Refresh token not passed");
+
+            // Удалим куку/разлогинем пользователя
+            response.addCookie(cookieProducer.makeDeletionCookie());
+
+            sendUnauthorized(response);
         } else if ("refreshTokenExpired".equals(authConclusion.getCause())) {
             log.debug("Refresh token expired");
 

@@ -62,8 +62,6 @@ public class OrganizationSettingsController {
 
     /**
      * Обновит настройки организации указанной в токене пользователя.
-     * <p>
-     * Только владелец организации может воспользоваться этим эндпоинтом.
      */
     @PatchMapping("/organizations/settings")
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)

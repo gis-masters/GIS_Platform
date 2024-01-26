@@ -26,8 +26,8 @@ import static org.junit.Assert.*;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
-    private static final int RETRY_DELAY = 2000;
-    private static final int MAX_RETRY_ATTEMPT = 10;
+    private static final int RETRY_DELAY = 3000;
+    private static final int MAX_RETRY_ATTEMPT = 40;
 
     public static Integer userId;
     public static Integer anotherUserId;
@@ -156,11 +156,15 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует некий пользователь")
     public void initializeSomeUser() throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
         createRandomUser();
     }
 
     @Given("Существует {int} пользователей")
     public void createUsers(Integer quantityOfUsers) throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
         for (int i = 0; i < quantityOfUsers; i++) {
             createRandomUser();
         }
@@ -319,9 +323,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             userDto = fiz5;
             createUser(fiz5);
 
+            System.out.println("============= Print userPool =============");
             userPool.forEach((id, userDto) -> {
                 System.out.printf("id: %d. Name: '%s' Email: '%s'%n", id, userDto.getName(), userDto.getEmail());
             });
+            System.out.println("==========================================");
+
+            // После изменения иерархии получаем новый актуальный токен
+            authorizationBase.loginAsOwner(false);
         } else {
             throw new IllegalStateException(
                     String.format("Unknown hierarchy: '%s'. Plz implement it first.", hierarchy));
@@ -625,14 +634,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     private boolean isUserExistInPool(String eMail) {
         System.out.println("Try found user in pool by email: " + eMail);
 
-        return userPool
-                .values().stream()
-                .filter(Objects::nonNull)
-                .anyMatch(dto -> {
-                    System.out.println("User: " + dto);
-
-                    return eMail.equals(dto.getEmail());
-                });
+        return userPool.values().stream()
+                       .filter(Objects::nonNull)
+                       .anyMatch(dto -> eMail.equals(dto.getEmail()));
     }
 
     private void makeExactUserAsCurrent(String email) {
@@ -646,24 +650,29 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void waitUntilUserSuccessfullyCreated(Integer id) throws InterruptedException {
-        System.out.println("check status user: " + id);
+        System.out.println("Wait for user: " + id + " created");
 
-        int currentAttempt = 1;
+        int currentAttempt = 0;
         do {
-            System.out.println("attempt check user: " + currentAttempt);
             currentAttempt++;
+            sleep(RETRY_DELAY);
+            System.out.printf("check user: " + id + " attempt: " + currentAttempt);
 
             Response response = getBaseRequestWithCurrentCookie()
                     .when().
                             get("/" + id);
 
-            boolean isEnabled = response.jsonPath().get("enabled");
+            if (response.statusCode() == SC_OK) {
+                if (response.jsonPath().getBoolean("enabled")) {
+                    System.out.println(" - ready!");
 
-            if (response.statusCode() == SC_OK && isEnabled) {
-                return;
+                    return;
+                }
+
+                System.out.println(" - NOT ready yet!");
+            } else {
+                System.out.println("\ncheck status for user: " + id + " failed. Reason: " + response.statusCode());
             }
-
-            sleep(RETRY_DELAY);
         } while (currentAttempt <= MAX_RETRY_ATTEMPT);
 
         throw new RuntimeException("User not created: " + id);
@@ -714,8 +723,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createRandomUser() throws InterruptedException {
-        authorizationBase.loginAsOwner();
-
         userDto = new UserCreateDto(generateString("STRING_10"),
                                     generateString("STRING_10"),
                                     generateString("EMAIL_10"),
@@ -725,6 +732,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createRandomUserAndLogin() throws InterruptedException {
+        authorizationBase.loginAsOwner();
+
         createRandomUser();
 
         authorizationBase.loginAsCurrentUser();

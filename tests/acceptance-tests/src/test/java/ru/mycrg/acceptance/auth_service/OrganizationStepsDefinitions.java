@@ -47,7 +47,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
                                                 ownerEmail, generateString(data.get(5)));
 
-        System.out.println("Org. Owner: " + ownerEmail);
+        System.out.println("Organization owner: " + ownerEmail);
 
         userPool.put(-1, owner);
         orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
@@ -268,122 +268,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void initTasks() {
-        // Create tasks as owner
-        authorizationBase.loginAsOwner();
-        List<String> task1 = new ArrayList<>();
-        task1.add("orgOwner");
-        task1.add("orgOwner");
-        task1.add(TaskType.CUSTOM.name());
-        task1.add("orgOwner task 1");
-
-        List<String> task2 = new ArrayList<>();
-        task2.add("orgOwner");
-        task2.add("orgOwner");
-        task2.add(TaskType.CUSTOM.name());
-        task2.add("orgOwner task 2");
-
-        List<String> task3 = new ArrayList<>();
-        task3.add("fiz1");
-        task3.add("fiz1");
-        task3.add(TaskType.CUSTOM.name());
-        task3.add("fiz1 task 1");
-
-        List<String> task4 = new ArrayList<>();
-        task4.add("fiz1");
-        task4.add("fiz1");
-        task4.add(TaskType.CUSTOM.name());
-        task4.add("fiz1 task 2");
-
-        List<String> task5 = new ArrayList<>();
-        task5.add("fiz1");
-        task5.add("fiz1");
-        task5.add(TaskType.CUSTOM.name());
-        task5.add("fiz1 task 3");
-
-        List<String> task6 = new ArrayList<>();
-        task6.add("fiz2");
-        task6.add("fiz2");
-        task6.add(TaskType.CUSTOM.name());
-        task6.add("fiz2 task 1");
-
-        List<String> task7 = new ArrayList<>();
-        task7.add("fiz2");
-        task7.add("fiz2");
-        task7.add(TaskType.CUSTOM.name());
-        task7.add("fiz2 task 2");
-
-        List<List<String>> tasksForOwner = new ArrayList<>();
-        tasksForOwner.add(task1);
-        tasksForOwner.add(task2);
-        tasksForOwner.add(task3);
-        tasksForOwner.add(task4);
-        tasksForOwner.add(task5);
-        tasksForOwner.add(task6);
-        tasksForOwner.add(task7);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForOwner));
-
-        // Create tasks as fiz2
-        UserCreateDto user2 = getUserByName("fiz2");
-        authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
-
-        List<String> task8 = new ArrayList<>();
-        task8.add("fiz3");
-        task8.add("fiz3");
-        task8.add(TaskType.CUSTOM.name());
-        task8.add("fiz3 task 1");
-
-        List<List<String>> tasksForFiz2 = new ArrayList<>();
-        tasksForFiz2.add(task8);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz2));
-
-        // Create tasks as fiz3
-        UserCreateDto user3 = getUserByName("fiz3");
-        authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
-
-        List<String> task9 = new ArrayList<>();
-        task9.add("fiz4");
-        task9.add("fiz4");
-        task9.add(TaskType.CUSTOM.name());
-        task9.add("fiz4 task 1");
-
-        List<String> task10 = new ArrayList<>();
-        task10.add("fiz4");
-        task10.add("fiz4");
-        task10.add(TaskType.CUSTOM.name());
-        task10.add("fiz4 task 2");
-
-        List<String> task11 = new ArrayList<>();
-        task11.add("fiz4");
-        task11.add("fiz4");
-        task11.add(TaskType.CUSTOM.name());
-        task11.add("fiz4 task 3");
-
-        List<List<String>> tasksForFiz4 = new ArrayList<>();
-        tasksForFiz4.add(task9);
-        tasksForFiz4.add(task10);
-        tasksForFiz4.add(task11);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz4));
-
-        // Create tasks as fiz5
-        UserCreateDto user5 = getUserByName("fiz5");
-        authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
-
-        List<String> task5_1 = new ArrayList<>();
-        task5_1.add("fiz5");
-        task5_1.add("fiz5");
-        task5_1.add(TaskType.CUSTOM.name());
-        task5_1.add("description of fiz5 task 1");
-
-        List<List<String>> tasksForFiz5 = new ArrayList<>();
-        tasksForFiz5.add(task5_1);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz5));
-    }
-
     @Given("Существует новая организация")
     public void initNewOrg(DataTable dataTable) throws InterruptedException {
         sendCreateOrganizationRequest(dataTable);
@@ -598,13 +482,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void waitUntilOrganizationSuccessfullyCreated(Integer id) throws InterruptedException {
+        System.out.println("Wait until organization: " + id + " created.");
         authorizationBase.loginAsRoot();
-
-        System.out.println("check status org: " + id);
 
         int currentAttempt = 0;
         do {
-            System.out.println("attempt create org: " + currentAttempt);
+            System.out.println("check organization: " + id + " attempt: " + currentAttempt);
             currentAttempt++;
 
             Response response = getBaseRequestWithCurrentCookie()
@@ -664,5 +547,122 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                    orgId = entry.getKey();
                    orgDto = entry.getValue();
                });
+    }
+
+    private void initTasks() {
+        // Create tasks as owner
+        authorizationBase.loginAsOwner();
+
+        List<String> task1 = new ArrayList<>();
+        task1.add("orgOwner");
+        task1.add("orgOwner");
+        task1.add(TaskType.CUSTOM.name());
+        task1.add("orgOwner task 1");
+
+        List<String> task2 = new ArrayList<>();
+        task2.add("orgOwner");
+        task2.add("orgOwner");
+        task2.add(TaskType.CUSTOM.name());
+        task2.add("orgOwner task 2");
+
+        List<String> task3 = new ArrayList<>();
+        task3.add("fiz1");
+        task3.add("fiz1");
+        task3.add(TaskType.CUSTOM.name());
+        task3.add("fiz1 task 1");
+
+        List<String> task4 = new ArrayList<>();
+        task4.add("fiz1");
+        task4.add("fiz1");
+        task4.add(TaskType.CUSTOM.name());
+        task4.add("fiz1 task 2");
+
+        List<String> task5 = new ArrayList<>();
+        task5.add("fiz1");
+        task5.add("fiz1");
+        task5.add(TaskType.CUSTOM.name());
+        task5.add("fiz1 task 3");
+
+        List<String> task6 = new ArrayList<>();
+        task6.add("fiz2");
+        task6.add("fiz2");
+        task6.add(TaskType.CUSTOM.name());
+        task6.add("fiz2 task 1");
+
+        List<String> task7 = new ArrayList<>();
+        task7.add("fiz2");
+        task7.add("fiz2");
+        task7.add(TaskType.CUSTOM.name());
+        task7.add("fiz2 task 2");
+
+        List<List<String>> tasksForOwner = new ArrayList<>();
+        tasksForOwner.add(task1);
+        tasksForOwner.add(task2);
+        tasksForOwner.add(task3);
+        tasksForOwner.add(task4);
+        tasksForOwner.add(task5);
+        tasksForOwner.add(task6);
+        tasksForOwner.add(task7);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForOwner));
+
+        // Create tasks as fiz2
+        UserCreateDto user2 = getUserByName("fiz2");
+        authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
+
+        List<String> task8 = new ArrayList<>();
+        task8.add("fiz3");
+        task8.add("fiz3");
+        task8.add(TaskType.CUSTOM.name());
+        task8.add("fiz3 task 1");
+
+        List<List<String>> tasksForFiz2 = new ArrayList<>();
+        tasksForFiz2.add(task8);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz2));
+
+        // Create tasks as fiz3
+        UserCreateDto user3 = getUserByName("fiz3");
+        authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
+
+        List<String> task9 = new ArrayList<>();
+        task9.add("fiz4");
+        task9.add("fiz4");
+        task9.add(TaskType.CUSTOM.name());
+        task9.add("fiz4 task 1");
+
+        List<String> task10 = new ArrayList<>();
+        task10.add("fiz4");
+        task10.add("fiz4");
+        task10.add(TaskType.CUSTOM.name());
+        task10.add("fiz4 task 2");
+
+        List<String> task11 = new ArrayList<>();
+        task11.add("fiz4");
+        task11.add("fiz4");
+        task11.add(TaskType.CUSTOM.name());
+        task11.add("fiz4 task 3");
+
+        List<List<String>> tasksForFiz4 = new ArrayList<>();
+        tasksForFiz4.add(task9);
+        tasksForFiz4.add(task10);
+        tasksForFiz4.add(task11);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz4));
+
+        // Create tasks as fiz5
+        UserCreateDto user5 = getUserByName("fiz5");
+        authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
+
+        List<String> task5_1 = new ArrayList<>();
+        task5_1.add("fiz5");
+        task5_1.add("fiz5");
+        task5_1.add(TaskType.CUSTOM.name());
+        task5_1.add("description of fiz5 task 1");
+
+        List<List<String>> tasksForFiz5 = new ArrayList<>();
+        tasksForFiz5.add(task5_1);
+
+        taskStepDefinition.initTasks(DataTable.create(tasksForFiz5));
     }
 }

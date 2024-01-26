@@ -49,6 +49,9 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             int assignedToId = getUserIdByName(task.get(0));
             int ownerId = getUserIdByName(task.get(1));
 
+            System.out.println("For: " + task.get(0) + " / assignedToId: " + getUserIdByName(task.get(0)));
+            System.out.println("For: " + task.get(1) + " / ownerId: " + getUserIdByName(task.get(1)));
+
             taskCreateDto = new HashMap<>();
             taskCreateDto.put("type", task.get(2));
             taskCreateDto.put("assigned_to", (long) assignedToId);

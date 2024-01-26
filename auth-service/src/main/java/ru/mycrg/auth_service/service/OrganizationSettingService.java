@@ -32,7 +32,7 @@ import static ru.mycrg.auth_service.util.SettingsHandler.mergeSettings;
 @Transactional
 public class OrganizationSettingService {
 
-    public static final long ROOT_ORG_ID = -1L;
+    private static final long ROOT_ORG_ID = -1L;
 
     private final Logger log = LoggerFactory.getLogger(OrganizationSettingService.class);
 
@@ -99,13 +99,14 @@ public class OrganizationSettingService {
      * <p>
      * Метод, на данный момент, используется только из защищенного контроллера, поэтому не требует секьюрити проверок.
      *
-     * @param id          Идентификатор организации
-     * @param newSettings Новые настройки
+     * @param currentOrgId Идентификатор организации
+     * @param newSettings  Новые настройки
      */
-    public void updateSettings(Long id, OrgSettingsRequestDto newSettings) {
+    public void updateSettings(Long currentOrgId, OrgSettingsRequestDto newSettings) {
         if (authenticationFacade.isRoot()) {
-            Organization systemOrganization = organizationRepository.findById(id)
-                                                                    .orElseThrow(() -> new NotFoundException(id));
+            Organization systemOrganization = organizationRepository
+                    .findById(currentOrgId)
+                    .orElseThrow(() -> new NotFoundException(currentOrgId));
 
             Map<String, Object> resultSettings;
 
@@ -135,30 +136,29 @@ public class OrganizationSettingService {
                               getOrgSettings(newSettings.getId()),
                               systemOrganization.getId());
         } else {
-            if (!Objects.equals(id, newSettings.getId())) {
+            if (!Objects.equals(currentOrgId, newSettings.getId())) {
                 // BadRequestException а не ForbiddenException осмысленно, чтобы не было возможности вычислить
                 // существующие организации.
                 throw new BadRequestException("Сущность не найден(а) по идентификатору: " + newSettings.getId());
             }
 
-            Long orgId = newSettings.getId();
-            Map<String, Object> newOrgSettings = newSettings.getSettings();
+            Organization organization = organizationRepository.findById(currentOrgId)
+                                                              .orElseThrow(() -> new NotFoundException(currentOrgId));
 
-            Organization organization = organizationRepository.findById(orgId)
-                                                              .orElseThrow(() -> new NotFoundException(orgId));
-
-            organization.setSettings(
-                    toJsonNode(JacksonUtil.toString(newOrgSettings)));
+            Map<String, Object> resultSettings = overlapOldSettings(
+                    readSettings(organization.getSettings()),
+                    newSettings.getSettings());
+            organization.setSettings(JacksonUtil.toJsonNode(JacksonUtil.toString(resultSettings)));
 
             organizationRepository.save(organization);
 
             Map<String, Object> systemOrgSettings = new HashMap<>();
-            Optional<OrgSettingsRequestDto> oSystemOrgSettings = readSystemSettingsForOrganization(orgId);
+            Optional<OrgSettingsRequestDto> oSystemOrgSettings = readSystemSettingsForOrganization(currentOrgId);
             if (oSystemOrgSettings.isPresent()) {
                 systemOrgSettings = oSystemOrgSettings.get().getSettings();
             }
 
-            mergeAndBroadcast(systemOrgSettings, newOrgSettings, orgId);
+            mergeAndBroadcast(systemOrgSettings, resultSettings, currentOrgId);
         }
     }
 
@@ -251,6 +251,22 @@ public class OrganizationSettingService {
                                     });
         } catch (Exception e) {
             String msg = String.format("Не удалось прочесть настройки всех организаций: '%s' из БД. Причина: %s",
+                                       jsonNode, e.getMessage());
+            log.error(msg, e);
+
+            throw new AuthServiceException(msg);
+        }
+    }
+
+    private Map<String, Object> readSettings(JsonNode jsonNode) {
+        if (jsonNode == null) {
+            return new HashMap<>();
+        }
+
+        try {
+            return mapper.readValue(jsonNode.toString(), Map.class);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось прочесть настройки организации: '%s'. Причина: %s",
                                        jsonNode, e.getMessage());
             log.error(msg, e);
 
