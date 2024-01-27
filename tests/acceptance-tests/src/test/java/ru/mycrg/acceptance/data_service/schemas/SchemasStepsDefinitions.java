@@ -126,6 +126,14 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         assertFalse(isSchemaReadonly);
     }
 
+    @Then("Сервер возвращает схему {string}")
+    public void checkSchemaByTitle(String title) {
+        assertTrue(
+                response.jsonPath()
+                        .getList("title", String.class)
+                        .contains(title));
+    }
+
     private void getCurrentSchema() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
