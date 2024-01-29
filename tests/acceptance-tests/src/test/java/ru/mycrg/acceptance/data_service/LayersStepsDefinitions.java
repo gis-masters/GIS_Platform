@@ -73,7 +73,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
                         log().ifError().
                         extract().response();
 
-        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
     @When("Пользователь делает запрос на получение проектов и слоёв связанных с файлом")

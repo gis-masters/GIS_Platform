@@ -46,7 +46,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         initProcess(processableModel);
 
-        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
     @When("Пользователь публикует DXF")
@@ -170,7 +170,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         initProcess(processableModel);
 
-        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
     private void placeGeometryFromShape(GeometryShapePlacementModel shapePlacementModel, String filename) {
@@ -180,7 +180,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         initProcessWithFile(processableModel, filename);
 
-        currentProcessId = extractId(response.jsonPath().get("_links.self.href"));
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
     private void getProcess(Integer processId) {

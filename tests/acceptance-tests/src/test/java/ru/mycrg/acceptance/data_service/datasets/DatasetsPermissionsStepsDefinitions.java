@@ -37,10 +37,10 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передаёт Location созданного правила")
     public void shouldReturnCorrectDatasetPermissionLocation() {
-        String url = response.getHeader("Location");
+        Integer permissionId = extractId(response);
 
-        Integer permissionId = extractId(response.getHeader("Location"));
-        assertThat(url, equalTo(makeDatasetPermissionUrl(currentDatasetIdentifier, permissionId)));
+        assertThat(response.getHeader("Location"),
+                   equalTo(makeDatasetPermissionUrl(currentDatasetIdentifier, permissionId)));
     }
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущий набор данных")

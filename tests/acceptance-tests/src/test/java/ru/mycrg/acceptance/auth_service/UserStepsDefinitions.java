@@ -14,6 +14,7 @@ import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -165,9 +166,24 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void createUsers(Integer quantityOfUsers) throws InterruptedException {
         authorizationBase.loginAsOwner();
 
-        for (int i = 0; i < quantityOfUsers; i++) {
-            createRandomUser();
+        CountDownLatch counter = new CountDownLatch(30);
+        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        for (int i = 0; i < 30; i++) {
+            executorService.submit(() -> {
+                try {
+                    createRandomUser();
+
+                    counter.countDown();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
+        counter.await();
+
+        System.out.println("Начали создавать " + quantityOfUsers + " пользователей одновременно");
+
+        executorService.shutdown();
     }
 
     @Given("Существует и авторизован некий пользователь")
@@ -196,7 +212,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @And("в заголовке Location передает ID созданного пользователя")
     public void extractUserIdFromLocation() {
-        userId = extractId(response.getHeader("Location"));
+        userId = extractId(response);
 
         userPool.put(userId, userDto);
     }
@@ -656,7 +672,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         do {
             currentAttempt++;
             sleep(RETRY_DELAY);
-            System.out.printf("check user: " + id + " attempt: " + currentAttempt);
+            System.out.println("check user: " + id + " attempt: " + currentAttempt);
 
             Response response = getBaseRequestWithCurrentCookie()
                     .when().
@@ -664,14 +680,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             if (response.statusCode() == SC_OK) {
                 if (response.jsonPath().getBoolean("enabled")) {
-                    System.out.println(" - ready!");
+                    System.out.println("check user: " + id + " attempt: " + currentAttempt + " - ready!");
 
                     return;
                 }
 
                 System.out.println(" - NOT ready yet!");
             } else {
-                System.out.println("\ncheck status for user: " + id + " failed. Reason: " + response.statusCode());
+                System.out.println("check status for user: " + id + " failed. Reason: " + response.statusCode());
             }
         } while (currentAttempt <= MAX_RETRY_ATTEMPT);
 
@@ -696,7 +712,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         } else {
             super.createEntity(dto);
             assertEquals(SC_ACCEPTED, response.getStatusCode());
-            anotherUserId = extractId(response.getHeader("Location"));
+            anotherUserId = extractId(response);
 
             waitUntilUserSuccessfullyCreated(anotherUserId);
         }

@@ -128,10 +128,10 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передаёт Location созданного набора")
     public void shouldReturnCorrectDatasetLocation() {
-        String url = response.getHeader("Location");
+        String location = response.getHeader("Location");
 
         String datasetName = extractDatasetName(response);
-        assertThat(url, equalTo(makeDatasetUrl(datasetName)));
+        assertThat(location, equalTo(makeDatasetUrl(datasetName)));
     }
 
     @And("Текущий набор существует в БД")
@@ -281,12 +281,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private String extractDatasetName(Response response) {
-        String location = response.getHeader("Location");
-        if (location == null || location.isBlank()) {
-            response.prettyPrint();
-
-            throw new IllegalArgumentException("Header Location отсутствует!");
-        }
+        String location = getLocation(response);
 
         System.out.println("Dataset location: " + location);
 

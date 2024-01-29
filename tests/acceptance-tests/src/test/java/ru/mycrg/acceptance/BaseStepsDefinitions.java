@@ -128,11 +128,25 @@ public class BaseStepsDefinitions {
         return getBaseRequest(port);
     }
 
-    public Integer extractId(String target) {
-        Pattern pattern = Pattern.compile("\\d+$");
-        Matcher matcher = pattern.matcher(target);
+    public String getLocation(Response response) {
+        String location = response.getHeader("Location");
+        if (location == null || location.isBlank()) {
+            response.prettyPrint();
 
+            throw new IllegalArgumentException("Header Location отсутствует!");
+        }
+
+        return location;
+    }
+
+    public Integer extractId(Response response) {
+        return extractId(getLocation(response));
+    }
+
+    public Integer extractId(String location) {
         Integer id = null;
+        Pattern pattern = Pattern.compile("\\d+$");
+        Matcher matcher = pattern.matcher(location);
         while (matcher.find()) {
             id = Integer.parseInt(matcher.group());
         }

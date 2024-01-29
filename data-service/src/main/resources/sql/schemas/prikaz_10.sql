@@ -636,7 +636,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "classid",
-            "title": " «Сети электросвязи»",
+            "title": "Сети электросвязи",
             "hidden": false, 
             "multiple": false,
             "required": true,

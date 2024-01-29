@@ -1,0 +1,96 @@
+-- INSERT INTO data.schemas (name, class_rule)
+-- SELECT 'org_settings_v1',
+--        '{
+--           "name": "org_settings",
+--           "title": "Настройки организации",
+--           "description": "Описание настроек организации",
+--           "tags": [
+--             "system"
+--           ],
+--           "tableName": "org_settings",
+--           "properties": [
+--             {
+--               "name": "create_library_item",
+--               "title": "Создание элементов в библиотеке",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "data_management",
+--               "title": "Управление данными",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "download_xml",
+--               "title": "Скачивание xml межевого плана и выгрузка координат и геометрии",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "download_files",
+--               "title": "Скачать документ",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "create_project",
+--               "title": "Создание проекта",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "edit_project_layer",
+--               "title": "Настройка слоев проекта",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "sed_dialog",
+--               "title": "СЭД Диалог",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "reestrs",
+--               "title": "Реестры",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "task_management",
+--               "title": "Управление задачами",
+--               "valueType": "BOOLEAN"
+--             },
+--             {
+--               "name": "tags",
+--               "title": "Управление тегами",
+--               "description": "Схема будет доступна если содержит хотя бы один из разрешенных тегов",
+--               "multiple": true,
+--               "valueType": "CHOICE",
+--               "enumerations": [
+--                 {
+--                   "title": "КПТ",
+--                   "value": "КПТ"
+--                 },
+--                 {
+--                   "title": "НТО",
+--                   "value": "НТО"
+--                 },
+--                 {
+--                   "title": "СМЭВ",
+--                   "value": "СМЭВ"
+--                 },
+--                 {
+--                   "title": "Фотофиксация",
+--                   "value": "Фотофиксация"
+--                 },
+--                 {
+--                   "title": "ГИСОГД",
+--                   "value": "ГИСОГД"
+--                 },
+--                 {
+--                   "title": "Приказ 123",
+--                   "value": "Приказ 123"
+--                 },
+--                 {
+--                   "title": "Приказ 10",
+--                   "value": "Приказ 10"
+--                 }
+--               ]
+--             }
+--           ]
+--         }'
+-- WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'org_settings_v1');

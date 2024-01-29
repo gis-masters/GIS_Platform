@@ -86,11 +86,10 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сервер передаёт Location созданного правила библиотеки: {string}")
     public void shouldReturnCorrectLibraryPermissionLocation(String libraryName) {
-        String url = response.getHeader("Location");
+        Integer permissionId = extractId(response);
 
-        Integer permissionId = extractId(response.getHeader("Location"));
-
-        assertThat(url, equalTo(makeLibraryPermissionUrl(libraryName, permissionId)));
+        assertThat(response.getHeader("Location"),
+                   equalTo(makeLibraryPermissionUrl(libraryName, permissionId)));
     }
 
     @Given("Владелец организации устанавливает роль {string} для текущего пользователя, для библиотеки: {string}")
@@ -272,7 +271,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 
     @When("Текущему пользователю установлена роль {string}, для файла file_1_1_1_2")
@@ -412,7 +411,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToFile, userId, "user", "VIEWER");
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 
     @Then("Пользователю становятся доступна только цепочка каталогов: folder_1->folder_1_1->folder_1_1_1, ведущая к файлу")
@@ -501,7 +500,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToFolder, userId, "user", "VIEWER");
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 
     private void addPermissionToRecordForCurrentUser(Integer recordId, String role) {
@@ -509,7 +508,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(urlToRecord, userId, "user", role);
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 
     private void setRoleForCurrentUserToLibrary(String libraryName, String role) {
@@ -517,7 +516,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(url, userId, "user", role);
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 
     private void setRoleForCurrentGroupToLibrary(String libraryName, String role) {
@@ -525,6 +524,6 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         libraryBasePermissions.addPermission(url, usersGroupId, "group", role);
 
-        currentPermissionId = super.extractId(response.getHeader("Location"));
+        currentPermissionId = super.extractId(response);
     }
 }

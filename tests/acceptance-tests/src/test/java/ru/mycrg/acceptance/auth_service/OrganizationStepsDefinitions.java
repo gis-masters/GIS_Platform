@@ -71,7 +71,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             createOrganization(org);
 
             assertEquals(202, response.getStatusCode());
-            Integer orgId = super.extractId(response.getHeader("Location"));
+            Integer orgId = super.extractId(response);
 
             scenarioOrganizations.put(orgId, org);
         }
@@ -151,7 +151,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @And("В заголовке Location передается ID созданной организации")
     public void checkOrgIdInLocationSetAsCurrentPutInPool() {
-        orgId = super.extractId(response.getHeader("Location"));
+        orgId = super.extractId(response);
 
         orgPool.put(orgId, orgDto);
     }
