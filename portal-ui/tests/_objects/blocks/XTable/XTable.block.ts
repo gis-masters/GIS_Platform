@@ -33,6 +33,9 @@ export class XTableBlock extends Block {
   }
 
   async getSecondColValues(): Promise<string[]> {
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
+
     const $$cellContents = await this.$$('secondColCellContent');
 
     const contents: string[] = [];

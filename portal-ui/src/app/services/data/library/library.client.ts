@@ -118,7 +118,7 @@ class LibraryClient extends Client {
   }
 
   async getAllLibraryRecords(libraryTableName: string): Promise<{ content: LibraryRecord }[]> {
-    const url = this.getDocLibraryRecordsUrl(libraryTableName);
+    const url = this.getDocLibraryRecordsAsRegistryUrl(libraryTableName);
 
     return http.getPaged<{ content: LibraryRecord }>(url);
   }

@@ -88,7 +88,7 @@ export const withSimpleContentType: Schema = {
     {
       name: 'is_folder',
       title: 'Признак раздела',
-      hidden: true,
+      hidden: false,
       propertyType: PropertyType.BOOL
     },
     {

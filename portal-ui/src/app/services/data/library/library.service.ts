@@ -3,6 +3,7 @@ import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explor
 import { addEntityPermission, removeEntityPermission } from '../permissions/permissions.service';
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
+import { Page } from '../../../../server-types/common-contracts';
 
 import {
   Library,
@@ -65,11 +66,11 @@ export async function getLibraryRecordsAsRegistry(
   libraryTableName: string,
   schemaId: string,
   pageOptions: PageOptions
-): Promise<[LibraryRecord[], number]> {
+): Promise<[LibraryRecord[], Page]> {
   const response = await libraryClient.getLibraryRecordsAsRegistry(libraryTableName, pageOptions);
   const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName, schemaId);
 
-  return [libraryRecords, response.page.totalPages];
+  return [libraryRecords, response.page];
 }
 
 export async function getAllLibraryRecordsAsRegistry(

@@ -7,6 +7,8 @@ export async function deleteAllLibraryRecordInLibrary(libraryTitle: string): Pro
   const response = await requestAsAdmin(libraryClient.getAllLibraryRecords, library.table_name);
 
   if (response) {
+    response.sort((a, b) => b.content.path.split('/').length - a.content.path.split('/').length);
+
     for (const record of response) {
       await requestAsAdmin(libraryClient.deleteLibraryRecord, record.content.id, library.table_name);
     }

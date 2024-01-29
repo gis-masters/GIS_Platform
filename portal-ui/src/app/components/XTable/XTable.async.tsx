@@ -7,27 +7,27 @@ import { IClassNameProps } from '@bem-react/core';
 import { cloneDeep, debounce } from 'lodash';
 import { cn } from '@bem-react/classname';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { PropertyType } from '../../services/data/schema/schema.models';
 import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { PageOptions, SortOrder } from '../../services/models';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 
-import { XTableColumn, XTableColumnType, XTableExtraColumnType } from './XTable.models';
-import { defaultRowIdGetter } from './XTable.utils';
 import { XTableRow } from './Row/XTable-Row';
 import { XTableHead } from './Head/XTable-Head';
 import { XTableCell } from './Cell/XTable-Cell';
 import { XTableEmpty } from './Empty/XTable-Empty';
 import { XTableTitle } from './Title/XTable-Title';
+import { defaultRowIdGetter } from './XTable.utils';
 import { XTableFooter } from './Footer/XTable-Footer';
 import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
 import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
 import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
+import { XTableColumn, XTableColumnType, XTableExtraColumnType } from './XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
 
@@ -40,6 +40,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerless?: boolean;
   footerless?: boolean;
   showFiltersPanel?: boolean;
+  counter?: ReactNode;
   customActionFirst?: boolean;
   size?: 'small' | 'medium';
   singleLineContent?: boolean;
@@ -86,8 +87,8 @@ type XTableColsSettings<T> = Partial<Record<keyof T, XTableColSettings>>;
 
 @observer
 export default class XTable<T> extends Component<XTableProps<T>> {
-  @observable private sortParams: SortParams<T>;
-  @observable private filterQuery: FilterQuery;
+  @observable private sortParams?: SortParams<T>;
+  @observable private filterQuery?: FilterQuery;
   @observable private filterActive = true;
   @observable private _page = 1;
   @observable private _asyncData: T[] = [];
@@ -97,7 +98,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   @observable private busy = false;
   @observable private colsSettings: XTableColsSettings<T> = {};
 
-  private fetchingOperationId: symbol;
+  private fetchingOperationId?: symbol;
   private tableRef: RefObject<HTMLDivElement> = createRef();
   private pageOptionsReactionDisposer?: IReactionDisposer;
   private pagedDataReactionDisposer?: IReactionDisposer;
@@ -170,6 +171,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       headerless,
       footerless,
       className,
+      counter,
       size,
       loading = false,
       singleLineContent = false,
@@ -193,7 +195,8 @@ export default class XTable<T> extends Component<XTableProps<T>> {
         {!headerless && (
           <XTableTitleBar>
             {title && <XTableTitle>{title}</XTableTitle>}
-            {showFiltersPanel && (
+            {counter}
+            {showFiltersPanel && this.filterQuery && (
               <XTableFilterPanel
                 filterQuery={this.filterQuery}
                 cols={this.cols}
@@ -214,6 +217,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
             </XTableTitleBarActions>
           </XTableTitleBar>
         )}
+        {/* ошибка тайпскрипта, быстро пофиксить не получилось */}
         <TableContainer
           minHeight={this.tableMinHeight}
           containerRef={this.tableRef}
@@ -304,7 +308,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     const { filterable, secondarySortField, filtersAlwaysEnabled } = this.props;
     let { data } = this.props as XTablePropsSync<T>;
 
-    if (data) {
+    if (data && this.filterQuery) {
       if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
         data = filterObjects(data, this.filterQuery);
       }

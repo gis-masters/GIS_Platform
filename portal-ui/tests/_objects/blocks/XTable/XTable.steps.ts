@@ -55,12 +55,12 @@ Then(
 
 // фильтр bool
 
-When('в таблице xTable c фильтром типа bool я нажимаю да', async () => {
-  await xTableFilterTypeBoolBlock.setValueTrue();
+When('в таблице xTable в колонке {string} c фильтром типа bool я нажимаю да', async (title: string) => {
+  await xTableFilterTypeBoolBlock.setValueTrue(title);
 });
 
-When('в таблице xTable c фильтром типа bool я нажимаю нет', async () => {
-  await xTableFilterTypeBoolBlock.setValueFalse();
+When('в таблице xTable в колонке {string} c фильтром типа bool я нажимаю нет', async (title: string) => {
+  await xTableFilterTypeBoolBlock.setValueFalse(title);
 });
 
 Then(

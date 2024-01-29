@@ -16,6 +16,7 @@ import { OrgAdminPage } from './pages/OrgAdmin';
 import { sleep } from '../../src/app/services/util/sleep';
 import { pagesRegistry } from './pages/_pagesRegistry';
 import { mapBlock } from './blocks/Map/Map.block';
+import { xTableBlock } from './blocks/XTable/XTable.block';
 
 async function findPage(title: string): Promise<Page> {
   const page = pagesRegistry.find(page => page.title === title);
@@ -226,6 +227,7 @@ Given('я на странице табличного представления 
   const { table_name } = await getDocumentsLibraryByTitle(libraryTitle);
   const libraryRegistryPage = new LibraryRegistryPage(table_name);
   await libraryRegistryPage.open();
+  await xTableBlock.waitForLoading();
 });
 
 Given('я на странице корзины удаленных документов библиотеки {string}', async (libraryTitle: string) => {

@@ -1,0 +1,37 @@
+.Counter {
+  display: flex;
+  align-items: flex-start;
+
+  margin-top: 10px;
+
+  text-wrap: nowrap;
+
+  color: var(--gray);
+
+  &-Icon {
+    padding-top: 2px;
+  }
+
+  &-Popover {
+    margin-left: 12px;
+    padding: 10px;
+  }
+
+  &-PopoverContent {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    font-size: 12px;
+  }
+
+  &-PopoverContentItem {
+    white-space: nowrap;
+
+    font-size: 14px;
+  }
+
+  &-PopoverContentItemTitle {
+    color: var(--gray);
+  }
+}

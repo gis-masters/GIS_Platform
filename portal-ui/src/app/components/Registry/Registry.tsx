@@ -24,6 +24,7 @@ export interface RegistryProps<T> {
   inDialog?: boolean;
   filtersAlwaysEnabled?: boolean;
   showFiltersPanel?: boolean;
+  counter?: ReactNode;
   onSelect?: (items: T[]) => void;
   onPageOptionsChange?: (pageOptions: PageOptions) => void;
   setPageOptions?: (pageOptions: PageOptions) => void;
@@ -86,6 +87,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
       cols,
       id,
       getData,
+      counter,
       defaultSort,
       className,
       inDialog,
@@ -101,6 +103,7 @@ export class Registry<T> extends Component<RegistryProps<T>> {
         cols={cols}
         id={id}
         getData={getData}
+        counter={counter}
         defaultSort={defaultSort}
         filtersAlwaysEnabled
         showFiltersPanel

@@ -27,14 +27,15 @@ import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemCont
 import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/library/library.service';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
 import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { DeletedDocuments } from '../Icons/DeletedDocuments';
 import { convertToComplexField } from '../Form/Form.utils';
+import { Counter, CounterItem } from '../Counter/Counter';
 import { DocumentInfo } from '../Documents/Documents';
 import { Registry } from '../Registry/Registry';
 import { XTableProps } from '../XTable/XTable';
@@ -65,6 +66,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private library?: Library;
   @observable private schema?: Schema;
   @observable private hiddenFields: string[] = [];
+  @observable private totalItemCounter?: string;
   @observable private tablePageOptions?: PageOptions;
   @observable private libraryDocuments: LibraryRecord[] = [];
   @observable private error?: string;
@@ -130,6 +132,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
               inDialog={this.props.inDialog}
               urlChangeEnabled
               defaultFilter={this.defaultFilter}
+              counter={<Counter setCounters={this.setCounters} totalItemCounter={this.totalItemCounter} />}
               invoke={this.tableInvoke}
               setPageOptions={this.setPageOptions}
               headerActions={
@@ -253,6 +256,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
             : undefined
         }
       ])
+      // тут в тайпскрипте какой то адок, я хз как пофиксить
     ].map((item: XTableColumn<LibraryRecord>) => ({
       ...item,
       hidden: this.hiddenFields.includes(String(item.field)) || item.hidden
@@ -361,11 +365,13 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       }
     }
 
-    const [documents, totalPages] = await getLibraryRecordsAsRegistry(
+    const [documents, pages] = await getLibraryRecordsAsRegistry(
       this.library.table_name,
       this.schema.name,
       pageOptions
     );
+
+    this.setTotalItemCounter(`Найдено: ${pages.totalElements}`);
 
     if (this.props.inDialog) {
       this.setLibraryDocuments(documents);
@@ -382,8 +388,72 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
         return documentCalculated;
       }),
-      totalPages
+      pages.totalPages
     ];
+  }
+
+  @boundMethod
+  private async setCounters(): Promise<CounterItem[]> {
+    if (!this.library || !this.schema) {
+      return [];
+    }
+
+    let counterInfo: CounterItem[] = [];
+    if (this.tablePageOptions) {
+      const clonedOptionsWithFilters = cloneDeep(this.tablePageOptions);
+      const clonedOptionsWithoutFilters = cloneDeep(this.tablePageOptions);
+      const currentIsFolderFilter = getFieldFilterValue(this.tablePageOptions.filter, 'is_folder');
+      clonedOptionsWithoutFilters.filter = { $and: [] };
+      clonedOptionsWithoutFilters.pageSize = 1;
+      addFilterPart(clonedOptionsWithoutFilters.filter, getPathFilter(this.breadcrumbsPath));
+
+      if (clonedOptionsWithFilters.filter) {
+        modifyFieldFilterValue(clonedOptionsWithFilters.filter, 'is_folder', { $in: [null, false] });
+      }
+      modifyFieldFilterValue(clonedOptionsWithoutFilters.filter, 'is_folder', { $in: [null, false] });
+
+      const [, documentsTotal] = await getLibraryRecordsAsRegistry(
+        this.library.table_name,
+        this.schema.name,
+        clonedOptionsWithoutFilters
+      );
+      counterInfo = [{ title: 'Всего документов: ', value: documentsTotal.totalElements }];
+
+      const [, filteredDocuments] = await getLibraryRecordsAsRegistry(
+        this.library.table_name,
+        this.schema.name,
+        clonedOptionsWithFilters
+      );
+
+      counterInfo.push({
+        title: 'Найдено документов: ',
+        value: currentIsFolderFilter === true ? 0 : filteredDocuments.totalElements
+      });
+
+      if (clonedOptionsWithFilters.filter) {
+        modifyFieldFilterValue(clonedOptionsWithFilters.filter, 'is_folder', true);
+      }
+      modifyFieldFilterValue(clonedOptionsWithoutFilters.filter, 'is_folder', true);
+      const [, foldersTotal] = await getLibraryRecordsAsRegistry(
+        this.library.table_name,
+        this.schema.name,
+        clonedOptionsWithoutFilters
+      );
+      counterInfo.push({ title: 'Всего папок: ', value: foldersTotal.totalElements });
+
+      const [, filteredFolders] = await getLibraryRecordsAsRegistry(
+        this.library.table_name,
+        this.schema.name,
+        clonedOptionsWithFilters
+      );
+
+      counterInfo.push({
+        title: 'Найдено папок: ',
+        value: currentIsFolderFilter === true || currentIsFolderFilter === undefined ? filteredFolders.totalElements : 0
+      });
+    }
+
+    return counterInfo;
   }
 
   private getStorageKey(): string {
@@ -435,6 +505,11 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @action
   private setError(error: string) {
     this.error = error;
+  }
+
+  @action
+  private setTotalItemCounter(totalItemCounter: string) {
+    this.totalItemCounter = totalItemCounter;
   }
 
   @action.bound

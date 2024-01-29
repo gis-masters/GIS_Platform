@@ -1,25 +1,51 @@
 import { Block } from '../../../../Block';
+import { hasClass } from '../../../../utils/hasClass';
 import { xTableBlock } from '../../XTable.block';
 
 class XTableFilterTypeBoolBlock extends Block {
+  selected = 'Mui-selected';
+
   selectors = {
     container: '.XTable-Filter_type_bool',
     filterButtonTrue: '.XTable-Filter_type_bool button:first-child',
     filterButtonFalse: '.XTable-Filter_type_bool button:last-child'
   };
 
-  async setValueTrue() {
-    const $filterButtonTrue = await this.$('filterButtonTrue');
-    await $filterButtonTrue.click();
+  async setValueTrue(title: string) {
+    const $headCell = await xTableBlock.getHeadCell(title);
+    const $filterButtonTrue = await $headCell.$('button:first-child');
+    const isSelected = await hasClass($filterButtonTrue, this.selected);
 
-    await browser.pause(300);
+    if (!isSelected) {
+      await $filterButtonTrue.click();
+    }
   }
 
-  async setValueFalse() {
-    const $filterButtonFalse = await this.$('filterButtonFalse');
-    await $filterButtonFalse.click();
+  async setValueFalse(title: string) {
+    const $headCell = await xTableBlock.getHeadCell(title);
+    const $filterButtonFalse = await $headCell.$('button:last-child');
+    const isSelected = await hasClass($filterButtonFalse, this.selected);
 
-    await browser.pause(300);
+    if (!isSelected) {
+      await $filterButtonFalse.click();
+    }
+  }
+
+  async clearFilterValue(title: string) {
+    const $headCell = await xTableBlock.getHeadCell(title);
+    const $filterButtonFalse = await $headCell.$('button:last-child');
+    let isSelected = await hasClass($filterButtonFalse, this.selected);
+
+    if (isSelected) {
+      await $filterButtonFalse.click();
+    }
+
+    const $filterButtonTrue = await $headCell.$('button:first-child');
+    isSelected = await hasClass($filterButtonTrue, this.selected);
+
+    if (isSelected) {
+      await $filterButtonTrue.click();
+    }
   }
 
   async checkFilterableTrueItems() {

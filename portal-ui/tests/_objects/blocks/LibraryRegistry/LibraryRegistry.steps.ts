@@ -2,7 +2,9 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { isEqual } from 'lodash';
 
 import { ScenarioScope } from '../../ScenarioScope';
+import { xTableBlock } from '../XTable/XTable.block';
 import { libraryRegistryBlock } from './LibraryRegistry.block';
+import { xTableFilterTypeBoolBlock } from '../XTable/Filter/_type/XTable-Filter_type_bool.block';
 
 When(
   'в окне выбора документа я выбираю документ с значением {string} в колонке {string}',
@@ -62,6 +64,20 @@ When(
 
 When('в реестре документов в поле фильтра по id я ввожу {string}', async (value: string) => {
   await libraryRegistryBlock.setIdFilter(value);
+});
+
+When('в реестре документов в поле фильтра {string} я выбираю да', async (title: string) => {
+  await xTableFilterTypeBoolBlock.setValueTrue(title);
+  await xTableBlock.waitForLoading();
+});
+
+When('в реестре документов я отключаю фильтр для поля {string}', async (title: string) => {
+  await xTableFilterTypeBoolBlock.clearFilterValue(title);
+  await xTableBlock.waitForLoading();
+});
+
+When('жду загрузку страницы в реестре документов', async () => {
+  await xTableBlock.waitForLoading();
 });
 
 Then(
