@@ -5,8 +5,9 @@ import { boundMethod } from 'autobind-decorator';
 import { Close } from '@mui/icons-material';
 import { IReactionDisposer, reaction } from 'mobx';
 
+import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
+import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
 import { communicationService } from '../../services/communication.service';
-import { FeaturesList } from '../FeaturesList/FeaturesList';
 import { SearchInfo } from '../SearchField/SearchField';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
@@ -62,7 +63,7 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
             Максимальное количество выбираемых объектов — {mapStore.selectingFeaturesLimit}
           </div>
         )}
-        <FeaturesList searchValue={searchValue} />
+        {searchValue ? <SearchFeaturesList searchValue={searchValue} /> : <SelectedFeaturesList />}
       </div>
     );
   }

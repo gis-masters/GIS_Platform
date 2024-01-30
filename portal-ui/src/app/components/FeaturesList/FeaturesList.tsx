@@ -1,48 +1,40 @@
 import React, { Component, createRef, RefObject } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { SearchItemDataTypeFeature } from '../../services/data/search/search.model';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { getSearchResults } from '../../services/data/search/search.service';
-import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { mapService } from '../../services/map/map.service';
-import { SearchInfo } from '../SearchField/SearchField';
-import { services } from '../../services/services';
-import { mapStore } from '../../stores/Map.store';
-import { Loading } from '../Loading/Loading';
-
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
+import { mapService } from '../../services/map/map.service';
+import { mapStore } from '../../stores/Map.store';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesList.scss';
 
 const cnFeaturesList = cn('FeaturesList');
 
-interface FeaturesListProps {
-  searchValue?: SearchInfo;
+export interface FeaturesListItemInfo {
+  feature?: WfsFeature;
+  headlines?: string[];
+  error?: FeatureError;
 }
 
-interface WfsFeaturesRequestInfo {
-  complexName: string;
-  featureId: string;
+interface FeaturesListProps {
+  items: FeaturesListItemInfo[];
+  forSearch?: boolean;
 }
 
 @observer
 export class FeaturesList extends Component<FeaturesListProps> {
   private ref: RefObject<HTMLDivElement> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
-  @observable private loading = false;
   @observable private width = 0;
   @observable private height = 0;
   @observable private highlightedFeatureId: string | undefined;
-  @observable private searchResult: WfsFeature[] = [];
   private highlightAllFeaturesTimeout: number | undefined;
 
   constructor(props: FeaturesListProps) {
@@ -50,19 +42,9 @@ export class FeaturesList extends Component<FeaturesListProps> {
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     if (this.ref.current) {
       this.resizeObserver.observe(this.ref.current);
-    }
-
-    if (this.props.searchValue) {
-      await this.getFeatures();
-    }
-  }
-
-  async componentDidUpdate(prevProps: FeaturesListProps) {
-    if (this.props.searchValue !== prevProps.searchValue) {
-      await this.getFeatures();
     }
   }
 
@@ -74,55 +56,33 @@ export class FeaturesList extends Component<FeaturesListProps> {
   }
 
   render() {
+    const { items, forSearch } = this.props;
+
     return (
       <div className={cnFeaturesList(null, ['scroll'])} ref={this.ref}>
-        {this.showResults ? (
+        {items.length ? (
           <FixedSizeList
             className='scroll'
             height={this.height}
             width={this.width}
-            itemSize={54}
-            itemData={this.items}
-            itemCount={this.items.length}
+            itemSize={forSearch ? 64 : 54}
+            itemData={items}
+            itemCount={items.length}
             overscanCount={5}
           >
             {this.renderRow}
           </FixedSizeList>
         ) : (
-          !this.loading && <div className={cnFeaturesList('Empty')}>Объекты не найдены</div>
+          <FeaturesListEmpty />
         )}
-        <Loading visible={this.loading} />
       </div>
     );
   }
 
-  @computed
-  private get showResults(): boolean {
-    const { searchValue } = this.props;
-
-    return !!(
-      (searchValue?.searchValue && this.searchResult.length) ||
-      (!searchValue?.searchValue && this.items.length)
-    );
-  }
-
-  @computed
-  private get items(): (WfsFeature | FeatureError)[] {
-    if (this.searchResult.length) {
-      return this.searchResult;
-    }
-
-    return [
-      ...mapStore.selectedFeatures,
-      ...(sidebars.deletedFeatures || []),
-      ...(sidebars.featuresWithNoAccess || []),
-      ...(sidebars.deletedLayers || [])
-    ];
-  }
-
-  @action.bound
-  private setLoading(isLoading: boolean): void {
-    this.loading = isLoading;
+  @action
+  private setSize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
   }
 
   @action.bound
@@ -134,24 +94,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
       mapService.highlightFeatures(mapStore.highlightedFeatures);
     }
     this.highlightedFeatureId = feature?.id;
-  }
-
-  @action.bound
-  private handleItemSelect(feature: WfsFeature) {
-    if (this.props.searchValue) {
-      sidebars.setFoundBySearchFeatureEdited(true);
-    } else {
-      sidebars.setMemorizedFeatures(mapStore.selectedFeatures);
-      sidebars.setSelectedFeaturesEdited(true);
-    }
-    sidebars.closeSidebar();
-    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
-  }
-
-  @action
-  private setSize(width: number, height: number) {
-    this.width = width;
-    this.height = height;
   }
 
   @boundMethod
@@ -170,76 +112,43 @@ export class FeaturesList extends Component<FeaturesListProps> {
     }
   }
 
-  private async getFeatures() {
-    this.setLoading(true);
-
-    const { searchValue } = this.props;
-
-    if (searchValue?.searchValue) {
-      const searchRequest = {
-        text: searchValue.searchValue,
-        sources: searchValue.source,
-        type: searchValue.type
-      };
-
-      try {
-        const [items] = await getSearchResults(searchRequest, { page: 0, pageSize: 50 });
-        const foundFeatures = items as SearchItemDataTypeFeature[];
-        const wfsFeaturesRequestInfo: WfsFeaturesRequestInfo[] = foundFeatures
-          .map(feature => {
-            const layer = currentProject.layers.find(
-              ({ dataset, tableName }) => dataset === feature.source.dataset && tableName === feature.source.table
-            );
-
-            if (layer?.complexName) {
-              return { complexName: layer.complexName, featureId: feature.payload.id };
-            }
-          })
-          .filter(Boolean);
-
-        const features = await Promise.all(
-          wfsFeaturesRequestInfo.map(async obj => {
-            return await getFeaturesById([obj.featureId], obj.complexName);
-          })
-        );
-
-        this.setSearchResult(features.flat());
-      } catch (error) {
-        services.logger.error(error);
-        this.setLoading(false);
-      }
+  @action.bound
+  private handleItemSelect(feature: WfsFeature) {
+    if (this.props.forSearch) {
+      sidebars.setFoundBySearchFeatureEdited(true);
+    } else {
+      sidebars.setMemorizedFeatures(mapStore.selectedFeatures);
+      sidebars.setSelectedFeaturesEdited(true);
     }
-
-    this.setLoading(false);
-  }
-
-  @action
-  private setSearchResult(searchResult: WfsFeature[]) {
-    this.searchResult = searchResult;
+    sidebars.closeSidebar();
+    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
   }
 
   @boundMethod
   private renderRow({ index, style }: ListChildComponentProps) {
-    if (!this.items.length) {
+    const { items, forSearch } = this.props;
+
+    if (!items.length) {
       return <FeaturesListEmpty />;
     }
 
-    if (!this.props.searchValue && mapStore.selectedFeatures.length && index >= mapStore.selectedFeatures.length) {
-      const featureError = this.items[index] as FeatureError;
+    if (!forSearch && mapStore.selectedFeatures.length && index >= mapStore.selectedFeatures.length) {
+      const featureError = items[index].error;
 
-      return <FeaturesListItem errorData={featureError} key={`err_${index}_${featureError.id}`} style={style} />;
+      return <FeaturesListItem errorData={featureError} key={`err_${index}_${featureError?.id}`} style={style} />;
     }
 
-    const feature = this.items[index] as WfsFeature;
+    const feature = items[index].feature;
 
     return (
       <FeaturesListItem
         feature={feature}
-        highlighted={feature.id === this.highlightedFeatureId}
+        highlighted={feature?.id === this.highlightedFeatureId}
         onHighlight={this.highlightItem}
         onSelect={this.handleItemSelect}
-        key={feature.id}
-        isSearchList={!!this.props.searchValue}
+        key={feature?.id}
+        headlines={items[index].headlines}
+        isSearchList={forSearch}
         style={style}
       />
     );

@@ -34,18 +34,26 @@ export interface SearchItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
   payload: WfsFeature;
+  headlines: string[];
 }
 
 export interface SearchRawItemDataTypeFeature extends FtsResponseDto {
   type: 'FEATURE';
   source: SearchSourceForFeature;
   payload: { properties: Record<string, unknown> };
+  headlines: string[];
 }
 
 interface SearchItemDataTypeDocument extends FtsResponseDto {
   type: 'DOCUMENT';
   source: SearchSourceForDocument;
   payload: LibraryRecordRaw;
+  headlines: string[];
+}
+
+export interface FoundWfsFeature {
+  feature: WfsFeature;
+  headlines: string[];
 }
 
 export type SearchItemData = SearchItemDataTypeDocument | SearchItemDataTypeFeature;

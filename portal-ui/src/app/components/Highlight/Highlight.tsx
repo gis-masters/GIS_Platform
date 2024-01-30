@@ -9,12 +9,13 @@ import '!style-loader!css-loader!sass-loader!./Highlight.scss';
 const cnHighlight = cn('Highlight');
 
 interface HighlightProps {
+  searchWords?: string[];
   word?: FilterQueryValue | FilterQuery[] | FilterQuery;
   children: string | number;
   enabled?: boolean;
 }
 
-export const Highlight: FC<HighlightProps> = ({ enabled, word, children }) => {
+export const Highlight: FC<HighlightProps> = ({ enabled, word, searchWords, children }) => {
   let actualWord: string | RegExp;
 
   if (
@@ -29,11 +30,11 @@ export const Highlight: FC<HighlightProps> = ({ enabled, word, children }) => {
     actualWord = word instanceof RegExp ? word : String(word);
   }
 
-  return enabled && actualWord ? (
+  return enabled && (actualWord || searchWords) ? (
     <Highlighter
       className={cnHighlight()}
       highlightClassName={cnHighlight('Mark')}
-      searchWords={[actualWord]}
+      searchWords={searchWords || [actualWord]}
       textToHighlight={String(children)}
     />
   ) : (

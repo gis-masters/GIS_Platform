@@ -1,11 +1,11 @@
-.FeaturesListItem {
+body .FeaturesListItem {
   position: relative;
 
   display: grid;
-  grid-template: auto auto / 50px 18px auto 100px;
-  grid-template-areas: 'id icon title buttons' 'id icon layer buttons';
+  grid-template: 20px 16px auto / 50px 18px auto 100px;
+  grid-template-areas: 'id icon title buttons' 'id icon layer buttons' 'id icon search buttons';
 
-  height: 54px;
+  height: 64px;
   padding: 7px 5px;
 
   transition: background-color 0.15s;
@@ -133,5 +133,9 @@
   &:hover &-Buttons,
   & &-Buttons:focus {
     opacity: 1;
+  }
+
+  &-PopoverItemTitle {
+    color: var(--gray);
   }
 }
