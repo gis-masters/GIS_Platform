@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;

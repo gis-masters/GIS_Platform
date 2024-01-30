@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.smev3.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 
 import java.util.UUID;
 
@@ -9,21 +9,23 @@ import java.util.UUID;
  * Мета информация по запросу
  */
 public class XmlBuildMeta {
-    private MnemonicEnum mnemonic;
-    private UUID clientId;
-    private UUID referenceClientId;
-    private String requestXmlString;
-    private JsonNode requestJson;
-    private JsonNode sources;
-    private JsonNode attachments;
+    private final Mnemonic mnemonic;
+    private final UUID clientId;
+    private final UUID referenceClientId;
+    private final String requestXmlString;
+    private final JsonNode requestJson;
+    private final JsonNode sources;
+    private final JsonNode attachments;
+    private final XmlValidationResult xmlValidationResult;
 
-    public XmlBuildMeta(MnemonicEnum mnemonic,
+    public XmlBuildMeta(Mnemonic mnemonic,
                         UUID clientId,
                         UUID referenceClientId,
                         String requestXmlString,
                         JsonNode requestJson,
                         JsonNode sources,
-                        JsonNode attachments) {
+                        JsonNode attachments,
+                        XmlValidationResult xmlValidationResult) {
         this.mnemonic = mnemonic;
         this.clientId = clientId;
         this.referenceClientId = referenceClientId;
@@ -31,9 +33,10 @@ public class XmlBuildMeta {
         this.requestJson = requestJson;
         this.sources = sources;
         this.attachments = attachments;
+        this.xmlValidationResult = xmlValidationResult;
     }
 
-    public MnemonicEnum getMnemonic() {
+    public Mnemonic getMnemonic() {
         return mnemonic;
     }
 
@@ -59,5 +62,13 @@ public class XmlBuildMeta {
 
     public JsonNode getAttachments() {
         return attachments;
+    }
+
+    public XmlValidationResult getValidateFailMessage() {
+        return xmlValidationResult;
+    }
+
+    public boolean isInvalid() {
+        return xmlValidationResult != null;
     }
 }

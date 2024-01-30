@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.request.register_rns;
 
 import ru.mycrg.data_service.register_rns_1_0_10.*;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
 import java.math.BigInteger;
@@ -29,7 +30,7 @@ public class Stub {
         addressElementType.setName("Хромченко");
 
         var addressFullType = new AddressFullType();
-        addressFullType.setRegion("91");
+        addressFullType.setRegion(SmevRequestConst.CRIMEA_REGION);
         addressFullType.setFIAS("ef8f9fe1-bc9f-48ca-8219-92a87f8af4c7");
         addressFullType.setLocality(addressElementTypeCity);
         addressFullType.setStreet(addressElementType);

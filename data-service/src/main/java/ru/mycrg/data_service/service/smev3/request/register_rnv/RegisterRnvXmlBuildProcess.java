@@ -3,18 +3,16 @@ package ru.mycrg.data_service.service.smev3.request.register_rnv;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
 import java.time.LocalDateTime;
@@ -27,14 +25,11 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.fields.FieldsSection.*;
 
 public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
-
     private final Logger log = LoggerFactory.getLogger(RegisterRnvXmlBuildProcess.class);
     private final ReusableElements rue = new ReusableElements();
 
-    public RegisterRnvXmlBuildProcess(RequestProcessor requestProcessor,
-                                      BaseDao baseDao,
-                                      @Qualifier("schemaServiceBase") ISchemaService schemaService) {
-        super(requestProcessor, baseDao, schemaService);
+    public RegisterRnvXmlBuildProcess(RequestProcessor requestProcessor) {
+        super(requestProcessor);
     }
 
     public BuildRequestAndSources<Request> run(@NotNull RegisterRnvRequestDto dto) {
@@ -133,8 +128,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
                 rue.rsoksSection13SupplierRecord,
                 FieldsSupplier.PROPERTY_ORGANIZATION_DATA_CONNECTION
         ).orElse(null);
-        log.debug("rsoksSection13SupplierOrganizationRecord read. is not null {}",
-                  rue.rsoksSection13SupplierOrganizationRecord != null);
+        log.debug("rsoksSection13SupplierOrganizationRecord read. is not null {}", rue.rsoksSection13SupplierOrganizationRecord != null);
 
         rue.usersAfterTriggerRecord = asRefRecord(
                 rue.rsoksSection13Record,
@@ -220,6 +214,9 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
                 .map(XmlMapper::mapCalendar)
                 .ifPresent(type::setConstPermitDate);
 
+        // Добавляем вложение
+        asAttachment(rue.section13Record, FieldsSection.PROPERTY_FILE);
+
         type.setRecipientInfo(developerRecipientInfo());
         type.setIssueOrgan(issueOrgan());
         type.setConstPermitIssueOrgan(constPermitIssueOrgan());
@@ -271,7 +268,10 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     private RecipientInfoType developerRecipientInfo() {
         var developerOrganizationAddress = new AddressFullType();
         asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_ACTUAL_ADDRESS)
-                .ifPresent(developerOrganizationAddress::setRegion);
+                .ifPresent(s -> {
+                    developerOrganizationAddress.setNote(s);
+                    developerOrganizationAddress.setRegion(SmevRequestConst.CRIMEA_REGION);
+                });
 
         var developerOrganizationInfoType = new OrganizationInfoType();
         asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_FULL_TITLE)
@@ -304,12 +304,15 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
                 .ifPresent(type::setObjectPurposeFunctional);
         asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_BUILD_CAPITAL_TYPE)
                 .ifPresent(type::setBuildCapitalType);
+        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_NAME_EIS)
+                .ifPresent(type::setObjectName);
 
         //TODO обратить внимание
         asString(rue.section13Record, FieldsSection.PROPERTY_LACOTEAN)
                 .ifPresent(s -> {
                     var addressFullType = new AddressFullType();
-                    addressFullType.setBuildingNumber(s);
+                    addressFullType.setRegion(SmevRequestConst.CRIMEA_REGION);
+                    addressFullType.setNote(s);
                     var addressAttrType = new AddressAttrType();
                     addressAttrType.setAddressFull(addressFullType);
                     type.setObjectAddress(addressAttrType);
@@ -325,7 +328,8 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         asString(rue.rveoksRecord, FieldsRveoks.PROPERTY_BUILDING_ADDRESS)
                 .ifPresent(s -> {
                     var addressFullType = new AddressFullType();
-                    addressFullType.setBuildingNumber(s);
+                    addressFullType.setNote(s);
+                    addressFullType.setRegion(SmevRequestConst.CRIMEA_REGION);
                     type.setObjectBuildingAddress(addressFullType);
                 });
 
@@ -472,26 +476,22 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
                 .ifPresent(type::setOtherIndex);
 
         var roofingMaterials = new RefBookProjectFactType();
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(roofingMaterials::setInProject);
         type.setRoofingMaterials(roofingMaterials);
 
         var ceilingMaterials = new RefBookProjectFactType();
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(ceilingMaterials::setInProject);
         type.setCeilingMaterials(ceilingMaterials);
 
         var materialsWall = new RefBookProjectFactType();
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(materialsWall::setInProject);
         type.setMaterialsWall(materialsWall);
 
         var materialsFoundations = new RefBookProjectFactType();
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(materialsFoundations::setInProject);
         type.setMaterialsFoundations(materialsFoundations);
 
@@ -576,29 +576,25 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         // rveoksPartRecord
         asString(rue.rveoksPartRecord, FieldsRveoksPart.PROPERTY_OTHER_INDICATORS_NON_PROD_FAC_PR)
                 .ifPresent(type::setOtherIndex);
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setRoofingMaterials(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setCeilingMaterials(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setMaterialsWall(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
@@ -773,29 +769,25 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         // rveoksPartRecord
         asString(rue.rveoksPartRecord, FieldsRveoksPart.PROPERTY_OTHER_INDICATORS_NON_PROD_FAC_PR)
                 .ifPresent(type::setOtherIndex);
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_ROOF_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setRoofingMaterials(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FLOOR_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setCeilingMaterials(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_WALL_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
                     type.setMaterialsWall(ref);
                 });
-        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE,
-                      FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
+        asRefBookType(rue.rveoksPartRecord, FieldsRveoksPart.TABLE, FieldsRveoksPart.PROPERTY_FOUNDATION_MATERIALS_NON_PROD_FAC_PR)
                 .ifPresent(refBookType -> {
                     var ref = new RefBookProjectFactType();
                     ref.setInProject(refBookType);
@@ -853,6 +845,10 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         asString(rue.rsoksPartRecord, FieldsRsoksPart.PROPERTY_OKS_TYPE_PR)
                 .ifPresent(objectType::setInProject);
         type.setObjectType(objectType);
+
+        // section13
+        asString(rue.section13Record, FieldsSection.PROPERTY_OBJECT_NAME_EIS)
+                .ifPresent(type::setObjectName);
 
         return type;
     }
@@ -1029,7 +1025,6 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
      * Для хранения объектов, который будут переиспользоваться
      */
     static class ReusableElements {
-
         private IRecord section13Record;
         private IRecord developerRecord;
         private IRecord developerOrganizationRecord;

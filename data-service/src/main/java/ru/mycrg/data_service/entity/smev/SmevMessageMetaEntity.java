@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.config.CrgCommonConfig;
 import ru.mycrg.data_service.entity.IContent;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -177,11 +177,11 @@ public class SmevMessageMetaEntity implements IContent {
     }
 
     @Nullable
-    public MnemonicEnum mnemonicEnum() {
-        return MnemonicEnum.fromStringPair(mnemonic, mnemonicVersion);
+    public Mnemonic mnemonicEnum() {
+        return Mnemonic.fromStringPair(mnemonic, mnemonicVersion);
     }
 
-    public static SmevMessageMetaEntity createIncoming(@NotNull MnemonicEnum mnemonic,
+    public static SmevMessageMetaEntity createIncoming(@NotNull Mnemonic mnemonic,
                                                        @NotNull UUID clientId,
                                                        @NotNull UUID referenceClientId,
                                                        @NotNull UUID referenceReestrIncoming,
@@ -200,7 +200,7 @@ public class SmevMessageMetaEntity implements IContent {
         return message;
     }
 
-    public static SmevMessageMetaEntity createOutgoing(@NotNull MnemonicEnum mnemonic,
+    public static SmevMessageMetaEntity createOutgoing(@NotNull Mnemonic mnemonic,
                                                        @NotNull UUID clientId,
                                                        @NotNull UUID referenceReestrOutgoing,
                                                        @NotNull JsonNode xmlObject,

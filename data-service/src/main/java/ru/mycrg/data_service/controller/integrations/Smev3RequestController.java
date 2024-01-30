@@ -3,13 +3,10 @@ package ru.mycrg.data_service.controller.integrations;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
-import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
-import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
-import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
+import ru.mycrg.data_service.dto.smev3.*;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
-import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
@@ -62,11 +59,13 @@ public class Smev3RequestController {
                                                           @RequestParam String appFilename,
                                                           @RequestParam String passportFilename,
                                                           @RequestParam String archiveFilename) {
-        var response = getCadastrialPlanRequestService
-                .request(requestFilename,
-                        appFilename,
-                        passportFilename,
-                        archiveFilename);
+        var dto = new GetCadastrialPlanDto();
+        dto.setAppFilename(appFilename);
+        dto.setArchiveFilename(archiveFilename);
+        dto.setRequestFilename(requestFilename);
+        dto.setPassportFilename(passportFilename);
+
+        var response = getCadastrialPlanRequestService.sendRequest(dto);
         return ResponseEntity.ok(response);
     }
 
@@ -74,8 +73,8 @@ public class Smev3RequestController {
      * urn://x-artefacts-uishc.domrf.ru/receipt-rnv
      */
     @PostMapping("/request/receipt-rnv")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto dto) {
-        var response = rnvRequestService.request(dto);
+    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
+        var response = rnvRequestService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -84,8 +83,8 @@ public class Smev3RequestController {
      * urn://x-artefacts-uishc.domrf.ru/receipt-rns
      */
     @PostMapping("/request/receipt-rns")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto dto) {
-        var response = rnsRequestService.request(dto);
+    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
+        var response = rnsRequestService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -95,7 +94,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/request/register-rns")
     public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody RegisterRnsRequestDto rnsRequestDto) {
-        var response = registerRnsService.request(rnsRequestDto);
+        var response = registerRnsService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -105,7 +104,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/request/register-rnv")
     public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
-        var response = registerRnvService.request(rnvRequestDto);
+        var response = registerRnvService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
     }

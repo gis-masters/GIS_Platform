@@ -2,13 +2,13 @@ package unit.smev;
 
 import org.junit.Test;
 import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegisterRnvMarshallerTest extends AMarshallerTest {
-    private final XmlMarshaller marshaller = new XmlMarshaller(MnemonicEnum.REGISTER_RNV_1_0_8.getPrefixMapper());
+    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.REGISTER_RNV_1_0_8.getPrefixMapper());
 
     @Test
     public void response() throws Exception {

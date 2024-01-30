@@ -9,25 +9,23 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
-import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/register-rns/1.0.10
@@ -38,12 +36,7 @@ import static java.util.Optional.ofNullable;
         havingValue = "true",
         matchIfMissing = true)
 public class RegisterRnsRequestService extends RequestProcessor {
-
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
-    private final BaseDao baseDao;
-    private final ISchemaService schemaService;
-    private final SmevMessageSenderService messageService;
-    private final SmevOutgoingAttachmentService attachmentService;
 
     public RegisterRnsRequestService(Smev3Config smev3Config,
                                      BaseDao baseDao,
@@ -51,48 +44,16 @@ public class RegisterRnsRequestService extends RequestProcessor {
                                      ResourceLoader resourceLoader,
                                      SmevMessageSenderService messageService,
                                      SmevOutgoingAttachmentService attachmentService) {
-        super(MnemonicEnum.REGISTER_RNS_1_0_10, resourceLoader, smev3Config);
-        this.baseDao = baseDao;
-        this.schemaService = schemaService;
-        this.messageService = messageService;
-        this.attachmentService = attachmentService;
-    }
 
-    public XmlBuildMeta request(@NotNull RegisterRnsRequestDto dto) {
-        log.info("SMEV3 | {}  recId {}", mnemonicEnum(), dto.getRecId());
-        try {
-            var buildRequest = new RegisterRnsXmlBuildProcess(
-                    this,
-                    baseDao,
-                    schemaService,
-                    attachmentService
-            ).run(dto);
-
-            // валидация бизнес части запроса
-            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
-                throw new SmevRequestException("validation fail: " + s);
-            });
-
-            var clientMessage = clientMessage(buildRequest);
-
-            var xmlMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
-                    null,
-                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
-                    JsonConverter.toJsonNode(clientMessage),
-                    buildRequest.getSourcesJson(),
-                    buildRequest.getAttachmentsJson()
-            );
-
-            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
-
-            return xmlMeta;
-        } catch (Exception e) {
-            log.error("SMEV. push to queue error: {}", e.getMessage());
-            throw new SmevRequestException("push to queue error :" + e.getMessage());
-        }
+        super(
+                Mnemonic.REGISTER_RNS_1_0_10,
+                messageService,
+                baseDao,
+                schemaService,
+                attachmentService,
+                resourceLoader,
+                smev3Config
+        );
     }
 
     @Override
@@ -106,6 +67,7 @@ public class RegisterRnsRequestService extends RequestProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
+                    null,
                     null,
                     null
             );
@@ -130,6 +92,25 @@ public class RegisterRnsRequestService extends RequestProcessor {
         }
     }
 
+    @Override
+    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        var buildRequest = new RegisterRnsXmlBuildProcess(this).run((RegisterRnsRequestDto) dto);
+
+        var clientMessage = clientMessage(buildRequest);
+
+        return new XmlBuildMeta(
+                mnemonicEnum(),
+                UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
+                null,
+                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                JsonConverter.toJsonNode(clientMessage),
+                buildRequest.getSourcesJson(),
+                buildRequest.getAttachmentsJson(),
+                validate(buildRequest.getRequest(), Request.class)
+        );
+    }
+
+
     private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
         var content = new Content();
 
@@ -140,16 +121,15 @@ public class RegisterRnsRequestService extends RequestProcessor {
 
         // AttachmentHeaderList
         var attachmentHeaderTypeList = buildRequestAndSources.getAttachmentsMap()
-                                                             .values()
-                                                             .stream()
-                                                             .map(smevAttachment -> {
-                                                                 var type = new AttachmentHeaderType();
-                                                                 type.setId(
-                                                                         smevAttachment.getAttachmentId().toString());
-                                                                 type.setFilePath(smevAttachment.getS3fileName());
-                                                                 return type;
-                                                             })
-                                                             .collect(Collectors.toList());
+                .values()
+                .stream()
+                .map(smevAttachment -> {
+                    var type = new AttachmentHeaderType();
+                    type.setId(smevAttachment.getAttachmentId().toString());
+                    type.setFilePath(smevAttachment.getS3fileName());
+                    return type;
+                })
+                .collect(Collectors.toList());
 
         if (!attachmentHeaderTypeList.isEmpty()) {
             var attachmentHeaderList = new AttachmentHeaderList();

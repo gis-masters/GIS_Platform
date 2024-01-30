@@ -28,6 +28,7 @@ public class FieldsSection {
     public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL = "object_purpose_functional";
     public static final String PROPERTY_BUILD_CAPITAL_TYPE = "build_capital_type";
     public static final String PROPERTY_LACOTEAN = "lacotean";
+    public static final String PROPERTY_OBJECT_NAME_EIS = "object_name_eis";
 
     //Иное
     public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_1 = "1";

@@ -40,7 +40,8 @@ public class SmevMessageService {
     }
 
     @Transactional
-    public void saveIncoming(ProcessAdapterMessageResult processResult, SmevMessageMetaEntity originalMessageRecord) {
+    public void saveIncoming(ProcessAdapterMessageResult processResult,
+                             SmevMessageMetaEntity originalMessageRecord) {
         try {
             var reestrMessage = new ReestrIncoming();
             reestrMessage.setId(UUID.randomUUID());
@@ -48,7 +49,7 @@ public class SmevMessageService {
             reestrMessage.setBody(processResult.getXmlBuildMeta().getRequestXmlString());
             reestrMessage.setDateIn(LocalDateTime.now());
             reestrMessage.setStatus(processResult.getStatus());
-            reestrMessage.setSystem(Systems.GISOGR_RK);
+            reestrMessage.setSystem(Systems.GISOGD_RK);
             if (processResult.getXmlBuildMeta().getRequestXmlString().contains("RRTR02")) {
                 reestrMessage.setUserFrom(Systems.FGIS_EGRN);
             } else {
@@ -84,7 +85,7 @@ public class SmevMessageService {
             reestrMessage.setBody(buildMeta.getRequestXmlString());
             reestrMessage.setDateOut(LocalDateTime.now());
             reestrMessage.setStatus(ReestrStatus.SEND_QUEUE.getTitle());
-            reestrMessage.setSystem(Systems.GISOGR_RK);
+            reestrMessage.setSystem(Systems.GISOGD_RK);
             reestrMessage.setUserTo(userTo);
             outgoingService.save(reestrMessage);
 
@@ -125,7 +126,8 @@ public class SmevMessageService {
                 message.getXmlString(),
                 message.getXmlObject(),
                 message.getRecords(),
-                message.getAttachments()
+                message.getAttachments(),
+                null
         );
     }
 }

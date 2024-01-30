@@ -7,20 +7,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.dto.smev3.GetCadastrialPlanDto;
+import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
-import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
-
-import static java.util.Optional.ofNullable;
 
 @Service
 @ConditionalOnProperty(
@@ -29,48 +28,19 @@ import static java.util.Optional.ofNullable;
         matchIfMissing = true)
 public class GetCadastrialPlanRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
-    private final SmevMessageSenderService messageService;
 
     public GetCadastrialPlanRequestService(Smev3Config smev3Config,
                                            ResourceLoader resourceLoader,
                                            SmevMessageSenderService messageService) {
-        super(MnemonicEnum.GET_CADASTRIAL_PLAN_1_1_2, resourceLoader, smev3Config);
-        this.messageService = messageService;
-    }
-
-    public XmlBuildMeta request(@NotNull String requestFilename,
-                                @NotNull String appFilename,
-                                @NotNull String passportFilename,
-                                @NotNull String archiveFilename) {
-        try {
-            var buildRequest = new GetCadastrialPlanXmlBuildProcess(
-                    this
-            ).run(requestFilename, appFilename, passportFilename);
-
-            // валидация бизнес части запроса
-            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
-                throw new SmevRequestException("validation fail: " + s);
-            });
-
-            var clientMessage = clientMessage(buildRequest.getRequest(), archiveFilename);
-
-            var xmlMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
-                    null,
-                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
-                    JsonConverter.toJsonNode(clientMessage),
-                    buildRequest.getSourcesJson(),
-                    buildRequest.getAttachmentsJson()
-            );
-
-            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, true, Systems.FGIS_EGRN);
-
-            return xmlMeta;
-        } catch (Exception e) {
-            throw new SmevRequestException("push to queue error :" + e.getMessage());
-        }
+        super(
+                Mnemonic.GET_CADASTRIAL_PLAN_1_1_2,
+                messageService,
+                null,
+                null,
+                null,
+                resourceLoader,
+                smev3Config
+        );
     }
 
     @Override
@@ -86,6 +56,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
+                    null,
                     null,
                     null
             );
@@ -108,6 +79,32 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+    @Override
+    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
+
+        var buildRequest = new GetCadastrialPlanXmlBuildProcess(
+                this
+        ).run(
+                getCadastrialPlanDto.getRequestFilename(),
+                getCadastrialPlanDto.getAppFilename(),
+                getCadastrialPlanDto.getPassportFilename()
+        );
+
+        var clientMessage = clientMessage(buildRequest.getRequest(), getCadastrialPlanDto.getArchiveFilename());
+
+        return new XmlBuildMeta(
+                mnemonicEnum(),
+                UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
+                null,
+                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                JsonConverter.toJsonNode(clientMessage),
+                buildRequest.getSourcesJson(),
+                buildRequest.getAttachmentsJson(),
+                validate(buildRequest.getRequest(), Request.class)
+        );
     }
 
     private ClientMessage clientMessage(Request request, String archiveFilename) {

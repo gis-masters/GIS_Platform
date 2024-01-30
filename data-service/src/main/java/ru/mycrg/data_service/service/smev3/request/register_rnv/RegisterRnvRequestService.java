@@ -9,21 +9,22 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
-import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
+import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
+import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
-
-import static java.util.Optional.ofNullable;
+import java.util.stream.Collectors;
 
 
 /**
@@ -35,61 +36,25 @@ import static java.util.Optional.ofNullable;
         havingValue = "true",
         matchIfMissing = true)
 public class RegisterRnvRequestService extends RequestProcessor {
-
     private final Logger log = LoggerFactory.getLogger(RegisterRnvRequestService.class);
-    private final BaseDao baseDao;
-    private final ISchemaService schemaService;
-    private final SmevMessageSenderService messageService;
 
-    public RegisterRnvRequestService(Smev3Config smev3Config,
-                                     BaseDao baseDao,
-                                     @Qualifier("schemaServiceBase") ISchemaService schemaService,
-                                     ResourceLoader resourceLoader,
-                                     SmevMessageSenderService messageService) {
-        super(MnemonicEnum.REGISTER_RNV_1_0_8, resourceLoader, smev3Config);
-        this.baseDao = baseDao;
-        this.schemaService = schemaService;
-        this.messageService = messageService;
-    }
-
-    public XmlBuildMeta request(@NotNull RegisterRnvRequestDto dto) {
-        log.info("SMEV3 | {}  recId {}", mnemonicEnum(), dto.getRecId());
-        try {
-            var buildRequest = new RegisterRnvXmlBuildProcess(
-                    this,
-                    baseDao,
-                    schemaService
-            ).run(dto);
-
-            // валидация бизнес части запроса
-            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
-                throw new SmevRequestException("validation fail: " + s);
-            });
-
-            var clientMessage = clientMessage(buildRequest.getRequest());
-
-            var xmlMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
-                    null,
-                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
-                    JsonConverter.toJsonNode(clientMessage),
-                    buildRequest.getSourcesJson(),
-                    buildRequest.getAttachmentsJson()
-            );
-
-            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
-
-            return xmlMeta;
-        } catch (Exception e) {
-            if (e instanceof SmevRequestException) {
-                throw (SmevRequestException) e;
-            }
-
-            log.error("SMEV. push to queue error: {}", e.getMessage());
-            throw new SmevRequestException("push to queue error :" + e.getMessage());
-        }
+    public RegisterRnvRequestService(
+            SmevMessageSenderService messageService,
+            Smev3Config smev3Config,
+            BaseDao baseDao,
+            @Qualifier("schemaServiceBase") ISchemaService schemaService,
+            ResourceLoader resourceLoader,
+            SmevOutgoingAttachmentService attachmentService
+    ) {
+        super(
+                Mnemonic.REGISTER_RNV_1_0_8,
+                messageService,
+                baseDao,
+                schemaService,
+                attachmentService,
+                resourceLoader,
+                smev3Config
+        );
     }
 
     @Override
@@ -103,6 +68,7 @@ public class RegisterRnvRequestService extends RequestProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
+                    null,
                     null,
                     null
             );
@@ -128,12 +94,49 @@ public class RegisterRnvRequestService extends RequestProcessor {
     }
 
 
-    private ClientMessage clientMessage(Request request) {
-        var primaryContent = new MessagePrimaryContent();
-        primaryContent.setRequest(request);
+    @Override
+    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        var buildRequest = new RegisterRnvXmlBuildProcess(this).run((RegisterRnvRequestDto) dto);
 
+        var clientMessage = clientMessage(buildRequest);
+
+        return new XmlBuildMeta(
+                mnemonicEnum(),
+                UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
+                null,
+                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                JsonConverter.toJsonNode(clientMessage),
+                buildRequest.getSourcesJson(),
+                buildRequest.getAttachmentsJson(),
+                validate(buildRequest.getRequest(), Request.class)
+        );
+    }
+
+    private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
         var content = new Content();
+
+        // PrimaryContent
+        var primaryContent = new MessagePrimaryContent();
+        primaryContent.setRequest(buildRequestAndSources.getRequest());
         content.setMessagePrimaryContent(primaryContent);
+
+        // AttachmentHeaderList
+        var attachmentHeaderTypeList = buildRequestAndSources.getAttachmentsMap()
+                .values()
+                .stream()
+                .map(smevAttachment -> {
+                    var type = new AttachmentHeaderType();
+                    type.setId(smevAttachment.getAttachmentId().toString());
+                    type.setFilePath(smevAttachment.getS3fileName());
+                    return type;
+                })
+                .collect(Collectors.toList());
+
+        if (!attachmentHeaderTypeList.isEmpty()) {
+            var attachmentHeaderList = new AttachmentHeaderList();
+            attachmentHeaderList.getAttachmentHeader().addAll(attachmentHeaderTypeList);
+            content.setAttachmentHeaderList(attachmentHeaderList);
+        }
 
         var contentType = new RequestContentType();
         contentType.setContent(content);

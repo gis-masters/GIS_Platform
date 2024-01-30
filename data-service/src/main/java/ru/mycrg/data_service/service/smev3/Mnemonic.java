@@ -3,13 +3,15 @@ package ru.mycrg.data_service.service.smev3;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.mycrg.data_service.service.reestrs.Systems;
 
 import java.util.Arrays;
 
-public enum MnemonicEnum {
+public enum Mnemonic {
     GET_CADASTRIAL_PLAN_1_1_2(
             "get-cadastrial-plan",
             "1.1.2",
+            Systems.FGIS_EGRN,
             "xsd_smev3/egrn_cadastrial_plans_1_1_2/core/service-adapter-types.xsd",
             "xsd_smev3/egrn_cadastrial_plans_1_1_2/egrn_cadastrial_plans_1_1_2.xsd",
             new NamespacePrefixMapper() {
@@ -20,11 +22,11 @@ public enum MnemonicEnum {
                     }
                     return "typ";
                 }
-            }
-    ),
+            }),
     RECEIPT_RNS_1_0_9(
             "receipt-rns",
             "1.0.9",
+            Systems.EIS_JS,
             "xsd_smev3/receipt_rns_1_0_9/core/service-adapter-types.xsd",
             "xsd_smev3/receipt_rns_1_0_9/receipt-rns-1.0.9.xsd",
             new NamespacePrefixMapper() {
@@ -41,11 +43,11 @@ public enum MnemonicEnum {
                             return "typ";
                     }
                 }
-            }
-    ),
+            }),
     REGISTER_RNS_1_0_10(
             "register-rns",
             "1.0.10",
+            Systems.EIS_JS,
             "xsd_smev3/register_rns_1_0_10/core/service-adapter-types.xsd",
             "xsd_smev3/register_rns_1_0_10/register-rns-1.0.10.xsd",
             new NamespacePrefixMapper() {
@@ -62,11 +64,11 @@ public enum MnemonicEnum {
                             return "typ";
                     }
                 }
-            }
-    ),
+            }),
     RECEIPT_RNV_1_0_9(
             "receipt-rnv",
             "1.0.9",
+            Systems.EIS_JS,
             "xsd_smev3/receipt_rnv_1_0_9/core/service-adapter-types.xsd",
             "xsd_smev3/receipt_rnv_1_0_9/receipt-rnv-1.0.9.xsd",
             new NamespacePrefixMapper() {
@@ -83,11 +85,11 @@ public enum MnemonicEnum {
                             return "typ";
                     }
                 }
-            }
-    ),
+            }),
     REGISTER_RNV_1_0_8(
             "register-rnv",
             "1.0.8",
+            Systems.EIS_JS,
             "xsd_smev3/register_rnv_1_0_8/core/service-adapter-types.xsd",
             "xsd_smev3/register_rnv_1_0_8/register-rnv-1.0.8.xsd",
             new NamespacePrefixMapper() {
@@ -104,10 +106,10 @@ public enum MnemonicEnum {
                             return "typ";
                     }
                 }
-            }
-    );
+            });
     private final String mnemonic;
     private final String version;
+    private final String system;
     private final String schemaPath;
     private final String rootSchemaPath;
     private final NamespacePrefixMapper prefixMapper;
@@ -118,6 +120,10 @@ public enum MnemonicEnum {
 
     public String getVersion() {
         return version;
+    }
+
+    public String getSystem() {
+        return system;
     }
 
     public String getSchemaPath() {
@@ -132,21 +138,23 @@ public enum MnemonicEnum {
         return prefixMapper;
     }
 
-    MnemonicEnum(String mnemonic,
-                 String version,
-                 String rootSchemaPath,
-                 String schemaPath,
-                 NamespacePrefixMapper namespacePrefixMapper) {
+    Mnemonic(String mnemonic,
+             String version,
+             String system,
+             String rootSchemaPath,
+             String schemaPath,
+             NamespacePrefixMapper namespacePrefixMapper) {
         this.mnemonic = mnemonic;
         this.version = version;
+        this.system = system;
         this.rootSchemaPath = rootSchemaPath;
         this.schemaPath = schemaPath;
         this.prefixMapper = namespacePrefixMapper;
     }
 
     @Nullable
-    public static MnemonicEnum fromStringPair(@NotNull String mnemonic, String version) {
-        return Arrays.stream(MnemonicEnum.values())
+    public static Mnemonic fromStringPair(@NotNull String mnemonic, String version) {
+        return Arrays.stream(Mnemonic.values())
                 .filter(enm -> enm.mnemonic.equals(mnemonic) && enm.version.equals(version))
                 .findFirst()
                 .orElse(null);

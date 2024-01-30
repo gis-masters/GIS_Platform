@@ -8,20 +8,18 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
-import ru.mycrg.data_service.service.reestrs.Systems;
-import ru.mycrg.data_service.service.smev3.MnemonicEnum;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
-
-import static java.util.Optional.ofNullable;
 
 
 /**
@@ -34,46 +32,19 @@ import static java.util.Optional.ofNullable;
         matchIfMissing = true)
 public class ReceiptRnsRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
-    private final SmevMessageSenderService messageService;
 
     public ReceiptRnsRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
                                     SmevMessageSenderService messageService) {
-        super(MnemonicEnum.RECEIPT_RNS_1_0_9, resourceLoader, smev3Config);
-        this.messageService = messageService;
-    }
-
-    public XmlBuildMeta request(@NotNull ReceiptRnsRequestDto dto) {
-        log.info("SMEV3. {} {}", mnemonicEnum(), dto);
-        try {
-            var buildRequest = new ReceiptRnsXmlBuildProcess(
-                    this
-            ).run(dto);
-
-            // валидация бизнес части запроса
-            ofNullable(validate(buildRequest.getRequest(), Request.class)).ifPresent(s -> {
-                throw new SmevRequestException("validation fail: " + s);
-            });
-
-            var clientMessage = clientMessage(buildRequest.getRequest());
-
-            var xmlMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(clientMessage.getQueryMessage().getClientId()),
-                    null,
-                    xmlMarshaller().marshall(clientMessage, ClientMessage.class),
-                    JsonConverter.toJsonNode(clientMessage),
-                    buildRequest.getSourcesJson(),
-                    buildRequest.getAttachmentsJson()
-            );
-
-            log.info("SMEV3. ClientId: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, dto.getSendToSmev(), Systems.EIS_JS);
-
-            return xmlMeta;
-        } catch (Exception e) {
-            throw new SmevRequestException("push to queue error :" + e.getMessage());
-        }
+        super(
+                Mnemonic.RECEIPT_RNS_1_0_9,
+                messageService,
+                null,
+                null,
+                null,
+                resourceLoader,
+                smev3Config
+        );
     }
 
     @Override
@@ -87,6 +58,7 @@ public class ReceiptRnsRequestService extends RequestProcessor {
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
+                    null,
                     null,
                     null
             );
@@ -109,6 +81,26 @@ public class ReceiptRnsRequestService extends RequestProcessor {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
         }
+    }
+
+    @Override
+    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        var buildRequest = new ReceiptRnsXmlBuildProcess(
+                this
+        ).run((ReceiptRnsRequestDto) dto);
+
+        var clientMessage = clientMessage(buildRequest.getRequest());
+
+        return new XmlBuildMeta(
+                mnemonicEnum(),
+                UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
+                null,
+                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                JsonConverter.toJsonNode(clientMessage),
+                buildRequest.getSourcesJson(),
+                buildRequest.getAttachmentsJson(),
+                validate(buildRequest.getRequest(), Request.class)
+        );
     }
 
     private ClientMessage clientMessage(Request request) {

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
@@ -30,7 +31,7 @@ public class BuildRequestAndSources<T> {
         this.sourcesJson = ofNullable(this.sourceRecordsMap)
                 .map(map -> map.isEmpty() ? null : map.entrySet())
                 .map(Collection::stream)
-                .map(stream -> stream.collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getContent())))
+                .map(this::mapSourcesToJson)
                 .map(JsonConverter::toJsonNode)
                 .orElse(null);
         this.attachmentsJson = ofNullable(this.attachmentsMap)
@@ -59,5 +60,9 @@ public class BuildRequestAndSources<T> {
 
     public JsonNode getAttachmentsJson() {
         return attachmentsJson;
+    }
+
+    private Map<String, Map<String, Object>> mapSourcesToJson(Stream<Map.Entry<RecordData, IRecord>> stream) {
+        return stream.collect(Collectors.toMap(entry -> entry.getKey().getDescription(), entry -> entry.getValue().getContent()));
     }
 }

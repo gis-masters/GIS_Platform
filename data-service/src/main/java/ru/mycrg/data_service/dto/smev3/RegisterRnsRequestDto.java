@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.dto.smev3;
 
-public class RegisterRnsRequestDto {
+public class RegisterRnsRequestDto implements ISmevRequestDto{
     private Long recId;
     private Boolean sendToSmev = true;
     private Boolean stubFields = false;
@@ -15,7 +15,7 @@ public class RegisterRnsRequestDto {
         return this;
     }
 
-    public Boolean getSendToSmev() {
+    public Boolean sendToSmev() {
         return sendToSmev;
     }
 

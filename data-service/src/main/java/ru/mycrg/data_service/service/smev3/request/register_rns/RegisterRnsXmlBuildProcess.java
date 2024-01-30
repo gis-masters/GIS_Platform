@@ -3,25 +3,21 @@ package ru.mycrg.data_service.service.smev3.request.register_rns;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
-import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
@@ -29,14 +25,17 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcess.class);
     private final ReusableElements rue = new ReusableElements();
-    private final SmevOutgoingAttachmentService attachmentService;
 
-    public RegisterRnsXmlBuildProcess(RequestProcessor requestProcessor,
-                                      BaseDao baseDao,
-                                      ISchemaService schemaService,
-                                      SmevOutgoingAttachmentService attachmentService) {
-        super(requestProcessor, baseDao, schemaService);
-        this.attachmentService = attachmentService;
+    // Заглушка
+    private final FileType stubScan = new FileType();
+
+    public RegisterRnsXmlBuildProcess(RequestProcessor requestProcessor) {
+        super(requestProcessor);
+
+        var attachmentRefType = new AttachmentRefType();
+        attachmentRefType.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
+        this.stubScan.setName("PHC_08.04.2022_19.01.53.pdf");
+        this.stubScan.setAttachmentRef(attachmentRefType);
     }
 
     public BuildRequestAndSources<Request> run(@NotNull RegisterRnsRequestDto dto) {
@@ -196,9 +195,12 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .map(LocalDateTime::toLocalDate)
                 .map(XmlMapper::mapCalendar)
                 .ifPresent(type::setExpireDate);
-        asFileRecord(rue.section13Record, FieldsSection.PROPERTY_FILE)
-                .map(this::attachments)
-                .ifPresent(u -> type.getScans().addAll(u));
+
+        // Добавляем вложение
+        asAttachment(rue.section13Record, FieldsSection.PROPERTY_FILE);
+
+        // Вставляем заглушку. Это валидное поведение
+        type.getScans().add(stubScan);
 
         type.setIssueOrgan(issueOrgan());
         type.setRecipientInfo(recipientInfo());
@@ -210,32 +212,18 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
         return request;
     }
 
-    private List<FileType> attachments(List<IRecord> filesRecord) {
-        return filesRecord
-                .stream()
-                .map(record -> {
-                    var fileId = record.getAsString(FieldsFiles.PROPERTY_ID);
-                    if (!attachmentsMap.containsKey(fileId)) {
-                        var smevAttachment = attachmentService.pushAttachment(record);
-                        attachmentsMap.put(smevAttachment.getFileId(), smevAttachment);
-                    }
-                    var existsAttachment = attachmentsMap.get(fileId);
-
-                    var attachmentRef = new AttachmentRefType();
-                    attachmentRef.setAttachmentId(existsAttachment.getAttachmentId().toString());
-                    var filetype = new FileType();
-                    filetype.setName(existsAttachment.getFileName());
-                    filetype.setAttachmentRef(attachmentRef);
-
-                    return filetype;
-                })
-                .collect(Collectors.toList());
-    }
-
     private RecipientInfoType recipientInfo() {
-        var addressFullType = new AddressFullType();
+        var recipientInfoType = new RecipientInfoType();
+        asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_EMAIL)
+                .ifPresent(recipientInfoType::setEmail);
+
         asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_ACTUAL_ADDRESS)
-                .ifPresent(addressFullType::setRegion);
+                .ifPresent(s -> {
+                    var addressFullType = new AddressFullType();
+                    addressFullType.setNote(s);
+                    addressFullType.setRegion(SmevRequestConst.CRIMEA_REGION);
+                    recipientInfoType.setMailingAddress(addressFullType);
+                });
 
         var organizationInfoType = new OrganizationInfoType();
         asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_FULL_TITLE)
@@ -246,11 +234,6 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .ifPresent(organizationInfoType::setINN);
         asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_KPP)
                 .ifPresent(organizationInfoType::setKPP);
-
-        var recipientInfoType = new RecipientInfoType();
-        asString(rue.developerOrganizationRecord, FieldsOrganization.PROPERTY_EMAIL)
-                .ifPresent(recipientInfoType::setEmail);
-        recipientInfoType.setMailingAddress(addressFullType);
         recipientInfoType.setOrganizationInfo(organizationInfoType);
 
         return recipientInfoType;
@@ -485,9 +468,14 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .map(LocalDateTime::toLocalDate)
                 .map(XmlMapper::mapCalendar)
                 .ifPresent(type::setExpertiseProjectDocDate);
+
+        //TODO не понятно что в итоге с вложениями. Но вроде как они не нужны тут
+        /*
         asFileRecord(section13record, FieldsSection.PROPERTY_FILE)
                 .map(this::attachments)
                 .ifPresent(file -> type.getAttachments().addAll(file));
+         */
+
         asRefBookType(ugeRecord, FieldsUge.TABLE, FieldsUge.PROPERTY_PROJECT_DOC_TYPE)
                 .ifPresent(type::setProjectDocType);
         type.setOrganDocInfo(rue.organDocInfo);
@@ -519,9 +507,14 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .map(LocalDateTime::toLocalDate)
                 .map(XmlMapper::mapCalendar)
                 .ifPresent(type::setEcologicalExpertiseDate);
+
+        //TODO не понятно что в итоге с вложениями. Но вроде как они не нужны тут
+        /*
         asFileRecord(rue.rsoksSection13_geceRecord, FieldsSection.PROPERTY_FILE)
                 .map(this::attachments)
                 .ifPresent(file -> type.getAttachments().addAll(file));
+         */
+
         asRefRecord(rue.rsoksSection13_geceRecord, FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION)
                 .flatMap(record -> asRefRecord(record, FieldsSupplier.PROPERTY_ORGANIZATION_DATA_CONNECTION))
                 .map(this::organDocInfo_Organization)
@@ -549,9 +542,13 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                     return file;
                 })
                 .ifPresent(file -> type.getLandPlotPlanningOrganisationDocs().add(file));
+
+        //TODO не понятно что в итоге с вложениями. Но вроде как они не нужны тут
+        /*
         asFileRecord(rue.gpzuSection13Record, FieldsSection.PROPERTY_FILE)
                 .map(this::attachments)
                 .ifPresent(file -> type.getDevPlanLandPlotDocs().addAll(file));
+         */
 
         asLocalDateTime(rue.gpzuSection13Record, FieldsSection.PROPERTY_DOC_DATE)
                 .map(LocalDateTime::toLocalDate)

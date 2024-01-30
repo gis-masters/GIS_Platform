@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.smev3.request;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -13,7 +12,7 @@ import ru.mycrg.data_service.fields.FieldsFiles;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.service.smev3.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
@@ -36,20 +35,13 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
 public abstract class AXmlBuildProcess {
-
     protected final RequestProcessor requestProcessor;
-    protected final BaseDao baseDao;
-    protected final ISchemaService schemaService;
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
     protected final Map<RecordData, IRecord> sourceRecordsMap = new HashMap<>();
     protected final Map<String, SmevAttachment> attachmentsMap = new HashMap<>();
 
-    public AXmlBuildProcess(RequestProcessor requestProcessor,
-                            BaseDao baseDao,
-                            @Qualifier("schemaServiceBase") ISchemaService schemaService) {
+    public AXmlBuildProcess(RequestProcessor requestProcessor) {
         this.requestProcessor = requestProcessor;
-        this.baseDao = baseDao;
-        this.schemaService = schemaService;
     }
 
     protected <T> BuildRequestAndSources<T> buildRequest(T request) {
@@ -111,7 +103,7 @@ public abstract class AXmlBuildProcess {
                 });
     }
 
-    protected Optional<List<IRecord>> asFileRecord(IRecord record, String fieldName) {
+    protected List<IRecord> asFileRecord(IRecord record, String fieldName) {
         return asString(record, fieldName)
                 .flatMap(jsonString -> fromJson(jsonString, new TypeReference<List<FileDescription>>() {
                         })
@@ -127,7 +119,23 @@ public abstract class AXmlBuildProcess {
                                 fileDescription.getId()
                         ))
                         .collect(Collectors.toList())
-                );
+                )
+                .orElse(List.of());
+    }
+
+    //TODO с атачментами пока не понятно как должно быть. Оставить так, до успешного  внедрения
+    protected List<SmevAttachment> asAttachment(IRecord record, String fieldName) {
+        return asFileRecord(record, fieldName)
+                .stream()
+                .map(fileRecord -> {
+                    var fileId = fileRecord.getAsString(FieldsFiles.PROPERTY_ID);
+                    if (!attachmentsMap.containsKey(fileId)) {
+                        var smevAttachment = attachmentService().pushAttachment(fileRecord);
+                        attachmentsMap.put(smevAttachment.getFileId(), smevAttachment);
+                    }
+                    return attachmentsMap.get(fileId);
+                })
+                .collect(Collectors.toList());
     }
 
     protected IRecord getRecordById(ResourceType resourceType,
@@ -141,7 +149,7 @@ public abstract class AXmlBuildProcess {
                 var schemaDto = ofNullable(schemaId)
                         .flatMap(this::getSchema)
                         .orElse(null);
-                var record = baseDao.getById(
+                var record = baseDao().getById(
                         new ResourceQualifier(
                                 workspace,
                                 libId,
@@ -170,7 +178,7 @@ public abstract class AXmlBuildProcess {
                 var schemaDto = ofNullable(schemaId)
                         .flatMap(this::getSchema)
                         .orElse(null);
-                var record = baseDao.getByJson(
+                var record = baseDao().getByJson(
                         ResourceJsonCondition.byJsonIdValue(
                                 workspace,
                                 libId,
@@ -202,8 +210,20 @@ public abstract class AXmlBuildProcess {
 
     protected Optional<SchemaDto> getSchema(String schemaName) {
         if (!schemasMap.containsKey(schemaName)) {
-            schemaService.getSchemaByName(schemaName).ifPresent(schemaDto -> schemasMap.put(schemaName, schemaDto));
+            schemaService().getSchemaByName(schemaName).ifPresent(schemaDto -> schemasMap.put(schemaName, schemaDto));
         }
         return ofNullable(schemasMap.get(schemaName));
+    }
+
+    public BaseDao baseDao() {
+        return requestProcessor.getBaseDao();
+    }
+
+    public ISchemaService schemaService() {
+        return requestProcessor.getSchemaService();
+    }
+
+    public SmevOutgoingAttachmentService attachmentService() {
+        return requestProcessor.getAttachmentService();
     }
 }

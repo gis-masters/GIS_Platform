@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
 
-public class ReceiptRnvRequestDto {
+public class ReceiptRnvRequestDto implements ISmevRequestDto{
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate permitDate;
 
@@ -39,7 +39,7 @@ public class ReceiptRnvRequestDto {
         return docId;
     }
 
-    public Boolean getSendToSmev() {
+    public Boolean sendToSmev() {
         return sendToSmev;
     }
 }

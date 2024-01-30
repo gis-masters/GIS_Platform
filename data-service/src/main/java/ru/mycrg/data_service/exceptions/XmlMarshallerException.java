@@ -1,5 +1,8 @@
 package ru.mycrg.data_service.exceptions;
 
+/**
+ * Проблемы при маршалинге xml
+ */
 public class XmlMarshallerException extends RuntimeException {
 
     public XmlMarshallerException(String message) {
