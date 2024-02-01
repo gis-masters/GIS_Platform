@@ -2,15 +2,16 @@ import { Coordinate } from 'ol/coordinate';
 import moment from 'moment';
 
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
+import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
+import { SelectColsControl } from '../../../../components/SelectColsControl/SelectColsControl';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
+import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { projections } from '../../../geoserver/projections.service';
 import { schemaService } from '../../../data/schema/schema.service';
-import { PropertyType } from '../../../data/schema/schema.models';
 import { formPrompt } from '../../../utility-dialogs.service';
 import { PrintTemplate } from '../PrintTemplate';
-import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 
 const MAX_COORDINATES = 30;
 
@@ -31,9 +32,10 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
     const schema = await schemaService.getSchema(layer.schemaId);
     const schemaWithAppliedView = applyView(schema, layer.view);
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);
+    const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
     // карта
-    const mapDialogResult = await formPrompt<{ title: string; image: string }>({
+    const mapDialogResult = await formPrompt<{ title: string; image: string; rows: PropertySchema[] }>({
       title: 'Параметры печати',
       message: this.title,
       schema: {
@@ -50,6 +52,13 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
             title: 'Карта',
             ControlComponent: PrintMapImageControl,
             someOption: 3
+          },
+          {
+            name: 'rows',
+            propertyType: PropertyType.CUSTOM,
+            ControlComponent: SelectColsControl,
+            properties,
+            title: 'Выбор полей для печати'
           }
         ]
       }
@@ -99,9 +108,22 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       coordinatesFragment = await this.renderFragment('coordinates', { coordinates: coordinatesRowsFragment });
     }
 
+    let printableRows = entity.properties;
+
+    if (mapDialogResult?.rows.length) {
+      const properties = mapDialogResult?.rows;
+      const selectedRows = {};
+
+      for (const property of properties) {
+        selectedRows[property.name] = entity.properties[property.name];
+      }
+
+      printableRows = selectedRows;
+    }
+
     // свойства
     const propertiesRows = await Promise.all(
-      Object.entries(entity.properties)
+      Object.entries(printableRows)
         .map(([key, value]) => {
           const propertySchema = schema.properties.find(({ name }) => name === key);
 

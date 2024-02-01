@@ -4,10 +4,11 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { schemaService } from '../../../data/schema/schema.service';
-import { PropertyType } from '../../../data/schema/schema.models';
+import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { formPrompt } from '../../../utility-dialogs.service';
 import { PrintTemplate } from '../PrintTemplate';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
+import { SelectColsControl } from '../../../../components/SelectColsControl/SelectColsControl';
 
 export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
   name: 'situationalPlan',
@@ -28,7 +29,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
     // карта
-    const mapDialogResult = await formPrompt<{ title: string; image: string }>({
+    const mapDialogResult = await formPrompt<{ title: string; image: string; cols: PropertySchema[] }>({
       title: 'Параметры печати',
       message: this.title,
       schema: {
@@ -45,17 +46,27 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
             title: 'Карта',
             ControlComponent: PrintMapImageControl,
             format: 'a5'
+          },
+          {
+            name: 'cols',
+            propertyType: PropertyType.CUSTOM,
+            ControlComponent: SelectColsControl,
+            properties,
+            title: 'Выбор колонок для печати'
           }
         ]
       }
     });
+
     if (!mapDialogResult) {
       return '';
     }
 
+    const printableCols = mapDialogResult.cols.length ? mapDialogResult.cols : properties;
+
     // заголовки таблицы
     const headersFragments = await Promise.all(
-      properties.map(async ({ title }) => {
+      printableCols.map(async ({ title }) => {
         return await this.renderFragment('oneTableHeader', { title });
       })
     );
@@ -64,7 +75,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const rowsFragments = await Promise.all(
       data.map(async (feature, i) => {
         const cellsFragments = await Promise.all(
-          properties.map(
+          printableCols.map(
             async property =>
               await this.renderFragment('oneTableCell', {
                 content: getReadablePropertyValue(feature.properties[property.name], property)
