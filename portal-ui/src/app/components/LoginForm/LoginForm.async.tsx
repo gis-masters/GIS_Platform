@@ -3,6 +3,7 @@ import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { AxiosError } from 'axios';
 
 import { route, Pages } from '../../stores/Route.store';
@@ -33,8 +34,10 @@ const defaultData: AuthUserData = {
   password: ''
 };
 
-export interface LoginFormProps {
+export interface LoginFormProps extends IClassNameProps {
   inDialog?: boolean;
+  notShowEsiaIn?: boolean;
+  notRightActions?: boolean;
 }
 
 @observer
@@ -85,11 +88,18 @@ export default class LoginForm extends Component<LoginFormProps> {
   }
 
   render() {
-    const { inDialog } = this.props;
+    const { className, inDialog, notShowEsiaIn, notRightActions } = this.props;
 
     return (
-      <div className={cnLoginForm({ inDialog }, ['HomePageForm'])}>
-        {!this.organizations.length && <LoginFormForm actionFunction={this.login} userData={this.userData} />}
+      <div className={className || cnLoginForm({ inDialog }, ['HomePageForm'])}>
+        {!this.organizations.length && (
+          <LoginFormForm
+            notShowEsiaIn={notShowEsiaIn}
+            actionFunction={this.login}
+            userData={this.userData}
+            notRightActions={notRightActions}
+          />
+        )}
 
         {!!this.organizations.length && (
           <LoginFormOrgSelect

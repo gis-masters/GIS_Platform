@@ -25,7 +25,8 @@ export enum Pages {
   SERVICES_CALCULATOR = 'services-calculator',
   RESTORE_PASSWORD = 'restore-password',
   CHANGE_PASSWORD = 'change-password',
-  TEST_DATA_PREPARATION = 'test-data-preparation'
+  TEST_DATA_PREPARATION = 'test-data-preparation',
+  PHOTO_UPLOADER = 'photo'
 }
 
 class Route {

@@ -28,6 +28,7 @@ import { MessagesRegistryPageComponent } from './pages/messages-registry/message
 import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
 import { TasksJournalPageComponent } from './pages/tasks-journal/tasks-journal-page.component';
 import { VectorTableRegistryPageComponent } from './pages/vector-table-registry/vector-table-registry-page.component';
+import { PhotoUploaderPageComponent } from './pages/photo-uploader/photo-uploader-page.component';
 
 export interface AppRouteData extends Data {
   page: Pages;
@@ -53,6 +54,11 @@ const routes: AppRoutes = [
     path: '',
     component: HomePageComponent,
     data: { page: Pages.HOME }
+  },
+  {
+    path: 'photo',
+    component: PhotoUploaderPageComponent,
+    data: { page: Pages.PHOTO_UPLOADER }
   },
   {
     path: 'register',
@@ -240,6 +246,7 @@ export class AppRoutingModule {}
 
 export const routingComponents = [
   HomePageComponent,
+  PhotoUploaderPageComponent,
   MapPageComponent,
   AboutComponent,
   RegisterComponent,

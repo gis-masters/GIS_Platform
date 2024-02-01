@@ -37,6 +37,8 @@ const schema: SimpleSchema = {
 
 interface LoginFormFormProps {
   userData: AuthUserData;
+  notShowEsiaIn?: boolean;
+  notRightActions?: boolean;
   actionFunction: (value: AuthUserData) => Promise<void>;
 }
 
@@ -50,7 +52,7 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
   }
 
   render() {
-    const { userData, actionFunction } = this.props;
+    const { userData, actionFunction, notShowEsiaIn, notRightActions } = this.props;
 
     return (
       <Form<AuthUserData>
@@ -66,17 +68,19 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
               <Button type='submit' color='primary' disabled={this.esiaLoading}>
                 Войти
               </Button>
-              {!!environment.esia?.length && (
+              {!notShowEsiaIn && !!environment.esia?.length && (
                 <Button onClick={this.authWithEsia} loading={this.esiaLoading}>
                   Войти с помощью ГОСУСЛУГ
                 </Button>
               )}
             </ActionsLeft>
-            <ActionsRight>
-              <Button routerLink='/restore-password' disabled={this.esiaLoading}>
-                Восстановить пароль
-              </Button>
-            </ActionsRight>
+            {!notRightActions && (
+              <ActionsRight>
+                <Button routerLink='/restore-password' disabled={this.esiaLoading}>
+                  Восстановить пароль
+                </Button>
+              </ActionsRight>
+            )}
           </>
         }
       />
