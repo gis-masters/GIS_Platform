@@ -119,6 +119,7 @@ export interface Adapter<
   getMeta: (item: ExplorerItemData<T>) => string;
   getDescription?: (item: ExplorerItemData<T>) => ReactNode;
   getIcon?: (item: ExplorerItemData<T>) => ReactNode;
+  additionalInfo?: (item: ExplorerItemData<T>) => ReactNode;
   isFolder: (item: ExplorerItemData<T>, store: ExplorerStore) => boolean;
   customOpenActionIcon?: (item: ExplorerItemData<T>) => ReactNode;
   customOpenAction?: (item: ExplorerItemData<T>) => void;

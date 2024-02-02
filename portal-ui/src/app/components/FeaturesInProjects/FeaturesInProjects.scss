@@ -1,8 +1,14 @@
 .FeaturesInProjects {
-  display: flex;
-  justify-content: space-between;
+  &-Button {
+    display: flex;
+    justify-content: space-between;
 
-  margin-bottom: 5px;
+    margin-bottom: 5px;
+  }
+
+  & .Button-Text {
+    display: contents;
+  }
 
   &-Icon {
     margin-left: 3px;

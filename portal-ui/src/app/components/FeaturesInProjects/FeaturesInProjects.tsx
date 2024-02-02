@@ -18,7 +18,7 @@ interface FeaturesInProjectsProps {
 
 export const FeatureInProjects: FC<FeaturesInProjectsProps> = ({ connections, featureId }) => {
   return (
-    <List>
+    <List className={cnFeaturesInProjects()}>
       {connections.map(
         (connection, index: number) =>
           connection.layer?.dataset &&
@@ -29,7 +29,7 @@ export const FeatureInProjects: FC<FeaturesInProjectsProps> = ({ connections, fe
                   <Button
                     color='primary'
                     variant='text'
-                    className={cnFeaturesInProjects()}
+                    className={cnFeaturesInProjects('Button')}
                     href={getFeaturesUrl(connection.project.id, connection.layer.dataset, connection.layer.tableName, [
                       featureId
                     ])}

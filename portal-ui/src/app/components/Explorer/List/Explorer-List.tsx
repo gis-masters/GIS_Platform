@@ -14,7 +14,8 @@ import {
   getTitle,
   isFolder,
   customOpenActionIcon,
-  customOpenAction
+  customOpenAction,
+  additionalInfo
 } from '../Adapter/Explorer-Adapter';
 import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 import { ExplorerEmpty } from '../Empty/Explorer-Empty';
@@ -92,6 +93,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
       title: getTitle(item, store),
       meta: getMeta(item),
       icon: getIcon(item),
+      additionalInfo: additionalInfo(item),
       selected: selectedItem,
       isFolder: isFolder(item, store),
       itemRef: selectedItem ? this.selectedItemRef : undefined,

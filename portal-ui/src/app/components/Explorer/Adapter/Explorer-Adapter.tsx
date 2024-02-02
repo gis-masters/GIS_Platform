@@ -88,6 +88,10 @@ export function getIcon(item: ExplorerItemData): ReactNode {
   return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFileOutlined />;
 }
 
+export function additionalInfo(item: ExplorerItemData): ReactNode {
+  return adapters[item.type].additionalInfo && adapters[item.type].additionalInfo(item);
+}
+
 export function isFolder(item: ExplorerItemData, store: ExplorerStore): boolean {
   return adapters[item.type].isFolder(item, store);
 }

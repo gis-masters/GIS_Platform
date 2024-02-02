@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { FtsRequestDto, FtsResponseDto } from '../../../../server-types/common-contracts';
 import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { LibraryRecordRaw } from '../library/library.models';
@@ -53,7 +54,7 @@ interface SearchItemDataTypeDocument extends FtsResponseDto {
 
 export interface FoundWfsFeature {
   feature: WfsFeature;
-  headlines: string[];
+  searchResultHighlight: ReactNode;
 }
 
 export type SearchItemData = SearchItemDataTypeDocument | SearchItemDataTypeFeature;

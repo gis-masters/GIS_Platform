@@ -6,7 +6,6 @@ import { ArrowForward } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { observable, action, makeObservable, computed } from 'mobx';
 
-import { Highlight } from '../Highlight/Highlight';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { Schema } from '../../services/data/schema/schema.models';
@@ -19,17 +18,15 @@ import { FeatureError } from '../../services/map/map-link-following.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import FeaturesListItemSearchResult from '../FeaturesListItemSearchResult/FeaturesListItemSearchResult';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 
 const cnFeaturesListItem = cn('FeaturesListItem');
 const cnFeaturesListItemOpenEdit = cn('FeaturesListItem', 'OpenEdit');
-const cnFeaturesListItemPopoverItemTitle = cn('FeaturesListItem', 'PopoverItemTitle');
 
 interface FeaturesListItemProps {
   feature?: WfsFeature;
-  headlines?: string[];
+  searchResultHighlight?: ReactNode;
   onSelect?: (item: WfsFeature) => void;
   onHighlight?: (item: WfsFeature | null) => void;
   highlighted?: boolean;
@@ -42,8 +39,6 @@ interface FeaturesListItemProps {
 @observer
 export class FeaturesListItem extends Component<FeaturesListItemProps> {
   @observable private rawSchema?: Schema;
-  @observable private searchPreview: string = '';
-  @observable private searchResult?: ReactNode;
 
   constructor(props: FeaturesListItemProps) {
     super(props);
@@ -52,21 +47,19 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   async componentDidMount() {
     await this.loadSchema();
-    this.setSearchResult(this.foundFeatureParts());
   }
 
   async componentDidUpdate(prevProps: FeaturesListItemProps) {
     if (prevProps.feature?.id !== this.props.feature?.id) {
       await this.loadSchema();
-      this.setSearchResult(this.foundFeatureParts());
     }
   }
 
   render() {
-    const { feature, highlighted, headlines, errorData, style } = this.props;
+    const { feature, highlighted, searchResultHighlight, errorData, style } = this.props;
 
     return (
-      <div className={cnFeaturesListItem({ highlighted, foundFeature: !!headlines?.length })} style={style}>
+      <div className={cnFeaturesListItem({ highlighted, foundFeature: !!searchResultHighlight })} style={style}>
         <div
           className={cnFeaturesListItem('Id', { disabled: !!errorData })}
           onDoubleClick={this.selectIt}
@@ -85,13 +78,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
           {errorData ? errorData.message : this.titleAndEmptiness?.title}
         </div>
         <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.subTitle}</div>
-        {headlines?.length && this.searchResult && this.searchPreview && (
-          <FeaturesListItemSearchResult
-            headlines={headlines}
-            searchPreview={this.searchPreview}
-            searchResults={this.searchResult}
-          />
-        )}
+        {searchResultHighlight}
         {!errorData && (
           <div className={cnFeaturesListItem('Buttons')}>
             {feature && <ZoomToFeature feature={feature} onClick={this.zoomHandler} />}
@@ -182,16 +169,6 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     this.rawSchema = schema;
   }
 
-  @action
-  private setSearchPreview(searchPreview: string) {
-    this.searchPreview = searchPreview;
-  }
-
-  @action
-  private setSearchResult(searchResult: ReactNode) {
-    this.searchResult = searchResult;
-  }
-
   private extractTableName(id: string) {
     const [tableName] = id.split('.');
     if (!tableName) {
@@ -199,78 +176,5 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     }
 
     return tableName;
-  }
-
-  @boundMethod
-  private foundFeatureParts(): ReactNode {
-    const { feature, headlines } = this.props;
-
-    if (this.rawSchema && feature) {
-      const properties = Object.entries(feature.properties);
-      const foundParts = properties
-        .map(property => {
-          const foundProperties: string[] = [];
-
-          if (!headlines?.length) {
-            return;
-          }
-
-          return this.searchForMatches(headlines, property, foundProperties);
-        })
-        .filter(item => item?.length);
-
-      return headlines && this.setHighlights(foundParts, headlines);
-    }
-  }
-
-  private searchForMatches(headlines: string[], property: [string, unknown], foundProperties: string[]) {
-    return headlines
-      .map(headline => {
-        const propertyValue = String(property[1]);
-        const index = propertyValue.indexOf(headline);
-
-        if (index !== -1) {
-          let searchResTextForPreview: string = headline;
-          searchResTextForPreview =
-            index >= 10
-              ? ` ...${propertyValue.slice(index - 10, index)} ${searchResTextForPreview}`
-              : ` ${propertyValue.slice(0, index)} ${searchResTextForPreview}`;
-
-          searchResTextForPreview =
-            `${searchResTextForPreview} ${propertyValue.slice(index + headline.length, index + headline.length + 10)}` +
-            (propertyValue.length > index + headline.length + 10 ? '...' : '');
-
-          const schemaProperties = this.rawSchema?.properties;
-          const schemaProperty = schemaProperties?.find(
-            schemaProp => schemaProp.name === property[0] && !schemaProp.hidden
-          );
-
-          if (schemaProperty && !foundProperties.includes(schemaProperty.name)) {
-            if (this.searchPreview.length < 60 && !this.searchPreview.includes(searchResTextForPreview)) {
-              this.setSearchPreview(this.searchPreview + ' ' + searchResTextForPreview);
-            }
-
-            foundProperties.push(schemaProperty.name);
-
-            return [schemaProperty.title, propertyValue];
-          }
-        }
-      })
-      .filter(Boolean);
-  }
-
-  private setHighlights(foundParts: ((string[] | undefined)[] | undefined)[], headlines: string[]) {
-    return foundParts.flat().map((part, i) => {
-      if (part && part[0] && part[1]) {
-        return (
-          <div key={i}>
-            <span className={cnFeaturesListItemPopoverItemTitle()}>{part[0]}</span>:{' '}
-            <Highlight searchWords={headlines} enabled>
-              {part[1]}
-            </Highlight>
-          </div>
-        );
-      }
-    });
   }
 }

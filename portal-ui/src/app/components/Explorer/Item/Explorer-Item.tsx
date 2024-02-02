@@ -13,11 +13,13 @@ import '!style-loader!css-loader!sass-loader!./Explorer-Item.scss';
 
 const cnExplorerItem = cn('Explorer', 'Item');
 const cnExplorerItemTitle = cn('Explorer', 'ItemTitle');
+const cnExplorerItemWrapper = cn('Explorer', 'ItemWrapper');
 
 export interface ExplorerItemProps {
   item: ExplorerItemData;
   title: ReactNode;
   meta?: string;
+  additionalInfo?: ReactNode;
   icon: ReactNode;
   selected: boolean;
   isFolder: boolean;
@@ -46,7 +48,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   }
 
   render() {
-    const { title, meta, selected, customOpenActionIcon, icon, isFolder, itemRef } = this.props;
+    const { title, meta, selected, customOpenActionIcon, icon, isFolder, additionalInfo, itemRef } = this.props;
 
     return (
       <ListItemButton
@@ -58,7 +60,14 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         ref={itemRef}
       >
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText classes={{ primary: cnExplorerItemTitle() }} primary={title} secondary={meta} />
+        {additionalInfo ? (
+          <div className={cnExplorerItemWrapper()}>
+            <ListItemText classes={{ primary: cnExplorerItemTitle() }} primary={title} secondary={meta} />
+            {additionalInfo}
+          </div>
+        ) : (
+          <ListItemText classes={{ primary: cnExplorerItemTitle() }} primary={title} secondary={meta} />
+        )}
         {isFolder && (
           <ListItemSecondaryAction>
             <IconButton edge='end' onClick={this.buttonClickHandler} disabled={this.disabled}>
@@ -74,7 +83,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   private openHandler() {
     const { customOpenActionIcon, customOpenAction, onOpen, item } = this.props;
 
-    if (customOpenActionIcon) {
+    if (customOpenActionIcon && customOpenAction) {
       customOpenAction(item);
     } else {
       onOpen(item);

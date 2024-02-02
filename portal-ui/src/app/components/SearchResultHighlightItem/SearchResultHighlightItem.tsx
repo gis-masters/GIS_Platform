@@ -10,25 +10,25 @@ import { IconButton } from '../IconButton/IconButton';
 import { Highlight } from '../Highlight/Highlight';
 import { sleep } from '../../services/util/sleep';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesListItemSearchResult.scss';
+import '!style-loader!css-loader!sass-loader!./SearchResultHighlightItem.scss';
 
-const cnFeaturesListItemSearchResult = cn('FeaturesListItemSearchResult');
+const cnSearchResultHighlightItem = cn('SearchResultHighlightItem');
 
-interface FeaturesListSidebarFeaturesProps {
+interface SearchResultHighlightItemProps {
   searchResults: ReactNode;
   headlines: string[];
   searchPreview: string;
 }
 
 @observer
-export default class FeaturesListItemSearchResult extends Component<FeaturesListSidebarFeaturesProps> {
+export default class SearchResultHighlightItem extends Component<SearchResultHighlightItemProps> {
   @observable private iconCoordinates?: DOMRect;
   @observable private popoverCoordinates?: DOMRect;
   @observable private popoverAnchor?: HTMLButtonElement | null;
 
   private paperRef: RefObject<HTMLDivElement> = createRef();
 
-  constructor(props: FeaturesListSidebarFeaturesProps) {
+  constructor(props: SearchResultHighlightItemProps) {
     super(props);
     makeObservable(this);
   }
@@ -41,9 +41,9 @@ export default class FeaturesListItemSearchResult extends Component<FeaturesList
     const { searchResults, headlines, searchPreview } = this.props;
 
     return (
-      <div className={cnFeaturesListItemSearchResult()}>
+      <div className={cnSearchResultHighlightItem()}>
         <IconButton
-          className={cnFeaturesListItemSearchResult('Icon')}
+          className={cnSearchResultHighlightItem('Icon')}
           size='small'
           onMouseMove={this.openPopover}
           color='inherit'
@@ -68,7 +68,7 @@ export default class FeaturesListItemSearchResult extends Component<FeaturesList
             horizontal: 'center'
           }}
           PaperProps={{
-            className: cnFeaturesListItemSearchResult('Popover'),
+            className: cnSearchResultHighlightItem('Popover'),
             ref: this.paperRef
           }}
         >

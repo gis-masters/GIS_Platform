@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 
 import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
+import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
 import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
@@ -87,6 +88,10 @@ export class ExplorerAdapterTypeSearchItem {
     if (item.payload.type === 'FEATURE') {
       return <FeatureIcon geometryType={item.payload.source.geometryType} className='' />;
     }
+  }
+
+  static additionalInfo(item: ExplorerItemData<SearchItemData>): ReactNode {
+    return <SearchResultHighlight item={item.payload} />;
   }
 
   static getMeta(item: ExplorerItemData<SearchItemData>): string {

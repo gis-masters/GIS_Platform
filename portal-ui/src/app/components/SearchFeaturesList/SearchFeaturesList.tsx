@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 
+import { SearchResultHighlightWrapper } from '../SearchResultHighlightWrapper/SearchResultHighlightWrapper';
 import { getSearchResults } from '../../services/data/search/search.service';
 import { FoundWfsFeature } from '../../services/data/search/search.model';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
@@ -78,7 +79,7 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
         const foundWfsFeature = items.map(item => {
           return {
             feature: item.payload as WfsFeature,
-            headlines: item.headlines
+            searchResultHighlight: <SearchResultHighlightWrapper item={item} />
           };
         });
 

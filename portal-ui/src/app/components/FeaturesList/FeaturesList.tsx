@@ -1,4 +1,4 @@
-import React, { Component, createRef, RefObject } from 'react';
+import React, { Component, createRef, ReactNode, RefObject } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
@@ -19,7 +19,7 @@ const cnFeaturesList = cn('FeaturesList');
 
 export interface FeaturesListItemInfo {
   feature?: WfsFeature;
-  headlines?: string[];
+  searchResultHighlight?: ReactNode;
   error?: FeatureError;
 }
 
@@ -147,7 +147,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
         onHighlight={this.highlightItem}
         onSelect={this.handleItemSelect}
         key={feature?.id}
-        headlines={items[index].headlines}
+        searchResultHighlight={items[index].searchResultHighlight}
         isSearchList={forSearch}
         style={style}
       />
