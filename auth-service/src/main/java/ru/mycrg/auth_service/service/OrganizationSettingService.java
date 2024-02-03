@@ -18,15 +18,15 @@ import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.auth_service_contract.events.request.OrgSettingsUpdatedEvent;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.fromString;
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
 import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
-import static ru.mycrg.auth_service.util.SettingsHandler.mergeSettings;
+import static ru.mycrg.auth_service.util.SettingsHandler.*;
 
 @Service
 @Transactional
@@ -37,26 +37,19 @@ public class OrganizationSettingService {
     private final Logger log = LoggerFactory.getLogger(OrganizationSettingService.class);
 
     private final IMessageBusProducer messageBus;
-    private final Map<String, String> knownSettings;
     private final IAuthenticationFacade authenticationFacade;
     private final OrganizationRepository organizationRepository;
+    private final OrgSettingsSchemaHolder orgSettingsSchemaHolder;
 
     @Autowired
     public OrganizationSettingService(OrganizationRepository organizationRepository,
                                       IMessageBusProducer messageBus,
                                       IAuthenticationFacade authenticationFacade,
-                                      Map<String, String> knownSettings) {
-        this.organizationRepository = organizationRepository;
-        this.authenticationFacade = authenticationFacade;
+                                      OrgSettingsSchemaHolder orgSettingsSchemaHolder) {
         this.messageBus = messageBus;
-        this.knownSettings = knownSettings;
-
-        log.debug("Known settings is: ");
-        this.knownSettings.forEach((k, v) -> log.debug("Key: '{}' Description: '{}'", k, v));
-    }
-
-    public Map<String, String> getKnownSetting() {
-        return knownSettings;
+        this.authenticationFacade = authenticationFacade;
+        this.organizationRepository = organizationRepository;
+        this.orgSettingsSchemaHolder = orgSettingsSchemaHolder;
     }
 
     public Set<OrgSettingsResponseDto> getSystemSettings() {
@@ -65,21 +58,33 @@ public class OrganizationSettingService {
 
         Set<OrgSettingsRequestDto> systemSettings = readSystemSettings(systemOrganization.getSettings());
 
-        Set<OrgSettingsResponseDto> result = new HashSet<>();
         List<Long> ids = systemSettings.stream()
                                        .map(OrgSettingsRequestDto::getId)
                                        .collect(Collectors.toList());
 
-        Iterable<Organization> allExistOrg = organizationRepository.findAllById(ids);
-        allExistOrg.forEach(o -> {
-            systemSettings.stream().filter(org -> org.getId().equals(o.getId()))
-                          .findFirst()
-                          .ifPresent(orgS -> {
-                              result.add(new OrgSettingsResponseDto(o.getId(), o.getName(), orgS.getSettings()));
-                          });
-        });
+        SchemaDto schema = orgSettingsSchemaHolder.getSchema();
+        Set<OrgSettingsResponseDto> result = new HashSet<>();
+        organizationRepository
+                .findAllById(ids)
+                .forEach(organization -> {
+                    systemSettings.stream()
+                                  .filter(org -> org.getId().equals(organization.getId()))
+                                  .findFirst()
+                                  .ifPresent(systemOrg -> {
+                                      Map<String, Object> orgSettings = readSettings(organization.getSettings());
 
-        return result;
+                                      result.add(
+                                              new OrgSettingsResponseDto(
+                                                      organization.getId(),
+                                                      organization.getName(),
+                                                      processSettings(schema, systemOrg.getSettings()),
+                                                      processSettings(schema, orgSettings)));
+                                  });
+                });
+
+        return result.stream()
+                     .sorted((o1, o2) -> (int) (o1.getId() - o2.getId()))
+                     .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public OrgSettingsResponseDto getSettings(Long id) {
@@ -88,7 +93,9 @@ public class OrganizationSettingService {
                                                                       .filter(dto -> dto.getId().equals(id))
                                                                       .findFirst();
         if (oSystem.isPresent()) {
-            systemSettings = oSystem.get().getSystem();
+            OrgSettingsResponseDto dto = oSystem.get();
+
+            return new OrgSettingsResponseDto(id, dto.getName(), dto.getSystem(), getOrgSettings(id));
         }
 
         return new OrgSettingsResponseDto(id, systemSettings, getOrgSettings(id));
@@ -99,10 +106,17 @@ public class OrganizationSettingService {
      * <p>
      * Метод, на данный момент, используется только из защищенного контроллера, поэтому не требует секьюрити проверок.
      *
-     * @param currentOrgId Идентификатор организации
-     * @param newSettings  Новые настройки
+     * @param currentOrgId   Идентификатор организации
+     * @param newSettingsDto Новые настройки
      */
-    public void updateSettings(Long currentOrgId, OrgSettingsRequestDto newSettings) {
+    public void updateSettings(Long currentOrgId, OrgSettingsRequestDto newSettingsDto) {
+        SchemaDto schema = orgSettingsSchemaHolder.getSchema();
+        Long orgId = newSettingsDto.getId();
+        Map<String, Object> clearedSettings = excludeUnknownKeys(schema, newSettingsDto.getSettings());
+        if (clearedSettings.isEmpty()) {
+            throw new BadRequestException("Заданы не корректные настройки: " + newSettingsDto);
+        }
+
         if (authenticationFacade.isRoot()) {
             Organization systemOrganization = organizationRepository
                     .findById(currentOrgId)
@@ -110,21 +124,23 @@ public class OrganizationSettingService {
 
             Map<String, Object> resultSettings;
 
-            log.debug("Add new setting: '{}' to system settings", newSettings);
+            log.debug("Add new setting: '{}' to system settings", clearedSettings);
 
             Set<OrgSettingsRequestDto> systemSettings = readSystemSettings(systemOrganization.getSettings());
 
-            Optional<OrgSettingsRequestDto> oOrgSettings = readSystemSettingsForOrganization(newSettings.getId());
+            Optional<OrgSettingsRequestDto> oOrgSettings = readSystemSettingsForOrganization(orgId);
             if (oOrgSettings.isPresent()) {
-                OrgSettingsRequestDto oldSettings = oOrgSettings.get();
+                OrgSettingsRequestDto currentSettingsDto = oOrgSettings.get();
 
-                resultSettings = overlapOldSettings(oldSettings.getSettings(), newSettings.getSettings());
+                resultSettings = overlapOldSettings(schema, currentSettingsDto.getSettings(), clearedSettings);
 
-                oldSettings.setSettings(resultSettings);
+                currentSettingsDto.setSettings(resultSettings);
 
-                replaceSetting(systemSettings, oldSettings);
+                // Update system settings
+                systemSettings.remove(new OrgSettingsRequestDto(currentSettingsDto.getId()));
+                systemSettings.add(currentSettingsDto);
             } else {
-                systemSettings.add(newSettings);
+                systemSettings.add(new OrgSettingsRequestDto(orgId, clearedSettings));
             }
 
             systemOrganization.setSettings(
@@ -132,22 +148,22 @@ public class OrganizationSettingService {
 
             organizationRepository.save(systemOrganization);
 
-            mergeAndBroadcast(newSettings.getSettings(),
-                              getOrgSettings(newSettings.getId()),
+            mergeAndBroadcast(clearedSettings,
+                              getOrgSettings(orgId),
                               systemOrganization.getId());
         } else {
-            if (!Objects.equals(currentOrgId, newSettings.getId())) {
+            if (!Objects.equals(currentOrgId, orgId)) {
                 // BadRequestException а не ForbiddenException осмысленно, чтобы не было возможности вычислить
                 // существующие организации.
-                throw new BadRequestException("Сущность не найден(а) по идентификатору: " + newSettings.getId());
+                throw new BadRequestException("Сущность не найден(а) по идентификатору: " + orgId);
             }
 
             Organization organization = organizationRepository.findById(currentOrgId)
                                                               .orElseThrow(() -> new NotFoundException(currentOrgId));
 
-            Map<String, Object> resultSettings = overlapOldSettings(
-                    readSettings(organization.getSettings()),
-                    newSettings.getSettings());
+            Map<String, Object> resultSettings = overlapOldSettings(schema,
+                                                                    readSettings(organization.getSettings()),
+                                                                    clearedSettings);
             organization.setSettings(JacksonUtil.toJsonNode(JacksonUtil.toString(resultSettings)));
 
             organizationRepository.save(organization);
@@ -164,8 +180,7 @@ public class OrganizationSettingService {
 
     synchronized
     public void initOrgSetting(Organization organization) {
-        Map<String, Object> enabledKnownSetting = new HashMap<>();
-        getKnownSetting().forEach((k, v) -> enabledKnownSetting.put(k, true));
+        Map<String, Object> enabledKnownSetting = orgSettingsSchemaHolder.allInclusive();
 
         // init in system settings
         Set<OrgSettingsRequestDto> systemSettings = getSystemSettings()
@@ -190,11 +205,6 @@ public class OrganizationSettingService {
         organizationRepository.save(organization);
     }
 
-    private void replaceSetting(Set<OrgSettingsRequestDto> systemSettings, OrgSettingsRequestDto oldSettings) {
-        systemSettings.remove(new OrgSettingsRequestDto(oldSettings.getId()));
-        systemSettings.add(oldSettings);
-    }
-
     private void mergeAndBroadcast(Map<String, Object> systemOrgSettings,
                                    Map<String, Object> newOrgSettings,
                                    Long orgId) {
@@ -208,36 +218,16 @@ public class OrganizationSettingService {
 
     @NotNull
     private Map<String, Object> getOrgSettings(Long orgId) {
+        SchemaDto schema = orgSettingsSchemaHolder.getSchema();
         Map<String, Object> result = new HashMap<>();
-        Organization organization = organizationRepository.findById(orgId)
-                                                          .orElseThrow(() -> new NotFoundException(orgId));
-
-        JsonNode settings = organization.getSettings();
+        JsonNode settings = organizationRepository.findById(orgId)
+                                                  .orElseThrow(() -> new NotFoundException(orgId))
+                                                  .getSettings();
         if (settings != null) {
-            result = fromString(settings.toString(), Map.class);
+            result = JacksonUtil.fromString(settings.toString(), Map.class);
         }
 
-        return result;
-    }
-
-    /**
-     * Накладываем новые настройки поверх старых. Используем известные нам настройки.
-     */
-    private Map<String, Object> overlapOldSettings(Map<String, Object> oldSettings,
-                                                   Map<String, Object> newSettings) {
-        Map<String, Object> result = new HashMap<>();
-        if (oldSettings != null) {
-            result = new HashMap<>(oldSettings);
-        }
-
-        for (Map.Entry<String, String> entry: knownSettings.entrySet()) {
-            String k = entry.getKey();
-            if (newSettings.containsKey(k)) {
-                result.put(k, newSettings.get(k));
-            }
-        }
-
-        return result;
+        return processSettings(schema, result);
     }
 
     private Set<OrgSettingsRequestDto> readSystemSettings(JsonNode jsonNode) {

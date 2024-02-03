@@ -7,6 +7,7 @@ import { Toast } from '../../../components/Toast/Toast';
 
 import { organizationsClient } from './organizations.client';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { schemaService } from '../../data/schema/schema.service';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;
@@ -16,8 +17,8 @@ class OrganizationsService {
       const settings = await organizationsClient.getOrganizationSettings();
       organizationSettings.setSettings(settings);
 
-      const availableSettings = await organizationsClient.getOrganizationKnownSettings();
-      organizationSettings.setAvailableSettings(availableSettings);
+      const settingSchema = await schemaService.getSchemaAtUrl(organizationsClient.getOrganizationsSettingsSchemaUrl());
+      organizationSettings.setSchema(settingSchema);
     } catch (error) {
       organizationSettings.setSettingsError(true);
       const err = error as AxiosError<{ status: string; message: string }>;
@@ -62,10 +63,10 @@ class OrganizationsService {
     return {
       properties: settingsKeys
         .map((item): PropertySchema | undefined => {
-          if (organizationSettings.availableOrgsSettings?.[item]) {
+          if (organizationSettings.schema?.properties[item]) {
             return {
               name: item,
-              title: organizationSettings.availableOrgsSettings[item],
+              title: 'organizationSettings.schema.properties[item]',
               propertyType: PropertyType.BOOL,
               hidden: systemManagement ? false : !organizationSettings.orgSettings?.system?.[item]
             };

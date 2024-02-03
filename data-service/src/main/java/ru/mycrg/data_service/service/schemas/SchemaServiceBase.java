@@ -21,6 +21,8 @@ import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 @Service
 public class SchemaServiceBase implements ISchemaService {
 
+    private final static String SYSTEM_TAG_NAME = "system";
+
     private final DataSchemaRepository schemaRepository;
 
     public SchemaServiceBase(DataSchemaRepository schemaRepository) {
@@ -63,6 +65,13 @@ public class SchemaServiceBase implements ISchemaService {
     public List<SchemaDto> getBySpecificProperty(String propertyName) {
         return schemaRepository.findBySpecificPropertyName(propertyName).stream()
                                .map(SchemaMapper::mapToDto)
+                               .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getSystemTags() {
+        return schemaRepository.findUniqueTags().stream()
+                               .filter(anObject -> !SYSTEM_TAG_NAME.equals(anObject))
                                .collect(Collectors.toList());
     }
 

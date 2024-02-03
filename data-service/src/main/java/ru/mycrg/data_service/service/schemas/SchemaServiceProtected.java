@@ -33,7 +33,7 @@ public class SchemaServiceProtected implements ISchemaService {
     @Override
     public List<SchemaDto> getSchemas(@Nullable List<String> featureNames) {
         return schemaService.getSchemas(featureNames).stream()
-                            .filter(this::isAllowedBySettings)
+                            .filter(this::isAllowedByTags)
                             .collect(Collectors.toList());
     }
 
@@ -53,30 +53,30 @@ public class SchemaServiceProtected implements ISchemaService {
     }
 
     @Override
+    public List<String> getSystemTags() {
+        return schemaService.getSystemTags();
+    }
+
+    @Override
     public boolean isSchemaExist(String name) {
         return schemaService.isSchemaExist(name);
     }
 
     /**
-     * Когда включены все приказы то возращаем все схемы
-     * <p>
-     * Когда все приказы вЫключены то возращаем все схемы которые без тегов
-     * <p>
-     * Когда вЫключен "приказ 10" то возращаем все схемы которые без тегов и 123 приказ
-     * <p>
-     * Когда вЫключен "приказ 123" то возращаем все схемы которые без тегов и 10 приказ
+     * Проверка касается только системных схем - с тегом 'system'. Если схема не содержит системного тега она разрешена.
+     * Для системных схем проверяется наличие тегов среди разрешенных. Если найден хотя бы один разрешенный тег - схема
+     * разрешена.
      */
-    private boolean isAllowedBySettings(SchemaDto schema) {
-        boolean order10Allowed = orgSettingsKeeper.isOrder10Allowed();
-        boolean order123Allowed = orgSettingsKeeper.isOrder123Allowed();
-
+    private boolean isAllowedByTags(SchemaDto schema) {
         List<String> tags = schema.getTags();
         if (tags.isEmpty() || !tags.contains("system")) {
             return true;
         }
 
-        if (order10Allowed && tags.contains("Приказ 10") || order123Allowed && tags.contains("Приказ 123")) {
-            return true;
+        for (String tag: tags) {
+            if (orgSettingsKeeper.isTagAllowed(tag)) {
+                return true;
+            }
         }
 
         return false;

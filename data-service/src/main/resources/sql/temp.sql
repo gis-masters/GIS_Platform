@@ -312,7 +312,6 @@ WHERE class_rule IS NOT NULL AND
                'reestr_common_schema',
                'reestr_incoming_schema',
                'reestr_outgoing_schema',
-               'dl_default_schema',
                'dl_zu_schema',
                'schema_for_test_table',
                'advertising_point_simf_2022',
@@ -481,5 +480,6 @@ WHERE class_rule IS NOT NULL AND
              'technoriskarea_point',
              'resortarea_point',
              'prison_point',
-             'wildlifeprotection_point'
+             'wildlifeprotection_point',
+             'tasks_schema_v1'
         );

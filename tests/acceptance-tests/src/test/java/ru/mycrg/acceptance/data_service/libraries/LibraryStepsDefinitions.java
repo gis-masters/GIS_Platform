@@ -762,7 +762,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         body(body).
                         contentType(ContentType.JSON)
                 .when().
-                        log().all().
                         post();
     }
 
@@ -817,7 +816,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         contentType("multipart/form-data").
                         multiPart("body", body)
                 .when().
-                        log().all().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);

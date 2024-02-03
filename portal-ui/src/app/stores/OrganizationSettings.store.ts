@@ -1,6 +1,7 @@
 import { observable, action, computed, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
+import { Schema } from '../services/data/schema/schema.models';
 
 export interface OrgSettings {
   id: number;
@@ -16,7 +17,7 @@ export class OrganizationSettings {
   @observable settingsError?: boolean;
   @observable orgSettings?: OrgSettings;
   @observable systemSettings?: OrgSettings[];
-  @observable availableOrgsSettings?: Record<string, string>;
+  @observable schema?: Schema;
 
   static get instance(): OrganizationSettings {
     return this._instance || (this._instance = new this());
@@ -37,8 +38,8 @@ export class OrganizationSettings {
   }
 
   @action
-  setAvailableSettings(settings?: Record<string, string>): void {
-    this.availableOrgsSettings = settings;
+  setSchema(schema?: Schema): void {
+    this.schema = schema;
     this.setSettingsError(false);
   }
 

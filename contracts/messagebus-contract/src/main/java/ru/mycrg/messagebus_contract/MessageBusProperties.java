@@ -60,6 +60,8 @@ public class MessageBusProperties {
     public static final String FILE_REQUEST_QUEUE = "fileRequestQueue";
 
     // Common
+    public static final String DATA_TO_AUTH_EXCHANGE = "dataToAuthExchange";
+    public static final String AUTH_TO_DATA_EXCHANGE = "authToDataExchange";
     public static final String DATA_TO_INTEGRATION_QUEUE = "dataToIntegrationQueue";
     public static final String INTEGRATION_TO_DATA_QUEUE = "IntegrationToDataQueue";
     public static final String DATA_TO_GEO_WRAPPER_QUEUE = "dataToGeoWrapperQueue";
@@ -71,6 +73,12 @@ public class MessageBusProperties {
     public static final String AUTH_TO_INTEGRATION_QUEUE = "authToIntegrationQueue";
     public static final String ORG_SETTINGS_FANOUT = "orgSettingsFanout";
     public static final String ORG_SETTINGS_KEY = "orgSettingsFanoutKey";
+
+    // System tags updated
+    public static final String SYSTEM_TAGS_UPDATED_QUEUE = "systemTagsUpdatedQueue";
+    public static final String SYSTEM_TAGS_REQUEST_QUEUE = "systemTagsRequestQueue";
+    public static final String SYSTEM_TAGS_UPDATED_ROUTING_KEY = "tagsUpdated";
+    public static final String SYSTEM_TAGS_REQUEST_ROUTING_KEY = "systemTagsRequest";
 
     // GisogdRf
     public static final String GISOGD_PUBLICATION_QUEUE = "gisogdPublicationQueue";

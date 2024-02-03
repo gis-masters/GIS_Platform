@@ -26,7 +26,13 @@ public class WellKnownFormulaGenerator {
 
     @NotNull
     public String generate(@NotNull String formulaName) {
-        return wellKnownFormulaGenerators.get(formulaName)
-                                         .generate();
+        IWellKnownFormulaGenerator formulaGenerator = wellKnownFormulaGenerators.get(formulaName);
+        if (formulaGenerator == null) {
+            log.info("Не поддерживаемая wellKnownFormula: '{}'", formulaName);
+
+            return "";
+        }
+
+        return formulaGenerator.generate();
     }
 }

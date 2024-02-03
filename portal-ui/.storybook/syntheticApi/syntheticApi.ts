@@ -17,7 +17,7 @@ export function initSyntheticApi() {
         });
       }
 
-      if (!config.url.includes('organizations/known-settings') && !config.url.includes('organizations/settings')) {
+      if (!config.url.includes('organizations/settings/schema') && !config.url.includes('organizations/settings')) {
         await sleep(Math.random() * 500);
       }
 

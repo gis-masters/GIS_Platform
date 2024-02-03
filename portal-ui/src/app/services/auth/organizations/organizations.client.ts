@@ -24,16 +24,12 @@ class OrganizationsClient extends Client {
     return this.getOrganizationsUrl() + '/settings';
   }
 
-  private getOrganizationsKnownSettingsUrl(): string {
-    return this.getOrganizationsUrl() + '/known-settings';
+  getOrganizationsSettingsSchemaUrl(): string {
+    return this.getOrganizationsSettingsUrl() + '/schema';
   }
 
   async getOrganizationSettings(): Promise<OrgSettings> {
     return http.get<OrgSettings>(this.getOrganizationsSettingsUrl());
-  }
-
-  async getOrganizationKnownSettings(): Promise<Record<string, string>> {
-    return http.get<Record<string, string>>(this.getOrganizationsKnownSettingsUrl());
   }
 
   async setOrganizationSettings(settings: OrgSettings): Promise<void> {

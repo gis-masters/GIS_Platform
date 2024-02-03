@@ -13,15 +13,14 @@ public class OrgSettingsResponseDto {
         // Required
     }
 
-    public OrgSettingsResponseDto(Long id, String name, Map<String, Object> system) {
+    public OrgSettingsResponseDto(Long id, Map<String, Object> system, Map<String, Object> organization) {
+        this(id, null, system, organization);
+    }
+
+    public OrgSettingsResponseDto(Long id, String name, Map<String, Object> system, Map<String, Object> organization) {
         this.id = id;
         this.system = system;
         this.name = name;
-    }
-
-    public OrgSettingsResponseDto(Long id, Map<String, Object> system, Map<String, Object> organization) {
-        this.id = id;
-        this.system = system;
         this.organization = organization;
     }
 

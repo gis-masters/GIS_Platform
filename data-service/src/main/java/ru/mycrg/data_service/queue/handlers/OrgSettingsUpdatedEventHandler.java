@@ -23,7 +23,7 @@ public class OrgSettingsUpdatedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrgSettingsUpdatedEvent";
+        return OrgSettingsUpdatedEvent.class.getSimpleName();
     }
 
     @Override
@@ -36,9 +36,7 @@ public class OrgSettingsUpdatedEventHandler implements IEventHandler {
 
             log.debug("Service settings was updated: {}", settings);
         } catch (Exception e) {
-            String msg = "Failed to update service settings. Reason: {}";
-
-            log.error(msg, e);
+            log.error("Failed to update service settings. Reason: {}", e.getMessage(), e);
         }
     }
 }

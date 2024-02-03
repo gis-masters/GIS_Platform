@@ -1,12 +1,11 @@
 package ru.mycrg.data_service.controller;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.schemas.requests.CreateSchemaRequest;
 import ru.mycrg.data_service.service.cqrs.schemas.requests.UpdateSchemaRequest;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
@@ -33,6 +32,14 @@ public class SchemasController {
     @PreAuthorize("isAuthenticated()")
     public List<SchemaDto> getSchemas(@RequestParam(name = "schemaIds") List<String> schemaIds) {
         return schemaService.getSchemas(schemaIds);
+    }
+
+    @GetMapping("/schemas/tags")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<String>> getSystemTags() {
+        List<String> systemTags = schemaService.getSystemTags();
+
+        return ResponseEntity.ok(systemTags);
     }
 
     @GetMapping("/reglaments_schemas")

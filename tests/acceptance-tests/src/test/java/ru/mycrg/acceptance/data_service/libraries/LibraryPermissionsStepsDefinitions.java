@@ -97,6 +97,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+
+        currentPermissionId = super.extractId(response);
     }
 
     @Given("Владелец организации устанавливает роль {string} для текущей группы, для библиотеки: {string}")
@@ -111,6 +113,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+
+        currentPermissionId = super.extractId(response);
     }
 
     /**
@@ -453,7 +457,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsCurrentUser();
 
         response = getBaseRequestWithCurrentCookie()
-                .when().
+                .when().log().all().
                         delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
     }
 
@@ -515,8 +519,6 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         String url = String.format("/%s/roleAssignment", libraryName);
 
         libraryBasePermissions.addPermission(url, userId, "user", role);
-
-        currentPermissionId = super.extractId(response);
     }
 
     private void setRoleForCurrentGroupToLibrary(String libraryName, String role) {

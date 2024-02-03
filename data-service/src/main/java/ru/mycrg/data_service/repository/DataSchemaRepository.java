@@ -25,5 +25,16 @@ public interface DataSchemaRepository extends PagingAndSortingRepository<Schema,
            nativeQuery = true)
     List<Schema> findBySpecificPropertyName(@Param("property") String property);
 
+    @Query(value = "" +
+            "SELECT DISTINCT json_array_elements_text(class_rule->'tags') AS tag " +
+            "FROM data.schemas " +
+            "WHERE EXISTS (" +
+            "    SELECT 1" +
+            "    FROM json_array_elements_text(class_rule->'tags') AS jt(tag)" +
+            "    WHERE jt.tag = 'system'" +
+            ")",
+           nativeQuery = true)
+    List<String> findUniqueTags();
+
     boolean existsByName(String name);
 }

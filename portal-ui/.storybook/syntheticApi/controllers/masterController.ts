@@ -12,7 +12,7 @@ import { schemasSyntheticController } from './data/schemas.syntheticController';
 import { groupsSyntheticController } from './auth/groups.syntheticController';
 import { usersSyntheticController } from './auth/users.syntheticController';
 import { settingsSyntheticController } from './auth/settings.syntheticController';
-import { knownSettingsSyntheticController } from './auth/known-settings.syntheticController';
+import { settingsSchemaSyntheticController } from './auth/settings-schema.syntheticController';
 
 export interface SyntheticController {
   pattern: RegExp;
@@ -36,7 +36,7 @@ const controllers: SyntheticController[] = [
   fiasOktmoSyntheticController,
   fiasAddressSyntheticController,
   settingsSyntheticController,
-  knownSettingsSyntheticController
+  settingsSchemaSyntheticController
 ];
 
 export function selectController(url: string) {

@@ -18,13 +18,16 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.extractIdFromDbName;
 public class DatabaseService {
 
     private final DdlDatabase ddlDatabase;
+    private final SystemTagsPublisher systemTagsPublisher;
     private final CrgMigrationHandler migrationHandler;
     private final IAuthenticationFacade authenticationFacade;
 
     public DatabaseService(DdlDatabase ddlDatabase,
+                           SystemTagsPublisher systemTagsPublisher,
                            CrgMigrationHandler migrationHandler,
                            IAuthenticationFacade authenticationFacade) {
         this.ddlDatabase = ddlDatabase;
+        this.systemTagsPublisher = systemTagsPublisher;
         this.migrationHandler = migrationHandler;
         this.authenticationFacade = authenticationFacade;
     }
@@ -37,6 +40,7 @@ public class DatabaseService {
         ddlDatabase.create(dbName);
 
         migrationHandler.performInitialMigrations(dbName);
+        systemTagsPublisher.publish();
     }
 
     public void delete(String dbName) {
@@ -50,7 +54,6 @@ public class DatabaseService {
             throw new ForbiddenException("Удаление базы данных доступно только администратору системы.");
         }
     }
-
 
     public boolean isExist(@NotNull String dbName) {
         if (authenticationFacade.isRoot()) {

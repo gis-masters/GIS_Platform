@@ -45,7 +45,7 @@ public class CustomTokenConverter extends JwtAccessTokenConverter {
         try {
             String orgId = authentication.getOAuth2Request().getRequestParameters().get("orgId");
 
-            log.debug("enhance the token with organization info: {}", orgId);
+            log.trace("enhance the token with organization info: {}", orgId);
             if (orgId != null && !orgId.isBlank()) {
                 requiredOrgId = Long.valueOf(orgId);
             }

@@ -1,9 +1,6 @@
 package ru.mycrg.auth_service.config;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -79,20 +76,83 @@ public class RabbitConfiguration {
         return BindingBuilder.bind(queueUserInit()).to(fanoutExchangeUserInit());
     }
 
+    // System tags updated binding
+    @Bean
+    public Queue systemTagsUpdatedQueue() {
+        return new Queue(SYSTEM_TAGS_UPDATED_QUEUE, false);
+    }
+
+    @Bean
+    public DirectExchange dataToAuthExchange() {
+        return new DirectExchange(DATA_TO_AUTH_EXCHANGE);
+    }
+
+    @Bean
+    public Binding bindTagsUpdatedEvent() {
+        return BindingBuilder
+                .bind(systemTagsUpdatedQueue())
+                .to(dataToAuthExchange())
+                .with(SYSTEM_TAGS_UPDATED_ROUTING_KEY);
+    }
+
+    // System tags request binding
+    @Bean
+    public Queue systemTagsRequestQueue() {
+        return new Queue(SYSTEM_TAGS_REQUEST_QUEUE, false);
+    }
+
+    @Bean
+    public DirectExchange authToDataExchange() {
+        return new DirectExchange(AUTH_TO_DATA_EXCHANGE);
+    }
+
+    @Bean
+    public Binding bindSystemTagsRequestEvent() {
+        return BindingBuilder
+                .bind(systemTagsRequestQueue())
+                .to(authToDataExchange())
+                .with(SYSTEM_TAGS_REQUEST_ROUTING_KEY);
+    }
+
     // Настраиваем publish/subscribe обмен для настроек организаций через тип 'fanout'
     // Создадим три очереди, по одной на каждый сервис
-    @Bean public Queue authToDataQueue() { return new Queue(AUTH_TO_DATA_QUEUE); }
-    @Bean public Queue authToGisQueue() { return new Queue(AUTH_TO_GIS_QUEUE); }
-    @Bean public Queue authToIntegrationQueue() { return new Queue(AUTH_TO_INTEGRATION_QUEUE); }
+    @Bean
+    public Queue authToDataQueue() {
+        return new Queue(AUTH_TO_DATA_QUEUE);
+    }
+
+    @Bean
+    public Queue authToGisQueue() {
+        return new Queue(AUTH_TO_GIS_QUEUE);
+    }
+
+    @Bean
+    public Queue authToIntegrationQueue() {
+        return new Queue(AUTH_TO_INTEGRATION_QUEUE);
+    }
 
     // Создадим fanout. Сообщения будут направлятся не в очереди а в этот "обменник".
     // Очереди будут связаны с обменником и будут все получать сообщения.
-    @Bean public FanoutExchange authSettingsFanout() { return new FanoutExchange(ORG_SETTINGS_FANOUT); }
+    @Bean
+    public FanoutExchange authSettingsFanout() {
+        return new FanoutExchange(ORG_SETTINGS_FANOUT);
+    }
 
     // Свяжем fanout со всеми очередями
-    @Bean public Binding authToDataBinding() { return BindingBuilder.bind(authToDataQueue()).to(authSettingsFanout());}
-    @Bean public Binding authToGisBinding() { return BindingBuilder.bind(authToGisQueue()).to(authSettingsFanout()); }
-    @Bean public Binding authToIntegrationBinding() { return BindingBuilder.bind(authToIntegrationQueue()).to(authSettingsFanout()); }
+    @Bean
+    public Binding authToDataBinding() {
+        return BindingBuilder.bind(authToDataQueue()).to(authSettingsFanout());
+    }
+
+    @Bean
+    public Binding authToGisBinding() {
+        return BindingBuilder.bind(authToGisQueue()).to(authSettingsFanout());
+    }
+
+    @Bean
+    public Binding authToIntegrationBinding() {
+        return BindingBuilder.bind(authToIntegrationQueue()).to(authSettingsFanout());
+    }
 
     // Common configuration
     @Bean

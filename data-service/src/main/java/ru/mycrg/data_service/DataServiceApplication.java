@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.migrations.GeoserverMigrationHandler;
+import ru.mycrg.data_service.service.SystemTagsPublisher;
 
 @EnableScheduling
 @SpringBootApplication
@@ -25,11 +26,14 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
 
+    private final SystemTagsPublisher systemTagsPublisher;
     private final CrgMigrationHandler migrationHandler;
     private final GeoserverMigrationHandler geoserverMigrationHandler;
 
-    public DataServiceApplication(CrgMigrationHandler migrationHandler,
+    public DataServiceApplication(SystemTagsPublisher systemTagsPublisher,
+                                  CrgMigrationHandler migrationHandler,
                                   GeoserverMigrationHandler geoserverMigrationHandler) {
+        this.systemTagsPublisher = systemTagsPublisher;
         this.migrationHandler = migrationHandler;
         this.geoserverMigrationHandler = geoserverMigrationHandler;
     }
@@ -45,5 +49,6 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
 
         migrationHandler.handle();
         geoserverMigrationHandler.handle();
+        systemTagsPublisher.publish();
     }
 }

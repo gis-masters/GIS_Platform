@@ -7,15 +7,18 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_service.service.OrgSettingsSchemaHolder;
 import ru.mycrg.auth_service.service.OrganizationSettingService;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.Set;
 
-import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 /**
  * POST эндпоинта нет, настройки это одно из полей организации, которое можно обновлять через PATCH
@@ -23,22 +26,16 @@ import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 @RestController
 public class OrganizationSettingsController {
 
-    private final OrganizationSettingService organizationSettingService;
     private final IAuthenticationFacade authenticationFacade;
+    private final OrgSettingsSchemaHolder orgSettingsSchemaHolder;
+    private final OrganizationSettingService organizationSettingService;
 
     public OrganizationSettingsController(OrganizationSettingService organizationSettingService,
-                                          IAuthenticationFacade authenticationFacade) {
-        this.organizationSettingService = organizationSettingService;
+                                          IAuthenticationFacade authenticationFacade,
+                                          OrgSettingsSchemaHolder orgSettingsSchemaHolder) {
         this.authenticationFacade = authenticationFacade;
-    }
-
-    /**
-     * Вернёт известные системе настройки.
-     */
-    @GetMapping("/organizations/known-settings")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getKnownSettings() {
-        return ResponseEntity.ok(organizationSettingService.getKnownSetting());
+        this.orgSettingsSchemaHolder = orgSettingsSchemaHolder;
+        this.organizationSettingService = organizationSettingService;
     }
 
     /**
@@ -58,6 +55,14 @@ public class OrganizationSettingsController {
 
             return ResponseEntity.ok(settings);
         }
+    }
+
+    @GetMapping("/organizations/settings/schema")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<SchemaDto> getSettingsSchema() {
+        SchemaDto schema = orgSettingsSchemaHolder.getSchema();
+
+        return ResponseEntity.ok(schema);
     }
 
     /**

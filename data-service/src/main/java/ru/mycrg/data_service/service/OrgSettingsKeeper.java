@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -35,16 +36,21 @@ public class OrgSettingsKeeper {
         throwIfNotAllowed("reestrs");
     }
 
-    public boolean isOrder10Allowed() {
-        Object oSetting = serviceSettings.get("prikaz_10");
+    public boolean isTagAllowed(String tag) {
+        if (!serviceSettings.containsKey("tags")) {
+            return false;
+        }
 
-        return oSetting == null || Boolean.parseBoolean(oSetting.toString());
-    }
+        List<String> tags = (List<String>) serviceSettings.get("tags");
+        if (tags.isEmpty()) {
+            return false;
+        }
 
-    public boolean isOrder123Allowed() {
-        Object oSetting = serviceSettings.get("prikaz_123");
+        if (tags.contains(tag)) {
+            return true;
+        }
 
-        return oSetting == null || Boolean.parseBoolean(oSetting.toString());
+        return false;
     }
 
     private void throwIfNotAllowed(String setting) {

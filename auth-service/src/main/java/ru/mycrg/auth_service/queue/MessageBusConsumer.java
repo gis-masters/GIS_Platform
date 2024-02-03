@@ -9,8 +9,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.util.List;
 
-import static ru.mycrg.messagebus_contract.MessageBusProperties.ORG_RESPONSE_QUEUE;
-import static ru.mycrg.messagebus_contract.MessageBusProperties.USER_RESPONSE_QUEUE;
+import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Service
 public class MessageBusConsumer implements IMessageBusConsumer {
@@ -24,7 +23,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
     @Override
     @RabbitListener(queues = {
             ORG_RESPONSE_QUEUE,
-            USER_RESPONSE_QUEUE
+            USER_RESPONSE_QUEUE,
+            SYSTEM_TAGS_UPDATED_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

@@ -5,16 +5,18 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 
 public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
@@ -52,26 +54,50 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Владелец организации устанавливает настройки организации {string}")
-    public void updateSpecificOrgSettingAsOwner(String settings) {
+    public void updateSettings(String param) {
         authorizationBase.loginAsOwner();
 
-        List<String> settingsArray = new ArrayList<>(Arrays.asList(settings.split(",")));
-        Map<String, Object> settingsMap = new HashMap<>();
-        settingsArray.forEach(setting -> {
-            setting = setting.trim();
-            String[] settingsSplit = setting.split(":");
+        String[] split = param.split(":");
+        Map<String, Object> settings = new HashMap<>();
+        settings.put(split[0], split[1]);
 
-            settingsMap.put(settingsSplit[0], settingsSplit[1]);
-        });
-
-        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settingsMap)));
+        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
     }
 
-    @And("Возвращает существующие настройки и их описание")
-    public void checkKnownSettings() {
-        Map<String, Object> knownSettings = response.jsonPath().getMap("");
+    @When("Владелец организации разрешает пользоваться схемами с тегами: {string}")
+    public void updateAllowedTagsAsOwner(String tagsAsString) {
+        authorizationBase.loginAsOwner();
 
+        Map<String, Object> settings = new HashMap<>();
+        Set<String> tags = Stream.of(tagsAsString.split(","))
+                                 .map(String::trim)
+                                 .collect(Collectors.toSet());
+
+        settings.put("tags", tags);
+
+        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
+    }
+
+    @When("Владелец организации запрещает все схемы")
+    public void denyAllTags() {
+        authorizationBase.loginAsOwner();
+
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("tags", new ArrayList<>());
+
+        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
+    }
+
+    @And("Схема настроек организации соответствует ожидаемому")
+    public void checkSettingsSchema() {
+        JsonPath path = response.jsonPath();
+
+        Map<String, Object> knownSettings = path.getMap("");
         assertFalse(knownSettings.isEmpty());
+        assertTrue(knownSettings.containsKey("name") && knownSettings.get("name").equals("org_settings"));
+
+        List<Object> properties = path.getList("properties");
+        assertEquals(10, properties.size());
     }
 
     @And("Возвращает существующие настройки организации")
@@ -121,8 +147,8 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
 
         List<OrgSettingsResponseDto> orgSettings = response.jsonPath().getList("", OrgSettingsResponseDto.class);
         Optional<OrgSettingsResponseDto> oOrg = orgSettings.stream()
-                                                          .filter(settings -> settings.getId() == Long.valueOf(orgId))
-                                                          .findFirst();
+                                                           .filter(settings -> settings.getId() == Long.valueOf(orgId))
+                                                           .findFirst();
 
         boolean resultValue = false;
         if (oOrg.isPresent()) {
@@ -146,7 +172,7 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
                         body(settingsAsJson).
                         contentType(ContentType.JSON)
                 .when().
-                        patch("/organizations/settings");
+                       patch("/organizations/settings");
 
         response.then()
                 .statusCode(204);

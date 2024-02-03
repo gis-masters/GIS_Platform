@@ -24,5 +24,14 @@ public interface ISchemaService {
      */
     List<SchemaDto> getBySpecificProperty(String propertyName);
 
+    /**
+     * Возвращает уникальные системные теги, найденные среди всех системных схем.
+     * <p>
+     * Системная схема это схема с тегом "system"
+     *
+     * @return Список уникальных системных тегов.
+     */
+    List<String> getSystemTags();
+
     boolean isSchemaExist(String name);
 }
