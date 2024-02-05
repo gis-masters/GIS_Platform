@@ -16,7 +16,6 @@ public class XmlBuildMeta {
     private final JsonNode requestJson;
     private final JsonNode sources;
     private final JsonNode attachments;
-    private final XmlValidationResult xmlValidationResult;
 
     public XmlBuildMeta(Mnemonic mnemonic,
                         UUID clientId,
@@ -24,8 +23,7 @@ public class XmlBuildMeta {
                         String requestXmlString,
                         JsonNode requestJson,
                         JsonNode sources,
-                        JsonNode attachments,
-                        XmlValidationResult xmlValidationResult) {
+                        JsonNode attachments) {
         this.mnemonic = mnemonic;
         this.clientId = clientId;
         this.referenceClientId = referenceClientId;
@@ -33,7 +31,6 @@ public class XmlBuildMeta {
         this.requestJson = requestJson;
         this.sources = sources;
         this.attachments = attachments;
-        this.xmlValidationResult = xmlValidationResult;
     }
 
     public Mnemonic getMnemonic() {
@@ -62,13 +59,5 @@ public class XmlBuildMeta {
 
     public JsonNode getAttachments() {
         return attachments;
-    }
-
-    public XmlValidationResult getValidateFailMessage() {
-        return xmlValidationResult;
-    }
-
-    public boolean isInvalid() {
-        return xmlValidationResult != null;
     }
 }

@@ -68,7 +68,6 @@ public class RegisterRnsRequestService extends RequestProcessor {
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null,
                     null
             );
             String status;
@@ -95,19 +94,19 @@ public class RegisterRnsRequestService extends RequestProcessor {
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var buildRequest = new RegisterRnsXmlBuildProcess(this).run((RegisterRnsRequestDto) dto);
-
         var clientMessage = clientMessage(buildRequest);
-
-        return new XmlBuildMeta(
+        var meta = new XmlBuildMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
                 buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson(),
-                validate(buildRequest.getRequest(), Request.class)
+                buildRequest.getAttachmentsJson()
         );
+        validate(meta, buildRequest.getRequest(), Request.class);
+
+        return meta;
     }
 
 

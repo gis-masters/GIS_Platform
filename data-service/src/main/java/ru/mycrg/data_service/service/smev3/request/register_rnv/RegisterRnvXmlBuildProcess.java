@@ -46,6 +46,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     }
 
     private void loadRecords(Long section13Id) {
+        // section13Record
         rue.section13Record = getRecordById(
                 LIBRARY_RECORD,
                 SYSTEM_SCHEMA_NAME,
@@ -55,19 +56,18 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         );
         log.debug("section13Record read. is not null {}", rue.section13Record != null);
 
-        rue.developerRecord = asRefRecord(
+        rue.developer_CustomerRecord = asRefRecord(
                 rue.section13Record,
                 FieldsSection.PROPERTY_DEVELOPER_DATA_CONNECTION
         ).orElse(null);
-        log.debug("developerRecord read. is not null {}", rue.section13Record != null);
+        log.debug("developer_CustomerRecord read. is not null {}", rue.developer_CustomerRecord != null);
 
-        rue.developerOrganizationRecord = asRefRecord(
-                rue.developerRecord,
-                FieldsCustomer.PROPERTY_ORGANIZATION
+        rue.supplier_SupplierRecord = asRefRecord(
+                rue.section13Record,
+                FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION
         ).orElse(null);
-        log.debug("developerOrganizationRecord read. is not null {}", rue.developerOrganizationRecord != null);
+        log.debug("supplier_SupplierRecord read. is not null {}", rue.supplier_SupplierRecord != null);
 
-        // rveoksRecord
         rue.rveoksRecord = getRecordByJsonIdValue(
                 LIBRARY_RECORD,
                 SYSTEM_SCHEMA_NAME,
@@ -77,64 +77,6 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
                 rue.section13Record.getId()
         );
         log.debug("rveoksRecord read. is not null {}", rue.rveoksRecord != null);
-
-        rue.rveoksPartRecord = getRecordByJsonIdValue(
-                LIBRARY_RECORD,
-                SYSTEM_SCHEMA_NAME,
-                FieldsRveoksPart.TABLE,
-                FieldsRveoksPart.TABLE,
-                FieldsRveoksPart.PROPERTY_DL_DATA_RVEOKS_DATA_CONNECTION,
-                rue.rveoksRecord.getId()
-        );
-        log.debug("rveoksPartRecord read. is not null {}", rue.rveoksPartRecord != null);
-
-        rue.techPlanRecord = asRefRecord(
-                rue.rveoksRecord,
-                FieldsRveoks.PROPERTY_DL_DATA_TECH_PLAN_DATA_CONNECTION
-        ).orElse(null);
-        log.debug("techPlanRecord read. is not null {}", rue.techPlanRecord != null);
-
-        //  rsoksRecord
-        rue.rsoksRecord = asRefRecord(
-                rue.rveoksRecord,
-                FieldsRveoks.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION
-        ).orElse(null);
-        log.debug("rsoksRecord read. is not null {}", rue.rsoksRecord != null);
-
-        rue.rsoksPartRecord = getRecordByJsonIdValue(
-                LIBRARY_RECORD,
-                SYSTEM_SCHEMA_NAME,
-                FieldsRsoksPart.TABLE,
-                FieldsRsoksPart.TABLE,
-                FieldsRsoksPart.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION,
-                rue.rsoksRecord.getId()
-        );
-        log.debug("rsoksPartRecord read. is not null {}", rue.rsoksPartRecord != null);
-
-        rue.rsoksSection13Record = asRefRecord(
-                rue.rsoksRecord,
-                FieldsRsoks.PROPERTY_DL_DATA_SECTION13_DATA_CONNECTION
-        ).orElse(null);
-        log.debug("rsoksSection13Record read. is not null {}", rue.rsoksSection13Record != null);
-
-        // rsoksSection13
-        rue.rsoksSection13SupplierRecord = asRefRecord(
-                rue.rsoksSection13Record,
-                FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION
-        ).orElse(null);
-        log.debug("rsoksSection13SupplierRecord read. is not null {}", rue.rsoksSection13SupplierRecord != null);
-
-        rue.rsoksSection13SupplierOrganizationRecord = asRefRecord(
-                rue.rsoksSection13SupplierRecord,
-                FieldsSupplier.PROPERTY_ORGANIZATION_DATA_CONNECTION
-        ).orElse(null);
-        log.debug("rsoksSection13SupplierOrganizationRecord read. is not null {}", rue.rsoksSection13SupplierOrganizationRecord != null);
-
-        rue.usersAfterTriggerRecord = asRefRecord(
-                rue.rsoksSection13Record,
-                FieldsSection.PROPERTY_ISSUE_PERSON_CONNECTION
-        ).orElse(null);
-        log.debug("usersAfterTriggerRecord read. is not null {}", rue.usersAfterTriggerRecord != null);
 
         rue.oks13Record = getRecordByJsonIdValue(
                 ResourceType.FEATURE,
@@ -166,14 +108,76 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         );
         log.debug("landplotRecord read. is not null {}", rue.landplotRecord != null);
 
-        rue.supplierRecord = asRefRecord(
-                rue.section13Record,
+        // developer_CustomerRecord
+        rue.developerOrganizationRecord = asRefRecord(
+                rue.developer_CustomerRecord,
+                FieldsCustomer.PROPERTY_ORGANIZATION
+        ).orElse(null);
+        log.debug("developerOrganizationRecord read. is not null {}", rue.developerOrganizationRecord != null);
+
+        // rveoksRecord
+        rue.rveoksPartRecord = getRecordByJsonIdValue(
+                LIBRARY_RECORD,
+                SYSTEM_SCHEMA_NAME,
+                FieldsRveoksPart.TABLE,
+                FieldsRveoksPart.TABLE,
+                FieldsRveoksPart.PROPERTY_DL_DATA_RVEOKS_DATA_CONNECTION,
+                rue.rveoksRecord.getId()
+        );
+        log.debug("rveoksPartRecord read. is not null {}", rue.rveoksPartRecord != null);
+
+        rue.techPlanRecord = asRefRecord(
+                rue.rveoksRecord,
+                FieldsRveoks.PROPERTY_DL_DATA_TECH_PLAN_DATA_CONNECTION
+        ).orElse(null);
+        log.debug("techPlanRecord read. is not null {}", rue.techPlanRecord != null);
+
+        rue.rsoksRecord = asRefRecord(
+                rue.rveoksRecord,
+                FieldsRveoks.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION
+        ).orElse(null);
+        log.debug("rsoksRecord read. is not null {}", rue.rsoksRecord != null);
+
+        //  rsoksRecord
+        rue.rsoksPartRecord = getRecordByJsonIdValue(
+                LIBRARY_RECORD,
+                SYSTEM_SCHEMA_NAME,
+                FieldsRsoksPart.TABLE,
+                FieldsRsoksPart.TABLE,
+                FieldsRsoksPart.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION,
+                rue.rsoksRecord.getId()
+        );
+        log.debug("rsoksPartRecord read. is not null {}", rue.rsoksPartRecord != null);
+
+        rue.rsoksSection13Record = asRefRecord(
+                rue.rsoksRecord,
+                FieldsRsoks.PROPERTY_DL_DATA_SECTION13_DATA_CONNECTION
+        ).orElse(null);
+        log.debug("rsoksSection13Record read. is not null {}", rue.rsoksSection13Record != null);
+
+        // rsoksSection13
+        rue.rsoksSection13SupplierRecord = asRefRecord(
+                rue.rsoksSection13Record,
                 FieldsSection.PROPERTY_SUPPLIER_DATA_CONNECTION
         ).orElse(null);
-        log.debug("supplierRecord read. is not null {}", rue.supplierRecord != null);
+        log.debug("rsoksSection13SupplierRecord read. is not null {}", rue.rsoksSection13SupplierRecord != null);
 
+        rue.usersAfterTriggerRecord = asRefRecord(
+                rue.rsoksSection13Record,
+                FieldsSection.PROPERTY_ISSUE_PERSON_CONNECTION
+        ).orElse(null);
+        log.debug("usersAfterTriggerRecord read. is not null {}", rue.usersAfterTriggerRecord != null);
+
+        // rsoksSection13SupplierRecord
+        rue.rsoksSection13SupplierOrganizationRecord = asRefRecord(
+                rue.rsoksSection13SupplierRecord,
+                FieldsSupplier.PROPERTY_ORGANIZATION_DATA_CONNECTION
+        ).orElse(null);
+        log.debug("rsoksSection13SupplierOrganizationRecord read. is not null {}", rue.rsoksSection13SupplierOrganizationRecord != null);
+
+        // supplierRecord
         rue.supplierOrganizationRecord = asRefRecord(
-                rue.supplierRecord,
+                rue.supplier_SupplierRecord,
                 FieldsSupplier.PROPERTY_ORGANIZATION_DATA_CONNECTION
         ).orElse(null);
         log.debug("supplierOrganizationRecord read. is not null {}", rue.supplierOrganizationRecord != null);
@@ -188,9 +192,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         // section13Record
         asString(rue.section13Record, FieldsSection.PROPERTY_DOC_NUM)
                 .ifPresent(type::setPermitNumber);
-        asLocalDateTime(rue.section13Record, FieldsSection.PROPERTY_DOC_DATE)
-                .map(LocalDateTime::toLocalDate)
-                .map(XmlMapper::mapCalendar)
+        asXMLGregorianCalendar(rue.section13Record, FieldsSection.PROPERTY_DOC_DATE)
                 .ifPresent(type::setPermitDate);
         asInt(rue.section13Record, FieldsSection.PROPERTY_CONST_GOVERNMENT_ORDER_ID)
                 .ifPresent(type::setGovernmentOrderId);
@@ -209,9 +211,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         // rsoksSection13Record
         asString(rue.rsoksSection13Record, FieldsSection.PROPERTY_DOC_NUM)
                 .ifPresent(type::setConstPermitNumber);
-        asLocalDateTime(rue.rsoksSection13Record, FieldsSection.PROPERTY_DOC_DATE)
-                .map(LocalDateTime::toLocalDate)
-                .map(XmlMapper::mapCalendar)
+        asXMLGregorianCalendar(rue.rsoksSection13Record, FieldsSection.PROPERTY_DOC_DATE)
                 .ifPresent(type::setConstPermitDate);
 
         // Добавляем вложение
@@ -954,17 +954,13 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         var type = new TechnicalPlanType();
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_TITLE)
                 .ifPresent(type::setTechnicalPlanID);
-        asLocalDateTime(rue.techPlanRecord, FieldsTechPlan.PROPERTY_ISSUE_DATE)
-                .map(LocalDateTime::toLocalDate)
-                .map(XmlMapper::mapCalendar)
+        asXMLGregorianCalendar(rue.techPlanRecord, FieldsTechPlan.PROPERTY_ISSUE_DATE)
                 .ifPresent(type::setDTechnicalPlan);
 
         var engineerType = new EngineerType();
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_SNILS_CADASTER_ENGINEER)
                 .ifPresent(engineerType::setEngineerSnils);
-        asLocalDateTime(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_REGISTRY_DATE)
-                .map(LocalDateTime::toLocalDate)
-                .map(XmlMapper::mapCalendar)
+        asXMLGregorianCalendar(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_REGISTRY_DATE)
                 .ifPresent(engineerType::setDCertificate);
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_FULL_NAME)
                 .map(RegisterRnvXmlBuildProcess::mapFio)
@@ -973,9 +969,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         var docType = new DocType();
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_CERTIFICATE_NUMBER)
                 .ifPresent(docType::setDocNumber);
-        asLocalDateTime(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_CERTIFICATE_DATE)
-                .map(LocalDateTime::toLocalDate)
-                .map(XmlMapper::mapCalendar)
+        asXMLGregorianCalendar(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_CERTIFICATE_DATE)
                 .ifPresent(docType::setDocDate);
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_CERTIFICATE_ORGANIZATION)
                 .ifPresent(docType::setDocIssueOrganization);
@@ -1026,7 +1020,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
      */
     static class ReusableElements {
         private IRecord section13Record;
-        private IRecord developerRecord;
+        private IRecord developer_CustomerRecord;
         private IRecord developerOrganizationRecord;
         private IRecord rveoksRecord;
         private IRecord rveoksPartRecord;
@@ -1040,7 +1034,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         private IRecord oks13LineRecord;
         private IRecord landplotRecord;
         private IRecord usersAfterTriggerRecord;
-        private IRecord supplierRecord;
+        private IRecord supplier_SupplierRecord;
         private IRecord supplierOrganizationRecord;
     }
 }

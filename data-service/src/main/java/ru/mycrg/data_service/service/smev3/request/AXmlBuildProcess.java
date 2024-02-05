@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.smev3.request;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -18,10 +19,13 @@ import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMapper;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -76,9 +80,20 @@ public abstract class AXmlBuildProcess {
                 .map(Double::parseDouble);
     }
 
+    protected Optional<BigInteger> asBigInteger(IRecord record, String fieldName) {
+        return asString(record, fieldName)
+                .map(BigInteger::new);
+    }
+
     protected Optional<LocalDateTime> asLocalDateTime(IRecord record, String fieldName) {
         return asString(record, fieldName)
                 .map(s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN)));
+    }
+
+    protected Optional<XMLGregorianCalendar> asXMLGregorianCalendar(IRecord record, String fieldName) {
+        return asLocalDateTime(record, fieldName)
+                .map(LocalDateTime::toLocalDate)
+                .map(XmlMapper::mapCalendar);
     }
 
     protected Optional<LocalDate> asLocalDate(IRecord record, String fieldName) {
@@ -166,6 +181,7 @@ public abstract class AXmlBuildProcess {
         }
     }
 
+    @NotNull
     protected IRecord getRecordByJsonIdValue(ResourceType resourceType,
                                              String workspace,
                                              String schemaId,
@@ -194,6 +210,40 @@ public abstract class AXmlBuildProcess {
         } catch (CrgDaoException e) {
             throw SmevRequestException.crgDaoException(e);
         }
+    }
+
+    @Nullable
+    protected IRecord findRecordByJsonIdValue(ResourceType resourceType,
+                                              String workspace,
+                                              String schemaId,
+                                              String libId,
+                                              String jsonFieldName,
+                                              Long jsonIdValue) {
+        var recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
+        if (!sourceRecordsMap.containsKey(recordData)) {
+            var schemaDto = ofNullable(schemaId)
+                    .flatMap(this::getSchema)
+                    .orElse(null);
+
+            var record = baseDao()
+                    .findByJson(
+                            ResourceJsonCondition.byJsonIdValue(
+                                    workspace,
+                                    libId,
+                                    jsonFieldName,
+                                    jsonIdValue,
+                                    resourceType
+                            ),
+                            schemaDto
+                    )
+                    .orElse(null);
+
+            if (record != null) {
+                sourceRecordsMap.put(recordData, record);
+                return record;
+            }
+        }
+        return null;
     }
 
     protected RefType refType(String tableName, String field, String strValue) {

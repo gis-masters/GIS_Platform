@@ -57,7 +57,6 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null,
                     null
             );
             String status;
@@ -84,27 +83,20 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
-
-        var buildRequest = new GetCadastrialPlanXmlBuildProcess(
-                this
-        ).run(
-                getCadastrialPlanDto.getRequestFilename(),
-                getCadastrialPlanDto.getAppFilename(),
-                getCadastrialPlanDto.getPassportFilename()
-        );
-
+        var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run(getCadastrialPlanDto);
         var clientMessage = clientMessage(buildRequest.getRequest(), getCadastrialPlanDto.getArchiveFilename());
-
-        return new XmlBuildMeta(
+        var meta = new XmlBuildMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
                 buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson(),
-                validate(buildRequest.getRequest(), Request.class)
+                buildRequest.getAttachmentsJson()
         );
+        validate(meta, buildRequest.getRequest(), Request.class);
+
+        return meta;
     }
 
     private ClientMessage clientMessage(Request request, String archiveFilename) {

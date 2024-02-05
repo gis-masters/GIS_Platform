@@ -300,8 +300,13 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(SmevRequestException.class)
-    public ResponseEntity<Object> smevRequestExceptionHandler(final SmevRequestException ex) {
-        var errorModel = new ApiErrorModel(BAD_REQUEST, ex.getMessage(), List.of());
+    public ResponseEntity<ApiSmevErrorModel> smevRequestExceptionHandler(final SmevRequestException ex) {
+        var errorModel = new ApiSmevErrorModel(
+                BAD_REQUEST,
+                ex.getMessage(),
+                ex.getBuildMeta(),
+                ex.getValidationResult()
+        );
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 

@@ -126,8 +126,7 @@ public class SmevMessageService {
                 message.getXmlString(),
                 message.getXmlObject(),
                 message.getRecords(),
-                message.getAttachments(),
-                null
+                message.getAttachments()
         );
     }
 }

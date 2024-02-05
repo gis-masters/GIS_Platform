@@ -9,5 +9,7 @@ public class FieldsRsoks {
     public static final String PROPERTY_DL_DATA_GECE_DATA_CONNECTION = "dl_data_gece_data_connection";
     public static final String PROPERTY_DL_DATA_UGE_DATA_CONNECTION = "dl_data_uge_data_connection";
     public static final String PROPERTY_DL_DATA_PROJECT_DOCUMENTATION_DESCRIPTION_CONNECTION = "dl_data_project_documentation_description_connection";
+    public static final String PROPERTY_BUILDING_ADDRESS = "building_address";
+    public static final String PROPERTY_OBJECT_BUSINESS_ID = "object_business_id";
 
 }

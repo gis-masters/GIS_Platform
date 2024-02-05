@@ -58,7 +58,6 @@ public class ReceiptRnvRequestService extends RequestProcessor {
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null,
                     null
             );
             String status;
@@ -84,22 +83,20 @@ public class ReceiptRnvRequestService extends RequestProcessor {
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        var buildRequest = new ReceiptRnvXmlBuildProcess(
-                this
-        ).run((ReceiptRnvRequestDto) dto);
-
+        var buildRequest = new ReceiptRnvXmlBuildProcess(this).run((ReceiptRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
-
-        return new XmlBuildMeta(
+        var meta = new XmlBuildMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
                 buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson(),
-                validate(buildRequest.getRequest(), Request.class)
+                buildRequest.getAttachmentsJson()
         );
+        validate(meta, buildRequest.getRequest(), Request.class);
+
+        return meta;
     }
 
     private ClientMessage clientMessage(Request request) {

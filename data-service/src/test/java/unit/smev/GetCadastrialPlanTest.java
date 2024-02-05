@@ -2,6 +2,7 @@ package unit.smev;
 
 import org.junit.Test;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.dto.smev3.GetCadastrialPlanDto;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.Request;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
@@ -23,10 +24,12 @@ public class GetCadastrialPlanTest {
 
         var processor = new GetCadastrialPlanRequestService(smev3Config, null, null);
 
-        var meta = new GetCadastrialPlanXmlBuildProcess(processor)
-                .run("request.xml",
-                        "app_1.xml",
-                        "Passport.pdf");
+        var dto = new GetCadastrialPlanDto();
+        dto.setRequestFilename("request.xml");
+        dto.setArchiveFilename("app_1.xml");
+        dto.setPassportFilename("Passport.pdf");
+
+        var meta = new GetCadastrialPlanXmlBuildProcess(processor).run(dto);
 
         // to xml
         var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);

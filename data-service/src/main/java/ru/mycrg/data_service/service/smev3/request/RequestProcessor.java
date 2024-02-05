@@ -31,7 +31,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Optional;
 
 public abstract class RequestProcessor {
     private static final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
@@ -109,12 +108,8 @@ public abstract class RequestProcessor {
         try {
             var xmlMeta = buildRequest(dto);
 
-            if (xmlMeta.isInvalid()) {
-                log.warn("Request is invalid. Reason: {}", xmlMeta.getValidateFailMessage());
-            } else {
-                log.info("Request is valid. Try send to SMEV. Client ID: {}", xmlMeta.getClientId());
-                messageService.sendMessage(xmlMeta, dto.sendToSmev(), mnemonic.getSystem());
-            }
+            log.info("Request is valid. Try send to SMEV. Client ID: {}", xmlMeta.getClientId());
+            messageService.sendMessage(xmlMeta, dto.sendToSmev(), mnemonic.getSystem());
 
             return xmlMeta;
         } catch (Exception e) {
@@ -127,33 +122,28 @@ public abstract class RequestProcessor {
         }
     }
 
-    protected <T> XmlValidationResult validate(T request, Class<T> tClass) {
+    protected <T> void validate(XmlBuildMeta meta, T request, Class<T> tClass) {
         log.info("validation: " + request);
         byte[] xmlBytes = null;
+        XmlValidationResult validationResult = null;
 
         try {
             xmlBytes = xmlMarshaller().marshall(request, tClass).getBytes(StandardCharsets.UTF_8);
-
-            schema
-                    .newValidator()
-                    .validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
-            log.info("validation successful!");
-
-            return null;
+            schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         } catch (SAXParseException e) {
-            log.error("validation fail: " + e.getMessage());
-
-            var xmlBase64 = Optional.of(xmlBytes)
-                    .map(base64Encoder::encode)
-                    .map(String::new)
-                    .orElse(null);
-
-            return new XmlValidationResult(e.getMessage(), e.getLineNumber(), xmlBase64);
+            var base64str = new String(base64Encoder.encode(xmlBytes));
+            validationResult = new XmlValidationResult(e.getMessage(), e.getLineNumber(), base64str);
         } catch (SAXException | JAXBException | IOException e) {
-            log.error("validation fail: " + e.getMessage());
-
-            return new XmlValidationResult(e.getMessage(), null, null);
+            validationResult = new XmlValidationResult(e.getMessage(), null, null);
         }
+
+        if (validationResult != null) {
+            var message = "validation fail: " + validationResult.getFailMessage();
+            log.error(message);
+            throw new SmevRequestException(message, meta, validationResult);
+        }
+
+        log.info("validation successful!");
     }
 
     private Schema loadSchema(String schemaPath) {
