@@ -18,4 +18,4 @@ export interface LayerIconProps extends IClassNameProps {
   size?: SvgIconProps['fontSize'];
 }
 
-export const LayerIcon: FC<LayerIconProps> = () => null;
+export const LayerIconBase: FC<LayerIconProps> = () => null;

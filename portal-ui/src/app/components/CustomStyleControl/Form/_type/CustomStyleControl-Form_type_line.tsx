@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { PolylineOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
 
@@ -10,11 +11,11 @@ import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleCo
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 
 @observer
-class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormProps> {
+export class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormProps> {
   private ruleTypeError = new Error('Неправильный тип стиля');
 
   render() {
-    const { className, value } = this.props;
+    const { className, value, withIcon } = this.props;
 
     if (value.type !== 'line') {
       throw this.ruleTypeError;
@@ -22,6 +23,8 @@ class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormPro
 
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
+        {withIcon && <PolylineOutlined color='primary' />}
+
         <CustomStyleControlStrokeSelect
           label='линия'
           value={value.rule}

@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { SvgIconProps } from '@mui/material';
-import { IClassNameProps, withBemMod } from '@bem-react/core';
+import { withBemMod } from '@bem-react/core';
 import { Adjust, SvgIconComponent, PolylineOutlined, ReportProblemOutlined } from '@mui/icons-material';
 
 import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
-import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
+import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
 import { Shape } from '../../Icons/Shape';
 
-interface LayerIconTypeVectorProps extends IClassNameProps {
-  type: 'vector';
-  schemaId?: string;
-  colorized?: boolean;
-  size?: SvgIconProps['fontSize'];
-}
-
 @observer
-class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
+class LayerIconTypeVector extends Component<LayerIconProps> {
   @observable geometryType: SupportedGeometryType | 'unknown' = 'unknown';
 
-  constructor(props: LayerIconTypeVectorProps) {
+  constructor(props: LayerIconProps) {
     super(props);
     makeObservable(this);
   }
@@ -39,7 +31,7 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
   render() {
     const { className, colorized, size } = this.props;
     let Icon: SvgIconComponent;
-    let htmlColor: string;
+    let htmlColor: string = '';
 
     switch (this.geometryType) {
       case GeometryType.POLYGON:
@@ -79,9 +71,11 @@ class LayerIconTypeVector extends Component<LayerIconTypeVectorProps> {
   }
 }
 
-export const withTypeVector = withBemMod<LayerIconTypeVectorProps, LayerIconProps>(
+export const withTypeVector = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),
   { type: 'vector' },
   () =>
-    ({ className, ...props }) => <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
+    ({ className, ...props }: LayerIconProps) => (
+      <LayerIconTypeVector {...props} className={cnLayerIcon(null, [className])} />
+    )
 );

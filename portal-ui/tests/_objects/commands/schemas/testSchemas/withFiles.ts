@@ -54,7 +54,7 @@ export const withFile: Schema = {
     },
     {
       name: 'is_folder',
-      title: 'Признак раздела',
+      title: 'Раздел',
       hidden: true,
       propertyType: PropertyType.BOOL
     }

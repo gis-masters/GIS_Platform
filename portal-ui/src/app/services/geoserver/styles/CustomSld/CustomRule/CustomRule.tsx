@@ -5,14 +5,18 @@ import { CustomStyleDescription } from '../../styles.models';
 import { CustomRuleTypeLine } from './_type/CustomRule_type_line';
 import { CustomRuleTypePoint } from './_type/CustomRule_type_point';
 import { CustomRuleTypePolygon } from './_type/CustomRule_type_polygon';
+import { CustomRuleTypeAll } from './_type/CustomRule_type_all';
 
 const types: Record<string, ComponentType<CustomStyleDescription>> = {
   line: CustomRuleTypeLine,
   point: CustomRuleTypePoint,
-  polygon: CustomRuleTypePolygon
+  polygon: CustomRuleTypePolygon,
+  all: CustomRuleTypeAll
 };
 
-export const CustomRule: FC<CustomStyleDescription> = styleDescription => {
+export type CustomRuleProps = CustomStyleDescription & { bare?: boolean };
+
+export const CustomRule: FC<CustomRuleProps> = styleDescription => {
   const CustomRuleComponent = types[styleDescription.type];
 
   if (!CustomRuleComponent) {

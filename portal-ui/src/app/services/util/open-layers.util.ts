@@ -4,7 +4,6 @@ import { Coordinate } from 'ol/coordinate';
 import { Feature } from 'ol';
 
 import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
-import { Toast } from '../../components/Toast/Toast';
 
 export enum UnitsOfAreaMeasurement {
   HECTARE = 'га',
@@ -28,13 +27,19 @@ export function featureToWfsFeature(olFeature: Feature): WfsFeature {
     throw new TypeError('Geometry is not SimpleGeometry');
   }
 
+  const coordinates = geometry.getCoordinates();
+
   return {
     type: 'Feature',
     id: String(olFeature.getId()),
-    geometry: {
-      type: geometry.getType() as GeometryType,
-      coordinates: geometry.getCoordinates()
-    },
+    ...(coordinates
+      ? {
+          geometry: {
+            type: geometry.getType() as GeometryType,
+            coordinates
+          }
+        }
+      : {}),
     geometry_name: 'geometry',
     properties
   };
@@ -43,25 +48,14 @@ export function featureToWfsFeature(olFeature: Feature): WfsFeature {
 /**
  * Из {@link WfsFeature} формируем OpenLayer фичу {@link Feature}
  */
-export function wfsFeatureToFeature(
-  wfsFeature: WfsFeature,
-  suppressError?: boolean
-): Feature<SimpleGeometry> | undefined {
-  if (!wfsFeature.geometry) {
-    if (!suppressError) {
-      Toast.error({
-        message: 'Ошибка отображения объекта',
-        details: `ID: ${wfsFeature.id}.
-                    Нет геометрии.`
-      });
-    }
-
-    return;
-  }
-
-  const olFeature = new Feature<SimpleGeometry>({
-    geometry: wfsGeometryToGeometry(wfsFeature.geometry)
-  });
+export function wfsFeatureToFeature(wfsFeature: WfsFeature): Feature<SimpleGeometry> {
+  const olFeature = new Feature<SimpleGeometry>(
+    wfsFeature.geometry
+      ? {
+          geometry: wfsGeometryToGeometry(wfsFeature.geometry)
+        }
+      : {}
+  );
 
   olFeature.setId(wfsFeature.id);
   olFeature.setProperties(wfsFeature.properties);

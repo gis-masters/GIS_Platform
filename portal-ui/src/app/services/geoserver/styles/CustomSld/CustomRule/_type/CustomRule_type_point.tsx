@@ -1,6 +1,4 @@
-import React, { FC } from 'react';
-
-import { CustomStyleDescription } from '../../../styles.models';
+import React, { FC, Fragment } from 'react';
 
 import { PointSymbolizer } from '../../PointSymbolizer/PointSymbolizer';
 import { SvgParameter } from '../../SvgParameter/SvgParameter';
@@ -10,14 +8,17 @@ import { Mark } from '../../Mark/Mark';
 import { WellKnownName } from '../../WellKnownName/WellKnownName';
 import { Fill } from '../../Fill/Fill';
 import { Size } from '../../Size/Size';
+import { CustomRuleProps } from '../CustomRule';
 
-export const CustomRuleTypePoint: FC<CustomStyleDescription> = ({ rule, type }) => {
+export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'point') {
     throw new Error('Ошибка: некорректный тип стиля');
   }
 
+  const Wrapper = bare ? Fragment : Rule;
+
   return (
-    <Rule>
+    <Wrapper>
       <PointSymbolizer>
         <Graphic>
           <Mark>
@@ -27,6 +28,6 @@ export const CustomRuleTypePoint: FC<CustomStyleDescription> = ({ rule, type }) 
           <Size>{rule.markSize}</Size>
         </Graphic>
       </PointSymbolizer>
-    </Rule>
+    </Wrapper>
   );
 };

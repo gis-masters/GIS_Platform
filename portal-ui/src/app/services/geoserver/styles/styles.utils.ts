@@ -1,10 +1,12 @@
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { CustomSld } from './CustomSld/CustomSld';
+import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
+import { GeometryType } from '../wfs/wfs.models';
 import { Mime } from '../../util/Mime';
 
 import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
+import { CustomSld } from './CustomSld/CustomSld';
 
 export function createImageFromBlob(image: Blob): Promise<string> {
   return new Promise(resolve => {
@@ -34,6 +36,20 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
   const sldDocument = new DOMParser().parseFromString(sld, 'application/xml');
 
   const lineSymbolizerNode = sldDocument.querySelector('LineSymbolizer');
+  const polygonSymbolizerNode = sldDocument.querySelector('PolygonSymbolizer');
+  const pointSymbolizerNode = sldDocument.querySelector('PointSymbolizer');
+
+  if (pointSymbolizerNode && lineSymbolizerNode && polygonSymbolizerNode) {
+    return {
+      type: 'all',
+      rule: [
+        parsePointSymbolizer(pointSymbolizerNode),
+        parseLineSymbolizer(lineSymbolizerNode),
+        parsePolygonSymbolizer(polygonSymbolizerNode)
+      ]
+    };
+  }
+
   if (lineSymbolizerNode) {
     return {
       type: 'line',
@@ -41,7 +57,6 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
     };
   }
 
-  const polygonSymbolizerNode = sldDocument.querySelector('PolygonSymbolizer');
   if (polygonSymbolizerNode) {
     return {
       type: 'polygon',
@@ -49,7 +64,6 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
     };
   }
 
-  const pointSymbolizerNode = sldDocument.querySelector('PointSymbolizer');
   if (pointSymbolizerNode) {
     return {
       type: 'point',
@@ -170,4 +184,16 @@ function parsePolygonSymbolizer(polygonSymbolizerNode: Element): PolygonRule {
   }
 
   return { ...result, fillColor };
+}
+
+export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygon' | 'point' {
+  if (isLinear(geometryType)) {
+    return 'line';
+  } else if (isPolygonal(geometryType)) {
+    return 'polygon';
+  } else if (isPoint(geometryType)) {
+    return 'point';
+  }
+
+  throw new Error('неподдерживаемый тип геометрии ' + geometryType);
 }

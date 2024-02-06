@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { Adjust } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
 
@@ -10,11 +11,11 @@ import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleCont
 import { CustomStyleControlMarkSelect } from '../../MarkSelect/CustomStyleControl-MarkSelect';
 
 @observer
-class CustomStyleControlFormTypePoint extends Component<CustomStyleControlFormProps> {
+export class CustomStyleControlFormTypePoint extends Component<CustomStyleControlFormProps> {
   private ruleTypeError = new Error('Неправильный тип стиля');
 
   render() {
-    const { className, value } = this.props;
+    const { className, value, withIcon } = this.props;
 
     if (value.type !== 'point') {
       throw this.ruleTypeError;
@@ -22,6 +23,8 @@ class CustomStyleControlFormTypePoint extends Component<CustomStyleControlFormPr
 
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
+        {withIcon && <Adjust color='primary' />}
+
         <CustomStyleControlMarkSelect
           label='маркер'
           value={value.rule}

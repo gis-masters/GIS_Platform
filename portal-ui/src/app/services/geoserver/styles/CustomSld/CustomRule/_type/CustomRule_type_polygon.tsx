@@ -1,6 +1,4 @@
-import React, { FC } from 'react';
-
-import { CustomStyleDescription } from '../../../styles.models';
+import React, { FC, Fragment } from 'react';
 
 import { PolygonSymbolizer } from '../../PolygonSymbolizer/PolygonSymbolizer';
 import { WellKnownName } from '../../WellKnownName/WellKnownName';
@@ -12,14 +10,17 @@ import { Fill } from '../../Fill/Fill';
 import { Rule } from '../../Rule/Rule';
 import { Mark } from '../../Mark/Mark';
 import { Size } from '../../Size/Size';
+import { CustomRuleProps } from '../CustomRule';
 
-export const CustomRuleTypePolygon: FC<CustomStyleDescription> = ({ rule, type }) => {
+export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'polygon') {
     throw new Error('Ошибка: некорректный тип стиля');
   }
 
+  const Wrapper = bare ? Fragment : Rule;
+
   return (
-    <Rule>
+    <Wrapper>
       <PolygonSymbolizer>
         <Fill>
           {rule.fillColor && !rule.fillGraphic && <SvgParameter name='fill'>{rule.fillColor}</SvgParameter>}
@@ -48,6 +49,6 @@ export const CustomRuleTypePolygon: FC<CustomStyleDescription> = ({ rule, type }
           )}
         </Stroke>
       </PolygonSymbolizer>
-    </Rule>
+    </Wrapper>
   );
 };

@@ -6,7 +6,7 @@ import { ReportProblemOutlined, SvgIconComponent } from '@mui/icons-material';
 
 import { TypeShpLine } from '../../Icons/TypeShpLine';
 import { TypeShpPoint } from '../../Icons/TypeShpPoint';
-import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
+import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
 import { TypeShpPolygon } from '../../Icons/TypeShpPolygon';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
@@ -33,7 +33,7 @@ class LayerIconTypeShp extends Component<LayerIconProps> {
   render() {
     const { className, colorized, size } = this.props;
     let Icon: SvgIconComponent;
-    let htmlColor: string;
+    let htmlColor: string = '';
 
     switch (this.geometryType) {
       case GeometryType.POLYGON:

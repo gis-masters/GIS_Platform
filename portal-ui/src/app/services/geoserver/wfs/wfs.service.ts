@@ -6,6 +6,8 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
+import { schemaService } from '../../data/schema/schema.service';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { filterFeatures } from '../../util/filterObjects';
 import { MapSelectionTypes } from '../../map/map.models';
@@ -18,12 +20,15 @@ import { cql2ol } from '../../util/cql2ol';
 import { Mime } from '../../util/Mime';
 import { WFS } from '../../ol/WFS';
 
-import { WfsFeature, WfsFeatureCollection } from './wfs.models';
-import { generateWfsSortParam } from './wfs.util';
+import { CoordinateEdited, WfsFeature, WfsFeatureCollection } from './wfs.models';
+import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
 import { wfsClient } from './wfs.client';
-import { getLayerSchema } from '../../gis/layers/layers.service';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
+  if (!layer.complexName) {
+    throw new Error('Нет complexName');
+  }
+
   return layer.nativeCRS
     ? {
         service: 'wfs',
@@ -57,7 +62,7 @@ export async function getFeatures(
 ): Promise<[WfsFeature[], number, number, number]> {
   if (pageOptions.pageSize > MAX_PAGE_SIZE) {
     const pagedResultFeatures: WfsFeature[] = [];
-    let pagedResult: [WfsFeature[], number, number, number];
+    let pagedResult: [WfsFeature[], number, number, number] | undefined = undefined;
 
     for (let page = 0; page < pageOptions.pageSize / MAX_PAGE_SIZE - 1; page++) {
       pagedResult = await getFeatures(
@@ -74,6 +79,10 @@ export async function getFeatures(
       }
     }
 
+    if (!Array.isArray(pagedResult)) {
+      throw new TypeError('Ошибка пагинации');
+    }
+
     return [pagedResultFeatures, ...(pagedResult.slice(1) as [number, number, number])];
   }
 
@@ -87,15 +96,21 @@ export async function getFeatures(
   const cqlFilter = cqlConcat(cqlBuild(pageOptions.filter), definitionQuery);
   const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
 
+  if (!layer.complexName) {
+    throw new Error('Нет complexName');
+  }
+
+  const { sort, sortOrder, pageSize, page } = pageOptions;
+
   const featureRequest = new WFS().writeGetFeature({
     viewParams: '',
     srsName: layer.nativeCRS,
     featureNS: '',
     featurePrefix: '',
     featureTypes: [layer.complexName],
-    startIndex: pageOptions.page * pageOptions.pageSize,
-    maxFeatures: pageOptions.pageSize,
-    sort: pageOptions.sort && { propertyName: pageOptions.sort, order: pageOptions.sortOrder },
+    startIndex: page * pageSize,
+    maxFeatures: pageSize,
+    sort: (sort && sortOrder && { propertyName: sort, order: sortOrder }) || undefined,
     featureIds,
     featureIdsNegative,
     filter
@@ -104,7 +119,7 @@ export async function getFeatures(
   const xml = new XMLSerializer().serializeToString(featureRequest);
 
   const collection = await getFeatureCollectionByXmlFilter(xml);
-  const totalPages = Math.ceil(collection.numberMatched / pageOptions.pageSize);
+  const totalPages = Math.ceil(collection.numberMatched / pageSize);
   let featuresTotal = collection.totalFeatures;
 
   // при включенных фильтрах геосервер врёт насчёт totalFeatures
@@ -157,10 +172,10 @@ export async function getFeaturesById(ids: string[], complexName: string, defini
 
   if (definitionQuery) {
     const filter = cqlParse(definitionQuery);
-    features = filterFeatures(features, filter);
+    features = filterFeatures(features || [], filter);
   }
 
-  return features;
+  return features || [];
 }
 
 export async function makeXmlPolygonIntersect(
@@ -197,4 +212,22 @@ export async function makeXmlPolygonIntersect(
   });
 
   return new XMLSerializer().serializeToString(featureRequest);
+}
+
+export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
+  const { tableName, schemaId } = layer;
+  const schema = await schemaService.getSchema(schemaId);
+  const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
+
+  if (!schema.geometryType) {
+    throw new Error(`Не задан тип геометрии для схемы ${schemaId}`);
+  }
+
+  return {
+    type: 'Feature',
+    id: `${tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+    geometry: getEmptyGeometry(schema.geometryType),
+    geometry_name: getGeometryFieldName(schema),
+    properties
+  };
 }

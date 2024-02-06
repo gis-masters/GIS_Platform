@@ -1,0 +1,77 @@
+import React, { Component } from 'react';
+import { observer } from 'mobx-react';
+import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+
+import { CustomStyleDescription } from '../../../../services/geoserver/styles/styles.models';
+
+import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
+import { CustomStyleControlFormTypePolygon } from './CustomStyleControl-Form_type_polygon';
+import { CustomStyleControlFormTypePoint } from './CustomStyleControl-Form_type_point';
+import { CustomStyleControlFormTypeLine } from './CustomStyleControl-Form_type_line';
+
+import '!style-loader!css-loader!sass-loader!./CustomStyleControl-Form_type_all.scss';
+
+@observer
+class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProps> {
+  private ruleTypeError = new Error('Неправильный тип стиля');
+
+  render() {
+    const { className, value } = this.props;
+
+    if (value.type !== 'all') {
+      throw this.ruleTypeError;
+    }
+
+    const [pointRule, lineRule, polygonRule] = value.rule;
+
+    return (
+      <div className={cnCustomStyleControlForm(null, [className])}>
+        <CustomStyleControlFormTypePoint
+          type='line'
+          value={{ type: 'point', rule: pointRule }}
+          withIcon
+          onChange={this.partChangeHandler}
+        />
+
+        <CustomStyleControlFormTypeLine
+          type='line'
+          value={{ type: 'line', rule: lineRule }}
+          withIcon
+          onChange={this.partChangeHandler}
+        />
+
+        <CustomStyleControlFormTypePolygon
+          type='polygon'
+          value={{ type: 'polygon', rule: polygonRule }}
+          withIcon
+          onChange={this.partChangeHandler}
+        />
+      </div>
+    );
+  }
+
+  @boundMethod
+  private partChangeHandler(partValue: CustomStyleDescription) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'all') {
+      throw this.ruleTypeError;
+    }
+
+    onChange({
+      type: 'all',
+      rule: [
+        partValue.type === 'point' ? partValue.rule : value.rule[0],
+        partValue.type === 'line' ? partValue.rule : value.rule[1],
+        partValue.type === 'polygon' ? partValue.rule : value.rule[2]
+      ]
+    });
+  }
+}
+
+export const withTypeAll = withBemMod<CustomStyleControlFormProps, CustomStyleControlFormProps>(
+  cnCustomStyleControlForm(),
+  { type: 'all' },
+  () => CustomStyleControlFormTypeAll
+);

@@ -94,8 +94,8 @@ export interface PolygonRule {
 }
 
 interface BaseCustomStyleDescription {
-  type: 'point' | 'line' | 'polygon';
-  rule: PointRule | LineRule | PolygonRule;
+  type: 'point' | 'line' | 'polygon' | 'all';
+  rule: PointRule | LineRule | PolygonRule | (PointRule | LineRule | PolygonRule)[];
 }
 
 interface CustomStyleLineDescription extends BaseCustomStyleDescription {
@@ -113,10 +113,16 @@ interface CustomStylePolygonDescription extends BaseCustomStyleDescription {
   rule: PolygonRule;
 }
 
+interface CustomStyleAllDescription extends BaseCustomStyleDescription {
+  type: 'all';
+  rule: [PointRule, LineRule, PolygonRule];
+}
+
 export type CustomStyleDescription =
   | CustomStyleLineDescription
   | CustomStylePointDescription
-  | CustomStylePolygonDescription;
+  | CustomStylePolygonDescription
+  | CustomStyleAllDescription;
 
 export interface StyleGeoserverInfo {
   name: string;

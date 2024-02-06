@@ -13,29 +13,7 @@ import {
   WfsPointGeometry
 } from './wfs.models';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import { getGeometryFieldName } from '../../data/schema/schema.utils';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
-import { schemaService } from '../../data/schema/schema.service';
 import { PageOptions, SortOrder } from '../../models';
-import { services } from '../../services';
-
-export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
-  const { tableName, schemaId } = layer;
-  const schema = await schemaService.getSchema(schemaId);
-  const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
-
-  if (!schema.geometryType) {
-    throw new Error(`Не задан тип геометрии для схемы ${schemaId}`);
-  }
-
-  return {
-    type: 'Feature',
-    id: `${tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
-    geometry: getEmptyGeometry(schema.geometryType),
-    geometry_name: getGeometryFieldName(schema),
-    properties
-  };
-}
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdited> {
   if (type === GeometryType.POINT) {
@@ -159,11 +137,10 @@ export function transformDimension(dimension: number | string): number {
 }
 
 export function getFeatureExtent(feature: WfsFeature): Extent {
-  const olFeature: Feature<SimpleGeometry> | undefined = wfsFeatureToFeature(feature, true);
+  const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(feature);
   const extent: Extent | undefined = olFeature?.getGeometry()?.getExtent();
 
   if (!olFeature || !extent) {
-    services.logger.warn('Incorrect feature: ', feature);
     throw new Error('Incorrect feature');
   }
 

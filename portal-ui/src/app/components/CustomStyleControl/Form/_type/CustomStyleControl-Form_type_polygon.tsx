@@ -9,6 +9,7 @@ import {
   customStyleFillColors,
   customStyleStrokeColors
 } from '../../../../services/geoserver/styles/styles.models';
+import { Shape } from '../../../Icons/Shape';
 
 import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
 import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
@@ -16,11 +17,11 @@ import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleCo
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 
 @observer
-class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlFormProps> {
+export class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlFormProps> {
   private ruleTypeError = new Error('Неправильный тип стиля');
 
   render() {
-    const { className, value } = this.props;
+    const { className, value, withIcon } = this.props;
 
     if (value.type !== 'polygon') {
       throw this.ruleTypeError;
@@ -28,6 +29,8 @@ class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlForm
 
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
+        {withIcon && <Shape color='primary' />}
+
         <CustomStyleControlStrokeSelect
           label='обводка'
           color={value.rule.strokeColor}

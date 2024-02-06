@@ -2,7 +2,7 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 import { Folder, FolderOpen } from '@mui/icons-material';
 
-import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
+import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
 
 interface LayerIconTypeGroupProps {
   type: 'group';

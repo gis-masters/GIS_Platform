@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-
 import { describe, expect, test } from '@jest/globals';
 
 import { CustomStyleDescription } from './styles.models';
@@ -64,6 +62,26 @@ const polygonWithoutFill: CustomStyleDescription = {
   }
 };
 
+const allTypesDefault: CustomStyleDescription = {
+  type: 'all',
+  rule: [
+    {
+      markType: 'circle',
+      markSize: 20,
+      markColor: '#ed5c57'
+    },
+    {
+      strokeColor: '#0f5c1a',
+      strokeWidth: 2
+    },
+    {
+      fillColor: '#80ff80',
+      strokeColor: '#0f5c1a',
+      strokeWidth: 2
+    }
+  ]
+};
+
 const pointRedCircleSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ff0000</SvgParameter></Fill></Mark><Size>10</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
@@ -79,32 +97,41 @@ const redPolygonSld =
 const checkeredOrangePolygonSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><GraphicFill><Graphic><Mark><WellKnownName>shape://times</WellKnownName><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>6</Size></Graphic></GraphicFill></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-dasharray">4 4</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
-const withoutFillSld =
+const withoutFillPolygonSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PolygonSymbolizer><Fill><SvgParameter name="fill">#ffffffff</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+
+const allTypesDefaultSld =
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ed5c57</SvgParameter></Fill></Mark><Size>20</Size></Graphic></PointSymbolizer><LineSymbolizer><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer><PolygonSymbolizer><Fill><SvgParameter name="fill">#80ff80</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+
+const dummyComplexName = 'dummy:complex_name';
 
 describe('утилита создания SLD-стилей buildCustomSld', () => {
   test('красная круглая точка', () => {
-    expect(buildCustomSld('dummy:complex_name', pointRedCircle)).toEqual(pointRedCircleSld);
+    expect(buildCustomSld(dummyComplexName, pointRedCircle)).toEqual(pointRedCircleSld);
   });
 
   test('синяя линия', () => {
-    expect(buildCustomSld('dummy:complex_name', lineBlue)).toEqual(lineBlueSld);
+    expect(buildCustomSld(dummyComplexName, lineBlue)).toEqual(lineBlueSld);
   });
 
   test('прерывистая линия', () => {
-    expect(buildCustomSld('dummy:complex_name', lineDashed)).toEqual(lineDashedSld);
+    expect(buildCustomSld(dummyComplexName, lineDashed)).toEqual(lineDashedSld);
   });
 
   test('красный полигон', () => {
-    expect(buildCustomSld('dummy:complex_name', redPolygon)).toEqual(redPolygonSld);
+    expect(buildCustomSld(dummyComplexName, redPolygon)).toEqual(redPolygonSld);
   });
 
   test('оранжевый полигон в клеточку', () => {
-    expect(buildCustomSld('dummy:complex_name', checkeredOrangePolygon)).toEqual(checkeredOrangePolygonSld);
+    expect(buildCustomSld(dummyComplexName, checkeredOrangePolygon)).toEqual(checkeredOrangePolygonSld);
   });
 
   test('полигон без заливки', () => {
-    expect(buildCustomSld('dummy:complex_name', polygonWithoutFill)).toEqual(withoutFillSld);
+    expect(buildCustomSld(dummyComplexName, polygonWithoutFill)).toEqual(withoutFillPolygonSld);
+  });
+
+  test('все типы', () => {
+    expect(buildCustomSld(dummyComplexName, allTypesDefault)).toEqual(allTypesDefaultSld);
   });
 });
 
@@ -127,5 +154,13 @@ describe('утилита чтения SLD-стилей parseCustomStyle', () => 
 
   test('оранжевый полигон в клеточку', () => {
     expect(parseCustomStyle(checkeredOrangePolygonSld)).toEqual(checkeredOrangePolygon);
+  });
+
+  test('полигон без заливки', () => {
+    expect(parseCustomStyle(withoutFillPolygonSld)).toEqual(polygonWithoutFill);
+  });
+
+  test('все типы', () => {
+    expect(parseCustomStyle(allTypesDefaultSld)).toEqual(allTypesDefault);
   });
 });

@@ -22,7 +22,7 @@ import {
 import { stylesClient } from './styles.client';
 import { cqlConcat } from '../../util/cqlConcat';
 import { getLayerSchema } from '../../gis/layers/layers.service';
-import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
+import { getSupGeometryType } from './styles.utils';
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
@@ -210,16 +210,4 @@ export async function getSimpleStylesListForGeometryType(geometryType: GeometryT
   }
 
   return stylesList[supGeometryType];
-}
-
-export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygon' | 'point' {
-  if (isLinear(geometryType)) {
-    return 'line';
-  } else if (isPolygonal(geometryType)) {
-    return 'polygon';
-  } else if (isPoint(geometryType)) {
-    return 'point';
-  }
-
-  throw new Error('неподдерживаемый тип геометрии ' + geometryType);
 }

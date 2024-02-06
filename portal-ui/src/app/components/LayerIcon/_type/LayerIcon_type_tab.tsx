@@ -1,7 +1,7 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { LayerIconProps, cnLayerIcon } from '../LayerIcon';
+import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
 import { TypeTabPolygon } from '../../Icons/TypeTabPolygon';
 
 export const withTypeTab = withBemMod<LayerIconProps, LayerIconProps>(

@@ -21,6 +21,7 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import TileSource from 'ol/source/Tile';
 import ImageSource from 'ol/source/Image';
 import ImageLayer from 'ol/layer/Image';
+import BaseEvent from 'ol/events/Event';
 import { boundMethod } from 'autobind-decorator';
 
 import { route } from '../../stores/Route.store';
@@ -55,6 +56,7 @@ import { applyView } from '../data/schema/schema.utils';
 import { cqlConcat } from '../util/cqlConcat';
 import { FilterBySelection } from './map.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
+import { Toast } from '../../components/Toast/Toast';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -487,7 +489,9 @@ class MapService {
     const featuresInOlProjection: WfsFeature[] = [...features]
       .filter(({ geometry }) => geometry)
       .map((feature: WfsFeature<Coordinate | CoordinateEdited>): WfsFeature => {
-        const geometry = transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection);
+        const geometry =
+          feature.geometry &&
+          transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection);
 
         if (!geometry) {
           throw new Error('Geometry is not defined');
@@ -503,6 +507,16 @@ class MapService {
 
     const olFeatures: Feature<SimpleGeometry>[] = [];
     for (const wfsFeature of featuresInOlProjection) {
+      if (!wfsFeature.geometry) {
+        Toast.error({
+          message: 'Ошибка отображения объекта',
+          details: `ID: ${wfsFeature.id}.
+                      Нет геометрии.`
+        });
+
+        continue;
+      }
+
       try {
         const olFeature = wfsFeatureToFeature(wfsFeature);
         if (olFeature) {
@@ -658,7 +672,7 @@ class MapService {
   drawOff() {
     document.body.classList.remove('global-crosshair-cursor');
     if (this.draftSourceDraw && this.drawHandler) {
-      this.draftSourceDraw.un(['drawend'], this.drawHandler);
+      this.draftSourceDraw.un(['drawend'], this.drawHandler as (event: BaseEvent | Event) => unknown);
       this.map.removeInteraction(this.draftSourceDraw);
       delete this.draftSourceDraw;
     }
@@ -693,11 +707,11 @@ class MapService {
   }
 
   drawMarkers(features: Feature<SimpleGeometry>[]) {
-    this.markersSource.addFeatures(features);
+    this.markersSource?.addFeatures(features);
   }
 
   clearMarkers() {
-    this.markersSource.clear();
+    this.markersSource?.clear();
   }
 
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
@@ -779,7 +793,7 @@ class MapService {
   private prepareWMTSPanorama(basemap: Basemap): WMTS {
     try {
       const projection = getProjection(basemap.projection);
-      const projectionExtent = projection.getExtent();
+      const projectionExtent = projection?.getExtent();
       const size = getWidth(projectionExtent) / basemap.size;
       const resolutions: number[] = [];
       const matrixIds: string[] = [];
@@ -863,9 +877,9 @@ class MapService {
     /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-call */
 
     fill.setColor(imageColor);
-    this.draftStyle.getStroke().setColor(strokeColor);
+    this.draftStyle?.getStroke().setColor(strokeColor);
 
-    this.draftSource.addFeatures([]); // repaint
+    this.draftSource?.addFeatures([]); // repaint
   }
 
   private getDraftColors(): { strokeColor: string; imageColor: string } {

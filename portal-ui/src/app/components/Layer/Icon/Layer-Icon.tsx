@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 
 import { CrgLayer, CrgLayersGroup, CrgLayerType } from '../../../services/gis/layers/layers.models';
 import { LayerIcon as Icon } from '../../LayerIcon/LayerIcon.composed';
-import { LayerIconType } from '../../LayerIcon/LayerIcon';
+import { LayerIconType } from '../../LayerIcon/LayerIcon.base';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Icon.scss';
 

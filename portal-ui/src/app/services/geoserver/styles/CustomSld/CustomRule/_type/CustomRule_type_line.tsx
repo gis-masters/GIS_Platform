@@ -1,19 +1,20 @@
-import React, { FC } from 'react';
-
-import { CustomStyleDescription } from '../../../styles.models';
+import React, { FC, Fragment } from 'react';
 
 import { LineSymbolizer } from '../../LineSymbolizer/LineSymbolizer';
 import { SvgParameter } from '../../SvgParameter/SvgParameter';
 import { Stroke } from '../../Stroke/Stroke';
 import { Rule } from '../../Rule/Rule';
+import { CustomRuleProps } from '../CustomRule';
 
-export const CustomRuleTypeLine: FC<CustomStyleDescription> = ({ rule, type }) => {
+export const CustomRuleTypeLine: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'line') {
     throw new Error('Ошибка: некорректный тип стиля');
   }
 
+  const Wrapper = bare ? Fragment : Rule;
+
   return (
-    <Rule>
+    <Wrapper>
       <LineSymbolizer>
         <Stroke>
           <SvgParameter name='stroke'>{rule.strokeColor}</SvgParameter>
@@ -24,6 +25,6 @@ export const CustomRuleTypeLine: FC<CustomStyleDescription> = ({ rule, type }) =
           )}
         </Stroke>
       </LineSymbolizer>
-    </Rule>
+    </Wrapper>
   );
 };

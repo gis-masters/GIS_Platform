@@ -52,7 +52,7 @@ import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
-import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.util';
+import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
@@ -68,10 +68,10 @@ interface LayerMenuProps {
   x: number;
   y: number;
   anchor: HTMLElement;
-  onClose: () => void;
   isGroup: boolean;
   editMode: boolean;
   layerWithError: boolean;
+  onClose(): void;
 }
 
 @observer
