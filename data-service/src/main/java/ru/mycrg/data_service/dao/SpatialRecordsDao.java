@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -36,29 +37,30 @@ public class SpatialRecordsDao {
 
     private final Logger log = LoggerFactory.getLogger(SpatialRecordsDao.class);
 
+    private final BaseDao baseDao;
     private final ParameterizedBaseDao pBaseDao;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
     private final SqlParameterSourceFactory sqlParameterSourceFactory;
 
-    public SpatialRecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate,
+    public SpatialRecordsDao(BaseDao baseDao,
+                             NamedParameterJdbcTemplate parameterJdbcTemplate,
                              ParameterizedBaseDao pBaseDao,
                              SqlParameterSourceFactory parameterSourceMapperFactory) {
+        this.baseDao = baseDao;
         this.pJdbcTemplate = parameterJdbcTemplate;
         this.pBaseDao = pBaseDao;
         this.sqlParameterSourceFactory = parameterSourceMapperFactory;
     }
 
-    public String fetchGeometryAsGeoJson(ResourceQualifier qualifier, int srid) {
-        String fieldId = getIdField(qualifier);
-        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape::public.geometry, %d)) " +
-                                      "FROM %s WHERE %s = %d",
-                              srid, qualifier.getTableQualifier(), fieldId, qualifier.getRecordIdAsLong());
+    public List<Feature> findAll(ResourceQualifier tableQualifier,
+                                 String ecqlFilter,
+                                 SchemaDto schema,
+                                 Pageable pageable) {
+        return baseDao.findAll(tableQualifier, ecqlFilter, pageable, new FeatureRowMapper(schema));
+    }
 
-        log.debug("fetch geometry as text: [{}]", query);
-
-        return pJdbcTemplate.queryForObject(query,
-                                            new MapSqlParameterSource(fieldId, qualifier.getRecordIdAsLong()),
-                                            String.class);
+    public Long total(ResourceQualifier tableQualifier, String ecqlFilter) {
+        return baseDao.total(tableQualifier, ecqlFilter);
     }
 
     public Optional<Feature> findById(ResourceQualifier qualifier, SchemaDto schema) {
@@ -170,6 +172,19 @@ public class SpatialRecordsDao {
 
             throw new CrgDaoException(msg);
         }
+    }
+
+    public String fetchGeometryAsGeoJson(ResourceQualifier qualifier, int srid) {
+        String fieldId = getIdField(qualifier);
+        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape::public.geometry, %d)) " +
+                                      "FROM %s WHERE %s = %d",
+                              srid, qualifier.getTableQualifier(), fieldId, qualifier.getRecordIdAsLong());
+
+        log.debug("fetch geometry as text: [{}]", query);
+
+        return pJdbcTemplate.queryForObject(query,
+                                            new MapSqlParameterSource(fieldId, qualifier.getRecordIdAsLong()),
+                                            String.class);
     }
 
     public boolean isExist(ResourceQualifier qualifier) {

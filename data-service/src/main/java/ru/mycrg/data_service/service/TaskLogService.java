@@ -50,7 +50,7 @@ public class TaskLogService {
             throw new BadRequestException(message);
         }
 
-        long total = baseDao.getTotal(TASK_LOG_QUALIFIER, ecqlFilter);
+        long total = baseDao.total(TASK_LOG_QUALIFIER, ecqlFilter);
 
         return new PageImpl<>(taskLogs, pageable, total);
     }

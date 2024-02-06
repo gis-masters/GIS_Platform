@@ -41,7 +41,7 @@ public class EpsgService {
                                                    pageable,
                                                    EpsgModel.class);
 
-            Long total = baseDao.getTotal(tableQualifier, ecqlFilter);
+            Long total = baseDao.total(tableQualifier, ecqlFilter);
 
             return new PageImpl<>(Collections.unmodifiableList(epsg), pageable, total);
         } catch (BadSqlGrammarException e) {

@@ -224,6 +224,6 @@ public class RecordsDao {
     }
 
     public Long getTotal(ResourceQualifier tableQualifier, String ecqlFilter) {
-        return baseDao.getTotal(tableQualifier, ecqlFilter);
+        return baseDao.total(tableQualifier, ecqlFilter);
     }
 }

@@ -3,7 +3,6 @@ package ru.mycrg.data_service.dao;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,51 +41,22 @@ public class BaseDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public <T> Optional<T> findByFilter(ResourceQualifier tQualifier, String ecqlFilter, Class<T> clazz) {
-        try {
-            String query = String.format("SELECT * FROM %s %s",
-                                         tQualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
-            log.debug("Find by filter: [{}]", query);
-
-            T obj = pJdbcTemplate.getJdbcTemplate()
-                                 .queryForObject(query, new BeanPropertyRowMapper<>(clazz));
-
-            return Optional.ofNullable(obj);
-        } catch (DataAccessException e) {
-            log.error("Failed to find object: Reason: {}", e.getMessage(), e.getCause());
-
-            return Optional.empty();
-        }
-    }
-
-    public Optional<IRecord> findBy(ResourceQualifier qualifier,
-                                    String ecqlFilter,
-                                    @Nullable SchemaDto schema) {
-        String query = String.format("SELECT * FROM %s %s",
-                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
-        log.debug("Find by schema and by filter: [{}]", query);
-
-        List<IRecord> records = pJdbcTemplate.getJdbcTemplate()
-                                             .query(query, new RecordRowMapper(schema));
-
-        return records.isEmpty()
-                ? Optional.empty()
-                : Optional.of(records.get(0));
+    public <T> Optional<T> findBy(ResourceQualifier qualifier,
+                                  String ecqlFilter,
+                                  Class<T> clazz) {
+        return findBy(qualifier, ecqlFilter, new BeanPropertyRowMapper<>(clazz));
     }
 
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
                                     String ecqlFilter) {
-        return findBy(qualifier, ecqlFilter, null);
-    }
-
-    public IRecord getById(ResourceQualifier qualifier) throws CrgDaoException {
-        return getById(qualifier, null);
+        return findBy(qualifier, ecqlFilter, new RecordRowMapper(null));
     }
 
     public IRecord getById(ResourceQualifier qualifier,
                            @Nullable SchemaDto schema) throws CrgDaoException {
         return findById(qualifier, schema)
-                .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(), qualifier.getRecordId()));
+                .orElseThrow(
+                        () -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(), qualifier.getRecordId()));
     }
 
     public Optional<IRecord> findById(ResourceQualifier qualifier) {
@@ -106,37 +76,6 @@ public class BaseDao {
                                    new RecordRowMapper(schema))
                             .stream()
                             .findFirst();
-    }
-
-    public IRecord getByJson(ResourceJsonCondition qualifier,
-                             @Nullable SchemaDto schema) throws CrgDaoException {
-        return findByJson(qualifier, schema)
-                .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(), qualifier.getJsonIdValue()));
-    }
-
-    /**
-     * Пример запроса:
-     *
-     * @code SELECT * FROM workspace_789.landplot_1627_2d2b WHERE jsonb_path_exists(file::jsonb, '$[*] ? (@.id ==
-     * $idvalue )', '{"idvalue":26410}');
-     */
-    public Optional<IRecord> findByJson(ResourceJsonCondition qualifier,
-                                        @Nullable SchemaDto schema) {
-        var query = String.format(
-                "SELECT * FROM %s WHERE jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
-                qualifier.getTableQualifier(),
-                qualifier.getJsonFieldName(),
-                qualifier.getJsonIdValue()
-        );
-
-        log.debug("find record by json query: [{}]", query);
-
-        var records = pJdbcTemplate.getJdbcTemplate()
-                                   .query(query, new RecordRowMapper(schema));
-
-        return records.isEmpty()
-                ? Optional.empty()
-                : Optional.of(records.get(0));
     }
 
     public <T> List<T> findAll(ResourceQualifier qualifier,
@@ -170,9 +109,9 @@ public class BaseDao {
         return findAll(qualifier, ecqlFilter, new BeanPropertyRowMapper<>(clazz));
     }
 
-    public <T> List<T> findAll(ResourceQualifier qualifier,
-                               String ecqlFilter,
-                               RowMapper<T> rowMapper) {
+    private <T> List<T> findAll(ResourceQualifier qualifier,
+                                String ecqlFilter,
+                                RowMapper<T> rowMapper) {
         String query = "SELECT * FROM " + qualifier.getTableQualifier() +
                 " " + buildWhereSection(ecqlFilter);
 
@@ -181,13 +120,20 @@ public class BaseDao {
         return pJdbcTemplate.query(query, rowMapper);
     }
 
-    public Long getTotal(ResourceQualifier qualifier, String ecqlFilter) {
+    public Long total(ResourceQualifier qualifier, String ecqlFilter) {
         String query = String.format("SELECT count(*) FROM %s %s",
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
 
         log.debug("Request find total by path: [{}]", query);
 
         return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
+    }
+
+    public IRecord getByJson(ResourceJsonCondition qualifier,
+                             @Nullable SchemaDto schema) throws CrgDaoException {
+        return findByJson(qualifier, schema)
+                .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(),
+                                                                  qualifier.getJsonIdValue()));
     }
 
     /**
@@ -233,5 +179,45 @@ public class BaseDao {
 
             throw new DataServiceException(msg, e.getCause());
         }
+    }
+
+    /**
+     * Пример запроса:
+     *
+     * @code SELECT * FROM workspace_789.landplot_1627_2d2b WHERE jsonb_path_exists(file::jsonb, '$[*] ? (@.id ==
+     * $idvalue )', '{"idvalue":26410}');
+     */
+    public Optional<IRecord> findByJson(ResourceJsonCondition qualifier,
+                                         @Nullable SchemaDto schema) {
+        var query = String.format(
+                "SELECT * FROM %s WHERE jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
+                qualifier.getTableQualifier(),
+                qualifier.getJsonFieldName(),
+                qualifier.getJsonIdValue()
+        );
+
+        log.debug("find record by json query: [{}]", query);
+
+        var records = pJdbcTemplate.getJdbcTemplate()
+                                   .query(query, new RecordRowMapper(schema));
+
+        return records.isEmpty()
+                ? Optional.empty()
+                : Optional.of(records.get(0));
+    }
+
+    private <T> Optional<T> findBy(ResourceQualifier qualifier,
+                                   String ecqlFilter,
+                                   RowMapper<T> rowMapper) {
+        String query = String.format("SELECT * FROM %s %s",
+                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
+        log.debug("Find one by filter: [{}]", query);
+
+        List<T> records = pJdbcTemplate.getJdbcTemplate()
+                                       .query(query, rowMapper);
+
+        return records.isEmpty()
+                ? Optional.empty()
+                : Optional.of(records.get(0));
     }
 }

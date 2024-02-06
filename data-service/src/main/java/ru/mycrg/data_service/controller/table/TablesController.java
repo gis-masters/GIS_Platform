@@ -57,9 +57,9 @@ public class TablesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables")
-    public ResponseEntity<Object> getTables(@PathVariable String datasetId,
-                                            @RequestParam(name = "filter", required = false) String ecqlFilter,
-                                            Pageable pageable) {
+    public ResponseEntity<?> getTables(@PathVariable String datasetId,
+                                       @RequestParam(name = "filter", required = false) String ecqlFilter,
+                                       Pageable pageable) {
         Page<IResourceModel> tables = tableService.getPaged(datasetId, ecqlFilter, pageable);
 
         return ResponseEntity.ok(pageFromList(tables, pageable));
@@ -67,8 +67,8 @@ public class TablesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
-    public ResponseEntity<Object> getTable(@PathVariable String datasetId,
-                                           @PathVariable String tableId) {
+    public ResponseEntity<?> getTable(@PathVariable String datasetId,
+                                      @PathVariable String tableId) {
         IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
         return ResponseEntity.ok(table);
@@ -76,8 +76,8 @@ public class TablesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @DeleteMapping("/datasets/{datasetId}/tables/{tableId}")
-    public ResponseEntity<Object> deleteTable(@PathVariable String datasetId,
-                                              @PathVariable String tableId) {
+    public ResponseEntity<?> deleteTable(@PathVariable String datasetId,
+                                         @PathVariable String tableId) {
         ResourceQualifier rQualifier = new ResourceQualifier(datasetId, tableId);
 
         mediator.execute(new DeleteTableRequest(rQualifier));

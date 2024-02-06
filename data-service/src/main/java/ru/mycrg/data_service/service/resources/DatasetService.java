@@ -69,7 +69,7 @@ public class DatasetService {
                     .map(datasetModel -> getInfo(datasetModel.getIdentifier()))
                     .collect(Collectors.toList());
 
-            Long total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            Long total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
 
             return new PageImpl<>(Collections.unmodifiableList(datasetsWithItemsCount), pageable, total);
         } else {

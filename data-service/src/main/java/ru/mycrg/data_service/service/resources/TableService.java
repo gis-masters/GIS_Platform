@@ -18,8 +18,8 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -77,7 +77,7 @@ public class TableService {
                                             ecqlFilter,
                                             pageable,
                                             TableModel.class);
-            total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
             Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
@@ -88,7 +88,7 @@ public class TableService {
                                                 ecqlFilter,
                                                 pageable,
                                                 TableModel.class);
-                total = baseDao.getTotal(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+                total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
             } else {
                 allowedTables = permissionsRepository
                         .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, null, pageable)
@@ -163,7 +163,7 @@ public class TableService {
             String ecqlFilter = "identifier = '" + tQualifier.getTable() + "'";
 
             TableModel table = baseDao
-                    .findByFilter(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter, TableModel.class)
+                    .findBy(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter, TableModel.class)
                     .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
 
             table.setRole(OWNER.name());

@@ -78,7 +78,7 @@ public class TaskService {
                                         .stream()
                                         .map(IRecord::getContent)
                                         .collect(Collectors.toList());
-            long total = baseDao.getTotal(taskQualifier, filter);
+            long total = baseDao.total(taskQualifier, filter);
 
             return new PageImpl<>(tasks, pageable, total);
         } catch (BadSqlGrammarException ex) {

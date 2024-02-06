@@ -61,6 +61,10 @@ public class ResourceQualifier extends AQualifier {
         return new ResourceQualifier(schemaName, libraryName, LIBRARY);
     }
 
+    public static ResourceQualifier tableQualifier(String dataset, String table) {
+        return new ResourceQualifier(dataset, table);
+    }
+
     public Long getRecordIdAsLong() {
         if (recordId != null) {
             return Long.parseLong(recordId.toString());
