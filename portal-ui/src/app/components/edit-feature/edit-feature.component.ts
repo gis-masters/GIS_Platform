@@ -33,7 +33,7 @@ import { PropertySchema, PropertyType } from '../../services/data/schema/schema.
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/formValidation.service';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';

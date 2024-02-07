@@ -2,7 +2,7 @@ import { ComponentType, ReactNode } from 'react';
 
 import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FormControlProps } from '../../../components/Form/Control/Form-Control';
-import { FieldValidator } from '../../formValidation.service';
+import { FieldValidator } from '../../util/form/formValidation.utils';
 
 export enum PropertyType {
   STRING = 'string',

@@ -5,8 +5,8 @@ import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { getUrlSubFormSchema } from '../../../services/util/form/fieldUrl';
 import { PropertySchemaUrl } from '../../../services/data/schema/schema.models';
-import { getEditUrlFormSchema } from '../../Form/Form.utils';
 import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
 import { HtmlContent } from '../../HtmlContent/HtmlContent';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
@@ -86,7 +86,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
         {editable && (
           <FormDialog
             open={this.editDialogOpen}
-            schema={{ properties: getEditUrlFormSchema(property) }}
+            schema={{ properties: getUrlSubFormSchema(property) }}
             value={item}
             actionFunction={this.editUrl}
             actionButtonProps={{ children: 'Сохранить' }}

@@ -1,0 +1,11 @@
+body .Form-ChoiceMenuItem {
+  white-space: normal;
+
+  &_type_selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    max-width: 350px;
+  }
+}

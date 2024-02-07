@@ -3,21 +3,3 @@
     text-transform: none;
   }
 }
-
-body .Form-ChoiceMenuItem {
-  white-space: normal;
-}
-
-body .Form-ChoiceRenderValue {
-  display: flex;
-}
-
-body .Form-ChoiceRenderValueText {
-  overflow: hidden;
-
-  height: auto;
-  min-height: 1.4375em;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}

@@ -6,7 +6,7 @@ import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutlin
 
 import { sleep } from '../../services/util/sleep';
 import { PropertyType, PropertySchema, SimpleSchema } from '../../services/data/schema/schema.models';
-import { validateFormValue } from '../../services/formValidation.service';
+import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';

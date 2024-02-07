@@ -16,7 +16,7 @@ import { cn } from '@bem-react/classname';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { ContentType, Schema } from '../../../services/data/schema/schema.models';
-import { cleanCalculatedValues } from '../../../services/formValidation.service';
+import { cleanCalculatedValues } from '../../../services/util/form/formValidation.utils';
 import { createLibraryRecord } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { FormDialog } from '../../FormDialog/FormDialog';

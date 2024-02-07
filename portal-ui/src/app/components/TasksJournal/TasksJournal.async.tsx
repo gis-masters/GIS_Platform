@@ -14,7 +14,7 @@ import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { communicationService } from '../../services/communication.service';
 import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
 import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
-import { calculateValues } from '../../services/formValidation.service';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { Schema } from '../../services/data/schema/schema.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';

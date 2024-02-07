@@ -12,7 +12,7 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { PropertySchema, PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/formValidation.service';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { schemaService } from '../../services/data/schema/schema.service';
 import {
   addFilterPart,

@@ -88,7 +88,10 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     if (currentValue.view !== changedValue.view && currentValue.styleName === this.schemaWithAppliedView?.styleName) {
       this.currentFormValue = changedValue;
       this.currentFormValue.styleName = this.schemaWithAppliedView?.styleName;
-      this.formInvoke?.setValue?.({ ...changedValue, styleName: this.schemaWithAppliedView?.styleName });
+      this.formInvoke?.setValue?.({
+        ...changedValue,
+        styleName: this.schemaWithAppliedView?.styleName
+      });
 
       return;
     }
@@ -192,13 +195,12 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       properties.push({
         name: 'photoMode',
         title: 'Фотослой',
+        multiple: true,
         description:
           'Если опция включена, при выделении на карте объектов этого слоя открываются фотографии из этих объектов',
         propertyType: PropertyType.CHOICE,
         defaultValue: layer.photoMode || '',
-        options: this.propertiesTypeFileOptions.some(property => property.title === 'Не выбрано')
-          ? this.propertiesTypeFileOptions
-          : [{ title: 'Не выбрано', value: '' }, ...this.propertiesTypeFileOptions]
+        options: this.propertiesTypeFileOptions
       });
     }
 

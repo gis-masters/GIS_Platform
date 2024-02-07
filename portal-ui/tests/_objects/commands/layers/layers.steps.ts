@@ -67,7 +67,7 @@ Given('у данного слоя включен фоторежим по пол�
     throw new Error(`Свойство ${fieldTitle} не найдено`);
   }
 
-  await updateLayer(latestLayer.id, { photoMode: property.name }, latestProject.id);
+  await updateLayer(latestLayer.id, { photoMode: JSON.stringify([property.name]) }, latestProject.id);
 });
 
 Given('в созданном проекте существует внешний слой', async function (this: ScenarioScope, table: DataTable) {

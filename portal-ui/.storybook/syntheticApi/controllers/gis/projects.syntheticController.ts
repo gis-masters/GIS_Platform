@@ -6,7 +6,7 @@ import { SyntheticController } from '../masterController';
 import { err404, parsePageOptions } from '../../utils';
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { Role } from '../../../../src/app/services/data/permissions/permissions.models';
-import { validateFieldValue } from '../../../../src/app/services/formValidation.service';
+import { validateFieldValue } from '../../../../src/app/services/util/form/formValidation.utils';
 import { PropertySchemaString, PropertyType } from '../../../../src/app/services/data/schema/schema.models';
 import { PageableResources } from '../../../../src/server-types/common-contracts';
 

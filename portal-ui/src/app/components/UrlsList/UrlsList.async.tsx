@@ -7,12 +7,11 @@ import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { getEditUrlFormSchema, parseUrlValue } from '../Form/Form.utils';
+import { getUrlSubFormSchema, parseUrlValue } from '../../services/util/form/fieldUrl';
 import { UrlInfo } from '../Form/Control/_type/Form-Control_type_url';
 import { PropertySchemaUrl } from '../../services/data/schema/schema.models';
 import { FormViewValue } from '../Form/ViewValue/Form-ViewValue';
 import { FormDialog } from '../FormDialog/FormDialog';
-
 import { UrlsListItem } from './Item/UrlsList-Item';
 
 import '!style-loader!css-loader!sass-loader!./UrlsList.scss';
@@ -68,7 +67,7 @@ export default class UrlsList extends Component<UrlsListProps> {
           <FormDialog
             open={this.createDialogOpen}
             className={cnUrlsListDialog()}
-            schema={{ properties: getEditUrlFormSchema(property) }}
+            schema={{ properties: getUrlSubFormSchema(property) }}
             value={{ url: '', text: '' }}
             actionFunction={this.createUrl}
             actionButtonProps={{ children: 'Сохранить' }}

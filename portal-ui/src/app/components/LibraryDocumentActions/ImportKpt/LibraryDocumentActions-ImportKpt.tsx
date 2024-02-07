@@ -9,7 +9,7 @@ import { SelectVectorTableControl } from '../../SelectVectorTableControl/SelectV
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { FieldValidator } from '../../../services/formValidation.service';
+import { FieldValidator } from '../../../services/util/form/formValidation.utils';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { CrgLayer } from '../../../services/gis/layers/layers.models';
 import { Datasource } from '../../AddLayerDialog/AddLayerDialog';

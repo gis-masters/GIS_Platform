@@ -4,7 +4,7 @@ import { SaveOutlined } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 
-import { validateFormValue } from '../../services/formValidation.service';
+import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
 

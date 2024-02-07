@@ -1,4 +1,5 @@
 Feature: Поле choice: внешний вид
+
   Scenario: Внешний вид заполненного большим значением редактируемого поля
     Given я на странице "form-field-choice--long-value-editable" библиотеки блоков
     Then блок FormControlTypeChoice вариант "long-value-editable" выглядит как положено
@@ -33,3 +34,11 @@ Feature: Поле choice: внешний вид
     When я нажимаю кнопку `Показать всё`
     And я нажимаю кнопку `Свернуть`
     Then блок FormViewTypeChoice вариант "long-value-view-closed" выглядит как положено
+
+  Scenario: Внешний вид поля с возможностью выбора нескольких значений без выбранных значений
+    Given я на странице "form-field-choice--multiple-empty" библиотеки блоков
+    Then блок FormControlTypeChoice вариант "multiple-empty" выглядит как положено
+
+  Scenario: Внешний вид поля с возможностью выбора нескольких значений с тремя выбранными значениями
+    Given я на странице "form-field-choice--multiple-three-value" библиотеки блоков
+    Then блок FormControlTypeChoice вариант "multiple-three-value" выглядит как положено

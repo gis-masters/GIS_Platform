@@ -4,7 +4,7 @@ import { StoryFn } from '@storybook/react';
 import { Biotech } from '@mui/icons-material';
 
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
-import { FieldErrors, validateFormValue } from '../../../../services/formValidation.service';
+import { FieldErrors, validateFormValue } from '../../../../services/util/form/formValidation.utils';
 import { Form } from '../../Form';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';

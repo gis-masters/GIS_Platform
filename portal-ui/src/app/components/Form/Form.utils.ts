@@ -8,16 +8,13 @@ import {
   ContentType,
   PropertyOption,
   PropertySchema,
-  PropertySchemaUrl,
   PropertyType,
   Schema,
   SimpleSchema,
   ValueFormula
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
-import { UrlInfo } from './Control/_type/Form-Control_type_url';
 import { FiasValue } from '../../services/data/fias/fias.models';
-import { services } from '../../services/services';
 
 const fromComplex: Partial<
   Record<PropertyType, <T>(propertySchema: PropertySchema, formValue: Partial<T>, fieldValue: unknown) => Partial<T>>
@@ -71,51 +68,6 @@ export function convertToComplexField<T>(field: PropertySchema, formValue: Parti
   }
 
   return formValue[field.name];
-}
-
-export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
-  if (value) {
-    try {
-      const parsedValue = JSON.parse(value) as UrlInfo | UrlInfo[];
-
-      if (Array.isArray(parsedValue)) {
-        return parsedValue;
-      }
-
-      if (!parsedValue) {
-        return multiple ? [] : [{ url: '', text: '' }];
-      }
-
-      if (!Array.isArray(parsedValue)) {
-        return [parsedValue];
-      }
-    } catch {
-      services.logger.warn('Неверное значение url: ', value);
-    }
-  }
-
-  if (!editable) {
-    return [];
-  }
-
-  return multiple ? [] : [{ url: '', text: '' }];
-}
-
-export function getEditUrlFormSchema(field: PropertySchemaUrl): PropertySchema[] {
-  return [
-    {
-      name: 'url',
-      title: 'Адрес ссылки',
-      propertyType: PropertyType.STRING,
-      regex: field.regex,
-      wellKnownRegex: (!field.regex && field.wellKnownRegex) || 'url'
-    },
-    {
-      name: 'text',
-      title: 'Название',
-      propertyType: PropertyType.STRING
-    }
-  ];
 }
 
 export function isEqualExceptCalculated<T>(

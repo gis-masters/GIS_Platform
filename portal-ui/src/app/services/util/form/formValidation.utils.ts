@@ -1,22 +1,22 @@
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
-import { getEditUrlFormSchema, parseUrlValue } from '../components/Form/Form.utils';
-import { FileInfo } from './data/files/files.models';
-import { knownRegex } from './regexp.service';
+import { FileInfo } from '../../data/files/files.models';
+import { knownRegex } from '../../regexp.service';
 import {
   PropertyType,
   PropertySchema,
-  PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertySchemaFloat,
   PropertySchemaInt,
   PropertySchemaString,
   PropertySchemaUrl,
   ValueFormula
-} from './data/schema/schema.models';
-import { valueWellKnownFormulas } from './data/schema/schema.utils';
-import { notFalsyFilter } from './util/NotFalsyFilter';
+} from '../../data/schema/schema.models';
+import { valueWellKnownFormulas } from '../../data/schema/schema.utils';
+import { notFalsyFilter } from '../NotFalsyFilter';
+import { getMultipleChoiceValue } from './choiceMultiple.util';
+import { getUrlSubFormSchema, parseUrlValue } from './fieldUrl';
 
 const messages = {
   required: 'Обязательное поле ',
@@ -101,15 +101,62 @@ function jsonArrayRequired(value: string, { required }: PropertySchema): string[
 
 // choice
 
-function choiceRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
-  if (required && !(typeof value === 'number' || typeof value === 'string')) {
+function choiceRequired(value: unknown, property: PropertySchema): string[] | undefined {
+  if (property.propertyType !== PropertyType.CHOICE) {
+    throw new Error('Ошибка типа свойства');
+  }
+
+  if (!property.required) {
+    return;
+  }
+
+  if (property.required && value === '') {
     return [messages.required];
+  }
+
+  if (property.multiple && ((typeof value === 'string' && value === '[]') || value === undefined || value === null)) {
+    return [messages.required];
+  }
+
+  if (!property.multiple) {
+    if (value === undefined || value === null || value === '[]') {
+      return [messages.required];
+    }
+    if (!(typeof value === 'number' || typeof value === 'string')) {
+      return [messages.required];
+    }
   }
 }
 
-function choiceValueInOptions(value: unknown, { options }: PropertySchemaChoice): string[] | undefined {
-  if (value && !options.some(option => String(option.value) === String(value))) {
-    return [messages.required];
+function choiceValueInOptions(value: unknown, property: PropertySchema): string[] | undefined {
+  if (property.propertyType !== PropertyType.CHOICE) {
+    throw new Error('Ошибка типа свойства');
+  }
+
+  if (value === '' || value === undefined || value === null) {
+    return;
+  }
+
+  const { options, multiple } = property;
+
+  if (!multiple && !options.some(option => String(option.value) === String(value))) {
+    return [messages.notInOptions];
+  }
+
+  if (multiple) {
+    if (value === undefined || value === null) {
+      return [messages.notInOptions];
+    }
+
+    if (value === '[]') {
+      return;
+    }
+
+    const multipleValues = getMultipleChoiceValue(value);
+
+    if (!options.some(option => multipleValues.includes(String(option.value)))) {
+      return [messages.notInOptions];
+    }
   }
 }
 
@@ -187,7 +234,7 @@ function urlRequired(value: string, { required, multiple }: PropertySchemaUrl): 
 function urlRegex(value: string, property: PropertySchemaUrl): string[] {
   const urlValue = parseUrlValue(value, property.multiple);
 
-  const fields = getEditUrlFormSchema(property);
+  const fields = getUrlSubFormSchema(property);
 
   const errors = urlValue.flatMap(item => {
     const fieldsErrors = validateFormValue(item, fields as PropertySchemaString[]);

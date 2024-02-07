@@ -21,7 +21,7 @@ import { placeFile } from '../../services/data/file-placement/file-placement.ser
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
 import { getDefaultValues, getViewChoiceOptions } from '../Form/Form.utils';
-import { FieldValidator, validateFormValue } from '../../services/formValidation.service';
+import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';

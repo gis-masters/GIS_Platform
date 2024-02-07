@@ -10,7 +10,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { calculateValues } from '../../../services/formValidation.service';
+import { calculateValues } from '../../../services/util/form/formValidation.utils';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { applyView } from '../../../services/data/schema/schema.utils';
 import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';

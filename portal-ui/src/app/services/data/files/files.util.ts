@@ -111,27 +111,58 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
 export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {
   return features.some(feature => {
     const photoMode = getLayerByFeatureInCurrentProject(feature)?.photoMode;
+    if (!photoMode) {
+      return false;
+    }
+    try {
+      const photoModeValue = (JSON.parse(photoMode) as string[]).filter(value => value !== '');
 
-    return typeof photoMode === 'string' && feature.properties[photoMode];
+      return Array.isArray(photoModeValue) && !!photoModeValue.length;
+    } catch {
+      return typeof photoMode === 'string' && !!feature.properties[photoMode];
+    }
   });
 }
 
 export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
   const layer = getLayerByFeatureInCurrentProject(feature);
-  if (typeof layer?.photoMode !== 'string') {
+  if (!layer?.photoMode || typeof layer?.photoMode !== 'string') {
     return [];
   }
-  const propertyValue = feature.properties[layer?.photoMode];
 
-  if (layer?.photoMode) {
-    if (typeof propertyValue === 'string') {
+  try {
+    const photoModeValues = JSON.parse(layer.photoMode) as string[];
+
+    return photoModeValues
+      .map(value => {
+        if (feature.properties[value]) {
+          return feature.properties[value];
+        }
+      })
+      .flatMap(property => {
+        if (typeof property === 'string') {
+          try {
+            return JSON.parse(property) as FileInfo[];
+          } catch {
+            // do nothing
+          }
+        } else if (Array.isArray(property)) {
+          return property as FileInfo[];
+        }
+      })
+      .filter(notFalsyFilter);
+  } catch {
+    // в данных может встречаться photoMode со значением в виде одиночной строки
+    const property = feature.properties[layer?.photoMode];
+
+    if (typeof property === 'string') {
       try {
-        return JSON.parse(propertyValue) as FileInfo[];
+        return JSON.parse(property) as FileInfo[];
       } catch {
         // do nothing
       }
-    } else if (Array.isArray(propertyValue)) {
-      return propertyValue as FileInfo[];
+    } else if (Array.isArray(property)) {
+      return property as FileInfo[];
     }
   }
 
