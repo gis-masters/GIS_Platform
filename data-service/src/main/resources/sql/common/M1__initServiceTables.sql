@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS data.base_maps
 (
-    id                       bigserial              NOT NULL,
-    name                     character varying(255),
-    title                    character varying(255) NOT NULL,
-    thumbnail_urn            character varying(255) NOT NULL,
-    type                     character varying(20)  NOT NULL,
-    url                      character varying(255),
-    layer_name               character varying(255),
+    id                       bigserial             NOT NULL,
+    name                     character varying,
+    title                    character varying     NOT NULL,
+    thumbnail_urn            character varying     NOT NULL,
+    type                     character varying(20) NOT NULL,
+    url                      character varying,
+    layer_name               character varying,
     style                    character varying(50),
     projection               character varying(20),
     format                   character varying(20),
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS data.schemas_and_tables
     scale                       integer,
     document_type               character varying(100),
     doc_approve_date            timestamp without time zone,
-    status                      varchar(100),
+    status                      varchar(50),
     is_public                   boolean,
     doc_termination_date        timestamp without time zone,
     gisogd_rf_publication_order integer,
@@ -54,9 +54,9 @@ ALTER TABLE data.schemas_and_tables
 
 CREATE TABLE IF NOT EXISTS data.schemas
 (
-    id                bigserial              NOT NULL,
-    name              character varying(255) NOT NULL,
-    class_rule        json                   NOT NULL,
+    id                bigserial         NOT NULL,
+    name              character varying NOT NULL,
+    class_rule        json              NOT NULL,
     custom_rule       text,
     calculated_fields text,
     CONSTRAINT schemas_pkey PRIMARY KEY (id)
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS data.processes
 (
     id        bigserial NOT NULL,
     user_name character varying(60),
-    title     character varying(255),
+    title     character varying,
     type      character varying(20),
     status    character varying(20),
     extra     json,
@@ -102,7 +102,7 @@ ALTER TABLE data.doc_libraries
 CREATE TABLE IF NOT EXISTS data.files
 (
     id                 uuid                   NOT NULL,
-    title              character varying(255) NOT NULL,
+    title              character varying      NOT NULL,
     size               bigint,
     extension          character varying(20),
     path               character varying(500) NOT NULL,
@@ -120,7 +120,7 @@ ALTER TABLE data.files
 CREATE TABLE IF NOT EXISTS data.acl_roles
 (
     id   bigserial NOT NULL,
-    name character varying(255),
+    name character varying,
     CONSTRAINT acl_roles_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE data.acl_roles
@@ -139,11 +139,11 @@ ALTER TABLE data.acl_principals
 
 CREATE TABLE IF NOT EXISTS data.acl_permissions
 (
-    id             bigserial              NOT NULL,
-    role_id        bigint                 NOT NULL,
-    principal_id   bigint                 NOT NULL,
-    resource_table character varying(255) NOT NULL,
-    resource_id    bigint                 NOT NULL,
+    id             bigserial         NOT NULL,
+    role_id        bigint            NOT NULL,
+    principal_id   bigint            NOT NULL,
+    resource_table character varying NOT NULL,
+    resource_id    bigint            NOT NULL,
     created_by     character varying(50),
     created_at     timestamp without time zone,
     last_modified  timestamp without time zone,

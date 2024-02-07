@@ -35,10 +35,10 @@ public class SchemasAndTables {
     @Column
     private String path;
 
-    @Column
+    @Column(length = 20)
     private String crs;
 
-    @Column
+    @Column(length = 50)
     private String schemaId;
 
     @Column(name = "items_count")
@@ -54,7 +54,7 @@ public class SchemasAndTables {
     @Column(name = "fias__oktmo")
     private String fiasOktmo;
 
-    @Column(name = "document_type")
+    @Column(name = "document_type", length = 100)
     private String documentType;
 
     @Column(name = "doc_approve_date")
@@ -63,7 +63,7 @@ public class SchemasAndTables {
     @Column(name = "scale")
     private Integer scale;
 
-    @Column
+    @Column(length = 50)
     private String status;
 
     @Column(name = "is_public")

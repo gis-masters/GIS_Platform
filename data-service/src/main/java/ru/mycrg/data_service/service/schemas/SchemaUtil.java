@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.schemas;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -26,8 +28,8 @@ public class SchemaUtil {
 
     private static final Logger log = LoggerFactory.getLogger(SchemaUtil.class);
 
-    private static final List<ValueType> typesReadyForFts = List.of(STRING, DATETIME, DOCUMENT, CHOICE, FILE, FIAS,
-                                                                    LOOKUP, UUID, USER, TEXT, URL);
+    private static final List<ValueType> typesReadyForFts = List.of(STRING, DOCUMENT, CHOICE, FILE, FIAS, LOOKUP,
+                                                                    UUID, USER, TEXT, URL);
 
     private SchemaUtil() {
         throw new IllegalStateException("Utility class");
@@ -212,7 +214,11 @@ public class SchemaUtil {
                      .anyMatch(property -> property.getValueTypeAsEnum().equals(type));
     }
 
-    private static boolean isSearchable(SimplePropertyDto prop) {
+    private static boolean isSearchable(@Nullable SimplePropertyDto prop) {
+        if (prop == null || TRUE.equals(prop.isHidden())) {
+            return false;
+        }
+
         return typesReadyForFts.contains(ValueType.valueOf(prop.getValueType()));
     }
 }

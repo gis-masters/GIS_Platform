@@ -171,6 +171,22 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         initTable(schemaTitle);
     }
 
+    @When("Для таблицы включен полнотекстовый поиск")
+    public void switchOnFtsForLatestTable() {
+        TableCreateDto latestTable = getLatestTable();
+
+        TableUpdateDto dto = new TableUpdateDto();
+        dto.setReadyForFts(true);
+
+        updateTable(latestTable.getName(), dto);
+
+        if (response.statusCode() != 200) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Не удалось включить FTS для таблицы: " + latestTable.getName());
+        }
+    }
+
     @When("Пользователь делает запрос на удаление текущей таблицы")
     public void deleteTable() {
         response = getBaseRequestWithCurrentCookie()
@@ -253,7 +269,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на обновление информации о текущей таблице")
     public void updateCurrentTable() {
-        updateTableInfo(currentTableName, new TableUpdateDto("update title"));
+        updateTable(currentTableName, new TableUpdateDto("update title"));
     }
 
     @When("Администратор даёт доступ: {string} для текущего пользователя на текущую таблицу")
@@ -270,7 +286,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         createPermissionForTable(new PermissionCreateDto("user", userId, role), anotherTableName);
     }
 
-    private void updateTableInfo(String tableName, TableUpdateDto dto) {
+    private void updateTable(String tableName, TableUpdateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         contentType(ContentType.JSON).

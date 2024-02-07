@@ -205,7 +205,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         validationSteps.validateLayer();
     }
 
-    @Given("Импортируем архив с валидным Shape-файлом в проект")
+    @Given("Импортирован архив с валидным Shape-файлом в проект")
     public void importValidShape() throws InterruptedException {
         initDataset();
         importSteps.initImport();

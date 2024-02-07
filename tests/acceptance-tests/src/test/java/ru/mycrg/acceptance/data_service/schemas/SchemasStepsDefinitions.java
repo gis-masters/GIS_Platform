@@ -60,6 +60,9 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     public void checkThatSchemasWithTag(String tag) {
         List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
 
+        assertNotNull(tagsFromSchemas);
+        assertFalse(tagsFromSchemas.isEmpty());
+
         long quantityHasTag = tagsFromSchemas.stream()
                                              .filter(Objects::nonNull)
                                              .filter(tags -> tags.contains(tag))
@@ -150,6 +153,10 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     private void fromPreparedSchemas(String schemaTemplate) {
         switch (schemaTemplate) {
+            case "Тест FTS - исключение hidden полей":
+                createSchema(testFtsHiddenFieldsSchema());
+
+                break;
             case "Тестовая схема V1":
                 SchemaDto schema0 = prepareHardcodedDefaultSchema();
                 schema0.setTitle("Тестовая схема V1");
@@ -314,6 +321,42 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         } else if (response.statusCode() != 201) {
             throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
         }
+    }
+
+    private SchemaDto testFtsHiddenFieldsSchema() {
+        return gson.fromJson(
+                "{" +
+                        "  \"name\": \"schema_for_test_fts_hidden-fields\"," +
+                        "  \"title\": \"Тест FTS - исключение hidden полей\"," +
+                        "  \"tableName\": \"test_fts_hidden_fields\"," +
+                        "  \"styleName\": \"generic\"," +
+                        "  \"readOnly\": false," +
+                        "  \"geometryType\": \"MultiPolygon\"," +
+                        "  \"properties\": [" +
+                        "    {" +
+                        "      \"name\": \"field_1\"," +
+                        "      \"title\": \"Строка 1\"," +
+                        "      \"description\": \"Строка участвующая в полнотекстовом поиске\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_2\"," +
+                        "      \"title\": \"Строка 2\"," +
+                        "      \"description\": \"Скрытая строка - НЕ должна участвовать в полнотекстовом поиске\"," +
+                        "      \"valueType\": \"STRING\"," +
+                        "      \"hidden\": true" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"shape\"," +
+                        "      \"title\": \"Геометрия\"," +
+                        "      \"hidden\": true," +
+                        "      \"valueType\": \"GEOMETRY\"," +
+                        "      \"allowedValues\": [" +
+                        "        \"MultiPolygon\"" +
+                        "      ]" +
+                        "    }" +
+                        "  ]" +
+                        "}", SchemaDto.class);
     }
 
     private SchemaDto prepareFunctionalZoneWithCalculatedFields() {

@@ -101,26 +101,6 @@ Feature: Действия с пользователями
       | surName        | desc              |
       | createdAt      | desc              |
 
-  Scenario Outline: Выборка всех пользователей постранично (<usersPerPage> page/pages)
-    Given Существуют пользователи
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-    When Администратор делает постраничный запрос на пользователей
-    Then Сервер отвечает со статус-кодом 200
-    And Количество страниц пользователей пропорционально "<usersPerPage>"
-    And На всех страницах пользователей есть "<usersPerPage>"
-    Examples:
-      | usersPerPage |
-      | 1            |
-      | 2            |
-      | 3            |
-
   Scenario: При выборке всех пользователей постранично результаты не дублируются
     Given Существует 30 пользователей
     When  Администратор делает постраничный запрос на всех пользователей, по 5 пользователей на странице

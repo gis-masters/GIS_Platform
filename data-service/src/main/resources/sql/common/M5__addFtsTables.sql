@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS data.fts_documents
 (
-    schema            character varying NOT NULL,
-    "table"           character varying NOT NULL,
-    id                bigint            NOT NULL,
-    path              character varying NOT NULL,
+    schema            character varying(40)  NOT NULL,
+    "table"           character varying(100) NOT NULL,
+    id                bigint                 NOT NULL,
+    path              character varying      NOT NULL,
     concatenated_data text,
     vector_data       tsvector GENERATED ALWAYS AS (to_tsvector('russian', concatenated_data)) STORED
 ) TABLESPACE pg_default;
@@ -16,9 +16,9 @@ CREATE INDEX IF NOT EXISTS idx_documents_vector_data ON data.fts_documents USING
 
 CREATE TABLE IF NOT EXISTS data.fts_layers
 (
-    schema            character varying NOT NULL,
-    "table"           character varying NOT NULL,
-    id                bigint            NOT NULL,
+    schema            character varying(40)  NOT NULL,
+    "table"           character varying(100) NOT NULL,
+    id                bigint                 NOT NULL,
     concatenated_data text,
     vector_data       tsvector GENERATED ALWAYS AS (to_tsvector('russian', concatenated_data)) STORED
 ) TABLESPACE pg_default;

@@ -14,7 +14,7 @@ public class FeatureBuilder {
 
     public static final String DATA_KEY = "тестовые данные";
 
-    public static List<Feature> prepareFeatures(String dataTemplate, SchemaDto schema) {
+    public static List<Feature> prepareFeatures(String dataTemplate) {
         List<Feature> features = new ArrayList<>();
 
         switch (dataTemplate) {
@@ -34,6 +34,19 @@ public class FeatureBuilder {
                 features.add(featureF);
                 features.add(featureI);
                 features.add(featureZ);
+
+                break;
+            case "исключение hidden полей при полнотекстовом поиске":
+                Feature feature1 = getFeature_F();
+                feature1.setProperty("field_1", "с. Золотое поле, ул. Ленина, д. 71");
+                feature1.setProperty("field_2", "с. Золотая балка, ул. Пушкина, д. 99");
+
+                Feature feature2 = getFeature_I();
+                feature2.setProperty("field_1", "с. Льговсоке, ул. Долгоруковская, д. 22");
+                feature2.setProperty("field_2", "с. Золотое поле, ул. Комарова, д. 71");
+
+                features.add(feature1);
+                features.add(feature2);
 
                 break;
             default:

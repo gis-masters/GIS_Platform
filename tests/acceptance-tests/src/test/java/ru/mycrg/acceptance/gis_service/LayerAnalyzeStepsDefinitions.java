@@ -43,7 +43,7 @@ public class LayerAnalyzeStepsDefinitions extends BaseStepsDefinitions {
                         basePath("");
     }
 
-    @When("Запускаем проверку доступности данного слоя по WMS")
+    @When("я запускаю анализатор: проверка доступности слоя по WMS")
     public void checkLayerEfficiencyOnGeoserver() {
         Resource resource = createResource();
 
@@ -59,7 +59,7 @@ public class LayerAnalyzeStepsDefinitions extends BaseStepsDefinitions {
                         extract().response();
     }
 
-    @Then("Результат проверки слоя положителен")
+    @Then("результат проверки слоя положителен")
     public void checkPositiveAnalyzeResult() {
         assertTrue(response.jsonPath().get("passed").toString().contains("true"));
     }

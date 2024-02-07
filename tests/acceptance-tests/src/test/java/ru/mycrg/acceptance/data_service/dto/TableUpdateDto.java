@@ -14,11 +14,17 @@ public class TableUpdateDto {
 
     private Boolean isPublic;
 
+    private Boolean readyForFts;
+
     private String fias__address;
 
     private String fias__oktmo;
 
     private Long fias__id;
+
+    public TableUpdateDto() {
+        // Required
+    }
 
     public TableUpdateDto(String title) {
         this.title = title;
@@ -78,5 +84,13 @@ public class TableUpdateDto {
 
     public void setFias__id(Long fias__id) {
         this.fias__id = fias__id;
+    }
+
+    public Boolean getReadyForFts() {
+        return readyForFts;
+    }
+
+    public void setReadyForFts(Boolean readyForFts) {
+        this.readyForFts = readyForFts;
     }
 }

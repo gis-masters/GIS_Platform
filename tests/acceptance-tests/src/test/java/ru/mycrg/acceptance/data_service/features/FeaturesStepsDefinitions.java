@@ -8,7 +8,6 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -33,10 +32,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Таблица наполнена данными {string}")
     public void createSomeDataInCurrentTable(String dataTemplate) throws JsonProcessingException {
-        String schemaName = getLatestTable().getSchemaId();
-        SchemaDto schema = getSchemaByName(schemaName);
-
-        scenarioFeatures = prepareFeatures(dataTemplate, schema);
+        scenarioFeatures = prepareFeatures(dataTemplate);
         for (Feature feature: scenarioFeatures) {
             createFeature(feature);
 
@@ -45,7 +41,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @Then("Данные корретно перенесены из слоя {string} в {string}")
+    @Then("Данные корректно перенесены из слоя {string} в {string}")
     public void checkDataInConsumer(String layerProducer, String layerConsumer, DataTable table) {
         List<String> data = table.asList(String.class);
         String idsAsString = data.get(1);
