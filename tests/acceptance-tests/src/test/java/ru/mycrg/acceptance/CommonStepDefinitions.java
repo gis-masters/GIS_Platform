@@ -28,21 +28,12 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(status, response.getStatusCode());
     }
 
-    @And("В ответе есть пункт {string}")
-    public void isThereField(String checkField) {
-        jsonPath = response.jsonPath();
-        List<String> entities = jsonPath.get("content");
-
-        assertNotNull(entities);
-        assertFalse(entities.isEmpty());
-    }
-
     @And("В ответе есть контент")
     public void isThereContentExist() {
         jsonPath = response.jsonPath();
         List<String> entities = jsonPath.get("content");
 
-        assertTrue(entities.size() >= 1);
+        assertFalse(entities.isEmpty());
     }
 
     @Then("Ответ имеет стандартное тело с пагинацией")
@@ -73,32 +64,12 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(count, Integer.valueOf(objectList.size()));
     }
 
-    @And("Данные отсортированы по {string} и {string} в {string}")
-    public void isDataSorted(String sortingType, String sortingDirection, String entity) {
-        jsonPath = response.jsonPath();
-        List<Object> sorted;
-        try {
-            sorted = jsonPath.getList(String.format("content.%s", sortingType));
-            if (sorted.isEmpty()) {
-                sorted = jsonPath.get(sortingType);
-            }
-        } catch (NullPointerException e) {
-            sorted = jsonPath.get(sortingType);
-        }
-
-        sorted.removeIf(Objects::isNull);
-
-        assertThat(sorted, not(sorted.isEmpty()));
-
-        checkSorting(sortingDirection, sorted);
-    }
-
     @And("Данные отсортированы по {string} и {string}")
     public void isDataSorted(String sortingType, String sortingDirection) {
         jsonPath = response.jsonPath();
         List<Object> sorted;
         try {
-            sorted = jsonPath.getList("content");
+            sorted = jsonPath.getList(String.format("content.%s", sortingType));
             if (sorted.isEmpty()) {
                 sorted = jsonPath.get(sortingType);
             }

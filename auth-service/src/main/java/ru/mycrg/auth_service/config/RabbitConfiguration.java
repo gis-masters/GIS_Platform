@@ -131,14 +131,14 @@ public class RabbitConfiguration {
         return new Queue(AUTH_TO_INTEGRATION_QUEUE);
     }
 
-    // Создадим fanout. Сообщения будут направлятся не в очереди а в этот "обменник".
+    // Создадим fanout. Сообщения будут направляться не в очереди, а в этот "обменник".
     // Очереди будут связаны с обменником и будут все получать сообщения.
     @Bean
     public FanoutExchange authSettingsFanout() {
         return new FanoutExchange(ORG_SETTINGS_FANOUT);
     }
 
-    // Свяжем fanout со всеми очередями
+    // Свяжем fanout настроек со всеми очередями
     @Bean
     public Binding authToDataBinding() {
         return BindingBuilder.bind(authToDataQueue()).to(authSettingsFanout());

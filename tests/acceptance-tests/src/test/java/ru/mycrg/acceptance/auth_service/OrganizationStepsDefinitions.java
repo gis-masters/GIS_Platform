@@ -108,7 +108,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         }
 
         // Наличие найстроек организаций у системного администратора
-        authorizationBase.loginAsRoot();
+        authorizationBase.loginAsSystemAdmin();
         getSystemSettings();
 
         List<Integer> orgIds = response.jsonPath().getList("id", Integer.class);
@@ -134,7 +134,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("на геосервере создано всё необходимое и даны права [geoserver]")
     public void checkAllScenarioOrganizations_Geoserver() {
-        authorizationBase.loginAsRoot();
+        authorizationBase.loginAsSystemAdmin();
 
         for (Map.Entry<Integer, OrganizationCreateDto> entry: scenarioOrganizations.entrySet()) {
             Integer id = entry.getKey();
@@ -483,7 +483,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     private void waitUntilOrganizationSuccessfullyCreated(Integer id) throws InterruptedException {
         System.out.println("Wait until organization: " + id + " created.");
-        authorizationBase.loginAsRoot();
+        authorizationBase.loginAsSystemAdmin();
 
         int currentAttempt = 0;
         do {

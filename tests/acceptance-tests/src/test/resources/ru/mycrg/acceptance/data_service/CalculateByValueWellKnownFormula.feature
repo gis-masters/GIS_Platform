@@ -3,7 +3,7 @@ Feature: Работа с calculatedValueWellKnownFormula
   Background:
     Given Существует организация
       | ООО НаборыДанных | 1234567890 | Наборов | Набор | EMAIL_13 | testPassword1 |
-    Given Авторизируемся владельцем организации
+    Given Владелец организации авторизован
     Given Существует набор данных
 
   Scenario: Невозможно создание таблицы, имеющей поля с calculatedValueWellKnownFormula без требуемых для вычисления полей

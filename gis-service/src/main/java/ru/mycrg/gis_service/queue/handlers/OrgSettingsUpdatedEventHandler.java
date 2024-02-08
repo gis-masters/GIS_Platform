@@ -8,8 +8,6 @@ import ru.mycrg.gis_service.security.OrgSettingsKeeper;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import java.util.Map;
-
 @Service
 public class OrgSettingsUpdatedEventHandler implements IEventHandler {
 
@@ -30,11 +28,10 @@ public class OrgSettingsUpdatedEventHandler implements IEventHandler {
     public void handle(IMessageBusEvent event) {
         try {
             OrgSettingsUpdatedEvent mqEvent = (OrgSettingsUpdatedEvent) event;
-            Map<String, Object> settings = mqEvent.getSettings();
 
-            settingsKeeper.setServiceSettings(settings);
+            settingsKeeper.updateOrgSetting(mqEvent);
 
-            log.debug("Service settings was updated: {}", settingsKeeper.getServiceSettings());
+            log.debug("Org. settings was updated: {}", mqEvent);
         } catch (Exception e) {
             String msg = "Failed to update service settings. Reason: {}";
 

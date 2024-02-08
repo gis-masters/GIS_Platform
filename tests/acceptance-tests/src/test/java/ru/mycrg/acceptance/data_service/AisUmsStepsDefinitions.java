@@ -23,27 +23,13 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequest().basePath("/integration/ais_ums");
     }
 
-    @When("Пользователь отправляет запрос с валидными данными,имитирующие данные от АИС УМС {string} {string} {string} {string} {string}")
-    public void importDataFromAisUms(String name, String cadNum, String regNum, String propertyType,
-                                     String departmentName) {
-        String generateName = generateString(name);
-        String generateCadNum = generateString(cadNum);
-        String generateRegNum = generateString(regNum);
-        String generatePropertyType = generateString(propertyType);
-        String generateDepartmentName = generateString(departmentName);
-
-        AisUmsDto aisUmsDto = new AisUmsDto(generateName, generateCadNum, generateRegNum, generatePropertyType,
-                                            generateDepartmentName);
-        AisUmsModel aisUmsModel = new AisUmsModel(List.of(aisUmsDto));
-
-        response = getBaseRequest()
-                .header("Authorization", "s-mxDFHIgKFSSppWScJoq_ZbcRFlNiaQ")
-                .given().
-                        body(gson.toJson(aisUmsModel)).
-                        contentType(ContentType.JSON)
-                .when().
-                        log().ifValidationFails().
-                        post("/import");
+    @When("Пользователь отправляет запрос с валидными данными, имитирующие данные от АИС УМС")
+    public void importDataFromAisUms() {
+        importData(generateString("STRING_16"),
+                   generateString("STRING_16"),
+                   generateString("STRING_16"),
+                   generateString("STRING_16"),
+                   generateString("STRING_16"));
     }
 
     @Then("Данные записаны в базу данных")
@@ -51,19 +37,30 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
         getAllAisUms();
         List<String> ids = response.jsonPath().getList("content.id");
 
-        assertTrue(ids.size() > 0);
+        assertFalse(ids.isEmpty());
     }
 
-    @When("Пользователь отправляет запрос с не валидными данными,имитирующие данные от АИС УМС {string} {string} {string} {string} {string}")
-    public void importDataFromAisUmsWithIncorrectBody(String name, String cadNum, String regNum, String propertyType,
-                                                      String departmentName) {
-        importDataFromAisUms(name, cadNum, regNum, propertyType, departmentName);
+    @When("Пользователь отправляет запрос с не валидными данными, имитирующие данные от АИС УМС {string} {string} {string} {string} {string}")
+    public void importDataFromAisUmsWithIncorrectBody(String nameTemplate,
+                                                      String cadNumTemplate,
+                                                      String regNumTemplate,
+                                                      String propertyTypeTemplate,
+                                                      String departmentNameTemplate) {
+        importData(generateString(nameTemplate),
+                   generateString(cadNumTemplate),
+                   generateString(regNumTemplate),
+                   generateString(propertyTypeTemplate),
+                   generateString(departmentNameTemplate));
     }
 
     @Given("В БД хранятся данные с одинаковым кадастровым номером от АИС УМС, в кол-ве {int} шт")
     public void initDataInBd(int count) {
         for (int i = 0; i < count; i++) {
-            importDataFromAisUms("STRING_10", "98:12:0001:854", "STRING_10", "STRING_10", "TEST");
+            importData(generateString("STRING_10"),
+                       "98:12:0001:854",
+                       generateString("STRING_10"),
+                       generateString("STRING_10"),
+                       "TEST_DEPARTMENT");
         }
     }
 
@@ -108,5 +105,23 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         get();
+    }
+
+    private void importData(String name,
+                            String cadNum,
+                            String regNum,
+                            String propertyType,
+                            String departmentName) {
+        AisUmsModel aisUmsModel = new AisUmsModel(
+                List.of(new AisUmsDto(name, cadNum, regNum, propertyType, departmentName)));
+
+        response = getBaseRequest()
+                .header("Authorization", "s-mxDFHIgKFSSppWScJoq_ZbcRFlNiaQ")
+                .given().
+                        body(gson.toJson(aisUmsModel)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        post("/import");
     }
 }

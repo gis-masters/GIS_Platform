@@ -71,13 +71,15 @@ public class MessageBusProperties {
     public static final String AUTH_TO_DATA_QUEUE = "authToDataQueue";
     public static final String AUTH_TO_GIS_QUEUE = "authToGisQueue";
     public static final String AUTH_TO_INTEGRATION_QUEUE = "authToIntegrationQueue";
+
+    // Org settings
     public static final String ORG_SETTINGS_FANOUT = "orgSettingsFanout";
     public static final String ORG_SETTINGS_KEY = "orgSettingsFanoutKey";
 
     // System tags updated
     public static final String SYSTEM_TAGS_UPDATED_QUEUE = "systemTagsUpdatedQueue";
     public static final String SYSTEM_TAGS_REQUEST_QUEUE = "systemTagsRequestQueue";
-    public static final String SYSTEM_TAGS_UPDATED_ROUTING_KEY = "tagsUpdated";
+    public static final String SYSTEM_TAGS_UPDATED_ROUTING_KEY = "systemTagsUpdated";
     public static final String SYSTEM_TAGS_REQUEST_ROUTING_KEY = "systemTagsRequest";
 
     // GisogdRf

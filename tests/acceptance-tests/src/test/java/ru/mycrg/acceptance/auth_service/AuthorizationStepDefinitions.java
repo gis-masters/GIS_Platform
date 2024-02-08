@@ -23,17 +23,12 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
-    @When("Авторизируемся под рутом")
-    public void authorizeAsRoot() {
-        authorizationBase.loginAsRoot();
-    }
-
     @Given("Администратор системы авторизован")
     public void authorizeAsSystemAdmin() {
-        authorizeAsRoot();
+        authorizationBase.loginAsSystemAdmin();
     }
 
-    @When("Авторизируемся пользователем")
+    @When("Авторизуемся пользователем")
     public void authorizeAsCurrentUser() {
         authorizationBase.loginAsCurrentUser();
     }
@@ -50,36 +45,29 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAs(user.getEmail(), user.getPassword());
     }
 
-    @When("Авторизируемся владельцем организации")
-    public void authorizeAsOrgOwner() {
+    @Given("Владелец организации авторизован")
+    public void orgOwnerAuthorized() {
         authorizationBase.loginAsOwner();
     }
 
     @When("Авторизуемся владельцем организации")
-    public void orgOwnerAuthorized() {
-        authorizeAsOrgOwner();
-    }
-
-    @When("Авторизируемся пользователем у которого email прописан в верхнем регистре")
-    public void authorizeAsUserIgnoreUsernameCase() {
-        String email = userDto.getEmail().toUpperCase();
-        authorizationBase.loginAs(email, userDto.getPassword());
-    }
-
-    @When("Авторизируемся пользователем у которого в поле email имеются отступы")
-    public void authorizeAsUserIgnoreWhitespace() {
-        String email = "   " + userDto.getEmail() + "   ";
-        authorizationBase.loginAs(email, userDto.getPassword());
-    }
-
-    @When("Владелец организации авторизован")
-    public void tryToGetAuthorizeOrgAdmin() {
+    public void authorizeAsOrgOwner() {
         authorizationBase.loginAsOwner();
+    }
+
+    @When("Авторизуемся пользователем у которого email прописан в верхнем регистре")
+    public void authorizeAsUserIgnoreUsernameCase() {
+        authorizationBase.loginAs(userDto.getEmail().toUpperCase(), userDto.getPassword());
+    }
+
+    @When("Авторизуемся пользователем у которого в поле email имеются отступы")
+    public void authorizeAsUserIgnoreWhitespace() {
+        authorizationBase.loginAs(String.format("   %s   ", userDto.getEmail()), userDto.getPassword());
     }
 
     @And("Пользователь не может авторизоваться")
     public void notPossibleToLogin() {
-        Map<String, String> queryParams = new HashMap<String, String>() {{
+        Map<String, String> queryParams = new HashMap<>() {{
             put("username", userDto.getEmail());
             put("password", userDto.getPassword());
             put("grant_type", "password");
@@ -87,7 +75,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequest()
                 .given().
-                formParams(queryParams)
+                        formParams(queryParams)
                 .when().
                         post("/oauth/token")
                 .then().

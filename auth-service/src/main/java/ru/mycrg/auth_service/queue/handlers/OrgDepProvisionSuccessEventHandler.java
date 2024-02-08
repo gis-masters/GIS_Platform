@@ -14,7 +14,7 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 
 import javax.persistence.EntityNotFoundException;
 
-import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
+import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
 
 @Service
 @Transactional

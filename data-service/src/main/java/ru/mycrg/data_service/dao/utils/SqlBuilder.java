@@ -713,7 +713,7 @@ public class SqlBuilder {
                 "              d.concatenated_data " +
                 "       FROM data." + ftsTable + " AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
                 "   " + ftsWhere + " " +
-                "       ORDER BY _rank_ DESC LIMIT " + limit +
+                "       ORDER BY _rank_ DESC, d.id LIMIT " + limit +
                 "     ) AS subquery " +
                 "ORDER BY dist ";
 

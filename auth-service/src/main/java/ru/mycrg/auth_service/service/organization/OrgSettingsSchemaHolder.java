@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service;
+package ru.mycrg.auth_service.service.organization;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

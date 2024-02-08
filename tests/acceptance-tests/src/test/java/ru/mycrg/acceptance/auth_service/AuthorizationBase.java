@@ -23,7 +23,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
     public static Map<String, Response> authorizationCache = new HashMap<>();
 
-    public void loginAsRoot() {
+    public void loginAsSystemAdmin() {
         System.out.println("login as root");
         Response response = authorizeUser(rootUserName, rootPassword, "root");
 

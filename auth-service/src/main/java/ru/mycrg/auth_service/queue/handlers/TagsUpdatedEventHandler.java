@@ -4,7 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
-import ru.mycrg.auth_service.service.OrgSettingsSchemaHolder;
+import ru.mycrg.auth_service.service.organization.IOrgSettingsBroadcaster;
+import ru.mycrg.auth_service.service.organization.OrgSettingsSchemaHolder;
 import ru.mycrg.auth_service_contract.events.response.SystemTagsUpdatedEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
@@ -14,9 +15,12 @@ public class TagsUpdatedEventHandler implements IEventHandler {
 
     private final Logger log = LoggerFactory.getLogger(TagsUpdatedEventHandler.class);
 
+    private final IOrgSettingsBroadcaster settingsBroadcaster;
     private final OrgSettingsSchemaHolder orgSettingsSchemaHolder;
 
-    public TagsUpdatedEventHandler(OrgSettingsSchemaHolder orgSettingsSchemaHolder) {
+    public TagsUpdatedEventHandler(IOrgSettingsBroadcaster settingsBroadcaster,
+                                   OrgSettingsSchemaHolder orgSettingsSchemaHolder) {
+        this.settingsBroadcaster = settingsBroadcaster;
         this.orgSettingsSchemaHolder = orgSettingsSchemaHolder;
     }
 
@@ -33,6 +37,7 @@ public class TagsUpdatedEventHandler implements IEventHandler {
             log.info("Получили новые системные теги: {}", event.getTags());
 
             orgSettingsSchemaHolder.updateTags(event.getTags());
+            settingsBroadcaster.broadcast();
         } catch (Exception e) {
             String msg = "Не удалось обновить теги настроек организаций. По причине: " + e.getMessage();
 

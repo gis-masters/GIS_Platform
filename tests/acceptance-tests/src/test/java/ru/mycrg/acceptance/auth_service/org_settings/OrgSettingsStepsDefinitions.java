@@ -45,7 +45,7 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор системы устанавливает свойство {string} в значение {string}")
     public void updateSpecificOrgSettingAsRoot(String key, String value) {
-        authorizationBase.loginAsRoot();
+        authorizationBase.loginAsSystemAdmin();
 
         Map<String, Object> settings = new HashMap<>();
         settings.put(key, value);

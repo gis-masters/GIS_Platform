@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
-import ru.mycrg.auth_service.service.OrganizationService;
+import ru.mycrg.auth_service.service.organization.OrganizationService;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 
 import javax.validation.Valid;

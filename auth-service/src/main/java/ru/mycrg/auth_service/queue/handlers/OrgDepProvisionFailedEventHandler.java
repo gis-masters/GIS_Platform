@@ -12,7 +12,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import javax.persistence.EntityNotFoundException;
 
-import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING_FAILED;
+import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONING_FAILED;
 
 @Service
 @Transactional

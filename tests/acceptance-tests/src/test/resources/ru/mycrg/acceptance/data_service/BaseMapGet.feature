@@ -3,7 +3,7 @@ Feature: Выборка подложек
   Background: Проверка организации
     Given Существует организация
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
-    When Авторизируемся владельцем организации
+    Given Владелец организации авторизован
 
   Scenario: Проверка представления всех подложек организации
     When Пользователь делает запрос на все подложки организации
@@ -21,8 +21,8 @@ Feature: Выборка подложек
       | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на все подложки
     Then Сервер отвечает со статус-кодом 200
-    And В ответе есть пункт "basemaps"
-    And Данные отсортированы по "<sorting factor>" и "<sorting direction>" в "basemaps"
+    And  В ответе есть контент
+    And  Данные отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | name   | title     | thumbnailUrn                     | type | url                                              | layerName | style  | projection  | format    | size | resolution | matrixIDs | sorting factor | sorting direction |
       | wmts1  | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | name           | asc               |

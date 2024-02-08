@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.auth_service.service.OrgSettingsSchemaHolder;
-import ru.mycrg.auth_service.service.OrganizationSettingService;
+import ru.mycrg.auth_service.service.organization.OrgSettingsSchemaHolder;
+import ru.mycrg.auth_service.service.organization.OrganizationSettingService;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.validation.Valid;
-import java.util.Map;
 import java.util.Set;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -71,9 +70,7 @@ public class OrganizationSettingsController {
     @PatchMapping("/organizations/settings")
     @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> updateSettings(@RequestBody @Valid OrgSettingsRequestDto settings) {
-        Long orgId = authenticationFacade.getOrganizationId();
-
-        organizationSettingService.updateSettings(orgId, settings);
+        organizationSettingService.updateSettings(settings);
 
         return ResponseEntity.noContent().build();
     }

@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service;
+package ru.mycrg.auth_service.service.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +17,7 @@ import ru.mycrg.auth_service.exceptions.ForbiddenException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
+import ru.mycrg.auth_service.service.AuthService;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -29,8 +30,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
-import static ru.mycrg.auth_service.service.OrganizationStatus.DELETING;
-import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONED;
+import static ru.mycrg.auth_service.service.organization.OrganizationStatus.DELETING;
+import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 

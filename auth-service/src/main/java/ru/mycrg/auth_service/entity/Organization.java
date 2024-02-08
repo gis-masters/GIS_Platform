@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import static ru.mycrg.auth_service.service.OrganizationStatus.PROVISIONING;
+import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONING;
 
 @Entity
 @Table(name = "organizations")

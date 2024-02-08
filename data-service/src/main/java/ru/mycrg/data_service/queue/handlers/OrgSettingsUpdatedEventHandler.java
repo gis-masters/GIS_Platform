@@ -8,8 +8,6 @@ import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import java.util.Map;
-
 @Service
 public class OrgSettingsUpdatedEventHandler implements IEventHandler {
 
@@ -30,11 +28,12 @@ public class OrgSettingsUpdatedEventHandler implements IEventHandler {
     public void handle(IMessageBusEvent event) {
         try {
             OrgSettingsUpdatedEvent mqEvent = (OrgSettingsUpdatedEvent) event;
-            Map<String, Object> settings = mqEvent.getSettings();
 
-            orgSettingsKeeper.setServiceSettings(settings);
+            orgSettingsKeeper.updateOrgSetting(mqEvent);
 
-            log.debug("Service settings was updated: {}", settings);
+            log.debug("Org. settings was updated: {}", mqEvent);
+
+            // В ответ отослать актуальные настройки по всем организациям
         } catch (Exception e) {
             log.error("Failed to update service settings. Reason: {}", e.getMessage(), e);
         }

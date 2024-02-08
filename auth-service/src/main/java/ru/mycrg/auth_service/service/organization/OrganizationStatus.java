@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service;
+package ru.mycrg.auth_service.service.organization;
 
 public enum OrganizationStatus {
 
