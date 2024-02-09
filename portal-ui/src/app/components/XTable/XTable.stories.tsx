@@ -106,6 +106,11 @@ const cols: XTableColumn<TestData>[] = [
   }
 ];
 
+const lastCol = cols.at(-1);
+if (!lastCol) {
+  throw new Error('Ошибка: нет колонок');
+}
+
 const colsWithDocuments: XTableColumn<TestData>[] = [
   ...cols.slice(0, -1),
   {
@@ -116,7 +121,7 @@ const colsWithDocuments: XTableColumn<TestData>[] = [
     field: 'documents',
     sortable: true
   },
-  cols.at(-1)!
+  lastCol
 ];
 
 const defaultSort: SortParams<TestData> = { field: 'title', asc: true };

@@ -716,13 +716,11 @@ class MapService {
 
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
     mapStore.enrollLoadingStart();
-    let data: Blob;
+    let data: Blob = new Blob();
     try {
       data = await getMap(url);
     } catch (error) {
       services.logger.error(error);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      data = error?.error;
     }
     const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
@@ -732,7 +730,7 @@ class MapService {
 
   private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
     mapStore.enrollLoadingStart();
-    let data: Blob;
+    let data: Blob = new Blob();
 
     const replacedUrl = url
       .replace('256%2C256', '1024%2C1024')
@@ -746,8 +744,7 @@ class MapService {
         data = await response.blob();
       }
     } catch (error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      data = error.error;
+      services.logger.error(error);
     }
 
     const blob = new Blob([data], { type: Mime.VND_JPEG_PNG8 });
@@ -791,71 +788,88 @@ class MapService {
   }
 
   private prepareWMTSPanorama(basemap: Basemap): WMTS {
-    try {
-      const projection = getProjection(basemap.projection);
-      const projectionExtent = projection?.getExtent();
-      const size = getWidth(projectionExtent) / basemap.size;
-      const resolutions: number[] = [];
-      const matrixIds: string[] = [];
-      for (let i = 0; i < basemap.resolution; ++i) {
-        // generate resolutions and matrixIds arrays for this WMTS
-        resolutions[i] = size / Math.pow(2, i);
-        matrixIds[i] = i.toString();
-      }
+    const projection = getProjection(basemap.projection);
+    const projectionExtent = projection?.getExtent();
 
-      return new WMTS({
-        tileLoadFunction: this.externalGisMapServerLoadFunction,
-        url: basemap.url,
-        tileGrid: new WMTSTileGrid({
-          origin: getTopLeft(projectionExtent),
-          resolutions,
-          matrixIds
-        }),
-        style: basemap.style,
-        layer: basemap.layerName,
-        matrixSet: 'GoogleMapsCompatible',
-        format: basemap.format,
-        projection,
-        wrapX: true,
-        crossOrigin: 'Anonymous'
-      });
-    } catch {
-      return;
+    if (!projection || !projectionExtent) {
+      throw new Error('Невозможно выполнить prepareWMTSPanorama. Область проекции не определена');
     }
+
+    if (!basemap.size || !basemap.resolution || !basemap.style || !basemap.layerName) {
+      throw new Error('Невозможно выполнить prepareWMTSPanorama. Параметры подложки не определены');
+    }
+
+    const size = getWidth(projectionExtent) / basemap.size;
+    const resolutions: number[] = [];
+    const matrixIds: string[] = [];
+    for (let i = 0; i < basemap.resolution; ++i) {
+      // generate resolutions and matrixIds arrays for this WMTS
+      resolutions[i] = size / Math.pow(2, i);
+      matrixIds[i] = i.toString();
+    }
+
+    return new WMTS({
+      tileLoadFunction: this.externalGisMapServerLoadFunction,
+      url: basemap.url,
+      tileGrid: new WMTSTileGrid({
+        origin: getTopLeft(projectionExtent),
+        resolutions,
+        matrixIds
+      }),
+      style: basemap.style,
+      layer: basemap.layerName,
+      matrixSet: 'GoogleMapsCompatible',
+      format: basemap.format,
+      projection,
+      wrapX: true,
+      crossOrigin: 'Anonymous'
+    });
   }
 
   private prepareWMTS(basemap: Basemap): WMTS {
-    try {
-      const projection = getProjection(basemap.projection);
-      const projectionExtent = projection.getExtent();
-      const size = getWidth(projectionExtent) / basemap.size;
-      const resolutions = [];
-      const matrixIds = [];
-      for (let i = 0; i < basemap.resolution; ++i) {
-        // generate resolutions and matrixIds arrays for this WMTS
-        resolutions[i] = size / Math.pow(2, i);
-        matrixIds[i] = `${basemap.projection}:${i}`;
-      }
+    const projection = getProjection(basemap.projection);
+    const projectionExtent = projection?.getExtent();
 
-      return new WMTS({
-        tileLoadFunction: this.crgLayersLoadFunction,
-        urls: [basemap.url],
-        tileGrid: new WMTSTileGrid({
-          origin: getTopLeft(projectionExtent),
-          resolutions,
-          matrixIds
-        }),
-        style: basemap.style,
-        layer: basemap.layerName,
-        matrixSet: basemap.projection,
-        format: basemap.format,
-        projection,
-        wrapX: true,
-        crossOrigin: 'Anonymous'
-      });
-    } catch {
-      return;
+    if (!projection || !projectionExtent) {
+      throw new Error('Невозможно выполнить prepareWMTS. Область проекции не определена');
     }
+
+    if (
+      !basemap.size ||
+      !basemap.url ||
+      !basemap.resolution ||
+      !basemap.projection ||
+      !basemap.style ||
+      !basemap.layerName
+    ) {
+      throw new Error('Невозможно выполнить prepareWMTS. Параметры подложки не определены');
+    }
+
+    const size = getWidth(projectionExtent) / basemap.size;
+    const resolutions = [];
+    const matrixIds = [];
+    for (let i = 0; i < basemap.resolution; ++i) {
+      // generate resolutions and matrixIds arrays for this WMTS
+      resolutions[i] = size / Math.pow(2, i);
+      matrixIds[i] = `${basemap.projection}:${i}`;
+    }
+
+    return new WMTS({
+      tileLoadFunction: this.crgLayersLoadFunction,
+      urls: [basemap.url],
+      tileGrid: new WMTSTileGrid({
+        origin: getTopLeft(projectionExtent),
+        resolutions,
+        matrixIds
+      }),
+      style: basemap.style,
+      layer: basemap.layerName,
+      matrixSet: basemap.projection,
+      format: basemap.format,
+      projection,
+      wrapX: true,
+      crossOrigin: 'Anonymous'
+    });
   }
 
   private isUserLayer(layer: BaseLayer): boolean {

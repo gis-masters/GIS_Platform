@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
-import { SelectColsControl } from '../../../../components/SelectColsControl/SelectColsControl';
+import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
@@ -35,7 +35,7 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
     // карта
-    const mapDialogResult = await formPrompt<{ title: string; image: string; rows: PropertySchema[] }>({
+    const mapDialogResult = await formPrompt<{ title: string; image: string; properties: PropertySchema[] }>({
       title: 'Параметры печати',
       message: this.title,
       schema: {
@@ -50,13 +50,12 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
             name: 'image',
             propertyType: PropertyType.CUSTOM,
             title: 'Карта',
-            ControlComponent: PrintMapImageControl,
-            someOption: 3
+            ControlComponent: PrintMapImageControl
           },
           {
-            name: 'rows',
+            name: 'properties',
             propertyType: PropertyType.CUSTOM,
-            ControlComponent: SelectColsControl,
+            ControlComponent: SelectPropertiesControl,
             properties,
             title: 'Выбор полей для печати'
           }
@@ -108,36 +107,21 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       coordinatesFragment = await this.renderFragment('coordinates', { coordinates: coordinatesRowsFragment });
     }
 
-    let printableRows = entity.properties;
-
-    if (mapDialogResult?.rows.length) {
-      const properties = mapDialogResult?.rows;
-      const selectedRows = {};
-
-      for (const property of properties) {
-        selectedRows[property.name] = entity.properties[property.name];
-      }
-
-      printableRows = selectedRows;
-    }
-
     // свойства
     const propertiesRows = await Promise.all(
-      Object.entries(printableRows)
+      Object.entries(entity.properties)
         .map(([key, value]) => {
           const propertySchema = schema.properties.find(({ name }) => name === key);
+          const disabled = propertySchema && !mapDialogResult.properties?.some(({ name }) => name === key);
 
           return {
             title: propertySchema?.title || key,
-            value: getReadablePropertyValue(value, propertySchema)
+            value: disabled ? '' : getReadablePropertyValue(value, propertySchema)
           };
         })
         .filter(({ value }) => value)
         .map(async ({ title, value }) => {
-          return await this.renderFragment('oneProperty', {
-            title,
-            value
-          });
+          return await this.renderFragment('oneProperty', { title, value });
         })
     );
 

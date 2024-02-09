@@ -1,4 +1,5 @@
 import { ComponentType, ReactNode } from 'react';
+import { isObject } from 'lodash';
 
 import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FormControlProps } from '../../../components/Form/Control/Form-Control';
@@ -27,6 +28,10 @@ export enum PropertyType {
   USER = 'user',
   USER_ID = 'userId',
   CUSTOM = 'custom' // frontend only
+}
+
+function isPropertyType(value: unknown): value is PropertyType {
+  return Object.values(PropertyType).includes(value as PropertyType);
 }
 
 export const schemaForSchema: SimpleSchema = {
@@ -282,3 +287,19 @@ export type PropertySchema =
   | PropertySchemaCustom
   | PropertySchemaGeometry
   | PropertySchemaUuid;
+
+export function isPropertySchema(obj: unknown): obj is PropertySchema {
+  return (
+    isObject(obj) &&
+    'propertyType' in obj &&
+    isPropertyType(obj.propertyType) &&
+    'name' in obj &&
+    typeof obj.name === 'string' &&
+    'title' in obj &&
+    typeof obj.title === 'string'
+  );
+}
+
+export function isPropertySchemaArray(arr: unknown): arr is PropertySchema[] {
+  return Array.isArray(arr) && arr.every(isPropertySchema);
+}

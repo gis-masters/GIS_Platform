@@ -8,7 +8,7 @@ import { PropertySchema, PropertyType } from '../../../data/schema/schema.models
 import { formPrompt } from '../../../utility-dialogs.service';
 import { PrintTemplate } from '../PrintTemplate';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
-import { SelectColsControl } from '../../../../components/SelectColsControl/SelectColsControl';
+import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 
 export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
   name: 'situationalPlan',
@@ -29,7 +29,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
     // карта
-    const mapDialogResult = await formPrompt<{ title: string; image: string; cols: PropertySchema[] }>({
+    const mapDialogResult = await formPrompt<{ title: string; image: string; properties: PropertySchema[] }>({
       title: 'Параметры печати',
       message: this.title,
       schema: {
@@ -48,9 +48,9 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
             format: 'a5'
           },
           {
-            name: 'cols',
+            name: 'properties',
             propertyType: PropertyType.CUSTOM,
-            ControlComponent: SelectColsControl,
+            ControlComponent: SelectPropertiesControl,
             properties,
             title: 'Выбор колонок для печати'
           }
@@ -62,7 +62,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
       return '';
     }
 
-    const printableCols = mapDialogResult.cols.length ? mapDialogResult.cols : properties;
+    const printableCols = mapDialogResult.properties?.length ? mapDialogResult.properties : properties;
 
     // заголовки таблицы
     const headersFragments = await Promise.all(

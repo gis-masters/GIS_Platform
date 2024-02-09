@@ -321,7 +321,7 @@ async function getDateImageSrc(resolution?: number): Promise<string> {
     resolution: resolution || printSettings.resolution
   });
   root.render(reactElement);
-  await sleep(0);
+  await sleep(200); // рендеринг реакт-компонента в dom-ноду
   const src = await domToImage.toPng(el.childNodes[0]);
   root.unmount();
   el.remove();

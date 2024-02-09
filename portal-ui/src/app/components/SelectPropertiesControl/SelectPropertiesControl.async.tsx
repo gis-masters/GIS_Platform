@@ -3,15 +3,17 @@ import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType, isPropertySchemaArray } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Button } from '../Button/Button';
 
-const cnSelectColsControl = cn('SelectColsControl');
+import '!style-loader!css-loader!sass-loader!./SelectPropertiesControl.scss';
+
+const cnSelectPropertiesControl = cn('SelectPropertiesControl');
 
 @observer
-export default class SelectColsControl extends Component<FormControlProps> {
+export default class SelectPropertiesControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
 
   constructor(props: FormControlProps) {
@@ -20,24 +22,34 @@ export default class SelectColsControl extends Component<FormControlProps> {
   }
 
   render() {
-    const { property } = this.props;
+    const { property, fieldValue } = this.props;
 
     if (property.propertyType !== PropertyType.CUSTOM) {
       throw new Error('Ошибка: не тот тип поля');
     }
 
-    const properties = property.properties as PropertySchema[];
+    const { properties } = property;
+
+    if (!isPropertySchemaArray(properties)) {
+      throw new Error('Ошибка: отсутствует обязательный параметр properties');
+    }
+
+    const selectedItems = Array.isArray(fieldValue) ? fieldValue : properties;
 
     return (
       <>
-        <Button className={cnSelectColsControl()} onClick={this.openDialog}>
-          Выбрать колонки
+        <span className={cnSelectPropertiesControl('Label')}>
+          выбрано {selectedItems.length} из {properties.length}
+        </span>
+
+        <Button className={cnSelectPropertiesControl()} onClick={this.openDialog}>
+          Выбрать
         </Button>
 
         <ChooseXTableDialog
           title='Выберите отображаемые столбцы'
           data={properties}
-          selectedItems={properties.filter(Boolean)}
+          selectedItems={selectedItems}
           cols={[{ title: 'Название', field: 'title', filterable: true }]}
           open={this.dialogOpen}
           onClose={this.closeDialog}
@@ -56,7 +68,11 @@ export default class SelectColsControl extends Component<FormControlProps> {
       throw new Error('Ошибка: не тот тип поля');
     }
 
-    const properties = property.properties as PropertySchema[];
+    const { properties } = property;
+
+    if (!isPropertySchemaArray(properties)) {
+      throw new Error('Ошибка: отсутствует обязательный параметр properties');
+    }
 
     if (onChange) {
       onChange({

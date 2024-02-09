@@ -687,7 +687,6 @@ export function convertGeoserverPropertiesToSchemaProperties(attributes: Attribu
 }
 
 export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] = []): GeometryType {
-  const error = 'Not any attributes with geometry';
   const geometryAttribute = attributes.find(attribute => attribute.binding.includes('org.locationtech.jts.geom'));
   if (geometryAttribute) {
     if (geometryAttribute.binding.includes(GeometryType.LINE_STRING)) {
@@ -714,8 +713,9 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
 
     return GeometryType.MULTI_POLYGON;
   }
-  services.logger.error(error);
 
+  const error = 'Not any attributes with geometry';
+  services.logger.error(error);
   throw new Error(error);
 }
 

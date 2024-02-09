@@ -1,4 +1,4 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import moment from 'moment';
 
@@ -11,15 +11,8 @@ interface PrintMapDialogDateProps {
   resolution?: number;
 }
 
-export const PrintMapDialogDate: FC<PrintMapDialogDateProps> = ({ forPrint, resolution }) => {
-  moment.locale('ru');
-
-  return (
-    <div
-      className={cnPrintMapDialogDate({ forPrint })}
-      style={{ '--PrintMapDialogDateResolution': resolution } as CSSProperties}
-    >
-      {moment().format('L')}
-    </div>
-  );
-};
+export const PrintMapDialogDate: FC<PrintMapDialogDateProps> = ({ forPrint, resolution }) => (
+  <div className={cnPrintMapDialogDate({ forPrint })} style={{ '--PrintMapDialogDateResolution': resolution || '' }}>
+    {moment().format('L')}
+  </div>
+);
