@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60301170101</se:Name>
 					<se:Description>
-						<se:Title>Придорожная полоса существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Придорожная полоса существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170101</ogc:Literal>
@@ -56,10 +54,9 @@
 				<se:Rule>
 					<se:Name>60301170102</se:Name>
 					<se:Description>
-						<se:Title>Придорожная полоса планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Придорожная полоса планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170102</ogc:Literal>
@@ -91,10 +88,9 @@
 				<se:Rule>
 					<se:Name>60301170201</se:Name>
 					<se:Description>
-						<se:Title>Приаэродромная территория существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Приаэродромная территория существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170201</ogc:Literal>
@@ -128,10 +124,9 @@
 				<se:Rule>
 					<se:Name>60301170202</se:Name>
 					<se:Description>
-						<se:Title>Приаэродромная территория планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Приаэродромная территория планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170202</ogc:Literal>
@@ -166,10 +161,9 @@
 				<se:Rule>
 					<se:Name>60301170301</se:Name>
 					<se:Description>
-						<se:Title>Зона наблюдений существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона наблюдений существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170301</ogc:Literal>
@@ -203,10 +197,9 @@
 				<se:Rule>
 					<se:Name>60301170302</se:Name>
 					<se:Description>
-						<se:Title>Зона наблюдений планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона наблюдений планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170302</ogc:Literal>
@@ -241,10 +234,9 @@
 				<se:Rule>
 					<se:Name>60301170401</se:Name>
 					<se:Description>
-						<se:Title>Другие зоны, устанавливаемые в соответствии с законодательством Российской Федерации существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Другие зоны, устанавливаемые в соответствии с законодательством Российской Федерации существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170401</ogc:Literal>
@@ -306,10 +298,9 @@
 				<se:Rule>
 					<se:Name>60301170402</se:Name>
 					<se:Description>
-						<se:Title>Другие зоны, устанавливаемые в соответствии с законодательством Российской Федерации планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Другие зоны, устанавливаемые в соответствии с законодательством Российской Федерации планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170402</ogc:Literal>
@@ -372,10 +363,9 @@
 				<se:Rule>
 					<se:Name>60301170501</se:Name>
 					<se:Description>
-						<se:Title>Зона охраняемого военного объекта, охранная зона военного объекта, запретные и специальные зоны, установленные в связи с размещением указаных объектов существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона охраняемого военного объекта, охранная зона военного объекта, запретные и специальные зоны, установленные в связи с размещением указаных объектов существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170501</ogc:Literal>
@@ -409,10 +399,9 @@
 				<se:Rule>
 					<se:Name>60301170502</se:Name>
 					<se:Description>
-						<se:Title>Зона охраняемого военного объекта, охранная зона военного объекта, запретные и специальные зоны, установленные в связи с размещением указаных объектов планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона охраняемого военного объекта, охранная зона военного объекта, запретные и специальные зоны, установленные в связи с размещением указаных объектов планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170502</ogc:Literal>
@@ -447,10 +436,9 @@
 				<se:Rule>
 					<se:Name>60301170601</se:Name>
 					<se:Description>
-						<se:Title>Зона ограничений передающего радиотехнического объекта, являющегося объектом капитального строительства существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона ограничений передающего радиотехнического объекта, являющегося объектом капитального строительства существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170601</ogc:Literal>
@@ -484,10 +472,9 @@
 				<se:Rule>
 					<se:Name>60301170602</se:Name>
 					<se:Description>
-						<se:Title>Зона ограничений передающего радиотехнического объекта, являющегося объектом капитального строительства планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона ограничений передающего радиотехнического объекта, являющегося объектом капитального строительства планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170602</ogc:Literal>
@@ -522,10 +509,9 @@
 				<se:Rule>
 					<se:Name>60301170701</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона пунктов государственной геодезической сети, государственной нивелирной сети и государственной гравиметрической земли существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона пунктов государственной геодезической сети, государственной нивелирной сети и государственной гравиметрической земли существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170701</ogc:Literal>
@@ -559,10 +545,9 @@
 				<se:Rule>
 					<se:Name>60301170702</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона пунктов государственной геодезической сети, государственной нивелирной сети и государственной гравиметрической земли планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона пунктов государственной геодезической сети, государственной нивелирной сети и государственной гравиметрической земли планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170702</ogc:Literal>
@@ -597,10 +582,9 @@
 				<se:Rule>
 					<se:Name>60301170801</se:Name>
 					<se:Description>
-						<se:Title>Зона безопасности с особым правовым режимом существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона безопасности с особым правовым режимом существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170801</ogc:Literal>
@@ -634,10 +618,9 @@
 				<se:Rule>
 					<se:Name>60301170802</se:Name>
 					<se:Description>
-						<se:Title>Зона безопасности с особым правовым режимом планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона безопасности с особым правовым режимом планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170802</ogc:Literal>
@@ -672,10 +655,9 @@
 				<se:Rule>
 					<se:Name>60301170901</se:Name>
 					<se:Description>
-						<se:Title>Рыболовная зона озера Байкал существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Рыболовная зона озера Байкал существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170901</ogc:Literal>
@@ -709,10 +691,9 @@
 				<se:Rule>
 					<se:Name>60301170902</se:Name>
 					<se:Description>
-						<se:Title>Зона безопасности с особым правовым режимом планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона безопасности с особым правовым режимом планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301170902</ogc:Literal>
@@ -747,10 +728,9 @@
 				<se:Rule>
 					<se:Name>60301171001</se:Name>
 					<se:Description>
-						<se:Title>Зона минимальных расстояний до магистральных или промышленных трубопроводов существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона минимальных расстояний до магистральных или промышленных трубопроводов существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301171001</ogc:Literal>
@@ -784,10 +764,9 @@
 				<se:Rule>
 					<se:Name>60301171002</se:Name>
 					<se:Description>
-						<se:Title>Зона минимальных расстояний до магистральных или промышленных трубопроводов планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона минимальных расстояний до магистральных или промышленных трубопроводов планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301171002</ogc:Literal>
@@ -822,10 +801,9 @@
 				<se:Rule>
 					<se:Name>60301171101</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона объектов инфраструктуры метрополитена существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона объектов инфраструктуры метрополитена существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301171101</ogc:Literal>
@@ -859,10 +837,9 @@
 				<se:Rule>
 					<se:Name>60301171102</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона объектов инфраструктуры метрополитена планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона объектов инфраструктуры метрополитена планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301171102</ogc:Literal>
@@ -897,8 +874,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

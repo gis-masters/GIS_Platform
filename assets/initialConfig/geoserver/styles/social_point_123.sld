@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты социального обслуживания</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050111</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050112</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050113</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050114</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050121</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050122</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050123</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050124</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050131</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050132</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050133</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050134</se:Name>
 					<se:Description>
-						<se:Title>Стационарные организации социального обслуживания планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарные организации социального обслуживания планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050211</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050212</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050213</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050214</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050221</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050222</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050223</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050224</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050231</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050232</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050233</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050234</se:Name>
 					<se:Description>
-						<se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Комплексные, полустационарные и нестационарные организации социального обслуживания планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050311</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050312</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050313</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050314</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050321</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050322</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050323</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050324</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050331</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050332</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050333</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050334</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) социального обслуживания на дому планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050411</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050412</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050413</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050414</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050421</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050422</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050423</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050424</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050431</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050432</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050433</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050434</se:Name>
 					<se:Description>
-						<se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1021,8 +1022,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050511</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1043,8 +1044,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050512</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1065,8 +1066,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050513</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1087,8 +1088,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050514</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1105,14 +1106,14 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-				
+
 
 
 				<se:Rule>
 					<se:Name>60201050521</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1133,8 +1134,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050522</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1155,8 +1156,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050523</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1177,8 +1178,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050524</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1201,8 +1202,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050531</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1223,8 +1224,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050532</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1245,8 +1246,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050533</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1267,8 +1268,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201050534</se:Name>
 					<se:Description>
-						<se:Title>Объекты молодежной политики планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты молодежной политики планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1286,12 +1287,12 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 
-				
+
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

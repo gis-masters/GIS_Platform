@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60204140101</se:Name>
 					<se:Description>
-						<se:Title>Канализация самотечная существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация самотечная существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140101</ogc:Literal>
@@ -52,10 +50,9 @@
 				<se:Rule>
 					<se:Name>60204140102</se:Name>
 					<se:Description>
-						<se:Title>Канализация самотечная планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация самотечная планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140102</ogc:Literal>
@@ -92,10 +89,9 @@
 				<se:Rule>
 					<se:Name>60204140103</se:Name>
 					<se:Description>
-						<se:Title>Канализация самотечная планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация самотечная планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140103</ogc:Literal>
@@ -140,10 +136,9 @@
 				<se:Rule>
 					<se:Name>60204140104</se:Name>
 					<se:Description>
-						<se:Title>Канализация самотечная планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация самотечная планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140104</ogc:Literal>
@@ -197,10 +192,9 @@
 				<se:Rule>
 					<se:Name>60204140201</se:Name>
 					<se:Description>
-						<se:Title>Канализация напорная существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация напорная существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140201</ogc:Literal>
@@ -236,10 +230,9 @@
 				<se:Rule>
 					<se:Name>60204140202</se:Name>
 					<se:Description>
-						<se:Title>Канализация напорная планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация напорная планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140202</ogc:Literal>
@@ -276,10 +269,9 @@
 				<se:Rule>
 					<se:Name>60204140203</se:Name>
 					<se:Description>
-						<se:Title>Канализация напорная планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация напорная планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140203</ogc:Literal>
@@ -324,10 +316,9 @@
 				<se:Rule>
 					<se:Name>60204140204</se:Name>
 					<se:Description>
-						<se:Title>Канализация напорная планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация напорная планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140204</ogc:Literal>
@@ -381,10 +372,9 @@
 				<se:Rule>
 					<se:Name>60204140301</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая напорная существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая напорная существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140301</ogc:Literal>
@@ -420,10 +410,9 @@
 				<se:Rule>
 					<se:Name>60204140302</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая напорная планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая напорная планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140302</ogc:Literal>
@@ -460,10 +449,9 @@
 				<se:Rule>
 					<se:Name>60204140303</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая напорная планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая напорная планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140303</ogc:Literal>
@@ -508,10 +496,9 @@
 				<se:Rule>
 					<se:Name>60204140304</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая напорная планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая напорная планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140304</ogc:Literal>
@@ -565,10 +552,9 @@
 				<se:Rule>
 					<se:Name>60204140401</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная закрытая существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная закрытая существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140401</ogc:Literal>
@@ -604,10 +590,9 @@
 				<se:Rule>
 					<se:Name>60204140402</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная закрытая планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная закрытая планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140402</ogc:Literal>
@@ -644,10 +629,9 @@
 				<se:Rule>
 					<se:Name>60204140403</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная закрытая планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная закрытая планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140403</ogc:Literal>
@@ -692,10 +676,9 @@
 				<se:Rule>
 					<se:Name>60204140404</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная закрытая планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная закрытая планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140404</ogc:Literal>
@@ -749,10 +732,9 @@
 				<se:Rule>
 					<se:Name>60204140501</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная открытая существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная открытая существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140501</ogc:Literal>
@@ -788,10 +770,9 @@
 				<se:Rule>
 					<se:Name>60204140502</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная открытая планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная открытая планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140502</ogc:Literal>
@@ -828,10 +809,9 @@
 				<se:Rule>
 					<se:Name>60204140503</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная открытая планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная открытая планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140503</ogc:Literal>
@@ -876,10 +856,9 @@
 				<se:Rule>
 					<se:Name>60204140504</se:Name>
 					<se:Description>
-						<se:Title>Канализация дождевая самотечная открытая планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Канализация дождевая самотечная открытая планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140504</ogc:Literal>
@@ -933,10 +912,9 @@
 				<se:Rule>
 					<se:Name>60204140601</se:Name>
 					<se:Description>
-						<se:Title>Дренаж существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дренаж существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140601</ogc:Literal>
@@ -972,10 +950,9 @@
 				<se:Rule>
 					<se:Name>60204140602</se:Name>
 					<se:Description>
-						<se:Title>Дренаж планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дренаж планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140602</ogc:Literal>
@@ -1012,10 +989,9 @@
 				<se:Rule>
 					<se:Name>60204140603</se:Name>
 					<se:Description>
-						<se:Title>Дренаж планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дренаж планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140603</ogc:Literal>
@@ -1060,10 +1036,9 @@
 				<se:Rule>
 					<se:Name>60204140604</se:Name>
 					<se:Description>
-						<se:Title>Дренаж планируемый к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дренаж планируемый к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140604</ogc:Literal>
@@ -1117,10 +1092,9 @@
 				<se:Rule>
 					<se:Name>60204140701</se:Name>
 					<se:Description>
-						<se:Title>Выпуски и ливнеотводы существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Выпуски и ливнеотводы существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140701</ogc:Literal>
@@ -1156,10 +1130,9 @@
 				<se:Rule>
 					<se:Name>60204140702</se:Name>
 					<se:Description>
-						<se:Title>Выпуски и ливнеотводы планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Выпуски и ливнеотводы планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140702</ogc:Literal>
@@ -1196,10 +1169,9 @@
 				<se:Rule>
 					<se:Name>60204140703</se:Name>
 					<se:Description>
-						<se:Title>Выпуски и ливнеотводы планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Выпуски и ливнеотводы планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140703</ogc:Literal>
@@ -1244,10 +1216,9 @@
 				<se:Rule>
 					<se:Name>60204140704</se:Name>
 					<se:Description>
-						<se:Title>Выпуски и ливнеотводы планируемые к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Выпуски и ливнеотводы планируемые к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204140704</ogc:Literal>
@@ -1301,8 +1272,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

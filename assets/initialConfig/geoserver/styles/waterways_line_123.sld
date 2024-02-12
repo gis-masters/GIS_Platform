@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60203140101</se:Name>
 					<se:Description>
-						<se:Title>Внутренний водный путь существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутренний водный путь существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203140101</ogc:Literal>
@@ -34,10 +32,9 @@
 				<se:Rule>
 					<se:Name>60203140102</se:Name>
 					<se:Description>
-						<se:Title>Внутренний водный путь планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутренний водный путь планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203140102</ogc:Literal>
@@ -56,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60203140201</se:Name>
 					<se:Description>
-						<se:Title>Корабельные фарватеры существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Корабельные фарватеры существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203140201</ogc:Literal>
@@ -87,10 +83,9 @@
 				<se:Rule>
 					<se:Name>60203140202</se:Name>
 					<se:Description>
-						<se:Title>Корабельные фарватеры планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Корабельные фарватеры планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203140202</ogc:Literal>
@@ -120,10 +115,9 @@
 				<se:Rule>
 					<se:Name>60203140203</se:Name>
 					<se:Description>
-						<se:Title>Корабельные фарватеры планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Корабельные фарватеры планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203140203</ogc:Literal>
@@ -159,8 +153,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

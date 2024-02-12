@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Особо охраняемые природные территории</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010511</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010512</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010521</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010522</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010531</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010532</se:Name>
 					<se:Description>
-						<se:Title>Памятник природы планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Памятник природы планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010611</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010612</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010621</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010622</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010631</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010632</se:Name>
 					<se:Description>
-						<se:Title>Дендрологический парк, ботанический сад планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Дендрологический парк, ботанический сад планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010711</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010712</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010721</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010722</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010731</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60501010732</se:Name>
 					<se:Description>
-						<se:Title>Иные особо охраняемые природные территории планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные особо охраняемые природные территории планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

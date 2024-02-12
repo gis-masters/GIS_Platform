@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink"
-                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
-                       version="1.1.0"
-                       xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ogc="http://www.opengis.net/ogc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+    xmlns:se="http://www.opengis.net/se">
     <NamedLayer>
         <se:Name>trading_point</se:Name>
         <UserStyle>
@@ -12,8 +12,8 @@
                 <se:Rule>
                     <se:Name>311310000</se:Name>
                     <se:Description>
-                        <se:Title>Кондитерские изделия</se:Title>
-                    </se:Description>
+            <se:Title>Кондитерские изделия</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -33,8 +33,8 @@
                 <se:Rule>
                     <se:Name>311320000</se:Name>
                     <se:Description>
-                        <se:Title>Сельскохозяйственная продукция</se:Title>
-                    </se:Description>
+            <se:Title>Сельскохозяйственная продукция</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -54,8 +54,8 @@
                 <se:Rule>
                     <se:Name>311330000</se:Name>
                     <se:Description>
-                        <se:Title>Яйцо</se:Title>
-                    </se:Description>
+            <se:Title>Яйцо</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -75,8 +75,8 @@
                 <se:Rule>
                     <se:Name>311340000</se:Name>
                     <se:Description>
-                        <se:Title>Продовольственные товары</se:Title>
-                    </se:Description>
+            <se:Title>Продовольственные товары</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -96,8 +96,8 @@
                 <se:Rule>
                     <se:Name>311350000</se:Name>
                     <se:Description>
-                        <se:Title>Колбасные изделия</se:Title>
-                    </se:Description>
+            <se:Title>Колбасные изделия</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -117,8 +117,8 @@
                 <se:Rule>
                     <se:Name>311360000</se:Name>
                     <se:Description>
-                        <se:Title>Хлебобулочные изделия</se:Title>
-                    </se:Description>
+            <se:Title>Хлебобулочные изделия</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -138,8 +138,8 @@
                 <se:Rule>
                     <se:Name>311370000</se:Name>
                     <se:Description>
-                        <se:Title>Горячие напитки со спец. аппарата</se:Title>
-                    </se:Description>
+            <se:Title>Горячие напитки со спец. аппарата</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -159,8 +159,8 @@
                 <se:Rule>
                     <se:Name>311380000</se:Name>
                     <se:Description>
-                        <se:Title>Напитки, мороженое</se:Title>
-                    </se:Description>
+            <se:Title>Напитки, мороженое</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -180,8 +180,8 @@
                 <se:Rule>
                     <se:Name>311390000</se:Name>
                     <se:Description>
-                        <se:Title>Квас</se:Title>
-                    </se:Description>
+            <se:Title>Квас</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -201,8 +201,8 @@
                 <se:Rule>
                     <se:Name>311400000</se:Name>
                     <se:Description>
-                        <se:Title>Квас, мороженое</se:Title>
-                    </se:Description>
+            <se:Title>Квас, мороженое</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -222,8 +222,8 @@
                 <se:Rule>
                     <se:Name>311410000</se:Name>
                     <se:Description>
-                        <se:Title>Живая рыба</se:Title>
-                    </se:Description>
+            <se:Title>Живая рыба</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -243,8 +243,8 @@
                 <se:Rule>
                     <se:Name>311420000</se:Name>
                     <se:Description>
-                        <se:Title>Мед и продукция пчеловодства</se:Title>
-                    </se:Description>
+            <se:Title>Мед и продукция пчеловодства</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -264,8 +264,8 @@
                 <se:Rule>
                     <se:Name>311430000</se:Name>
                     <se:Description>
-                        <se:Title>Бахчевые культуры</se:Title>
-                    </se:Description>
+            <se:Title>Бахчевые культуры</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -285,8 +285,8 @@
                 <se:Rule>
                     <se:Name>311440000</se:Name>
                     <se:Description>
-                        <se:Title>Живые цветы</se:Title>
-                    </se:Description>
+            <se:Title>Живые цветы</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -306,8 +306,8 @@
                 <se:Rule>
                     <se:Name>311450000</se:Name>
                     <se:Description>
-                        <se:Title>Хвойные насаждения</se:Title>
-                    </se:Description>
+            <se:Title>Хвойные насаждения</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -327,8 +327,8 @@
                 <se:Rule>
                     <se:Name>311460000</se:Name>
                     <se:Description>
-                        <se:Title>Хлебобулочные и кондитерские изделия</se:Title>
-                    </se:Description>
+            <se:Title>Хлебобулочные и кондитерские изделия</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -348,8 +348,8 @@
                 <se:Rule>
                     <se:Name>311470000</se:Name>
                     <se:Description>
-                        <se:Title>Молочная продукция</se:Title>
-                    </se:Description>
+            <se:Title>Молочная продукция</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -369,8 +369,8 @@
                 <se:Rule>
                     <se:Name>311480000</se:Name>
                     <se:Description>
-                        <se:Title>Общественный туалет</se:Title>
-                    </se:Description>
+            <se:Title>Общественный туалет</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -390,8 +390,8 @@
                 <se:Rule>
                     <se:Name>311490000</se:Name>
                     <se:Description>
-                        <se:Title>Общественное питание</se:Title>
-                    </se:Description>
+            <se:Title>Общественное питание</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -411,8 +411,8 @@
                 <se:Rule>
                     <se:Name>311500000</se:Name>
                     <se:Description>
-                        <se:Title>Питьевая вода</se:Title>
-                    </se:Description>
+            <se:Title>Питьевая вода</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -432,8 +432,8 @@
                 <se:Rule>
                     <se:Name>311510000</se:Name>
                     <se:Description>
-                        <se:Title>Иные нестационарные объекты</se:Title>
-                    </se:Description>
+            <se:Title>Иные нестационарные объекты</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -453,8 +453,8 @@
                 <se:Rule>
                     <se:Name>311520000</se:Name>
                     <se:Description>
-                        <se:Title>Непродовольственные товары</se:Title>
-                    </se:Description>
+            <se:Title>Непродовольственные товары</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -474,8 +474,8 @@
                 <se:Rule>
                     <se:Name>311530000</se:Name>
                     <se:Description>
-                        <se:Title>Бытовые услуги</se:Title>
-                    </se:Description>
+            <se:Title>Бытовые услуги</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -495,8 +495,8 @@
                 <se:Rule>
                     <se:Name>311550000</se:Name>
                     <se:Description>
-                        <se:Title>Автосервис</se:Title>
-                    </se:Description>
+            <se:Title>Автосервис</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -516,8 +516,8 @@
                 <se:Rule>
                     <se:Name>311560000</se:Name>
                     <se:Description>
-                        <se:Title>Лекарственные средства</se:Title>
-                    </se:Description>
+            <se:Title>Лекарственные средства</se:Title>
+          </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>classid</ogc:PropertyName>
@@ -537,8 +537,8 @@
                 <se:Rule>
                     <se:Name>Default</se:Name>
                     <se:Description>
-                        <se:Title>Не определено</se:Title>
-                    </se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
                     <se:ElseFilter/>
                     <se:PointSymbolizer>
                         <se:Graphic>

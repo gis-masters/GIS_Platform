@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Месторождения и проявления полезных ископаемых</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020111</se:Name>
 					<se:Description>
-						<se:Title>Месторождения нефти и газа федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения нефти и газа федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020121</se:Name>
 					<se:Description>
-						<se:Title>Месторождения нефти и газа регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения нефти и газа регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020131</se:Name>
 					<se:Description>
-						<se:Title>Месторождения нефти и газа местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения нефти и газа местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020211</se:Name>
 					<se:Description>
-						<se:Title>Месторождения угля и горючих сланцев федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения угля и горючих сланцев федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020221</se:Name>
 					<se:Description>
-						<se:Title>Месторождения угля и горючих сланцев регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения угля и горючих сланцев регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020231</se:Name>
 					<se:Description>
-						<se:Title>Месторождения угля и горючих сланцев местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения угля и горючих сланцев местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020311</se:Name>
 					<se:Description>
-						<se:Title>Месторождения торфа и сапропеля федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения торфа и сапропеля федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020321</se:Name>
 					<se:Description>
-						<se:Title>Месторождения торфа и сапропеля регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения торфа и сапропеля регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020331</se:Name>
 					<se:Description>
-						<se:Title>Месторождения торфа и сапропеля местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения торфа и сапропеля местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020411</se:Name>
 					<se:Description>
-						<se:Title>Месторождения металлических полезных ископаемых федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения металлических полезных ископаемых федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020421</se:Name>
 					<se:Description>
-						<se:Title>Месторождения металлических полезных ископаемых регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения металлических полезных ископаемых регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020431</se:Name>
 					<se:Description>
-						<se:Title>Месторождения металлических полезных ископаемых местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения металлических полезных ископаемых местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020511</se:Name>
 					<se:Description>
-						<se:Title>Месторождения неметаллических полезных ископаемых федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения неметаллических полезных ископаемых федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020521</se:Name>
 					<se:Description>
-						<se:Title>Месторождения неметаллических полезных ископаемых регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения неметаллических полезных ископаемых регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020531</se:Name>
 					<se:Description>
-						<se:Title>Месторождения неметаллических полезных ископаемых местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения неметаллических полезных ископаемых местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020611</se:Name>
 					<se:Description>
-						<se:Title>Месторождения гидроминерального сырья федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения гидроминерального сырья федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020621</se:Name>
 					<se:Description>
-						<se:Title>Месторождения гидроминерального сырья регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения гидроминерального сырья регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020631</se:Name>
 					<se:Description>
-						<se:Title>Месторождения гидроминерального сырья местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения гидроминерального сырья местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020711</se:Name>
 					<se:Description>
-						<se:Title>Месторождения подземных вод федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения подземных вод федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020721</se:Name>
 					<se:Description>
-						<se:Title>Месторождения подземных вод регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения подземных вод регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60901020731</se:Name>
 					<se:Description>
-						<se:Title>Месторождения подземных вод местного значения</se:Title>
-					</se:Description>
+            <se:Title>Месторождения подземных вод местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

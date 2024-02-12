@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:se="http://www.opengis.net/se">
   <NamedLayer>
     <se:Name>Санитарно-защитная зона</se:Name>
     <UserStyle>
@@ -31,24 +35,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://vertline</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>4</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-			   <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>  
-             </se:Stroke>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://vertline</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>4</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>
+            </se:Stroke>
             <se:PerpendicularOffset>-2</se:PerpendicularOffset>
-           </se:PolygonSymbolizer>
+          </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301010102</se:Name>
@@ -77,24 +81,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://vertline</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>4</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-			   <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>  
-             </se:Stroke>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://vertline</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>4</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>
+            </se:Stroke>
             <se:PerpendicularOffset>-2</se:PerpendicularOffset>
-           </se:PolygonSymbolizer>
+          </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301010201</se:Name>
@@ -122,24 +126,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://vertline</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>4</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-			   <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>  
-             </se:Stroke>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://vertline</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>4</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>
+            </se:Stroke>
             <se:PerpendicularOffset>-2</se:PerpendicularOffset>
-           </se:PolygonSymbolizer>
+          </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301010202</se:Name>
@@ -168,24 +172,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://vertline</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>4</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-			   <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>  
-             </se:Stroke>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://vertline</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>4</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>
+            </se:Stroke>
             <se:PerpendicularOffset>-2</se:PerpendicularOffset>
-           </se:PolygonSymbolizer>
+          </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>Default</se:Name>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60201010101</se:Name>
 					<se:Description>
-						<se:Title>Дошкольная образовательная организация существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дошкольная образовательная организация существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010101</ogc:Literal>
@@ -34,10 +32,9 @@
 				<se:Rule>
 					<se:Name>60201010102</se:Name>
 					<se:Description>
-						<se:Title>Дошкольная образовательная организация планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дошкольная образовательная организация планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010102</ogc:Literal>
@@ -56,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60201010103</se:Name>
 					<se:Description>
-						<se:Title>Дошкольная образовательная организация планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дошкольная образовательная организация планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010103</ogc:Literal>
@@ -77,10 +73,9 @@
 				<se:Rule>
 					<se:Name>60201010104</se:Name>
 					<se:Description>
-						<se:Title>Дошкольная образовательная организация планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дошкольная образовательная организация планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010104</ogc:Literal>
@@ -98,10 +93,9 @@
 				<se:Rule>
 					<se:Name>60201010201</se:Name>
 					<se:Description>
-						<se:Title>Общеобразовательная организация существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Общеобразовательная организация существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010201</ogc:Literal>
@@ -119,10 +113,9 @@
 				<se:Rule>
 					<se:Name>60201010202</se:Name>
 					<se:Description>
-						<se:Title>Общеобразовательная организация планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Общеобразовательная организация планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010202</ogc:Literal>
@@ -141,10 +134,9 @@
 				<se:Rule>
 					<se:Name>60201010203</se:Name>
 					<se:Description>
-						<se:Title>Общеобразовательная организация планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Общеобразовательная организация планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010203</ogc:Literal>
@@ -162,10 +154,9 @@
 				<se:Rule>
 					<se:Name>60201010204</se:Name>
 					<se:Description>
-						<se:Title>Общеобразовательная организация планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Общеобразовательная организация планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010204</ogc:Literal>
@@ -183,10 +174,9 @@
 				<se:Rule>
 					<se:Name>60201010301</se:Name>
 					<se:Description>
-						<se:Title>Организация дополнительного образования существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация дополнительного образования существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010301</ogc:Literal>
@@ -204,10 +194,9 @@
 				<se:Rule>
 					<se:Name>60201010302</se:Name>
 					<se:Description>
-						<se:Title>Организация дополнительного образования планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация дополнительного образования планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010302</ogc:Literal>
@@ -226,10 +215,9 @@
 				<se:Rule>
 					<se:Name>60201010303</se:Name>
 					<se:Description>
-						<se:Title>Организация дополнительного образования планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация дополнительного образования планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010303</ogc:Literal>
@@ -247,10 +235,9 @@
 				<se:Rule>
 					<se:Name>60201010304</se:Name>
 					<se:Description>
-						<se:Title>Организация дополнительного образования планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация дополнительного образования планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010304</ogc:Literal>
@@ -268,10 +255,9 @@
 				<se:Rule>
 					<se:Name>60201010401</se:Name>
 					<se:Description>
-						<se:Title>Организация, реализующая программы профессионального и высшего образования существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация, реализующая программы профессионального и высшего образования существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010401</ogc:Literal>
@@ -289,10 +275,9 @@
 				<se:Rule>
 					<se:Name>60201010402</se:Name>
 					<se:Description>
-						<se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010402</ogc:Literal>
@@ -311,10 +296,9 @@
 				<se:Rule>
 					<se:Name>60201010403</se:Name>
 					<se:Description>
-						<se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010403</ogc:Literal>
@@ -332,10 +316,9 @@
 				<se:Rule>
 					<se:Name>60201010404</se:Name>
 					<se:Description>
-						<se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Организация, реализующая программы профессионального и высшего образования планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010404</ogc:Literal>
@@ -353,10 +336,9 @@
 				<se:Rule>
 					<se:Name>60201010501</se:Name>
 					<se:Description>
-						<se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением существующее</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением существующее</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010501</ogc:Literal>
@@ -374,10 +356,9 @@
 				<se:Rule>
 					<se:Name>60201010502</se:Name>
 					<se:Description>
-						<se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010502</ogc:Literal>
@@ -396,10 +377,9 @@
 				<se:Rule>
 					<se:Name>60201010503</se:Name>
 					<se:Description>
-						<se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010503</ogc:Literal>
@@ -417,10 +397,9 @@
 				<se:Rule>
 					<se:Name>60201010504</se:Name>
 					<se:Description>
-						<se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением планируемое к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010504</ogc:Literal>
@@ -438,10 +417,9 @@
 				<se:Rule>
 					<se:Name>60201010601</se:Name>
 					<se:Description>
-						<se:Title>Научная организация и ее структурные подразделения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Научная организация и ее структурные подразделения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010601</ogc:Literal>
@@ -459,10 +437,9 @@
 				<se:Rule>
 					<se:Name>60201010602</se:Name>
 					<se:Description>
-						<se:Title>Научная организация и ее структурные подразделения планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Научная организация и ее структурные подразделения планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010602</ogc:Literal>
@@ -481,10 +458,9 @@
 				<se:Rule>
 					<se:Name>60201010603</se:Name>
 					<se:Description>
-						<se:Title>Научная организация и ее структурные подразделения планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Научная организация и ее структурные подразделения планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010603</ogc:Literal>
@@ -502,10 +478,9 @@
 				<se:Rule>
 					<se:Name>60201010604</se:Name>
 					<se:Description>
-						<se:Title>Научная организация и ее структурные подразделения планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Научная организация и ее структурные подразделения планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60201010604</ogc:Literal>
@@ -523,8 +498,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld" version="1.1.0"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:ogc="http://www.opengis.net/ogc"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60203010101</se:Name>
 					<se:Description>
-						<se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010101</ogc:Literal>
@@ -61,10 +59,9 @@
 				<se:Rule>
 					<se:Name>60203010102</se:Name>
 					<se:Description>
-						<se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010102</ogc:Literal>
@@ -109,10 +106,9 @@
 				<se:Rule>
 					<se:Name>60203010103</se:Name>
 					<se:Description>
-						<se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодорожные линии (за исключением железнодорожных путей необщего пользования) планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010103</ogc:Literal>
@@ -157,10 +153,9 @@
 				<se:Rule>
 					<se:Name>60203010201</se:Name>
 					<se:Description>
-						<se:Title>Железнодоржные линии необщего пользования существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодоржные линии необщего пользования существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010201</ogc:Literal>
@@ -205,10 +200,9 @@
 				<se:Rule>
 					<se:Name>60203010202</se:Name>
 					<se:Description>
-						<se:Title>Железнодоржные линии необщего пользования планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодоржные линии необщего пользования планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010202</ogc:Literal>
@@ -253,10 +247,9 @@
 				<se:Rule>
 					<se:Name>60203010203</se:Name>
 					<se:Description>
-						<se:Title>Железнодоржные линии необщего пользования планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Железнодоржные линии необщего пользования планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203010203</ogc:Literal>
@@ -301,8 +294,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

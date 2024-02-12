@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты хранения и обслуживания общественного пассажирского транспорта</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080111</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080112</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080113</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080114</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080121</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080122</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080123</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080124</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планируемое к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080131</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080132</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планиуемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планиуемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080133</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планиуемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планиуемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080134</se:Name>
 					<se:Description>
-						<se:Title>Электродепо метрополитена планиуемое к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электродепо метрополитена планиуемое к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080211</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080212</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080213</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080214</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080221</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080222</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080223</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080224</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080231</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080232</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080233</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080234</se:Name>
 					<se:Description>
-						<se:Title>Трамвайное депо планируемое к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Трамвайное депо планируемое к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080311</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080312</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080313</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080314</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080321</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080322</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080323</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080324</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080331</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080332</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080333</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080334</se:Name>
 					<se:Description>
-						<se:Title>Троллейбусное депо планируемое к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Троллейбусное депо планируемое к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080411</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080412</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080413</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080414</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080421</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080422</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080423</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080424</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080431</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080432</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080433</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080434</se:Name>
 					<se:Description>
-						<se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Совмещенное троллейбусно-трамвайное депо планируемое к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080511</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1040,8 +1041,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080512</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1061,8 +1062,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080513</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1082,8 +1083,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080514</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1103,8 +1104,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080521</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1124,8 +1125,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080522</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1145,8 +1146,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080523</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1166,8 +1167,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080524</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1187,8 +1188,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080531</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1208,8 +1209,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080532</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1229,8 +1230,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080533</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1250,8 +1251,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203080534</se:Name>
 					<se:Description>
-						<se:Title>Автобусный парк планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Автобусный парк планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1271,8 +1272,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

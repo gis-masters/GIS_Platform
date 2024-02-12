@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Ограждения</se:Name>
     <UserStyle>
@@ -211,7 +215,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_kamennaya_menee_1_m.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -251,7 +256,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_kamennaya_menee_1_m.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -291,7 +297,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_kamennaya_menee_1_m.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -331,7 +338,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_kamennaya_menee_1_m.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -392,7 +400,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metall_vushe_1_m_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -432,7 +441,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metall_vushe_1_m_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -472,7 +482,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metall_vushe_1_m_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -512,7 +523,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metall_vushe_1_m_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -573,7 +585,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -613,7 +626,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -653,7 +667,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -693,7 +708,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -754,7 +770,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -794,7 +811,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -834,7 +852,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -874,7 +893,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_krugl.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -935,7 +955,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -975,7 +996,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -1015,7 +1037,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -1055,7 +1078,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ograda_metal_vushe_1_m_beton_kvadrat.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -2171,7 +2195,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>8</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2206,7 +2230,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>8</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2241,7 +2265,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>8</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2257,7 +2281,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>6</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2273,7 +2297,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>2</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2308,7 +2332,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>8</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2324,7 +2348,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>6</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2340,7 +2364,7 @@
                 <se:Fill>
                   <se:SvgParameter name="fill">#00000</se:SvgParameter>
                 </se:Fill>
-              </se:Mark> 
+              </se:Mark>
               <se:Size>2</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
@@ -2483,69 +2507,70 @@
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:PointSymbolizer>
-             <se:Geometry>
+            <se:Geometry>
               <ogc:Function name="endpoint">
-              <ogc:PropertyName>shape</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
-             </se:Geometry>
+            </se:Geometry>
             <se:Graphic>
               <se:Mark>
-               <se:WellKnownName>shape://horline</se:WellKnownName>
+                <se:WellKnownName>shape://horline</se:WellKnownName>
                 <se:Fill>
-                <se:SvgParameter name="fill">#00000</se:SvgParameter>
+                  <se:SvgParameter name="fill">#00000</se:SvgParameter>
                   <se:SvgParameter name="stroke-offset">1</se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
-              <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            </se:Stroke>
-              </se:Mark> 
-              <se:Size>15</se:Size><se:Rotation>
-              <ogc:Function name="endAngle">
-              <ogc:PropertyName>shape</ogc:PropertyName>
-              </ogc:Function>
-             </se:Rotation>
+                  <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                  <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                  <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
+                  <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
+                </se:Stroke>
+              </se:Mark>
+              <se:Size>15</se:Size>
+              <se:Rotation>
+                <ogc:Function name="endAngle">
+                  <ogc:PropertyName>shape</ogc:PropertyName>
+                </ogc:Function>
+              </se:Rotation>
               <se:Displacement>
-              <se:DisplacementX>-11</se:DisplacementX>
-             <se:DisplacementY>-10</se:DisplacementY>
-            </se:Displacement>
-               
-             </se:Graphic>
+                <se:DisplacementX>-11</se:DisplacementX>
+                <se:DisplacementY>-10</se:DisplacementY>
+              </se:Displacement>
+
+            </se:Graphic>
           </se:PointSymbolizer>
           <se:PointSymbolizer>
-             <se:Geometry>
+            <se:Geometry>
               <ogc:Function name="startpoint">
-              <ogc:PropertyName>shape</ogc:PropertyName>
+                <ogc:PropertyName>shape</ogc:PropertyName>
               </ogc:Function>
-             </se:Geometry>
+            </se:Geometry>
             <se:Graphic>
               <se:Mark>
-               <se:WellKnownName>shape://horline</se:WellKnownName>
+                <se:WellKnownName>shape://horline</se:WellKnownName>
                 <se:Fill>
-                <se:SvgParameter name="fill">#00000</se:SvgParameter>
+                  <se:SvgParameter name="fill">#00000</se:SvgParameter>
                   <se:SvgParameter name="stroke-offset">1</se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-              <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
-              <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            </se:Stroke>
-              </se:Mark> 
+                  <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                  <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                  <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
+                  <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
+                </se:Stroke>
+              </se:Mark>
               <se:Size>15</se:Size>
-<se:Rotation>
-              <ogc:Function name="startAngle">
-              <ogc:PropertyName>shape</ogc:PropertyName>
-              </ogc:Function>
-             </se:Rotation>
+              <se:Rotation>
+                <ogc:Function name="startAngle">
+                  <ogc:PropertyName>shape</ogc:PropertyName>
+                </ogc:Function>
+              </se:Rotation>
               <se:Displacement>
-              <se:DisplacementX>-11</se:DisplacementX>
-             <se:DisplacementY>10</se:DisplacementY>
-            </se:Displacement>
-              
-             </se:Graphic>
+                <se:DisplacementX>-11</se:DisplacementX>
+                <se:DisplacementY>10</se:DisplacementY>
+              </se:Displacement>
+
+            </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
 

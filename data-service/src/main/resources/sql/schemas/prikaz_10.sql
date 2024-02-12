@@ -6,6 +6,7 @@ SELECT 'thermalpipeline_line',
         "readOnly": true,
         "tableName": "thermalpipeline_line",
         "originName": "ThermalPipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -17,18 +18,13 @@ SELECT 'thermalpipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": "«Сети теплоснабжения»",
-            "hidden": false, 
-            "multiple": false,
+            "title": "«Сети теплоснабжения»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45,26 +41,17 @@ SELECT 'thermalpipeline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
-            "title": "Вид расположения трубопровода",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Вид расположения трубопровода", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -96,9 +83,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "LENGTH",
-            "title": "Протяженность сооружения, км",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Протяженность сооружения, км", 
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -106,10 +91,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "WEAR_PRCNT",
-            "title": "Процент износа, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -117,10 +99,7 @@ SELECT 'thermalpipeline_line',
           {
             "name": "D1_PLINE",
             "title": "Диаметр подающего трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -128,10 +107,7 @@ SELECT 'thermalpipeline_line',
           {
             "name": "D2_PLINE",
             "title": "Диаметр обратного трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -139,10 +115,7 @@ SELECT 'thermalpipeline_line',
           {
             "name": "D3_PLINE",
             "title": "Диаметр подающего трубопровода горячего водоснабжения, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -150,67 +123,44 @@ SELECT 'thermalpipeline_line',
           {
             "name": "D4_PLINE",
             "title": "Диаметр циркуляционного трубопровода горячего водоснабжения, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "ZONE_SIZE",
-            "title": "Размер охранной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-            "title": "Справочник: Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Справочник: Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -234,9 +184,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "reg_status",
-            "title": "Справочник: Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Справочник: Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -268,10 +216,7 @@ SELECT 'thermalpipeline_line',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -310,6 +255,7 @@ SELECT 'oilpipeline_line',
         "readOnly": true,
         "tableName": "oilpipeline_line",
         "originName": "OilPipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -321,18 +267,13 @@ SELECT 'oilpipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-      "title": "Код объекта ",
-            "hidden": false, 
-            "multiple": false,
+      "title": "Код объекта ", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -352,27 +293,18 @@ SELECT 'oilpipeline_line',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
-            "title": "Вид расположения трубопровода",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Вид расположения трубопровода", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -404,9 +336,7 @@ SELECT 'oilpipeline_line',
           },
           {
             "name": "LENGTH",
-            "title": "Протяженность сооружения, км",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Протяженность сооружения, км", 
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -414,10 +344,7 @@ SELECT 'oilpipeline_line',
           },
           {
             "name": "WEAR_PRCNT",
-            "title": "Процент износа, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -425,10 +352,7 @@ SELECT 'oilpipeline_line',
           {
             "name": "PLINE_CNT",
             "title": "Количество труб",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -436,87 +360,58 @@ SELECT 'oilpipeline_line',
           {
             "name": "D_PLINE",
             "title": "Диаметр трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "PRESSURE",
-            "title": "Рабочее давление в трубопроводе, МПа",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Рабочее давление в трубопроводе, МПа", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "SZZ_SIZE",
-            "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер санитарно-защитной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "ZONE_SIZE",
-            "title": "Размер охранной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-      "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+      "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -540,9 +435,7 @@ SELECT 'oilpipeline_line',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -574,10 +467,7 @@ SELECT 'oilpipeline_line',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -616,6 +506,7 @@ SELECT 'telecomnetworkline_line',
         "readOnly": true,
         "tableName": "telecomnetworkline_line",
         "originName": "TelecomNetworkLine",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -627,18 +518,13 @@ SELECT 'telecomnetworkline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": "Сети электросвязи",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Сети электросвязи»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -654,37 +540,25 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WEAR_PRCNT",
-            "title": "Процент износа, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "COMM_TYPE",
-            "title": "Вид линии связи",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Вид линии связи", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -712,10 +586,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "COMM_CTYPE",
-            "title": "Вид линейно-кабельного сооружения связи",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Вид линейно-кабельного сооружения связи", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -738,10 +609,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "CABLE_TYPE",
-            "title": "Тип кабельной связи",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип кабельной связи", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -756,20 +624,14 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "ZONE_SIZE",
-            "title": "Размер охранной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "DANGER_OBJ",
-            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -824,47 +686,30 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-      "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+      "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -888,9 +733,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -922,10 +765,7 @@ SELECT 'telecomnetworkline_line',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -981,6 +821,7 @@ SELECT 'electrictransformer_point',
         "readOnly": true,
         "tableName": "electrictransformer_point",
         "originName": "ElectricTransformer",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -992,18 +833,13 @@ SELECT 'electrictransformer_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": " «Электрические подстанции»",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Электрические подстанции»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1103,37 +939,24 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DISP_NUM",
-            "title": "Диспетчерский номер",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Диспетчерский номер", 
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -1141,28 +964,18 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "ADDRESS",
-            "title": "Местоположение, адресное описание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
             "name": "VOLTAGE",
-            "title": "Напряжение, кВ",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Напряжение, кВ", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CURRENT",
-            "title": "Тип тока",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип тока", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1177,10 +990,7 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "GROUND_POS",
-            "title": "Расположение объекта относительно уровня земли",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Расположение объекта относительно уровня земли", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1199,9 +1009,7 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "DANGER_OBJ",
-            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1257,29 +1065,21 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "WEAR_PRCNT",
-            "title": "Процент износа, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "FACT_USE",
-            "title": "Фактическое использование объекта, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Фактическое использование объекта, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "POWER",
-            "title": "Мощность трансформаторов, МВ · A",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Мощность трансформаторов, МВ · A", 
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -1288,9 +1088,7 @@ SELECT 'electrictransformer_point',
           {
             "name": "AMOUNT",
             "title": "Количество трансформаторов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
             "required": true,
             "valueType": "INT",
             "maxInclusive": 2147483647,
@@ -1298,67 +1096,44 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "SZZ_SIZE",
-            "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер санитарно-защитной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "ZONE_SIZE",
-            "title": "Размер охранной зоны, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-      "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+      "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1382,9 +1157,7 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1416,10 +1189,7 @@ SELECT 'electrictransformer_point',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -1441,6 +1211,7 @@ SELECT 'railwayfacility_point',
         "readOnly": true,
         "tableName": "railwayfacility_point",
         "originName": "RailwayFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -1452,18 +1223,13 @@ SELECT 'railwayfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": " «Объекты железнодорожного транспорта»",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Объекты железнодорожного транспорта»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1491,28 +1257,19 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -1520,18 +1277,12 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "ADDRESS",
-            "title": "Местоположение, адресное описание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
             "name": "USING_TYPE",
-            "title": "Вид разрешенного использования",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Вид разрешенного использования", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1547,10 +1298,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "RST_TYPE",
-            "title": "Тип железнодорожной станции",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип железнодорожной станции", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1577,10 +1325,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "RST_CLASS",
-            "title": "Класс железнодорожной станции/вокзала",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Класс железнодорожной станции/вокзала", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1611,10 +1356,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "RFO_TYPE",
-            "title": "Тип иных объектов железнодорожного транспорта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип иных объектов железнодорожного транспорта", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1642,20 +1384,14 @@ SELECT 'railwayfacility_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость железнодорожного вокзала, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SUBURBAN_TR",
-            "title": "Наличие движения пригородных поездов",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Наличие движения пригородных поездов", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1670,10 +1406,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "FREIGHT",
-            "title": "Грузоперевозки, тонн",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Грузоперевозки, тонн", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -1681,10 +1414,7 @@ SELECT 'railwayfacility_point',
           {
             "name": "PASS_TRAIN",
             "title": "Размер движения пассажирских поездов, пар в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -1692,29 +1422,19 @@ SELECT 'railwayfacility_point',
           {
             "name": "CARGO_TRAIN",
             "title": "Размер движения грузовых поездов, пар в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "COMPL_NAME",
-            "title": "Наименование комплексного объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Наименование комплексного объекта", 
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
-            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -1769,47 +1489,30 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-            "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1833,9 +1536,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1867,10 +1568,7 @@ SELECT 'railwayfacility_point',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -1934,6 +1632,7 @@ SELECT 'admesrf',
         "readOnly": true,
         "tableName": "admesrf",
         "originName": "AdmeSRF",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -1945,18 +1644,13 @@ SELECT 'admesrf',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": "Код объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Код объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1968,18 +1662,13 @@ SELECT 'admesrf',
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "TYPE_SUBJ",
-            "title": "Тип субъекта Российской Федерации",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Тип субъекта Российской Федерации", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2011,29 +1700,19 @@ SELECT 'admesrf',
           },
           {
             "name": "POPULATION",
-            "title": "Численность населения, тыс. чел.",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Численность населения, тыс. чел.", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -2054,6 +1733,7 @@ SELECT 'wastefacility_point',
         "readOnly": true,
         "tableName": "wastefacility_point",
         "originName": "WasteFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -2065,18 +1745,13 @@ SELECT 'wastefacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2108,28 +1783,19 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -2137,28 +1803,17 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "ADDRESS",
-            "title": "Местоположение, адресное описание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
             "name": "ORO_NUMBER",
-            "title": "Учетный номер объекта размещения отходов",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Учетный номер объекта размещения отходов", 
             "valueType": "STRING"
           },
           {
             "name": "ORO_TYPE",
-            "title": "Назначение объекта размещения отходов",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Назначение объекта размещения отходов", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2173,10 +1828,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "ORO_STYPE",
-            "title": "Вид объекта размещения отходов",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Вид объекта размещения отходов", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2255,10 +1907,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "RECYC_TYPE",
-            "title": "Тип объекта по переработке промышленных, бытовых и биологических отходов",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип объекта по переработке промышленных, бытовых и биологических отходов", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2281,10 +1930,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "BUR_TYPE",
-            "title": "Тип скотомогильника",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип скотомогильника", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2312,19 +1958,14 @@ SELECT 'wastefacility_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "HZRD_CLASS",
-            "title": "Класс опасности объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Класс опасности объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2352,10 +1993,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "HZRD_CAT",
-            "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2378,10 +2016,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "DANGER_OBJ",
-            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2436,47 +2071,30 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-            "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2500,9 +2118,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2534,10 +2150,7 @@ SELECT 'wastefacility_point',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -2617,6 +2230,7 @@ SELECT 'waterfacility_point',
         "readOnly": true,
         "tableName": "waterfacility_point",
         "originName": "WaterFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -2628,18 +2242,13 @@ SELECT 'waterfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": " «Объекты водоснабжения»",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Объекты водоснабжения»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2671,28 +2280,19 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -2700,19 +2300,12 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "ADDRESS",
-            "title": "Местоположение, адресное описание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
             "name": "WATER_STYPE",
-            "title": "Тип водозабора по характеристикам источника",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Тип водозабора по характеристикам источника", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2727,10 +2320,7 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "GROUND_POS",
-            "title": "Расположение объекта относительно уровня земли",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Расположение объекта относительно уровня земли", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -2749,39 +2339,28 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "WEAR_PRCNT",
-            "title": "Процент износа, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "FACT_USE",
-            "title": "Фактическое использование объекта, %",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Фактическое использование объекта, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "OUTPUT",
-            "title": "Производительность, тыс. куб. м/сут",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Производительность, тыс. куб. м/сут", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "SIZE_ZSO_1",
-            "title": "Размер первого пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Размер первого пояса зоны санитарной охраны источника водоснабжения, м", 
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -2789,29 +2368,21 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "SIZE_ZSO_2",
-            "title": "Размер второго пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер второго пояса зоны санитарной охраны источника водоснабжения, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "SIZE_ZSO_3",
-            "title": "Размер третьего пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Размер третьего пояса зоны санитарной охраны источника водоснабжения, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
             "name": "ZONE_SIZE",
-            "title": "Размер зоны санитарной охраны водопроводных сооружений, м",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Размер зоны санитарной охраны водопроводных сооружений, м", 
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -2819,47 +2390,30 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-            "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2883,9 +2437,7 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -2917,10 +2469,7 @@ SELECT 'waterfacility_point',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -2968,6 +2517,7 @@ SELECT 'publictransportservice_point',
         "readOnly": true,
         "tableName": "publictransportservice_point",
         "originName": "PublicTransportService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -2979,18 +2529,13 @@ SELECT 'publictransportservice_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
-            "hidden": false, 
-            "multiple": false,
+            "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3018,28 +2563,19 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "NUMBER",
-            "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
             "name": "NAME",
-            "title": "Наименование объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Наименование объекта", 
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -3047,30 +2583,20 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "ADDRESS",
-            "title": "Местоположение, адресное описание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Вместимость, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "DANGER_OBJ",
-            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3125,47 +2651,30 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "FUNCTION",
-            "title": "Назначение объекта",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
             "name": "SOURCE",
-            "title": "Источник данных",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
-            "title": "Примечание",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
+            "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-            "title": "Статус объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3189,9 +2698,7 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "reg_status",
-            "title": "Значение объекта",
-            "hidden": false, 
-            "multiple": false,
+            "title": "Значение объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3223,10 +2730,7 @@ SELECT 'publictransportservice_point',
           },
           {
             "name": "shape",
-            "title": "геометрия",
-            "hidden": false, 
-            "multiple": false,
-            "required": false,
+            "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -3234,8 +2738,7 @@ SELECT 'publictransportservice_point',
           }
         ],
         "description": "Класс объектов «Объекты хранения и обслуживания общественного пассажирского транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -3267,6 +2770,7 @@ SELECT 'airtransportobj_point',
         "readOnly": true,
         "tableName": "airtransportobj_point",
         "originName": "AirTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -3278,18 +2782,13 @@ SELECT 'airtransportobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты воздушного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3322,27 +2821,18 @@ SELECT 'airtransportobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -3351,18 +2841,11 @@ SELECT 'airtransportobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AVIA_TYPE",
             "title": "Тип объекта по виду обслуживаемой авиации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3386,10 +2869,7 @@ SELECT 'airtransportobj_point',
           {
             "name": "CAPACITY",
             "title": "Пропускная способность аэропорта, пасс./час",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3397,9 +2877,6 @@ SELECT 'airtransportobj_point',
           {
             "name": "FREIGHT",
             "title": "Грузоперевозки, тонн",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -3407,8 +2884,6 @@ SELECT 'airtransportobj_point',
           {
             "name": "LAND_TYPE",
             "title": "Тип посадочной площадки",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3429,9 +2904,6 @@ SELECT 'airtransportobj_point',
           {
             "name": "RWY_CLASS",
             "title": "Класс взлетно-посадочной полосы",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3463,18 +2935,11 @@ SELECT 'airtransportobj_point',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3530,19 +2995,12 @@ SELECT 'airtransportobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3550,26 +3008,16 @@ SELECT 'airtransportobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3594,8 +3042,6 @@ SELECT 'airtransportobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3628,9 +3074,6 @@ SELECT 'airtransportobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -3638,8 +3081,7 @@ SELECT 'airtransportobj_point',
           }
         ],
         "description": "Класс объектов «Объекты воздушного транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -3677,6 +3119,7 @@ SELECT 'autoservice_point',
         "readOnly": true,
         "tableName": "autoservice_point",
         "originName": "AutoService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -3688,18 +3131,13 @@ SELECT 'autoservice_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3724,27 +3162,18 @@ SELECT 'autoservice_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -3753,18 +3182,11 @@ SELECT 'autoservice_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GAS_ST_TYPE",
             "title": "Тип автозаправочных станций",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3796,10 +3218,7 @@ SELECT 'autoservice_point',
           {
             "name": "FUEL_COUNT",
             "title": "Количество топливораздаточных колонок автозаправочных станций",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3807,10 +3226,7 @@ SELECT 'autoservice_point',
           {
             "name": "POST_COUNT",
             "title": "Количество постов станций технического обслуживания",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3818,9 +3234,6 @@ SELECT 'autoservice_point',
           {
             "name": "PRKNG_TYPE",
             "title": "Тип стоянок автомобилей",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3844,9 +3257,6 @@ SELECT 'autoservice_point',
           {
             "name": "PRKNG_LVL",
             "title": "Тип размещения стоянок относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3866,9 +3276,6 @@ SELECT 'autoservice_point',
           {
             "name": "PRKNG_TIME",
             "title": "Тип стоянок автомобилей по длительности хранения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -3884,10 +3291,7 @@ SELECT 'autoservice_point',
           {
             "name": "PRKNG_FLS",
             "title": "Этажность стоянок",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3895,9 +3299,7 @@ SELECT 'autoservice_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
             "required": true,
             "valueType": "INT",
             "maxInclusive": 2147483647,
@@ -3906,19 +3308,12 @@ SELECT 'autoservice_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -3926,26 +3321,16 @@ SELECT 'autoservice_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -3970,8 +3355,6 @@ SELECT 'autoservice_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4004,9 +3387,6 @@ SELECT 'autoservice_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -4014,8 +3394,7 @@ SELECT 'autoservice_point',
           }
         ],
         "description": "Класс объектов «Объекты обслуживания и хранения автомобильного транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -4103,6 +3482,7 @@ SELECT 'heritage_point',
         "readOnly": true,
         "tableName": "heritage_point",
         "originName": "Heritage",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -4114,18 +3494,13 @@ SELECT 'heritage_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты культурного наследия (ОКН)»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4150,27 +3525,18 @@ SELECT 'heritage_point',
           {
             "name": "NUMBER",
             "title": "Номер объекта культурного наследия на карте",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -4179,26 +3545,16 @@ SELECT 'heritage_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "REG_NUMBER",
             "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "HIST_CAT",
             "title": "Категория историко-культурного значения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4227,9 +3583,6 @@ SELECT 'heritage_point',
           {
             "name": "HER_TYPE",
             "title": "Вид памятника",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4257,9 +3610,6 @@ SELECT 'heritage_point',
           {
             "name": "ANS_TYPE",
             "title": "Вид ансамбля",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4327,9 +3677,6 @@ SELECT 'heritage_point',
           {
             "name": "HIST_OUT",
             "title": "Объекты выдающейся культурной ценности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4345,9 +3692,6 @@ SELECT 'heritage_point',
           {
             "name": "OCH_USE",
             "title": "Использование объекта культурного наследия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4427,26 +3771,16 @@ SELECT 'heritage_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4463,9 +3797,6 @@ SELECT 'heritage_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -4473,8 +3804,7 @@ SELECT 'heritage_point',
           }
         ],
         "description": "Класс объектов «Объекты культурного наследия (ОКН)»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -4511,6 +3841,7 @@ SELECT 'resort_point',
         "readOnly": true,
         "tableName": "resort_point",
         "originName": "Resort",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -4522,18 +3853,13 @@ SELECT 'resort_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты санаторно-курортного назначения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4546,27 +3872,18 @@ SELECT 'resort_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -4575,18 +3892,11 @@ SELECT 'resort_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "RES_STYPE",
             "title": "Вид объекта санаторно-курортного назначения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4626,10 +3936,7 @@ SELECT 'resort_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -4637,10 +3944,7 @@ SELECT 'resort_point',
           {
             "name": "PERSON_PD",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -4648,9 +3952,6 @@ SELECT 'resort_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -4658,10 +3959,7 @@ SELECT 'resort_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -4669,19 +3967,12 @@ SELECT 'resort_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -4689,26 +3980,16 @@ SELECT 'resort_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4733,8 +4014,6 @@ SELECT 'resort_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4767,9 +4046,6 @@ SELECT 'resort_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -4777,8 +4053,7 @@ SELECT 'resort_point',
           }
         ],
         "description": "Класс объектов «Объекты санаторно-курортного назначения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -4810,6 +4085,7 @@ SELECT 'servicefacility_point',
         "readOnly": true,
         "tableName": "servicefacility_point",
         "originName": "ServiceFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -4821,18 +4097,13 @@ SELECT 'servicefacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Прочие объекты, связанные с производственной деятельностью»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -4845,27 +4116,18 @@ SELECT 'servicefacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -4874,18 +4136,11 @@ SELECT 'servicefacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SERV_STYPE",
             "title": "Подтип объекта, связанного с производственной деятельностью",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4945,27 +4200,16 @@ SELECT 'servicefacility_point',
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOT_SIZE",
             "title": "Общая площадь территории участка - га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -4973,9 +4217,6 @@ SELECT 'servicefacility_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий - кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -4983,10 +4224,7 @@ SELECT 'servicefacility_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -4994,8 +4232,6 @@ SELECT 'servicefacility_point',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5024,9 +4260,6 @@ SELECT 'servicefacility_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5050,9 +4283,6 @@ SELECT 'servicefacility_point',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5080,9 +4310,6 @@ SELECT 'servicefacility_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5138,19 +4365,12 @@ SELECT 'servicefacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -5158,26 +4378,16 @@ SELECT 'servicefacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5202,8 +4412,6 @@ SELECT 'servicefacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5236,9 +4444,6 @@ SELECT 'servicefacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -5246,8 +4451,7 @@ SELECT 'servicefacility_point',
           }
         ],
         "description": "Класс объектов «Прочие объекты, связанные с производственной деятельностью»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -5279,6 +4483,7 @@ SELECT 'sewerfacility_point',
         "readOnly": true,
         "tableName": "sewerfacility_point",
         "originName": "SewerFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -5290,18 +4495,13 @@ SELECT 'sewerfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты водоотведения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5330,27 +4530,18 @@ SELECT 'sewerfacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -5359,18 +4550,11 @@ SELECT 'sewerfacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5390,9 +4574,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5400,9 +4581,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5410,9 +4588,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "OUTPUT",
             "title": "Производительность, тыс. куб. м/сут",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5420,9 +4595,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "SNOW_TYPE",
             "title": "Тип снегоплавильного, снегоприемного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5438,9 +4610,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5464,9 +4633,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5474,19 +4640,12 @@ SELECT 'sewerfacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -5494,26 +4653,16 @@ SELECT 'sewerfacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5538,8 +4687,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5572,9 +4719,6 @@ SELECT 'sewerfacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -5582,8 +4726,7 @@ SELECT 'sewerfacility_point',
           }
         ],
         "description": "Класс объектов «Объекты водоотведения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -5623,6 +4766,7 @@ SELECT 'culture_point',
         "readOnly": true,
         "tableName": "culture_point",
         "originName": "Culture",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -5634,18 +4778,13 @@ SELECT 'culture_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты культуры и искусства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5666,27 +4805,18 @@ SELECT 'culture_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -5695,18 +4825,11 @@ SELECT 'culture_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CU_TYPE",
             "title": "Подтип объекта культурно-просветительного назначения ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5734,9 +4857,6 @@ SELECT 'culture_point',
           {
             "name": "CLB_TYPE",
             "title": "Подтип объекта культурно-досугового (клубного) типа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5764,9 +4884,6 @@ SELECT 'culture_point',
           {
             "name": "ENT_TYPE",
             "title": "Подтип зрелищной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -5794,9 +4911,6 @@ SELECT 'culture_point',
           {
             "name": "LB_STOCK",
             "title": "Фонды библиотек - тыс. экземпляров",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5804,10 +4918,7 @@ SELECT 'culture_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -5815,9 +4926,6 @@ SELECT 'culture_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5825,9 +4933,6 @@ SELECT 'culture_point',
           {
             "name": "EXB_AREA",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5835,10 +4940,7 @@ SELECT 'culture_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -5846,19 +4948,12 @@ SELECT 'culture_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -5866,26 +4961,16 @@ SELECT 'culture_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5910,8 +4995,6 @@ SELECT 'culture_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -5944,9 +5027,6 @@ SELECT 'culture_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -5954,8 +5034,7 @@ SELECT 'culture_point',
           }
         ],
         "description": "Класс объектов «Объекты культуры и искусства»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6027,6 +5106,7 @@ SELECT 'mineraldep_point',
         "readOnly": true,
         "tableName": "mineraldep_point",
         "originName": "MineralDep",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -6038,18 +5118,13 @@ SELECT 'mineraldep_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Месторождения и проявления полезных ископаемых»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6086,18 +5161,11 @@ SELECT 'mineraldep_point',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MIN_MTYPE",
             "title": "Вид металлических полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -6129,9 +5197,6 @@ SELECT 'mineraldep_point',
           {
             "name": "MIN_NTYPE",
             "title": "Вид неметаллических полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -6175,17 +5240,12 @@ SELECT 'mineraldep_point',
           {
             "name": "MINERALS",
             "title": "Вид полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MIN_ATYPE",
             "title": "Вид участка недр",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6202,35 +5262,21 @@ SELECT 'mineraldep_point',
           {
             "name": "N_GRF",
             "title": "Номер паспорта государственного кадастра месторождений и проявлений полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAS",
             "title": "Индекс массива государственного кадастра месторождений и проявлений полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6263,9 +5309,6 @@ SELECT 'mineraldep_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -6273,8 +5316,7 @@ SELECT 'mineraldep_point',
           }
         ],
         "description": "Класс объектов «Месторождения и проявления полезных ископаемых»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6306,6 +5348,7 @@ SELECT 'transplogisticobj_point',
         "readOnly": true,
         "tableName": "transplogisticobj_point",
         "originName": "TranspLogisticObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -6317,18 +5360,13 @@ SELECT 'transplogisticobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Комплексные объекты транспортной инфраструктуры»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6345,27 +5383,18 @@ SELECT 'transplogisticobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -6374,18 +5403,11 @@ SELECT 'transplogisticobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -6405,19 +5427,12 @@ SELECT 'transplogisticobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -6425,26 +5440,16 @@ SELECT 'transplogisticobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6469,8 +5474,6 @@ SELECT 'transplogisticobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6503,9 +5506,6 @@ SELECT 'transplogisticobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -6513,8 +5513,7 @@ SELECT 'transplogisticobj_point',
           }
         ],
         "description": "Класс объектов «Комплексные объекты транспортной инфраструктуры»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6546,6 +5545,7 @@ SELECT 'publictransportobj_point',
         "readOnly": true,
         "tableName": "publictransportobj_point",
         "originName": "PublicTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -6557,18 +5557,13 @@ SELECT 'publictransportobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты автомобильного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6585,27 +5580,18 @@ SELECT 'publictransportobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -6614,19 +5600,12 @@ SELECT 'publictransportobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Вместимость, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -6634,19 +5613,12 @@ SELECT 'publictransportobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -6654,26 +5626,16 @@ SELECT 'publictransportobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6698,8 +5660,6 @@ SELECT 'publictransportobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6732,9 +5692,6 @@ SELECT 'publictransportobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -6742,8 +5699,7 @@ SELECT 'publictransportobj_point',
           }
         ],
         "description": "Класс объектов «Объекты автомобильного пассажирского транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6775,6 +5731,7 @@ SELECT 'envmonitoring_point',
         "readOnly": true,
         "tableName": "envmonitoring_point",
         "originName": "EnvMonitoring",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -6786,18 +5743,13 @@ SELECT 'envmonitoring_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6810,27 +5762,18 @@ SELECT 'envmonitoring_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -6839,18 +5782,11 @@ SELECT 'envmonitoring_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -6858,8 +5794,6 @@ SELECT 'envmonitoring_point',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -6868,19 +5802,12 @@ SELECT 'envmonitoring_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -6888,26 +5815,16 @@ SELECT 'envmonitoring_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6932,8 +5849,6 @@ SELECT 'envmonitoring_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -6966,9 +5881,6 @@ SELECT 'envmonitoring_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -6976,8 +5888,7 @@ SELECT 'envmonitoring_point',
           }
         ],
         "description": "Класс объектов «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -7009,6 +5920,7 @@ SELECT 'hydro_point',
         "readOnly": true,
         "tableName": "hydro_point",
         "originName": "Hydro",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -7020,18 +5932,13 @@ SELECT 'hydro_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Поверхностные водные объекты»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7064,27 +5971,16 @@ SELECT 'hydro_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LENGTH",
             "title": "Общая длина водотока, км",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7092,9 +5988,6 @@ SELECT 'hydro_point',
           {
             "name": "AREA",
             "title": "Общая площадь водоема, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7102,9 +5995,6 @@ SELECT 'hydro_point',
           {
             "name": "WPZ_SIZE",
             "title": "Размер водоохраной зоны объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7112,9 +6002,6 @@ SELECT 'hydro_point',
           {
             "name": "RS_SIZE",
             "title": "Размер прибрежной полосы объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7122,9 +6009,6 @@ SELECT 'hydro_point',
           {
             "name": "FSH_SIZE",
             "title": "Размер береговой полосы общего пользования объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7132,10 +6016,7 @@ SELECT 'hydro_point',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7143,17 +6024,11 @@ SELECT 'hydro_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7170,9 +6045,6 @@ SELECT 'hydro_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -7180,8 +6052,7 @@ SELECT 'hydro_point',
           }
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -7202,6 +6073,7 @@ SELECT 'engprotectionobj_point',
         "readOnly": true,
         "tableName": "engprotectionobj_point",
         "originName": "EngProtectionObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -7213,18 +6085,13 @@ SELECT 'engprotectionobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты инженерной защиты от опасных геологических процессов»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7253,27 +6120,18 @@ SELECT 'engprotectionobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -7282,18 +6140,11 @@ SELECT 'engprotectionobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CEP_CLASS",
             "title": "Класс сооружений инженерной защиты",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -7317,19 +6168,12 @@ SELECT 'engprotectionobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7337,26 +6181,16 @@ SELECT 'engprotectionobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7381,8 +6215,6 @@ SELECT 'engprotectionobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7415,9 +6247,6 @@ SELECT 'engprotectionobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -7425,8 +6254,7 @@ SELECT 'engprotectionobj_point',
           }
         ],
         "description": "Класс объектов «Объекты инженерной защиты от опасных геологических процессов»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -7458,6 +6286,7 @@ SELECT 'waterpipeline_line',
         "readOnly": true,
         "tableName": "waterpipeline_line",
         "originName": "WaterPipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -7469,18 +6298,13 @@ SELECT 'waterpipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "«Сети водоснабжения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7501,26 +6325,17 @@ SELECT 'waterpipeline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
             "title": "Вид расположения трубопровода",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7553,8 +6368,6 @@ SELECT 'waterpipeline_line',
           {
             "name": "LENGTH",
             "title": "Протяженность сооружения, км",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -7563,9 +6376,6 @@ SELECT 'waterpipeline_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7573,10 +6383,7 @@ SELECT 'waterpipeline_line',
           {
             "name": "PLINE_CNT",
             "title": "Количество труб",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7584,10 +6391,7 @@ SELECT 'waterpipeline_line',
           {
             "name": "D_PLINE",
             "title": "Диаметр трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7595,9 +6399,6 @@ SELECT 'waterpipeline_line',
           {
             "name": "ZONE_SIZE",
             "title": "Размер санитарно-защитной полосы водоводов, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7605,19 +6406,12 @@ SELECT 'waterpipeline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7625,26 +6419,16 @@ SELECT 'waterpipeline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Справочник: Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7669,8 +6453,6 @@ SELECT 'waterpipeline_line',
           {
             "name": "reg_status",
             "title": "Справочник: Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7703,9 +6485,6 @@ SELECT 'waterpipeline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -7713,8 +6492,7 @@ SELECT 'waterpipeline_line',
           }
         ],
         "description": "Класс объектов «Сети водоснабжения»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -7754,6 +6532,7 @@ SELECT 'culture',
         "readOnly": true,
         "tableName": "culture",
         "originName": "Culture",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -7765,18 +6544,13 @@ SELECT 'culture',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты культуры и искусства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -7797,27 +6571,18 @@ SELECT 'culture',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -7826,18 +6591,11 @@ SELECT 'culture',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CU_TYPE",
             "title": "Подтип объекта культурно-просветительного назначения ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -7865,9 +6623,6 @@ SELECT 'culture',
           {
             "name": "CLB_TYPE",
             "title": "Подтип объекта культурно-досугового (клубного) типа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -7895,9 +6650,6 @@ SELECT 'culture',
           {
             "name": "ENT_TYPE",
             "title": "Подтип зрелищной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -7925,9 +6677,6 @@ SELECT 'culture',
           {
             "name": "LB_STOCK",
             "title": "Фонды библиотек - тыс. экземпляров",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7935,10 +6684,7 @@ SELECT 'culture',
           {
             "name": "CAPACITY",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7946,9 +6692,6 @@ SELECT 'culture',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7956,9 +6699,6 @@ SELECT 'culture',
           {
             "name": "EXB_AREA",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -7966,10 +6706,7 @@ SELECT 'culture',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7977,19 +6714,12 @@ SELECT 'culture',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -7997,26 +6727,16 @@ SELECT 'culture',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8041,8 +6761,6 @@ SELECT 'culture',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8075,9 +6793,6 @@ SELECT 'culture',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -8085,8 +6800,7 @@ SELECT 'culture',
           }
         ],
         "description": "Класс объектов «Объекты культуры и искусства»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -8158,6 +6872,7 @@ SELECT 'manufacturing',
         "readOnly": true,
         "tableName": "manufacturing",
         "originName": "Manufacturing",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -8169,18 +6884,13 @@ SELECT 'manufacturing',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8233,27 +6943,18 @@ SELECT 'manufacturing',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -8262,36 +6963,21 @@ SELECT 'manufacturing',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MP_TYPE",
             "title": "Основные производственные подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8331,10 +7017,7 @@ SELECT 'manufacturing',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -8342,8 +7025,6 @@ SELECT 'manufacturing',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8372,9 +7053,6 @@ SELECT 'manufacturing',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8398,9 +7076,6 @@ SELECT 'manufacturing',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8428,9 +7103,6 @@ SELECT 'manufacturing',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8486,19 +7158,12 @@ SELECT 'manufacturing',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -8506,26 +7171,16 @@ SELECT 'manufacturing',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8550,9 +7205,6 @@ SELECT 'manufacturing',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8584,9 +7236,6 @@ SELECT 'manufacturing',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -8594,8 +7243,7 @@ SELECT 'manufacturing',
           }
         ],
         "description": "Класс объектов «Предприятия и объекты добывающей и обрабатывающей промышленности»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -8641,6 +7289,7 @@ SELECT 'authorityservice',
         "readOnly": true,
         "tableName": "authorityservice",
         "originName": "AuthorityService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -8652,18 +7301,13 @@ SELECT 'authorityservice',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Прочие объекты обслуживания»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8700,27 +7344,18 @@ SELECT 'authorityservice',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -8729,18 +7364,11 @@ SELECT 'authorityservice',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AB_STYPE",
             "title": "Подтип административного здания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8768,9 +7396,6 @@ SELECT 'authorityservice',
           {
             "name": "CR_STYPE",
             "title": "Подтип объекта проведения гражданских обрядов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8790,9 +7415,6 @@ SELECT 'authorityservice',
           {
             "name": "TRD_STYPE",
             "title": "Подтип объекта торговли, общественного питания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8820,9 +7442,6 @@ SELECT 'authorityservice',
           {
             "name": "RS_STYPE",
             "title": "Подтип непроизводственного объекта по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8850,9 +7469,6 @@ SELECT 'authorityservice',
           {
             "name": "PU_STYPE",
             "title": "Подтип непроизводственного объекта коммунально-бытового обслуживания и предоставления персональных услуг",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -8880,9 +7496,6 @@ SELECT 'authorityservice',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -8890,9 +7503,6 @@ SELECT 'authorityservice',
           {
             "name": "TRD_AREA",
             "title": "Торговая площадь, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -8900,9 +7510,6 @@ SELECT 'authorityservice',
           {
             "name": "TRD_COUNT",
             "title": "Количество торговых мест рыночного комплекса, единиц",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -8910,10 +7517,7 @@ SELECT 'authorityservice',
           {
             "name": "CAPACITY",
             "title": "Количество посадочных мест объекта общественного питания, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -8921,10 +7525,7 @@ SELECT 'authorityservice',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих (операционных) мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -8932,19 +7533,12 @@ SELECT 'authorityservice',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -8952,26 +7546,16 @@ SELECT 'authorityservice',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8996,8 +7580,6 @@ SELECT 'authorityservice',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9030,9 +7612,6 @@ SELECT 'authorityservice',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -9040,8 +7619,7 @@ SELECT 'authorityservice',
           }
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -9137,6 +7715,7 @@ SELECT 'sport',
         "readOnly": true,
         "tableName": "sport",
         "originName": "Sport",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -9148,18 +7727,13 @@ SELECT 'sport',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Объекты физической культуры и массового спорта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9176,27 +7750,18 @@ SELECT 'sport',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -9205,18 +7770,11 @@ SELECT 'sport',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AF_TYPE",
             "title": "Подтип спортивного сооружения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -9328,9 +7886,6 @@ SELECT 'sport',
           {
             "name": "SP_AREA",
             "title": "Площадь пола спортивных и тренажерных залов, кв. м ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -9338,9 +7893,6 @@ SELECT 'sport',
           {
             "name": "POOL_AREA",
             "title": "Площадь зеркала воды плавательных бассейнов, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -9348,9 +7900,6 @@ SELECT 'sport',
           {
             "name": "SPS_AREA",
             "title": "Площадь плоскостных спортивных сооружений, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -9358,10 +7907,7 @@ SELECT 'sport',
           {
             "name": "CAPACITY",
             "title": "Единовременная пропускная способность, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -9369,10 +7915,7 @@ SELECT 'sport',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -9380,19 +7923,12 @@ SELECT 'sport',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -9400,26 +7936,16 @@ SELECT 'sport',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9444,8 +7970,6 @@ SELECT 'sport',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9478,9 +8002,6 @@ SELECT 'sport',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -9488,8 +8009,7 @@ SELECT 'sport',
           }
         ],
         "description": "Класс объектов «Объекты физкультурного и спортивного назначения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -9529,6 +8049,7 @@ SELECT 'naturalriskzone',
         "readOnly": true,
         "tableName": "naturalriskzone",
         "originName": "NaturalRiskZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -9540,18 +8061,13 @@ SELECT 'naturalriskzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9576,8 +8092,6 @@ SELECT 'naturalriskzone',
           {
             "name": "EME_SOURCE",
             "title": "Источник природной чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9718,9 +8232,6 @@ SELECT 'naturalriskzone',
           {
             "name": "RISK_CAT",
             "title": "Категория опасности процесса",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -9744,8 +8255,6 @@ SELECT 'naturalriskzone',
           {
             "name": "EME_CLASS",
             "title": "Классификация чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9778,27 +8287,16 @@ SELECT 'naturalriskzone',
           {
             "name": "OTHER",
             "title": "Иной параметр и его единицы измерения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -9806,8 +8304,7 @@ SELECT 'naturalriskzone',
           }
         ],
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone');
 
@@ -9820,6 +8317,7 @@ SELECT 'natureprotectarea',
         "readOnly": true,
         "tableName": "natureprotectarea",
         "originName": "NatureProtectArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -9831,18 +8329,13 @@ SELECT 'natureprotectarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Особо охраняемые природные территории»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9879,27 +8372,17 @@ SELECT 'natureprotectarea',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOCATION",
             "title": "Местоположение",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -9907,28 +8390,17 @@ SELECT 'natureprotectarea',
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -9936,26 +8408,16 @@ SELECT 'natureprotectarea',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -9980,8 +8442,6 @@ SELECT 'natureprotectarea',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10014,9 +8474,6 @@ SELECT 'natureprotectarea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -10024,8 +8481,7 @@ SELECT 'natureprotectarea',
           }
         ],
         "description": "Класс объектов «Особо охраняемые природные территории»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -10057,6 +8513,7 @@ SELECT 'gasfacility',
         "readOnly": true,
         "tableName": "gasfacility",
         "originName": "GasFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -10068,18 +8525,13 @@ SELECT 'gasfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты добычи и транспортировки газа»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10152,28 +8604,19 @@ SELECT 'gasfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -10182,18 +8625,11 @@ SELECT 'gasfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -10213,9 +8649,6 @@ SELECT 'gasfacility',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа,%",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10223,9 +8656,6 @@ SELECT 'gasfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10233,9 +8663,6 @@ SELECT 'gasfacility',
           {
             "name": "OUTPUT",
             "title": "Производительность, тыс. куб. м/час",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10243,9 +8670,6 @@ SELECT 'gasfacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -10269,9 +8693,6 @@ SELECT 'gasfacility',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10279,9 +8700,6 @@ SELECT 'gasfacility',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10289,19 +8707,12 @@ SELECT 'gasfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -10309,26 +8720,16 @@ SELECT 'gasfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10353,8 +8754,6 @@ SELECT 'gasfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10387,9 +8786,6 @@ SELECT 'gasfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -10397,8 +8793,7 @@ SELECT 'gasfacility',
           }
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки газа»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -10430,6 +8825,7 @@ SELECT 'gasfacility_point',
         "readOnly": true,
         "tableName": "gasfacility_point",
         "originName": "GasFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -10441,18 +8837,13 @@ SELECT 'gasfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты добычи и транспортировки газа»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10525,28 +8916,19 @@ SELECT 'gasfacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -10555,18 +8937,11 @@ SELECT 'gasfacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -10586,9 +8961,6 @@ SELECT 'gasfacility_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа,%",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10596,9 +8968,6 @@ SELECT 'gasfacility_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10606,9 +8975,6 @@ SELECT 'gasfacility_point',
           {
             "name": "OUTPUT",
             "title": "Производительность, тыс. куб. м/час",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10616,9 +8982,6 @@ SELECT 'gasfacility_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -10642,9 +9005,6 @@ SELECT 'gasfacility_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10652,9 +9012,6 @@ SELECT 'gasfacility_point',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -10662,19 +9019,12 @@ SELECT 'gasfacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -10682,26 +9032,16 @@ SELECT 'gasfacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10726,8 +9066,6 @@ SELECT 'gasfacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10760,9 +9098,6 @@ SELECT 'gasfacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -10770,8 +9105,7 @@ SELECT 'gasfacility_point',
           }
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки газа»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -10803,6 +9137,7 @@ SELECT 'publictransportobj',
         "readOnly": true,
         "tableName": "publictransportobj",
         "originName": "PublicTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -10814,18 +9149,13 @@ SELECT 'publictransportobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты автомобильного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10842,27 +9172,18 @@ SELECT 'publictransportobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -10871,19 +9192,12 @@ SELECT 'publictransportobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Вместимость, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -10891,19 +9205,12 @@ SELECT 'publictransportobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -10911,26 +9218,16 @@ SELECT 'publictransportobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10955,8 +9252,6 @@ SELECT 'publictransportobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -10989,9 +9284,6 @@ SELECT 'publictransportobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -10999,8 +9291,7 @@ SELECT 'publictransportobj',
           }
         ],
         "description": "Класс объектов «Объекты автомобильного пассажирского транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -11032,6 +9323,7 @@ SELECT 'thermalfacility',
         "readOnly": true,
         "tableName": "thermalfacility",
         "originName": "ThermalFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -11043,18 +9335,13 @@ SELECT 'thermalfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты теплоснабжения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11079,27 +9366,18 @@ SELECT 'thermalfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -11108,18 +9386,11 @@ SELECT 'thermalfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUEL_TYPE",
             "title": "Основной вид топлива",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11175,9 +9446,6 @@ SELECT 'thermalfacility',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11197,9 +9465,6 @@ SELECT 'thermalfacility',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11207,9 +9472,6 @@ SELECT 'thermalfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11217,9 +9479,6 @@ SELECT 'thermalfacility',
           {
             "name": "ELECT_POWER",
             "title": "Электрическая мощность, МВт",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11227,9 +9486,6 @@ SELECT 'thermalfacility',
           {
             "name": "HT_POWER",
             "title": "Тепловая мощность, Гкал/ч",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11237,9 +9493,6 @@ SELECT 'thermalfacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11263,9 +9516,6 @@ SELECT 'thermalfacility',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11273,9 +9523,6 @@ SELECT 'thermalfacility',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11283,19 +9530,12 @@ SELECT 'thermalfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -11303,26 +9543,16 @@ SELECT 'thermalfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11347,8 +9577,6 @@ SELECT 'thermalfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11381,9 +9609,6 @@ SELECT 'thermalfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -11391,8 +9616,7 @@ SELECT 'thermalfacility',
           }
         ],
         "description": "Класс объектов «Объекты теплоснабжения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -11432,6 +9656,7 @@ SELECT 'envmonitoring',
         "readOnly": true,
         "tableName": "envmonitoring",
         "originName": "EnvMonitoring",
+        "tags": ["system", "Приказ 10"],
         "properties": [
         {
             "name": "ruleid",
@@ -11443,18 +9668,13 @@ SELECT 'envmonitoring',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11467,27 +9687,18 @@ SELECT 'envmonitoring',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -11496,18 +9707,11 @@ SELECT 'envmonitoring',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11515,8 +9719,6 @@ SELECT 'envmonitoring',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -11525,19 +9727,12 @@ SELECT 'envmonitoring',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -11545,26 +9740,16 @@ SELECT 'envmonitoring',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11589,8 +9774,6 @@ SELECT 'envmonitoring',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11623,9 +9806,6 @@ SELECT 'envmonitoring',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -11633,8 +9813,7 @@ SELECT 'envmonitoring',
           }
         ],
         "description": "Класс объектов «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -11666,6 +9845,7 @@ SELECT 'thermalfacility_point',
         "readOnly": true,
         "tableName": "thermalfacility_point",
         "originName": "ThermalFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -11677,18 +9857,13 @@ SELECT 'thermalfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты теплоснабжения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11713,27 +9888,18 @@ SELECT 'thermalfacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -11742,18 +9908,11 @@ SELECT 'thermalfacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUEL_TYPE",
             "title": "Основной вид топлива",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11809,9 +9968,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11831,9 +9987,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11841,9 +9994,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11851,9 +10001,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "ELECT_POWER",
             "title": "Электрическая мощность, МВт",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11861,9 +10008,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "HT_POWER",
             "title": "Тепловая мощность, Гкал/ч",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11871,9 +10015,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -11897,9 +10038,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11907,9 +10045,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -11917,19 +10052,12 @@ SELECT 'thermalfacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -11937,26 +10065,16 @@ SELECT 'thermalfacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -11981,8 +10099,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12015,9 +10131,6 @@ SELECT 'thermalfacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -12025,8 +10138,7 @@ SELECT 'thermalfacility_point',
           }
         ],
         "description": "Класс объектов «Объекты теплоснабжения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -12066,6 +10178,7 @@ SELECT 'road_line',
         "readOnly": true,
         "tableName": "road_line",
         "originName": "Road",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -12077,18 +10190,13 @@ SELECT 'road_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Автомобильные дороги»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12113,26 +10221,17 @@ SELECT 'road_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "USING_TYPE",
             "title": "Вид разрешенного использования",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12149,9 +10248,6 @@ SELECT 'road_line',
           {
             "name": "CAT_EXIST",
             "title": "Категория автомобильной дороги (существующая)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12187,9 +10283,6 @@ SELECT 'road_line',
           {
             "name": "CAT_PLAN",
             "title": "Категория автомобильной дороги (проектная)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12225,18 +10318,11 @@ SELECT 'road_line',
           {
             "name": "ROAD_ID",
             "title": "Идентификационный номер",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SURFACE_EXIST",
             "title": "Вид покрытия (существующий)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12260,9 +10346,6 @@ SELECT 'road_line',
           {
             "name": "SURFACE_PLAN",
             "title": "Вид покрытия (проектный)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12286,9 +10369,6 @@ SELECT 'road_line',
           {
             "name": "REG_RDTYPE",
             "title": "Подкатегория автомобильной дороги регионального значения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12304,8 +10384,6 @@ SELECT 'road_line',
           {
             "name": "TIME_LTYPE",
             "title": "Период функционирования дороги",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12326,9 +10404,6 @@ SELECT 'road_line',
           {
             "name": "RDWIN_TYPE",
             "title": "Тип зимней автомобильной дороги (автозимника)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12348,9 +10423,6 @@ SELECT 'road_line',
           {
             "name": "RDWIN_CAT",
             "title": "Категория зимней автомобильной дороги (автозимника)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12370,37 +10442,22 @@ SELECT 'road_line',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NUM_TC",
             "title": "Наименование транспортного коридора",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -12408,26 +10465,16 @@ SELECT 'road_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12452,8 +10499,6 @@ SELECT 'road_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12486,9 +10531,6 @@ SELECT 'road_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -12496,8 +10538,7 @@ SELECT 'road_line',
           }
         ],
         "description": "Класс объектов «Автомобильные дороги»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -12583,6 +10624,7 @@ SELECT 'telecomfacility',
         "readOnly": true,
         "tableName": "telecomfacility",
         "originName": "TelecomFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -12594,18 +10636,13 @@ SELECT 'telecomfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты связи»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12658,27 +10695,18 @@ SELECT 'telecomfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -12687,18 +10715,11 @@ SELECT 'telecomfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -12706,9 +10727,6 @@ SELECT 'telecomfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -12716,10 +10734,7 @@ SELECT 'telecomfacility',
           {
             "name": "CAPACITY",
             "title": "Емкость, абонентов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -12727,9 +10742,6 @@ SELECT 'telecomfacility',
           {
             "name": "DATA_RATE",
             "title": "Скорость передачи данных, Гбит/с",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -12737,9 +10749,6 @@ SELECT 'telecomfacility',
           {
             "name": "ZONE_MSIZE",
             "title": "Максимальное расстояние зоны ограничения застройки, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -12747,9 +10756,6 @@ SELECT 'telecomfacility',
           {
             "name": "HGHT_ZONE",
             "title": "Высота нижней границы зоны ограничения застройки, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -12757,9 +10763,6 @@ SELECT 'telecomfacility',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -12815,19 +10818,12 @@ SELECT 'telecomfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -12835,26 +10831,16 @@ SELECT 'telecomfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12879,8 +10865,6 @@ SELECT 'telecomfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12913,9 +10897,6 @@ SELECT 'telecomfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -12923,8 +10904,7 @@ SELECT 'telecomfacility',
           }
         ],
         "description": "Класс объектов «Объекты связи»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -12964,6 +10944,7 @@ SELECT 'customcontrol',
         "readOnly": true,
         "tableName": "customcontrol",
         "originName": "CustomControl",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -12975,18 +10956,13 @@ SELECT 'customcontrol',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Пункт пропуска через Государственную границу»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -12999,27 +10975,18 @@ SELECT 'customcontrol',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -13028,17 +10995,11 @@ SELECT 'customcontrol',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "INT_TRN_T",
             "title": "Тип пунктов пропуска по виду международного сообщения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13075,8 +11036,6 @@ SELECT 'customcontrol',
           {
             "name": "INT_TRF_T",
             "title": "Тип пунктов пропуска по характеру международного сообщения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13097,8 +11056,6 @@ SELECT 'customcontrol',
           {
             "name": "CTM_TIME_T",
             "title": "Тип пунктов пропуска по режиму работы",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13123,8 +11080,6 @@ SELECT 'customcontrol',
           {
             "name": "CTM_USE_T",
             "title": "Тип пунктов пропуска по характеру использования",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13141,19 +11096,12 @@ SELECT 'customcontrol',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -13161,26 +11109,16 @@ SELECT 'customcontrol',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13205,8 +11143,6 @@ SELECT 'customcontrol',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13239,9 +11175,6 @@ SELECT 'customcontrol',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -13249,8 +11182,7 @@ SELECT 'customcontrol',
           }
         ],
         "description": "Класс объектов «Пункт пропуска через Государственную границу»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -13282,6 +11214,7 @@ SELECT 'education',
         "readOnly": true,
         "tableName": "education",
         "originName": "Education",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -13293,7 +11226,6 @@ SELECT 'education',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
             "valueType": "STRING"
@@ -13301,8 +11233,6 @@ SELECT 'education',
           {
             "name": "classid",
             "title": " «Объекты образования и науки»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13335,28 +11265,19 @@ SELECT 'education',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -13365,27 +11286,16 @@ SELECT 'education',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME_UNIT",
             "title": "Наименование территориально обособленного структурного подразделения в составе организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EDU_STYPE",
             "title": "Подтип общеобразовательной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13413,9 +11323,6 @@ SELECT 'education',
           {
             "name": "EDU_SDTYPE",
             "title": "Подтип организации, реализующей программы профессионального и высшего образования",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13435,9 +11342,6 @@ SELECT 'education',
           {
             "name": "SCI_TYPE",
             "title": "Подтип научной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13465,9 +11369,6 @@ SELECT 'education',
           {
             "name": "PRG_TYPE",
             "title": "Тип образовательных программ, дополняющих основную деятельность организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13487,9 +11388,6 @@ SELECT 'education',
           {
             "name": "EDU_TUNIT",
             "title": "Тип структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13593,10 +11491,7 @@ SELECT 'education',
           {
             "name": "CAPACITY",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -13604,9 +11499,6 @@ SELECT 'education',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -13614,10 +11506,7 @@ SELECT 'education',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -13625,19 +11514,12 @@ SELECT 'education',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -13645,26 +11527,16 @@ SELECT 'education',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13689,8 +11561,6 @@ SELECT 'education',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13723,9 +11593,6 @@ SELECT 'education',
           {
             "name": "shape",
             "title": "Геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -13733,8 +11600,7 @@ SELECT 'education',
           }
         ],
         "description": "Класс объектов «Объекты образования и науки»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -13804,6 +11670,7 @@ SELECT 'publictransportline_line',
         "readOnly": true,
         "tableName": "publictransportline_line",
         "originName": "PublicTransportLine",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -13815,18 +11682,13 @@ SELECT 'publictransportline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Линии общественного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -13871,27 +11733,17 @@ SELECT 'publictransportline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13911,9 +11763,6 @@ SELECT 'publictransportline_line',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -13969,19 +11818,12 @@ SELECT 'publictransportline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -13989,26 +11831,16 @@ SELECT 'publictransportline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14033,8 +11865,6 @@ SELECT 'publictransportline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14067,9 +11897,6 @@ SELECT 'publictransportline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -14077,8 +11904,7 @@ SELECT 'publictransportline_line',
           }
         ],
         "description": "Класс объектов «Линии общественного пассажирского транспорта»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -14110,6 +11936,7 @@ SELECT 'telecomfacility_point',
         "readOnly": true,
         "tableName": "telecomfacility_point",
         "originName": "TelecomFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -14121,18 +11948,13 @@ SELECT 'telecomfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты связи»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14185,27 +12007,18 @@ SELECT 'telecomfacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -14214,18 +12027,11 @@ SELECT 'telecomfacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14233,9 +12039,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14243,10 +12046,7 @@ SELECT 'telecomfacility_point',
           {
             "name": "CAPACITY",
             "title": "Емкость, абонентов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14254,9 +12054,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "DATA_RATE",
             "title": "Скорость передачи данных, Гбит/с",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14264,9 +12061,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "ZONE_MSIZE",
             "title": "Максимальное расстояние зоны ограничения застройки, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14274,9 +12068,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "HGHT_ZONE",
             "title": "Высота нижней границы зоны ограничения застройки, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14284,9 +12075,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -14342,19 +12130,12 @@ SELECT 'telecomfacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14362,26 +12143,16 @@ SELECT 'telecomfacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14406,8 +12177,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14440,9 +12209,6 @@ SELECT 'telecomfacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -14450,8 +12216,7 @@ SELECT 'telecomfacility_point',
           }
         ],
         "description": "Класс объектов «Объекты связи»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -14491,6 +12256,7 @@ SELECT 'resort',
         "readOnly": true,
         "tableName": "resort",
         "originName": "Resort",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -14502,18 +12268,13 @@ SELECT 'resort',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты санаторно-курортного назначения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14526,27 +12287,18 @@ SELECT 'resort',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -14555,18 +12307,11 @@ SELECT 'resort',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "RES_STYPE",
             "title": "Вид объекта санаторно-курортного назначения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -14606,10 +12351,7 @@ SELECT 'resort',
           {
             "name": "CAPACITY",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14617,10 +12359,7 @@ SELECT 'resort',
           {
             "name": "PERSON_PD",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14628,9 +12367,6 @@ SELECT 'resort',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14638,10 +12374,7 @@ SELECT 'resort',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14649,19 +12382,12 @@ SELECT 'resort',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14669,26 +12395,16 @@ SELECT 'resort',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14713,8 +12429,6 @@ SELECT 'resort',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14747,9 +12461,6 @@ SELECT 'resort',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -14757,8 +12468,7 @@ SELECT 'resort',
           }
         ],
         "description": "Класс объектов «Объекты санаторно-курортного назначения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -14790,6 +12500,7 @@ SELECT 'servicefacility',
         "readOnly": true,
         "tableName": "servicefacility",
         "originName": "ServiceFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -14801,18 +12512,13 @@ SELECT 'servicefacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Прочие объекты, связанные с производственной деятельностью»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -14825,27 +12531,18 @@ SELECT 'servicefacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -14854,18 +12551,11 @@ SELECT 'servicefacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SERV_STYPE",
             "title": "Подтип объекта, связанного с производственной деятельностью",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -14925,27 +12615,16 @@ SELECT 'servicefacility',
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOT_SIZE",
             "title": "Общая площадь территории участка - га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14953,9 +12632,6 @@ SELECT 'servicefacility',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий - кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -14963,10 +12639,7 @@ SELECT 'servicefacility',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -14974,8 +12647,6 @@ SELECT 'servicefacility',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15004,9 +12675,6 @@ SELECT 'servicefacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15030,9 +12698,6 @@ SELECT 'servicefacility',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15060,9 +12725,6 @@ SELECT 'servicefacility',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15118,19 +12780,12 @@ SELECT 'servicefacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -15138,26 +12793,16 @@ SELECT 'servicefacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15182,8 +12827,6 @@ SELECT 'servicefacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15216,9 +12859,6 @@ SELECT 'servicefacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -15226,8 +12866,7 @@ SELECT 'servicefacility',
           }
         ],
         "description": "Класс объектов «Прочие объекты, связанные с производственной деятельностью»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -15259,6 +12898,7 @@ SELECT 'admenp',
         "readOnly": true,
         "tableName": "admenp",
         "originName": "AdmeNP",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -15270,18 +12910,13 @@ SELECT 'admenp',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15294,18 +12929,13 @@ SELECT 'admenp',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -15314,9 +12944,6 @@ SELECT 'admenp',
           {
             "name": "SETTL_LVL",
             "title": "Административное значение населенного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15344,9 +12971,6 @@ SELECT 'admenp',
           {
             "name": "SETTL_TYPE",
             "title": "Тип населенного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15634,8 +13258,6 @@ SELECT 'admenp',
           {
             "name": "POPULATION",
             "title": "Численность населения, тыс. чел.",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -15644,17 +13266,11 @@ SELECT 'admenp',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status_adm",
             "title": "Статус объекта административно-территориального деления",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15671,9 +13287,6 @@ SELECT 'admenp',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -15681,8 +13294,7 @@ SELECT 'admenp',
           }
         ],
         "description": "Класс объектов «Территория населенного пункта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admenp');
 
@@ -15695,6 +13307,7 @@ SELECT 'transportobj',
         "readOnly": true,
         "tableName": "transportobj",
         "originName": "TransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -15706,18 +13319,13 @@ SELECT 'transportobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15750,27 +13358,18 @@ SELECT 'transportobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -15779,18 +13378,11 @@ SELECT 'transportobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "BRIDGE_T",
             "title": "Тип мостовых сооружений",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15826,9 +13418,6 @@ SELECT 'transportobj',
           {
             "name": "TUNNEL_T",
             "title": "Тип тоннелей",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15848,9 +13437,6 @@ SELECT 'transportobj',
           {
             "name": "CROSSP_T",
             "title": "Тип пешеходных переходов в разных уровнях по расположению относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15866,9 +13452,6 @@ SELECT 'transportobj',
           {
             "name": "CROSSR_T",
             "title": "Тип железнодорожного переезда",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -15884,19 +13467,12 @@ SELECT 'transportobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -15904,26 +13480,16 @@ SELECT 'transportobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15948,8 +13514,6 @@ SELECT 'transportobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -15982,9 +13546,6 @@ SELECT 'transportobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -15992,8 +13553,7 @@ SELECT 'transportobj',
           }
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -16049,6 +13609,7 @@ SELECT 'transportobj_line',
         "readOnly": true,
         "tableName": "transportobj_line",
         "originName": "TransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -16060,18 +13621,13 @@ SELECT 'transportobj_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16104,27 +13660,18 @@ SELECT 'transportobj_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -16133,18 +13680,11 @@ SELECT 'transportobj_line',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "BRIDGE_T",
             "title": "Тип мостовых сооружений",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16180,9 +13720,6 @@ SELECT 'transportobj_line',
           {
             "name": "TUNNEL_T",
             "title": "Тип тоннелей",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16202,9 +13739,6 @@ SELECT 'transportobj_line',
           {
             "name": "CROSSP_T",
             "title": "Тип пешеходных переходов в разных уровнях по расположению относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16220,9 +13754,6 @@ SELECT 'transportobj_line',
           {
             "name": "CROSSR_T",
             "title": "Тип железнодорожного переезда",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16238,19 +13769,12 @@ SELECT 'transportobj_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -16258,26 +13782,16 @@ SELECT 'transportobj_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16302,8 +13816,6 @@ SELECT 'transportobj_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16336,9 +13848,6 @@ SELECT 'transportobj_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -16346,8 +13855,7 @@ SELECT 'transportobj_line',
           }
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -16403,6 +13911,7 @@ SELECT 'transportobj_point',
         "readOnly": true,
         "tableName": "transportobj_point",
         "originName": "TransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -16414,18 +13923,13 @@ SELECT 'transportobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Искусственные дорожные сооружения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16458,27 +13962,18 @@ SELECT 'transportobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -16487,18 +13982,11 @@ SELECT 'transportobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "BRIDGE_T",
             "title": "Тип мостовых сооружений",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16534,9 +14022,6 @@ SELECT 'transportobj_point',
           {
             "name": "TUNNEL_T",
             "title": "Тип тоннелей",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16556,9 +14041,6 @@ SELECT 'transportobj_point',
           {
             "name": "CROSSP_T",
             "title": "Тип пешеходных переходов в разных уровнях по расположению относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16574,9 +14056,6 @@ SELECT 'transportobj_point',
           {
             "name": "CROSSR_T",
             "title": "Тип железнодорожного переезда",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16592,19 +14071,12 @@ SELECT 'transportobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -16612,26 +14084,16 @@ SELECT 'transportobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16656,8 +14118,6 @@ SELECT 'transportobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16690,9 +14150,6 @@ SELECT 'transportobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -16700,8 +14157,7 @@ SELECT 'transportobj_point',
           }
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -16757,6 +14213,7 @@ SELECT 'wastefacility',
         "readOnly": true,
         "tableName": "wastefacility",
         "originName": "WasteFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -16768,18 +14225,13 @@ SELECT 'wastefacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -16812,27 +14264,18 @@ SELECT 'wastefacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -16841,27 +14284,16 @@ SELECT 'wastefacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ORO_NUMBER",
             "title": "Учетный номер объекта размещения отходов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ORO_TYPE",
             "title": "Назначение объекта размещения отходов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16877,9 +14309,6 @@ SELECT 'wastefacility',
           {
             "name": "ORO_STYPE",
             "title": "Вид объекта размещения отходов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16959,9 +14388,6 @@ SELECT 'wastefacility',
           {
             "name": "RECYC_TYPE",
             "title": "Тип объекта по переработке промышленных, бытовых и биологических отходов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -16985,9 +14411,6 @@ SELECT 'wastefacility',
           {
             "name": "BUR_TYPE",
             "title": "Тип скотомогильника",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17015,10 +14438,7 @@ SELECT 'wastefacility',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -17026,8 +14446,6 @@ SELECT 'wastefacility',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17056,9 +14474,6 @@ SELECT 'wastefacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17082,9 +14497,6 @@ SELECT 'wastefacility',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17140,19 +14552,12 @@ SELECT 'wastefacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -17160,26 +14565,16 @@ SELECT 'wastefacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17204,8 +14599,6 @@ SELECT 'wastefacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17238,9 +14631,6 @@ SELECT 'wastefacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -17248,8 +14638,7 @@ SELECT 'wastefacility',
           }
         ],
         "description": "Класс объектов «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17321,6 +14710,7 @@ SELECT 'waterfacility',
         "readOnly": true,
         "tableName": "waterfacility",
         "originName": "WaterFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -17332,18 +14722,13 @@ SELECT 'waterfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты водоснабжения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17376,27 +14761,18 @@ SELECT 'waterfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -17405,18 +14781,11 @@ SELECT 'waterfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WATER_STYPE",
             "title": "Тип водозабора по характеристикам источника",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17432,9 +14801,6 @@ SELECT 'waterfacility',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17454,9 +14820,6 @@ SELECT 'waterfacility',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17464,9 +14827,6 @@ SELECT 'waterfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17474,9 +14834,6 @@ SELECT 'waterfacility',
           {
             "name": "OUTPUT",
             "title": "Производительность, тыс. куб. м/сут",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17484,8 +14841,6 @@ SELECT 'waterfacility',
           {
             "name": "SIZE_ZSO_1",
             "title": "Размер первого пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -17494,9 +14849,6 @@ SELECT 'waterfacility',
           {
             "name": "SIZE_ZSO_2",
             "title": "Размер второго пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17504,9 +14856,6 @@ SELECT 'waterfacility',
           {
             "name": "SIZE_ZSO_3",
             "title": "Размер третьего пояса зоны санитарной охраны источника водоснабжения, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17514,8 +14863,6 @@ SELECT 'waterfacility',
           {
             "name": "ZONE_SIZE",
             "title": "Размер зоны санитарной охраны водопроводных сооружений, м",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -17524,19 +14871,12 @@ SELECT 'waterfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -17544,26 +14884,16 @@ SELECT 'waterfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17588,8 +14918,6 @@ SELECT 'waterfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17622,9 +14950,6 @@ SELECT 'waterfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -17632,8 +14957,7 @@ SELECT 'waterfacility',
           }
         ],
         "description": "Класс объектов «Объекты водоснабжения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17673,6 +14997,7 @@ SELECT 'otherobject',
         "readOnly": true,
         "tableName": "otherobject",
         "originName": "OtherObject",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -17684,18 +15009,13 @@ SELECT 'otherobject',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17708,27 +15028,18 @@ SELECT 'otherobject',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -17737,28 +15048,18 @@ SELECT 'otherobject',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LAWSOURCE",
             "title": "Реквизиты нормативного акта, устанавливающего тип объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -17766,9 +15067,6 @@ SELECT 'otherobject',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17796,9 +15094,6 @@ SELECT 'otherobject',
           {
             "name": "HZRD_CAT",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -17822,9 +15117,6 @@ SELECT 'otherobject',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17832,8 +15124,6 @@ SELECT 'otherobject',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -17842,19 +15132,12 @@ SELECT 'otherobject',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -17862,26 +15145,16 @@ SELECT 'otherobject',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17906,8 +15179,6 @@ SELECT 'otherobject',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -17940,9 +15211,6 @@ SELECT 'otherobject',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -17950,8 +15218,7 @@ SELECT 'otherobject',
           }
         ],
         "description": "Класс объектов «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17983,6 +15250,7 @@ SELECT 'forest',
         "readOnly": true,
         "tableName": "forest",
         "originName": "Forest",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -17994,18 +15262,13 @@ SELECT 'forest',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Леса»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18026,9 +15289,6 @@ SELECT 'forest',
           {
             "name": "FOREST_CAT",
             "title": "Категории защитных лесов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18052,9 +15312,6 @@ SELECT 'forest',
           {
             "name": "FOREST_T",
             "title": "Категория леса, выполняющего функции защиты природных и иных объектов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18086,9 +15343,6 @@ SELECT 'forest',
           {
             "name": "FOREST_VAL",
             "title": "Категория ценности леса",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18132,9 +15386,6 @@ SELECT 'forest',
           {
             "name": "FOREST_OS",
             "title": "Категория особо защитных участков лесов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18170,9 +15421,6 @@ SELECT 'forest',
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -18180,10 +15428,7 @@ SELECT 'forest',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -18191,26 +15436,16 @@ SELECT 'forest',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18227,9 +15462,6 @@ SELECT 'forest',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -18237,8 +15469,7 @@ SELECT 'forest',
           }
         ],
         "description": "Класс объектов «Леса»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -18279,6 +15510,7 @@ SELECT 'education_point',
         "readOnly": true,
         "tableName": "education_point",
         "originName": "Education",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -18290,18 +15522,13 @@ SELECT 'education_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты образования и науки»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18334,28 +15561,19 @@ SELECT 'education_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -18364,27 +15582,16 @@ SELECT 'education_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME_UNIT",
             "title": "Наименование территориально обособленного структурного подразделения в составе организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EDU_STYPE",
             "title": "Подтип общеобразовательной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18412,9 +15619,6 @@ SELECT 'education_point',
           {
             "name": "EDU_SDTYPE",
             "title": "Подтип организации, реализующей программы профессионального и высшего образования",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18434,9 +15638,6 @@ SELECT 'education_point',
           {
             "name": "SCI_TYPE",
             "title": "Подтип научной организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18464,9 +15665,6 @@ SELECT 'education_point',
           {
             "name": "PRG_TYPE",
             "title": "Тип образовательных программ, дополняющих основную деятельность организации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18486,9 +15684,6 @@ SELECT 'education_point',
           {
             "name": "EDU_TUNIT",
             "title": "Тип структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -18592,10 +15787,7 @@ SELECT 'education_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -18603,9 +15795,6 @@ SELECT 'education_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -18613,10 +15802,7 @@ SELECT 'education_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -18624,45 +15810,28 @@ SELECT 'education_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18687,8 +15856,6 @@ SELECT 'education_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18721,9 +15888,6 @@ SELECT 'education_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -18731,8 +15895,7 @@ SELECT 'education_point',
           }
         ],
         "description": "Класс объектов «Объекты образования и науки»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -18802,6 +15965,7 @@ SELECT 'electricpowerstation',
         "readOnly": true,
         "tableName": "electricpowerstation",
         "originName": "ElectricPowerStation",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -18813,18 +15977,13 @@ SELECT 'electricpowerstation',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Электростанции»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -18925,27 +16084,18 @@ SELECT 'electricpowerstation',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -18954,18 +16104,11 @@ SELECT 'electricpowerstation',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUEL_TYPE",
             "title": "Основной вид топлива",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19021,9 +16164,6 @@ SELECT 'electricpowerstation',
           {
             "name": "POWER_TYPE",
             "title": "Тип теплосиловой установки",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19047,9 +16187,6 @@ SELECT 'electricpowerstation',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -19057,9 +16194,6 @@ SELECT 'electricpowerstation',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -19067,8 +16201,6 @@ SELECT 'electricpowerstation',
           {
             "name": "ELECT_POWER",
             "title": "Электрическая мощность, МВт",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -19077,8 +16209,6 @@ SELECT 'electricpowerstation',
           {
             "name": "HEAT_POWER",
             "title": "Тепловая мощность, Гкал/ч",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -19087,9 +16217,6 @@ SELECT 'electricpowerstation',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19113,9 +16240,6 @@ SELECT 'electricpowerstation',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -19123,9 +16247,6 @@ SELECT 'electricpowerstation',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19181,19 +16302,12 @@ SELECT 'electricpowerstation',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -19201,26 +16315,16 @@ SELECT 'electricpowerstation',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19245,8 +16349,6 @@ SELECT 'electricpowerstation',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19279,9 +16381,6 @@ SELECT 'electricpowerstation',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -19289,8 +16388,7 @@ SELECT 'electricpowerstation',
           }
         ],
         "description": "Класс объектов «Электростанции»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -19322,6 +16420,7 @@ SELECT 'publictransportservice',
         "readOnly": true,
         "tableName": "publictransportservice",
         "originName": "PublicTransportService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -19333,18 +16432,13 @@ SELECT 'publictransportservice',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты хранения и обслуживания общественного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19373,27 +16467,18 @@ SELECT 'publictransportservice',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -19402,19 +16487,12 @@ SELECT 'publictransportservice',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Вместимость, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -19422,9 +16500,6 @@ SELECT 'publictransportservice',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19480,19 +16555,12 @@ SELECT 'publictransportservice',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -19500,26 +16568,16 @@ SELECT 'publictransportservice',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19544,8 +16602,6 @@ SELECT 'publictransportservice',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19578,9 +16634,6 @@ SELECT 'publictransportservice',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -19588,8 +16641,7 @@ SELECT 'publictransportservice',
           }
         ],
         "description": "Класс объектов «Объекты хранения и обслуживания общественного пассажирского транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -19621,6 +16673,7 @@ SELECT 'airtransportobj',
         "readOnly": true,
         "tableName": "airtransportobj",
         "originName": "AirTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -19632,18 +16685,13 @@ SELECT 'airtransportobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты воздушного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19676,27 +16724,18 @@ SELECT 'airtransportobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -19705,18 +16744,11 @@ SELECT 'airtransportobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AVIA_TYPE",
             "title": "Тип объекта по виду обслуживаемой авиации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19740,10 +16772,7 @@ SELECT 'airtransportobj',
           {
             "name": "CAPACITY",
             "title": "Пропускная способность аэропорта, пасс./час",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -19751,9 +16780,6 @@ SELECT 'airtransportobj',
           {
             "name": "FREIGHT",
             "title": "Грузоперевозки, тонн",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -19761,8 +16787,6 @@ SELECT 'airtransportobj',
           {
             "name": "LAND_TYPE",
             "title": "Тип посадочной площадки",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19783,9 +16807,6 @@ SELECT 'airtransportobj',
           {
             "name": "RWY_CLASS",
             "title": "Класс взлетно-посадочной полосы",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19817,18 +16838,11 @@ SELECT 'airtransportobj',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -19884,19 +16898,12 @@ SELECT 'airtransportobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -19904,26 +16911,16 @@ SELECT 'airtransportobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19948,8 +16945,6 @@ SELECT 'airtransportobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -19982,9 +16977,6 @@ SELECT 'airtransportobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -19992,8 +16984,7 @@ SELECT 'airtransportobj',
           }
         ],
         "description": "Класс объектов «Объекты воздушного транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -20031,6 +17022,7 @@ SELECT 'electricpowerstation_point',
         "readOnly": true,
         "tableName": "electricpowerstation_point",
         "originName": "ElectricPowerStation",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -20042,18 +17034,13 @@ SELECT 'electricpowerstation_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Электростанции»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20154,27 +17141,18 @@ SELECT 'electricpowerstation_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -20183,18 +17161,11 @@ SELECT 'electricpowerstation_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUEL_TYPE",
             "title": "Основной вид топлива",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20250,9 +17221,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "POWER_TYPE",
             "title": "Тип теплосиловой установки",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20276,9 +17244,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -20286,9 +17251,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -20296,8 +17258,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "ELECT_POWER",
             "title": "Электрическая мощность, МВт",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -20306,8 +17266,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "HEAT_POWER",
             "title": "Тепловая мощность, Гкал/ч",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -20316,9 +17274,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20342,9 +17297,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -20352,9 +17304,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20410,19 +17359,12 @@ SELECT 'electricpowerstation_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -20430,26 +17372,16 @@ SELECT 'electricpowerstation_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20474,8 +17406,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20508,9 +17438,6 @@ SELECT 'electricpowerstation_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -20518,8 +17445,7 @@ SELECT 'electricpowerstation_point',
           }
         ],
         "description": "Класс объектов «Электростанции»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -20551,6 +17477,7 @@ SELECT 'autoservice',
         "readOnly": true,
         "tableName": "autoservice",
         "originName": "AutoService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -20562,18 +17489,13 @@ SELECT 'autoservice',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты обслуживания и хранения автомобильного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20598,27 +17520,18 @@ SELECT 'autoservice',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -20627,18 +17540,11 @@ SELECT 'autoservice',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GAS_ST_TYPE",
             "title": "Тип автозаправочных станций",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20670,10 +17576,7 @@ SELECT 'autoservice',
           {
             "name": "FUEL_COUNT",
             "title": "Количество топливораздаточных колонок автозаправочных станций",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -20681,10 +17584,7 @@ SELECT 'autoservice',
           {
             "name": "POST_COUNT",
             "title": "Количество постов станций технического обслуживания",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -20692,9 +17592,6 @@ SELECT 'autoservice',
           {
             "name": "PRKNG_TYPE",
             "title": "Тип стоянок автомобилей",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20718,9 +17615,6 @@ SELECT 'autoservice',
           {
             "name": "PRKNG_LVL",
             "title": "Тип размещения стоянок относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20740,9 +17634,6 @@ SELECT 'autoservice',
           {
             "name": "PRKNG_TIME",
             "title": "Тип стоянок автомобилей по длительности хранения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -20758,10 +17649,7 @@ SELECT 'autoservice',
           {
             "name": "PRKNG_FLS",
             "title": "Этажность стоянок",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -20769,9 +17657,7 @@ SELECT 'autoservice',
           {
             "name": "CAPACITY",
             "title": "Вместимость, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
             "required": true,
             "valueType": "INT",
             "maxInclusive": 2147483647,
@@ -20780,19 +17666,12 @@ SELECT 'autoservice',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -20800,26 +17679,16 @@ SELECT 'autoservice',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20844,8 +17713,6 @@ SELECT 'autoservice',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -20878,9 +17745,6 @@ SELECT 'autoservice',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -20888,8 +17752,7 @@ SELECT 'autoservice',
           }
         ],
         "description": "Класс объектов «Объекты обслуживания и хранения автомобильного транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -20977,6 +17840,7 @@ SELECT 'hydraulicstructures_line',
         "readOnly": true,
         "tableName": "hydraulicstructures_line",
         "originName": "HydraulicStructures",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -20988,18 +17852,13 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Гидротехнические сооружения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21032,27 +17891,18 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -21061,18 +17911,11 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GTS_CLASS",
             "title": "Класс гидротехнического сооружения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21096,9 +17939,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21106,9 +17946,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21116,9 +17953,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21126,9 +17960,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21184,19 +18015,12 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -21204,26 +18028,16 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21248,8 +18062,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21282,9 +18094,6 @@ SELECT 'hydraulicstructures_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -21292,8 +18101,7 @@ SELECT 'hydraulicstructures_line',
           }
         ],
         "description": "Класс объектов «Гидротехнические сооружения»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -21325,6 +18133,7 @@ SELECT 'gaspipeline_line',
         "readOnly": true,
         "tableName": "gaspipeline_line",
         "originName": "GasPipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -21336,18 +18145,13 @@ SELECT 'gaspipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Распределительные трубопроводы для транспортировки газа»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21384,27 +18188,18 @@ SELECT 'gaspipeline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
             "title": "Вид расположения трубопровода",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21437,8 +18232,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "LENGTH",
             "title": "Протяженность сооружения, км",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -21447,9 +18240,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21457,10 +18247,7 @@ SELECT 'gaspipeline_line',
           {
             "name": "PLINE_CNT",
             "title": "Количество труб",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -21468,10 +18255,7 @@ SELECT 'gaspipeline_line',
           {
             "name": "D_PLINE",
             "title": "Диаметр трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -21479,9 +18263,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "CAT_DISTR",
             "title": "Категория распределительных газопроводов по давлению",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21509,9 +18290,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "PRESSURE",
             "title": "Рабочее давление в трубопроводе, МПа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21519,9 +18297,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21529,9 +18304,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -21539,19 +18311,12 @@ SELECT 'gaspipeline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -21559,26 +18324,16 @@ SELECT 'gaspipeline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21603,8 +18358,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21637,9 +18390,6 @@ SELECT 'gaspipeline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -21647,8 +18397,7 @@ SELECT 'gaspipeline_line',
           }
         ],
         "description": "Класс объектов «Трубопроводы для транспортировки газа»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -21680,6 +18429,7 @@ SELECT 'street_line',
         "readOnly": true,
         "tableName": "street_line",
         "originName": "Street",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -21691,18 +18441,13 @@ SELECT 'street_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Улично-дорожная сеть городского поселения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21739,36 +18484,22 @@ SELECT 'street_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "STR_R_TYPE",
             "title": "Тип магистральных улиц районного значения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21784,9 +18515,6 @@ SELECT 'street_line',
           {
             "name": "STR_L_TYPE",
             "title": "Тип улиц и дорог местного значения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21814,9 +18542,6 @@ SELECT 'street_line',
           {
             "name": "SURFACE_EXIST",
             "title": "Вид покрытия (существующий)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21840,9 +18565,6 @@ SELECT 'street_line',
           {
             "name": "SURFACE_PLAN",
             "title": "Вид покрытия (проектный)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -21866,19 +18588,12 @@ SELECT 'street_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -21886,26 +18601,16 @@ SELECT 'street_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21930,8 +18635,6 @@ SELECT 'street_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -21964,9 +18667,6 @@ SELECT 'street_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -21974,8 +18674,7 @@ SELECT 'street_line',
           }
         ],
         "description": "Класс объектов «Улично-дорожная сеть городского поселения»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -22040,6 +18739,7 @@ SELECT 'hydraulicstructures_point',
         "readOnly": true,
         "tableName": "hydraulicstructures_point",
         "originName": "HydraulicStructures",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -22051,18 +18751,13 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Гидротехнические сооружения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22095,27 +18790,18 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -22124,18 +18810,11 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GTS_CLASS",
             "title": "Класс гидротехнического сооружения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22159,9 +18838,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -22169,9 +18845,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -22179,9 +18852,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -22189,9 +18859,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22247,19 +18914,12 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22267,26 +18927,16 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22311,8 +18961,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22345,9 +18993,6 @@ SELECT 'hydraulicstructures_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -22355,8 +19000,7 @@ SELECT 'hydraulicstructures_point',
           }
         ],
         "description": "Класс объектов «Гидротехнические сооружения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -22388,6 +19032,7 @@ SELECT 'health',
         "readOnly": true,
         "tableName": "health",
         "originName": "Health",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -22399,18 +19044,13 @@ SELECT 'health',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты здравоохранения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22451,27 +19091,18 @@ SELECT 'health',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -22480,18 +19111,11 @@ SELECT 'health',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MD_STYPE",
             "title": "Вид лечебно-профилактической медицинской организации (кроме санаторно-курортной), оказывающей медицинскую помощь в стационарных условиях, ее структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22551,9 +19175,6 @@ SELECT 'health',
           {
             "name": "AMB_TYPE",
             "title": "Вид лечебно-профилактической медицинской организации, оказывающей медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22597,9 +19218,6 @@ SELECT 'health',
           {
             "name": "MST_TYPE",
             "title": "Подтип медицинской организации особого типа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22623,9 +19241,6 @@ SELECT 'health',
           {
             "name": "SU_TYPE",
             "title": "Подтип медицинской организации по надзору в сфере защиты прав потребителей и благополучия человека",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22653,9 +19268,6 @@ SELECT 'health',
           {
             "name": "MSD_TYPE",
             "title": "Вид обособленного структурного подразделения медицинской организации, оказывающей первичную медико-санитарную помощь",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22687,9 +19299,6 @@ SELECT 'health',
           {
             "name": "MC_TYPE",
             "title": "Вид медицинской организации, оказывающей скорую медицинскую помощь, ее структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -22705,10 +19314,7 @@ SELECT 'health',
           {
             "name": "CAPACITY_S",
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22716,10 +19322,7 @@ SELECT 'health',
           {
             "name": "CAPACITY24",
             "title": "Мощность круглосуточного стационара, количество коек",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22727,10 +19330,7 @@ SELECT 'health',
           {
             "name": "CAPACITY",
             "title": "Мощность дневного стационара, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22738,10 +19338,7 @@ SELECT 'health',
           {
             "name": "NUM_CARS",
             "title": "Число автомобилей скорой медицинской помощи, единиц автомобилей",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22749,9 +19346,6 @@ SELECT 'health',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -22759,10 +19353,7 @@ SELECT 'health',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -22770,19 +19361,12 @@ SELECT 'health',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 10
@@ -22790,26 +19374,16 @@ SELECT 'health',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22834,8 +19408,6 @@ SELECT 'health',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -22868,9 +19440,6 @@ SELECT 'health',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -22878,8 +19447,7 @@ SELECT 'health',
           }
         ],
         "description": "Класс объектов «Объекты здравоохранения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -22989,6 +19557,7 @@ SELECT 'customcontrol_point',
         "readOnly": true,
         "tableName": "customcontrol_point",
         "originName": "CustomControl",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -23000,18 +19569,13 @@ SELECT 'customcontrol_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Пункт пропуска через Государственную границу»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23024,27 +19588,18 @@ SELECT 'customcontrol_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -23053,17 +19608,11 @@ SELECT 'customcontrol_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "INT_TRN_T",
             "title": "Тип пунктов пропуска по виду международного сообщения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23100,8 +19649,6 @@ SELECT 'customcontrol_point',
           {
             "name": "INT_TRF_T",
             "title": "Тип пунктов пропуска по характеру международного сообщения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23122,8 +19669,6 @@ SELECT 'customcontrol_point',
           {
             "name": "CTM_TIME_T",
             "title": "Тип пунктов пропуска по режиму работы",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23148,8 +19693,6 @@ SELECT 'customcontrol_point',
           {
             "name": "CTM_USE_T",
             "title": "Тип пунктов пропуска по характеру использования",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23166,19 +19709,12 @@ SELECT 'customcontrol_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23186,26 +19722,16 @@ SELECT 'customcontrol_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23230,8 +19756,6 @@ SELECT 'customcontrol_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23264,9 +19788,6 @@ SELECT 'customcontrol_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -23274,8 +19795,7 @@ SELECT 'customcontrol_point',
           }
         ],
         "description": "Класс объектов «Пункт пропуска через Государственную границу»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -23307,6 +19827,7 @@ SELECT 'health_point',
         "readOnly": true,
         "tableName": "health_point",
         "originName": "Health",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -23318,18 +19839,13 @@ SELECT 'health_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты здравоохранения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23370,27 +19886,18 @@ SELECT 'health_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -23399,18 +19906,11 @@ SELECT 'health_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MD_STYPE",
             "title": "Вид лечебно-профилактической медицинской организации (кроме санаторно-курортной), оказывающей медицинскую помощь в стационарных условиях, ее структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23470,9 +19970,6 @@ SELECT 'health_point',
           {
             "name": "AMB_TYPE",
             "title": "Вид лечебно-профилактической медицинской организации, оказывающей медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23516,9 +20013,6 @@ SELECT 'health_point',
           {
             "name": "MST_TYPE",
             "title": "Подтип медицинской организации особого типа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23542,9 +20036,6 @@ SELECT 'health_point',
           {
             "name": "SU_TYPE",
             "title": "Подтип медицинской организации по надзору в сфере защиты прав потребителей и благополучия человека",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23572,9 +20063,6 @@ SELECT 'health_point',
           {
             "name": "MSD_TYPE",
             "title": "Вид обособленного структурного подразделения медицинской организации, оказывающей первичную медико-санитарную помощь",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23606,9 +20094,6 @@ SELECT 'health_point',
           {
             "name": "MC_TYPE",
             "title": "Вид медицинской организации, оказывающей скорую медицинскую помощь, ее структурного подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -23624,10 +20109,7 @@ SELECT 'health_point',
           {
             "name": "CAPACITY_S",
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23635,10 +20117,7 @@ SELECT 'health_point',
           {
             "name": "CAPACITY24",
             "title": "Мощность круглосуточного стационара, количество коек",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23646,10 +20125,7 @@ SELECT 'health_point',
           {
             "name": "CAPACITY",
             "title": "Мощность дневного стационара, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23657,10 +20133,7 @@ SELECT 'health_point',
           {
             "name": "NUM_CARS",
             "title": "Число автомобилей скорой медицинской помощи, единиц автомобилей",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23668,9 +20141,6 @@ SELECT 'health_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -23678,10 +20148,7 @@ SELECT 'health_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -23689,19 +20156,12 @@ SELECT 'health_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 10
@@ -23709,26 +20169,16 @@ SELECT 'health_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23753,8 +20203,6 @@ SELECT 'health_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23787,9 +20235,6 @@ SELECT 'health_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -23797,8 +20242,7 @@ SELECT 'health_point',
           }
         ],
         "description": "Класс объектов «Объекты здравоохранения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -23908,6 +20352,7 @@ SELECT 'railwayline_line',
         "readOnly": true,
         "tableName": "railwayline_line",
         "originName": "RailwayLine",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -23919,18 +20364,13 @@ SELECT 'railwayline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Железнодорожный путь»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -23947,26 +20387,17 @@ SELECT 'railwayline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAT_RR",
             "title": "Категория железнодорожной линии",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24015,9 +20446,6 @@ SELECT 'railwayline_line',
           {
             "name": "EL_SUPPLY",
             "title": "Оснащение системой тягового электроснабжения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24033,9 +20461,6 @@ SELECT 'railwayline_line',
           {
             "name": "TRACK_TYPE",
             "title": "Ширина колеи железной дороги",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24059,9 +20484,6 @@ SELECT 'railwayline_line',
           {
             "name": "NUM_TRACKS",
             "title": "Количество путей железной дороги",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24085,10 +20507,7 @@ SELECT 'railwayline_line',
           {
             "name": "CAPACITY",
             "title": "Пропускная способность, ед./сут.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24096,9 +20515,6 @@ SELECT 'railwayline_line',
           {
             "name": "SUBURBAN_TR",
             "title": "Наличие движения пригородных поездов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24114,18 +20530,11 @@ SELECT 'railwayline_line',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24181,28 +20590,17 @@ SELECT 'railwayline_line',
           {
             "name": "NUM_TC",
             "title": "Наименование транспортного коридора",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24210,26 +20608,16 @@ SELECT 'railwayline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24254,8 +20642,6 @@ SELECT 'railwayline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24288,9 +20674,6 @@ SELECT 'railwayline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -24298,8 +20681,7 @@ SELECT 'railwayline_line',
           }
         ],
         "description": "Класс объектов «Железнодорожные пути»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -24331,6 +20713,7 @@ SELECT 'pipeline_line',
         "readOnly": true,
         "tableName": "pipeline_line",
         "originName": "Pipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -24342,18 +20725,13 @@ SELECT 'pipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24378,26 +20756,17 @@ SELECT 'pipeline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
             "title": "Тип трубопровода",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24430,8 +20799,6 @@ SELECT 'pipeline_line',
           {
             "name": "LENGTH",
             "title": "Протяженность сооружения, км",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -24440,9 +20807,6 @@ SELECT 'pipeline_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -24450,10 +20814,7 @@ SELECT 'pipeline_line',
           {
             "name": "PLINE_CNT",
             "title": "Количество труб",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24461,10 +20822,7 @@ SELECT 'pipeline_line',
           {
             "name": "D_PLINE",
             "title": "Диаметр трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24472,9 +20830,6 @@ SELECT 'pipeline_line',
           {
             "name": "CAT_MAIN",
             "title": "Категория магистральных газопроводов по давлению",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24490,9 +20845,6 @@ SELECT 'pipeline_line',
           {
             "name": "PRESSURE",
             "title": "Рабочее давление в трубопроводе, МПа",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -24500,9 +20852,6 @@ SELECT 'pipeline_line',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -24510,9 +20859,6 @@ SELECT 'pipeline_line',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -24520,19 +20866,12 @@ SELECT 'pipeline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24540,26 +20879,16 @@ SELECT 'pipeline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24584,8 +20913,6 @@ SELECT 'pipeline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24618,9 +20945,6 @@ SELECT 'pipeline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -24628,8 +20952,7 @@ SELECT 'pipeline_line',
           }
         ],
         "description": "Класс объектов «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -24666,6 +20989,7 @@ SELECT 'cemetery_point',
         "readOnly": true,
         "tableName": "cemetery_point",
         "originName": "Cemetery",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -24677,18 +21001,13 @@ SELECT 'cemetery_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Места погребения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24713,27 +21032,18 @@ SELECT 'cemetery_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -24742,18 +21052,11 @@ SELECT 'cemetery_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CEMET_TYPE",
             "title": "Тип кладбища ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24769,9 +21072,6 @@ SELECT 'cemetery_point',
           {
             "name": "CEMET_STYPE",
             "title": "Классификация кладбища в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24795,9 +21095,6 @@ SELECT 'cemetery_point',
           {
             "name": "CEMET_WTYPE",
             "title": "Тип воинского кладбища, военного мемориального кладбища",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24817,9 +21114,6 @@ SELECT 'cemetery_point',
           {
             "name": "CEMET_STAT",
             "title": "Статус кладбища ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -24835,8 +21129,6 @@ SELECT 'cemetery_point',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24865,8 +21157,6 @@ SELECT 'cemetery_point',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -24875,10 +21165,7 @@ SELECT 'cemetery_point',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -24886,26 +21173,16 @@ SELECT 'cemetery_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Справочник: Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24930,8 +21207,6 @@ SELECT 'cemetery_point',
           {
             "name": "reg_status",
             "title": "Справочник: Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -24964,9 +21239,6 @@ SELECT 'cemetery_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -24974,8 +21246,7 @@ SELECT 'cemetery_point',
           }
         ],
         "description": "Класс объектов «Места погребения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -25033,6 +21304,7 @@ SELECT 'cemetery',
         "readOnly": true,
         "tableName": "cemetery",
         "originName": "Cemetery",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -25044,18 +21316,13 @@ SELECT 'cemetery',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Места погребения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25080,27 +21347,18 @@ SELECT 'cemetery',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -25109,18 +21367,11 @@ SELECT 'cemetery',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CEMET_TYPE",
             "title": "Тип кладбища ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25136,9 +21387,6 @@ SELECT 'cemetery',
           {
             "name": "CEMET_STYPE",
             "title": "Классификация кладбища в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25162,9 +21410,6 @@ SELECT 'cemetery',
           {
             "name": "CEMET_WTYPE",
             "title": "Тип воинского кладбища, военного мемориального кладбища",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25184,9 +21429,6 @@ SELECT 'cemetery',
           {
             "name": "CEMET_STAT",
             "title": "Статус кладбища ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25202,8 +21444,6 @@ SELECT 'cemetery',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25232,8 +21472,6 @@ SELECT 'cemetery',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -25242,10 +21480,7 @@ SELECT 'cemetery',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -25253,26 +21488,16 @@ SELECT 'cemetery',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25297,8 +21522,6 @@ SELECT 'cemetery',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25331,9 +21554,6 @@ SELECT 'cemetery',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -25341,8 +21561,7 @@ SELECT 'cemetery',
           }
         ],
         "description": "Класс объектов «Места погребения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -25406,6 +21625,7 @@ SELECT 'investmentzone',
         "readOnly": true,
         "tableName": "investmentzone",
         "originName": "InvestmentZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -25417,18 +21637,13 @@ SELECT 'investmentzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25457,45 +21672,27 @@ SELECT 'investmentzone',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Основная специализация, перечень видов экономической деятельности, при осуществлении которых действует особый правовой режим осуществления предпринимательской деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Общая площадь территории зоны (кластера), га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -25503,10 +21700,7 @@ SELECT 'investmentzone',
           {
             "name": "LIVE_TIME",
             "title": "Срок функционирования зоны ",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -25514,10 +21708,7 @@ SELECT 'investmentzone',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -25525,26 +21716,16 @@ SELECT 'investmentzone',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25569,8 +21750,6 @@ SELECT 'investmentzone',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25603,9 +21782,6 @@ SELECT 'investmentzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -25613,8 +21789,7 @@ SELECT 'investmentzone',
           }
         ],
         "description": "Класс объектов «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -25635,6 +21810,7 @@ SELECT 'watertransportobj',
         "readOnly": true,
         "tableName": "watertransportobj",
         "originName": "WaterTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -25646,18 +21822,13 @@ SELECT 'watertransportobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты водного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25702,27 +21873,18 @@ SELECT 'watertransportobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -25731,18 +21893,11 @@ SELECT 'watertransportobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PASS_TERM",
             "title": "Наличие пассажирского терминала",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25758,9 +21913,6 @@ SELECT 'watertransportobj',
           {
             "name": "FERRY_CRGT",
             "title": "Тип паромной переправы по типу груза",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25776,9 +21928,6 @@ SELECT 'watertransportobj',
           {
             "name": "FERRY_MVT",
             "title": "Тип паромной переправы по способу передвижения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25794,9 +21943,6 @@ SELECT 'watertransportobj',
           {
             "name": "YATCH_CLS",
             "title": "Классификация мест стоянки маломерных судов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25824,9 +21970,6 @@ SELECT 'watertransportobj',
           {
             "name": "CAPACITY",
             "title": "Проектная мощность",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -25834,9 +21977,6 @@ SELECT 'watertransportobj',
           {
             "name": "SH_CAPACITY",
             "title": "Пропускная способность",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -25844,9 +21984,6 @@ SELECT 'watertransportobj',
           {
             "name": "FREIGHT",
             "title": "Грузоперевозки, тонн",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -25854,18 +21991,11 @@ SELECT 'watertransportobj',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -25921,19 +22051,12 @@ SELECT 'watertransportobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -25941,26 +22064,16 @@ SELECT 'watertransportobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -25985,8 +22098,6 @@ SELECT 'watertransportobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26019,9 +22130,6 @@ SELECT 'watertransportobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -26029,8 +22137,7 @@ SELECT 'watertransportobj',
           }
         ],
         "description": "Класс объектов «Объекты водного транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -26110,6 +22217,7 @@ SELECT 'electricline_line',
         "readOnly": true,
         "tableName": "electricline_line",
         "originName": "ElectricLine",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -26121,18 +22229,13 @@ SELECT 'electricline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Линии электропередачи (ЛЭП)»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26205,26 +22308,17 @@ SELECT 'electricline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "VOLTAGE",
             "title": "Напряжение, кВ",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26297,9 +22391,6 @@ SELECT 'electricline_line',
           {
             "name": "CURRENT",
             "title": "Тип тока",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26315,8 +22406,6 @@ SELECT 'electricline_line',
           {
             "name": "PL_TYPE",
             "title": "Вид линии электропередач",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26341,9 +22430,6 @@ SELECT 'electricline_line',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26399,8 +22485,6 @@ SELECT 'electricline_line',
           {
             "name": "LENGTH",
             "title": "Протяженность сооружения, метры",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -26409,9 +22493,6 @@ SELECT 'electricline_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26419,9 +22500,6 @@ SELECT 'electricline_line',
           {
             "name": "FEATURE_LEP",
             "title": "Особенности ЛЭП",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26441,9 +22519,6 @@ SELECT 'electricline_line',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26451,9 +22526,6 @@ SELECT 'electricline_line',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26461,19 +22533,12 @@ SELECT 'electricline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -26481,26 +22546,16 @@ SELECT 'electricline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26525,8 +22580,6 @@ SELECT 'electricline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26559,9 +22612,6 @@ SELECT 'electricline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -26569,8 +22619,7 @@ SELECT 'electricline_line',
           }
         ],
         "description": "Класс объектов «Линии электропередачи (ЛЭП)»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -26602,6 +22651,7 @@ SELECT 'watertransportobj_point',
         "readOnly": true,
         "tableName": "watertransportobj_point",
         "originName": "WaterTransportObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -26613,18 +22663,13 @@ SELECT 'watertransportobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты водного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26669,27 +22714,18 @@ SELECT 'watertransportobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -26698,18 +22734,11 @@ SELECT 'watertransportobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PASS_TERM",
             "title": "Наличие пассажирского терминала",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26725,9 +22754,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "FERRY_CRGT",
             "title": "Тип паромной переправы по типу груза",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26743,9 +22769,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "FERRY_MVT",
             "title": "Тип паромной переправы по способу передвижения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26761,9 +22784,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "YATCH_CLS",
             "title": "Классификация мест стоянки маломерных судов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26791,9 +22811,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "CAPACITY",
             "title": "Проектная мощность",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26801,9 +22818,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "SH_CAPACITY",
             "title": "Пропускная способность",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26811,9 +22825,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "FREIGHT",
             "title": "Грузоперевозки, тонн",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -26821,18 +22832,11 @@ SELECT 'watertransportobj_point',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -26888,19 +22892,12 @@ SELECT 'watertransportobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -26908,26 +22905,16 @@ SELECT 'watertransportobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26952,8 +22939,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -26986,9 +22971,6 @@ SELECT 'watertransportobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -26996,8 +22978,7 @@ SELECT 'watertransportobj_point',
           }
         ],
         "description": "Класс объектов «Объекты водного транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -27077,6 +23058,7 @@ SELECT 'historicsettlement',
         "readOnly": true,
         "tableName": "historicsettlement",
         "originName": "HistoricSettlement",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -27088,18 +23070,13 @@ SELECT 'historicsettlement',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Границы территории исторического поселения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27112,17 +23089,12 @@ SELECT 'historicsettlement',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SETTL_CAT",
             "title": "Категория историко-культурного значения исторического поселения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27139,27 +23111,16 @@ SELECT 'historicsettlement',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -27167,8 +23128,7 @@ SELECT 'historicsettlement',
           }
         ],
         "description": "Класс объектов «Границы территории исторического поселения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'historicsettlement');
 
@@ -27181,6 +23141,7 @@ SELECT 'public',
         "readOnly": true,
         "tableName": "public",
         "originName": "Public",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -27192,18 +23153,13 @@ SELECT 'public',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Общественные пространства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27228,27 +23184,18 @@ SELECT 'public',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -27257,18 +23204,11 @@ SELECT 'public',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "TPARK_TYPE",
             "title": "Подтип тематического парка",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27308,9 +23248,6 @@ SELECT 'public',
           {
             "name": "PKIO_TYPE",
             "title": "Подтип парка культуры и отдыха",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27326,9 +23263,6 @@ SELECT 'public',
           {
             "name": "PED_TYPE",
             "title": "Подтип пешеходной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27356,9 +23290,6 @@ SELECT 'public',
           {
             "name": "AQ_STYPE",
             "title": "Подтип благоустроенного пляжа, места массовой околоводной рекреации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27382,9 +23313,6 @@ SELECT 'public',
           {
             "name": "SP_AREA",
             "title": "Площадь территории, кв. м ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -27392,10 +23320,7 @@ SELECT 'public',
           {
             "name": "CAPACITY",
             "title": "Среднесуточная посещаемость, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -27403,8 +23328,6 @@ SELECT 'public',
           {
             "name": "SEASON",
             "title": "Продолжительность работы",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27429,10 +23352,7 @@ SELECT 'public',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -27440,19 +23360,12 @@ SELECT 'public',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -27460,17 +23373,11 @@ SELECT 'public',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27495,8 +23402,6 @@ SELECT 'public',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27529,9 +23434,6 @@ SELECT 'public',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -27539,8 +23441,7 @@ SELECT 'public',
           }
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -27604,6 +23505,7 @@ SELECT 'sewerfacility',
         "readOnly": true,
         "tableName": "sewerfacility",
         "originName": "SewerFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -27615,18 +23517,13 @@ SELECT 'sewerfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты водоотведения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27655,27 +23552,18 @@ SELECT 'sewerfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -27684,18 +23572,11 @@ SELECT 'sewerfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27715,9 +23596,6 @@ SELECT 'sewerfacility',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -27725,9 +23603,6 @@ SELECT 'sewerfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -27735,9 +23610,6 @@ SELECT 'sewerfacility',
           {
             "name": "OUTPUT",
             "title": "Производительность, тыс. куб. м/сут",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -27745,9 +23617,6 @@ SELECT 'sewerfacility',
           {
             "name": "SNOW_TYPE",
             "title": "Тип снегоплавильного, снегоприемного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27763,9 +23632,6 @@ SELECT 'sewerfacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27789,9 +23655,6 @@ SELECT 'sewerfacility',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -27799,19 +23662,12 @@ SELECT 'sewerfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -27819,26 +23675,16 @@ SELECT 'sewerfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27863,8 +23709,6 @@ SELECT 'sewerfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -27897,9 +23741,6 @@ SELECT 'sewerfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -27907,8 +23748,7 @@ SELECT 'sewerfacility',
           }
         ],
         "description": "Класс объектов «Объекты водоотведения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -27948,6 +23788,7 @@ SELECT 'functionalzone',
         "readOnly": true,
         "tableName": "functionalzone",
         "originName": "FunctionalZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -27959,18 +23800,13 @@ SELECT 'functionalzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Функциональные зоны»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28119,9 +23955,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_MFSTP",
             "title": "Вид многофункциональной общественно-деловой зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28153,9 +23986,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_ODSTP",
             "title": "Вид зоны специализированной общественной застройки",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28211,9 +24041,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_INGSTP",
             "title": "Вид зоны инженерной инфраструктуры",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28249,9 +24076,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_TRSTP",
             "title": "Вид зоны транспортной инфраструктуры",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28287,9 +24111,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_SHSTP",
             "title": "Вид сельскохозяйственной зоны иного использования",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28317,9 +24138,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_RECSTP",
             "title": "Вид зоны отдыха",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28343,9 +24161,6 @@ SELECT 'functionalzone',
           {
             "name": "FZ_ORECSTP",
             "title": "Вид иной рекреационной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28373,8 +24188,6 @@ SELECT 'functionalzone',
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -28383,18 +24196,11 @@ SELECT 'functionalzone',
           {
             "name": "INFO_OBJ",
             "title": "Сведения о планируемых объектах федерального значения, объектах регионального значения, объектах местного значения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CONSTR_DEN",
             "title": "Коэффициент застройки, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -28402,10 +24208,7 @@ SELECT 'functionalzone',
           {
             "name": "BLD_HEIGHT",
             "title": "Этажность застройки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -28413,9 +24216,6 @@ SELECT 'functionalzone',
           {
             "name": "POP_DEN",
             "title": "Плотность населения, чел/га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -28423,10 +24223,7 @@ SELECT 'functionalzone',
           {
             "name": "POPULATION",
             "title": "Численность населения, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -28434,10 +24231,7 @@ SELECT 'functionalzone',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -28445,19 +24239,12 @@ SELECT 'functionalzone',
           {
             "name": "OTHER",
             "title": "Иной параметр и его единицы измерения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -28465,8 +24252,6 @@ SELECT 'functionalzone',
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28483,9 +24268,6 @@ SELECT 'functionalzone',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28517,9 +24299,6 @@ SELECT 'functionalzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -28527,8 +24306,7 @@ SELECT 'functionalzone',
           }
         ],
         "description": "Класс объектов «Функциональные зоны»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -28644,6 +24422,7 @@ SELECT 'technoriskarea',
         "readOnly": true,
         "tableName": "technoriskarea",
         "originName": "TechnoRiskArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -28655,18 +24434,13 @@ SELECT 'technoriskarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28691,8 +24465,6 @@ SELECT 'technoriskarea',
           {
             "name": "TM_SOURCE",
             "title": "Источник техногенной чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28713,8 +24485,6 @@ SELECT 'technoriskarea',
           {
             "name": "IND_TYPE",
             "title": "Вид техногенной аварии",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28763,9 +24533,6 @@ SELECT 'technoriskarea',
           {
             "name": "RAD_CLASS",
             "title": "Степень возможного радиоактивного загрязнения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -28789,8 +24556,6 @@ SELECT 'technoriskarea',
           {
             "name": "EME_CLASS",
             "title": "Классификация чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28823,27 +24588,16 @@ SELECT 'technoriskarea',
           {
             "name": "OTHER",
             "title": "Иной параметр и его единицы измерения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -28851,8 +24605,7 @@ SELECT 'technoriskarea',
           }
         ],
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea');
 
@@ -28865,6 +24618,7 @@ SELECT 'coastalprotectionzone',
         "readOnly": true,
         "tableName": "coastalprotectionzone",
         "originName": "CoastalProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -28876,18 +24630,13 @@ SELECT 'coastalprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Прибрежные защитные полосы»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28900,35 +24649,21 @@ SELECT 'coastalprotectionzone',
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -28945,9 +24680,6 @@ SELECT 'coastalprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -28955,8 +24687,7 @@ SELECT 'coastalprotectionzone',
           }
         ],
         "description": "Класс объектов «Прибрежные защитные полосы»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'coastalprotectionzone');
 
@@ -28969,6 +24700,7 @@ SELECT 'publictransportstops',
         "readOnly": true,
         "tableName": "publictransportstops",
         "originName": "PublicTransportStops",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -28980,18 +24712,13 @@ SELECT 'publictransportstops',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Остановочные пункты общественного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29028,27 +24755,18 @@ SELECT 'publictransportstops',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -29057,18 +24775,11 @@ SELECT 'publictransportstops',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "STOP_TYPE",
             "title": "Тип остановочного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29096,9 +24807,6 @@ SELECT 'publictransportstops',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29118,9 +24826,6 @@ SELECT 'publictransportstops',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29176,19 +24881,12 @@ SELECT 'publictransportstops',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -29196,26 +24894,16 @@ SELECT 'publictransportstops',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29240,8 +24928,6 @@ SELECT 'publictransportstops',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29274,9 +24960,6 @@ SELECT 'publictransportstops',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -29284,8 +24967,7 @@ SELECT 'publictransportstops',
           }
         ],
         "description": "Класс объектов «Остановочные пункты общественного пассажирского транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -29325,6 +25007,7 @@ SELECT 'hazardarea',
         "readOnly": true,
         "tableName": "hazardarea",
         "originName": "HazardArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -29335,19 +25018,13 @@ SELECT 'hazardarea',
           },
           {
             "name": "GLOBALID",
-            "title": "",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Зона экстренного оповещения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29360,18 +25037,11 @@ SELECT 'hazardarea',
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -29379,8 +25049,7 @@ SELECT 'hazardarea',
           }
         ],
         "description": "Класс объектов «Зона экстренного оповещения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hazardarea');
 
@@ -29393,6 +25062,7 @@ SELECT 'publictransportstops_point',
         "readOnly": true,
         "tableName": "publictransportstops_point",
         "originName": "PublicTransportStops",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -29404,18 +25074,13 @@ SELECT 'publictransportstops_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Остановочные пункты общественного пассажирского транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29452,27 +25117,18 @@ SELECT 'publictransportstops_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -29481,18 +25137,11 @@ SELECT 'publictransportstops_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "STOP_TYPE",
             "title": "Тип остановочного пункта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29520,9 +25169,6 @@ SELECT 'publictransportstops_point',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29542,9 +25188,6 @@ SELECT 'publictransportstops_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29600,19 +25243,12 @@ SELECT 'publictransportstops_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -29620,26 +25256,16 @@ SELECT 'publictransportstops_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29664,8 +25290,6 @@ SELECT 'publictransportstops_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29698,9 +25322,6 @@ SELECT 'publictransportstops_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -29708,8 +25329,7 @@ SELECT 'publictransportstops_point',
           }
         ],
         "description": "Класс объектов «Остановочные пункты общественного пассажирского транспорта»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -29749,6 +25369,7 @@ SELECT 'otherobject_point',
         "readOnly": true,
         "tableName": "otherobject_point",
         "originName": "OtherObject",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -29760,18 +25381,13 @@ SELECT 'otherobject_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29784,27 +25400,18 @@ SELECT 'otherobject_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -29813,28 +25420,18 @@ SELECT 'otherobject_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LAWSOURCE",
             "title": "Реквизиты нормативного акта, устанавливающего тип объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -29842,9 +25439,6 @@ SELECT 'otherobject_point',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29872,9 +25466,6 @@ SELECT 'otherobject_point',
           {
             "name": "HZRD_CAT",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -29898,9 +25489,6 @@ SELECT 'otherobject_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -29908,8 +25496,6 @@ SELECT 'otherobject_point',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -29918,19 +25504,12 @@ SELECT 'otherobject_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -29938,26 +25517,16 @@ SELECT 'otherobject_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -29982,8 +25551,6 @@ SELECT 'otherobject_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30016,9 +25583,6 @@ SELECT 'otherobject_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -30026,8 +25590,7 @@ SELECT 'otherobject_point',
           }
         ],
         "description": "Класс объектов «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -30059,6 +25622,7 @@ SELECT 'resortarea',
         "readOnly": true,
         "tableName": "resortarea",
         "originName": "ResortArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -30070,18 +25634,13 @@ SELECT 'resortarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Лечебно-оздоровительные местности и курорты»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30094,36 +25653,22 @@ SELECT 'resortarea',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -30131,19 +25676,12 @@ SELECT 'resortarea',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30151,26 +25689,16 @@ SELECT 'resortarea',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30195,8 +25723,6 @@ SELECT 'resortarea',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30229,9 +25755,6 @@ SELECT 'resortarea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -30239,8 +25762,7 @@ SELECT 'resortarea',
           }
         ],
         "description": "Класс объектов «Лечебно-оздоровительные местности и курорты»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -30269,6 +25791,7 @@ SELECT 'social',
         "readOnly": true,
         "tableName": "social",
         "originName": "Social",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -30280,18 +25803,13 @@ SELECT 'social',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты социального обслуживания»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30316,27 +25834,18 @@ SELECT 'social',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -30345,18 +25854,11 @@ SELECT 'social',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ST_STYPE",
             "title": "Подтип стационарной организации социального обслуживания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -30420,9 +25922,6 @@ SELECT 'social',
           {
             "name": "SP_STYPE",
             "title": "Подтип комплексной, полустационарной, нестационарной организации социального обслуживания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -30482,9 +25981,6 @@ SELECT 'social',
           {
             "name": "SSAH_STYPE",
             "title": "Подтип организации (отделения) социального обслуживания на дому",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -30500,9 +25996,6 @@ SELECT 'social',
           {
             "name": "USA_STYPE",
             "title": "Подтип организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -30522,10 +26015,7 @@ SELECT 'social',
           {
             "name": "CAPACITY",
             "title": "Вместимость стационарных учреждений (отделений), мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30533,10 +26023,7 @@ SELECT 'social',
           {
             "name": "PERSON_PH",
             "title": "Численность граждан, обслуживаемых на дому, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30544,10 +26031,7 @@ SELECT 'social',
           {
             "name": "PERSON_PD",
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30555,9 +26039,6 @@ SELECT 'social',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -30565,10 +26046,7 @@ SELECT 'social',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30576,19 +26054,12 @@ SELECT 'social',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -30596,26 +26067,16 @@ SELECT 'social',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30640,8 +26101,6 @@ SELECT 'social',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30674,9 +26133,6 @@ SELECT 'social',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -30684,8 +26140,7 @@ SELECT 'social',
           }
         ],
         "description": "Класс объектов «Объекты социального обслуживания»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -30773,6 +26228,7 @@ SELECT 'agriculture',
         "readOnly": true,
         "tableName": "agriculture",
         "originName": "Agriculture",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -30784,18 +26240,13 @@ SELECT 'agriculture',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -30864,27 +26315,18 @@ SELECT 'agriculture',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование предприятия",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -30893,36 +26335,21 @@ SELECT 'agriculture',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_TYPE",
             "title": "Основные производственные объекты",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31018,9 +26445,6 @@ SELECT 'agriculture',
           {
             "name": "STORE_TYPE",
             "title": "Объекты хранения и переработки ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31072,18 +26496,11 @@ SELECT 'agriculture',
           {
             "name": "OTH_POBJ",
             "title": "Иные обособленно размещенные объекты капитального строительства, связанные с производственной деятельностью",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Мощность объекта, тыс. голов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -31091,10 +26508,7 @@ SELECT 'agriculture',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31102,8 +26516,6 @@ SELECT 'agriculture',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31132,9 +26544,6 @@ SELECT 'agriculture',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31158,9 +26567,6 @@ SELECT 'agriculture',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31188,9 +26594,6 @@ SELECT 'agriculture',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31246,19 +26649,12 @@ SELECT 'agriculture',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31266,26 +26662,16 @@ SELECT 'agriculture',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31310,8 +26696,6 @@ SELECT 'agriculture',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31344,9 +26728,6 @@ SELECT 'agriculture',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -31354,8 +26735,7 @@ SELECT 'agriculture',
           }
         ],
         "description": "Класс объектов «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -31387,6 +26767,7 @@ SELECT 'social_point',
         "readOnly": true,
         "tableName": "social_point",
         "originName": "Social",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -31398,18 +26779,13 @@ SELECT 'social_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты социального обслуживания»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31434,27 +26810,18 @@ SELECT 'social_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -31463,18 +26830,11 @@ SELECT 'social_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ST_STYPE",
             "title": "Подтип стационарной организации социального обслуживания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31538,9 +26898,6 @@ SELECT 'social_point',
           {
             "name": "SP_STYPE",
             "title": "Подтип комплексной, полустационарной, нестационарной организации социального обслуживания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31600,9 +26957,6 @@ SELECT 'social_point',
           {
             "name": "SSAH_STYPE",
             "title": "Подтип организации (отделения) социального обслуживания на дому",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31618,9 +26972,6 @@ SELECT 'social_point',
           {
             "name": "USA_STYPE",
             "title": "Подтип организации (отделения) срочного социального обслуживания, срочной социально-консультационной помощи",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -31640,10 +26991,7 @@ SELECT 'social_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость стационарных учреждений (отделений), мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31651,10 +26999,7 @@ SELECT 'social_point',
           {
             "name": "PERSON_PH",
             "title": "Численность граждан, обслуживаемых на дому, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31662,10 +27007,7 @@ SELECT 'social_point',
           {
             "name": "PERSON_PD",
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31673,9 +27015,6 @@ SELECT 'social_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -31683,10 +27022,7 @@ SELECT 'social_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31694,19 +27030,12 @@ SELECT 'social_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -31714,26 +27043,16 @@ SELECT 'social_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31758,8 +27077,6 @@ SELECT 'social_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31792,9 +27109,6 @@ SELECT 'social_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -31802,8 +27116,7 @@ SELECT 'social_point',
           }
         ],
         "description": "Класс объектов «Объекты социального обслуживания»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -31891,6 +27204,7 @@ SELECT 'agriculture_point',
         "readOnly": true,
         "tableName": "agriculture_point",
         "originName": "Agriculture",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -31902,18 +27216,13 @@ SELECT 'agriculture_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -31982,27 +27291,18 @@ SELECT 'agriculture_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование предприятия",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -32011,36 +27311,21 @@ SELECT 'agriculture_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_TYPE",
             "title": "Основные производственные объекты",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32136,9 +27421,6 @@ SELECT 'agriculture_point',
           {
             "name": "STORE_TYPE",
             "title": "Объекты хранения и переработки ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32190,18 +27472,11 @@ SELECT 'agriculture_point',
           {
             "name": "OTH_POBJ",
             "title": "Иные обособленно размещенные объекты капитального строительства, связанные с производственной деятельностью",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CAPACITY",
             "title": "Мощность объекта, тыс. голов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -32209,10 +27484,7 @@ SELECT 'agriculture_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -32220,8 +27492,6 @@ SELECT 'agriculture_point',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32250,9 +27520,6 @@ SELECT 'agriculture_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32276,9 +27543,6 @@ SELECT 'agriculture_point',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32306,9 +27570,6 @@ SELECT 'agriculture_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32364,19 +27625,12 @@ SELECT 'agriculture_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -32384,26 +27638,16 @@ SELECT 'agriculture_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32428,8 +27672,6 @@ SELECT 'agriculture_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32462,9 +27704,6 @@ SELECT 'agriculture_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -32472,8 +27711,7 @@ SELECT 'agriculture_point',
           }
         ],
         "description": "Класс объектов «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -32505,6 +27743,7 @@ SELECT 'wildlifeprotection',
         "readOnly": true,
         "tableName": "wildlifeprotection",
         "originName": "WildlifeProtection",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -32516,18 +27755,13 @@ SELECT 'wildlifeprotection',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32544,27 +27778,18 @@ SELECT 'wildlifeprotection',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -32573,18 +27798,11 @@ SELECT 'wildlifeprotection',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32612,8 +27830,6 @@ SELECT 'wildlifeprotection',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -32622,19 +27838,12 @@ SELECT 'wildlifeprotection',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -32642,26 +27851,16 @@ SELECT 'wildlifeprotection',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32686,8 +27885,6 @@ SELECT 'wildlifeprotection',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32720,9 +27917,6 @@ SELECT 'wildlifeprotection',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -32730,8 +27924,7 @@ SELECT 'wildlifeprotection',
           }
         ],
         "description": "Класс объектов «Объекты охраны животного мира»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -32763,6 +27956,7 @@ SELECT 'heritagearea',
         "readOnly": true,
         "tableName": "heritagearea",
         "originName": "HeritageArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -32774,18 +27968,13 @@ SELECT 'heritagearea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32802,27 +27991,18 @@ SELECT 'heritagearea',
           {
             "name": "NUMBER",
             "title": "Номер объекта культурного наследия на карте",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -32831,26 +28011,16 @@ SELECT 'heritagearea',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "REG_NUMBER",
             "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SPECIFIC",
             "title": "Вид, видовая принадлежность объекта культурного наследия",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32871,8 +28041,6 @@ SELECT 'heritagearea',
           {
             "name": "HIST_CAT",
             "title": "Категория историко-культурного значения",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32901,9 +28069,6 @@ SELECT 'heritagearea',
           {
             "name": "HIST_OUT",
             "title": "Объекты выдающейся культурной ценности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -32919,26 +28084,16 @@ SELECT 'heritagearea',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -32963,9 +28118,6 @@ SELECT 'heritagearea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -32973,8 +28125,7 @@ SELECT 'heritagearea',
           }
         ],
         "description": "Класс объектов «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritagearea');
 
@@ -32987,6 +28138,7 @@ SELECT 'mineraldep',
         "readOnly": true,
         "tableName": "mineraldep",
         "originName": "MineralDep",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -32998,18 +28150,13 @@ SELECT 'mineraldep',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Месторождения и проявления полезных ископаемых»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33046,18 +28193,11 @@ SELECT 'mineraldep',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MIN_MTYPE",
             "title": "Вид металлических полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -33089,9 +28229,6 @@ SELECT 'mineraldep',
           {
             "name": "MIN_NTYPE",
             "title": "Вид неметаллических полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -33135,17 +28272,12 @@ SELECT 'mineraldep',
           {
             "name": "MINERALS",
             "title": "Вид полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MIN_ATYPE",
             "title": "Вид участка недр",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33162,35 +28294,21 @@ SELECT 'mineraldep',
           {
             "name": "N_GRF",
             "title": "Номер паспорта государственного кадастра месторождений и проявлений полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAS",
             "title": "Индекс массива государственного кадастра месторождений и проявлений полезных ископаемых",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33223,9 +28341,6 @@ SELECT 'mineraldep',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33233,8 +28348,7 @@ SELECT 'mineraldep',
           }
         ],
         "description": "Класс объектов «Месторождения и проявления полезных ископаемых»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -33266,6 +28380,7 @@ SELECT 'transplogisticobj',
         "readOnly": true,
         "tableName": "transplogisticobj",
         "originName": "TranspLogisticObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -33277,18 +28392,13 @@ SELECT 'transplogisticobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Комплексные объекты транспортной инфраструктуры»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33305,27 +28415,18 @@ SELECT 'transplogisticobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -33334,18 +28435,11 @@ SELECT 'transplogisticobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -33365,19 +28459,12 @@ SELECT 'transplogisticobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -33385,26 +28472,16 @@ SELECT 'transplogisticobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33429,8 +28506,6 @@ SELECT 'transplogisticobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33463,9 +28538,6 @@ SELECT 'transplogisticobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33473,8 +28545,7 @@ SELECT 'transplogisticobj',
           }
         ],
         "description": "Класс объектов «Комплексные объекты транспортной инфраструктуры»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -33506,6 +28577,7 @@ SELECT 'heritageprotectionzone',
         "readOnly": true,
         "tableName": "heritageprotectionzone",
         "originName": "HeritageProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -33517,18 +28589,13 @@ SELECT 'heritageprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»\"",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33557,44 +28624,26 @@ SELECT 'heritageprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33611,9 +28660,6 @@ SELECT 'heritageprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33621,8 +28667,7 @@ SELECT 'heritageprotectionzone',
           }
         ],
         "description": "Класс объектов «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritageprotectionzone');
 
@@ -33635,6 +28680,7 @@ SELECT 'engprotectionzone',
         "readOnly": true,
         "tableName": "engprotectionzone",
         "originName": "EngProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -33646,18 +28692,13 @@ SELECT 'engprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Охранная зона инженерных коммуникаций»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33694,44 +28735,26 @@ SELECT 'engprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33748,9 +28771,6 @@ SELECT 'engprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33758,8 +28778,7 @@ SELECT 'engprotectionzone',
           }
         ],
         "description": "Класс объектов «Охранная зона инженерных коммуникаций»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionzone');
 
@@ -33772,6 +28791,7 @@ SELECT 'foreshore',
         "readOnly": true,
         "tableName": "foreshore",
         "originName": "Foreshore",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -33783,18 +28803,13 @@ SELECT 'foreshore',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Береговые полосы»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33807,35 +28822,21 @@ SELECT 'foreshore',
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33852,9 +28853,6 @@ SELECT 'foreshore',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33862,8 +28860,7 @@ SELECT 'foreshore',
           }
         ],
         "description": "Класс объектов «Береговые полосы»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'foreshore');
 
@@ -33876,6 +28873,7 @@ SELECT 'transpprotectionzone',
         "readOnly": true,
         "tableName": "transpprotectionzone",
         "originName": "TranspProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -33887,18 +28885,13 @@ SELECT 'transpprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Охранная зона транспортных коммуникаций»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33919,44 +28912,26 @@ SELECT 'transpprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -33973,9 +28948,6 @@ SELECT 'transpprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -33983,8 +28955,7 @@ SELECT 'transpprotectionzone',
           }
         ],
         "description": "Класс объектов «Охранная зона транспортных коммуникаций»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpprotectionzone');
 
@@ -33997,6 +28968,7 @@ SELECT 'recreation',
         "readOnly": true,
         "tableName": "recreation",
         "originName": "Recreation",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -34008,18 +28980,13 @@ SELECT 'recreation',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты отдыха и туризма»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34048,27 +29015,18 @@ SELECT 'recreation',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -34077,18 +29035,11 @@ SELECT 'recreation',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "HOT_STYPE",
             "title": "Подтип гостиниц, аналогичных коллективных средств размещения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34120,9 +29071,6 @@ SELECT 'recreation',
           {
             "name": "SAF_STYPE",
             "title": "Подтип специализированного коллективного средства размещения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34166,9 +29114,6 @@ SELECT 'recreation',
           {
             "name": "CHI_STYPE",
             "title": "Подтип детского оздоровительного лагеря",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34200,9 +29145,6 @@ SELECT 'recreation',
           {
             "name": "AL_STYPE",
             "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34242,10 +29184,7 @@ SELECT 'recreation',
           {
             "name": "CAPACITY",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34253,10 +29192,7 @@ SELECT 'recreation',
           {
             "name": "PERSON_PD",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34264,10 +29200,7 @@ SELECT 'recreation',
           {
             "name": "ONE_TIME",
             "title": "Единовременная пропускная способность, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34275,10 +29208,7 @@ SELECT 'recreation',
           {
             "name": "BOAT_COUNT",
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34286,10 +29216,7 @@ SELECT 'recreation',
           {
             "name": "SEAT_COUNT",
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34297,9 +29224,6 @@ SELECT 'recreation',
           {
             "name": "SEASON",
             "title": "Продолжительность работы",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34323,10 +29247,7 @@ SELECT 'recreation',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34334,19 +29255,12 @@ SELECT 'recreation',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34354,26 +29268,16 @@ SELECT 'recreation',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34398,8 +29302,6 @@ SELECT 'recreation',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34432,9 +29334,6 @@ SELECT 'recreation',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -34442,8 +29341,7 @@ SELECT 'recreation',
           }
         ],
         "description": "Класс объектов «Объекты отдыха и туризма»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -34549,6 +29447,7 @@ SELECT 'natureprotectionzone',
         "readOnly": true,
         "tableName": "natureprotectionzone",
         "originName": "NatureProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -34560,18 +29459,13 @@ SELECT 'natureprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Охранная зона особо охраняемых природных территорий»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34584,9 +29478,6 @@ SELECT 'natureprotectionzone',
           {
             "name": "ZONE_OOPT",
             "title": "Тип охранной зоны особо охраняемых природных территорий",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34622,44 +29513,26 @@ SELECT 'natureprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34676,9 +29549,6 @@ SELECT 'natureprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -34686,8 +29556,7 @@ SELECT 'natureprotectionzone',
           }
         ],
         "description": "Класс объектов «Охранная зона особо охраняемых природных территорий»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectionzone');
 
@@ -34700,6 +29569,7 @@ SELECT 'traditionalarea',
         "readOnly": true,
         "tableName": "traditionalarea",
         "originName": "TraditionalArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -34711,18 +29581,13 @@ SELECT 'traditionalarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34735,18 +29600,12 @@ SELECT 'traditionalarea',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -34754,10 +29613,7 @@ SELECT 'traditionalarea',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34765,26 +29621,16 @@ SELECT 'traditionalarea',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34801,8 +29647,6 @@ SELECT 'traditionalarea',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34835,9 +29679,6 @@ SELECT 'traditionalarea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -34845,8 +29686,7 @@ SELECT 'traditionalarea',
           }
         ],
         "description": "Класс объектов «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -34867,6 +29707,7 @@ SELECT 'specialeconomicarea',
         "readOnly": true,
         "tableName": "specialeconomicarea",
         "originName": "SpecialEconomicArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -34878,18 +29719,13 @@ SELECT 'specialeconomicarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Особые экономические зоны»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -34914,54 +29750,32 @@ SELECT 'specialeconomicarea',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Общая площадь территории зоны, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -34969,9 +29783,6 @@ SELECT 'specialeconomicarea',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -34979,10 +29790,7 @@ SELECT 'specialeconomicarea',
           {
             "name": "WRK_COUNT",
             "title": "Оценка количества рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -34990,19 +29798,12 @@ SELECT 'specialeconomicarea',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -35010,26 +29811,16 @@ SELECT 'specialeconomicarea',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35046,8 +29837,6 @@ SELECT 'specialeconomicarea',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35080,9 +29869,6 @@ SELECT 'specialeconomicarea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -35090,8 +29876,7 @@ SELECT 'specialeconomicarea',
           }
         ],
         "description": "Класс объектов «Особые экономические зоны»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -35123,6 +29908,7 @@ SELECT 'emergencyprotectionobj',
         "readOnly": true,
         "tableName": "emergencyprotectionobj",
         "originName": "EmergencyProtectionObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -35134,18 +29920,13 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35178,27 +29959,18 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -35207,18 +29979,11 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FP_TYPE",
             "title": "Вид пожарной охраны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35246,9 +30011,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "FP_CLASS",
             "title": "Классификация зданий пожарных депо",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35276,10 +30038,7 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "FE_COUNT",
             "title": "Количество автомобилей",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -35287,9 +30046,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "W_SOURCE",
             "title": "Источники наружного противопожарного водоснабжения и подъезды к ним",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35305,9 +30061,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "FS_OBJECTS",
             "title": "Объекты лесопожарной охраны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35331,9 +30084,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "D_OBJECTS",
             "title": "Вид потенциально-опасного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35365,9 +30115,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "S_ALERT",
             "title": "Система оповещения населения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35399,19 +30146,12 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -35419,26 +30159,16 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35463,8 +30193,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35497,9 +30225,6 @@ SELECT 'emergencyprotectionobj',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -35507,8 +30232,7 @@ SELECT 'emergencyprotectionobj',
           }
         ],
         "description": "Класс объектов «Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -35596,6 +30320,7 @@ SELECT 'electrictransformer',
         "readOnly": true,
         "tableName": "electrictransformer",
         "originName": "ElectricTransformer",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -35607,18 +30332,13 @@ SELECT 'electrictransformer',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Электрические подстанции»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35719,36 +30439,23 @@ SELECT 'electrictransformer',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DISP_NUM",
             "title": "Диспетчерский номер",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -35757,27 +30464,17 @@ SELECT 'electrictransformer',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "VOLTAGE",
             "title": "Напряжение, кВ",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CURRENT",
             "title": "Тип тока",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35793,9 +30490,6 @@ SELECT 'electrictransformer',
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -35815,8 +30509,6 @@ SELECT 'electrictransformer',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35873,9 +30565,6 @@ SELECT 'electrictransformer',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -35883,9 +30572,6 @@ SELECT 'electrictransformer',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -35893,8 +30579,6 @@ SELECT 'electrictransformer',
           {
             "name": "POWER",
             "title": "Мощность трансформаторов, МВ · A",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -35903,9 +30587,7 @@ SELECT 'electrictransformer',
           {
             "name": "AMOUNT",
             "title": "Количество трансформаторов",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
             "required": true,
             "valueType": "INT",
             "maxInclusive": 2147483647,
@@ -35914,9 +30596,6 @@ SELECT 'electrictransformer',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -35924,9 +30603,6 @@ SELECT 'electrictransformer',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -35934,19 +30610,12 @@ SELECT 'electrictransformer',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -35954,26 +30623,16 @@ SELECT 'electrictransformer',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -35998,8 +30657,6 @@ SELECT 'electrictransformer',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36032,9 +30689,6 @@ SELECT 'electrictransformer',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -36042,8 +30696,7 @@ SELECT 'electrictransformer',
           }
         ],
         "description": "Класс объектов «Электрические подстанции»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer');
 
@@ -36056,6 +30709,7 @@ SELECT 'railwayfacility',
         "readOnly": true,
         "tableName": "railwayfacility",
         "originName": "RailwayFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -36067,18 +30721,13 @@ SELECT 'railwayfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты железнодорожного транспорта»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36107,27 +30756,18 @@ SELECT 'railwayfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -36136,17 +30776,11 @@ SELECT 'railwayfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "USING_TYPE",
             "title": "Вид разрешенного использования",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36163,9 +30797,6 @@ SELECT 'railwayfacility',
           {
             "name": "RST_TYPE",
             "title": "Тип железнодорожной станции",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36193,9 +30824,6 @@ SELECT 'railwayfacility',
           {
             "name": "RST_CLASS",
             "title": "Класс железнодорожной станции/вокзала",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36227,9 +30855,6 @@ SELECT 'railwayfacility',
           {
             "name": "RFO_TYPE",
             "title": "Тип иных объектов железнодорожного транспорта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36257,10 +30882,7 @@ SELECT 'railwayfacility',
           {
             "name": "CAPACITY",
             "title": "Вместимость железнодорожного вокзала, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -36268,9 +30890,6 @@ SELECT 'railwayfacility',
           {
             "name": "SUBURBAN_TR",
             "title": "Наличие движения пригородных поездов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36286,9 +30905,6 @@ SELECT 'railwayfacility',
           {
             "name": "FREIGHT",
             "title": "Грузоперевозки, тонн",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36296,10 +30912,7 @@ SELECT 'railwayfacility',
           {
             "name": "PASS_TRAIN",
             "title": "Размер движения пассажирских поездов, пар в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -36307,10 +30920,7 @@ SELECT 'railwayfacility',
           {
             "name": "CARGO_TRAIN",
             "title": "Размер движения грузовых поездов, пар в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -36318,18 +30928,11 @@ SELECT 'railwayfacility',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36385,19 +30988,12 @@ SELECT 'railwayfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -36405,26 +31001,16 @@ SELECT 'railwayfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36449,8 +31035,6 @@ SELECT 'railwayfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36483,9 +31067,6 @@ SELECT 'railwayfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -36493,8 +31074,7 @@ SELECT 'railwayfacility',
           }
         ],
         "description": "Класс объектов «Объекты железнодорожного транспорта»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -36550,6 +31130,7 @@ SELECT 'admemo',
         "readOnly": true,
         "tableName": "admemo",
         "originName": "AdmeMO",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -36561,18 +31142,13 @@ SELECT 'admemo',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36609,18 +31185,13 @@ SELECT 'admemo',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -36629,9 +31200,6 @@ SELECT 'admemo',
           {
             "name": "POPULATION",
             "title": "Численность населения, тыс. чел.",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36639,17 +31207,11 @@ SELECT 'admemo',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status_adm",
             "title": "Статус объекта административно-территориального деления",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36666,9 +31228,6 @@ SELECT 'admemo',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -36676,8 +31235,7 @@ SELECT 'admemo',
           }
         ],
         "description": "Класс объектов «Территория муниципального образования»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admemo');
 
@@ -36690,6 +31248,7 @@ SELECT 'oilfacility',
         "readOnly": true,
         "tableName": "oilfacility",
         "originName": "OilFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -36701,18 +31260,13 @@ SELECT 'oilfacility',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36769,27 +31323,18 @@ SELECT 'oilfacility',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -36798,18 +31343,11 @@ SELECT 'oilfacility',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36829,9 +31367,6 @@ SELECT 'oilfacility',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36839,9 +31374,6 @@ SELECT 'oilfacility',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36849,8 +31381,6 @@ SELECT 'oilfacility',
           {
             "name": "OUTPUT",
             "title": "Производительность, т/сут",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -36859,8 +31389,6 @@ SELECT 'oilfacility',
           {
             "name": "VOLUME",
             "title": "Объем, куб. м",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -36869,9 +31397,6 @@ SELECT 'oilfacility',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -36895,9 +31420,6 @@ SELECT 'oilfacility',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36905,9 +31427,6 @@ SELECT 'oilfacility',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -36915,19 +31434,12 @@ SELECT 'oilfacility',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -36935,26 +31447,16 @@ SELECT 'oilfacility',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -36979,8 +31481,6 @@ SELECT 'oilfacility',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37013,9 +31513,6 @@ SELECT 'oilfacility',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -37023,8 +31520,7 @@ SELECT 'oilfacility',
           }
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки жидких углеводородов»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -37056,6 +31552,7 @@ SELECT 'emergencyprotectionobj_point',
         "readOnly": true,
         "tableName": "emergencyprotectionobj_point",
         "originName": "EmergencyProtectionObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -37067,18 +31564,13 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37111,27 +31603,18 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -37140,18 +31623,11 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FP_TYPE",
             "title": "Вид пожарной охраны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37179,9 +31655,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "FP_CLASS",
             "title": "Классификация зданий пожарных депо",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37209,10 +31682,7 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "FE_COUNT",
             "title": "Количество автомобилей",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -37220,9 +31690,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "W_SOURCE",
             "title": "Источники наружного противопожарного водоснабжения и подъезды к ним",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37238,9 +31705,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "FS_OBJECTS",
             "title": "Объекты лесопожарной охраны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37264,9 +31728,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "D_OBJECTS",
             "title": "Вид потенциально-опасного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37298,9 +31759,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "S_ALERT",
             "title": "Система оповещения населения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37332,19 +31790,12 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -37352,26 +31803,16 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Справочник: Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37396,8 +31837,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "reg_status",
             "title": "Справочник: Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37430,9 +31869,6 @@ SELECT 'emergencyprotectionobj_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -37440,8 +31876,7 @@ SELECT 'emergencyprotectionobj_point',
           }
         ],
         "description": "Класс объектов «Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -37529,6 +31964,7 @@ SELECT 'manufacturing_point',
         "readOnly": true,
         "tableName": "manufacturing_point",
         "originName": "Manufacturing",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -37540,18 +31976,13 @@ SELECT 'manufacturing_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Предприятия и объекты добывающей и обрабатывающей промышленности»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37604,27 +32035,18 @@ SELECT 'manufacturing_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -37633,36 +32055,21 @@ SELECT 'manufacturing_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MAIN_ACTIV",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADD_ACTIV",
             "title": "Дополнительные виды деятельности",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MP_TYPE",
             "title": "Основные производственные подразделения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37702,10 +32109,7 @@ SELECT 'manufacturing_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -37713,8 +32117,6 @@ SELECT 'manufacturing_point',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37743,9 +32145,6 @@ SELECT 'manufacturing_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37769,9 +32168,6 @@ SELECT 'manufacturing_point',
           {
             "name": "BENT_TYPE",
             "title": "Тип хозяйствующего субъекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37799,9 +32195,6 @@ SELECT 'manufacturing_point',
           {
             "name": "DANGER_OBJ",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37857,19 +32250,12 @@ SELECT 'manufacturing_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -37877,26 +32263,16 @@ SELECT 'manufacturing_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -37921,9 +32297,6 @@ SELECT 'manufacturing_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -37955,9 +32328,6 @@ SELECT 'manufacturing_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -37965,8 +32335,7 @@ SELECT 'manufacturing_point',
           }
         ],
         "description": "Класс объектов «Предприятия и объекты добывающей и обрабатывающей промышленности»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -38012,6 +32381,7 @@ SELECT 'authorityservice_point',
         "readOnly": true,
         "tableName": "authorityservice_point",
         "originName": "AuthorityService",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -38023,18 +32393,13 @@ SELECT 'authorityservice_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Прочие объекты обслуживания»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38071,27 +32436,18 @@ SELECT 'authorityservice_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -38100,18 +32456,11 @@ SELECT 'authorityservice_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AB_STYPE",
             "title": "Подтип административного здания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38139,9 +32488,6 @@ SELECT 'authorityservice_point',
           {
             "name": "CR_STYPE",
             "title": "Подтип объекта проведения гражданских обрядов",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38161,9 +32507,6 @@ SELECT 'authorityservice_point',
           {
             "name": "TRD_STYPE",
             "title": "Подтип объекта торговли, общественного питания",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38191,9 +32534,6 @@ SELECT 'authorityservice_point',
           {
             "name": "RS_STYPE",
             "title": "Подтип непроизводственного объекта по предоставлению населению правовых, финансовых, консультационных и иных подобных услуг",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38221,9 +32561,6 @@ SELECT 'authorityservice_point',
           {
             "name": "PU_STYPE",
             "title": "Подтип непроизводственного объекта коммунально-бытового обслуживания и предоставления персональных услуг",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38251,9 +32588,6 @@ SELECT 'authorityservice_point',
           {
             "name": "BLD_AREA",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38261,9 +32595,6 @@ SELECT 'authorityservice_point',
           {
             "name": "TRD_AREA",
             "title": "Торговая площадь, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38271,9 +32602,6 @@ SELECT 'authorityservice_point',
           {
             "name": "TRD_COUNT",
             "title": "Количество торговых мест рыночного комплекса, единиц",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38281,10 +32609,7 @@ SELECT 'authorityservice_point',
           {
             "name": "CAPACITY",
             "title": "Количество посадочных мест объекта общественного питания, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38292,10 +32617,7 @@ SELECT 'authorityservice_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих (операционных) мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38303,19 +32625,12 @@ SELECT 'authorityservice_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38323,26 +32638,16 @@ SELECT 'authorityservice_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38367,8 +32672,6 @@ SELECT 'authorityservice_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38401,9 +32704,6 @@ SELECT 'authorityservice_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -38411,8 +32711,7 @@ SELECT 'authorityservice_point',
           }
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -38508,6 +32807,7 @@ SELECT 'sport_point',
         "readOnly": true,
         "tableName": "sport_point",
         "originName": "Sport",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -38519,18 +32819,13 @@ SELECT 'sport_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты физкультурного и спортивного назначения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38547,27 +32842,18 @@ SELECT 'sport_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -38576,18 +32862,11 @@ SELECT 'sport_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AF_TYPE",
             "title": "Подтип спортивного сооружения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -38699,9 +32978,6 @@ SELECT 'sport_point',
           {
             "name": "SP_AREA",
             "title": "Площадь пола спортивных и тренажерных залов, кв. м ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38709,9 +32985,6 @@ SELECT 'sport_point',
           {
             "name": "POOL_AREA",
             "title": "Площадь зеркала воды плавательных бассейнов, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38719,9 +32992,6 @@ SELECT 'sport_point',
           {
             "name": "SPS_AREA",
             "title": "Площадь плоскостных спортивных сооружений, кв. м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -38729,10 +32999,7 @@ SELECT 'sport_point',
           {
             "name": "CAPACITY",
             "title": "Единовременная пропускная способность, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38740,10 +33007,7 @@ SELECT 'sport_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38751,19 +33015,12 @@ SELECT 'sport_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -38771,26 +33028,16 @@ SELECT 'sport_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38815,8 +33062,6 @@ SELECT 'sport_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38849,9 +33094,6 @@ SELECT 'sport_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -38859,8 +33101,7 @@ SELECT 'sport_point',
           }
         ],
         "description": "Класс объектов «Объекты физкультурного и спортивного назначения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -38900,6 +33141,7 @@ SELECT 'recreation_point',
         "readOnly": true,
         "tableName": "recreation_point",
         "originName": "Recreation",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -38911,18 +33153,13 @@ SELECT 'recreation_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты отдыха и туризма»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -38951,27 +33188,18 @@ SELECT 'recreation_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -38980,18 +33208,11 @@ SELECT 'recreation_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "HOT_STYPE",
             "title": "Подтип гостиниц, аналогичных коллективных средств размещения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39023,9 +33244,6 @@ SELECT 'recreation_point',
           {
             "name": "SAF_STYPE",
             "title": "Подтип специализированного коллективного средства размещения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39069,9 +33287,6 @@ SELECT 'recreation_point',
           {
             "name": "CHI_STYPE",
             "title": "Подтип детского оздоровительного лагеря",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39103,9 +33318,6 @@ SELECT 'recreation_point',
           {
             "name": "AL_STYPE",
             "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39145,10 +33357,7 @@ SELECT 'recreation_point',
           {
             "name": "CAPACITY",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39156,10 +33365,7 @@ SELECT 'recreation_point',
           {
             "name": "PERSON_PD",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39167,10 +33373,7 @@ SELECT 'recreation_point',
           {
             "name": "ONE_TIME",
             "title": "Единовременная пропускная способность, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39178,10 +33381,7 @@ SELECT 'recreation_point',
           {
             "name": "BOAT_COUNT",
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39189,10 +33389,7 @@ SELECT 'recreation_point',
           {
             "name": "SEAT_COUNT",
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39200,9 +33397,6 @@ SELECT 'recreation_point',
           {
             "name": "SEASON",
             "title": "Продолжительность работы",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39226,10 +33420,7 @@ SELECT 'recreation_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39237,19 +33428,12 @@ SELECT 'recreation_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39257,26 +33441,16 @@ SELECT 'recreation_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39301,8 +33475,6 @@ SELECT 'recreation_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39335,9 +33507,6 @@ SELECT 'recreation_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -39345,8 +33514,7 @@ SELECT 'recreation_point',
           }
         ],
         "description": "Класс объектов «Объекты отдыха и туризма»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -39452,6 +33620,7 @@ SELECT 'public_point',
         "readOnly": true,
         "tableName": "public_point",
         "originName": "Public",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -39463,18 +33632,13 @@ SELECT 'public_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "«Общественные пространства»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39499,27 +33663,18 @@ SELECT 'public_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование организации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -39528,18 +33683,11 @@ SELECT 'public_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "TPARK_TYPE",
             "title": "Подтип тематического парка",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39579,9 +33727,6 @@ SELECT 'public_point',
           {
             "name": "PKIO_TYPE",
             "title": "Подтип парка культуры и отдыха",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39597,9 +33742,6 @@ SELECT 'public_point',
           {
             "name": "PED_TYPE",
             "title": "Подтип пешеходной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39627,9 +33769,6 @@ SELECT 'public_point',
           {
             "name": "AQ_STYPE",
             "title": "Подтип благоустроенного пляжа, места массовой околоводной рекреации",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -39653,9 +33792,6 @@ SELECT 'public_point',
           {
             "name": "SP_AREA",
             "title": "Площадь территории, кв. м ",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -39663,10 +33799,7 @@ SELECT 'public_point',
           {
             "name": "CAPACITY",
             "title": "Среднесуточная посещаемость, чел.",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39674,8 +33807,6 @@ SELECT 'public_point',
           {
             "name": "SEASON",
             "title": "Продолжительность работы",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39700,10 +33831,7 @@ SELECT 'public_point',
           {
             "name": "WRK_COUNT",
             "title": "Количество рабочих мест, единиц",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39711,19 +33839,12 @@ SELECT 'public_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -39731,17 +33852,11 @@ SELECT 'public_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39766,8 +33881,6 @@ SELECT 'public_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39800,9 +33913,6 @@ SELECT 'public_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -39810,8 +33920,7 @@ SELECT 'public_point',
           }
         ],
         "description": "Класс объектов «Общественные пространства»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -39875,6 +33984,7 @@ SELECT 'waterprotectionzone',
         "readOnly": true,
         "tableName": "waterprotectionzone",
         "originName": "WaterProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -39886,18 +33996,13 @@ SELECT 'waterprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Водоохранные зоны»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39910,35 +34015,21 @@ SELECT 'waterprotectionzone',
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -39955,9 +34046,6 @@ SELECT 'waterprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -39965,8 +34053,7 @@ SELECT 'waterprotectionzone',
           }
         ],
         "description": "Класс объектов «Водоохранные зоны»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterprotectionzone');
 
@@ -39979,6 +34066,7 @@ SELECT 'envdanger_point',
         "readOnly": true,
         "tableName": "envdanger_point",
         "originName": "EnvDanger",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -39990,18 +34078,13 @@ SELECT 'envdanger_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40018,27 +34101,18 @@ SELECT 'envdanger_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -40047,27 +34121,16 @@ SELECT 'envdanger_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40075,27 +34138,16 @@ SELECT 'envdanger_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -40103,8 +34155,7 @@ SELECT 'envdanger_point',
           }
         ],
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger_point');
 
@@ -40117,6 +34168,7 @@ SELECT 'prison',
         "readOnly": true,
         "tableName": "prison",
         "originName": "Prison",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -40128,18 +34180,13 @@ SELECT 'prison',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты ФСИН России»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40152,27 +34199,18 @@ SELECT 'prison',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -40181,18 +34219,11 @@ SELECT 'prison',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FSES_STYPE",
             "title": "Подтип объекта ФСИН России",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -40240,19 +34271,12 @@ SELECT 'prison',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -40260,26 +34284,16 @@ SELECT 'prison',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40312,8 +34326,6 @@ SELECT 'prison',
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40338,9 +34350,6 @@ SELECT 'prison',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -40348,8 +34357,7 @@ SELECT 'prison',
           }
         ],
         "description": "Класс объектов «Объекты ФСИН России, иные объекты федерального значения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -40381,6 +34389,7 @@ SELECT 'greeneryplanting',
         "readOnly": true,
         "tableName": "greeneryplanting",
         "originName": "GreeneryPlanting",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -40392,18 +34401,13 @@ SELECT 'greeneryplanting',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Территории зеленого фонда городских и сельских поселений»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40436,45 +34440,26 @@ SELECT 'greeneryplanting',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OZSN_TYPE",
             "title": "Тип озелененной территории специального назначения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -40498,9 +34483,6 @@ SELECT 'greeneryplanting',
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40508,26 +34490,16 @@ SELECT 'greeneryplanting',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40544,9 +34516,6 @@ SELECT 'greeneryplanting',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -40554,8 +34523,7 @@ SELECT 'greeneryplanting',
           }
         ],
         "description": "Класс объектов «Территории зеленого фонда городских и сельских поселений »",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -40579,6 +34547,7 @@ SELECT 'forestpark',
         "readOnly": true,
         "tableName": "forestpark",
         "originName": "ForestPark",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -40590,18 +34559,13 @@ SELECT 'forestpark',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Лесопарковый зеленый пояс»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40614,45 +34578,27 @@ SELECT 'forestpark',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40660,26 +34606,16 @@ SELECT 'forestpark',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40696,9 +34632,6 @@ SELECT 'forestpark',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -40706,8 +34639,7 @@ SELECT 'forestpark',
           }
         ],
         "description": "Класс объектов «Лесопарковый зеленый пояс»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forestpark');
 
@@ -40720,6 +34652,7 @@ SELECT 'oilfacility_point',
         "readOnly": true,
         "tableName": "oilfacility_point",
         "originName": "OilFacility",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -40731,18 +34664,13 @@ SELECT 'oilfacility_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -40799,27 +34727,18 @@ SELECT 'oilfacility_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -40828,18 +34747,11 @@ SELECT 'oilfacility_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "GROUND_POS",
             "title": "Расположение объекта относительно уровня земли",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -40859,9 +34771,6 @@ SELECT 'oilfacility_point',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40869,9 +34778,6 @@ SELECT 'oilfacility_point',
           {
             "name": "FACT_USE",
             "title": "Фактическое использование объекта, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40879,8 +34785,6 @@ SELECT 'oilfacility_point',
           {
             "name": "OUTPUT",
             "title": "Производительность, т/сут",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -40889,8 +34793,6 @@ SELECT 'oilfacility_point',
           {
             "name": "VOLUME",
             "title": "Объем, куб. м",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -40899,9 +34801,6 @@ SELECT 'oilfacility_point',
           {
             "name": "HZRD_CAT",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -40925,9 +34824,6 @@ SELECT 'oilfacility_point',
           {
             "name": "SZZ_SIZE",
             "title": "Размер санитарно-защитной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40935,9 +34831,6 @@ SELECT 'oilfacility_point',
           {
             "name": "ZONE_SIZE",
             "title": "Размер охранной зоны, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40945,19 +34838,12 @@ SELECT 'oilfacility_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -40965,26 +34851,16 @@ SELECT 'oilfacility_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41009,8 +34885,6 @@ SELECT 'oilfacility_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41043,9 +34917,6 @@ SELECT 'oilfacility_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -41053,8 +34924,7 @@ SELECT 'oilfacility_point',
           }
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки жидких углеводородов»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -41086,6 +34956,7 @@ SELECT 'transpsanitarygapzone',
         "readOnly": true,
         "tableName": "transpsanitarygapzone",
         "originName": "TranspSanitaryGapZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41097,18 +34968,13 @@ SELECT 'transpsanitarygapzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41137,44 +35003,26 @@ SELECT 'transpsanitarygapzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41191,9 +35039,6 @@ SELECT 'transpsanitarygapzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41201,8 +35046,7 @@ SELECT 'transpsanitarygapzone',
           }
         ],
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpsanitarygapzone');
 
@@ -41215,6 +35059,7 @@ SELECT 'sanitaryprotectionzone',
         "readOnly": true,
         "tableName": "sanitaryprotectionzone",
         "originName": "SanitaryProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41226,18 +35071,13 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Санитарно-защитная зона»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41254,8 +35094,6 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "SZZ_TYPE",
             "title": "Тип санитарно-защитной зоны",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41276,8 +35114,6 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41306,8 +35142,6 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "SPZ_EVENT",
             "title": "Планируемое событие/мероприятие по санитарно-защитной зоне",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41328,44 +35162,27 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание расчетной или установленной зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41382,9 +35199,6 @@ SELECT 'sanitaryprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41392,8 +35206,7 @@ SELECT 'sanitaryprotectionzone',
           }
         ],
         "description": "Класс объектов «Санитарно-защитная зона»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sanitaryprotectionzone');
 
@@ -41406,6 +35219,7 @@ SELECT 'drinkwaterprotectionzone',
         "readOnly": true,
         "tableName": "drinkwaterprotectionzone",
         "originName": "DrinkWaterProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41417,18 +35231,13 @@ SELECT 'drinkwaterprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41453,44 +35262,26 @@ SELECT 'drinkwaterprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41507,9 +35298,6 @@ SELECT 'drinkwaterprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41517,8 +35305,7 @@ SELECT 'drinkwaterprotectionzone',
           }
         ],
         "description": "Класс объектов «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'drinkwaterprotectionzone');
 
@@ -41531,6 +35318,7 @@ SELECT 'admerf',
         "readOnly": true,
         "tableName": "admerf",
         "originName": "AdmeRF",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41542,18 +35330,13 @@ SELECT 'admerf',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41566,18 +35349,12 @@ SELECT 'admerf',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "POPULATION",
             "title": "Численность населения, тыс. чел.",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -41585,18 +35362,11 @@ SELECT 'admerf',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41604,8 +35374,7 @@ SELECT 'admerf',
           }
         ],
         "description": "Класс объектов «Территория Российской Федерации»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admerf');
 
@@ -41618,6 +35387,7 @@ SELECT 'resortprotectionzone',
         "readOnly": true,
         "tableName": "resortprotectionzone",
         "originName": "ResortProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41629,18 +35399,13 @@ SELECT 'resortprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Зоны округов санитарной (горно-санитарной) охраны»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41661,44 +35426,26 @@ SELECT 'resortprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41715,9 +35462,6 @@ SELECT 'resortprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41725,8 +35469,7 @@ SELECT 'resortprotectionzone',
           }
         ],
         "description": "Класс объектов «Зоны округов санитарной (горно-санитарной) охраны»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortprotectionzone');
 
@@ -41739,6 +35482,7 @@ SELECT 'landuse',
         "readOnly": true,
         "tableName": "landuse",
         "originName": "LandUse",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41750,18 +35494,13 @@ SELECT 'landuse',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Земли по категориям»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41798,8 +35537,6 @@ SELECT 'landuse',
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41816,9 +35553,6 @@ SELECT 'landuse',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41826,8 +35560,7 @@ SELECT 'landuse',
           }
         ],
         "description": "Класс объектов «Земли по категориям»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'landuse');
 
@@ -41840,6 +35573,7 @@ SELECT 'mineralarea',
         "readOnly": true,
         "tableName": "mineralarea",
         "originName": "MineralArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -41851,18 +35585,13 @@ SELECT 'mineralarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях, не связанных с их добычей»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -41875,72 +35604,43 @@ SELECT 'mineralarea',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOCATION",
             "title": "Местоположение",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MIN_DEVELP",
             "title": "Недропользователь",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "MINERALS",
             "title": "Полезные ископаемые",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LICENCE",
             "title": "Лицензия",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DATE_START",
             "title": "Дата выдачи лицензии",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "DATE_CLOSE",
             "title": "Дата окончания лицензии",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь, кв. км.",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -41948,27 +35648,17 @@ SELECT 'mineralarea',
           {
             "name": "STATUS_OTV",
             "title": "Статус отвода",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -41976,8 +35666,7 @@ SELECT 'mineralarea',
           }
         ],
         "description": "Класс объектов «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineralarea');
 
@@ -41990,6 +35679,7 @@ SELECT 'engsanitarygapzone',
         "readOnly": true,
         "tableName": "engsanitarygapzone",
         "originName": "EngSanitaryGapZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42001,18 +35691,13 @@ SELECT 'engsanitarygapzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42033,44 +35718,26 @@ SELECT 'engsanitarygapzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42087,9 +35754,6 @@ SELECT 'engsanitarygapzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -42097,8 +35761,7 @@ SELECT 'engsanitarygapzone',
           }
         ],
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engsanitarygapzone');
 
@@ -42111,6 +35774,7 @@ SELECT 'otherzone',
         "readOnly": true,
         "tableName": "otherzone",
         "originName": "OtherZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42122,18 +35786,13 @@ SELECT 'otherzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Иные зоны с особыми условиями использования»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42158,27 +35817,16 @@ SELECT 'otherzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AEROSZONE",
             "title": "Подзона приаэродромной территории",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -42214,26 +35862,16 @@ SELECT 'otherzone',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42250,9 +35888,6 @@ SELECT 'otherzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -42260,8 +35895,7 @@ SELECT 'otherzone',
           }
         ],
         "description": "Класс объектов «Иные зоны с особыми условиями использования»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -42285,6 +35919,7 @@ SELECT 'envdanger',
         "readOnly": true,
         "tableName": "envdanger",
         "originName": "EnvDanger",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42296,18 +35931,13 @@ SELECT 'envdanger',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42324,27 +35954,18 @@ SELECT 'envdanger',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -42353,27 +35974,16 @@ SELECT 'envdanger',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -42381,27 +35991,16 @@ SELECT 'envdanger',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -42409,8 +36008,7 @@ SELECT 'envdanger',
           }
         ],
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger');
 
@@ -42423,6 +36021,7 @@ SELECT 'streetv_line',
         "readOnly": true,
         "tableName": "streetv_line",
         "originName": "StreetV",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42434,18 +36033,13 @@ SELECT 'streetv_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Улично-дорожная сеть сельского поселения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42470,36 +36064,22 @@ SELECT 'streetv_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "STR_TYPE",
             "title": "Тип улиц в жилой застройке",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -42519,9 +36099,6 @@ SELECT 'streetv_line',
           {
             "name": "SURFACE_EXIST",
             "title": "Вид покрытия (существующий)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -42545,9 +36122,6 @@ SELECT 'streetv_line',
           {
             "name": "SURFACE_PLAN",
             "title": "Вид покрытия (проектный)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -42571,19 +36145,12 @@ SELECT 'streetv_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -42591,26 +36158,16 @@ SELECT 'streetv_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42635,8 +36192,6 @@ SELECT 'streetv_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42669,9 +36224,6 @@ SELECT 'streetv_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -42679,8 +36231,7 @@ SELECT 'streetv_line',
           }
         ],
         "description": "Класс объектов «Улично-дорожная сеть сельского населенного пункта»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -42729,6 +36280,7 @@ SELECT 'otherprotectionzone',
         "readOnly": true,
         "tableName": "otherprotectionzone",
         "originName": "OtherProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42740,18 +36292,13 @@ SELECT 'otherprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Охранная зона иного назначения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42768,44 +36315,26 @@ SELECT 'otherprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42822,9 +36351,6 @@ SELECT 'otherprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -42832,8 +36358,7 @@ SELECT 'otherprotectionzone',
           }
         ],
         "description": "Класс объектов «Охранная зона иного назначения»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherprotectionzone');
 
@@ -42846,6 +36371,7 @@ SELECT 'protectionzone',
         "readOnly": true,
         "tableName": "protectionzone",
         "originName": "ProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42857,18 +36383,12 @@ SELECT 'protectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
-            "title": "",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42893,44 +36413,26 @@ SELECT 'protectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -42947,9 +36449,6 @@ SELECT 'protectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -42957,8 +36456,7 @@ SELECT 'protectionzone',
           }
         ],
         "description": "Класс объектов «Зоны охраняемых объектов»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'protectionzone');
 
@@ -42971,6 +36469,7 @@ SELECT 'hydro',
         "readOnly": true,
         "tableName": "hydro",
         "originName": "Hydro",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -42982,18 +36481,13 @@ SELECT 'hydro',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Поверхностные водные объекты»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43026,27 +36520,16 @@ SELECT 'hydro',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LENGTH",
             "title": "Общая длина водотока, км",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43054,9 +36537,6 @@ SELECT 'hydro',
           {
             "name": "AREA",
             "title": "Общая площадь водоема, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43064,9 +36544,6 @@ SELECT 'hydro',
           {
             "name": "WPZ_SIZE",
             "title": "Размер водоохраной зоны объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43074,9 +36551,6 @@ SELECT 'hydro',
           {
             "name": "RS_SIZE",
             "title": "Размер прибрежной полосы объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43084,9 +36558,6 @@ SELECT 'hydro',
           {
             "name": "FSH_SIZE",
             "title": "Размер береговой полосы общего пользования объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43094,10 +36565,7 @@ SELECT 'hydro',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -43105,17 +36573,11 @@ SELECT 'hydro',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43132,9 +36594,6 @@ SELECT 'hydro',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -43142,8 +36601,7 @@ SELECT 'hydro',
           }
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -43164,6 +36622,7 @@ SELECT 'floodarea',
         "readOnly": true,
         "tableName": "floodarea",
         "originName": "FloodArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -43175,18 +36634,13 @@ SELECT 'floodarea',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Зоны затопления и подтопления»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43203,9 +36657,6 @@ SELECT 'floodarea',
           {
             "name": "FLOODING_T",
             "title": "Характеристика зоны затопления",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -43229,9 +36680,6 @@ SELECT 'floodarea',
           {
             "name": "UDERFL_T",
             "title": "Характеристика зоны подтопления",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -43251,35 +36699,21 @@ SELECT 'floodarea',
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43296,9 +36730,6 @@ SELECT 'floodarea',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -43306,8 +36737,7 @@ SELECT 'floodarea',
           }
         ],
         "description": "Класс объектов «Зоны затопления и подтопления»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -43339,6 +36769,7 @@ SELECT 'areabasedevelopment',
         "readOnly": true,
         "tableName": "areabasedevelopment",
         "originName": "AreaBaseDevelopment",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -43350,18 +36781,13 @@ SELECT 'areabasedevelopment',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Комплексное развитие территорий»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43386,35 +36812,22 @@ SELECT 'areabasedevelopment',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Общая площадь территории, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -43423,10 +36836,7 @@ SELECT 'areabasedevelopment',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -43434,26 +36844,16 @@ SELECT 'areabasedevelopment',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43478,8 +36878,6 @@ SELECT 'areabasedevelopment',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43512,9 +36910,6 @@ SELECT 'areabasedevelopment',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -43522,8 +36917,7 @@ SELECT 'areabasedevelopment',
           }
         ],
         "description": "Класс объектов «Комплексное развитие территорий»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -43544,6 +36938,7 @@ SELECT 'fishprotectionzone',
         "readOnly": true,
         "tableName": "fishprotectionzone",
         "originName": "FishProtectionZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -43555,18 +36950,13 @@ SELECT 'fishprotectionzone',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Рыбоохранная и рыбохозяйственная заповедная зоны»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43583,44 +36973,26 @@ SELECT 'fishprotectionzone',
           {
             "name": "ZONE_DESC",
             "title": "Описание зоны",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OBJECTNAME",
             "title": "Наименование объекта (для которого устанавливается зона)",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43637,9 +37009,6 @@ SELECT 'fishprotectionzone',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -43647,8 +37016,7 @@ SELECT 'fishprotectionzone',
           }
         ],
         "description": "Класс объектов «Рыбоохранная и рыбохозяйственная заповедная зоны»",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'fishprotectionzone');
 
@@ -43661,6 +37029,7 @@ SELECT 'waterways_line',
         "readOnly": true,
         "tableName": "waterways_line",
         "originName": "WaterWays",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -43672,18 +37041,13 @@ SELECT 'waterways_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Водные пути»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43700,45 +37064,27 @@ SELECT 'waterways_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "UPPER_BND",
             "title": "Верхняя граница по течению",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOWER_BND",
             "title": "Нижняя граница по течению",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "WAYLENGHT",
             "title": "Протяженность, км",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -43746,37 +37092,22 @@ SELECT 'waterways_line',
           {
             "name": "COMPL_NAME",
             "title": "Наименование комплексного объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NUM_TC",
             "title": "Наименование транспортного коридора",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -43784,26 +37115,16 @@ SELECT 'waterways_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43828,8 +37149,6 @@ SELECT 'waterways_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43862,9 +37181,6 @@ SELECT 'waterways_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -43872,8 +37188,7 @@ SELECT 'waterways_line',
           }
         ],
         "description": "Класс объектов «Водные пути»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -43905,6 +37220,7 @@ SELECT 'admborder_line',
         "readOnly": true,
         "tableName": "admborder_line",
         "originName": "AdmBorder",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -43916,18 +37232,13 @@ SELECT 'admborder_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -43976,17 +37287,11 @@ SELECT 'admborder_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status_adm",
             "title": "Статус границы единицы административно-территориального деления Российской Федерации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44004,8 +37309,6 @@ SELECT 'admborder_line',
             "name": "shape",
             "title": "Геомметрия",
             "hidden": true,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -44013,8 +37316,7 @@ SELECT 'admborder_line',
           }
         ],
         "description": "Границы единиц административно-территориального деления Российской Федерации",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admborder_line');
 
@@ -44027,6 +37329,7 @@ SELECT 'hydro_line',
         "readOnly": true,
         "tableName": "hydro_line",
         "originName": "Hydro",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -44038,18 +37341,13 @@ SELECT 'hydro_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Поверхностные водные объекты»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44082,27 +37380,16 @@ SELECT 'hydro_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LENGTH",
             "title": "Общая длина водотока, км",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44110,9 +37397,6 @@ SELECT 'hydro_line',
           {
             "name": "AREA",
             "title": "Общая площадь водоема, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44120,9 +37404,6 @@ SELECT 'hydro_line',
           {
             "name": "WPZ_SIZE",
             "title": "Размер водоохраной зоны объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44130,9 +37411,6 @@ SELECT 'hydro_line',
           {
             "name": "RS_SIZE",
             "title": "Размер прибрежной полосы объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44140,9 +37418,6 @@ SELECT 'hydro_line',
           {
             "name": "FSH_SIZE",
             "title": "Размер береговой полосы общего пользования объекта, м",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44150,10 +37425,7 @@ SELECT 'hydro_line',
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -44161,17 +37433,11 @@ SELECT 'hydro_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44188,9 +37454,6 @@ SELECT 'hydro_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -44198,8 +37461,7 @@ SELECT 'hydro_line',
           }
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -44221,6 +37483,7 @@ SELECT 'sewerpipeline_line',
         "readOnly": true,
         "tableName": "sewerpipeline_line",
         "originName": "SewerPipeline",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -44232,18 +37495,13 @@ SELECT 'sewerpipeline_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Сети водоотведения»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44280,26 +37538,17 @@ SELECT 'sewerpipeline_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "PLINE_TYPE",
             "title": "Вид расположения трубопровода",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44332,8 +37581,6 @@ SELECT 'sewerpipeline_line',
           {
             "name": "LENGTH",
             "title": "Протяженность сооружения, км",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -44342,9 +37589,6 @@ SELECT 'sewerpipeline_line',
           {
             "name": "WEAR_PRCNT",
             "title": "Процент износа, %",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -44352,10 +37596,7 @@ SELECT 'sewerpipeline_line',
           {
             "name": "PLINE_CNT",
             "title": "Количество труб",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -44363,10 +37604,7 @@ SELECT 'sewerpipeline_line',
           {
             "name": "D_PLINE",
             "title": "Диаметр трубопровода, мм",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -44374,19 +37612,12 @@ SELECT 'sewerpipeline_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -44394,26 +37625,16 @@ SELECT 'sewerpipeline_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44438,8 +37659,6 @@ SELECT 'sewerpipeline_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44472,9 +37691,6 @@ SELECT 'sewerpipeline_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -44482,8 +37698,7 @@ SELECT 'sewerpipeline_line',
           }
         ],
         "description": "Класс объектов «Сети водоотведения»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -44515,6 +37730,7 @@ SELECT 'engprotectionobj_line',
         "readOnly": true,
         "tableName": "engprotectionobj_line",
         "originName": "EngProtectionObj",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -44526,18 +37742,13 @@ SELECT 'engprotectionobj_line',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты инженерной защиты от опасных геологических процессов»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44566,27 +37777,18 @@ SELECT 'engprotectionobj_line',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -44595,18 +37797,11 @@ SELECT 'engprotectionobj_line',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "CEP_CLASS",
             "title": "Класс сооружений инженерной защиты",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -44630,19 +37825,12 @@ SELECT 'engprotectionobj_line',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -44650,26 +37838,16 @@ SELECT 'engprotectionobj_line',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44694,8 +37872,6 @@ SELECT 'engprotectionobj_line',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44728,9 +37904,6 @@ SELECT 'engprotectionobj_line',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -44738,8 +37911,7 @@ SELECT 'engprotectionobj_line',
           }
         ],
         "description": "Класс объектов «Объекты инженерной защиты от опасных геологических процессов»",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -44771,6 +37943,7 @@ SELECT 'naturalriskzone_point',
         "readOnly": true,
         "tableName": "naturalriskzone_point",
         "originName": "NaturalRiskZone",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -44782,18 +37955,13 @@ SELECT 'naturalriskzone_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": "Код объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44818,8 +37986,6 @@ SELECT 'naturalriskzone_point',
           {
             "name": "EME_SOURCE",
             "title": "Источник природной чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -44960,9 +38126,6 @@ SELECT 'naturalriskzone_point',
           {
             "name": "RISK_CAT",
             "title": "Категория опасности процесса",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -44986,8 +38149,6 @@ SELECT 'naturalriskzone_point',
           {
             "name": "EME_CLASS",
             "title": "Классификация чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45020,27 +38181,16 @@ SELECT 'naturalriskzone_point',
           {
             "name": "OTHER",
             "title": "Иной параметр и его единицы измерения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -45048,8 +38198,7 @@ SELECT 'naturalriskzone_point',
           }
         ],
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone_point');
 
@@ -45062,6 +38211,7 @@ SELECT 'natureprotectarea_point',
         "readOnly": true,
         "tableName": "natureprotectarea_point",
         "originName": "NatureProtectArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -45073,18 +38223,13 @@ SELECT 'natureprotectarea_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Особо охраняемые природные территории»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45121,27 +38266,17 @@ SELECT 'natureprotectarea_point',
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "LOCATION",
             "title": "Местоположение",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -45149,28 +38284,17 @@ SELECT 'natureprotectarea_point',
           {
             "name": "OBJ_DESC",
             "title": "Описание объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -45178,26 +38302,16 @@ SELECT 'natureprotectarea_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45222,8 +38336,6 @@ SELECT 'natureprotectarea_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45256,9 +38368,6 @@ SELECT 'natureprotectarea_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -45266,8 +38375,7 @@ SELECT 'natureprotectarea_point',
           }
         ],
         "description": "Класс объектов «Особо охраняемые природные территории»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -45299,6 +38407,7 @@ SELECT 'technoriskarea_point',
         "readOnly": true,
         "tableName": "technoriskarea_point",
         "originName": "TechnoRiskArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -45310,18 +38419,13 @@ SELECT 'technoriskarea_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45346,8 +38450,6 @@ SELECT 'technoriskarea_point',
           {
             "name": "TM_SOURCE",
             "title": "Источник техногенной чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45368,8 +38470,6 @@ SELECT 'technoriskarea_point',
           {
             "name": "IND_TYPE",
             "title": "Вид техногенной аварии",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45418,9 +38518,6 @@ SELECT 'technoriskarea_point',
           {
             "name": "RAD_CLASS",
             "title": "Степень возможного радиоактивного загрязнения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -45444,8 +38541,6 @@ SELECT 'technoriskarea_point',
           {
             "name": "EME_CLASS",
             "title": "Классификация чрезвычайной ситуации",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45478,27 +38573,16 @@ SELECT 'technoriskarea_point',
           {
             "name": "OTHER",
             "title": "Иной параметр и его единицы измерения",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -45506,8 +38590,7 @@ SELECT 'technoriskarea_point',
           }
         ],
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea_point');
 
@@ -45520,6 +38603,7 @@ SELECT 'resortarea_point',
         "readOnly": true,
         "tableName": "resortarea_point",
         "originName": "ResortArea",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -45531,18 +38615,13 @@ SELECT 'resortarea_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Лечебно-оздоровительные местности и курорты»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45555,36 +38634,22 @@ SELECT 'resortarea_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "AREA",
             "title": "Площадь объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -45592,19 +38657,12 @@ SELECT 'resortarea_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -45612,26 +38670,16 @@ SELECT 'resortarea_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45656,8 +38704,6 @@ SELECT 'resortarea_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45690,9 +38736,6 @@ SELECT 'resortarea_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -45700,8 +38743,7 @@ SELECT 'resortarea_point',
           }
         ],
         "description": "Класс объектов «Лечебно-оздоровительные местности и курорты»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -45730,6 +38772,7 @@ SELECT 'prison_point',
         "readOnly": true,
         "tableName": "prison_point",
         "originName": "Prison",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -45741,18 +38784,13 @@ SELECT 'prison_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты ФСИН России»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45765,27 +38803,18 @@ SELECT 'prison_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -45794,18 +38823,11 @@ SELECT 'prison_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "FSES_STYPE",
             "title": "Подтип объекта ФСИН России",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -45853,19 +38875,12 @@ SELECT 'prison_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -45873,26 +38888,16 @@ SELECT 'prison_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45925,8 +38930,6 @@ SELECT 'prison_point',
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -45951,9 +38954,6 @@ SELECT 'prison_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -45961,8 +38961,7 @@ SELECT 'prison_point',
           }
         ],
         "description": "Класс объектов «Объекты ФСИН России, иные объекты федерального значения»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -45994,6 +38993,7 @@ SELECT 'wildlifeprotection_point',
         "readOnly": true,
         "tableName": "wildlifeprotection_point",
         "originName": "WildlifeProtection",
+        "tags": ["system", "Приказ 10"],
         "properties": [
           {
             "name": "ruleid",
@@ -46005,18 +39005,13 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "GLOBALID",
             "title": "Идентификатор объекта",
-            "hidden": false,
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "classid",
             "title": " «Объекты государственной системы наблюдений за состоянием окружающей среды»",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -46033,27 +39028,18 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "NUMBER",
             "title": "Номер согласно Положению о территориальном планировании",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NAME",
             "title": "Наименование объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "OKTMO",
             "title": "Код ОКТМО",
-            "hidden": false,
             "pattern": "[0-9]{8}|[0-9]{11}",
-            "multiple": false,
             "required": true,
             "maxLength": 11,
             "minLength": 8,
@@ -46062,18 +39048,11 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "ADDRESS",
             "title": "Местоположение, адресное описание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "HZRD_CLASS",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -46101,8 +39080,6 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "AREA",
             "title": "Площадь объекта, га",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -46111,19 +39088,12 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "FUNCTION",
             "title": "Назначение объекта",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "EVENT_TIME",
             "title": "Срок реализации",
-            "hidden": false,
             "pattern": "[\\-+]?[0-9]+",
-            "multiple": false,
-            "required": false,
             "valueType": "INT",
             "maxInclusive": 2147483647,
             "minInclusive": 1
@@ -46131,26 +39101,16 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "SOURCE",
             "title": "Источник данных",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "NOTE",
             "title": "Примечание",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
-            "maxLength": 254,
             "valueType": "STRING"
           },
           {
             "name": "status",
             "title": "Статус объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -46175,8 +39135,6 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "hidden": false,
-            "multiple": false,
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -46209,9 +39167,6 @@ SELECT 'wildlifeprotection_point',
           {
             "name": "shape",
             "title": "геометрия",
-            "hidden": false,
-            "multiple": false,
-            "required": false,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Point"
@@ -46219,8 +39174,7 @@ SELECT 'wildlifeprotection_point',
           }
         ],
         "description": "Класс объектов «Объекты охраны животного мира»",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -46248,43 +39202,33 @@ SELECT 'mp',
        '{
           "name": "mp",
           "title": "Образуемые земельные участки",
-          "readOnly": false,
           "tableName": "mp",
           "originName": "mp",
-          "properties": [
+          "tags": ["system", "Приказ 10"],
+        "properties": [
             {
               "name": "reason",
               "title": "Вид кадастровых работ",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "cadastralblock",
               "title": "Номер кадастрового квартала",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
+                  "required": true,
               "maxLength": 20,
               "valueType": "STRING"
             },
             {
               "name": "prevcadastralnumbers",
               "title": "Кадастровые номера земельных участков, из которых образован данный участок",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 254,
+                  "required": true,
               "valueType": "STRING"
             },
             {
               "name": "area",
               "title": "Площадь земельного участка, м.кв.",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
+                  "required": true,
               "valueType": "DOUBLE",
               "totalDigits": 38,
               "fractionDigits": 8
@@ -46292,19 +39236,13 @@ SELECT 'mp',
             {
               "name": "address",
               "title": "Адрес (местоположение) участка",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "Category",
               "title": "Категория земель",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 254,
+                  "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -46345,46 +39283,31 @@ SELECT 'mp',
             {
               "name": "bydoc",
               "title": "Вид разрешенного использования участка по документу",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "objectsrealty",
               "title": "Сведения об объектах недвижимости, расположенных на образуемом земельном участке",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "conclusion",
               "title": "Заключение кадастрового инженера",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "note",
               "title": "Примечания",
-              "hidden": false,
-              "multiple": false,
-              "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+                  "required": true,
+              "valueType": "TEXT"
             },
             {
               "name": "shape",
               "title": "геометрия",
-              "hidden": false,
-              "multiple": false,
-              "required": false,
-              "valueType": "GEOMETRY",
+                    "valueType": "GEOMETRY",
               "allowedValues": [
                 "Polygon"
               ]
@@ -46397,7 +39320,6 @@ SELECT 'mp',
             }
           ],
           "description": "Образуемые земельные участки",
-          "geometryType": "MultiPolygon",
-          "customRuleFunction": null
+          "geometryType": "MultiPolygon"
         }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp');

@@ -5,7 +5,7 @@ SELECT 'thermalpipeline_line_123',
         "title": "Сети теплоснабжения",
         "styleName": "thermalpipeline_line_123",
         "tableName": "thermalpipeline_line_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "globalid",
@@ -90,22 +90,22 @@ SELECT 'thermalpipeline_line_123',
           },
           {
             "name": "d1_pline",
-            "title": "Диаметр подающего трубопровода, мм",            
+            "title": "Диаметр подающего трубопровода, мм",
             "valueType": "INT"
           },
           {
             "name": "d2_pline",
-            "title": "Диаметр обратного трубопровода, мм",            
+            "title": "Диаметр обратного трубопровода, мм",
             "valueType": "INT"
           },
           {
             "name": "d3_pline",
-            "title": "Диаметр подающего трубопровода горячего водоснабжения, мм",            
+            "title": "Диаметр подающего трубопровода горячего водоснабжения, мм",
             "valueType": "INT"
           },
           {
             "name": "d4_pline",
-            "title": "Диаметр циркуляционного трубопровода горячего водоснабжения, мм",            
+            "title": "Диаметр циркуляционного трубопровода горячего водоснабжения, мм",
             "valueType": "INT"
           },
           {
@@ -122,7 +122,7 @@ SELECT 'thermalpipeline_line_123',
           },
           {
             "name": "event_time",
-            "title": "Срок реализации",            
+            "title": "Срок реализации",
             "valueType": "INT"
           },
           {
@@ -233,7 +233,7 @@ SELECT 'oilpipeline_line_123',
         "title": "Магистральные трубопроводы жидких углеводородов",
         "styleName": "oilpipeline_line_123",
         "tableName": "oilpipeline_line_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "globalid",
@@ -517,7 +517,7 @@ SELECT 'telecomnetworkline_line_123',
         "title": "Сети электросвязи",
         "styleName": "telecomnetworkline_line_123",
         "tableName": "telecomnetworkline_line_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "globalid",
@@ -828,7 +828,7 @@ SELECT 'electrictransformer_point_123',
   "title": "Электрические подстанции",
   "styleName": "electrictransformer_point_123",
   "tableName": "electrictransformer_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -844,11 +844,11 @@ SELECT 'electrictransformer_point_123',
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Электрическая подстанция 1150 кВ",
+          "title": "Электрическая подстанция 1150 кВ",
           "value": "602040201"
         },
         {
-          "title": "Электрическая подстанция 800 кВ",
+          "title": "Электрическая подстанция 800 кВ",
           "value": "602040202"
         },
         {
@@ -856,55 +856,55 @@ SELECT 'electrictransformer_point_123',
           "value": "602040203"
         },
         {
-          "title": "Электрическая подстанция 600 кВ",
+          "title": "Электрическая подстанция 600 кВ",
           "value": "602040204"
         },
         {
-          "title": "Электрическая подстанция 500 кВ",
+          "title": "Электрическая подстанция 500 кВ",
           "value": "602040205"
         },
         {
-          "title": "Электрическая подстанция 400 кВ",
+          "title": "Электрическая подстанция 400 кВ",
           "value": "602040206"
         },
         {
-          "title": "Электрическая подстанция 330 кВ",
+          "title": "Электрическая подстанция 330 кВ",
           "value": "602040207"
         },
         {
-          "title": "Электрическая подстанция 300 кВ",
+          "title": "Электрическая подстанция 300 кВ",
           "value": "602040208"
         },
         {
-          "title": "Электрическая подстанция 220 кВ",
+          "title": "Электрическая подстанция 220 кВ",
           "value": "602040209"
         },
         {
-          "title": "Электрическая подстанция 150 кВ",
+          "title": "Электрическая подстанция 150 кВ",
           "value": "602040210"
         },
         {
-          "title": "Электрическая подстанция 110 кВ",
+          "title": "Электрическая подстанция 110 кВ",
           "value": "602040211"
         },
         {
-          "title": "Электрическая подстанция 60 кВ",
+          "title": "Электрическая подстанция 60 кВ",
           "value": "602040212"
         },
         {
-          "title": "Электрическая подстанция 35 кВ",
+          "title": "Электрическая подстанция 35 кВ",
           "value": "602040213"
         },
         {
-          "title": "Электрическая подстанция 20 кВ",
+          "title": "Электрическая подстанция 20 кВ",
           "value": "602040214"
         },
         {
-          "title": "Электрическая подстанция 10 кВ",
+          "title": "Электрическая подстанция 10 кВ",
           "value": "602040215"
         },
         {
-          "title": "Электрическая подстанция 6 кВ",
+          "title": "Электрическая подстанция 6 кВ",
           "value": "602040216"
         },
         {
@@ -916,7 +916,7 @@ SELECT 'electrictransformer_point_123',
           "value": "602040218"
         },
         {
-          "title": "Электрическая подстанция 400 кВ преобразовательная",
+          "title": "Электрическая подстанция 400 кВ преобразовательная",
           "value": "602040221"
         },
         {
@@ -1322,7 +1322,7 @@ SELECT 'railwayfacility_point_123',
   "title": "Объекты железнодорожного транспорта",
   "styleName": "railwayfacility_point_123",
   "tableName": "railwayfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -1737,7 +1737,7 @@ SELECT 'admesrf_123',
         "readOnly": true,
         "tableName": "admesrf_123",
         "originName": "admesrf_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -1823,8 +1823,7 @@ SELECT 'admesrf_123',
           }
         ],
         "description": "Класс объектов Территория субъекта Российской Федерации",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admesrf_123');
 
@@ -1836,7 +1835,7 @@ SELECT 'wastefacility_point_123',
   "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
   "styleName": "wastefacility_point_123",
   "tableName": "wastefacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -2392,7 +2391,7 @@ SELECT 'waterfacility_point_123',
   "title": "Объекты водоснабжения",
   "styleName": "waterfacility_point_123",
   "tableName": "waterfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -2688,7 +2687,7 @@ SELECT 'publictransportservice_point_123',
   "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
   "styleName": "publictransportservice_point_123",
   "tableName": "publictransportservice_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -2957,7 +2956,7 @@ SELECT 'airtransportobj_point_123',
   "title": "Объекты воздушного транспорта",
   "styleName": "airtransportobj_point_123",
   "tableName": "airtransportobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -3314,7 +3313,7 @@ SELECT 'autoservice_point_123',
   "title": "Объекты обслуживания и хранения автомобильного транспорта",
   "styleName": "autoservice_point_123",
   "tableName": "autoservice_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -3683,7 +3682,7 @@ SELECT 'heritage_point_123',
   "title": "Объекты культурного наследия (ОКН)",
   "styleName": "heritage_point_123",
   "tableName": "heritage_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -4157,7 +4156,7 @@ SELECT 'resort_point_123',
   "title": "Объекты санаторно-курортного назначения",
   "styleName": "resort_point_123",
   "tableName": "resort_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -4415,7 +4414,7 @@ SELECT 'servicefacility_point_123',
   "title": "Прочие объекты, связанные с производственной деятельностью",
   "styleName": "servicefacility_point_123",
   "tableName": "servicefacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -4904,7 +4903,7 @@ SELECT 'sewerfacility_point_123',
   "title": "Объекты водоотведения",
   "styleName": "sewerfacility_point_123",
   "tableName": "sewerfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -5218,7 +5217,7 @@ SELECT 'culture_point_123',
   "title": "Объекты культуры и искусства",
   "styleName": "culture_point_123",
   "tableName": "culture_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -5628,7 +5627,7 @@ SELECT 'mineraldep_point_123',
         "readOnly": true,
         "tableName": "mineraldep_point_123",
         "originName": "mineraldep_point_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -5839,8 +5838,7 @@ SELECT 'mineraldep_point_123',
           }
         ],
         "description": "Класс объектов Месторождения и проявления полезных ископаемых",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -5871,7 +5869,7 @@ SELECT 'transplogisticobj_point_123',
   "title": "Комплексные объекты транспортной инфраструктуры",
   "styleName": "transplogisticobj_point_123",
   "tableName": "transplogisticobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -5950,7 +5948,7 @@ SELECT 'transplogisticobj_point_123',
     },
     {
       "name": "event_time",
-      "title": "Срок реализации",      
+      "title": "Срок реализации",
       "valueType": "INT"
     },
     {
@@ -6126,7 +6124,7 @@ SELECT 'publictransportobj_point_123',
         "readOnly": true,
         "tableName": "publictransportobj_point_123",
         "originName": "publictransportobj_point_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -6275,8 +6273,7 @@ SELECT 'publictransportobj_point_123',
           }
         ],
         "description": "Класс объектов Объекты автомобильного пассажирского транспорта",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6307,7 +6304,7 @@ SELECT 'envmonitoring_point_123',
   "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
   "styleName": "envmonitoring_point_123",
   "tableName": "envmonitoring_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -6521,7 +6518,7 @@ SELECT 'hydro_point_123',
         "readOnly": true,
         "tableName": "hydro_point_123",
         "originName": "hydro_point_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -6646,8 +6643,7 @@ SELECT 'hydro_point_123',
           }
         ],
         "description": "Класс объектов Поверхностные водные объекты",
-        "geometryType": "Point",
-        "customRuleFunction": null
+        "geometryType": "Point"
       }',
        'var errors = [];
 
@@ -6667,7 +6663,7 @@ SELECT 'engprotectionobj_point_123',
   "title": "Объекты инженерной защиты от опасных геологических процессов",
   "styleName": "engprotectionobj_point_123",
   "tableName": "engprotectionobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -6880,7 +6876,7 @@ SELECT 'waterpipeline_line_123',
   "title": "Сети водоснабжения",
   "styleName": "waterpipeline_line_123",
   "tableName": "waterpipeline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -7111,7 +7107,7 @@ SELECT 'culture_123',
         "readOnly": true,
         "tableName": "culture_123",
         "originName": "culture_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -7368,8 +7364,7 @@ SELECT 'culture_123',
           }
         ],
         "description": "Класс объектов Объекты культуры и искусства",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -7441,7 +7436,7 @@ SELECT 'manufacturing_123',
         "readOnly": true,
         "tableName": "manufacturing_123",
         "originName": "manufacturing_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -7807,8 +7802,7 @@ SELECT 'manufacturing_123',
           }
         ],
         "description": "Класс объектов Предприятия и объекты добывающей и обрабатывающей промышленности",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -7854,7 +7848,7 @@ SELECT 'authorityservice_123',
         "readOnly": true,
         "tableName": "authorityservice_123",
         "originName": "authorityservice_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -8173,8 +8167,7 @@ SELECT 'authorityservice_123',
           }
         ],
         "description": "Класс объектов Прочие объекты обслуживания",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -8270,7 +8263,7 @@ SELECT 'sport_123',
         "readOnly": true,
         "tableName": "sport_123",
         "originName": "sport_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -8293,7 +8286,7 @@ SELECT 'sport_123',
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
+                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
                 "value": "602010301"
               },
               {
@@ -8553,8 +8546,7 @@ SELECT 'sport_123',
           }
         ],
         "description": "Класс объектов Объекты физкультурного и спортивного назначения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -8594,7 +8586,7 @@ SELECT 'naturalriskzone_123',
         "readOnly": true,
         "tableName": "naturalriskzone_123",
         "originName": "naturalriskzone_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -8850,8 +8842,7 @@ SELECT 'naturalriskzone_123',
           }
         ],
         "description": "Класс объектов Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone_123');
 
@@ -8864,7 +8855,7 @@ SELECT 'natureprotectarea_123',
         "readOnly": true,
         "tableName": "natureprotectarea_123",
         "originName": "natureprotectarea_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -9024,8 +9015,7 @@ SELECT 'natureprotectarea_123',
           }
         ],
         "description": "Класс объектов Особо охраняемые природные территории",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -9058,7 +9048,7 @@ SELECT 'gasfacility_123',
         "readOnly": true,
         "tableName": "gasfacility_123",
         "originName": "gasfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -9331,8 +9321,7 @@ SELECT 'gasfacility_123',
           }
         ],
         "description": "Класс объектов Объекты добычи и транспортировки газа",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -9363,7 +9352,7 @@ SELECT 'gasfacility_point_123',
   "title": "Объекты добычи и транспортировки газа",
   "styleName": "gasfacility_point_123",
   "tableName": "gasfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -9739,7 +9728,7 @@ SELECT 'publictransportobj_123',
   "title": "Объекты автомобильного пассажирского транспорта",
   "styleName": "publictransportobj_123",
   "tableName": "publictransportobj_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -9942,7 +9931,7 @@ SELECT 'thermalfacility_123',
         "readOnly": true,
         "tableName": "thermalfacility_123",
         "originName": "thermalfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -10227,8 +10216,7 @@ SELECT 'thermalfacility_123',
           }
         ],
         "description": "Класс объектов Объекты теплоснабжения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -10268,7 +10256,7 @@ SELECT 'envmonitoring_123',
         "readOnly": true,
         "tableName": "envmonitoring_123",
         "originName": "envmonitoring_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
         {
             "name": "ruleid",
@@ -10421,8 +10409,7 @@ SELECT 'envmonitoring_123',
           }
         ],
         "description": "Класс объектов Объекты государственной системы наблюдений за состоянием окружающей среды",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -10453,7 +10440,7 @@ SELECT 'thermalfacility_point_123',
   "title": "Объекты теплоснабжения",
   "styleName": "thermalfacility_point_123",
   "tableName": "thermalfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -10824,7 +10811,7 @@ SELECT 'road_line_123',
   "title": "Автомобильные дороги",
   "styleName": "road_line_123",
   "tableName": "road_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -11307,7 +11294,7 @@ SELECT 'telecomfacility_123',
         "readOnly": true,
         "tableName": "telecomfacility_123",
         "originName": "telecomfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -11577,8 +11564,7 @@ SELECT 'telecomfacility_123',
           }
         ],
         "description": "Класс объектов Объекты связи",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -11654,7 +11640,7 @@ SELECT 'customcontrol_123',
         "readOnly": true,
         "tableName": "customcontrol_123",
         "originName": "customcontrol_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -11890,8 +11876,7 @@ SELECT 'customcontrol_123',
           }
         ],
         "description": "Класс объектов Пункт пропуска через Государственную границу",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -11923,7 +11908,7 @@ SELECT 'education_123',
         "readOnly": true,
         "tableName": "education_123",
         "originName": "education_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -11937,8 +11922,7 @@ SELECT 'education_123',
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
-            "valueType": "STRING", 
-            "sequenceNumber": 1
+            "valueType": "STRING"
           },
           {
             "name": "classid",
@@ -11970,22 +11954,19 @@ SELECT 'education_123',
                 "title": "Научная организация и ее структурные подразделения",
                 "value": "602010106"
               }
-            ],
-            "sequenceNumber": 2
+            ]
           },
           {
             "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
-            "valueType": "STRING", 
-            "sequenceNumber": 3
+            "valueType": "STRING"
           },
           {
             "name": "name",
             "title": "Наименование организации",
             "required": true,
             "minLength": 1,
-            "valueType": "STRING", 
-            "sequenceNumber": 4
+            "valueType": "STRING"
           },
           {
             "name": "oktmo",
@@ -11994,20 +11975,17 @@ SELECT 'education_123',
             "required": true,
             "maxLength": 11,
             "minLength": 8,
-            "valueType": "STRING",
-            "sequenceNumber": 5
+            "valueType": "STRING"
           },
           {
             "name": "address",
             "title": "Местоположение, адресное описание",
-            "valueType": "STRING", 
-            "sequenceNumber": 6
+            "valueType": "STRING"
           },
           {
             "name": "name_unit",
             "title": "Наименование территориально обособленного структурного подразделения в составе организации",
-            "valueType": "STRING", 
-            "sequenceNumber": 7
+            "valueType": "STRING"
           },
           {
             "name": "edu_stype",
@@ -12034,8 +12012,7 @@ SELECT 'education_123',
                 "title": "Среднего общего образования",
                 "value": "5"
               }
-            ],
-            "sequenceNumber": 8
+            ]
           },
           {
             "name": "edu_sdtype",
@@ -12054,8 +12031,7 @@ SELECT 'education_123',
                 "title": "Образовательная организация высшего образования",
                 "value": "3"
               }
-            ],
-            "sequenceNumber": 8
+            ]
           },
           {
             "name": "sci_type",
@@ -12082,8 +12058,7 @@ SELECT 'education_123',
                 "title": "Центры коллективного пользования научным оборудованием",
                 "value": "5"
               }
-            ],
-            "sequenceNumber": 10
+            ]
           },
           {
             "name": "prg_type",
@@ -12102,8 +12077,7 @@ SELECT 'education_123',
                 "title": "Реализующая программы дошкольного образования и программы профессионального обучения",
                 "value": "3"
               }
-            ],
-            "sequenceNumber": 11
+            ]
           },
           {
             "name": "edu_tunit",
@@ -12206,51 +12180,43 @@ SELECT 'education_123',
                 "title": "Здание или сооружение иного назначения",
                 "value": "24"
               }
-            ],
-            "sequenceNumber": 12
+            ]
           },
           {
             "name": "capacity",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
-            "valueType": "INT",
-            "sequenceNumber": 13
+            "valueType": "INT"
           },
           {
             "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
-            "valueType": "DOUBLE",            
-            "fractionDigits": 2,
-            "sequenceNumber": 14
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
           },
           {
             "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
-            "valueType": "INT",
-            "sequenceNumber": 15
+            "valueType": "INT"
           },
           {
             "name": "function",
             "title": "Назначение объекта",
-            "valueType": "STRING", 
-            "sequenceNumber": 16
+            "valueType": "STRING"
           },
           {
             "name": "event_time",
             "title": "Количество рабочих мест, единиц",
-            "valueType": "INT",
-            "sequenceNumber": 17
+            "valueType": "INT"
           },
           {
             "name": "source",
             "title": "Источник данных",
-            "valueType": "STRING", 
-            "sequenceNumber": 18
+            "valueType": "STRING"
           },
           {
             "name": "note",
             "title": "Примечание",
-            "valueType": "STRING", 
-            "sequenceNumber": 19
+            "valueType": "STRING"
           },
           {
             "name": "status",
@@ -12274,8 +12240,7 @@ SELECT 'education_123',
                 "title": "Планируемый к ликвидации",
                 "value": "4"
               }
-            ],
-            "sequenceNumber": 20
+            ]
           },
           {
             "name": "reg_status",
@@ -12307,8 +12272,7 @@ SELECT 'education_123',
                 "title": "Иное значение",
                 "value": "6"
               }
-            ],
-            "sequenceNumber": 21
+            ]
           },
           {
             "name": "shape",
@@ -12316,13 +12280,11 @@ SELECT 'education_123',
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
-            ],
-            "sequenceNumber": 22
+            ]
           }
         ],
         "description": "Класс объектов Объекты образования и науки",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -12391,7 +12353,7 @@ SELECT 'publictransportline_line_123',
   "title": "Линии общественного пассажирского транспорта",
   "styleName": "publictransportline_line_123",
   "tableName": "publictransportline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -12653,7 +12615,7 @@ SELECT 'telecomfacility_point_123',
   "title": "Объекты связи",
   "styleName": "telecomfacility_point_123",
   "tableName": "telecomfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -13012,7 +12974,7 @@ SELECT 'resort_123',
         "readOnly": true,
         "tableName": "resort_123",
         "originName": "resort_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -13212,8 +13174,7 @@ SELECT 'resort_123',
           }
         ],
         "description": "Класс объектов Объекты санаторно-курортного назначения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -13245,7 +13206,7 @@ SELECT 'servicefacility_123',
         "readOnly": true,
         "tableName": "servicefacility_123",
         "originName": "servicefacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -13604,8 +13565,7 @@ SELECT 'servicefacility_123',
           }
         ],
         "description": "Класс объектов Прочие объекты, связанные с производственной деятельностью",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -13637,7 +13597,7 @@ SELECT 'admenp_123',
         "readOnly": true,
         "tableName": "admenp_123",
         "originName": "admenp_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -13993,8 +13953,7 @@ SELECT 'admenp_123',
                 "value": "70"
               }
             ],
-            "fractionDigits": 2,
-            "sequenceNumber": 6
+            "fractionDigits": 2
           },
           {
             "name": "population",
@@ -14035,8 +13994,7 @@ SELECT 'admenp_123',
           }
         ],
         "description": "Класс объектов Территория населенного пункта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admenp_123');
 
@@ -14049,7 +14007,7 @@ SELECT 'transportobj_123',
         "readOnly": true,
         "tableName": "transportobj_123",
         "originName": "transportobj_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -14293,8 +14251,7 @@ SELECT 'transportobj_123',
           }
         ],
         "description": "Класс объектов Искусственные дорожные сооружения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -14350,7 +14307,7 @@ SELECT 'transportobj_line_123',
         "readOnly": true,
         "tableName": "transportobj_line_123",
         "originName": "transportobj_line_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -14594,8 +14551,7 @@ SELECT 'transportobj_line_123',
           }
         ],
         "description": "Класс объектов Искусственные дорожные сооружения",
-        "geometryType": "MultiLineString",
-        "customRuleFunction": null
+        "geometryType": "MultiLineString"
       }',
        'var errors = [];
 
@@ -14650,7 +14606,7 @@ SELECT 'transportobj_point_123',
   "title": "Искусственные дорожные сооружения",
   "styleName": "transportobj_point_123",
   "tableName": "transportobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -14953,7 +14909,7 @@ SELECT 'wastefacility_123',
         "readOnly": true,
         "tableName": "wastefacility_123",
         "originName": "wastefacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -15373,8 +15329,7 @@ SELECT 'wastefacility_123',
           }
         ],
         "description": "Класс объектов Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -15446,7 +15401,7 @@ SELECT 'waterfacility_123',
         "readOnly": true,
         "tableName": "waterfacility_123",
         "originName": "waterfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -15684,8 +15639,7 @@ SELECT 'waterfacility_123',
           }
         ],
         "description": "Класс объектов Объекты водоснабжения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -15725,7 +15679,7 @@ SELECT 'otherobject_123',
         "readOnly": true,
         "tableName": "otherobject_123",
         "originName": "otherobject_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -15939,8 +15893,7 @@ SELECT 'otherobject_123',
           }
         ],
         "description": "Класс объектов Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -15971,7 +15924,7 @@ SELECT 'forest_123',
   "title": "Леса",
   "styleName": "forest_123",
   "tableName": "forest_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -16238,7 +16191,7 @@ SELECT 'education_point_123',
   "title": "Объекты образования и науки",
   "styleName": "education_point_123",
   "tableName": "education_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -16775,7 +16728,7 @@ SELECT 'electricpowerstation_123',
         "readOnly": true,
         "tableName": "electricpowerstation_123",
         "originName": "electricpowerstation_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -17191,8 +17144,7 @@ SELECT 'electricpowerstation_123',
           }
         ],
         "description": "Класс объектов Электростанции",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17224,7 +17176,7 @@ SELECT 'publictransportservice_123',
         "readOnly": true,
         "tableName": "publictransportservice_123",
         "originName": "publictransportservice_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -17440,8 +17392,7 @@ SELECT 'publictransportservice_123',
           }
         ],
         "description": "Класс объектов Объекты хранения и обслуживания общественного пассажирского транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17473,7 +17424,7 @@ SELECT 'airtransportobj_123',
         "readOnly": true,
         "tableName": "airtransportobj_123",
         "originName": "airtransportobj_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -17778,8 +17729,7 @@ SELECT 'airtransportobj_123',
           }
         ],
         "description": "Класс объектов Объекты воздушного транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -17816,7 +17766,7 @@ SELECT 'electricpowerstation_point_123',
   "title": "Электростанции",
   "styleName": "electricpowerstation_point_123",
   "tableName": "electricpowerstation_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -18327,7 +18277,7 @@ SELECT 'autoservice_123',
         "readOnly": true,
         "tableName": "autoservice_123",
         "originName": "autoservice_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -18588,8 +18538,7 @@ SELECT 'autoservice_123',
           }
         ],
         "description": "Класс объектов Объекты обслуживания и хранения автомобильного транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -18676,7 +18625,7 @@ SELECT 'hydraulicstructures_line_123',
   "title": "Гидротехнические сооружения",
   "styleName": "hydraulicstructures_line_123",
   "tableName": "hydraulicstructures_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -18986,7 +18935,7 @@ SELECT 'gaspipeline_line_123',
   "title": "Распределительный трубопровода для транспортировки газа",
   "styleName": "gaspipeline_line_123",
   "tableName": "gaspipeline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -19109,7 +19058,7 @@ SELECT 'gaspipeline_line_123',
           "value": "1"
         },
         {
-          "title": "I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))",
+          "title": "I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))",
           "value": "2"
         },
         {
@@ -19298,7 +19247,7 @@ SELECT 'street_line_123',
   "title": "Улично-дорожная сеть городского поселения",
   "styleName": "street_line_123",
   "tableName": "street_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -19640,7 +19589,7 @@ SELECT 'hydraulicstructures_point_123',
   "title": "Гидротехнические сооружения",
   "styleName": "hydraulicstructures_point_123",
   "tableName": "hydraulicstructures_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -19950,7 +19899,7 @@ SELECT 'health_123',
         "readOnly": true,
         "tableName": "health_123",
         "originName": "health_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -20151,7 +20100,7 @@ SELECT 'health_123',
                 "value": "3"
               },
               {
-                "title": "Медицинский отряд (в т. ч. специального назначения)",
+                "title": "Медицинский отряд (в т. ч. специального назначения)",
                 "value": "4"
               }
             ]
@@ -20257,7 +20206,7 @@ SELECT 'health_123',
           },
           {
             "name": "wrk_count",
-            "title": "Количество рабочих мест, единиц",            
+            "title": "Количество рабочих мест, единиц",
             "valueType": "INT"
           },
           {
@@ -20347,8 +20296,7 @@ SELECT 'health_123',
           }
         ],
         "description": "Класс объектов Объекты здравоохранения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -20489,7 +20437,7 @@ SELECT 'customcontrol_point_123',
   "title": "Пункт пропуска через Государственную границу",
   "styleName": "customcontrol_point_123",
   "tableName": "customcontrol_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -20751,7 +20699,7 @@ SELECT 'health_point_123',
   "title": "Объекты здравоохранения",
   "styleName": "health_point_123",
   "tableName": "health_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -21330,7 +21278,7 @@ SELECT 'railwayline_line_123',
   "title": "Железнодорожные пути",
   "styleName": "railwayline_line_123",
   "tableName": "railwayline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -21742,7 +21690,7 @@ SELECT 'pipeline_line_123',
   "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
   "styleName": "pipeline_line_123",
   "tableName": "pipeline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -22006,7 +21954,7 @@ SELECT 'cemetery_point_123',
   "title": "Места погребения",
   "styleName": "cemetery_point_123",
   "tableName": "cemetery_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -22320,7 +22268,7 @@ SELECT 'cemetery_123',
         "readOnly": true,
         "tableName": "cemetery_123",
         "originName": "cemetery_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -22574,8 +22522,7 @@ SELECT 'cemetery_123',
           }
         ],
         "description": "Класс объектов Места погребения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -22639,7 +22586,7 @@ SELECT 'investmentzone_123',
         "readOnly": true,
         "tableName": "investmentzone_123",
         "originName": "investmentzone_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -22825,8 +22772,7 @@ SELECT 'investmentzone_123',
           }
         ],
         "description": "Класс объектов Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -22859,7 +22805,7 @@ SELECT 'watertransportobj_123',
         "readOnly": true,
         "tableName": "watertransportobj_123",
         "originName": "watertransportobj_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -23181,8 +23127,7 @@ SELECT 'watertransportobj_123',
           }
         ],
         "description": "Класс объектов Объекты водного транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -23261,7 +23206,7 @@ SELECT 'electricline_line_123',
   "title": "Линии электропередачи (ЛЭП)",
   "styleName": "electricline_line_123",
   "tableName": "electricline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -23689,7 +23634,7 @@ SELECT 'watertransportobj_point_123',
   "title": "Объекты водного транспорта",
   "styleName": "watertransportobj_point_123",
   "tableName": "watertransportobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -24115,7 +24060,7 @@ SELECT 'historicsettlement_123',
   "title": "Границы территории исторического поселения",
   "styleName": "historicsettlement_123",
   "tableName": "historicsettlement_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -24199,7 +24144,7 @@ SELECT 'public_123',
         "readOnly": true,
         "tableName": "public_123",
         "originName": "public_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -24490,8 +24435,7 @@ SELECT 'public_123',
           }
         ],
         "description": "Класс объектов Прочие объекты обслуживания",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -24555,7 +24499,7 @@ SELECT 'sewerfacility_123',
         "readOnly": true,
         "tableName": "sewerfacility_123",
         "originName": "sewerfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -24792,8 +24736,7 @@ SELECT 'sewerfacility_123',
           }
         ],
         "description": "Класс объектов Объекты водоотведения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -24832,7 +24775,7 @@ SELECT 'functionalzone_123',
   "title": "Функциональные зоны",
   "styleName": "functionalzone_123",
   "tableName": "functionalzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -25550,7 +25493,7 @@ SELECT 'technoriskarea_123',
         "readOnly": true,
         "tableName": "technoriskarea_123",
         "originName": "technoriskarea_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -25712,8 +25655,7 @@ SELECT 'technoriskarea_123',
                 "value": "6"
               }
             ],
-            "fractionDigits": 2,
-            "sequenceNumber": 6
+            "fractionDigits": 2
           },
           {
             "name": "other",
@@ -25736,8 +25678,7 @@ SELECT 'technoriskarea_123',
           }
         ],
         "description": "Класс объектов Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea_123');
 
@@ -25749,7 +25690,7 @@ SELECT 'coastalprotectionzone_123',
   "title": "Прибрежные защитные полосы",
   "styleName": "coastalprotectionzone_123",
   "tableName": "coastalprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -25876,7 +25817,7 @@ SELECT 'publictransportstops_123',
         "readOnly": true,
         "tableName": "publictransportstops_123",
         "originName": "publictransportstops_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -26141,8 +26082,7 @@ SELECT 'publictransportstops_123',
           }
         ],
         "description": "Класс объектов Остановочные пункты общественного пассажирского транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -26182,7 +26122,7 @@ SELECT 'hazardarea_123',
         "readOnly": true,
         "tableName": "hazardarea_123",
         "originName": "hazardarea_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -26226,8 +26166,7 @@ SELECT 'hazardarea_123',
           }
         ],
         "description": "Класс объектов Зона экстренного оповещения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hazardarea_123');
 
@@ -26239,7 +26178,7 @@ SELECT 'publictransportstops_point_123',
   "title": "Остановочные пункты общественного пассажирского транспорта",
   "styleName": "publictransportstops_point_123",
   "tableName": "publictransportstops_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -26546,7 +26485,7 @@ SELECT 'otherobject_point_123',
   "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
   "styleName": "otherobject_point_123",
   "tableName": "otherobject_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -26838,7 +26777,7 @@ SELECT 'resortarea_123',
         "readOnly": true,
         "tableName": "resortarea_123",
         "originName": "resortarea_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -26975,8 +26914,7 @@ SELECT 'resortarea_123',
           }
         ],
         "description": "Класс объектов Лечебно-оздоровительные местности и курорты",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -27005,7 +26943,7 @@ SELECT 'social_123',
         "readOnly": true,
         "tableName": "social_123",
         "originName": "social_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -27339,8 +27277,7 @@ SELECT 'social_123',
           }
         ],
         "description": "Класс объектов Объекты социального обслуживания",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -27428,7 +27365,7 @@ SELECT 'agriculture_123',
         "readOnly": true,
         "tableName": "agriculture_123",
         "originName": "agriculture_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -27929,8 +27866,7 @@ SELECT 'agriculture_123',
           }
         ],
         "description": "Класс объектов Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -27961,7 +27897,7 @@ SELECT 'social_point_123',
   "title": "Объекты социального обслуживания",
   "styleName": "social_point_123",
   "tableName": "social_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -28449,7 +28385,7 @@ SELECT 'agriculture_point_123',
   "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
   "styleName": "agriculture_point_123",
   "tableName": "agriculture_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -29082,7 +29018,7 @@ SELECT 'wildlifeprotection_123',
         "readOnly": true,
         "tableName": "wildlifeprotection_123",
         "originName": "wildlifeprotection_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -29260,8 +29196,7 @@ SELECT 'wildlifeprotection_123',
           }
         ],
         "description": "Класс объектов Объекты охраны животного мира",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -29292,7 +29227,7 @@ SELECT 'heritagearea_123',
   "title": "Границы территорий объектов культурного наследия и историко-культурных заповедников",
   "styleName": "heritagearea_123",
   "tableName": "heritagearea_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -29469,7 +29404,7 @@ SELECT 'mineraldep_123',
         "readOnly": true,
         "tableName": "mineraldep_123",
         "originName": "mineraldep_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -29680,8 +29615,7 @@ SELECT 'mineraldep_123',
           }
         ],
         "description": "Класс объектов Месторождения и проявления полезных ископаемых",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -29713,7 +29647,7 @@ SELECT 'transplogisticobj_123',
         "readOnly": true,
         "tableName": "transplogisticobj_123",
         "originName": "transplogisticobj_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -29876,8 +29810,7 @@ SELECT 'transplogisticobj_123',
           }
         ],
         "description": "Класс объектов Комплексные объекты транспортной инфраструктуры",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -29908,7 +29841,7 @@ SELECT 'heritageprotectionzone_123',
   "title": "Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
   "styleName": "heritageprotectionzone_123",
   "tableName": "heritageprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -30055,7 +29988,7 @@ SELECT 'engprotectionzone_123',
   "title": "Охранная зона инженерных коммуникаций",
   "styleName": "engprotectionzone_123",
   "tableName": "engprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -30211,7 +30144,7 @@ SELECT 'foreshore_123',
   "title": "Береговые полосы",
   "styleName": "foreshore_123",
   "tableName": "foreshore_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -30338,7 +30271,7 @@ SELECT 'transpprotectionzone_123',
   "title": "Охранная зона транспортных коммуникаций",
   "styleName": "transpprotectionzone_123",
   "tableName": "transpprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -30478,7 +30411,7 @@ SELECT 'recreation_123',
         "readOnly": true,
         "tableName": "recreation_123",
         "originName": "recreation_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -30831,8 +30764,7 @@ SELECT 'recreation_123',
           }
         ],
         "description": "Класс объектов Объекты отдыха и туризма",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -30937,7 +30869,7 @@ SELECT 'natureprotectionzone_123',
   "title": "Охранная зона особо охраняемых природных территорий",
   "styleName": "natureprotectionzone_123",
   "tableName": "natureprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -31103,7 +31035,7 @@ SELECT 'traditionalarea_123',
   "title": "Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ",
   "styleName": "traditionalarea_123",
   "tableName": "traditionalarea_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -31238,7 +31170,7 @@ SELECT 'specialeconomicarea_123',
   "title": "Особые экономические зоны",
   "styleName": "specialeconomicarea_123",
   "tableName": "specialeconomicarea_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -31327,8 +31259,7 @@ SELECT 'specialeconomicarea_123',
     {
       "name": "event_time",
       "title": "Срок реализации",
-      "valueType": "INT",
-      "whiteSpace": "collapse"
+      "valueType": "INT"
     },
     {
       "name": "source",
@@ -31444,7 +31375,7 @@ SELECT 'emergencyprotectionobj_123',
         "readOnly": true,
         "tableName": "emergencyprotectionobj_123",
         "originName": "emergencyprotectionobj_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -31763,8 +31694,7 @@ SELECT 'emergencyprotectionobj_123',
           }
         ],
         "description": "Класс объектов Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -31852,7 +31782,7 @@ SELECT 'electrictransformer_123',
         "readOnly": true,
         "tableName": "electrictransformer_123",
         "originName": "electrictransformer_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -31875,11 +31805,11 @@ SELECT 'electrictransformer_123',
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Электрическая подстанция 1150 кВ",
+                "title": "Электрическая подстанция 1150 кВ",
                 "value": "602040201"
               },
               {
-                "title": "Электрическая подстанция 800 кВ",
+                "title": "Электрическая подстанция 800 кВ",
                 "value": "602040202"
               },
               {
@@ -31887,55 +31817,55 @@ SELECT 'electrictransformer_123',
                 "value": "602040203"
               },
               {
-                "title": "Электрическая подстанция 600 кВ",
+                "title": "Электрическая подстанция 600 кВ",
                 "value": "602040204"
               },
               {
-                "title": "Электрическая подстанция 500 кВ",
+                "title": "Электрическая подстанция 500 кВ",
                 "value": "602040205"
               },
               {
-                "title": "Электрическая подстанция 400 кВ",
+                "title": "Электрическая подстанция 400 кВ",
                 "value": "602040206"
               },
               {
-                "title": "Электрическая подстанция 330 кВ",
+                "title": "Электрическая подстанция 330 кВ",
                 "value": "602040207"
               },
               {
-                "title": "Электрическая подстанция 300 кВ",
+                "title": "Электрическая подстанция 300 кВ",
                 "value": "602040208"
               },
               {
-                "title": "Электрическая подстанция 220 кВ",
+                "title": "Электрическая подстанция 220 кВ",
                 "value": "602040209"
               },
               {
-                "title": "Электрическая подстанция 150 кВ",
+                "title": "Электрическая подстанция 150 кВ",
                 "value": "602040210"
               },
               {
-                "title": "Электрическая подстанция 110 кВ",
+                "title": "Электрическая подстанция 110 кВ",
                 "value": "602040211"
               },
               {
-                "title": "Электрическая подстанция 60 кВ",
+                "title": "Электрическая подстанция 60 кВ",
                 "value": "602040212"
               },
               {
-                "title": "Электрическая подстанция 35 кВ",
+                "title": "Электрическая подстанция 35 кВ",
                 "value": "602040213"
               },
               {
-                "title": "Электрическая подстанция 20 кВ",
+                "title": "Электрическая подстанция 20 кВ",
                 "value": "602040214"
               },
               {
-                "title": "Электрическая подстанция 10 кВ",
+                "title": "Электрическая подстанция 10 кВ",
                 "value": "602040215"
               },
               {
-                "title": "Электрическая подстанция 6 кВ",
+                "title": "Электрическая подстанция 6 кВ",
                 "value": "602040216"
               },
               {
@@ -31947,7 +31877,7 @@ SELECT 'electrictransformer_123',
                 "value": "602040218"
               },
               {
-                "title": "Электрическая подстанция 400 кВ преобразовательная",
+                "title": "Электрическая подстанция 400 кВ преобразовательная",
                 "value": "602040221"
               },
               {
@@ -32218,8 +32148,7 @@ SELECT 'electrictransformer_123',
           }
         ],
         "description": "Класс объектов Электрические подстанции",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer_123');
 
@@ -32232,7 +32161,7 @@ SELECT 'railwayfacility_123',
         "readOnly": true,
         "tableName": "railwayfacility_123",
         "originName": "railwayfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -32585,8 +32514,7 @@ SELECT 'railwayfacility_123',
           }
         ],
         "description": "Класс объектов Объекты железнодорожного транспорта",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -32642,7 +32570,7 @@ SELECT 'admemo_123',
         "readOnly": true,
         "tableName": "admemo_123",
         "originName": "admemo_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -32746,8 +32674,7 @@ SELECT 'admemo_123',
           }
         ],
         "description": "Класс объектов Территория муниципального образования",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admemo_123');
 
@@ -32760,7 +32687,7 @@ SELECT 'oilfacility_123',
         "readOnly": true,
         "tableName": "oilfacility_123",
         "originName": "oilfacility_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -33024,8 +32951,7 @@ SELECT 'oilfacility_123',
           }
         ],
         "description": "Класс объектов Объекты добычи и транспортировки жидких углеводородов",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -33056,7 +32982,7 @@ SELECT 'emergencyprotectionobj_point_123',
   "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
   "styleName": "emergencyprotectionobj_point_123",
   "tableName": "emergencyprotectionobj_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -33491,7 +33417,7 @@ SELECT 'manufacturing_point_123',
   "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
   "styleName": "manufacturing_point_123",
   "tableName": "manufacturing_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -33937,7 +33863,7 @@ SELECT 'authorityservice_point_123',
   "title": "Прочие объекты обслуживания",
   "styleName": "authorityservice_point_123",
   "tableName": "authorityservice_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -34384,7 +34310,7 @@ SELECT 'sport_point_123',
   "title": "Объекты физкультурного и спортивного назначения",
   "styleName": "sport_point_123",
   "tableName": "sport_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -34400,7 +34326,7 @@ SELECT 'sport_point_123',
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
+          "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
           "value": "602010301"
         },
         {
@@ -34785,7 +34711,7 @@ SELECT 'recreation_point_123',
   "title": "Объекты отдыха и туризма",
   "styleName": "recreation_point_123",
   "tableName": "recreation_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -35302,7 +35228,7 @@ SELECT 'public_point_123',
   "title": "Общественные пространства",
   "styleName": "public_point_123",
   "tableName": "public_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -35704,7 +35630,7 @@ SELECT 'waterprotectionzone_123',
   "title": "Водоохранные зоны",
   "styleName": "waterprotectionzone_123",
   "tableName": "waterprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -35830,7 +35756,7 @@ SELECT 'envdanger_point_123',
   "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
   "styleName": "envdanger_point_123",
   "tableName": "envdanger_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -35936,7 +35862,7 @@ SELECT 'prison_123',
         "readOnly": true,
         "tableName": "prison_123",
         "originName": "prison_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -36123,8 +36049,7 @@ SELECT 'prison_123',
           }
         ],
         "description": "Класс объектов Объекты ФСИН России, иные объекты федерального значения",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }',
        'var errors = [];
 
@@ -36171,7 +36096,7 @@ SELECT 'greeneryplanting_123',
   "title": "Территории зеленого фонда городских и сельских поселений ",
   "styleName": "greeneryplanting_123",
   "tableName": "greeneryplanting_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -36335,7 +36260,7 @@ SELECT 'forestpark_123',
   "title": "Лесопарковый зеленый пояс",
   "styleName": "forestpark_123",
   "tableName": "forestpark_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -36443,7 +36368,7 @@ SELECT 'oilfacility_point_123',
   "title": "Объекты добычи и транспортировки жидких углеводородов",
   "styleName": "oilfacility_point_123",
   "tableName": "oilfacility_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -36776,7 +36701,7 @@ SELECT 'transpsanitarygapzone_123',
   "title": "Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
   "styleName": "transpsanitarygapzone_123",
   "tableName": "transpsanitarygapzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -36923,7 +36848,7 @@ SELECT 'sanitaryprotectionzone_123',
   "title": "Санитарно-защитная зона",
   "styleName": "sanitaryprotectionzone_123",
   "tableName": "sanitaryprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -37133,7 +37058,7 @@ SELECT 'drinkwaterprotectionzone_123',
   "title": "Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
   "styleName": "drinkwaterprotectionzone_123",
   "tableName": "drinkwaterprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -37277,7 +37202,7 @@ SELECT 'admerf_123',
         "readOnly": true,
         "tableName": "admerf_123",
         "originName": "admerf_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -37332,8 +37257,7 @@ SELECT 'admerf_123',
           }
         ],
         "description": "Класс объектов Территория Российской Федерации",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admerf_123');
 
@@ -37345,7 +37269,7 @@ SELECT 'resortprotectionzone_123',
   "title": "Зоны округов санитарной (горно-санитарной) охраны",
   "styleName": "resortprotectionzone_123",
   "tableName": "resortprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -37485,7 +37409,7 @@ SELECT 'landuse_123',
         "readOnly": true,
         "tableName": "landuse_123",
         "originName": "landuse_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -37564,8 +37488,7 @@ SELECT 'landuse_123',
           }
         ],
         "description": "Класс объектов Земли по категориям",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'landuse_123');
 
@@ -37578,7 +37501,7 @@ SELECT 'mineralarea_123',
         "readOnly": true,
         "tableName": "mineralarea_123",
         "originName": "mineralarea_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -37671,8 +37594,7 @@ SELECT 'mineralarea_123',
           }
         ],
         "description": "Класс объектов Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineralarea_123');
 
@@ -37684,7 +37606,7 @@ SELECT 'engsanitarygapzone_123',
   "title": "Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций_123",
   "styleName": "engsanitarygapzone_123",
   "tableName": "engsanitarygapzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -37823,7 +37745,7 @@ SELECT 'otherzone_123',
   "title": "Иные зоны с особыми условиями использования",
   "styleName": "otherzone_123",
   "tableName": "otherzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -38035,7 +37957,7 @@ SELECT 'envdanger_123',
         "readOnly": true,
         "tableName": "envdanger_123",
         "originName": "envdanger_123",
-        "tags": ["Приказ 123"],
+        "tags": ["system", "Приказ 123"],
         "properties": [
           {
             "name": "ruleid",
@@ -38124,8 +38046,7 @@ SELECT 'envdanger_123',
           }
         ],
         "description": "Класс объектов Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
-        "geometryType": "MultiPolygon",
-        "customRuleFunction": null
+        "geometryType": "MultiPolygon"
       }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger_123');
 
@@ -38137,7 +38058,7 @@ SELECT 'streetv_line_123',
   "title": "Улично-дорожная сеть сельского населенного пункта",
   "styleName": "streetv_line_123",
   "tableName": "streetv_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -38393,7 +38314,7 @@ SELECT 'otherprotectionzone_123',
   "title": "Охранная зона иного назначения",
   "styleName": "otherprotectionzone_123",
   "tableName": "otherprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -38536,7 +38457,7 @@ SELECT 'protectionzone_123',
   "title": "Зоны охраняемых объектов",
   "styleName": "protectionzone_123",
   "tableName": "protectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -38678,7 +38599,7 @@ SELECT 'hydro_123',
   "title": "Поверхностные водные объекты",
   "styleName": "hydro_123",
   "tableName": "hydro_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -38823,7 +38744,7 @@ SELECT 'floodarea_123',
   "title": "Зоны затопления и подтопления",
   "styleName": "floodarea_123",
   "tableName": "floodarea_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39012,7 +38933,7 @@ SELECT 'areabasedevelopment_123',
   "title": "Комплексное развитие территорий",
   "styleName": "areabasedevelopment_123",
   "tableName": "areabasedevelopment_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39180,7 +39101,7 @@ SELECT 'fishprotectionzone_123',
   "title": "Рыбоохранная и рыбохозяйственная заповедная зоны",
   "styleName": "fishprotectionzone_123",
   "tableName": "fishprotectionzone_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39316,7 +39237,7 @@ SELECT 'waterways_line_123',
   "title": "Водные пути",
   "styleName": "waterways_line_123",
   "tableName": "waterways_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39499,7 +39420,7 @@ SELECT 'admborder_line_123',
   "title": "Границы единиц административно-территориального деления Российской Федерации",
   "styleName": "admborder_line_123",
   "tableName": "admborder_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39619,7 +39540,7 @@ SELECT 'hydro_line_123',
   "readOnly": true,
   "tableName": "hydro_line_123",
   "originName": "hydro_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39732,8 +39653,7 @@ SELECT 'hydro_line_123',
     }
   ],
   "description": "Класс объектов Поверхностные водные объекты",
-  "geometryType": "MultiLineString",
-  "customRuleFunction": null
+  "geometryType": "MultiLineString"
 }',
        'var errors = [];
 
@@ -39754,7 +39674,7 @@ SELECT 'sewerpipeline_line_123',
   "title": "Сети водоотведения",
   "styleName": "sewerpipeline_line_123",
   "tableName": "sewerpipeline_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -39992,7 +39912,7 @@ SELECT 'engprotectionobj_line_123',
   "title": "Объекты инженерной защиты от опасных геологических процессов",
   "styleName": "engprotectionobj_line_123",
   "tableName": "engprotectionobj_line_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -40205,7 +40125,7 @@ SELECT 'naturalriskzone_point_123',
   "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
   "styleName": "naturalriskzone_point_123",
   "tableName": "naturalriskzone_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -40482,7 +40402,7 @@ SELECT 'natureprotectarea_point_123',
   "readOnly": true,
   "styleName": "natureprotectarea_point_123",
   "tableName": "natureprotectarea_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -40690,7 +40610,7 @@ SELECT 'technoriskarea_point_123',
   "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
   "styleName": "technoriskarea_point_123",
   "tableName": "technoriskarea_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -40890,7 +40810,7 @@ SELECT 'resortarea_point_123',
   "title": "Лечебно-оздоровительные местности и курорты",
   "styleName": "resortarea_point_123",
   "tableName": "resortarea_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -41058,7 +40978,7 @@ SELECT 'prison_point_123',
   "title": "Объекты ФСИН России, иные объекты федерального значения",
   "styleName": "prison_point_123",
   "tableName": "prison_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -41304,7 +41224,7 @@ SELECT 'wildlifeprotection_point_123',
   "title": "Объекты охраны животного мира",
   "styleName": "wildlifeprotection_point_123",
   "tableName": "wildlifeprotection_point_123",
-  "tags": ["Приказ 123"],
+  "tags": ["system", "Приказ 123"],
   "properties": [
     {
       "name": "globalid",
@@ -41542,14 +41462,13 @@ SELECT 'mp_123',
           "title": "Образуемые земельные участки",
           "tableName": "mp_123",
           "originName": "mp_123",
-          "tags": ["Приказ 123"],
+          "tags": ["system", "Приказ 123"],
           "properties": [
             {
               "name": "reason",
               "title": "Вид кадастровых работ",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
               "name": "cadastralblock",
@@ -41575,8 +41494,7 @@ SELECT 'mp_123',
               "name": "address",
               "title": "Адрес (местоположение) участка",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
               "name": "category",
@@ -41622,29 +41540,25 @@ SELECT 'mp_123',
               "name": "bydoc",
               "title": "Вид разрешенного использования участка по документу",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
               "name": "objectsrealty",
               "title": "Сведения об объектах недвижимости, расположенных на образуемом земельном участке",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
               "name": "conclusion",
               "title": "Заключение кадастрового инженера",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
               "name": "note",
               "title": "Примечания",
               "required": true,
-              "maxLength": 4000,
-              "valueType": "STRING"
+              "valueType": "TEXT"
             },
             {
             "name": "shape",
@@ -41663,7 +41577,6 @@ SELECT 'mp_123',
             }
           ],
           "description": "Образуемые земельные участки",
-          "geometryType": "MultiPolygon",
-          "customRuleFunction": null
+          "geometryType": "MultiPolygon"
         }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp_123');

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты водного транспорта</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130111</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130112</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130113</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130121</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130122</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130123</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130131</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130132</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130133</se:Name>
 					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Морской порт и (или) морской терминал планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130211</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130212</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130213</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130221</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130222</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130223</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130231</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130232</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130233</se:Name>
 					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130311</se:Name>
 					<se:Description>
-						<se:Title>Речной порт существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130312</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130313</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130321</se:Name>
 					<se:Description>
-						<se:Title>Речной порт существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130322</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130323</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130331</se:Name>
 					<se:Description>
-						<se:Title>Речной порт существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130332</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130333</se:Name>
 					<se:Description>
-						<se:Title>Речной порт планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной порт планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130411</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130412</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130413</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130421</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130422</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130423</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130431</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130432</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130433</se:Name>
 					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект инфраструктуры внутренних водных путей планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130511</se:Name>
 					<se:Description>
-						<se:Title>Причал существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130512</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130513</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130514</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130521</se:Name>
 					<se:Description>
-						<se:Title>Причал существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130522</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130523</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130524</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130531</se:Name>
 					<se:Description>
-						<se:Title>Причал существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Причал существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130532</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130533</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130534</se:Name>
 					<se:Description>
-						<se:Title>Причал планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Причал планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130611</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1040,8 +1041,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130612</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1061,8 +1062,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130613</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1082,8 +1083,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130614</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1103,8 +1104,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130621</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1124,8 +1125,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130622</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1145,8 +1146,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130623</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1166,8 +1167,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130624</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1187,8 +1188,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130631</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1208,8 +1209,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130632</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1229,8 +1230,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130633</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1250,8 +1251,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130634</se:Name>
 					<se:Description>
-						<se:Title>Паромная переправа планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Паромная переправа планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1271,8 +1272,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130711</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1292,8 +1293,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130712</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1313,8 +1314,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130713</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1334,8 +1335,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130714</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1355,8 +1356,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130721</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1376,8 +1377,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130722</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1397,8 +1398,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130723</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1418,8 +1419,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130724</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1439,8 +1440,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130731</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1460,8 +1461,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130732</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1481,8 +1482,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130733</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1502,8 +1503,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130734</se:Name>
 					<se:Description>
-						<se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Место стоянки маломерных, спортивных парусных и прогулочных судов планируемое к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1523,8 +1524,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130811</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1544,8 +1545,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130812</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1565,8 +1566,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130813</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1586,8 +1587,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130821</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1607,8 +1608,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130822</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1628,8 +1629,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130823</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1649,8 +1650,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130831</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1670,8 +1671,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130832</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1691,8 +1692,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130833</se:Name>
 					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1712,8 +1713,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130911</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1733,8 +1734,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130912</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1754,8 +1755,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130913</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1775,8 +1776,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130921</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1796,8 +1797,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130922</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1817,8 +1818,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130923</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1838,8 +1839,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130931</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1859,8 +1860,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130932</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1880,8 +1881,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203130933</se:Name>
 					<se:Description>
-						<se:Title>Наплавной мост планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Наплавной мост планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1898,12 +1899,12 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-				
-								<se:Rule>
+
+				<se:Rule>
 					<se:Name>60203131011</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1923,8 +1924,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131012</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1944,8 +1945,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131013</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1965,8 +1966,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131014</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1986,8 +1987,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131021</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2007,8 +2008,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131022</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2028,8 +2029,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131023</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2049,8 +2050,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131024</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2070,8 +2071,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131031</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2091,8 +2092,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131032</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2112,8 +2113,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131033</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2133,8 +2134,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60203131034</se:Name>
 					<se:Description>
-						<se:Title>Речной вокзал планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Речной вокзал планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2151,13 +2152,13 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-				
-				
+
+
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

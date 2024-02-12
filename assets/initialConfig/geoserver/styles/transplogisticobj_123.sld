@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60203060101</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-логистический центр существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-логистический центр существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060101</ogc:Literal>
@@ -34,10 +32,9 @@
 				<se:Rule>
 					<se:Name>60203060102</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-логистический центр планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-логистический центр планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060102</ogc:Literal>
@@ -56,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60203060103</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-логистический центр планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-логистический центр планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060103</ogc:Literal>
@@ -77,10 +73,9 @@
 				<se:Rule>
 					<se:Name>60203060104</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-логистический центр планируемый к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-логистический центр планируемый к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060104</ogc:Literal>
@@ -98,10 +93,9 @@
 				<se:Rule>
 					<se:Name>60203060201</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-пересадочный узел существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-пересадочный узел существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060201</ogc:Literal>
@@ -119,10 +113,9 @@
 				<se:Rule>
 					<se:Name>60203060202</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-пересадочный узел планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-пересадочный узел планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060202</ogc:Literal>
@@ -141,10 +134,9 @@
 				<se:Rule>
 					<se:Name>60203060203</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-пересадочный узел планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-пересадочный узел планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060203</ogc:Literal>
@@ -162,10 +154,9 @@
 				<se:Rule>
 					<se:Name>60203060204</se:Name>
 					<se:Description>
-						<se:Title>Транспортно-пересадочный узел планируемый к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Транспортно-пересадочный узел планируемый к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203060204</ogc:Literal>
@@ -183,8 +174,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

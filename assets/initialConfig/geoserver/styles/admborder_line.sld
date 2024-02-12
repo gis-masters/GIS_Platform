@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" xmlns:se="http://www.opengis.net/se" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc">
   <NamedLayer>
     <se:Name>Границы единиц административно-территориального деления Российской Федерации</se:Name>
     <UserStyle>
@@ -45,8 +49,8 @@
                   <se:Size>6</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">7 43</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">13</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">7 43</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">13</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -120,8 +124,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -166,8 +170,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -212,8 +216,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -258,8 +262,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -304,8 +308,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -350,8 +354,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 30</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -396,8 +400,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 27</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">5.5</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 27</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">5.5</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -442,8 +446,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 27</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">5.5</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 27</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">5.5</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -488,8 +492,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -505,8 +509,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -551,8 +555,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -568,8 +572,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -614,8 +618,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -631,8 +635,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -677,8 +681,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -694,8 +698,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -740,8 +744,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -757,8 +761,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -803,8 +807,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">15</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -820,8 +824,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">9</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -866,8 +870,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">17</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">17</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -883,8 +887,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">12</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">12</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -900,8 +904,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
@@ -946,8 +950,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">17</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">17</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -963,8 +967,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">12</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">12</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
@@ -980,8 +984,8 @@
                   <se:Size>4</se:Size>
                 </se:Graphic>
               </se:GraphicStroke>
-              	<se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
-           		<se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">5 40</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>

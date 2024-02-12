@@ -2,6 +2,7 @@ INSERT INTO data.schemas (name, class_rule)
 SELECT 'reestr_common_schema',
        '{
   "name": "reestr_common_schema",
+  "tags": ["system","Реестры"],
   "title": "Реестры сообщений",
   "description": "Общая схема, описывающая модель реестров. Версия 0.2",
   "readOnly": true,
@@ -22,8 +23,7 @@ SELECT 'reestr_common_schema',
     {
       "name": "description",
       "title": "Описание",
-      "valueType": "STRING",
-      "maxLength": 2000
+      "valueType": "TEXT"
     },
     {
       "name": "table_name",
@@ -71,6 +71,7 @@ INSERT INTO data.schemas (name, class_rule)
 SELECT 'reestr_incoming_schema',
        '{
   "name": "reestr_incoming_schema",
+  "tags": ["system", "Реестры"],
   "title": "Реестр входящих сообщений",
   "description": "Схема, описывающая реестр входящих сообщений. Версия 0.1",
   "readOnly": true,
@@ -155,6 +156,7 @@ INSERT INTO data.schemas (name, class_rule)
 SELECT 'reestr_outgoing_schema',
        '{
   "name": "reestr_outgoing_schema",
+  "tags": ["system", "Реестры"],
   "title": "Реестр исходящих сообщений",
   "description": "Схема, описывающая реестр исходящих сообщений. Версия 0.1",
   "readOnly": true,

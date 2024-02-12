@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Места погребения</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030111</se:Name>
 					<se:Description>
-						<se:Title>Кладбище существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030112</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030113</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030121</se:Name>
 					<se:Description>
-						<se:Title>Кладбище существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030122</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030123</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030131</se:Name>
 					<se:Description>
-						<se:Title>Кладбище существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030132</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030133</se:Name>
 					<se:Description>
-						<se:Title>Кладбище планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Кладбище планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030211</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030212</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030213</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030221</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030222</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030223</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030231</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030232</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030233</se:Name>
 					<se:Description>
-						<se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Воинское кладбище, военное мемориальное кладбище планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030311</se:Name>
 					<se:Description>
-						<se:Title>Крематорий существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030312</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030313</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030321</se:Name>
 					<se:Description>
-						<se:Title>Крематорий существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030322</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030323</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030331</se:Name>
 					<se:Description>
-						<se:Title>Крематорий существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030332</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030333</se:Name>
 					<se:Description>
-						<se:Title>Крематорий планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Крематорий планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030411</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище существующее федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище существующее федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030413</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище планируемое к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище планируемое к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030421</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище существующее регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище существующее регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030423</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище планируемое к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище планируемое к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030431</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище существующее местного значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище существующее местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205030433</se:Name>
 					<se:Description>
-						<se:Title>Историческое кладбище планируемое к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Историческое кладбище планируемое к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

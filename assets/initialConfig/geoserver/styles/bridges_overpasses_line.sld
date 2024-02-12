@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor version="1.1.0"
-                       xmlns="http://www.opengis.net/sld" 
-                       xmlns:xlink="http://www.w3.org/1999/xlink" 
-                       xmlns:se="http://www.opengis.net/se" 
-                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                       xmlns:ogc="http://www.opengis.net/ogc" 
-                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+  xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Мосты и путепроводы линейные</se:Name>
     <UserStyle>
@@ -555,7 +554,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -574,7 +574,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -616,7 +617,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -635,7 +637,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -677,7 +680,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -696,7 +700,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -738,7 +743,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -757,7 +763,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -821,7 +828,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -840,7 +848,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -882,7 +891,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -901,7 +911,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -943,7 +954,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -962,7 +974,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1004,7 +1017,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1023,7 +1037,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/storona_0_4verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1072,7 +1087,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
-         <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -1088,7 +1103,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1107,7 +1123,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1120,8 +1137,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-         <se:Rule>
+
+        <se:Rule>
           <se:Name>323-300-L</se:Name>
           <se:Description>
             <se:Title>Труба водопропускная</se:Title>
@@ -1134,7 +1151,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
-         <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -1150,7 +1167,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1169,7 +1187,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1182,7 +1201,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-300-L</se:Name>
           <se:Description>
@@ -1196,7 +1215,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
-         <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -1212,7 +1231,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1231,7 +1251,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1244,7 +1265,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-300-L</se:Name>
           <se:Description>
@@ -1258,7 +1279,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>2001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
-         <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -1274,7 +1295,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1293,7 +1315,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_mal_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1306,7 +1329,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-300-L</se:Name>
           <se:Description>
@@ -1319,7 +1342,7 @@
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:MinScaleDenominator>2501</se:MinScaleDenominator>
-         <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -1368,7 +1391,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1387,7 +1411,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1440,7 +1465,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1459,7 +1485,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1511,7 +1538,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1530,7 +1558,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1582,7 +1611,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1601,7 +1631,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1685,7 +1716,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1704,7 +1736,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1756,7 +1789,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1775,7 +1809,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1827,7 +1862,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1846,7 +1882,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1898,7 +1935,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most2.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -1917,7 +1955,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/most.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2008,7 +2047,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2027,7 +2067,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2038,9 +2079,9 @@
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>
-          </se:PointSymbolizer>    
+          </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-380-L</se:Name>
           <se:Description>
@@ -2083,7 +2124,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2102,7 +2144,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2113,9 +2156,9 @@
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>
-          </se:PointSymbolizer>    
+          </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-380-L</se:Name>
           <se:Description>
@@ -2158,7 +2201,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2177,7 +2221,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2188,9 +2233,9 @@
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>
-          </se:PointSymbolizer>    
+          </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>323-380-L</se:Name>
           <se:Description>
@@ -2233,7 +2278,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_niz.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2252,7 +2298,8 @@
               </ogc:Function>
             </se:Geometry>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/truba_vodopropusknaya_verh.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -2263,10 +2310,10 @@
                 </ogc:Function>
               </se:Rotation>
             </se:Graphic>
-          </se:PointSymbolizer>    
+          </se:PointSymbolizer>
         </se:Rule>
-        
-         <se:Rule>
+
+        <se:Rule>
           <se:Name>323-380-L</se:Name>
           <se:Description>
             <se:Title>Труба водопропускная 2 л.</se:Title>
@@ -2299,7 +2346,7 @@
               <se:SvgParameter name="stroke-dashoffset">1</se:SvgParameter>
             </se:Stroke>
             <se:PerpendicularOffset>-1.5</se:PerpendicularOffset>
-          </se:LineSymbolizer>   
+          </se:LineSymbolizer>
         </se:Rule>
 
         <se:Rule>

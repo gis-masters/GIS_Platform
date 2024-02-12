@@ -2,8 +2,8 @@ INSERT INTO data.schemas (name, class_rule)
 SELECT 'tasks_schema_v1',
        '{
   "name": "tasks_schema_v1",
+  "tags": ["system", "Задачи"],
   "title": "Схема задач",
-  "readOnly": false,
   "styleName": "tasks_schema_v1",
   "tableName": "tasks",
   "originName": "tasks",
@@ -36,11 +36,9 @@ SELECT 'tasks_schema_v1',
     {
       "name": "content_type_id",
       "title": "Вид документа",
-      "hidden": false,
       "display": "radiogroup",
       "minWidth": 300,
       "readOnly": true,
-      "required": false,
       "maxLength": 50,
       "valueType": "CHOICE",
       "enumerations": [
@@ -196,7 +194,6 @@ SELECT 'tasks_schema_v1',
       "id": "inbox_data",
       "type": "DOCUMENT",
       "title": "Настраиваемая задача. Внесение и регистрация документов в ГИСОГД РК",
-      "childOnly": false,
       "attributes": [
         {
           "name": "id",

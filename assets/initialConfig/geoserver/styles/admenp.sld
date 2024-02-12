@@ -42,7 +42,7 @@
               <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
               <se:SvgParameter name="stroke-linejoin">mitre</se:SvgParameter>
               <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
-            <se:SvgParameter name="stroke-dasharray">28 7</se:SvgParameter>
+              <se:SvgParameter name="stroke-dasharray">28 7</se:SvgParameter>
             </se:Stroke>
           </se:PolygonSymbolizer>
         </se:Rule>

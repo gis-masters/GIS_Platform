@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld" version="1.1.0"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:ogc="http://www.opengis.net/ogc"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60203040101</se:Name>
 					<se:Description>
-						<se:Title>Магистральные городские дороги существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральные городские дороги существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040101</ogc:Literal>
@@ -52,10 +50,9 @@
 				<se:Rule>
 					<se:Name>60203040102</se:Name>
 					<se:Description>
-						<se:Title>Магистральные городские дороги планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральные городские дороги планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040102</ogc:Literal>
@@ -100,10 +97,9 @@
 				<se:Rule>
 					<se:Name>60203040103</se:Name>
 					<se:Description>
-						<se:Title>Магистральные городские дороги планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральные городские дороги планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040103</ogc:Literal>
@@ -139,10 +135,9 @@
 				<se:Rule>
 					<se:Name>60203040201</se:Name>
 					<se:Description>
-						<se:Title>Магистральная дорога регулируемого движения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная дорога регулируемого движения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040201</ogc:Literal>
@@ -178,10 +173,9 @@
 				<se:Rule>
 					<se:Name>60203040202</se:Name>
 					<se:Description>
-						<se:Title>Магистральная дорога регулируемого движения планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная дорога регулируемого движения планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040202</ogc:Literal>
@@ -226,10 +220,9 @@
 				<se:Rule>
 					<se:Name>60203040203</se:Name>
 					<se:Description>
-						<se:Title>Магистральная дорога регулируемого движения планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная дорога регулируемого движения планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040203</ogc:Literal>
@@ -265,10 +258,9 @@
 				<se:Rule>
 					<se:Name>60203040301</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040301</ogc:Literal>
@@ -304,10 +296,9 @@
 				<se:Rule>
 					<se:Name>60203040302</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040302</ogc:Literal>
@@ -352,10 +343,9 @@
 				<se:Rule>
 					<se:Name>60203040303</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040303</ogc:Literal>
@@ -391,10 +381,9 @@
 				<se:Rule>
 					<se:Name>60203040401</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения регулируемого движения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения регулируемого движения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040401</ogc:Literal>
@@ -430,10 +419,9 @@
 				<se:Rule>
 					<se:Name>60203040402</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения регулируемого движения планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения регулируемого движения планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040402</ogc:Literal>
@@ -478,10 +466,9 @@
 				<se:Rule>
 					<se:Name>60203040403</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица общегородского значения регулируемого движения планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица общегородского значения регулируемого движения планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040403</ogc:Literal>
@@ -517,10 +504,9 @@
 				<se:Rule>
 					<se:Name>60203040501</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица районного значения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица районного значения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040501</ogc:Literal>
@@ -556,10 +542,9 @@
 				<se:Rule>
 					<se:Name>60203040502</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица районного значения планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица районного значения планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040502</ogc:Literal>
@@ -604,10 +589,9 @@
 				<se:Rule>
 					<se:Name>60203040503</se:Name>
 					<se:Description>
-						<se:Title>Магистральная улица районного значения планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральная улица районного значения планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040503</ogc:Literal>
@@ -643,10 +627,9 @@
 				<se:Rule>
 					<se:Name>60203040601</se:Name>
 					<se:Description>
-						<se:Title>Улицы и дороги местного значения существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Улицы и дороги местного значения существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040601</ogc:Literal>
@@ -682,10 +665,9 @@
 				<se:Rule>
 					<se:Name>60203040602</se:Name>
 					<se:Description>
-						<se:Title>Улицы и дороги местного значения планируемые к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Улицы и дороги местного значения планируемые к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040602</ogc:Literal>
@@ -730,10 +712,9 @@
 				<se:Rule>
 					<se:Name>60203040603</se:Name>
 					<se:Description>
-						<se:Title>Улицы и дороги местного значения планируемые к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Улицы и дороги местного значения планируемые к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040603</ogc:Literal>
@@ -769,10 +750,9 @@
 				<se:Rule>
 					<se:Name>60203040701</se:Name>
 					<se:Description>
-						<se:Title>Дорожка велосипедная существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дорожка велосипедная существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040701</ogc:Literal>
@@ -790,10 +770,9 @@
 				<se:Rule>
 					<se:Name>60203040702</se:Name>
 					<se:Description>
-						<se:Title>Дорожка велосипедная планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дорожка велосипедная планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040702</ogc:Literal>
@@ -812,10 +791,9 @@
 				<se:Rule>
 					<se:Name>60203040703</se:Name>
 					<se:Description>
-						<se:Title>Дорожка велосипедная планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Дорожка велосипедная планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203040703</ogc:Literal>
@@ -851,8 +829,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60601020101</se:Name>
 					<se:Description>
-						<se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60601020101</ogc:Literal>
@@ -50,10 +48,9 @@
 				<se:Rule>
 					<se:Name>60601020201</se:Name>
 					<se:Description>
-						<se:Title>Зона, подверженная риску радиоактивного загрязнения существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона, подверженная риску радиоактивного загрязнения существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60601020201</ogc:Literal>
@@ -103,10 +100,9 @@
 				<se:Rule>
 					<se:Name>60601020301</se:Name>
 					<se:Description>
-						<se:Title>Зона, подверженная риску химического заражения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона, подверженная риску химического заражения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60601020301</ogc:Literal>
@@ -156,10 +152,9 @@
 				<se:Rule>
 					<se:Name>60601020401</se:Name>
 					<se:Description>
-						<se:Title>Зона возможного катастрофического затопления (при аварии на гидродинамически опасном объекте) существующие</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона возможного катастрофического затопления (при аварии на гидродинамически опасном объекте) существующие</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60601020401</ogc:Literal>
@@ -209,10 +204,9 @@
 				<se:Rule>
 					<se:Name>60601020501</se:Name>
 					<se:Description>
-						<se:Title>Зона локального загрязнения почвы существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона локального загрязнения почвы существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60601020501</ogc:Literal>
@@ -262,8 +256,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

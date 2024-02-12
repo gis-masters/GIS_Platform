@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60102030101</se:Name>
 					<se:Description>
-						<se:Title>Муниципальный район существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Муниципальный район существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030101</ogc:Literal>
@@ -34,10 +32,9 @@
 				<se:Rule>
 					<se:Name>60102030102</se:Name>
 					<se:Description>
-						<se:Title>Муниципальный район планируемый</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Муниципальный район планируемый</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030102</ogc:Literal>
@@ -56,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60102030201</se:Name>
 					<se:Description>
-						<se:Title>Городской округ существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городской округ существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030201</ogc:Literal>
@@ -77,10 +73,9 @@
 				<se:Rule>
 					<se:Name>60102030202</se:Name>
 					<se:Description>
-						<se:Title>Городской округ планируемый</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городской округ планируемый</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030202</ogc:Literal>
@@ -99,10 +94,9 @@
 				<se:Rule>
 					<se:Name>60102030801</se:Name>
 					<se:Description>
-						<se:Title>Муниципальный округ существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Муниципальный округ существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030801</ogc:Literal>
@@ -120,10 +114,9 @@
 				<se:Rule>
 					<se:Name>60102030802</se:Name>
 					<se:Description>
-						<se:Title>Муниципальный округ планируемый</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Муниципальный округ планируемый</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030802</ogc:Literal>
@@ -142,10 +135,9 @@
 				<se:Rule>
 					<se:Name>60102030901</se:Name>
 					<se:Description>
-						<se:Title>Территория агломерации существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Территория агломерации существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030901</ogc:Literal>
@@ -163,10 +155,9 @@
 				<se:Rule>
 					<se:Name>60102030902</se:Name>
 					<se:Description>
-						<se:Title>Территория агломерации планируемая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Территория агломерации планируемая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030902</ogc:Literal>
@@ -185,10 +176,9 @@
 				<se:Rule>
 					<se:Name>60102031001</se:Name>
 					<se:Description>
-						<se:Title>Межселенная территория существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Межселенная территория существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102031001</ogc:Literal>
@@ -203,10 +193,9 @@
 				<se:Rule>
 					<se:Name>60102031002</se:Name>
 					<se:Description>
-						<se:Title>Межселенная территория планируемая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Межселенная территория планируемая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102031002</ogc:Literal>
@@ -245,10 +234,9 @@
 				<se:Rule>
 					<se:Name>60102031101</se:Name>
 					<se:Description>
-						<se:Title>Федеральная территория существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Федеральная территория существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102031101</ogc:Literal>
@@ -266,10 +254,9 @@
 				<se:Rule>
 					<se:Name>60102031102</se:Name>
 					<se:Description>
-						<se:Title>Федеральная территория планируемая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Федеральная территория планируемая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102031102</ogc:Literal>
@@ -288,10 +275,9 @@
 				<se:Rule>
 					<se:Name>60102030301</se:Name>
 					<se:Description>
-						<se:Title>Городской округ с внутригородским делением существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городской округ с внутригородским делением существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030301</ogc:Literal>
@@ -309,10 +295,9 @@
 				<se:Rule>
 					<se:Name>60102030302</se:Name>
 					<se:Description>
-						<se:Title>Городской округ с внутригородским делением планируемый</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городской округ с внутригородским делением планируемый</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030302</ogc:Literal>
@@ -331,10 +316,9 @@
 				<se:Rule>
 					<se:Name>60102030401</se:Name>
 					<se:Description>
-						<se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030401</ogc:Literal>
@@ -352,10 +336,9 @@
 				<se:Rule>
 					<se:Name>60102030402</se:Name>
 					<se:Description>
-						<se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения планируемая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутригородская территория (внутригородское муниципальное образование) города федерального значения планируемая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030402</ogc:Literal>
@@ -374,10 +357,9 @@
 				<se:Rule>
 					<se:Name>60102030501</se:Name>
 					<se:Description>
-						<se:Title>Внутригородской район существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутригородской район существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030501</ogc:Literal>
@@ -395,10 +377,9 @@
 				<se:Rule>
 					<se:Name>60102030502</se:Name>
 					<se:Description>
-						<se:Title>Внутригородской район планируемый</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Внутригородской район планируемый</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030502</ogc:Literal>
@@ -417,10 +398,9 @@
 				<se:Rule>
 					<se:Name>60102030601</se:Name>
 					<se:Description>
-						<se:Title>Городское поселение существующее</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городское поселение существующее</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030601</ogc:Literal>
@@ -438,10 +418,9 @@
 				<se:Rule>
 					<se:Name>60102030602</se:Name>
 					<se:Description>
-						<se:Title>Городское поселение планируемое</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Городское поселение планируемое</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030602</ogc:Literal>
@@ -460,10 +439,9 @@
 				<se:Rule>
 					<se:Name>60102030701</se:Name>
 					<se:Description>
-						<se:Title>Сельское поселение существующее</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Сельское поселение существующее</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030701</ogc:Literal>
@@ -481,10 +459,9 @@
 				<se:Rule>
 					<se:Name>60102030702</se:Name>
 					<se:Description>
-						<se:Title>Сельское поселение планируемое</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Сельское поселение планируемое</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60102030702</ogc:Literal>
@@ -503,8 +480,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

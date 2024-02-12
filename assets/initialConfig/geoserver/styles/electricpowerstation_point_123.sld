@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Электростанции</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010111</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010112</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010113</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010114</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010121</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010122</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010123</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010124</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010131</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010132</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010133</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010134</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидравлическая (ГЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010211</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010212</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010213</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010214</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидиции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидиции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010221</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010222</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010223</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010224</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010231</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010232</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010233</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010234</se:Name>
 					<se:Description>
-						<se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция гидроаккумулирующая (ГАЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010311</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010312</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010313</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010314</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010321</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010322</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010323</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010324</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010331</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010332</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010333</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010334</se:Name>
 					<se:Description>
-						<se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция приливная (ПЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010411</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010412</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010413</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010414</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010421</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010422</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010423</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010424</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010431</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010432</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010433</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010434</se:Name>
 					<se:Description>
-						<se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая электростанция (ТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010511</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1040,8 +1041,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010512</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1061,8 +1062,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010513</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1082,8 +1083,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010514</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1103,8 +1104,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010521</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1124,8 +1125,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010522</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1145,8 +1146,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010523</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1166,8 +1167,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010524</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1187,8 +1188,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010531</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1208,8 +1209,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010532</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1229,8 +1230,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010533</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1250,8 +1251,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010534</se:Name>
 					<se:Description>
-						<se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция тепловая конденсационная (КЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1271,8 +1272,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010611</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1292,8 +1293,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010612</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1313,8 +1314,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010613</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1334,8 +1335,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010614</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1355,8 +1356,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010621</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1376,8 +1377,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010622</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1397,8 +1398,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010623</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1418,8 +1419,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010624</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1439,8 +1440,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010631</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1460,8 +1461,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010632</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1481,8 +1482,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010633</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1502,8 +1503,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010634</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль (ТЭЦ) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1523,8 +1524,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010711</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1544,8 +1545,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010712</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1565,8 +1566,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010713</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1586,8 +1587,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010714</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1607,8 +1608,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010721</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1628,8 +1629,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010722</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1649,8 +1650,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010723</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1670,8 +1671,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010724</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1691,8 +1692,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010731</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1712,8 +1713,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010732</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1733,8 +1734,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010733</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1754,8 +1755,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010734</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная (ГТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1775,8 +1776,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010811</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1796,8 +1797,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010812</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1817,8 +1818,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010813</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1838,8 +1839,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010814</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1859,8 +1860,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010821</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1880,8 +1881,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010822</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1901,8 +1902,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010823</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1922,8 +1923,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010824</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1943,8 +1944,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010831</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1964,8 +1965,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010832</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1985,8 +1986,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010833</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2006,8 +2007,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010834</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газопоршневая (ГПЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2027,8 +2028,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010911</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2048,8 +2049,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010912</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2069,8 +2070,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010913</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2090,8 +2091,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010914</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2111,8 +2112,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010921</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2132,8 +2133,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010922</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2153,8 +2154,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010923</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2174,8 +2175,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010924</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2195,8 +2196,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010931</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2216,8 +2217,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010932</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2237,8 +2238,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010933</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2258,8 +2259,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204010934</se:Name>
 					<se:Description>
-						<se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Парогазовая электростанция (ПГЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2279,8 +2280,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011011</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2300,8 +2301,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011012</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2321,8 +2322,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011013</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2342,8 +2343,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011014</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2363,8 +2364,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011021</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2384,8 +2385,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011022</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2405,8 +2406,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011023</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2426,8 +2427,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011024</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2447,8 +2448,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011031</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2468,8 +2469,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011032</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2489,8 +2490,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011033</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2510,8 +2511,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011034</se:Name>
 					<se:Description>
-						<se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Плавучая электростанция (ПЛЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2531,8 +2532,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011111</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2552,8 +2553,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011112</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2573,8 +2574,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011113</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2594,8 +2595,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011114</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2615,8 +2616,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011121</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2636,8 +2637,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011122</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2657,8 +2658,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011123</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2678,8 +2679,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011124</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2699,8 +2700,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011131</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2720,8 +2721,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011132</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2741,8 +2742,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011133</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2762,8 +2763,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011134</se:Name>
 					<se:Description>
-						<se:Title>Атомная электростанция (АЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Атомная электростанция (АЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2783,8 +2784,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011211</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2804,8 +2805,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011212</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2825,8 +2826,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011213</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2846,8 +2847,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011214</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2867,8 +2868,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011221</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2888,8 +2889,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011222</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2909,8 +2910,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011223</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2930,8 +2931,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011224</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2951,8 +2952,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011231</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2972,8 +2973,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011232</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2993,8 +2994,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011233</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3014,8 +3015,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011234</se:Name>
 					<se:Description>
-						<se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция атомная плавучая тепловая (ПАТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3035,8 +3036,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011311</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3056,8 +3057,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011312</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3077,8 +3078,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011313</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3098,8 +3099,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011314</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3119,8 +3120,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011321</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3140,8 +3141,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011322</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3161,8 +3162,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011323</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3182,8 +3183,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011324</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3203,8 +3204,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011331</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3224,8 +3225,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011332</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3245,8 +3246,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011333</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3266,8 +3267,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011334</se:Name>
 					<se:Description>
-						<se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Теплоэлектроцентраль атомная (АТЭЦ) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3287,8 +3288,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011411</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3308,8 +3309,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011412</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3329,8 +3330,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011413</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3350,8 +3351,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011414</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3371,8 +3372,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011421</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3392,8 +3393,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011422</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3413,8 +3414,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011423</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3434,8 +3435,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011424</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3455,8 +3456,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011431</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3476,8 +3477,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011432</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3497,8 +3498,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011433</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3518,8 +3519,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011434</se:Name>
 					<se:Description>
-						<se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция дизельная (ДЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3539,8 +3540,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011511</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3560,8 +3561,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011512</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3581,8 +3582,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011513</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3602,8 +3603,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011514</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3623,8 +3624,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011521</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3644,8 +3645,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011522</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3665,8 +3666,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011523</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3686,8 +3687,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011524</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3707,8 +3708,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011531</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3728,8 +3729,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011532</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3749,8 +3750,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011533</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3770,8 +3771,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011534</se:Name>
 					<se:Description>
-						<se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Газодизельная электростанция (ГДЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3791,8 +3792,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011611</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3812,8 +3813,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011612</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3833,8 +3834,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011613</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3854,8 +3855,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011614</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3875,8 +3876,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011621</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3896,8 +3897,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011622</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3917,8 +3918,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011623</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3938,8 +3939,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011624</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3959,8 +3960,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011631</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3980,8 +3981,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011632</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4001,8 +4002,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011633</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4022,8 +4023,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011634</se:Name>
 					<se:Description>
-						<se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция геотермальная (ГеоЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4043,8 +4044,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011711</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4064,8 +4065,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011712</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4085,8 +4086,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011713</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4106,8 +4107,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011714</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4127,8 +4128,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011721</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4148,8 +4149,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011722</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4169,8 +4170,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011723</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4190,8 +4191,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011724</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4211,8 +4212,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011731</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4232,8 +4233,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011732</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4253,8 +4254,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011733</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4274,8 +4275,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011734</se:Name>
 					<se:Description>
-						<se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Геотермальная тепловая электростанция (ГеоТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4295,8 +4296,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011811</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4316,8 +4317,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011812</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4337,8 +4338,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011813</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4358,8 +4359,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011814</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4379,8 +4380,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011821</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4400,8 +4401,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011822</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4421,8 +4422,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011823</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4442,8 +4443,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011824</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4463,8 +4464,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011831</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4484,8 +4485,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011832</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4505,8 +4506,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011833</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4526,8 +4527,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011834</se:Name>
 					<se:Description>
-						<se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция ветровая (ВЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4547,8 +4548,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011911</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4568,8 +4569,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011912</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4589,8 +4590,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011913</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4610,8 +4611,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011914</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4631,8 +4632,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011921</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4652,8 +4653,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011922</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4673,8 +4674,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011923</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4694,8 +4695,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011924</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4715,8 +4716,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011931</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4736,8 +4737,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011932</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4757,8 +4758,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011933</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4778,8 +4779,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204011934</se:Name>
 					<se:Description>
-						<se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция солнечная (СЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4799,8 +4800,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012011</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4820,8 +4821,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012012</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4841,8 +4842,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012013</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4862,8 +4863,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012014</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4883,8 +4884,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012021</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4904,8 +4905,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012022</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4925,8 +4926,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012023</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4946,8 +4947,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012024</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4967,8 +4968,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012031</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4988,8 +4989,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012032</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5009,8 +5010,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012033</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5030,8 +5031,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012034</se:Name>
 					<se:Description>
-						<se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция комбинированная солнечная тепловая (КСТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5051,8 +5052,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012111</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5072,8 +5073,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012112</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5093,8 +5094,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012113</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5114,8 +5115,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012114</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5135,8 +5136,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012121</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5156,8 +5157,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012122</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5177,8 +5178,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012123</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5198,8 +5199,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012124</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5219,8 +5220,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012131</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5240,8 +5241,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012132</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5261,8 +5262,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012133</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5282,8 +5283,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012134</se:Name>
 					<se:Description>
-						<se:Title>Электростанция на биомассе планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция на биомассе планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5303,8 +5304,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012211</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5324,8 +5325,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012212</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5345,8 +5346,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012213</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5366,8 +5367,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012214</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5387,8 +5388,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012221</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5408,8 +5409,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012222</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5429,8 +5430,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012223</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5450,8 +5451,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012224</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5471,8 +5472,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012231</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5492,8 +5493,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012232</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5513,8 +5514,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012233</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5534,8 +5535,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012234</se:Name>
 					<se:Description>
-						<se:Title>Биогазовая станция (БГС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Биогазовая станция (БГС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5555,8 +5556,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012311</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5576,8 +5577,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012312</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5597,8 +5598,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012313</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5618,8 +5619,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012314</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5639,8 +5640,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012321</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5660,8 +5661,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012322</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5681,8 +5682,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012323</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5702,8 +5703,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012324</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5723,8 +5724,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012331</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5744,8 +5745,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012332</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5765,8 +5766,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012333</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5786,8 +5787,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204012334</se:Name>
 					<se:Description>
-						<se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Электростанция газотурбинная мобильная (МГТЭС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -5807,8 +5808,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты теплоснабжения</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090111</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090112</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090113</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090114</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090121</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090122</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090123</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090124</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090131</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090132</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090133</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090134</se:Name>
 					<se:Description>
-						<se:Title>Источник тепловой энергии планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Источник тепловой энергии планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090211</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090212</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090213</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090214</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090221</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090222</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090223</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090224</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090231</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090232</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090233</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090234</se:Name>
 					<se:Description>
-						<se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Центральный тепловой пункт (ЦТП) планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090311</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090312</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090313</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090314</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090321</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090322</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090323</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090324</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090331</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090332</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090333</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090334</se:Name>
 					<se:Description>
-						<se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Индивидуальный тепловой пункт (ИТП) планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090411</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090412</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090413</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090414</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090421</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090422</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090423</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090424</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090431</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) существующая местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090432</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090433</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60204090434</se:Name>
 					<se:Description>
-						<se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Тепловая перекачивающая насосная станция (ТПНС) планируемая к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

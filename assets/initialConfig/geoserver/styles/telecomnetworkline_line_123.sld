@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60204160101</se:Name>
 					<se:Description>
-						<se:Title>Линия связи существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линия связи существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160101</ogc:Literal>
@@ -55,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60204160102</se:Name>
 					<se:Description>
-						<se:Title>Линия связи планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линия связи планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160102</ogc:Literal>
@@ -98,10 +95,9 @@
 				<se:Rule>
 					<se:Name>60204160103</se:Name>
 					<se:Description>
-						<se:Title>Линия связи планируемая к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линия связи планируемая к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160103</ogc:Literal>
@@ -149,10 +145,9 @@
 				<se:Rule>
 					<se:Name>60204160104</se:Name>
 					<se:Description>
-						<se:Title>Линия связи планируемая к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линия связи планируемая к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160104</ogc:Literal>
@@ -209,10 +204,9 @@
 				<se:Rule>
 					<se:Name>60204160201</se:Name>
 					<se:Description>
-						<se:Title>Линейно-кабельное сооружение связи существующее</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линейно-кабельное сооружение связи существующее</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160201</ogc:Literal>
@@ -269,10 +263,9 @@
 				<se:Rule>
 					<se:Name>60204160202</se:Name>
 					<se:Description>
-						<se:Title>Линейно-кабельное сооружение связи планируемое к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линейно-кабельное сооружение связи планируемое к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160202</ogc:Literal>
@@ -330,10 +323,9 @@
 				<se:Rule>
 					<se:Name>60204160203</se:Name>
 					<se:Description>
-						<se:Title>Линейно-кабельное сооружение связи планируемое к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линейно-кабельное сооружение связи планируемое к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160203</ogc:Literal>
@@ -399,10 +391,9 @@
 				<se:Rule>
 					<se:Name>60204160204</se:Name>
 					<se:Description>
-						<se:Title>Линейно-кабельное сооружение связи планируемое к ликвидации</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Линейно-кабельное сооружение связи планируемое к ликвидации</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204160204</ogc:Literal>
@@ -477,8 +468,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

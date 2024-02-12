@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60204080101</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод подводящий (промысловый) существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод подводящий (промысловый) существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080101</ogc:Literal>
@@ -55,10 +53,9 @@
 				<se:Rule>
 					<se:Name>60204080102</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод подводящий (промысловый) планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод подводящий (промысловый) планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080102</ogc:Literal>
@@ -98,10 +95,9 @@
 				<se:Rule>
 					<se:Name>60204080103</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод подводящий (промысловый) планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод подводящий (промысловый) планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080103</ogc:Literal>
@@ -149,10 +145,9 @@
 				<se:Rule>
 					<se:Name>60204080201</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод прочий существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод прочий существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080201</ogc:Literal>
@@ -191,10 +186,9 @@
 				<se:Rule>
 					<se:Name>60204080202</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод прочий планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод прочий планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080202</ogc:Literal>
@@ -234,10 +228,9 @@
 				<se:Rule>
 					<se:Name>60204080203</se:Name>
 					<se:Description>
-						<se:Title>Нефтепровод прочий планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Нефтепровод прочий планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080203</ogc:Literal>
@@ -285,10 +278,9 @@
 				<se:Rule>
 					<se:Name>60204080301</se:Name>
 					<se:Description>
-						<se:Title>Продуктопровод существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Продуктопровод существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080301</ogc:Literal>
@@ -327,10 +319,9 @@
 				<se:Rule>
 					<se:Name>60204080302</se:Name>
 					<se:Description>
-						<se:Title>Продуктопровод планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Продуктопровод планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080302</ogc:Literal>
@@ -370,10 +361,9 @@
 				<se:Rule>
 					<se:Name>60204080303</se:Name>
 					<se:Description>
-						<se:Title>Продуктопровод планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Продуктопровод планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204080303</ogc:Literal>
@@ -421,8 +411,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

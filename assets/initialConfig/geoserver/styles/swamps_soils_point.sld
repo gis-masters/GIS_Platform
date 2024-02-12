@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-                       xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+  xmlns:se="http://www.opengis.net/se">
   <NamedLayer>
     <se:Name>Болота и грунты точечные</se:Name>
     <UserStyle>
       <se:Name>Swamps and soils</se:Name>
-      <se:FeatureTypeStyle>	
+      <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>468-100-P</se:Name>
           <se:Description>
@@ -23,15 +24,16 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/zabolochennost_snak.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
-        </se:Rule>  
-        
+        </se:Rule>
+
         <se:Rule>
           <se:Name>468-100-P</se:Name>
           <se:Description>
@@ -47,7 +49,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/zabolochennost_snak.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -55,8 +58,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-       <se:Rule>
+
+        <se:Rule>
           <se:Name>468-100-P</se:Name>
           <se:Description>
             <se:Title>Заболоченность(знак)</se:Title>
@@ -71,7 +74,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/zabolochennost_snak.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -79,7 +83,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>468-100-P</se:Name>
           <se:Description>
@@ -95,7 +99,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/zabolochennost_snak.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -103,7 +108,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>468-100-P</se:Name>
           <se:Description>
@@ -119,7 +124,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/zabolochennost_snak.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -143,7 +149,8 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kamni.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -151,7 +158,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kamni</se:Name>
           <se:Description>
@@ -167,7 +174,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kamni.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -175,7 +183,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kamni</se:Name>
           <se:Description>
@@ -191,7 +199,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kamni.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -199,7 +208,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kamni</se:Name>
           <se:Description>
@@ -216,7 +225,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kamni.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -224,7 +234,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kamni</se:Name>
           <se:Description>
@@ -240,7 +250,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kamni.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -249,8 +260,8 @@
           </se:PointSymbolizer>
         </se:Rule>
 
-        
-        
+
+
         <se:Rule>
           <se:Name>galka</se:Name>
           <se:Description>
@@ -266,7 +277,8 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/galka.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -274,7 +286,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>galka</se:Name>
           <se:Description>
@@ -290,7 +302,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/galka.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -298,7 +311,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>galka</se:Name>
           <se:Description>
@@ -314,7 +327,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/galka.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -322,7 +336,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>galka</se:Name>
           <se:Description>
@@ -338,7 +352,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/galka.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -346,7 +361,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>galka</se:Name>
           <se:Description>
@@ -362,7 +377,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/galka.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -370,8 +386,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-        
+
+
         <se:Rule>
           <se:Name>pesok</se:Name>
           <se:Description>
@@ -387,7 +403,8 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/pesok.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -395,7 +412,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>pesok</se:Name>
           <se:Description>
@@ -411,7 +428,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/pesok.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -419,7 +437,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>pesok</se:Name>
           <se:Description>
@@ -435,7 +453,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/pesok.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -443,7 +462,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>pesok</se:Name>
           <se:Description>
@@ -459,7 +478,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/pesok.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -467,7 +487,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>pesok</se:Name>
           <se:Description>
@@ -483,7 +503,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/pesok.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -491,8 +512,8 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
-        
+
+
         <se:Rule>
           <se:Name>kam ros</se:Name>
           <se:Description>
@@ -508,7 +529,8 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kam_ros.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -516,7 +538,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kam ros</se:Name>
           <se:Description>
@@ -532,7 +554,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kam_ros.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -540,7 +563,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kam ros</se:Name>
           <se:Description>
@@ -556,7 +579,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kam_ros.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -564,7 +588,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kam ros</se:Name>
           <se:Description>
@@ -580,7 +604,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kam_ros.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -588,7 +613,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>kam ros</se:Name>
           <se:Description>
@@ -604,7 +629,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/kam_ros.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -628,15 +654,16 @@
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/solonchak_prohodimiy.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
               <se:Size>30</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
-        </se:Rule>   
-        
+        </se:Rule>
+
         <se:Rule>
           <se:Name>469-000-P</se:Name>
           <se:Description>
@@ -652,7 +679,8 @@
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/solonchak_prohodimiy.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -660,7 +688,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>469-000-P</se:Name>
           <se:Description>
@@ -676,7 +704,8 @@
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/solonchak_prohodimiy.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -684,7 +713,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>469-000-P</se:Name>
           <se:Description>
@@ -700,7 +729,8 @@
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/solonchak_prohodimiy.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>
@@ -708,7 +738,7 @@
             </se:Graphic>
           </se:PointSymbolizer>
         </se:Rule>
-        
+
         <se:Rule>
           <se:Name>469-000-P</se:Name>
           <se:Description>
@@ -724,7 +754,8 @@
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:PointSymbolizer>
             <se:Graphic>
-              <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
                 <se:OnlineResource xlink:type="simple" xlink:href="icons/solonchak_prohodimiy.png" />
                 <se:Format>image/png</se:Format>
               </se:ExternalGraphic>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты утилизации, обезвреживания, размещения отходов производства и потребления</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040111</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040112</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040113</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040114</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040121</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040122</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040123</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040124</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040131</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040132</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040133</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040134</se:Name>
 					<se:Description>
-						<se:Title>Объект размещения отходов планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект размещения отходов планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040211</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040212</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040213</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040214</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040221</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040222</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040223</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040224</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040231</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040232</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040233</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040234</se:Name>
 					<se:Description>
-						<se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект по обработке, утилизации, обезвреживанию отходов планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040311</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040312</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040313</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040314</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040321</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040322</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040323</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040324</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040331</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040332</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040333</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040334</se:Name>
 					<se:Description>
-						<se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект утилизации, уничтожения биологических отходов планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040411</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040412</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040413</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040414</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040421</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040422</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040423</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040424</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040431</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040432</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040433</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040434</se:Name>
 					<se:Description>
-						<se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объект обращения с радиоактивными отходами планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040511</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1040,8 +1041,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040514</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1061,8 +1062,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040521</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1082,8 +1083,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040524</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1103,8 +1104,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040531</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1124,8 +1125,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040534</se:Name>
 					<se:Description>
-						<se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места несанкционированного размещения отходов производства и потребления планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1145,8 +1146,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040611</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1166,8 +1167,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040612</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1187,8 +1188,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040613</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1208,8 +1209,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040614</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1229,8 +1230,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040621</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1250,8 +1251,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040622</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1271,8 +1272,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040623</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1292,8 +1293,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040624</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1313,8 +1314,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040631</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1334,8 +1335,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040632</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1355,8 +1356,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040633</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1376,8 +1377,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60202040634</se:Name>
 					<se:Description>
-						<se:Title>Иные объекты обращения с отходами планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Иные объекты обращения с отходами планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1397,8 +1398,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

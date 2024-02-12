@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты государственной системы наблюдений за состоянием окружающей среды</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040111</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040112</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040113</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040114</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040121</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040122</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040123</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040124</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040131</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040132</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040133</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60205040134</se:Name>
 					<se:Description>
-						<se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Стационарный пункт наблюдений за состоянием окружающей природной среды, ее загрязнением планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

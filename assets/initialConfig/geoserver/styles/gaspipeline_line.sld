@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Распределительные трубопроводы для транспортировки газа</se:Name>
     <UserStyle>
@@ -53,7 +57,7 @@
               <ogc:Literal>60204060102</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.4</se:SvgParameter>
@@ -91,7 +95,7 @@
               <ogc:Literal>60204060103</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2.4</se:SvgParameter>
@@ -137,7 +141,7 @@
               <ogc:Literal>60204060201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1</se:SvgParameter>
@@ -155,9 +159,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>6</se:Size>
                 </se:Graphic>
@@ -197,9 +201,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>6</se:Size>
                 </se:Graphic>
@@ -220,7 +224,7 @@
               <ogc:Literal>60204060203</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2.4</se:SvgParameter>
@@ -247,9 +251,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>6</se:Size>
                 </se:Graphic>
@@ -288,9 +292,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -311,7 +315,7 @@
               <ogc:Literal>60204060302</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -330,9 +334,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -380,9 +384,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#8400a8</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -403,7 +407,7 @@
               <ogc:Literal>60204060401</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -421,9 +425,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -444,7 +448,7 @@
               <ogc:Literal>60204060402</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -463,9 +467,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -486,7 +490,7 @@
               <ogc:Literal>60204060403</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.4</se:SvgParameter>
@@ -513,9 +517,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#397d7c</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -536,7 +540,7 @@
               <ogc:Literal>60204060501</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -554,9 +558,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -577,7 +581,7 @@
               <ogc:Literal>60204060502</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -596,9 +600,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -619,7 +623,7 @@
               <ogc:Literal>60204060503</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.4</se:SvgParameter>
@@ -646,9 +650,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -669,7 +673,7 @@
               <ogc:Literal>60204060601</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#267300</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -687,9 +691,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#267300</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#267300</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -710,7 +714,7 @@
               <ogc:Literal>60204060602</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#267300</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -729,9 +733,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#267300</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#267300</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -752,7 +756,7 @@
               <ogc:Literal>60204060603</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.4</se:SvgParameter>
@@ -779,9 +783,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#267300</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#267300</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -802,7 +806,7 @@
               <ogc:Literal>60204060701</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#990078</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -820,9 +824,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#990078</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#990078</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -843,7 +847,7 @@
               <ogc:Literal>60204060702</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#990078</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.8</se:SvgParameter>
@@ -862,9 +866,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#990078</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#990078</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>
@@ -885,7 +889,7 @@
               <ogc:Literal>60204060703</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.4</se:SvgParameter>
@@ -912,9 +916,9 @@
                       <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#990078</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#990078</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.7</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>5</se:Size>
                 </se:Graphic>

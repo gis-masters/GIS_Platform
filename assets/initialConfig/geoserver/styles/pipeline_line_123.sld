@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60204040101</se:Name>
 					<se:Description>
-						<se:Title>Магистральный нефтепровод существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный нефтепровод существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040101</ogc:Literal>
@@ -51,10 +49,9 @@
 				<se:Rule>
 					<se:Name>60204040102</se:Name>
 					<se:Description>
-						<se:Title>Магистральный нефтепровод планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный нефтепровод планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040102</ogc:Literal>
@@ -90,10 +87,9 @@
 				<se:Rule>
 					<se:Name>60204040103</se:Name>
 					<se:Description>
-						<se:Title>Магистральный нефтепровод планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный нефтепровод планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040103</ogc:Literal>
@@ -137,10 +133,9 @@
 				<se:Rule>
 					<se:Name>60204040201</se:Name>
 					<se:Description>
-						<se:Title>Магистральный продуктопровод существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный продуктопровод существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040201</ogc:Literal>
@@ -197,10 +192,9 @@
 				<se:Rule>
 					<se:Name>60204040202</se:Name>
 					<se:Description>
-						<se:Title>Магистральный продуктопровод планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный продуктопровод планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040202</ogc:Literal>
@@ -258,10 +252,9 @@
 				<se:Rule>
 					<se:Name>60204040203</se:Name>
 					<se:Description>
-						<se:Title>Магистральный продуктопровод планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный продуктопровод планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040203</ogc:Literal>
@@ -327,10 +320,9 @@
 				<se:Rule>
 					<se:Name>60204040301</se:Name>
 					<se:Description>
-						<se:Title>Магистральный газопровод существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный газопровод существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040301</ogc:Literal>
@@ -369,10 +361,9 @@
 				<se:Rule>
 					<se:Name>60204040302</se:Name>
 					<se:Description>
-						<se:Title>Магистральный газопроводпланируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный газопроводпланируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040302</ogc:Literal>
@@ -412,10 +403,9 @@
 				<se:Rule>
 					<se:Name>60204040303</se:Name>
 					<se:Description>
-						<se:Title>Магистральный газопровод планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Магистральный газопровод планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040303</ogc:Literal>
@@ -463,10 +453,9 @@
 				<se:Rule>
 					<se:Name>60204040401</se:Name>
 					<se:Description>
-						<se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа существующий</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа существующий</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040401</ogc:Literal>
@@ -505,10 +494,9 @@
 				<se:Rule>
 					<se:Name>60204040402</se:Name>
 					<se:Description>
-						<se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа планируемый к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040402</ogc:Literal>
@@ -548,10 +536,9 @@
 				<se:Rule>
 					<se:Name>60204040403</se:Name>
 					<se:Description>
-						<se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Газопровод распределительный, предназначенный для транспортировки природного газа под давлением свыше 1.2 МПа и сжиженного углеводородного газа под давлением свыше 1.6 МПа планируемый к реконструкции</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204040403</ogc:Literal>
@@ -599,8 +586,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

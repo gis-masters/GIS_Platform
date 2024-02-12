@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Сети электросвязи</se:Name>
     <UserStyle>
@@ -34,9 +38,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -46,7 +50,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-		<se:Rule>
+        <se:Rule>
           <se:Name>60204160102</se:Name>
           <se:Description>
             <se:Title>Линия связи планируемая к размещению</se:Title>
@@ -66,7 +70,7 @@
               <se:SvgParameter name="stroke-dasharray">18 7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -76,9 +80,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -116,7 +120,7 @@
               <se:SvgParameter name="stroke-dasharray">18 4 4 4</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -126,9 +130,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -157,7 +161,7 @@
               <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -167,9 +171,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -179,23 +183,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://times</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>5</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-             </se:Stroke>
-           </se:LineSymbolizer>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://times</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>5</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+            </se:Stroke>
+          </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204160201</se:Name>
@@ -208,7 +212,7 @@
               <ogc:Literal>60204160201</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
@@ -226,9 +230,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -267,7 +271,7 @@
               <ogc:Literal>60204160202</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
@@ -276,7 +280,7 @@
               <se:SvgParameter name="stroke-dasharray">18 7</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -286,9 +290,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -327,7 +331,7 @@
               <ogc:Literal>60204160203</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">1.2</se:SvgParameter>
@@ -344,7 +348,7 @@
               <se:SvgParameter name="stroke-dasharray">18 4 4 4</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -354,9 +358,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -403,7 +407,7 @@
               <se:SvgParameter name="stroke-linecap">butt</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-		  <se:LineSymbolizer>
+          <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
@@ -413,9 +417,9 @@
                       <se:SvgParameter name="fill">#000000</se:SvgParameter>
                     </se:Fill>
                     <se:Stroke>
-               			<se:SvgParameter name="stroke">#000000</se:SvgParameter>
-               			<se:SvgParameter name="stroke-width">1</se:SvgParameter>
-             		</se:Stroke>
+                      <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                    </se:Stroke>
                   </se:Mark>
                   <se:Size>4</se:Size>
                 </se:Graphic>
@@ -425,23 +429,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-             <se:Stroke>
-               <se:GraphicStroke>
-                 <se:Graphic>
-                   <se:Mark>
-                     <se:WellKnownName>shape://times</se:WellKnownName>
-                     <se:Stroke>
-                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                       <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
-                     </se:Stroke>
-                   </se:Mark>
-                   <se:Size>5</se:Size>
-                 </se:Graphic>
-               </se:GraphicStroke>
-               <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
-               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-             </se:Stroke>
-           </se:LineSymbolizer>
+            <se:Stroke>
+              <se:GraphicStroke>
+                <se:Graphic>
+                  <se:Mark>
+                    <se:WellKnownName>shape://times</se:WellKnownName>
+                    <se:Stroke>
+                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                      <se:SvgParameter name="stroke-width">0.6</se:SvgParameter>
+                    </se:Stroke>
+                  </se:Mark>
+                  <se:Size>5</se:Size>
+                </se:Graphic>
+              </se:GraphicStroke>
+              <se:SvgParameter name="stroke-dasharray">5 20</se:SvgParameter>
+              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+            </se:Stroke>
+          </se:LineSymbolizer>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>

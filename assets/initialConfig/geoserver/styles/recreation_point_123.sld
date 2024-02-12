@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
-xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
-xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
+	xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты отдыха и туризма</se:Name>
 		<UserStyle>
@@ -11,8 +12,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060111</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +33,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060112</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -53,8 +54,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060113</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -74,8 +75,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060114</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -95,8 +96,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060121</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -116,8 +117,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060122</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -137,8 +138,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060123</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -158,8 +159,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060124</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -179,8 +180,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060131</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -200,8 +201,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060132</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -221,8 +222,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060133</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -242,8 +243,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060134</se:Name>
 					<se:Description>
-						<se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Гостиницы и аналогичные коллективные средства размещения планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -263,8 +264,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060211</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -284,8 +285,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060212</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -305,8 +306,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060213</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -326,8 +327,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060214</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -347,8 +348,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060221</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -368,8 +369,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060222</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -389,8 +390,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060223</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -410,8 +411,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060224</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -431,8 +432,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060231</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -452,8 +453,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060232</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -473,8 +474,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060233</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -494,8 +495,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060234</se:Name>
 					<se:Description>
-						<se:Title>Специализированные коллективные средства размещения планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Специализированные коллективные средства размещения планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -515,8 +516,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060311</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -536,8 +537,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060312</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -557,8 +558,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060313</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -578,8 +579,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060314</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -599,8 +600,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060321</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -620,8 +621,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060322</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -641,8 +642,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060323</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -662,8 +663,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060324</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -683,8 +684,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060331</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -704,8 +705,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060332</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -725,8 +726,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060333</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -746,8 +747,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060334</se:Name>
 					<se:Description>
-						<se:Title>Детский оздоровительный лагерь планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Детский оздоровительный лагерь планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -767,8 +768,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060411</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь существующий федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь существующий федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -788,8 +789,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060412</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -809,8 +810,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060413</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -830,8 +831,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060414</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -851,8 +852,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060421</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь существующий регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь существующий регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -872,8 +873,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060422</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -893,8 +894,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060423</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -914,8 +915,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060424</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -935,8 +936,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060431</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь существующий местного значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь существующий местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -956,8 +957,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060432</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -977,8 +978,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060433</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -998,8 +999,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060434</se:Name>
 					<se:Description>
-						<se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Оздоровительно-спортивный лагерь планируемый к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1019,8 +1020,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060511</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1040,8 +1041,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060512</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1061,8 +1062,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060513</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1082,8 +1083,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060514</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1103,8 +1104,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060521</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1124,8 +1125,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060522</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1145,8 +1146,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060523</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1166,8 +1167,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060524</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1187,8 +1188,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060531</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1208,8 +1209,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060532</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1229,8 +1230,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060533</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1250,8 +1251,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060534</se:Name>
 					<se:Description>
-						<se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Объекты физкультурно-досугового назначения и активного отдыха планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1273,8 +1274,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060611</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1294,8 +1295,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060612</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1315,8 +1316,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060613</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1336,8 +1337,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060614</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации федерального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1357,8 +1358,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060621</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1378,8 +1379,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060622</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1399,8 +1400,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060623</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1420,8 +1421,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060624</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации регионального значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1441,8 +1442,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060631</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм существующие местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1462,8 +1463,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060632</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к размещению местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1483,8 +1484,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060633</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к реконструкции местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1504,8 +1505,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>60201060634</se:Name>
 					<se:Description>
-						<se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
+            <se:Title>Места и объекты массового посещения, в том числе тематический туризм планируемые к ликвидации местного значения</se:Title>
+          </se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1527,8 +1528,8 @@ xmlns:se="http://www.opengis.net/se">
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

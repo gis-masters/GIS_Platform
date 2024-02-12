@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor
-	xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -13,10 +12,9 @@
 				<se:Rule>
 					<se:Name>60301100101</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона объекта культурного наследия существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона объекта культурного наследия существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100101</ogc:Literal>
@@ -50,10 +48,9 @@
 				<se:Rule>
 					<se:Name>60301100102</se:Name>
 					<se:Description>
-						<se:Title>Охранная зона объекта культурного наследия планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Охранная зона объекта культурного наследия планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100102</ogc:Literal>
@@ -88,10 +85,9 @@
 				<se:Rule>
 					<se:Name>60301100201</se:Name>
 					<se:Description>
-						<se:Title>Зона регулирования застройки и хозяйственной деятельности существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона регулирования застройки и хозяйственной деятельности существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100201</ogc:Literal>
@@ -125,10 +121,9 @@
 				<se:Rule>
 					<se:Name>60301100202</se:Name>
 					<se:Description>
-						<se:Title>Зона регулирования застройки и хозяйственной деятельности планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона регулирования застройки и хозяйственной деятельности планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100202</ogc:Literal>
@@ -163,10 +158,9 @@
 				<se:Rule>
 					<se:Name>60301100301</se:Name>
 					<se:Description>
-						<se:Title>Зона охраняемого природного ландшафта существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона охраняемого природного ландшафта существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100301</ogc:Literal>
@@ -200,10 +194,9 @@
 				<se:Rule>
 					<se:Name>60301100302</se:Name>
 					<se:Description>
-						<se:Title>Зона охраняемого природного ландшафта планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Зона охраняемого природного ландшафта планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100302</ogc:Literal>
@@ -238,10 +231,9 @@
 				<se:Rule>
 					<se:Name>60301100401</se:Name>
 					<se:Description>
-						<se:Title>Объединенная зона охраны объекта культурного наследия существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Объединенная зона охраны объекта культурного наследия существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100401</ogc:Literal>
@@ -285,10 +277,9 @@
 				<se:Rule>
 					<se:Name>60301100402</se:Name>
 					<se:Description>
-						<se:Title>Объединенная зона охраны объекта культурного наследия планируемая к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Объединенная зона охраны объекта культурного наследия планируемая к размещению</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100402</ogc:Literal>
@@ -332,10 +323,9 @@
 				<se:Rule>
 					<se:Name>60301100501</se:Name>
 					<se:Description>
-						<se:Title>Защитная зона объекта культурного наследия существующая</se:Title>
-					</se:Description>
-					<ogc:Filter
-						xmlns:ogc="http://www.opengis.net/ogc">
+            <se:Title>Защитная зона объекта культурного наследия существующая</se:Title>
+          </se:Description>
+					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301100501</ogc:Literal>
@@ -379,8 +369,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-						<se:Title>Не определено</se:Title>
-					</se:Description>
+            <se:Title>Не определено</se:Title>
+          </se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

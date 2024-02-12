@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:se="http://www.opengis.net/se"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Растительность линейная</se:Name>
     <UserStyle>
@@ -325,7 +329,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/polosa_kustarnika.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -372,7 +377,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/polosa_kustarnika.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -419,7 +425,8 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
+                    xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/polosa_kustarnika.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -430,7 +437,7 @@
               <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
-        </se:Rule>     
+        </se:Rule>
         <se:Rule>
           <se:Name>397-100-L</se:Name>
           <se:Description>
@@ -444,11 +451,11 @@
           </ogc:Filter>
           <se:MinScaleDenominator>2500</se:MinScaleDenominator>
           <se:LineSymbolizer>
-          <se:Stroke>
-            <se:SvgParameter name="stroke">#000000</se:SvgParameter>
-            <se:SvgParameter name="stroke-width">0</se:SvgParameter>
-            <se:SvgParameter name="opacity">1</se:SvgParameter>
-          </se:Stroke>
+            <se:Stroke>
+              <se:SvgParameter name="stroke">#000000</se:SvgParameter>
+              <se:SvgParameter name="stroke-width">0</se:SvgParameter>
+              <se:SvgParameter name="opacity">1</se:SvgParameter>
+            </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
 
@@ -463,7 +470,7 @@
               <ogc:Literal>386-400-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer> 
+          <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -800,7 +807,8 @@
 
         <se:Rule>
           <se:Name>Default</se:Name>
-          <se:Description>            <se:Title>Не определено</se:Title>
+          <se:Description>
+            <se:Title>Не определено</se:Title>
           </se:Description>
           <se:ElseFilter/>
           <se:LineSymbolizer>
