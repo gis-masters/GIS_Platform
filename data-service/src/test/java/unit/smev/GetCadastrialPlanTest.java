@@ -24,12 +24,7 @@ public class GetCadastrialPlanTest {
 
         var processor = new GetCadastrialPlanRequestService(smev3Config, null, null);
 
-        var dto = new GetCadastrialPlanDto();
-        dto.setRequestFilename("request.xml");
-        dto.setArchiveFilename("app_1.xml");
-        dto.setPassportFilename("Passport.pdf");
-
-        var meta = new GetCadastrialPlanXmlBuildProcess(processor).run(dto);
+        var meta = new GetCadastrialPlanXmlBuildProcess(processor).run();
 
         // to xml
         var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);

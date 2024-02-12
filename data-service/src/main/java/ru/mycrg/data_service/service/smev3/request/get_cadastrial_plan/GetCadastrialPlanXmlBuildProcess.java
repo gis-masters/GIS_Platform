@@ -1,9 +1,7 @@
 package ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.dto.smev3.GetCadastrialPlanDto;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
@@ -22,7 +20,10 @@ public class GetCadastrialPlanXmlBuildProcess extends AXmlBuildProcess {
         super(requestProcessor);
     }
 
-    public BuildRequestAndSources<Request> run(@NotNull GetCadastrialPlanDto dto) {
+    public BuildRequestAndSources<Request> run() {
+
+        String requestFilename = "request.xml";
+        String statementFilename = "statement.xml";
         try {
             Request request = new Request();
             request.setRegion(CRIMEA_REGION);
@@ -36,38 +37,26 @@ public class GetCadastrialPlanXmlBuildProcess extends AXmlBuildProcess {
             TValidatedStructuredAttachmentFormat requestDescription = new TValidatedStructuredAttachmentFormat();
             requestDescription.setIsUnstructuredFormat(false);
             requestDescription.setIsZippedPacket(true);
-            requestDescription.setFileName(dto.getRequestFilename());
+            requestDescription.setFileName(requestFilename);
             attachment.setRequestDescription(requestDescription);
 
             TValidatedStructuredAttachmentFormat statement = new TValidatedStructuredAttachmentFormat();
             statement.setIsUnstructuredFormat(false);
             statement.setIsZippedPacket(true);
-            statement.setFileName(dto.getAppFilename());
+            statement.setFileName(statementFilename);
             attachment.getStatement().add(statement);
 
-            TStructuredAttachmentFormat appSig = new TStructuredAttachmentFormat();
-            appSig.setIsUnstructuredFormat(true);
-            appSig.setIsZippedPacket(true);
-            appSig.setFileName(dto.getAppFilename() + ".sig");
-            attachment.getFile().add(appSig);
+            TStructuredAttachmentFormat statementSig = new TStructuredAttachmentFormat();
+            statementSig.setIsUnstructuredFormat(true);
+            statementSig.setIsZippedPacket(true);
+            statementSig.setFileName(statementFilename + ".sig");
+            attachment.getFile().add(statementSig);
 
             TStructuredAttachmentFormat requestSig = new TStructuredAttachmentFormat();
             requestSig.setIsUnstructuredFormat(true);
             requestSig.setIsZippedPacket(true);
-            requestSig.setFileName(dto.getRequestFilename() + ".sig");
+            requestSig.setFileName(requestFilename + ".sig");
             attachment.getFile().add(requestSig);
-
-            TStructuredAttachmentFormat passport = new TStructuredAttachmentFormat();
-            passport.setIsUnstructuredFormat(true);
-            passport.setIsZippedPacket(true);
-            passport.setFileName(dto.getPassportFilename());
-            attachment.getFile().add(passport);
-
-            TStructuredAttachmentFormat passportSig = new TStructuredAttachmentFormat();
-            passportSig.setIsUnstructuredFormat(true);
-            passportSig.setIsZippedPacket(true);
-            passportSig.setFileName(dto.getPassportFilename() + ".sig");
-            attachment.getFile().add(passportSig);
 
             return buildRequest(request);
         } catch (Exception e) {

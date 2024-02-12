@@ -20,6 +20,8 @@ import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @ConditionalOnProperty(
@@ -80,10 +82,21 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         }
     }
 
+    public void validateCadastrialNumber(String number){
+        String cadastrialNumberRegex = "\\d{2}:\\d{2}:\\d{6}";
+        Pattern pattern = Pattern.compile(cadastrialNumberRegex);
+        Matcher matcher = pattern.matcher(number);
+
+        if (!matcher.matches()) {
+            log.error("Invalid cadastrial number: {}", number);
+            throw new SmevRequestException("Invalid cadastrial number: " + number);
+        }
+    }
+
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
-        var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run(getCadastrialPlanDto);
+        var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run();
         var clientMessage = clientMessage(buildRequest.getRequest(), getCadastrialPlanDto.getArchiveFilename());
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

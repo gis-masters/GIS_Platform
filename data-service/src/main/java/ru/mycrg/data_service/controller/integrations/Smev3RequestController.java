@@ -54,19 +54,20 @@ public class Smev3RequestController {
     /**
      * Отправить запрос в ЕГРН для получения КПТ
      */
-    @GetMapping("/request/egrn")
-    public ResponseEntity<XmlBuildMeta> getCadastrialPlan(@RequestParam String requestFilename,
-                                                          @RequestParam String appFilename,
-                                                          @RequestParam String passportFilename,
-                                                          @RequestParam String archiveFilename) {
-        var dto = new GetCadastrialPlanDto();
-        dto.setAppFilename(appFilename);
-        dto.setArchiveFilename(archiveFilename);
-        dto.setRequestFilename(requestFilename);
-        dto.setPassportFilename(passportFilename);
+    @PostMapping("/request/egrn")
+    public ResponseEntity<XmlBuildMeta> getCadastrialPlan(@RequestBody OrderKptDto body) {
+        body.getOrder().stream()
+                .map(s -> {
+                    getCadastrialPlanRequestService.validateCadastrialNumber(s);
+                    s = "Request_" + s.replace(":", "_") + ".zip";
+                    return s;
+                }).forEach(s -> {
+            var dto = new GetCadastrialPlanDto();
+            dto.setArchiveFilename(s);
+            getCadastrialPlanRequestService.sendRequest(dto);
+        });
 
-        var response = getCadastrialPlanRequestService.sendRequest(dto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().build();
     }
 
     /**
