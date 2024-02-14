@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:ogc="http://www.opengis.net/ogc"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-    xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink"
+                       xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
+                       version="1.1.0"
+                       xmlns:se="http://www.opengis.net/se">
     <NamedLayer>
         <se:Name>Объекты охраны животного мира</se:Name>
         <UserStyle>
@@ -12,8 +12,8 @@
                 <se:Rule>
                     <se:Name>60205050111</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных существующие федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных существующие федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -23,7 +23,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050111.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050111.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -33,8 +34,8 @@
                 <se:Rule>
                     <se:Name>60205050112</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к размещению федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -44,7 +45,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050112.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050112.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -54,9 +56,9 @@
                 <se:Rule>
                     <se:Name>60205050113</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к реконструкции федерального значения
-                    </se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к реконструкции федерального значения
+                        </se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -66,7 +68,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050113.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050113.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -76,8 +79,8 @@
                 <se:Rule>
                     <se:Name>60205050114</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к ликвидации федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -87,7 +90,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050114.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050114.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -97,8 +101,8 @@
                 <se:Rule>
                     <se:Name>60205050121</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных существующие регионального значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных существующие регионального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -108,7 +112,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050121.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050121.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -118,9 +123,9 @@
                 <se:Rule>
                     <se:Name>60205050122</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к размещению регионального значения
-                    </se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к размещению регионального значения
+                        </se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -130,7 +135,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050122.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050122.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -140,9 +146,9 @@
                 <se:Rule>
                     <se:Name>60205050123</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к реконструкции регионального значения
-                    </se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к реконструкции регионального значения
+                        </se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -152,7 +158,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050123.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050123.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -162,9 +169,9 @@
                 <se:Rule>
                     <se:Name>60205050124</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к ликвидации регионального значения
-                    </se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к ликвидации регионального значения
+                        </se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -174,7 +181,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050124.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050124.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -184,8 +192,8 @@
                 <se:Rule>
                     <se:Name>60205050131</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных существующие местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных существующие местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -195,7 +203,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050131.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050131.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -205,8 +214,8 @@
                 <se:Rule>
                     <se:Name>60205050132</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к размещению местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к размещению местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -216,7 +225,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050132.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050132.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -226,8 +236,8 @@
                 <se:Rule>
                     <se:Name>60205050133</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к реконструкции местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -237,7 +247,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050133.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050133.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -247,8 +258,8 @@
                 <se:Rule>
                     <se:Name>60205050134</se:Name>
                     <se:Description>
-            <se:Title>Центры реабилитации животных планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Центры реабилитации животных планируемые к ликвидации местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -258,7 +269,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050134.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050134.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -268,8 +280,8 @@
                 <se:Rule>
                     <se:Name>60205050211</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) существующие федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) существующие федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -279,7 +291,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050211.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050211.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -289,8 +302,8 @@
                 <se:Rule>
                     <se:Name>60205050212</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к размещению федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -300,7 +313,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050212.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050212.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -310,8 +324,8 @@
                 <se:Rule>
                     <se:Name>60205050213</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к реконструкции федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -321,7 +335,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050213.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050213.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -331,8 +346,8 @@
                 <se:Rule>
                     <se:Name>60205050214</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к ликвидации федерального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -342,7 +357,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050214.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050214.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -352,8 +368,8 @@
                 <se:Rule>
                     <se:Name>60205050221</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) существующие регионального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) существующие регионального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -363,7 +379,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050221.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050221.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -373,8 +390,8 @@
                 <se:Rule>
                     <se:Name>60205050222</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к размещению регионального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -384,7 +401,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050222.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050222.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -394,8 +412,8 @@
                 <se:Rule>
                     <se:Name>60205050223</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к реконструкции регионального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -405,7 +423,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050223.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050223.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -415,8 +434,8 @@
                 <se:Rule>
                     <se:Name>60205050224</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к ликвидации регионального значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -426,7 +445,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050224.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050224.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -436,8 +456,8 @@
                 <se:Rule>
                     <se:Name>60205050231</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) существующие местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) существующие местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -447,7 +467,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050231.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050231.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -457,8 +478,8 @@
                 <se:Rule>
                     <se:Name>60205050232</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к размещению местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к размещению местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -468,7 +489,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050232.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050232.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -478,8 +500,8 @@
                 <se:Rule>
                     <se:Name>60205050233</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к реконструкции местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -489,7 +511,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050233.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050233.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -499,8 +522,8 @@
                 <se:Rule>
                     <se:Name>60205050234</se:Name>
                     <se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+                        <se:Title>Зверопереходы (экодуки) планируемые к ликвидации местного значения</se:Title>
+                    </se:Description>
                     <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
                         <ogc:PropertyIsEqualTo>
                             <ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -510,7 +533,8 @@
                     <se:PointSymbolizer>
                         <se:Graphic>
                             <se:ExternalGraphic>
-                                <se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050234.svg"/>
+                                <se:OnlineResource xlink:type="simple"
+                                                   xlink:href="svg/05_Unclassified/05_WildlifeProtection/60205050234.svg"/>
                                 <se:Format>image/svg+xml</se:Format>
                             </se:ExternalGraphic>
                             <se:Size>40</se:Size>
@@ -520,8 +544,8 @@
                 <se:Rule>
                     <se:Name>Default</se:Name>
                     <se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+                        <se:Title>Не определено</se:Title>
+                    </se:Description>
                     <se:ElseFilter/>
                     <se:PointSymbolizer>
                         <se:Graphic>

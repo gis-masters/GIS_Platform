@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-  xmlns:ogc="http://www.opengis.net/ogc">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" xmlns:ogc="http://www.opengis.net/ogc">
   <NamedLayer>
     <se:Name>Растительность площадная</se:Name>
     <UserStyle>
@@ -54,7 +50,7 @@
               <ogc:Literal>372-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -152,13 +148,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/krivolesie.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -209,7 +204,7 @@
               <ogc:Literal>373-100-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -273,13 +268,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zarosli_kustarnikov.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -305,13 +299,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/cust_coluchiy.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -337,13 +330,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/lug.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -354,13 +346,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/lug.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -388,13 +379,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/visokotravnaya_rast.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -405,13 +395,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/visokotravnaya_rast.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -439,13 +428,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/kamish.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -456,13 +444,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/kamish.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -490,13 +477,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stepnaya.PNG" />
                     <se:Format>application/octet-stream</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>30</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -507,13 +493,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stepnaya.PNG" />
                     <se:Format>application/octet-stream</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>30</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -532,7 +517,7 @@
               <ogc:Literal>409-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -570,7 +555,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -579,8 +564,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -605,7 +589,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>500</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -614,8 +598,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -640,7 +623,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>1000</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -649,8 +632,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -675,7 +657,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>1500</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -684,8 +666,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -710,7 +691,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>2000</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -719,8 +700,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -745,7 +725,7 @@
           </ogc:Filter>
           <se:MinScaleDenominator>2500</se:MinScaleDenominator>
           <se:MaxScaleDenominator>4500</se:MaxScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -754,8 +734,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gazon.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -766,7 +745,7 @@
             <se:VendorOption name="graphic-margin">10</se:VendorOption>
           </se:PolygonSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>416-000-S</se:Name>
           <se:Description>
@@ -779,7 +758,7 @@
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
           <se:MinScaleDenominator>4501</se:MinScaleDenominator>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -798,7 +777,7 @@
               <ogc:Literal>410-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a3ff73</se:SvgParameter>
             </se:Fill>
@@ -807,8 +786,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/yagodniki.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -830,7 +808,7 @@
               <ogc:Literal>411-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a3ff73</se:SvgParameter>
             </se:Fill>
@@ -839,8 +817,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/vinogradniki.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -856,8 +833,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/vinogradniki.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -881,7 +857,7 @@
               <ogc:Literal>412-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a3ff73</se:SvgParameter>
             </se:Fill>
@@ -928,8 +904,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/yagodniki_dlya_sada.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -962,13 +937,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ris.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>45</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -979,13 +953,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ris.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>45</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1013,13 +986,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ris.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>45</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1030,13 +1002,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/ris.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>45</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1089,7 +1060,7 @@
               <ogc:Literal>386-400-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -1144,7 +1115,7 @@
               <ogc:Literal>386-600-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -1199,7 +1170,7 @@
               <ogc:Literal>386-500-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -1254,7 +1225,7 @@
               <ogc:Literal>386-300-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#a5f57a</se:SvgParameter>
             </se:Fill>
@@ -1318,13 +1289,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zarosli_kustarnikov.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -1350,13 +1320,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zarosli_kustarnikov.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -1390,7 +1359,7 @@
               <ogc:Literal>373-200-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#cdf57a</se:SvgParameter>
             </se:Fill>
@@ -1471,13 +1440,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/redkolesie.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>25</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -1503,13 +1471,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/redkolesie.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>15</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">free</se:VendorOption>
@@ -1535,13 +1502,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/redkolesie.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>12</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1567,13 +1533,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/burelom.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>20</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1599,13 +1564,12 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/burelom.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
                   <se:Size>20</se:Size>
-                </se:Graphic>
+                </se:Graphic>            
               </se:GraphicFill>
             </se:Fill>
             <se:VendorOption name="random">grid</se:VendorOption>
@@ -1639,7 +1603,7 @@
               <ogc:Literal>400-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#d3ffbe</se:SvgParameter>
             </se:Fill>
@@ -1648,8 +1612,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/kustarnichek.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -1665,8 +1628,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/kustarnichek.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>

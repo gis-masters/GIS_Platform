@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-	xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты ФСИН России</se:Name>
 		<UserStyle>
@@ -12,8 +11,8 @@
 				<se:Rule>
 					<se:Name>60205010111</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -33,8 +32,8 @@
 				<se:Rule>
 					<se:Name>60205010112</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -54,8 +53,8 @@
 				<se:Rule>
 					<se:Name>60205010113</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -75,8 +74,8 @@
 				<se:Rule>
 					<se:Name>60205010114</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -96,8 +95,8 @@
 				<se:Rule>
 					<se:Name>60205010121</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -117,8 +116,8 @@
 				<se:Rule>
 					<se:Name>60205010122</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -138,8 +137,8 @@
 				<se:Rule>
 					<se:Name>60205010123</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -159,8 +158,8 @@
 				<se:Rule>
 					<se:Name>60205010124</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -180,8 +179,8 @@
 				<se:Rule>
 					<se:Name>60205010131</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -201,8 +200,8 @@
 				<se:Rule>
 					<se:Name>60205010132</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -222,8 +221,8 @@
 				<se:Rule>
 					<se:Name>60205010133</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -243,8 +242,8 @@
 				<se:Rule>
 					<se:Name>60205010134</se:Name>
 					<se:Description>
-            <se:Title>Объект ФСИН России планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Объект ФСИН России планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -264,8 +263,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

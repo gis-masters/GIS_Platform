@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-	xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты железнодорожного транспорта</se:Name>
 		<UserStyle>
@@ -12,8 +11,8 @@
 				<se:Rule>
 					<se:Name>60203020111</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -33,8 +32,8 @@
 				<se:Rule>
 					<se:Name>60203020112</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планиуемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планиуемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -54,8 +53,8 @@
 				<se:Rule>
 					<se:Name>60203020113</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планиуемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планиуемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -75,8 +74,8 @@
 				<se:Rule>
 					<se:Name>60203020121</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -96,8 +95,8 @@
 				<se:Rule>
 					<se:Name>60203020122</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -117,8 +116,8 @@
 				<se:Rule>
 					<se:Name>60203020123</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -138,8 +137,8 @@
 				<se:Rule>
 					<se:Name>60203020131</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -159,8 +158,8 @@
 				<se:Rule>
 					<se:Name>60203020132</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -180,8 +179,8 @@
 				<se:Rule>
 					<se:Name>60203020133</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожная станция планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожная станция планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -201,8 +200,8 @@
 				<se:Rule>
 					<se:Name>60203020211</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -222,8 +221,8 @@
 				<se:Rule>
 					<se:Name>60203020212</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -243,8 +242,8 @@
 				<se:Rule>
 					<se:Name>60203020213</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -264,8 +263,8 @@
 				<se:Rule>
 					<se:Name>60203020221</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -285,8 +284,8 @@
 				<se:Rule>
 					<se:Name>60203020222</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -306,8 +305,8 @@
 				<se:Rule>
 					<se:Name>60203020223</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -327,8 +326,8 @@
 				<se:Rule>
 					<se:Name>60203020231</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -348,8 +347,8 @@
 				<se:Rule>
 					<se:Name>60203020232</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -369,8 +368,8 @@
 				<se:Rule>
 					<se:Name>60203020233</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожный вокзал планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожный вокзал планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -390,8 +389,8 @@
 				<se:Rule>
 					<se:Name>60203020311</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо существующее федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо существующее федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -411,8 +410,8 @@
 				<se:Rule>
 					<se:Name>60203020312</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -432,8 +431,8 @@
 				<se:Rule>
 					<se:Name>60203020313</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -453,8 +452,8 @@
 				<se:Rule>
 					<se:Name>60203020321</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо существующее регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо существующее регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -474,8 +473,8 @@
 				<se:Rule>
 					<se:Name>60203020322</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -495,8 +494,8 @@
 				<se:Rule>
 					<se:Name>60203020323</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -516,8 +515,8 @@
 				<se:Rule>
 					<se:Name>60203020331</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо существующее местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо существующее местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -537,8 +536,8 @@
 				<se:Rule>
 					<se:Name>60203020332</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -558,8 +557,8 @@
 				<se:Rule>
 					<se:Name>60203020333</se:Name>
 					<se:Description>
-            <se:Title>Железнодорожное депо планируемое к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Железнодорожное депо планируемое к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -579,8 +578,8 @@
 				<se:Rule>
 					<se:Name>60203020411</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -600,8 +599,8 @@
 				<se:Rule>
 					<se:Name>60203020412</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -621,8 +620,8 @@
 				<se:Rule>
 					<se:Name>60203020413</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -642,8 +641,8 @@
 				<se:Rule>
 					<se:Name>60203020421</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -663,8 +662,8 @@
 				<se:Rule>
 					<se:Name>60203020422</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -684,8 +683,8 @@
 				<se:Rule>
 					<se:Name>60203020423</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -705,8 +704,8 @@
 				<se:Rule>
 					<se:Name>60203020431</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -726,8 +725,8 @@
 				<se:Rule>
 					<se:Name>60203020432</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -747,8 +746,8 @@
 				<se:Rule>
 					<se:Name>60203020433</se:Name>
 					<se:Description>
-            <se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Остановочный пассажирский железнодорожный пункт планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -768,8 +767,8 @@
 				<se:Rule>
 					<se:Name>60203020511</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -789,8 +788,8 @@
 				<se:Rule>
 					<se:Name>60203020512</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -810,8 +809,8 @@
 				<se:Rule>
 					<se:Name>60203020513</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -831,8 +830,8 @@
 				<se:Rule>
 					<se:Name>60203020521</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -852,8 +851,8 @@
 				<se:Rule>
 					<se:Name>60203020522</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -873,8 +872,8 @@
 				<se:Rule>
 					<se:Name>60203020523</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -894,8 +893,8 @@
 				<se:Rule>
 					<se:Name>60203020531</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -915,8 +914,8 @@
 				<se:Rule>
 					<se:Name>60203020532</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -936,8 +935,8 @@
 				<se:Rule>
 					<se:Name>60203020533</se:Name>
 					<se:Description>
-            <se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Иные объекты железнодорожного транспорта планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -957,8 +956,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

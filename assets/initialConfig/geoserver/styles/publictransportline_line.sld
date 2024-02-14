@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:ogc="http://www.opengis.net/ogc" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se">
   <NamedLayer>
     <se:Name>PublicTransportLine</se:Name>
     <UserStyle>
@@ -20,7 +16,7 @@
               <ogc:Literal>60203100101</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		<se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">0.3</se:SvgParameter>
@@ -39,21 +35,21 @@
             <se:PerpendicularOffset>-3</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>6</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>6</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100102</se:Name>
@@ -66,7 +62,7 @@
               <ogc:Literal>60203100102</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ff0000</se:SvgParameter>
               <se:SvgParameter name="stroke-width">6</se:SvgParameter>
@@ -75,21 +71,21 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>6</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>6</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
@@ -133,21 +129,21 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>6</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>6</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
@@ -182,39 +178,39 @@
               <ogc:Literal>60203100104</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>6</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>6</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 20</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 20</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
@@ -392,22 +388,22 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 20</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 20</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>
@@ -480,24 +476,24 @@
             </se:Stroke>
             <se:PerpendicularOffset>-3</se:PerpendicularOffset>
           </se:LineSymbolizer>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>7</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+		  <se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>7</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100302</se:Name>
@@ -552,24 +548,24 @@
             </se:Stroke>
             <se:PerpendicularOffset>-3</se:PerpendicularOffset>
           </se:LineSymbolizer>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>7</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+		  <se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>7</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100303</se:Name>
@@ -624,24 +620,24 @@
             </se:Stroke>
             <se:PerpendicularOffset>-3</se:PerpendicularOffset>
           </se:LineSymbolizer>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>7</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+		  <se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>7</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100304</se:Name>
@@ -686,41 +682,41 @@
             </se:Stroke>
             <se:PerpendicularOffset>-3</se:PerpendicularOffset>
           </se:LineSymbolizer>
+		  <se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>7</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>7</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 10</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">8</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">15 45</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">15 45</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100401</se:Name>
@@ -850,22 +846,22 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">15 45</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">15 45</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100501</se:Name>
@@ -1020,23 +1016,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100602</se:Name>
@@ -1067,25 +1063,25 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-        </se:Rule>
-        <se:Rule>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
+          </se:Rule>
+          <se:Rule>
           <se:Name>60203100603</se:Name>
           <se:Description>
             <se:Title>Трамвайная линия планируемая к реконструкции</se:Title>
@@ -1114,23 +1110,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100604</se:Name>
@@ -1153,41 +1149,41 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">6 16</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">16</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>7</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">4 40</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">27.5</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>7</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">4 40</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">27.5</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100701</se:Name>
@@ -1209,23 +1205,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100702</se:Name>
@@ -1256,23 +1252,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100703</se:Name>
@@ -1303,23 +1299,23 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100704</se:Name>
@@ -1342,41 +1338,41 @@
             </se:Stroke>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://vertline</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>11</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://vertline</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>11</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 22</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">22</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">6 52</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">36</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1.5</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">6 52</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">36</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60203100801</se:Name>

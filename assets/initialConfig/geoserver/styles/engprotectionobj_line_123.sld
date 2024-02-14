@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60204180101</se:Name>
 					<se:Description>
-            <se:Title>Сооружения существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180101</ogc:Literal>
@@ -51,9 +53,10 @@
 				<se:Rule>
 					<se:Name>60204180102</se:Name>
 					<se:Description>
-            <se:Title>Сооружения планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180102</ogc:Literal>
@@ -91,9 +94,10 @@
 				<se:Rule>
 					<se:Name>60204180103</se:Name>
 					<se:Description>
-            <se:Title>Сооружения планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180103</ogc:Literal>
@@ -139,9 +143,10 @@
 				<se:Rule>
 					<se:Name>60204180201</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противоселевые существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противоселевые существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180201</ogc:Literal>
@@ -178,9 +183,10 @@
 				<se:Rule>
 					<se:Name>60204180202</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противоселевые планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противоселевые планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180202</ogc:Literal>
@@ -218,9 +224,10 @@
 				<se:Rule>
 					<se:Name>60204180203</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противоселевые планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противоселевые планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180203</ogc:Literal>
@@ -266,9 +273,10 @@
 				<se:Rule>
 					<se:Name>60204180301</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противолавинные существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противолавинные существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180301</ogc:Literal>
@@ -305,9 +313,10 @@
 				<se:Rule>
 					<se:Name>60204180302</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противолавинные планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противолавинные планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180302</ogc:Literal>
@@ -345,9 +354,10 @@
 				<se:Rule>
 					<se:Name>60204180303</se:Name>
 					<se:Description>
-            <se:Title>Сооружения противолавинные планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения противолавинные планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180303</ogc:Literal>
@@ -393,9 +403,10 @@
 				<se:Rule>
 					<se:Name>60204180401</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180401</ogc:Literal>
@@ -441,9 +452,10 @@
 				<se:Rule>
 					<se:Name>60204180402</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180402</ogc:Literal>
@@ -491,9 +503,10 @@
 				<se:Rule>
 					<se:Name>60204180403</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты берегов морей, водохранилищ, озер, рек планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180403</ogc:Literal>
@@ -549,9 +562,10 @@
 				<se:Rule>
 					<se:Name>60204180501</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты от затопления и подтопления существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты от затопления и подтопления существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180501</ogc:Literal>
@@ -587,9 +601,10 @@
 				<se:Rule>
 					<se:Name>60204180502</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты от затопления и подтопления планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты от затопления и подтопления планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180502</ogc:Literal>
@@ -626,9 +641,10 @@
 				<se:Rule>
 					<se:Name>60204180503</se:Name>
 					<se:Description>
-            <se:Title>Сооружения для защиты от затопления и подтопления планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Сооружения для защиты от затопления и подтопления планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204180503</ogc:Literal>
@@ -673,8 +689,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-  xmlns:ogc="http://www.opengis.net/ogc">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" xmlns:ogc="http://www.opengis.net/ogc">
   <NamedLayer>
     <se:Name>Зоны затопления и подтопления</se:Name>
     <UserStyle>
@@ -35,23 +31,23 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://plus</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#ff0000</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                  <se:Rotation>45</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://plus</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#ff0000</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                   <se:Rotation>45</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>  
+             </se:Stroke>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301140102</se:Name>
@@ -80,23 +76,23 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://plus</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#ff0000</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                  <se:Rotation>45</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://plus</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#ff0000</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                   <se:Rotation>45</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>  
+             </se:Stroke>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301140201</se:Name>
@@ -124,23 +120,23 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://plus</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#002673</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                  <se:Rotation>45</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://plus</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#002673</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                   <se:Rotation>45</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>  
+             </se:Stroke>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301140202</se:Name>
@@ -169,23 +165,23 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://plus</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#002673</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                  <se:Rotation>45</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>
-            </se:Stroke>
-          </se:PolygonSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://plus</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#002673</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                   <se:Rotation>45</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">10 50</se:SvgParameter>  
+             </se:Stroke>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>Default</se:Name>

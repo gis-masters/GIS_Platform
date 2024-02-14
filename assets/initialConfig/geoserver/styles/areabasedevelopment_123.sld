@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>70402010002</se:Name>
 					<se:Description>
-            <se:Title>Территория комплексного развития, включая территории, подлежащие комплексному освоению, в том числе в целях строительства стандартного жилья, территории размещения земельных участков, подлежащих предоставлению многодетным семьям планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Территория комплексного развития, включая территории, подлежащие комплексному освоению, в том числе в целях строительства стандартного жилья, территории размещения земельных участков, подлежащих предоставлению многодетным семьям планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>70402010002</ogc:Literal>
@@ -51,9 +53,10 @@
 				<se:Rule>
 					<se:Name>70402020002</se:Name>
 					<se:Description>
-            <se:Title>Территории, подлежащие градостроительному преобразованию (развитие застроенных территорий, реорганизация промышленных территорий, иное существенное изменение плотности использования или функции территории) планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Территории, подлежащие градостроительному преобразованию (развитие застроенных территорий, реорганизация промышленных территорий, иное существенное изменение плотности использования или функции территории) планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>70402020002</ogc:Literal>
@@ -90,9 +93,10 @@
 				<se:Rule>
 					<se:Name>70402030002</se:Name>
 					<se:Description>
-            <se:Title>Территории освоения подземного пространства в градостроительных целях планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Территории освоения подземного пространства в градостроительных целях планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>70402030002</ogc:Literal>
@@ -129,9 +133,10 @@
 				<se:Rule>
 					<se:Name>70402040002</se:Name>
 					<se:Description>
-            <se:Title>Искусственные земельные участки планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Искусственные земельные участки планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>70402040002</ogc:Literal>
@@ -168,8 +173,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

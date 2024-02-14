@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <StyledLayerDescriptor version="1.1.0"
-  xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ogc="http://www.opengis.net/ogc" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+                       xmlns="http://www.opengis.net/sld" 
+                       xmlns:xlink="http://www.w3.org/1999/xlink" 
+                       xmlns:se="http://www.opengis.net/se" 
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                       xmlns:ogc="http://www.opengis.net/ogc" 
+                       xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Микроформы рельефа линейные</se:Name>
     <UserStyle>
@@ -451,7 +452,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -513,7 +514,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">7 14</se:SvgParameter>
@@ -575,7 +576,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">3 14</se:SvgParameter>
@@ -637,7 +638,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -699,7 +700,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -761,7 +762,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -823,7 +824,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">7 14</se:SvgParameter>
@@ -885,7 +886,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">3 14</se:SvgParameter>
@@ -947,7 +948,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1009,7 +1010,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1072,7 +1073,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -1096,7 +1097,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-9</se:DisplacementX>
                     <se:DisplacementY>6</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 20</se:SvgParameter>
@@ -1159,7 +1160,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">7 14</se:SvgParameter>
@@ -1183,7 +1184,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-6</se:DisplacementX>
                     <se:DisplacementY>6</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">1 20</se:SvgParameter>
@@ -1245,7 +1246,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">3 14</se:SvgParameter>
@@ -1269,7 +1270,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-6</se:DisplacementX>
                     <se:DisplacementY>6</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">0.5 16.5</se:SvgParameter>
@@ -1331,7 +1332,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1393,7 +1394,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1640,7 +1641,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -1702,7 +1703,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">7 14</se:SvgParameter>
@@ -1764,7 +1765,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">3 14</se:SvgParameter>
@@ -1826,7 +1827,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1888,7 +1889,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-2</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 14</se:SvgParameter>
@@ -1952,7 +1953,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -1994,14 +1995,14 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-10</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>254-100-L</se:Name>
           <se:Description>
@@ -2056,7 +2057,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-3</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
@@ -2098,14 +2099,14 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-10</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">8 14</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>254-100-L</se:Name>
           <se:Description>
@@ -2160,7 +2161,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-4</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">4 16</se:SvgParameter>
@@ -2202,14 +2203,14 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-9</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">4 16</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>254-100-L</se:Name>
           <se:Description>
@@ -2264,7 +2265,7 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-1</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 16</se:SvgParameter>
@@ -2306,18 +2307,18 @@
                   <se:Displacement>
                     <se:DisplacementX>-8</se:DisplacementX>
                     <se:DisplacementY>-6</se:DisplacementY>
-                  </se:Displacement>
+                  </se:Displacement> 
                 </se:Graphic>
               </se:GraphicStroke>
               <se:SvgParameter name="stroke-dasharray">2 16</se:SvgParameter>
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
+        
+       
+        
 
-
-
-
-
+        
 
         <se:Rule>
           <se:Name>349-200-L</se:Name>
@@ -2341,7 +2342,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>349-200-L</se:Name>
           <se:Description>
@@ -2364,7 +2365,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>349-200-L</se:Name>
           <se:Description>
@@ -2387,7 +2388,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>349-200-L</se:Name>
           <se:Description>
@@ -2410,7 +2411,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>349-200-L</se:Name>
           <se:Description>
@@ -2433,7 +2434,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+       
 
         <se:Rule>
           <se:Name>354-300-L</se:Name>
@@ -2457,7 +2458,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>354-300-L</se:Name>
           <se:Description>
@@ -2480,7 +2481,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>354-300-L</se:Name>
           <se:Description>
@@ -2503,7 +2504,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>354-300-L</se:Name>
           <se:Description>
@@ -2526,7 +2527,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>354-300-L</se:Name>
           <se:Description>
@@ -2549,7 +2550,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
 
         <se:Rule>
           <se:Name>353-100-L</se:Name>
@@ -2573,7 +2574,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>353-100-L</se:Name>
           <se:Description>
@@ -2596,7 +2597,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>353-100-L</se:Name>
           <se:Description>
@@ -2619,7 +2620,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>353-100-L</se:Name>
           <se:Description>
@@ -2642,7 +2643,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>353-100-L</se:Name>
           <se:Description>
@@ -2665,7 +2666,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
 
         <se:Rule>
           <se:Name>345-000-L</se:Name>
@@ -2701,7 +2702,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>345-000-L</se:Name>
           <se:Description>
@@ -2736,7 +2737,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>345-000-L</se:Name>
           <se:Description>
@@ -2771,7 +2772,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>345-000-L</se:Name>
           <se:Description>
@@ -2806,7 +2807,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>345-000-L</se:Name>
           <se:Description>
@@ -2841,7 +2842,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
 
         <se:Rule>
           <se:Name>218-100-L</se:Name>
@@ -2883,7 +2884,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>218-100-L</se:Name>
           <se:Description>
@@ -2924,7 +2925,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>218-100-L</se:Name>
           <se:Description>
@@ -2965,7 +2966,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>218-100-L</se:Name>
           <se:Description>
@@ -3006,7 +3007,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>218-100-L</se:Name>
           <se:Description>
@@ -3088,7 +3089,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>333-000-L</se:Name>
           <se:Description>
@@ -3129,7 +3130,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>333-000-L</se:Name>
           <se:Description>
@@ -3170,7 +3171,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>333-000-L</se:Name>
           <se:Description>
@@ -3211,7 +3212,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>333-000-L</se:Name>
           <se:Description>
@@ -3272,8 +3273,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3287,7 +3287,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>351-000-L</se:Name>
           <se:Description>
@@ -3307,8 +3307,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3322,7 +3321,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>351-000-L</se:Name>
           <se:Description>
@@ -3342,8 +3341,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3357,7 +3355,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>351-000-L</se:Name>
           <se:Description>
@@ -3377,8 +3375,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3392,7 +3389,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>351-000-L</se:Name>
           <se:Description>
@@ -3412,8 +3409,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/zadernovaniy_ustup.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3450,7 +3446,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>334-100-L</se:Name>
           <se:Description>
@@ -3473,7 +3469,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>334-100-L</se:Name>
           <se:Description>
@@ -3496,7 +3492,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>334-100-L</se:Name>
           <se:Description>
@@ -3519,7 +3515,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>334-100-L</se:Name>
           <se:Description>
@@ -3563,7 +3559,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-500-L</se:Name>
           <se:Description>
@@ -3584,7 +3580,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-500-L</se:Name>
           <se:Description>
@@ -3605,7 +3601,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-500-L</se:Name>
           <se:Description>
@@ -3626,7 +3622,7 @@
             </se:Stroke>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-500-L</se:Name>
           <se:Description>
@@ -3648,7 +3644,7 @@
           </se:LineSymbolizer>
         </se:Rule>
 
-
+       
         <se:Rule>
           <se:Name>281-100-L</se:Name>
           <se:Description>
@@ -3674,8 +3670,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3690,7 +3685,7 @@
             <se:PerpendicularOffset>6</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>281-100-L</se:Name>
           <se:Description>
@@ -3716,8 +3711,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3732,7 +3726,7 @@
             <se:PerpendicularOffset>7</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>281-100-L</se:Name>
           <se:Description>
@@ -3758,8 +3752,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3774,7 +3767,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>281-100-L</se:Name>
           <se:Description>
@@ -3800,8 +3793,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3816,7 +3808,7 @@
             <se:PerpendicularOffset>3</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>281-100-L</se:Name>
           <se:Description>
@@ -3842,8 +3834,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_derevo.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3884,8 +3875,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3900,7 +3890,7 @@
             <se:PerpendicularOffset>6</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-000-L</se:Name>
           <se:Description>
@@ -3926,8 +3916,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3942,7 +3931,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-000-L</se:Name>
           <se:Description>
@@ -3968,8 +3957,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -3984,7 +3972,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-000-L</se:Name>
           <se:Description>
@@ -4010,8 +3998,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4026,7 +4013,7 @@
             <se:PerpendicularOffset>3</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>280-000-L</se:Name>
           <se:Description>
@@ -4052,8 +4039,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/stenka_podpornaya_kamen.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4068,7 +4054,7 @@
             <se:PerpendicularOffset>3</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>347-000-L</se:Name>
           <se:Description>
@@ -4088,8 +4074,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4123,8 +4108,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4138,7 +4122,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>347-000-L</se:Name>
           <se:Description>
@@ -4158,8 +4142,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4173,7 +4156,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>347-000-L</se:Name>
           <se:Description>
@@ -4193,8 +4176,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4208,7 +4190,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>347-000-L</se:Name>
           <se:Description>
@@ -4228,8 +4210,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/gryada_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4263,8 +4244,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4278,7 +4258,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>146-000-L</se:Name>
           <se:Description>
@@ -4298,8 +4278,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4313,7 +4292,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>146-000-L</se:Name>
           <se:Description>
@@ -4333,8 +4312,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4348,7 +4326,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>146-000-L</se:Name>
           <se:Description>
@@ -4368,8 +4346,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -4383,7 +4360,7 @@
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>146-000-L</se:Name>
           <se:Description>
@@ -4403,8 +4380,7 @@
             <se:Stroke>
               <se:GraphicStroke>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_korchevaniya_line.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>

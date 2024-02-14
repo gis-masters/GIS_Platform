@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-	xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты добычи и транспортировки газа</se:Name>
 		<UserStyle>
@@ -12,8 +11,8 @@
 				<se:Rule>
 					<se:Name>60204050111</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -33,8 +32,8 @@
 				<se:Rule>
 					<se:Name>60204050112</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -54,8 +53,8 @@
 				<se:Rule>
 					<se:Name>60204050113</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -75,8 +74,8 @@
 				<se:Rule>
 					<se:Name>60204050114</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -96,8 +95,8 @@
 				<se:Rule>
 					<se:Name>60204050121</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -117,8 +116,8 @@
 				<se:Rule>
 					<se:Name>60204050122</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -138,8 +137,8 @@
 				<se:Rule>
 					<se:Name>60204050123</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -159,8 +158,8 @@
 				<se:Rule>
 					<se:Name>60204050124</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -180,8 +179,8 @@
 				<se:Rule>
 					<se:Name>60204050131</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -201,8 +200,8 @@
 				<se:Rule>
 					<se:Name>60204050132</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -222,8 +221,8 @@
 				<se:Rule>
 					<se:Name>60204050133</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -243,8 +242,8 @@
 				<se:Rule>
 					<se:Name>60204050134</se:Name>
 					<se:Description>
-            <se:Title>Газовый промысел планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газовый промысел планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -264,8 +263,8 @@
 				<se:Rule>
 					<se:Name>60204050211</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -285,8 +284,8 @@
 				<se:Rule>
 					<se:Name>60204050212</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -306,8 +305,8 @@
 				<se:Rule>
 					<se:Name>60204050213</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -327,8 +326,8 @@
 				<se:Rule>
 					<se:Name>60204050214</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -348,8 +347,8 @@
 				<se:Rule>
 					<se:Name>60204050221</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -369,8 +368,8 @@
 				<se:Rule>
 					<se:Name>60204050222</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -390,8 +389,8 @@
 				<se:Rule>
 					<se:Name>60204050223</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -411,8 +410,8 @@
 				<se:Rule>
 					<se:Name>60204050224</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -432,8 +431,8 @@
 				<se:Rule>
 					<se:Name>60204050231</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -453,8 +452,8 @@
 				<se:Rule>
 					<se:Name>60204050232</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -474,8 +473,8 @@
 				<se:Rule>
 					<se:Name>60204050233</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -495,8 +494,8 @@
 				<se:Rule>
 					<se:Name>60204050234</se:Name>
 					<se:Description>
-            <se:Title>Головные сооружения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Головные сооружения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -516,8 +515,8 @@
 				<se:Rule>
 					<se:Name>60204050311</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -537,8 +536,8 @@
 				<se:Rule>
 					<se:Name>60204050312</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -558,8 +557,8 @@
 				<se:Rule>
 					<se:Name>60204050313</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -579,8 +578,8 @@
 				<se:Rule>
 					<se:Name>60204050314</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -600,8 +599,8 @@
 				<se:Rule>
 					<se:Name>60204050321</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -621,8 +620,8 @@
 				<se:Rule>
 					<se:Name>60204050322</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -642,8 +641,8 @@
 				<se:Rule>
 					<se:Name>60204050323</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -663,8 +662,8 @@
 				<se:Rule>
 					<se:Name>60204050324</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -684,8 +683,8 @@
 				<se:Rule>
 					<se:Name>60204050331</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -705,8 +704,8 @@
 				<se:Rule>
 					<se:Name>60204050332</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -726,8 +725,8 @@
 				<se:Rule>
 					<se:Name>60204050333</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -747,8 +746,8 @@
 				<se:Rule>
 					<se:Name>60204050334</se:Name>
 					<se:Description>
-            <se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Установка комплексной подготовки газа (УКПГ) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -768,8 +767,8 @@
 				<se:Rule>
 					<se:Name>60204050411</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -789,8 +788,8 @@
 				<se:Rule>
 					<se:Name>60204050412</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -810,8 +809,8 @@
 				<se:Rule>
 					<se:Name>60204050413</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -831,8 +830,8 @@
 				<se:Rule>
 					<se:Name>60204050414</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -852,8 +851,8 @@
 				<se:Rule>
 					<se:Name>60204050421</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -873,8 +872,8 @@
 				<se:Rule>
 					<se:Name>60204050422</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -894,8 +893,8 @@
 				<se:Rule>
 					<se:Name>60204050423</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -915,8 +914,8 @@
 				<se:Rule>
 					<se:Name>60204050424</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -936,8 +935,8 @@
 				<se:Rule>
 					<se:Name>60204050431</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -957,8 +956,8 @@
 				<se:Rule>
 					<se:Name>60204050432</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -978,8 +977,8 @@
 				<se:Rule>
 					<se:Name>60204050433</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -999,8 +998,8 @@
 				<se:Rule>
 					<se:Name>60204050434</se:Name>
 					<se:Description>
-            <se:Title>Дожимная компрессорная станция планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Дожимная компрессорная станция планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1020,8 +1019,8 @@
 				<se:Rule>
 					<se:Name>60204050511</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1041,8 +1040,8 @@
 				<se:Rule>
 					<se:Name>60204050512</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1062,8 +1061,8 @@
 				<se:Rule>
 					<se:Name>60204050513</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1083,8 +1082,8 @@
 				<se:Rule>
 					<se:Name>60204050514</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1104,8 +1103,8 @@
 				<se:Rule>
 					<se:Name>60204050521</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1125,8 +1124,8 @@
 				<se:Rule>
 					<se:Name>60204050522</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1146,8 +1145,8 @@
 				<se:Rule>
 					<se:Name>60204050523</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1167,8 +1166,8 @@
 				<se:Rule>
 					<se:Name>60204050524</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1188,8 +1187,8 @@
 				<se:Rule>
 					<se:Name>60204050531</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1209,8 +1208,8 @@
 				<se:Rule>
 					<se:Name>60204050532</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1230,8 +1229,8 @@
 				<se:Rule>
 					<se:Name>60204050533</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1251,8 +1250,8 @@
 				<se:Rule>
 					<se:Name>60204050534</se:Name>
 					<se:Description>
-            <se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Компрессорная станция (КС), компрессорный цех (КЦ) планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1272,8 +1271,8 @@
 				<se:Rule>
 					<se:Name>60204050611</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1293,8 +1292,8 @@
 				<se:Rule>
 					<se:Name>60204050612</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1314,8 +1313,8 @@
 				<se:Rule>
 					<se:Name>60204050613</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1335,8 +1334,8 @@
 				<se:Rule>
 					<se:Name>60204050614</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1356,8 +1355,8 @@
 				<se:Rule>
 					<se:Name>60204050621</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1377,8 +1376,8 @@
 				<se:Rule>
 					<se:Name>60204050622</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1398,8 +1397,8 @@
 				<se:Rule>
 					<se:Name>60204050623</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1419,8 +1418,8 @@
 				<se:Rule>
 					<se:Name>60204050624</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1440,8 +1439,8 @@
 				<se:Rule>
 					<se:Name>60204050631</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1461,8 +1460,8 @@
 				<se:Rule>
 					<se:Name>60204050632</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1482,8 +1481,8 @@
 				<se:Rule>
 					<se:Name>60204050633</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1503,8 +1502,8 @@
 				<se:Rule>
 					<se:Name>60204050634</se:Name>
 					<se:Description>
-            <se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газораспределительная станция (ГРС) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1524,8 +1523,8 @@
 				<se:Rule>
 					<se:Name>60204050711</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1545,8 +1544,8 @@
 				<se:Rule>
 					<se:Name>60204050712</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1566,8 +1565,8 @@
 				<se:Rule>
 					<se:Name>60204050713</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1587,8 +1586,8 @@
 				<se:Rule>
 					<se:Name>60204050714</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1608,8 +1607,8 @@
 				<se:Rule>
 					<se:Name>60204050721</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1629,8 +1628,8 @@
 				<se:Rule>
 					<se:Name>60204050722</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1650,8 +1649,8 @@
 				<se:Rule>
 					<se:Name>60204050723</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1671,8 +1670,8 @@
 				<se:Rule>
 					<se:Name>60204050724</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1692,8 +1691,8 @@
 				<se:Rule>
 					<se:Name>60204050731</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1713,8 +1712,8 @@
 				<se:Rule>
 					<se:Name>60204050732</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1734,8 +1733,8 @@
 				<se:Rule>
 					<se:Name>60204050733</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1755,8 +1754,8 @@
 				<se:Rule>
 					<se:Name>60204050734</se:Name>
 					<se:Description>
-            <se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Станция подземного хранения газа (СПХГ) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1776,8 +1775,8 @@
 				<se:Rule>
 					<se:Name>60204050811</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1797,8 +1796,8 @@
 				<se:Rule>
 					<se:Name>60204050812</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1818,8 +1817,8 @@
 				<se:Rule>
 					<se:Name>60204050813</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1839,8 +1838,8 @@
 				<se:Rule>
 					<se:Name>60204050814</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1860,8 +1859,8 @@
 				<se:Rule>
 					<se:Name>60204050821</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1881,8 +1880,8 @@
 				<se:Rule>
 					<se:Name>60204050822</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1902,8 +1901,8 @@
 				<se:Rule>
 					<se:Name>60204050823</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1923,8 +1922,8 @@
 				<se:Rule>
 					<se:Name>60204050824</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1944,8 +1943,8 @@
 				<se:Rule>
 					<se:Name>60204050831</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1965,8 +1964,8 @@
 				<se:Rule>
 					<se:Name>60204050832</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1986,8 +1985,8 @@
 				<se:Rule>
 					<se:Name>60204050833</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2007,8 +2006,8 @@
 				<se:Rule>
 					<se:Name>60204050834</se:Name>
 					<se:Description>
-            <se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Резервуарная установка сжиженных углеводородных газов (СУГ) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2028,8 +2027,8 @@
 				<se:Rule>
 					<se:Name>60204050911</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2049,8 +2048,8 @@
 				<se:Rule>
 					<se:Name>60204050912</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2070,8 +2069,8 @@
 				<se:Rule>
 					<se:Name>60204050913</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2091,8 +2090,8 @@
 				<se:Rule>
 					<se:Name>60204050914</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2112,8 +2111,8 @@
 				<se:Rule>
 					<se:Name>60204050921</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2133,8 +2132,8 @@
 				<se:Rule>
 					<se:Name>60204050922</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2154,8 +2153,8 @@
 				<se:Rule>
 					<se:Name>60204050923</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2175,8 +2174,8 @@
 				<se:Rule>
 					<se:Name>60204050924</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2196,8 +2195,8 @@
 				<se:Rule>
 					<se:Name>60204050931</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2217,8 +2216,8 @@
 				<se:Rule>
 					<se:Name>60204050932</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2238,8 +2237,8 @@
 				<se:Rule>
 					<se:Name>60204050933</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2259,8 +2258,8 @@
 				<se:Rule>
 					<se:Name>60204050934</se:Name>
 					<se:Description>
-            <se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по производству сжиженного природного газа (СПГ) планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2280,8 +2279,8 @@
 				<se:Rule>
 					<se:Name>60204051011</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2301,8 +2300,8 @@
 				<se:Rule>
 					<se:Name>60204051012</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2322,8 +2321,8 @@
 				<se:Rule>
 					<se:Name>60204051013</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2343,8 +2342,8 @@
 				<se:Rule>
 					<se:Name>60204051014</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2364,8 +2363,8 @@
 				<se:Rule>
 					<se:Name>60204051021</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2385,8 +2384,8 @@
 				<se:Rule>
 					<se:Name>60204051022</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2406,8 +2405,8 @@
 				<se:Rule>
 					<se:Name>60204051023</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2427,8 +2426,8 @@
 				<se:Rule>
 					<se:Name>60204051024</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2448,8 +2447,8 @@
 				<se:Rule>
 					<se:Name>60204051031</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2469,8 +2468,8 @@
 				<se:Rule>
 					<se:Name>60204051032</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2490,8 +2489,8 @@
 				<se:Rule>
 					<se:Name>60204051033</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2511,8 +2510,8 @@
 				<se:Rule>
 					<se:Name>60204051034</se:Name>
 					<se:Description>
-            <se:Title>Завод по стабилизации конденсата планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Завод по стабилизации конденсата планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2532,8 +2531,8 @@
 				<se:Rule>
 					<se:Name>60204051111</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2553,8 +2552,8 @@
 				<se:Rule>
 					<se:Name>60204051112</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2574,8 +2573,8 @@
 				<se:Rule>
 					<se:Name>60204051113</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2595,8 +2594,8 @@
 				<se:Rule>
 					<se:Name>60204051114</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2616,8 +2615,8 @@
 				<se:Rule>
 					<se:Name>60204051121</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2637,8 +2636,8 @@
 				<se:Rule>
 					<se:Name>60204051122</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2658,8 +2657,8 @@
 				<se:Rule>
 					<se:Name>60204051123</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2679,8 +2678,8 @@
 				<se:Rule>
 					<se:Name>60204051124</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2700,8 +2699,8 @@
 				<se:Rule>
 					<se:Name>60204051131</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2721,8 +2720,8 @@
 				<se:Rule>
 					<se:Name>60204051132</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2742,8 +2741,8 @@
 				<se:Rule>
 					<se:Name>60204051133</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2763,8 +2762,8 @@
 				<se:Rule>
 					<se:Name>60204051134</se:Name>
 					<se:Description>
-            <se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регазификационный береговой терминал для сжиженного природного газа планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2784,8 +2783,8 @@
 				<se:Rule>
 					<se:Name>60204051211</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2805,8 +2804,8 @@
 				<se:Rule>
 					<se:Name>60204051212</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2826,8 +2825,8 @@
 				<se:Rule>
 					<se:Name>60204051213</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2847,8 +2846,8 @@
 				<se:Rule>
 					<se:Name>60204051214</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2868,8 +2867,8 @@
 				<se:Rule>
 					<se:Name>60204051221</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2889,8 +2888,8 @@
 				<se:Rule>
 					<se:Name>60204051222</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2910,8 +2909,8 @@
 				<se:Rule>
 					<se:Name>60204051223</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2931,8 +2930,8 @@
 				<se:Rule>
 					<se:Name>60204051224</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2952,8 +2951,8 @@
 				<se:Rule>
 					<se:Name>60204051231</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2973,8 +2972,8 @@
 				<se:Rule>
 					<se:Name>60204051232</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -2994,8 +2993,8 @@
 				<se:Rule>
 					<se:Name>60204051233</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3015,8 +3014,8 @@
 				<se:Rule>
 					<se:Name>60204051234</se:Name>
 					<se:Description>
-            <se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Погрузочный береговой терминал для сжиженного природного газа планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3036,8 +3035,8 @@
 				<se:Rule>
 					<se:Name>60204051311</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3057,8 +3056,8 @@
 				<se:Rule>
 					<se:Name>60204051312</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3078,8 +3077,8 @@
 				<se:Rule>
 					<se:Name>60204051313</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3099,8 +3098,8 @@
 				<se:Rule>
 					<se:Name>60204051314</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3120,8 +3119,8 @@
 				<se:Rule>
 					<se:Name>60204051321</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3141,8 +3140,8 @@
 				<se:Rule>
 					<se:Name>60204051322</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3162,8 +3161,8 @@
 				<se:Rule>
 					<se:Name>60204051323</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3183,8 +3182,8 @@
 				<se:Rule>
 					<se:Name>60204051324</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3204,8 +3203,8 @@
 				<se:Rule>
 					<se:Name>60204051331</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3225,8 +3224,8 @@
 				<se:Rule>
 					<se:Name>60204051332</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3246,8 +3245,8 @@
 				<se:Rule>
 					<se:Name>60204051333</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3267,8 +3266,8 @@
 				<se:Rule>
 					<se:Name>60204051334</se:Name>
 					<se:Description>
-            <se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газоизмерительная станция (ГИС) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3288,8 +3287,8 @@
 				<se:Rule>
 					<se:Name>60204051411</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3309,8 +3308,8 @@
 				<se:Rule>
 					<se:Name>60204051412</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3330,8 +3329,8 @@
 				<se:Rule>
 					<se:Name>60204051413</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3351,8 +3350,8 @@
 				<se:Rule>
 					<se:Name>60204051414</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3372,8 +3371,8 @@
 				<se:Rule>
 					<se:Name>60204051421</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3393,8 +3392,8 @@
 				<se:Rule>
 					<se:Name>60204051422</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3414,8 +3413,8 @@
 				<se:Rule>
 					<se:Name>60204051423</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3435,8 +3434,8 @@
 				<se:Rule>
 					<se:Name>60204051424</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3456,8 +3455,8 @@
 				<se:Rule>
 					<se:Name>60204051431</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3477,8 +3476,8 @@
 				<se:Rule>
 					<se:Name>60204051432</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3498,8 +3497,8 @@
 				<se:Rule>
 					<se:Name>60204051433</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3519,8 +3518,8 @@
 				<se:Rule>
 					<se:Name>60204051434</se:Name>
 					<se:Description>
-            <se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт редуцирования газа (ПРГ) планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3540,8 +3539,8 @@
 				<se:Rule>
 					<se:Name>60204051511</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) существующая федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) существующая федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3561,8 +3560,8 @@
 				<se:Rule>
 					<se:Name>60204051512</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3582,8 +3581,8 @@
 				<se:Rule>
 					<se:Name>60204051513</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3603,8 +3602,8 @@
 				<se:Rule>
 					<se:Name>60204051514</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3624,8 +3623,8 @@
 				<se:Rule>
 					<se:Name>60204051521</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) существующая регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) существующая регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3645,8 +3644,8 @@
 				<se:Rule>
 					<se:Name>60204051522</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3666,8 +3665,8 @@
 				<se:Rule>
 					<se:Name>60204051523</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3687,8 +3686,8 @@
 				<se:Rule>
 					<se:Name>60204051524</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3708,8 +3707,8 @@
 				<se:Rule>
 					<se:Name>60204051531</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) существующая местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) существующая местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3729,8 +3728,8 @@
 				<se:Rule>
 					<se:Name>60204051532</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3750,8 +3749,8 @@
 				<se:Rule>
 					<se:Name>60204051533</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3771,8 +3770,8 @@
 				<se:Rule>
 					<se:Name>60204051534</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительная станция (ГНС) планируемая к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3792,8 +3791,8 @@
 				<se:Rule>
 					<se:Name>60204051611</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3813,8 +3812,8 @@
 				<se:Rule>
 					<se:Name>60204051612</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый у размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый у размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3834,8 +3833,8 @@
 				<se:Rule>
 					<se:Name>60204051613</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый у реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый у реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3855,8 +3854,8 @@
 				<se:Rule>
 					<se:Name>60204051614</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый у ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый у ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3876,8 +3875,8 @@
 				<se:Rule>
 					<se:Name>60204051621</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3897,8 +3896,8 @@
 				<se:Rule>
 					<se:Name>60204051622</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3918,8 +3917,8 @@
 				<se:Rule>
 					<se:Name>60204051623</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3939,8 +3938,8 @@
 				<se:Rule>
 					<se:Name>60204051624</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3960,8 +3959,8 @@
 				<se:Rule>
 					<se:Name>60204051631</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -3981,8 +3980,8 @@
 				<se:Rule>
 					<se:Name>60204051632</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4002,8 +4001,8 @@
 				<se:Rule>
 					<se:Name>60204051633</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4023,8 +4022,8 @@
 				<se:Rule>
 					<se:Name>60204051634</se:Name>
 					<se:Description>
-            <se:Title>Газонаполнительный пункт (ГНП) планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Газонаполнительный пункт (ГНП) планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -4044,8 +4043,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

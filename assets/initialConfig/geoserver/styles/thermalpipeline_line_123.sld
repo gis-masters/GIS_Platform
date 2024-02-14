@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60204100101</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод магистральный существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод магистральный существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100101</ogc:Literal>
@@ -32,9 +34,10 @@
 				<se:Rule>
 					<se:Name>60204100102</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод магистральный планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод магистральный планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100102</ogc:Literal>
@@ -53,9 +56,10 @@
 				<se:Rule>
 					<se:Name>60204100103</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод магистральный планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод магистральный планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100103</ogc:Literal>
@@ -82,9 +86,10 @@
 				<se:Rule>
 					<se:Name>60204100104</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод магистральный планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод магистральный планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100104</ogc:Literal>
@@ -120,9 +125,10 @@
 				<se:Rule>
 					<se:Name>60204100201</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод распределительный (квартальный) существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод распределительный (квартальный) существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100201</ogc:Literal>
@@ -140,9 +146,10 @@
 				<se:Rule>
 					<se:Name>60204100202</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод распределительный (квартальный) планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод распределительный (квартальный) планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100202</ogc:Literal>
@@ -161,9 +168,10 @@
 				<se:Rule>
 					<se:Name>60204100203</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод распределительный (квартальный) планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод распределительный (квартальный) планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100203</ogc:Literal>
@@ -190,9 +198,10 @@
 				<se:Rule>
 					<se:Name>60204100204</se:Name>
 					<se:Description>
-            <se:Title>Теплопровод распределительный (квартальный) планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Теплопровод распределительный (квартальный) планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60204100204</ogc:Literal>
@@ -228,8 +237,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

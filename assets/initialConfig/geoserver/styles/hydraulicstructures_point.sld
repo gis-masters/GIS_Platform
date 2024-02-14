@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-	xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Гидротехнические сооружения</se:Name>
 		<UserStyle>
@@ -12,8 +11,8 @@
 				<se:Rule>
 					<se:Name>60204170111</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -31,31 +30,31 @@
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204170112</se:Name>
-					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204170112</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/09_HydraulicStructures/60204170112.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
+				<se:Name>60204170112</se:Name>
+				<se:Description>
+					<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
+				</se:Description>
+				<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+					<ogc:PropertyIsEqualTo>
+						<ogc:PropertyName>ruleid</ogc:PropertyName>
+						<ogc:Literal>60204170112</ogc:Literal>
+					</ogc:PropertyIsEqualTo>
+				</ogc:Filter>
+				<se:PointSymbolizer>
+					<se:Graphic>
+						<se:ExternalGraphic>
+							<se:OnlineResource xlink:type="simple" xlink:href="svg/04_Engineering/09_HydraulicStructures/60204170112.svg" />
+							<se:Format>image/svg+xml</se:Format>
+						</se:ExternalGraphic>
 							<se:Size>40</se:Size>
-						</se:Graphic>
-					</se:PointSymbolizer>
+					</se:Graphic>
+				</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
 					<se:Name>60204170113</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -75,8 +74,8 @@
 				<se:Rule>
 					<se:Name>60204170114</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -96,8 +95,8 @@
 				<se:Rule>
 					<se:Name>60204170121</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -117,8 +116,8 @@
 				<se:Rule>
 					<se:Name>60204170122</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -138,8 +137,8 @@
 				<se:Rule>
 					<se:Name>60204170123</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -159,8 +158,8 @@
 				<se:Rule>
 					<se:Name>60204170124</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -180,8 +179,8 @@
 				<se:Rule>
 					<se:Name>60204170131</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -201,8 +200,8 @@
 				<se:Rule>
 					<se:Name>60204170132</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -222,8 +221,8 @@
 				<se:Rule>
 					<se:Name>60204170133</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -243,8 +242,8 @@
 				<se:Rule>
 					<se:Name>60204170134</se:Name>
 					<se:Description>
-            <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -264,8 +263,8 @@
 				<se:Rule>
 					<se:Name>60204170211</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -285,8 +284,8 @@
 				<se:Rule>
 					<se:Name>60204170212</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -306,8 +305,8 @@
 				<se:Rule>
 					<se:Name>60204170213</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -327,8 +326,8 @@
 				<se:Rule>
 					<se:Name>60204170214</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -348,8 +347,8 @@
 				<se:Rule>
 					<se:Name>60204170221</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -369,8 +368,8 @@
 				<se:Rule>
 					<se:Name>60204170222</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -390,8 +389,8 @@
 				<se:Rule>
 					<se:Name>60204170223</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -411,8 +410,8 @@
 				<se:Rule>
 					<se:Name>60204170224</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -432,8 +431,8 @@
 				<se:Rule>
 					<se:Name>60204170231</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -453,8 +452,8 @@
 				<se:Rule>
 					<se:Name>60204170232</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -474,8 +473,8 @@
 				<se:Rule>
 					<se:Name>60204170233</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -495,8 +494,8 @@
 				<se:Rule>
 					<se:Name>60204170234</se:Name>
 					<se:Description>
-            <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -516,8 +515,8 @@
 				<se:Rule>
 					<se:Name>60204170311</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -537,8 +536,8 @@
 				<se:Rule>
 					<se:Name>60204170312</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -558,8 +557,8 @@
 				<se:Rule>
 					<se:Name>60204170313</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -579,8 +578,8 @@
 				<se:Rule>
 					<se:Name>60204170314</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -600,8 +599,8 @@
 				<se:Rule>
 					<se:Name>60204170321</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -621,8 +620,8 @@
 				<se:Rule>
 					<se:Name>60204170322</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -642,8 +641,8 @@
 				<se:Rule>
 					<se:Name>60204170323</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -663,8 +662,8 @@
 				<se:Rule>
 					<se:Name>60204170324</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -684,8 +683,8 @@
 				<se:Rule>
 					<se:Name>60204170331</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -705,8 +704,8 @@
 				<se:Rule>
 					<se:Name>60204170332</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -726,8 +725,8 @@
 				<se:Rule>
 					<se:Name>60204170333</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -747,8 +746,8 @@
 				<se:Rule>
 					<se:Name>60204170334</se:Name>
 					<se:Description>
-            <se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водозаборные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -768,8 +767,8 @@
 				<se:Rule>
 					<se:Name>60204170411</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -789,8 +788,8 @@
 				<se:Rule>
 					<se:Name>60204170412</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -810,8 +809,8 @@
 				<se:Rule>
 					<se:Name>60204170413</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -831,8 +830,8 @@
 				<se:Rule>
 					<se:Name>60204170414</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -852,8 +851,8 @@
 				<se:Rule>
 					<se:Name>60204170421</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -873,8 +872,8 @@
 				<se:Rule>
 					<se:Name>60204170422</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -894,8 +893,8 @@
 				<se:Rule>
 					<se:Name>60204170423</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -915,8 +914,8 @@
 				<se:Rule>
 					<se:Name>60204170424</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -936,8 +935,8 @@
 				<se:Rule>
 					<se:Name>60204170431</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -957,8 +956,8 @@
 				<se:Rule>
 					<se:Name>60204170432</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -978,8 +977,8 @@
 				<se:Rule>
 					<se:Name>60204170433</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -999,8 +998,8 @@
 				<se:Rule>
 					<se:Name>60204170434</se:Name>
 					<se:Description>
-            <se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Водопроводящие гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1020,8 +1019,8 @@
 				<se:Rule>
 					<se:Name>60204170511</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1041,8 +1040,8 @@
 				<se:Rule>
 					<se:Name>60204170512</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1062,8 +1061,8 @@
 				<se:Rule>
 					<se:Name>60204170513</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1083,8 +1082,8 @@
 				<se:Rule>
 					<se:Name>60204170514</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1104,8 +1103,8 @@
 				<se:Rule>
 					<se:Name>60204170521</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1125,8 +1124,8 @@
 				<se:Rule>
 					<se:Name>60204170522</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1146,8 +1145,8 @@
 				<se:Rule>
 					<se:Name>60204170523</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1167,8 +1166,8 @@
 				<se:Rule>
 					<se:Name>60204170524</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1188,8 +1187,8 @@
 				<se:Rule>
 					<se:Name>60204170531</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1209,8 +1208,8 @@
 				<se:Rule>
 					<se:Name>60204170532</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1230,8 +1229,8 @@
 				<se:Rule>
 					<se:Name>60204170533</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1251,8 +1250,8 @@
 				<se:Rule>
 					<se:Name>60204170534</se:Name>
 					<se:Description>
-            <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1272,8 +1271,8 @@
 				<se:Rule>
 					<se:Name>60204170611</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения существующие федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения существующие федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1293,8 +1292,8 @@
 				<se:Rule>
 					<se:Name>60204170612</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1314,8 +1313,8 @@
 				<se:Rule>
 					<se:Name>60204170613</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1335,8 +1334,8 @@
 				<se:Rule>
 					<se:Name>60204170614</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1356,8 +1355,8 @@
 				<se:Rule>
 					<se:Name>60204170621</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения существующие регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения существующие регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1377,8 +1376,8 @@
 				<se:Rule>
 					<se:Name>60204170622</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1398,8 +1397,8 @@
 				<se:Rule>
 					<se:Name>60204170623</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1419,8 +1418,8 @@
 				<se:Rule>
 					<se:Name>60204170624</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1440,8 +1439,8 @@
 				<se:Rule>
 					<se:Name>60204170631</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения существующие местного значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения существующие местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1461,8 +1460,8 @@
 				<se:Rule>
 					<se:Name>60204170632</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1482,8 +1481,8 @@
 				<se:Rule>
 					<se:Name>60204170633</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1503,8 +1502,8 @@
 				<se:Rule>
 					<se:Name>60204170634</se:Name>
 					<se:Description>
-            <se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Гидротехнические сооружения специального назначения планируемые к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -1524,8 +1523,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60301040101</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона железнодорожных путей существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона железнодорожных путей существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040101</ogc:Literal>
@@ -38,9 +40,10 @@
 				<se:Rule>
 					<se:Name>60301040102</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона железнодорожных путей планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона железнодорожных путей планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040102</ogc:Literal>
@@ -65,9 +68,10 @@
 				<se:Rule>
 					<se:Name>60301040201</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона внеуличного транспорта существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона внеуличного транспорта существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040201</ogc:Literal>
@@ -91,9 +95,10 @@
 				<se:Rule>
 					<se:Name>60301040202</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона внеуличного транспорта планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона внеуличного транспорта планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040202</ogc:Literal>
@@ -118,9 +123,10 @@
 				<se:Rule>
 					<se:Name>60301040301</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона морских портов существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона морских портов существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040301</ogc:Literal>
@@ -144,9 +150,10 @@
 				<se:Rule>
 					<se:Name>60301040302</se:Name>
 					<se:Description>
-            <se:Title>Охранная зона морских портов планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Охранная зона морских портов планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301040302</ogc:Literal>
@@ -171,8 +178,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

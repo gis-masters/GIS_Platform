@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-  xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" xmlns:se="http://www.opengis.net/se">
   <NamedLayer>
     <se:Name>Микроформы рельефа площадные</se:Name>
     <UserStyle>
@@ -25,7 +21,7 @@
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
           </se:PolygonSymbolizer>
-        </se:Rule>
+        </se:Rule> 
         <se:Rule>
           <se:Name>342-100-S</se:Name>
           <se:Description>
@@ -275,7 +271,7 @@
               <ogc:Literal>354-200-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
@@ -284,8 +280,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_tv_porod_galechnik.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -307,7 +302,7 @@
               <ogc:Literal>353-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
@@ -316,8 +311,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_rh_porod.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -339,7 +333,7 @@
               <ogc:Literal>348-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
@@ -348,8 +342,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/skoplenie_kamney.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -360,7 +353,7 @@
             <se:VendorOption name="grid">random</se:VendorOption>
           </se:PolygonSymbolizer>
         </se:Rule>
-
+        
         <se:Rule>
           <se:Name>146-000-S</se:Name>
           <se:Description>
@@ -372,7 +365,7 @@
               <ogc:Literal>146-000-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
@@ -381,8 +374,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/val_corchevaniya.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>
@@ -404,7 +396,7 @@
               <ogc:Literal>354-100-S</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:PolygonSymbolizer>
+          <se:PolygonSymbolizer> 
             <se:Fill>
               <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
             </se:Fill>
@@ -413,8 +405,7 @@
             <se:Fill>
               <se:GraphicFill>
                 <se:Graphic>
-                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld"
-                    xmlns:xlink="http://www.w3.org/1999/xlink">
+                  <se:ExternalGraphic xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <se:OnlineResource xlink:type="simple" xlink:href="icons/osipi_tv_porod_kam.png" />
                     <se:Format>image/png</se:Format>
                   </se:ExternalGraphic>

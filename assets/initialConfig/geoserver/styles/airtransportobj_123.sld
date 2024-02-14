@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60203120101</se:Name>
 					<se:Description>
-            <se:Title>Международный аэропорт существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Международный аэропорт существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120101</ogc:Literal>
@@ -32,9 +34,10 @@
 				<se:Rule>
 					<se:Name>60203120102</se:Name>
 					<se:Description>
-            <se:Title>Международный аэропорт планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Международный аэропорт планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120102</ogc:Literal>
@@ -53,9 +56,10 @@
 				<se:Rule>
 					<se:Name>60203120103</se:Name>
 					<se:Description>
-            <se:Title>Международный аэропорт планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Международный аэропорт планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120103</ogc:Literal>
@@ -73,9 +77,10 @@
 				<se:Rule>
 					<se:Name>60203120104</se:Name>
 					<se:Description>
-            <se:Title>Международный аэропорт планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Международный аэропорт планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120104</ogc:Literal>
@@ -93,9 +98,10 @@
 				<se:Rule>
 					<se:Name>60203120201</se:Name>
 					<se:Description>
-            <se:Title>Аэропорт существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэропорт существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120201</ogc:Literal>
@@ -113,9 +119,10 @@
 				<se:Rule>
 					<se:Name>60203120202</se:Name>
 					<se:Description>
-            <se:Title>Аэропорт планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэропорт планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120202</ogc:Literal>
@@ -134,9 +141,10 @@
 				<se:Rule>
 					<se:Name>60203120203</se:Name>
 					<se:Description>
-            <se:Title>Аэропорт планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэропорт планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120203</ogc:Literal>
@@ -154,9 +162,10 @@
 				<se:Rule>
 					<se:Name>60203120204</se:Name>
 					<se:Description>
-            <se:Title>Аэропорт планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэропорт планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120204</ogc:Literal>
@@ -174,9 +183,10 @@
 				<se:Rule>
 					<se:Name>60203120301</se:Name>
 					<se:Description>
-            <se:Title>Аэродром существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэродром существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120301</ogc:Literal>
@@ -194,9 +204,10 @@
 				<se:Rule>
 					<se:Name>60203120302</se:Name>
 					<se:Description>
-            <se:Title>Аэродром планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэродром планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120302</ogc:Literal>
@@ -215,9 +226,10 @@
 				<se:Rule>
 					<se:Name>60203120303</se:Name>
 					<se:Description>
-            <se:Title>Аэродром планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэродром планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120303</ogc:Literal>
@@ -235,9 +247,10 @@
 				<se:Rule>
 					<se:Name>60203120304</se:Name>
 					<se:Description>
-            <se:Title>Аэродром планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Аэродром планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120304</ogc:Literal>
@@ -255,9 +268,10 @@
 				<se:Rule>
 					<se:Name>60203120401</se:Name>
 					<se:Description>
-            <se:Title>Вертодром существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вертодром существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120401</ogc:Literal>
@@ -275,9 +289,10 @@
 				<se:Rule>
 					<se:Name>60203120402</se:Name>
 					<se:Description>
-            <se:Title>Вертодром планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вертодром планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120402</ogc:Literal>
@@ -296,9 +311,10 @@
 				<se:Rule>
 					<se:Name>60203120403</se:Name>
 					<se:Description>
-            <se:Title>Вертодром планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вертодром планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120403</ogc:Literal>
@@ -316,9 +332,10 @@
 				<se:Rule>
 					<se:Name>60203120404</se:Name>
 					<se:Description>
-            <se:Title>Вертодром планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вертодром планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120404</ogc:Literal>
@@ -336,9 +353,10 @@
 				<se:Rule>
 					<se:Name>60203120501</se:Name>
 					<se:Description>
-            <se:Title>Посадочная площадка существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Посадочная площадка существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120501</ogc:Literal>
@@ -356,9 +374,10 @@
 				<se:Rule>
 					<se:Name>60203120502</se:Name>
 					<se:Description>
-            <se:Title>Посадочная площадка планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Посадочная площадка планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120502</ogc:Literal>
@@ -377,9 +396,10 @@
 				<se:Rule>
 					<se:Name>60203120503</se:Name>
 					<se:Description>
-            <se:Title>Посадочная площадка планируемая к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Посадочная площадка планируемая к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120503</ogc:Literal>
@@ -397,9 +417,10 @@
 				<se:Rule>
 					<se:Name>60203120504</se:Name>
 					<se:Description>
-            <se:Title>Посадочная площадка планируемая к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Посадочная площадка планируемая к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120504</ogc:Literal>
@@ -417,9 +438,10 @@
 				<se:Rule>
 					<se:Name>60203120601</se:Name>
 					<se:Description>
-            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120601</ogc:Literal>
@@ -437,9 +459,10 @@
 				<se:Rule>
 					<se:Name>60203120602</se:Name>
 					<se:Description>
-            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120602</ogc:Literal>
@@ -458,9 +481,10 @@
 				<se:Rule>
 					<se:Name>60203120603</se:Name>
 					<se:Description>
-            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120603</ogc:Literal>
@@ -478,9 +502,10 @@
 				<se:Rule>
 					<se:Name>60203120604</se:Name>
 					<se:Description>
-            <se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Объект единой системы организации воздушного движения, расположенный вне аэропортов (аэродромов) планируемый к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203120604</ogc:Literal>
@@ -498,8 +523,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60301080101</se:Name>
 					<se:Description>
-            <se:Title>Первый пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Первый пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080101</ogc:Literal>
@@ -57,9 +59,10 @@
 				<se:Rule>
 					<se:Name>60301080102</se:Name>
 					<se:Description>
-            <se:Title>Первый пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Первый пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080102</ogc:Literal>
@@ -102,9 +105,10 @@
 				<se:Rule>
 					<se:Name>60301080201</se:Name>
 					<se:Description>
-            <se:Title>Второй пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Второй пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080201</ogc:Literal>
@@ -147,9 +151,10 @@
 				<se:Rule>
 					<se:Name>60301080202</se:Name>
 					<se:Description>
-            <se:Title>Второй пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Второй пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080202</ogc:Literal>
@@ -192,9 +197,10 @@
 				<se:Rule>
 					<se:Name>60301080301</se:Name>
 					<se:Description>
-            <se:Title>Третий пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Третий пояс зоны санитарной охраны источника водоснабжения существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080301</ogc:Literal>
@@ -237,9 +243,10 @@
 				<se:Rule>
 					<se:Name>60301080302</se:Name>
 					<se:Description>
-            <se:Title>Третий пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Третий пояс зоны санитарной охраны источника водоснабжения планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080302</ogc:Literal>
@@ -282,9 +289,10 @@
 				<se:Rule>
 					<se:Name>60301080401</se:Name>
 					<se:Description>
-            <se:Title>Санитарно-защитная полоса водоводов существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарно-защитная полоса водоводов существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080401</ogc:Literal>
@@ -327,9 +335,10 @@
 				<se:Rule>
 					<se:Name>60301080402</se:Name>
 					<se:Description>
-            <se:Title>Санитарно-защитная полоса водоводов планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарно-защитная полоса водоводов планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301080402</ogc:Literal>
@@ -372,8 +381,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

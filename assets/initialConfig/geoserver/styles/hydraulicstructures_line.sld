@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <se:Name>Гидротехнические сооружения</se:Name>
     <UserStyle>
@@ -58,7 +54,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170102</se:Name>
           <se:Description>
             <se:Title>Водоподпорные и водонапорные гидротехнические сооружения планируемые к размещению</se:Title>
@@ -120,7 +116,7 @@
               <ogc:Literal>60204170103</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -218,23 +214,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204170201</se:Name>
@@ -285,7 +281,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170202</se:Name>
           <se:Description>
             <se:Title>Водосбросные и водопропускные гидротехнические сооружения (в том числе сопрягающие) планируемые к размещению</se:Title>
@@ -347,7 +343,7 @@
               <ogc:Literal>60204170203</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -445,23 +441,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204170301</se:Name>
@@ -512,7 +508,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170302</se:Name>
           <se:Description>
             <se:Title>Водозаборные гидротехнические сооружения планируемые к размещению</se:Title>
@@ -574,7 +570,7 @@
               <ogc:Literal>60204170303</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -672,23 +668,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204170401</se:Name>
@@ -739,7 +735,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170402</se:Name>
           <se:Description>
             <se:Title>Водопроводящие гидротехнические сооружения планируемые к размещению</se:Title>
@@ -801,7 +797,7 @@
               <ogc:Literal>60204170403</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -899,23 +895,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204170501</se:Name>
@@ -966,7 +962,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170502</se:Name>
           <se:Description>
             <se:Title>Регуляционные и выправительные гидротехнические сооружения планируемые к размещению</se:Title>
@@ -1028,7 +1024,7 @@
               <ogc:Literal>60204170503</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -1126,23 +1122,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60204170601</se:Name>
@@ -1193,7 +1189,7 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
         </se:Rule>
-        <se:Rule>
+		<se:Rule>
           <se:Name>60204170602</se:Name>
           <se:Description>
             <se:Title>Гидротехнические сооружения специального назначения планируемые к размещению</se:Title>
@@ -1255,7 +1251,7 @@
               <ogc:Literal>60204170603</ogc:Literal>
             </ogc:PropertyIsEqualTo>
           </ogc:Filter>
-          <se:LineSymbolizer>
+		  <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#ffff00</se:SvgParameter>
               <se:SvgParameter name="stroke-width">2</se:SvgParameter>
@@ -1353,23 +1349,23 @@
             <se:PerpendicularOffset>5</se:PerpendicularOffset>
           </se:LineSymbolizer>
           <se:LineSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>shape://times</se:WellKnownName>
-                    <se:Stroke>
-                      <se:SvgParameter name="stroke">#333333</se:SvgParameter>
-                      <se:SvgParameter name="stroke-width">1</se:SvgParameter>
-                    </se:Stroke>
-                  </se:Mark>
-                  <se:Size>10</se:Size>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>shape://times</se:WellKnownName>
+                     <se:Stroke>
+                       <se:SvgParameter name="stroke">#333333</se:SvgParameter>
+                       <se:SvgParameter name="stroke-width">1</se:SvgParameter>
+                     </se:Stroke>
+                   </se:Mark>
+                   <se:Size>10</se:Size>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">7 29</se:SvgParameter>
+               <se:SvgParameter name="stroke-dashoffset">56</se:SvgParameter>
+             </se:Stroke>
+           </se:LineSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>Default</se:Name>

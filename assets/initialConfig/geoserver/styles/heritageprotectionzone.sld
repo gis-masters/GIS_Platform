@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-  xmlns:ogc="http://www.opengis.net/ogc">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" xmlns:ogc="http://www.opengis.net/ogc">
   <NamedLayer>
     <se:Name>Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации</se:Name>
     <UserStyle>
@@ -255,24 +251,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>triangle</se:WellKnownName>
-                    <se:Fill>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>triangle</se:WellKnownName>
+                     <se:Fill>
                       <se:SvgParameter name="fill">#8400a8</se:SvgParameter>
                     </se:Fill>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                  <se:Rotation>180</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>
-            </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                   <se:Rotation>180</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
+			   <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>  
+             </se:Stroke>
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
-          </se:PolygonSymbolizer>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301100402</se:Name>
@@ -301,24 +297,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>triangle</se:WellKnownName>
-                    <se:Fill>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>triangle</se:WellKnownName>
+                     <se:Fill>
                       <se:SvgParameter name="fill">#8400a8</se:SvgParameter>
                     </se:Fill>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                  <se:Rotation>180</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>
-            </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                   <se:Rotation>180</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
+			   <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>  
+             </se:Stroke>
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
-          </se:PolygonSymbolizer>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>60301100501</se:Name>
@@ -347,24 +343,24 @@
             </se:Stroke>
           </se:PolygonSymbolizer>
           <se:PolygonSymbolizer>
-            <se:Stroke>
-              <se:GraphicStroke>
-                <se:Graphic>
-                  <se:Mark>
-                    <se:WellKnownName>triangle</se:WellKnownName>
-                    <se:Fill>
+             <se:Stroke>
+               <se:GraphicStroke>
+                 <se:Graphic>
+                   <se:Mark>
+                     <se:WellKnownName>triangle</se:WellKnownName>
+                     <se:Fill>
                       <se:SvgParameter name="fill">#ff00ff</se:SvgParameter>
                     </se:Fill>
-                  </se:Mark>
-                  <se:Size>8</se:Size>
-                  <se:Rotation>180</se:Rotation>
-                </se:Graphic>
-              </se:GraphicStroke>
-              <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
-              <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>
-            </se:Stroke>
+                   </se:Mark>
+                   <se:Size>8</se:Size>
+                   <se:Rotation>180</se:Rotation>
+                 </se:Graphic>
+               </se:GraphicStroke>
+               <se:SvgParameter name="stroke-dasharray">5 50</se:SvgParameter>
+			   <se:SvgParameter name="stroke-dashoffset">0</se:SvgParameter>  
+             </se:Stroke>
             <se:PerpendicularOffset>4</se:PerpendicularOffset>
-          </se:PolygonSymbolizer>
+           </se:PolygonSymbolizer>
         </se:Rule>
         <se:Rule>
           <se:Name>Default</se:Name>

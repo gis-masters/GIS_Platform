@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-	xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:ogc="http://www.opengis.net/ogc"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
-	xmlns:se="http://www.opengis.net/se">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" 
+xmlns:ogc="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0" 
+xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>CustomControl_123</se:Name>
 		<UserStyle>
@@ -12,8 +11,8 @@
 				<se:Rule>
 					<se:Name>60203150111</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу существующий федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -32,8 +31,8 @@
 				<se:Rule>
 					<se:Name>60203150112</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к размещению федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -52,8 +51,8 @@
 				<se:Rule>
 					<se:Name>60203150113</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -72,8 +71,8 @@
 				<se:Rule>
 					<se:Name>60203150114</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации федерального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации федерального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -92,8 +91,8 @@
 				<se:Rule>
 					<se:Name>60203150121</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу существующий регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -112,8 +111,8 @@
 				<se:Rule>
 					<se:Name>60203150122</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к размещению регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -132,8 +131,8 @@
 				<se:Rule>
 					<se:Name>60203150123</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -152,8 +151,8 @@
 				<se:Rule>
 					<se:Name>60203150124</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации регионального значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации регионального значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -172,8 +171,8 @@
 				<se:Rule>
 					<se:Name>60203150131</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу существующий местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу существующий местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -192,8 +191,8 @@
 				<se:Rule>
 					<se:Name>60203150132</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к размещению местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к размещению местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -212,8 +211,8 @@
 				<se:Rule>
 					<se:Name>60203150133</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к реконструкции местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -232,8 +231,8 @@
 				<se:Rule>
 					<se:Name>60203150134</se:Name>
 					<se:Description>
-            <se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации местного значения</se:Title>
-          </se:Description>
+						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации местного значения</se:Title>
+					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
@@ -252,8 +251,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PointSymbolizer>
 						<se:Graphic>

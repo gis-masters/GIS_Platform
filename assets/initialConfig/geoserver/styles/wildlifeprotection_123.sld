@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60205050101</se:Name>
 					<se:Description>
-            <se:Title>Центры реабилитации животных существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Центры реабилитации животных существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050101</ogc:Literal>
@@ -32,9 +34,10 @@
 				<se:Rule>
 					<se:Name>60205050102</se:Name>
 					<se:Description>
-            <se:Title>Центры реабилитации животных планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Центры реабилитации животных планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050102</ogc:Literal>
@@ -53,9 +56,10 @@
 				<se:Rule>
 					<se:Name>60205050103</se:Name>
 					<se:Description>
-            <se:Title>Центры реабилитации животных планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Центры реабилитации животных планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050103</ogc:Literal>
@@ -73,9 +77,10 @@
 				<se:Rule>
 					<se:Name>60205050104</se:Name>
 					<se:Description>
-            <se:Title>Центры реабилитации животных планируемые к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Центры реабилитации животных планируемые к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050104</ogc:Literal>
@@ -93,9 +98,10 @@
 				<se:Rule>
 					<se:Name>60205050201</se:Name>
 					<se:Description>
-            <se:Title>Зверопереходы (экодуки) существующие</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Зверопереходы (экодуки) существующие</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050201</ogc:Literal>
@@ -113,9 +119,10 @@
 				<se:Rule>
 					<se:Name>60205050202</se:Name>
 					<se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Зверопереходы (экодуки) планируемые к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050202</ogc:Literal>
@@ -134,9 +141,10 @@
 				<se:Rule>
 					<se:Name>60205050203</se:Name>
 					<se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Зверопереходы (экодуки) планируемые к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050203</ogc:Literal>
@@ -154,9 +162,10 @@
 				<se:Rule>
 					<se:Name>60205050204</se:Name>
 					<se:Description>
-            <se:Title>Зверопереходы (экодуки) планируемые к ликвидации</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Зверопереходы (экодуки) планируемые к ликвидации</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60205050204</ogc:Literal>
@@ -174,8 +183,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

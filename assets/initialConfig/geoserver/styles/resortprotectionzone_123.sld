@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:se="http://www.opengis.net/se"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd" version="1.1.0"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60301090101</se:Name>
 					<se:Description>
-            <se:Title>Первая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Первая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090101</ogc:Literal>
@@ -47,9 +49,10 @@
 				<se:Rule>
 					<se:Name>60301090102</se:Name>
 					<se:Description>
-            <se:Title>Первая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Первая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090102</ogc:Literal>
@@ -82,9 +85,10 @@
 				<se:Rule>
 					<se:Name>60301090201</se:Name>
 					<se:Description>
-            <se:Title>Вторая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вторая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090201</ogc:Literal>
@@ -117,9 +121,10 @@
 				<se:Rule>
 					<se:Name>60301090202</se:Name>
 					<se:Description>
-            <se:Title>Вторая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Вторая зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090202</ogc:Literal>
@@ -152,9 +157,10 @@
 				<se:Rule>
 					<se:Name>60301090301</se:Name>
 					<se:Description>
-            <se:Title>Третья зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Третья зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090301</ogc:Literal>
@@ -187,9 +193,10 @@
 				<se:Rule>
 					<se:Name>60301090302</se:Name>
 					<se:Description>
-            <se:Title>Третья зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Третья зона округа санитарной (горно-санитарной) охраны лечебно-оздоровительных местностей, курортов, и природных лечебных ресурсов планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301090302</ogc:Literal>
@@ -222,8 +229,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

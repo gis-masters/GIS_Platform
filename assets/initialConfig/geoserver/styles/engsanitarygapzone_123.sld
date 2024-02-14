@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:ogc="http://www.opengis.net/ogc"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60301030101</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030101</ogc:Literal>
@@ -57,9 +59,10 @@
 				<se:Rule>
 					<se:Name>60301030102</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв магистральных трубопроводов углеводородного сырья планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030102</ogc:Literal>
@@ -103,9 +106,10 @@
 				<se:Rule>
 					<se:Name>60301030201</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв компрессорных установок существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв компрессорных установок существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030201</ogc:Literal>
@@ -148,9 +152,10 @@
 				<se:Rule>
 					<se:Name>60301030202</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв компрессорных установок планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв компрессорных установок планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030202</ogc:Literal>
@@ -194,9 +199,10 @@
 				<se:Rule>
 					<se:Name>60301030301</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв линий электропередачи существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв линий электропередачи существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030301</ogc:Literal>
@@ -239,9 +245,10 @@
 				<se:Rule>
 					<se:Name>60301030302</se:Name>
 					<se:Description>
-            <se:Title>Санитарный разрыв линий электропередачи планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Санитарный разрыв линий электропередачи планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60301030302</ogc:Literal>
@@ -285,8 +292,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:PolygonSymbolizer>
 						<se:Fill>

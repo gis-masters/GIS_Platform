@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" version="1.1.0"
+<StyledLayerDescriptor
+	xmlns="http://www.opengis.net/sld" version="1.1.0"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd"
 	xmlns:ogc="http://www.opengis.net/ogc"
@@ -12,9 +13,10 @@
 				<se:Rule>
 					<se:Name>60203050101</se:Name>
 					<se:Description>
-            <se:Title>Поселковая дорога существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Поселковая дорога существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050101</ogc:Literal>
@@ -50,9 +52,10 @@
 				<se:Rule>
 					<se:Name>60203050102</se:Name>
 					<se:Description>
-            <se:Title>Поселковая дорога планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Поселковая дорога планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050102</ogc:Literal>
@@ -97,9 +100,10 @@
 				<se:Rule>
 					<se:Name>60203050103</se:Name>
 					<se:Description>
-            <se:Title>Поселковая дорога планируемая к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Поселковая дорога планируемая к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050103</ogc:Literal>
@@ -135,9 +139,10 @@
 				<se:Rule>
 					<se:Name>60203050201</se:Name>
 					<se:Description>
-            <se:Title>Главная улица существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Главная улица существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050201</ogc:Literal>
@@ -173,9 +178,10 @@
 				<se:Rule>
 					<se:Name>60203050202</se:Name>
 					<se:Description>
-            <se:Title>Главная улица планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Главная улица планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050202</ogc:Literal>
@@ -220,9 +226,10 @@
 				<se:Rule>
 					<se:Name>60203050203</se:Name>
 					<se:Description>
-            <se:Title>Главная улица планируемая к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Главная улица планируемая к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050203</ogc:Literal>
@@ -258,9 +265,10 @@
 				<se:Rule>
 					<se:Name>60203050301</se:Name>
 					<se:Description>
-            <se:Title>Улица в жилой застройке существующая</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Улица в жилой застройке существующая</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050301</ogc:Literal>
@@ -296,9 +304,10 @@
 				<se:Rule>
 					<se:Name>60203050302</se:Name>
 					<se:Description>
-            <se:Title>Улица в жилой застройке планируемая к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Улица в жилой застройке планируемая к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050302</ogc:Literal>
@@ -343,9 +352,10 @@
 				<se:Rule>
 					<se:Name>60203050303</se:Name>
 					<se:Description>
-            <se:Title>Улица в жилой застройке планируемая к реконструкции</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Улица в жилой застройке планируемая к реконструкции</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050303</ogc:Literal>
@@ -381,9 +391,10 @@
 				<se:Rule>
 					<se:Name>60203050401</se:Name>
 					<se:Description>
-            <se:Title>Хозяйственный проезд, скотопрогон существующий</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Хозяйственный проезд, скотопрогон существующий</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050401</ogc:Literal>
@@ -401,9 +412,10 @@
 				<se:Rule>
 					<se:Name>60203050402</se:Name>
 					<se:Description>
-            <se:Title>Хозяйственный проезд, скотопрогон планируемый к размещению</se:Title>
-          </se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
+						<se:Title>Хозяйственный проезд, скотопрогон планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter
+						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
 							<ogc:Literal>60203050402</ogc:Literal>
@@ -422,8 +434,8 @@
 				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
-            <se:Title>Не определено</se:Title>
-          </se:Description>
+						<se:Title>Не определено</se:Title>
+					</se:Description>
 					<se:ElseFilter/>
 					<se:LineSymbolizer>
 						<se:Stroke>

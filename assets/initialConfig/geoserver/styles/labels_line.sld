@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StyledLayerDescriptor xmlns="http://www.opengis.net/sld"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:se="http://www.opengis.net/se"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:se="http://www.opengis.net/se" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ogc="http://www.opengis.net/ogc" version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.1.0/StyledLayerDescriptor.xsd">
 
   <NamedLayer>
     <se:Name>Подписи</se:Name>
@@ -26,11 +22,11 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
-            <se:Label>
+            <se:Label>             
               <ogc:PropertyName>textstring</ogc:PropertyName>
             </se:Label>
             <se:Font>
@@ -60,7 +56,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -94,7 +90,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -128,7 +124,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>   
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -162,7 +158,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>2001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -197,11 +193,11 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
-            <se:Label>
+            <se:Label>             
               <ogc:PropertyName>textstring</ogc:PropertyName>
             </se:Label>
             <se:Font>
@@ -231,7 +227,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -265,7 +261,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -299,7 +295,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -333,7 +329,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>2001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -367,11 +363,11 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
-            <se:Label>
+            <se:Label>             
               <ogc:PropertyName>textstring</ogc:PropertyName>
             </se:Label>
             <se:Font>
@@ -401,7 +397,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -435,7 +431,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -469,7 +465,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -503,7 +499,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>2001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -537,11 +533,11 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
-            <se:Label>
+            <se:Label>             
               <ogc:PropertyName>textstring</ogc:PropertyName>
             </se:Label>
             <se:Font>
@@ -571,7 +567,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -605,7 +601,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -639,7 +635,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -673,7 +669,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>2001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>2500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -708,7 +704,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -741,7 +737,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -774,7 +770,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -807,7 +803,7 @@
                 <ogc:Literal>5.4</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:TextSymbolizer>
             <se:Label>
@@ -840,7 +836,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter>  
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -873,7 +869,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -906,7 +902,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -939,7 +935,7 @@
                 <ogc:Literal>6</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:TextSymbolizer>
             <se:Label>
@@ -972,7 +968,7 @@
                 <ogc:Literal>7.8</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>0</se:MinScaleDenominator>
           <se:MaxScaleDenominator>500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -1005,7 +1001,7 @@
                 <ogc:Literal>7.8</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>501</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1000</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -1038,7 +1034,7 @@
                 <ogc:Literal>7.8</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1001</se:MinScaleDenominator>
           <se:MaxScaleDenominator>1500</se:MaxScaleDenominator>
           <se:TextSymbolizer>
@@ -1071,7 +1067,7 @@
                 <ogc:Literal>7.8</ogc:Literal>
               </ogc:PropertyIsEqualTo>
             </ogc:And>
-          </ogc:Filter>
+          </ogc:Filter> 
           <se:MinScaleDenominator>1501</se:MinScaleDenominator>
           <se:TextSymbolizer>
             <se:Label>
