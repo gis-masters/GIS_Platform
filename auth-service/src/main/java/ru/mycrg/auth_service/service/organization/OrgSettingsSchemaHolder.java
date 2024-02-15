@@ -1,5 +1,6 @@
 package ru.mycrg.auth_service.service.organization;
 
+import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -18,6 +19,7 @@ import static ru.mycrg.data_service_contract.enums.ValueType.CHOICE;
 public class OrgSettingsSchemaHolder {
 
     private final SchemaDto schema;
+    private final Gson mapper = new Gson();
 
     public OrgSettingsSchemaHolder() {
         schema = new SchemaDto();
@@ -81,6 +83,14 @@ public class OrgSettingsSchemaHolder {
         taskManagement.setValueType(BOOLEAN);
         taskManagement.setDefaultValue(false);
 
+        SimplePropertyDto tags = new SimplePropertyDto();
+        tags.setName("tags");
+        tags.setTitle("Управление схемами");
+        tags.setDescription("Системная схема будет доступна если содержит хотя бы один из разрешенных тегов");
+        tags.setMultiple(true);
+        tags.setValueType(CHOICE);
+        tags.setEnumerations(new ArrayList<>());
+
         props.add(createLibraryItem);
         props.add(dataManagement);
         props.add(downloadXml);
@@ -90,12 +100,15 @@ public class OrgSettingsSchemaHolder {
         props.add(sedDialog);
         props.add(reestrs);
         props.add(taskManagement);
+        props.add(tags);
 
         this.schema.setProperties(props);
     }
 
     public SchemaDto getSchema() {
-        return this.schema;
+        return mapper.fromJson(
+                mapper.toJson(schema),
+                SchemaDto.class);
     }
 
     public void updateTags(List<String> tags) {
@@ -109,8 +122,7 @@ public class OrgSettingsSchemaHolder {
         tag.setDescription("Системная схема будет доступна если содержит хотя бы один из разрешенных тегов");
         tag.setMultiple(true);
         tag.setValueType(CHOICE);
-        tag.setEnumerations(enumerations);
-        tag.setDefaultValue(new ArrayList<>());
+        tag.setEnumerations(enumerations.isEmpty() ? new ArrayList<>() : enumerations);
 
         this.schema.getProperties().removeIf(property -> property.getName().equals("tags"));
         this.schema.addProperty(tag);
@@ -118,7 +130,7 @@ public class OrgSettingsSchemaHolder {
 
     public Map<String, Object> allInclusive() {
         Map<String, Object> result = new HashMap<>();
-        getSchema().getProperties().forEach(property -> {
+        this.schema.getProperties().forEach(property -> {
             if (property.getValueType().equals(BOOLEAN.name())) {
                 result.put(property.getName(), true);
             }

@@ -37,68 +37,6 @@ const choiceField: PropertySchemaChoice[] = [
   }
 ];
 
-const value = { address: 'address1' };
-const longValue = { address: 'address3' };
-
-const Template: StoryFn<typeof Form> = args => <Form {...args} />;
-
-export const LongValueEditable = Template.bind({});
-LongValueEditable.args = {
-  schema: { properties: choiceField },
-  value: longValue,
-  auto: true
-};
-
-export const Editable = Template.bind({});
-Editable.args = {
-  schema: { properties: choiceField },
-  value,
-  auto: true
-};
-
-export const EditableEmpty = Template.bind({});
-EditableEmpty.args = {
-  schema: { properties: choiceField },
-  value: emptyValue,
-  auto: true
-};
-
-export const LongValueView = Template.bind({});
-LongValueView.args = {
-  schema: { properties: choiceField },
-  value: longValue,
-  readonly: true,
-  auto: true
-};
-
-export const View = Template.bind({});
-View.args = {
-  schema: { properties: choiceField },
-  value,
-  readonly: true,
-  auto: true
-};
-
-export const ViewEmpty = Template.bind({});
-ViewEmpty.args = {
-  schema: { properties: choiceField },
-  value: emptyValue,
-  readonly: true,
-  auto: true
-};
-
-const actionFunction = async (val: unknown) => {
-  // имитируем обращение к серверу
-  await sleep(Math.random() * 500);
-  Toast.success(JSON.stringify(val, null, 2));
-};
-
-const actions = (
-  <Button type='submit' startIcon={<Send />} color='primary'>
-    Send
-  </Button>
-);
-
 const choiceFieldWithMultiple: PropertySchemaChoice[] = [
   {
     propertyType: PropertyType.CHOICE,
@@ -137,6 +75,75 @@ const choiceFieldWithMultipleWithMatchNumber: PropertySchemaChoice[] = [
 const multipleThreeValues = {
   address: JSON.stringify(['address1', 'address2', 'address3']),
   address2: ['address1', 'address2', 'address3']
+};
+
+const value = { address: 'address1' };
+const longValue = { address: 'address3' };
+
+const actionFunction = async (val: unknown) => {
+  // имитируем обращение к серверу
+  await sleep(Math.random() * 500);
+  Toast.success(JSON.stringify(val, null, 2));
+};
+
+const actions = (
+  <Button type='submit' startIcon={<Send />} color='primary'>
+    Send
+  </Button>
+);
+
+const Template: StoryFn<typeof Form> = args => <Form {...args} />;
+
+export const LongValueEditable = Template.bind({});
+LongValueEditable.args = {
+  schema: { properties: choiceField },
+  value: longValue,
+  auto: true
+};
+
+export const Editable = Template.bind({});
+Editable.args = {
+  schema: { properties: choiceField },
+  value,
+  auto: true
+};
+
+export const EditableEmpty = Template.bind({});
+EditableEmpty.args = {
+  schema: { properties: choiceField },
+  value: emptyValue,
+  auto: true
+};
+
+export const IncorrectValue = Template.bind({});
+IncorrectValue.args = {
+  schema: { properties: choiceFieldWithMultiple },
+  value: { address: 'некорректное значение' },
+  auto: true
+};
+
+export const LongValueView = Template.bind({});
+LongValueView.args = {
+  schema: { properties: choiceField },
+  value: longValue,
+  readonly: true,
+  auto: true
+};
+
+export const View = Template.bind({});
+View.args = {
+  schema: { properties: choiceField },
+  value,
+  readonly: true,
+  auto: true
+};
+
+export const ViewEmpty = Template.bind({});
+ViewEmpty.args = {
+  schema: { properties: choiceField },
+  value: emptyValue,
+  readonly: true,
+  auto: true
 };
 
 export const MultipleEmpty = Template.bind({});

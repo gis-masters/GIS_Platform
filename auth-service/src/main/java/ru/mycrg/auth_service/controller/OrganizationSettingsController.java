@@ -26,14 +26,11 @@ import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_
 public class OrganizationSettingsController {
 
     private final IAuthenticationFacade authenticationFacade;
-    private final OrgSettingsSchemaHolder orgSettingsSchemaHolder;
     private final OrganizationSettingService organizationSettingService;
 
     public OrganizationSettingsController(OrganizationSettingService organizationSettingService,
-                                          IAuthenticationFacade authenticationFacade,
-                                          OrgSettingsSchemaHolder orgSettingsSchemaHolder) {
+                                          IAuthenticationFacade authenticationFacade) {
         this.authenticationFacade = authenticationFacade;
-        this.orgSettingsSchemaHolder = orgSettingsSchemaHolder;
         this.organizationSettingService = organizationSettingService;
     }
 
@@ -59,7 +56,7 @@ public class OrganizationSettingsController {
     @GetMapping("/organizations/settings/schema")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<SchemaDto> getSettingsSchema() {
-        SchemaDto schema = orgSettingsSchemaHolder.getSchema();
+        SchemaDto schema = organizationSettingService.getSchema();
 
         return ResponseEntity.ok(schema);
     }

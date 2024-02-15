@@ -1,5 +1,7 @@
 package ru.mycrg.acceptance.data_service.dto.schemas;
 
+import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class SimplePropertyDto {
     private Integer maxSize;
     private Integer maxFiles;
     private Integer maxDocuments;
+    private List<ValueTitleProjection> enumerations = new ArrayList<>();
     private List<String> allowedValues = new ArrayList<>();
 
     private String calculatedValueFormula;
@@ -344,5 +347,13 @@ public class SimplePropertyDto {
 
     public void setDefaultValueWellKnownFormula(String defaultValueWellKnownFormula) {
         this.defaultValueWellKnownFormula = defaultValueWellKnownFormula;
+    }
+
+    public List<ValueTitleProjection> getEnumerations() {
+        return enumerations;
+    }
+
+    public void setEnumerations(List<ValueTitleProjection> enumerations) {
+        this.enumerations = enumerations;
     }
 }

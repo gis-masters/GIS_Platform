@@ -6,7 +6,10 @@ import { Container } from '@mui/material';
 import { cloneDeep } from 'lodash';
 import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
 
-import { organizationSettings, OrgSettings } from '../../stores/OrganizationSettings.store';
+import { isStringArray } from '../../services/util/typeGuards/isStringArray';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { organizationsClient } from '../../services/auth/organizations/organizations.client';
+import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { SimpleSchema } from '../../services/data/schema/schema.models';
@@ -25,21 +28,21 @@ export interface OrganizationSettingsProps {
 
 @observer
 export default class OrganizationSettings extends Component<OrganizationSettingsProps> {
-  @observable private formValue: Record<string, boolean> = cloneDeep(
+  @observable private formValue?: Settings = cloneDeep(
     organizationSettings.orgSettings?.organization || this.props.orgSettings?.system
   );
   @observable private busy = false;
-  @observable private schema: SimpleSchema;
+  @observable private schema?: SimpleSchema;
 
-  private reactionDisposerOrganizationSettings: IReactionDisposer;
-  private reactionDisposerSystemSettings: IReactionDisposer;
+  private reactionDisposerOrganizationSettings?: IReactionDisposer;
+  private reactionDisposerSystemSettings?: IReactionDisposer;
 
   constructor(props: OrganizationSettingsProps) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.reactionDisposerOrganizationSettings = reaction(
       () => cloneDeep(organizationSettings.orgSettings),
       () => {
@@ -65,13 +68,17 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     );
 
     if (this.formValue) {
-      this.setSchema(organizationsService.orgSchema(this.formValue, this.props.systemManagement));
+      const schema = await schemaService.getSchemaAtUrl(organizationsClient.getOrganizationsSettingsSchemaUrl());
+
+      this.setSchema(schema);
     }
   }
 
   componentWillUnmount() {
-    this.reactionDisposerOrganizationSettings();
-    this.reactionDisposerSystemSettings();
+    if (this.reactionDisposerOrganizationSettings && this.reactionDisposerSystemSettings) {
+      this.reactionDisposerOrganizationSettings();
+      this.reactionDisposerSystemSettings();
+    }
   }
 
   render() {
@@ -109,10 +116,27 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @boundMethod
-  private async save(value: Record<string, boolean>) {
+  private async save(value: Settings) {
     this.setBusy(true);
+
     const { systemManagement, orgSettings } = this.props;
     const id = systemManagement ? orgSettings.id : organizationSettings.orgSettings.id;
+
+    const tags = value.tags;
+
+    if (tags && !Array.isArray(tags)) {
+      try {
+        const parsedValue = JSON.parse(tags) as unknown;
+        if (isStringArray(parsedValue)) {
+          value.tags = parsedValue;
+        } else {
+          throw new TypeError('Неверный тип данных');
+        }
+      } catch {
+        throw new Error('Ошибка в типах данных');
+      }
+    }
+
     const payload = { id, settings: value };
 
     await organizationsService.setOrganizationSettings(payload);
@@ -131,7 +155,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setFormValue(formValue: Record<string, boolean>) {
+  private setFormValue(formValue: Settings): void {
     this.formValue = formValue;
   }
 }

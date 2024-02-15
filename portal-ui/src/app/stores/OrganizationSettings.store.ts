@@ -3,12 +3,25 @@ import { observable, action, computed, makeObservable } from 'mobx';
 import { currentUser } from './CurrentUser.store';
 import { Schema } from '../services/data/schema/schema.models';
 
+export interface Settings {
+  createLibraryItem: boolean;
+  createProject: boolean;
+  dataManagement: boolean;
+  downloadFiles: boolean;
+  downloadXml: boolean;
+  editProjectLayer: boolean;
+  reestrs: boolean;
+  sedDialog: boolean;
+  taskManagement: boolean;
+  tags: string | string[];
+}
+
 export interface OrgSettings {
   id: number;
   name?: string;
-  settings?: Record<string, boolean>;
-  system?: Record<string, boolean>;
-  organization?: Record<string, boolean>;
+  system?: Settings;
+
+  organization?: Settings;
 }
 
 export class OrganizationSettings {
@@ -32,6 +45,10 @@ export class OrganizationSettings {
     if (Array.isArray(settings)) {
       this.systemSettings = settings;
     } else {
+      const tags = settings.organization.tags;
+      if (tags.length) {
+        settings.organization.tags = tags;
+      }
       this.orgSettings = settings;
     }
     this.setSettingsError(false);
@@ -68,7 +85,10 @@ export class OrganizationSettings {
 
   @computed
   get taskManagement(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.taskManagement, this.orgSettings?.organization?.taskManagement);
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.taskManagement,
+      !!this.orgSettings?.organization?.taskManagement
+    );
   }
 
   @computed

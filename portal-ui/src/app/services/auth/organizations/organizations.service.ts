@@ -18,6 +18,7 @@ class OrganizationsService {
       organizationSettings.setSettings(settings);
 
       const settingSchema = await schemaService.getSchemaAtUrl(organizationsClient.getOrganizationsSettingsSchemaUrl());
+
       organizationSettings.setSchema(settingSchema);
     } catch (error) {
       organizationSettings.setSettingsError(true);

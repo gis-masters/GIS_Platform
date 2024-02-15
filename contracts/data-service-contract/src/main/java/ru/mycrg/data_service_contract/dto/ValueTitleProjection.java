@@ -1,11 +1,15 @@
 package ru.mycrg.data_service_contract.dto;
 
+import java.util.Objects;
+
 public class ValueTitleProjection {
 
     private String value;
     private String title;
 
-    public ValueTitleProjection() {}
+    public ValueTitleProjection() {
+        // Required
+    }
 
     public ValueTitleProjection(String value, String title) {
         this.value = value;
@@ -26,5 +30,22 @@ public class ValueTitleProjection {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ValueTitleProjection that = (ValueTitleProjection) o;
+        return Objects.equals(value, that.value) && Objects.equals(title, that.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, title);
     }
 }

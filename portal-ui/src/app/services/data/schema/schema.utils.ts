@@ -264,8 +264,6 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
     if (oldField.valueType === ValueType.CHOICE) {
       field.propertyType = PropertyType.CHOICE;
 
-      (field as Partial<PropertySchemaChoice>).multiple = oldField.isMultiple;
-      delete (field as Partial<OldPropertySchemaChoice>).isMultiple;
       (field as Partial<PropertySchemaChoice>).options = oldField.enumerations;
       delete (field as Partial<OldPropertySchemaChoice>).enumerations;
     }
@@ -366,9 +364,7 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
     if (newField.propertyType === PropertyType.CHOICE) {
       field.valueType = ValueType.CHOICE;
 
-      (field as Partial<OldPropertySchemaChoice>).isMultiple = newField.multiple;
       (field as Partial<OldPropertySchemaChoice>).enumerations = newField.options;
-      delete (field as Partial<PropertySchemaChoice>).multiple;
       delete (field as Partial<PropertySchemaChoice>).options;
     }
 

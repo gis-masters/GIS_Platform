@@ -1,14 +1,17 @@
 package ru.mycrg.auth_service.util;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class SettingsHandler {
 
@@ -20,27 +23,31 @@ public class SettingsHandler {
      * Выводит результирующие настройки исходя из параметров выставленных администратором системы и администратором
      * организации.
      *
-     * @param rootSettings Настройки для организации указанные администратором системы.
-     * @param orgSettings  Настройки указанные администратором организации.
+     * @param systemSettings Настройки для организации указанные администратором системы.
+     * @param orgSettings    Настройки указанные администратором организации.
      */
-    public static Map<String, Object> mergeSettings(Map<String, Object> rootSettings,
-                                                    Map<String, Object> orgSettings) {
+    public static Map<String, Object> mergeSettings(@Nullable Map<String, Object> systemSettings,
+                                                    @Nullable Map<String, Object> orgSettings) {
+        if (systemSettings == null || orgSettings == null) {
+            return new HashMap<>();
+        }
+
         Map<String, Object> result = new HashMap<>();
-        if (rootSettings.isEmpty() && orgSettings.isEmpty()) {
+        if (systemSettings.isEmpty() && orgSettings.isEmpty()) {
             return result;
-        } else if (rootSettings.isEmpty()) {
+        } else if (systemSettings.isEmpty()) {
             result.putAll(orgSettings);
 
             return result;
         } else if (orgSettings.isEmpty()) {
-            result.putAll(rootSettings);
+            result.putAll(systemSettings);
 
             return result;
         }
 
-        rootSettings.forEach((k, v) -> {
+        systemSettings.forEach((k, v) -> {
             if ("tags".equals(k)) {
-                List<String> rootTags = (List<String>) rootSettings.get(k);
+                List<String> rootTags = (List<String>) systemSettings.get(k);
                 List<String> orgTags = (List<String>) orgSettings.get(k);
                 if (rootTags.isEmpty() || orgTags.isEmpty()) {
                     result.remove(k);
@@ -52,9 +59,10 @@ public class SettingsHandler {
 
                 result.put(k, resultTags);
             } else {
-                boolean rootValueAllowed = Boolean.parseBoolean(v.toString());
-                if (rootValueAllowed) {
-                    result.put(k, orgSettings.get(k));
+                if (TRUE.equals(v)) {
+                    if (orgSettings.containsKey(k)) {
+                        result.put(k, orgSettings.get(k));
+                    }
                 } else {
                     result.put(k, v);
                 }
@@ -103,16 +111,22 @@ public class SettingsHandler {
             }
 
             // Process tags props
-            if ("tags".equals(property.getName())) {
+            if ("tags".equals(name)) {
                 List<String> resultTags = new ArrayList<>();
-
                 List<String> tags = (List<String>) result.get(name);
+                if (tags == null || tags.isEmpty()) {
+                    result.put("tags", resultTags);
+
+                    continue;
+                }
+
                 property.getEnumerations().forEach(item -> {
                     String value = item.getValue();
                     if (tags.contains(value)) {
                         resultTags.add(item.getValue());
                     }
                 });
+
                 result.put("tags", resultTags);
             }
         }
@@ -160,5 +174,58 @@ public class SettingsHandler {
         }
 
         return result;
+    }
+
+    /**
+     * Формируем схему настроек конкретной организации, опираясь на настройки определенные администратором системы.
+     * <p>
+     * Разрешенные свойства будут транслированы в схему. Запрещенные явно или отсутствующие в схему не попадут.
+     *
+     * @param baseSchema  Базовая схема настроек организации.
+     * @param orgSettings Настройки организации.
+     *
+     * @return Схема измененная по заданным системным администратором и владельцем организации настройкам.
+     */
+    public static SchemaDto buildSchema(SchemaDto baseSchema, OrgSettingsResponseDto orgSettings) {
+        SchemaDto newSchema = new SchemaDto();
+        newSchema.setName(baseSchema.getName());
+        newSchema.setTableName(baseSchema.getTableName());
+        newSchema.setTitle(baseSchema.getTitle());
+        newSchema.setDescription(baseSchema.getDescription());
+
+        Map<String, Object> systemSettings = orgSettings.getSystem();
+        if (systemSettings == null || systemSettings.isEmpty()) {
+            return newSchema;
+        }
+
+        List<SimplePropertyDto> newProperties = new ArrayList<>(baseSchema.getProperties());
+        for (SimplePropertyDto property: baseSchema.getProperties()) {
+            String name = property.getName();
+            if (Objects.equals(name, "tags")) {
+                if (systemSettings.containsKey(name)) {
+                    List<String> tags = (List<String>) systemSettings.get(name);
+                    List<ValueTitleProjection> allowedTags = property.getEnumerations().stream()
+                                                                     .filter(item -> tags.contains(item.getTitle()))
+                                                                     .collect(Collectors.toList());
+
+                    newProperties.stream()
+                                 .filter(propertyDto -> propertyDto.getName().equals("tags"))
+                                 .findFirst()
+                                 .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedTags));
+                }
+            } else {
+                if (systemSettings.containsKey(name)) {
+                    if (FALSE.equals(systemSettings.get(name))) {
+                        newProperties.removeIf(p -> Objects.equals(name, p.getName()));
+                    }
+                } else {
+                    newProperties.removeIf(p -> Objects.equals(name, p.getName()));
+                }
+            }
+        }
+
+        newSchema.setProperties(newProperties);
+
+        return newSchema;
     }
 }

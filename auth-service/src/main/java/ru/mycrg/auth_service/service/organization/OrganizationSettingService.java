@@ -21,8 +21,7 @@ import java.util.stream.Collectors;
 
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
 import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSettings;
-import static ru.mycrg.auth_service.util.SettingsHandler.excludeUnknownKeys;
-import static ru.mycrg.auth_service.util.SettingsHandler.overlapOldSettings;
+import static ru.mycrg.auth_service.util.SettingsHandler.*;
 
 @Service
 @Transactional
@@ -169,5 +168,14 @@ public class OrganizationSettingService {
         organization.setSettings(toJsonNode(JacksonUtil.toString(enabledKnownSetting)));
 
         organizationRepository.save(organization);
+    }
+
+    public SchemaDto getSchema() {
+        if (authenticationFacade.isRoot()) {
+            return orgSettingsSchemaHolder.getSchema();
+        }
+
+        return buildSchema(orgSettingsSchemaHolder.getSchema(),
+                           orgSettingsRepository.readOrganizationSettings(authenticationFacade.getOrganizationId()));
     }
 }

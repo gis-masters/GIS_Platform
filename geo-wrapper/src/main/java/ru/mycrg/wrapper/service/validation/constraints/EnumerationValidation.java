@@ -12,7 +12,7 @@ public class EnumerationValidation implements CrgConstraintValidator {
 
     @Override
     public boolean isValid(Object value, SimplePropertyDto context) {
-        if (value == null || context.getEnumerations().isEmpty()) {
+        if (value == null || context.getEnumerations() == null || context.getEnumerations().isEmpty()) {
             return true;
         }
 

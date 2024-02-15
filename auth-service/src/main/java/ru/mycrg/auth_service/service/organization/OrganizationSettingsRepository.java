@@ -3,8 +3,6 @@ package ru.mycrg.auth_service.service.organization;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_service.entity.Organization;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
@@ -18,12 +16,11 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.auth_service.service.organization.OrganizationSettingService.ROOT_ORG_ID;
 import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSettings;
+import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSystemSettings;
 import static ru.mycrg.auth_service.util.SettingsHandler.processSettings;
 
 @Component
 public class OrganizationSettingsRepository {
-
-    private final Logger log = LoggerFactory.getLogger(OrganizationSettingsRepository.class);
 
     private final OrganizationRepository organizationRepository;
     private final OrgSettingsSchemaHolder orgSettingsSchemaHolder;
@@ -38,14 +35,14 @@ public class OrganizationSettingsRepository {
         Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
                                                                 .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-        return SettingsMapper.mapToSystemSettings(systemOrganization.getSettings());
+        return mapToSystemSettings(systemOrganization.getSettings());
     }
 
     public Set<OrgSettingsResponseDto> readSystemSettings2() {
         Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
                                                                 .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
 
-        Set<OrgSettingsRequestDto> systemSettings = SettingsMapper.mapToSystemSettings(systemOrganization.getSettings());
+        Set<OrgSettingsRequestDto> systemSettings = mapToSystemSettings(systemOrganization.getSettings());
 
         List<Long> ids = systemSettings.stream()
                                        .map(OrgSettingsRequestDto::getId)

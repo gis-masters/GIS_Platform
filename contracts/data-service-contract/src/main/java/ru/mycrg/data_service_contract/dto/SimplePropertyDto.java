@@ -9,10 +9,9 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SimplePropertyDto {
 
     @NotBlank
@@ -77,8 +76,8 @@ public class SimplePropertyDto {
     private Integer maxSize;
     private Integer maxFiles;
     private Integer maxDocuments;
-    private List<ValueTitleProjection> enumerations = new ArrayList<>();
-    private List<String> allowedValues = new ArrayList<>();
+    private List<ValueTitleProjection> enumerations;
+    private List<String> allowedValues;
 
     public String getName() {
         return name;

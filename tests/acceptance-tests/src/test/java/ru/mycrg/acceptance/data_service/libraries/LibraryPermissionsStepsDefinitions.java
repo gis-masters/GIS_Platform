@@ -467,8 +467,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsCurrentUser();
 
         response = getBaseRequestWithCurrentCookie()
-                .when().log().all().
-                       delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
+                .when().
+                        delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
     }
 
     @When("Пользователь удаляет текущее разрешение для библиотеки по-умолчанию")

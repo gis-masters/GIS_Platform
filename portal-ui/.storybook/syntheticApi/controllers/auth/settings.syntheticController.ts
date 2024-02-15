@@ -16,29 +16,27 @@ class SettingsSyntheticController implements SyntheticController {
       id: 63,
       system: {
         reestrs: true,
-        prikaz_10: true,
         sedDialog: true,
-        prikaz_123: true,
         downloadXml: true,
         createProject: true,
         downloadFiles: true,
         dataManagement: true,
         taskManagement: true,
         editProjectLayer: true,
-        createLibraryItem: true
+        createLibraryItem: true,
+        tags: ['Приказ 123', 'Приказ 10']
       },
       organization: {
         reestrs: true,
-        prikaz_10: true,
         sedDialog: true,
-        prikaz_123: true,
         downloadXml: true,
         createProject: true,
         downloadFiles: true,
         dataManagement: true,
         taskManagement: true,
         editProjectLayer: true,
-        createLibraryItem: true
+        createLibraryItem: true,
+        tags: ['Приказ 123', 'Приказ 10']
       }
     };
   }
