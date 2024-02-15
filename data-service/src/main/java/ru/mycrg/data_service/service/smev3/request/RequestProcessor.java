@@ -98,10 +98,6 @@ public abstract class RequestProcessor {
         return schema;
     }
 
-    public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
-        throw new NotImplementedException("not implemented");
-    }
-
     @NoContextTransaction(dbProperty = "crg-options.integration.smev3.targetDb")
     public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
         log.info("SMEV3 | {}  dto {}", mnemonicEnum(), dto);

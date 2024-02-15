@@ -3,21 +3,17 @@
     <typ:itSystem>U629301</typ:itSystem>
     <typ:RequestMessage>
         <typ:RequestMetadata>
-            <typ:clientId>4a1b2bee-9d89-11ee-8c90-0242ac120002</typ:clientId>
+            <typ:clientId>307da951-afef-4aad-889d-fdd5d63974b2</typ:clientId>
         </typ:RequestMetadata>
         <typ:RequestContent>
             <typ:content>
                 <typ:MessagePrimaryContent>
                     <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9"
                                  xmlns:com="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9">
-                        <tns:ReceiptExploitation>
-                            <tns:PermitNumber>50-RU03308000-112233-2022-1</tns:PermitNumber>
-                            <tns:PermitDate>2022-11-22</tns:PermitDate>
-                            <tns:IssueOrgan>
-                                <com:OGRN>1185053037476</com:OGRN>
-                                <com:INN>5024190060</com:INN>
-                            </tns:IssueOrgan>
-                        </tns:ReceiptExploitation>
+                        <tns:ReceiptListExploitation>
+                            <tns:PermitDateFrom>2001-01-01</tns:PermitDateFrom>
+                            <tns:PermitDateTo>2023-01-01</tns:PermitDateTo>
+                        </tns:ReceiptListExploitation>
                     </tns:Request>
                 </typ:MessagePrimaryContent>
             </typ:content>

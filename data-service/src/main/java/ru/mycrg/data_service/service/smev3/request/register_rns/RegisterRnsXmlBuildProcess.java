@@ -237,7 +237,7 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 .ifPresent(type::setConstCadastralDistrict);
         asString(rue.section13Record, FieldsSection.PROPERTY_CONST_CADASTRAL_AREA)
                 .ifPresent(type::setConstCadastralArea);
-        asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_CONSTRUCTION_TYPE)
+        asConstructorKind(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_CONSTRUCTION_TYPE)
                 .ifPresent(type::setConstructionKind);
         asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_PERMISSION_TYPE)
                 .ifPresent(type::setConstPermissionType);
@@ -712,7 +712,53 @@ public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
                 });
     }
 
-    private Optional<StatusConstructionType> asStatus(IRecord record, String fieldName) {
+    private Optional<RefBookType> asConstructorKind(IRecord record,
+                                                    String tableName,
+                                                    String fieldName) {
+        return asRefType(record, tableName, fieldName)
+                .map(refType -> {
+                    var ref = new RefBookType();
+                    ref.setName(refType.getName());
+
+                    switch (refType.getCode()) {
+                        // Строительство объекта капитального строительства
+                        case "0I.1":
+                            ref.setCode("1");
+                            break;
+                        // Строительство линейного объекта
+                        case "0I.2":
+                            ref.setCode("2");
+                            break;
+                        // Строительство объекта капитального строительства, входящего в состав линейного
+                        case "0I.3":
+                            ref.setCode("3");
+                            break;
+                        // Реконструкция объекта капитального строительства
+                        case "0I.4":
+                            ref.setCode("4");
+                            break;
+                        // Реконструкция линейного объекта
+                        case "0I.5":
+                            ref.setCode("5");
+                            break;
+                        // Реконструкция объекта капитального строительства, входящего в состав линейного
+                        case "0I.6":
+                            ref.setCode("6");
+                            break;
+                        // Работы по сохранению объекта культурного наследия
+                        case "0I.7":
+                            ref.setCode("7");
+                            break;
+                        default:
+                            throw new SmevRequestException("document constructor kind is undefined :" + refType.getCode());
+                    }
+
+                    return ref;
+                });
+    }
+
+    private Optional<StatusConstructionType> asStatus(IRecord record,
+                                                      String fieldName) {
         return asString(record, fieldName)
                 .map(s -> {
                     switch (s) {

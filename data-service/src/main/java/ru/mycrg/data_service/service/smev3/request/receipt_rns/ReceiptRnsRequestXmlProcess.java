@@ -14,10 +14,10 @@ import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import static ru.mycrg.data_service.util.xml.XmlMapper.mapCalendar;
 
 
-public class ReceiptRnsXmlBuildProcess extends AXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnsXmlBuildProcess.class);
+public class ReceiptRnsRequestXmlProcess extends AXmlBuildProcess {
+    private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestXmlProcess.class);
 
-    public ReceiptRnsXmlBuildProcess(RequestProcessor requestProcessor) {
+    public ReceiptRnsRequestXmlProcess(RequestProcessor requestProcessor) {
         super(requestProcessor);
     }
 

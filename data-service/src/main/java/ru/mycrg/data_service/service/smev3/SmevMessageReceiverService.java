@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
@@ -30,16 +30,16 @@ public class SmevMessageReceiverService {
     private final SmevMessageService messageService;
     private final RabbitTemplate rabbitTemplate;
     private final Queue adapterReceiveFailQueue;
-    private final List<RequestProcessor> requestProcessors;
+    private final List<ResponseProcessor> responseProcessors;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
                                       RabbitTemplate rabbitTemplate,
                                       Queue adapterReceiveFailQueue,
-                                      List<RequestProcessor> requestProcessors) {
+                                      List<ResponseProcessor> responseProcessors) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
-        this.requestProcessors = requestProcessors;
+        this.responseProcessors = responseProcessors;
     }
 
     /**
@@ -52,7 +52,7 @@ public class SmevMessageReceiverService {
             var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("not found original message"));
-            requestProcessors.stream()
+            responseProcessors.stream()
                     .filter(processor -> processor.mnemonicEnum() == messageEntity.mnemonicEnum())
                     .findFirst()
                     .ifPresentOrElse(
@@ -90,10 +90,10 @@ public class SmevMessageReceiverService {
     }
 
 
-    private void process(RequestProcessor consumer, SmevMessageMetaEntity originalMessageRecord, String body) {
+    private void process(ResponseProcessor responseProcessor, SmevMessageMetaEntity originalMessageRecord, String body) {
         try {
             log.debug("Try to process message {}", body);
-            var processResult = consumer.processMessageFromSmev(body);
+            var processResult = responseProcessor.processMessageFromSmev(body);
             messageService.saveIncoming(processResult, originalMessageRecord);
             log.info("Success process");
         } catch (Exception e) {

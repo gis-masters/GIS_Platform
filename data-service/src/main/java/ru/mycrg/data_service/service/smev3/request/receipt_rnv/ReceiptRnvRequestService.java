@@ -46,43 +46,12 @@ public class ReceiptRnvRequestService extends RequestProcessor {
         );
     }
 
-    @Override
-    public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
-        try {
-            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
-            var XmlBuildMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    messageBody,
-                    JsonConverter.toJsonNode(queryResult),
-                    null,
-                    null
-            );
-            String status;
-            String message;
-
-            if (queryResult.getMessage().getMessageType().equals("RejectMessage")) {
-                status = queryResult.getMessage().getResponseContent().getRejects().get(0).getCode();
-                message = queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription();
-            } else {
-                status = queryResult.getMessage().getResponseContent().getStatus().getCode();
-                message = queryResult.getMessage().getResponseContent().getStatus().getDescription();
-            }
-
-            return new ProcessAdapterMessageResult()
-                    .setXmlBuildMeta(XmlBuildMeta)
-                    .setStatus(status)
-                    .setMessage(message);
-        } catch (Exception e) {
-            log.error("Process adapter message error: {}", e.getMessage());
-            throw new SmevRequestException("process adapter message error :" + e.getMessage());
-        }
-    }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("build xml request " + dto);
+
         var buildRequest = new ReceiptRnvXmlBuildProcess(this).run((ReceiptRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
         var meta = new XmlBuildMeta(

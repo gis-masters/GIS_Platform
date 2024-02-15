@@ -45,7 +45,6 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         );
     }
 
-    @Override
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
             //TODO тут ошибка, так как импорт некорректного класса

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<typ:ClientMessage xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
-    <typ:itSystem>U629301</typ:itSystem>
-    <typ:RequestMessage>
-        <typ:RequestMetadata>
-            <typ:clientId>04f1efb8-927a-11ee-b9d1-0242ac120002</typ:clientId>
-        </typ:RequestMetadata>
-        <typ:RequestContent>
-            <typ:content>
-                <typ:MessagePrimaryContent>
+<ClientMessage xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <itSystem>U629301</itSystem>
+    <RequestMessage>
+        <RequestMetadata>
+            <clientId>04f1efb8-927a-11ee-b9d1-0242ac120002</clientId>
+        </RequestMetadata>
+        <RequestContent>
+            <content>
+                <MessagePrimaryContent>
                     <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/register-rnv/1.0.8"
                                  xmlns:com="urn://x-artefacts-uishc.domrf.ru/register-rnv/commons/1.0.8">
                         <tns:RegisterNewExploitation>
@@ -382,8 +382,8 @@
                             </tns:ConstPermitIssueOrgan>
                         </tns:RegisterNewExploitation>
                     </tns:Request>
-                </typ:MessagePrimaryContent>
-            </typ:content>
-        </typ:RequestContent>
-    </typ:RequestMessage>
-</typ:ClientMessage>
+                </MessagePrimaryContent>
+            </content>
+        </RequestContent>
+    </RequestMessage>
+</ClientMessage>

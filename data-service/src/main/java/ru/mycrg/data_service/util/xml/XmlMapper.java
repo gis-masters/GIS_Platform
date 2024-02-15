@@ -8,6 +8,7 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class XmlMapper {
 
@@ -38,5 +39,12 @@ public class XmlMapper {
             return null;
         }
         return LocalDate.of(source.getYear(), source.getMonth(), source.getDay());
+    }
+
+    public static LocalDateTime mapLocalDateTime(XMLGregorianCalendar source) {
+        if (source == null) {
+            return null;
+        }
+        return LocalDateTime.of(mapLocalDate(source), LocalTime.of(0, 0, 0));
     }
 }

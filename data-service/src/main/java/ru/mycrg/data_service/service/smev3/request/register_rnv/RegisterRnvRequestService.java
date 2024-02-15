@@ -57,7 +57,6 @@ public class RegisterRnvRequestService extends RequestProcessor {
         );
     }
 
-    @Override
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
             var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
@@ -95,6 +94,8 @@ public class RegisterRnvRequestService extends RequestProcessor {
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("build xml request " + dto);
+
         var buildRequest = new RegisterRnvXmlBuildProcess(this).run((RegisterRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
         var meta = new XmlBuildMeta(
