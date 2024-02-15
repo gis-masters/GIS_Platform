@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.processes.executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.WsMessageDto;
@@ -63,6 +64,7 @@ public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePla
     }
 
     @Override
+    @Transactional
     public ImportReport execute() {
         log.debug("Начало публикации Shape: {}", this.payload);
 

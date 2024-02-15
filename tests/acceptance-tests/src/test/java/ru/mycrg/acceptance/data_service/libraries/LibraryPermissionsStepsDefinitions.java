@@ -97,8 +97,18 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+        int statusCode = response.statusCode();
+        if (statusCode == 201) {
+            currentPermissionId = super.extractId(response);
+        } else if (statusCode == 409) {
+            System.out.println("Роль: " + role + " уже установлена для: " + libraryName);
+            response.prettyPrint();
+        } else {
+            response.prettyPrint();
+            String msg = String.format("Роль: %s уже установлена для: %s", role, libraryName);
 
-        currentPermissionId = super.extractId(response);
+            throw new IllegalStateException(msg);
+        }
     }
 
     @Given("Владелец организации устанавливает роль {string} для текущей группы, для библиотеки: {string}")
@@ -458,7 +468,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().log().all().
-                        delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
+                       delete(String.format("%s/roleAssignment/%d", libraryName, currentPermissionId));
     }
 
     @When("Пользователь удаляет текущее разрешение для библиотеки по-умолчанию")

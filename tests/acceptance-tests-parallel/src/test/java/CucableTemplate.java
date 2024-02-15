@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        glue = "steps",
+        glue = "main",
         features = {"target/parallel/features/[CUCABLE:FEATURE].feature"},
         plugin = {"json:target/cucumber-report/[CUCABLE:RUNNER].json"}
 )

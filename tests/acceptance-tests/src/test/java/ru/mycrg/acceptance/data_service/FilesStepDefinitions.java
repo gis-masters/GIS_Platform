@@ -280,10 +280,10 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         currentFileId = ids.get(0);
     }
 
-    private void getFile(UUID firstFileId) {
+    private void getFile(UUID id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + firstFileId);
+                        get("/" + id);
 
         jsonPath = response.jsonPath();
     }

@@ -35,7 +35,6 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import java.io.IOException;
 import java.util.UUID;
 
-import static java.util.Objects.nonNull;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.service.processes.FileType.DXF;

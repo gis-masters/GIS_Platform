@@ -1,24 +1,22 @@
-@featureTag
-Feature: MyTest1
+Feature: Test feature 1
 
-  Scenario: Scenario 1 in MyTest1
-
-  @scenario1Tag1
-  @scenario1Tag2
-  Scenario: Scenario 2 in MyTest1
-    Given I do something
-
-  @scenario2Tag1
-  Scenario: Scenario 3 in MyTest1
-    Given this is a given step
+  Scenario Outline: This is a scenario outline with candy '<candy>'
+    Given I do something with data
+      | givenTable1 | givenTable2 |
     When I do something
     Then I expect a result
+    And I expect a second result
 
-  Scenario: Scenario 4 in MyTest1
+  @examples1
+    Examples:
+      | key | value | candy                |
+      | 1   | one   |                      |
+      | 2   | two   | a bag of gummy bears |
+      | 3   | three | a lollypop           |
 
-  Scenario: Scenario 5 in MyTest1
-    Given this is a given step
-    When I do something with data
-      | country | Germany |
-      | city    |         |
-    Then I expect a result
+  @examples2
+    Examples:
+      | key | value | candy        |
+      | 1   | uno   |              |
+      | 2   | dos   | chocolate    |
+      | 3   | tres  | cotton candy |

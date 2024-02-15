@@ -37,13 +37,13 @@ public class File {
     @Column
     private Long size;
 
-    @Column(length = 20)
+    @Column(length = 10)
     private String extension;
 
     @Column(length = 500)
     private String path;
 
-    @Column(length = 100)
+    @Column(length = 130)
     private String contentType;
 
     @Column
