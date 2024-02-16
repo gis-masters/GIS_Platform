@@ -2,6 +2,9 @@ package ru.mycrg.auth_service.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -14,6 +17,8 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 public class SettingsHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(SettingsHandler.class);
 
     private SettingsHandler() {
         throw new IllegalStateException("Utility class");
@@ -58,6 +63,18 @@ public class SettingsHandler {
                                                  .collect(Collectors.toList());
 
                 result.put(k, resultTags);
+            } else if ("favorites_epsg".equals(k)) {
+                List<String> rootEpsg = (List<String>) systemSettings.get(k);
+                List<String> orgEpsg = (List<String>) orgSettings.get(k);
+                if (rootEpsg.isEmpty() || orgEpsg.isEmpty()) {
+                    result.remove(k);
+                }
+
+                List<String> resultEpsg = orgEpsg.stream()
+                                                 .filter(rootEpsg::contains)
+                                                 .collect(Collectors.toList());
+
+                result.put(k, resultEpsg);
             } else {
                 if (TRUE.equals(v)) {
                     if (orgSettings.containsKey(k)) {
@@ -129,6 +146,26 @@ public class SettingsHandler {
 
                 result.put("tags", resultTags);
             }
+
+            // Process favoriteEpsg props
+            if ("favorites_epsg".equals(name)) {
+                List<String> resultEpsg = new ArrayList<>();
+                List<String> epsg = (List<String>) result.get(name);
+                if (epsg == null || epsg.isEmpty()) {
+                    result.put("favorites_epsg", resultEpsg);
+
+                    continue;
+                }
+
+                property.getEnumerations().forEach(item -> {
+                    String value = item.getValue();
+                    if (epsg.contains(value)) {
+                        resultEpsg.add(item.getValue());
+                    }
+                });
+
+                result.put("favorites_epsg", resultEpsg);
+            }
         }
 
         return result;
@@ -151,24 +188,61 @@ public class SettingsHandler {
 
             // Process tags props
             if ("tags".equals(property.getName())) {
-                List<String> resultTags = new ArrayList<>();
+                try {
+                    List<String> resultTags = new ArrayList<>();
 
-                List<String> tags = (List<String>) result.get(name);
-                if (tags == null || tags.isEmpty()) {
-                    break;
-                }
-
-                property.getEnumerations().forEach(item -> {
-                    String value = item.getValue();
-                    if (tags.contains(value)) {
-                        resultTags.add(item.getValue());
+                    List<String> tags = (List<String>) result.get(name);
+                    if (tags == null || tags.isEmpty()) {
+                        continue;
                     }
-                });
 
-                if (resultTags.isEmpty()) {
-                    result.remove("tags");
-                } else {
-                    result.put("tags", resultTags);
+                    property.getEnumerations().forEach(item -> {
+                        String value = item.getValue();
+                        if (tags.contains(value)) {
+                            resultTags.add(item.getValue());
+                        }
+                    });
+
+                    if (resultTags.isEmpty()) {
+                        result.remove("tags");
+                    } else {
+                        result.put("tags", resultTags);
+                    }
+                } catch (Exception e) {
+                    String msg = "Структура поля tags не соответствует ожиданию.";
+                    log.error(msg + ". По причине: {}", e.getMessage(), e);
+
+                    throw new BadRequestException(msg);
+                }
+            }
+
+            // Process favorites_epsg props
+            if ("favorites_epsg".equals(property.getName())) {
+                try {
+                    List<String> resultEpsg = new ArrayList<>();
+
+                    List<String> epsg = (List<String>) result.get(name);
+                    if (epsg == null || epsg.isEmpty()) {
+                        continue;
+                    }
+
+                    property.getEnumerations().forEach(item -> {
+                        String value = item.getValue();
+                        if (epsg.contains(value)) {
+                            resultEpsg.add(item.getValue());
+                        }
+                    });
+
+                    if (resultEpsg.isEmpty()) {
+                        result.remove("favorites_epsg");
+                    } else {
+                        result.put("favorites_epsg", resultEpsg);
+                    }
+                } catch (Exception e) {
+                    String msg = "Структура поля favorites_epsg не соответствует ожиданию.";
+                    log.error(msg + ". По причине: {}", e.getMessage(), e);
+
+                    throw new BadRequestException(msg);
                 }
             }
         }
@@ -212,6 +286,18 @@ public class SettingsHandler {
                                  .filter(propertyDto -> propertyDto.getName().equals("tags"))
                                  .findFirst()
                                  .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedTags));
+                }
+            } else if (Objects.equals(name, "favorites_epsg")) {
+                if (systemSettings.containsKey(name)) {
+                    List<String> epsg = (List<String>) systemSettings.get(name);
+                    List<ValueTitleProjection> allowedEpsg = property.getEnumerations().stream()
+                                                                     .filter(item -> epsg.contains(item.getTitle()))
+                                                                     .collect(Collectors.toList());
+
+                    newProperties.stream()
+                                 .filter(propertyDto -> propertyDto.getName().equals("favorites_epsg"))
+                                 .findFirst()
+                                 .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedEpsg));
                 }
             } else {
                 if (systemSettings.containsKey(name)) {

@@ -1,13 +1,21 @@
-package ru.mycrg.data_service.entity;
+package ru.mycrg.common_contracts.generated;
 
 public class EpsgModel {
 
     private String authName;
     private Integer authSrid;
+    private String srtext;
     private String proj4Text;
 
     public EpsgModel() {
         // Required
+    }
+
+    public EpsgModel(String authName, Integer authSrid, String srtext, String proj4Text) {
+        this.authName = authName;
+        this.authSrid = authSrid;
+        this.srtext = srtext;
+        this.proj4Text = proj4Text;
     }
 
     public String getAuthName() {
@@ -32,5 +40,13 @@ public class EpsgModel {
 
     public void setProj4Text(String proj4Text) {
         this.proj4Text = proj4Text;
+    }
+
+    public String getSrtext() {
+        return srtext;
+    }
+
+    public void setSrtext(String srtext) {
+        this.srtext = srtext;
     }
 }

@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service_contract.enums.ValueType.BOOLEAN;
-import static ru.mycrg.data_service_contract.enums.ValueType.CHOICE;
+import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 @Component
 public class OrgSettingsSchemaHolder {
@@ -91,6 +90,19 @@ public class OrgSettingsSchemaHolder {
         tags.setValueType(CHOICE);
         tags.setEnumerations(new ArrayList<>());
 
+        SimplePropertyDto favoritesEpsg = new SimplePropertyDto();
+        favoritesEpsg.setName("favorites_epsg");
+        favoritesEpsg.setTitle("Предпочитаемые системы координаты");
+        favoritesEpsg.setMultiple(true);
+        favoritesEpsg.setValueType(CHOICE);
+        favoritesEpsg.setEnumerations(List.of(new ValueTitleProjection("EPSG:3857")));
+
+        SimplePropertyDto defaultEpsg = new SimplePropertyDto();
+        defaultEpsg.setName("default_epsg");
+        defaultEpsg.setTitle("Система координат по-умолчанию");
+        defaultEpsg.setValueType(STRING);
+        defaultEpsg.setDefaultValue("EPSG:3857");
+
         props.add(createLibraryItem);
         props.add(dataManagement);
         props.add(downloadXml);
@@ -101,6 +113,8 @@ public class OrgSettingsSchemaHolder {
         props.add(reestrs);
         props.add(taskManagement);
         props.add(tags);
+        props.add(favoritesEpsg);
+        props.add(defaultEpsg);
 
         this.schema.setProperties(props);
     }

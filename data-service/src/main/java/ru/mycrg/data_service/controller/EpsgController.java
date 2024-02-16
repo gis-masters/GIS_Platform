@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.entity.EpsgModel;
+import ru.mycrg.common_contracts.generated.EpsgModel;
 import ru.mycrg.data_service.service.EpsgService;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 

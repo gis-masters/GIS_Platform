@@ -1,3 +1,10 @@
+export interface EpsgModel {
+  authName: string;
+  authSrid: number;
+  srtext: string;
+  proj4Text: string;
+}
+
 export interface FtsRequestDto {
   text: string;
   ecqlFilter: string;
@@ -8,8 +15,10 @@ export interface FtsRequestDto {
 
 export interface FtsResponseDto {
   type: FtsType;
+  value: number;
   source: { [index: string]: any };
-  payload: { [index: string]: any };
+  payload: any;
+  headlines: string[];
 }
 
 export interface Page {

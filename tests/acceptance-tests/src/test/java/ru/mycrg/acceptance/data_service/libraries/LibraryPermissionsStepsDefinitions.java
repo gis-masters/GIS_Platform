@@ -111,20 +111,30 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @Given("Владелец организации устанавливает роль {string} для текущей группы, для библиотеки: {string}")
-    public void addPermissionToLibraryForCurrentGroup(String role, String libraryName) {
-        authorizationBase.loginAsOwner();
-
-        setRoleForCurrentGroupToLibrary(libraryName, role);
-    }
-
     @Given("Текущему пользователю установлена роль {string}, для библиотеки: {string}")
     public void setPermissionToLibraryForCurrentUser(String role, String libraryName) {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+        int statusCode = response.statusCode();
+        if (statusCode == 201) {
+            currentPermissionId = super.extractId(response);
+        } else if (statusCode == 409) {
+            System.out.println("Роль: " + role + " уже установлена для: " + libraryName);
+            response.prettyPrint();
+        } else {
+            response.prettyPrint();
+            String msg = String.format("Роль: %s уже установлена для: %s", role, libraryName);
 
-        currentPermissionId = super.extractId(response);
+            throw new IllegalStateException(msg);
+        }
+    }
+
+    @Given("Владелец организации устанавливает роль {string} для текущей группы, для библиотеки: {string}")
+    public void addPermissionToLibraryForCurrentGroup(String role, String libraryName) {
+        authorizationBase.loginAsOwner();
+
+        setRoleForCurrentGroupToLibrary(libraryName, role);
     }
 
     /**

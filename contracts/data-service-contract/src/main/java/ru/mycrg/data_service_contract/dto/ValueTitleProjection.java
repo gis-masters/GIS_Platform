@@ -11,6 +11,11 @@ public class ValueTitleProjection {
         // Required
     }
 
+    public ValueTitleProjection(String title) {
+        this.title = title;
+        this.value = title;
+    }
+
     public ValueTitleProjection(String value, String title) {
         this.value = value;
         this.title = title;

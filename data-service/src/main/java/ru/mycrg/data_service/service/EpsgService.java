@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.BaseDao;
-import ru.mycrg.data_service.entity.EpsgModel;
+import ru.mycrg.common_contracts.generated.EpsgModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
@@ -22,8 +22,6 @@ public class EpsgService {
 
     private final Logger log = LoggerFactory.getLogger(EpsgService.class);
 
-    private final String SPATIAL_TABLE_NAME = "spatial_ref_sys";
-
     private final BaseDao baseDao;
 
     private final ResourceQualifier tableQualifier;
@@ -31,7 +29,7 @@ public class EpsgService {
     public EpsgService(BaseDao baseDao) {
         this.baseDao = baseDao;
 
-        this.tableQualifier = new ResourceQualifier(INITIAL_SCHEMA_NAME, SPATIAL_TABLE_NAME);
+        this.tableQualifier = new ResourceQualifier(INITIAL_SCHEMA_NAME, "spatial_ref_sys");
     }
 
     public Page<EpsgModel> getAll(String ecqlFilter, Pageable pageable) {

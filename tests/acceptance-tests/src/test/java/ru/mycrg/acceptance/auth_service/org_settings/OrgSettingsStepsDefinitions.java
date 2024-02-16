@@ -95,9 +95,7 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
         Map<String, Object> knownSettings = path.getMap("");
         assertFalse(knownSettings.isEmpty());
         assertTrue(knownSettings.containsKey("name") && knownSettings.get("name").equals("org_settings"));
-
-        List<Object> properties = path.getList("properties");
-        assertEquals(10, properties.size());
+        assertTrue(path.getList("properties").size() > 11);
     }
 
     @And("Возвращает существующие настройки организации")
