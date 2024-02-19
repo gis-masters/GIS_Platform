@@ -36,7 +36,7 @@ export interface FormProps<T>
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
   onFormSubmit?(changedValue: T): void;
-  onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T]): void;
+  onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T], formValue: Partial<T>): void;
   onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T | string): void;
   onActionSuccess?(changedValue: T): void;
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
@@ -45,7 +45,7 @@ export interface FormProps<T>
   formRole?: FormRole;
   labelInTextField?: boolean;
   auto?: boolean;
-  actionFunction?: (value: T) => Promise<void> | void;
+  actionFunction?(value: T | Partial<T>): Promise<void> | void;
   invoke?: {
     setValue?(value: T): void;
     validate?(): void;
@@ -230,17 +230,27 @@ export default class Form<T> extends Component<FormProps<T>> {
 
   private async doAction() {
     const { actionFunction, onActionSuccess, onActionError, schema } = this.props;
+    if (!schema) {
+      throw new Error('Не удалось отправить форму: нет схемы');
+    }
 
     try {
+      if (!this.value) {
+        throw new Error('Не удалось отправить форму: нет значений');
+      }
+      if (!actionFunction) {
+        throw new Error('Не удалось отправить форму: нет действия');
+      }
       await actionFunction(cleanCalculatedValues<T>(this.value, schema.properties));
       if (onActionSuccess) {
         onActionSuccess(this.value as T);
       }
     } catch (error) {
       const axiosError = error as AxiosError<{ errors: Record<string, unknown>[]; message: string }>;
-      const formErrors: FieldErrors[] = Array.isArray(error)
-        ? (error as FieldErrors[])
-        : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors;
+      const formErrors: FieldErrors[] =
+        (Array.isArray(error)
+          ? (error as FieldErrors[])
+          : (error as AxiosError<{ errors?: FieldErrors[] }>)?.response?.data?.errors) || [];
       const fieldsErrors: FieldErrors[] = [];
       const generalErrors: string[] = [];
 
@@ -253,7 +263,7 @@ export default class Form<T> extends Component<FormProps<T>> {
           }
 
           if (field?.hidden) {
-            generalErrors.push(`${field.title}: ${err.messages.join(err.messages.length > 1 ? ', ' : '')}`);
+            generalErrors.push(`${field.title}: ${err.messages?.join(err.messages.length > 1 ? ', ' : '')}`);
           }
 
           if (!field && err.messages) {
@@ -312,12 +322,12 @@ export default class Form<T> extends Component<FormProps<T>> {
 
   @action
   private setHiddenFieldsErrors(errors?: string[]) {
-    this.hiddenFieldsErrors = errors;
+    this.hiddenFieldsErrors = errors || [];
   }
 
   @action
   private setGeneralServerErrors(errors?: string[]) {
-    this.generalServerErrors = errors;
+    this.generalServerErrors = errors || [];
   }
 
   @boundMethod
@@ -328,19 +338,26 @@ export default class Form<T> extends Component<FormProps<T>> {
       this.filterFieldErrors(fieldName);
     }
 
-    if (onFieldChange) {
-      onFieldChange(value, fieldName, prevValue);
+    if (onFieldChange && this.value) {
+      onFieldChange(value, fieldName, prevValue, this.value);
     }
   }
 
   @boundMethod
   private fieldValidate(value: T[keyof T], fieldName: string) {
     const { auto, schema, onFieldNeedValidate } = this.props;
+    if (!schema) {
+      throw new Error('Не удалось отправить форму: нет схемы');
+    }
     const field = schema.properties?.find(({ name }) => name === fieldName);
+
+    if (!field) {
+      throw new Error('Ошибка: нет поля');
+    }
 
     if (auto) {
       this.filterFieldErrors(fieldName);
-      this.setErrors([...this.errors, validateFieldValue(value, field, this.value)]);
+      this.setErrors([...(this.errors || []), validateFieldValue(value, field, this.value)]);
     }
 
     if (onFieldNeedValidate) {
@@ -357,6 +374,6 @@ export default class Form<T> extends Component<FormProps<T>> {
   private reset() {
     this.setErrors();
     this.setServerErrors();
-    this.setValue(cloneDeep(this.props.value));
+    this.setValue(cloneDeep(this.props.value || {}));
   }
 }

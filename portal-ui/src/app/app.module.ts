@@ -34,7 +34,6 @@ import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/conf
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
 import { AttributesNgComponent } from './components/attributes-ng/attributes-ng.component';
-import { ResizableBarDirective } from './directives/resizableBar.directive';
 import { PageTitleComponent } from './components/page-title/page-title.component';
 import { DataImportComponent } from './components/data-import/data-import.component';
 import { WorkspaceHeaderComponent } from './components/workspace-header/workspace-header.component';
@@ -100,7 +99,6 @@ import { VectorTableRegistryComponent } from './components/vector-table-registry
     EditFeaturesSidebarComponent,
     EditFeatureComponent,
     AttributesNgComponent,
-    ResizableBarDirective,
     PageTitleComponent,
     DataImportComponent,
     WorkspaceHeaderComponent,

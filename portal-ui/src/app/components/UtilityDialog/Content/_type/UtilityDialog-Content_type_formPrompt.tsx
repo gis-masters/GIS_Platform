@@ -15,7 +15,7 @@ class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentP
     const {
       className,
       formId,
-      info: { message, schema }
+      info: { message, schema, formProps }
     } = this.props;
 
     return (
@@ -29,6 +29,7 @@ class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentP
               auto
               actionFunction={this.submitHandler}
               value={getDefaultValues(schema.properties)}
+              {...formProps}
             />
           )}
         </RegistryConsumer>

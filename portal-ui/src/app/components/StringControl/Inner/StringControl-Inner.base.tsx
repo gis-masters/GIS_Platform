@@ -1,0 +1,57 @@
+import { TextField, TextFieldProps } from '@mui/material';
+import React, { Component } from 'react';
+import { boundMethod } from 'autobind-decorator';
+import { cn } from '@bem-react/classname';
+
+import { FormControlProps } from '../../Form/Control/Form-Control';
+import { PropertySchemaString } from '../../../services/data/schema/schema.models';
+
+export const cnStringControlInner = cn('StringControl', 'Inner');
+
+export interface StringControlInnerProps extends Omit<FormControlProps, 'onChange'> {
+  property: PropertySchemaString;
+  textFieldProps?: Partial<TextFieldProps>;
+  display?: string;
+  onBlur(): void;
+  onChange(value: string): void;
+}
+
+export class StringControlInnerBase extends Component<StringControlInnerProps> {
+  render() {
+    const {
+      htmlId,
+      inSet,
+      labelInTextField,
+      fieldValue,
+      errors,
+      property,
+      variant,
+      textFieldProps,
+      className,
+      onBlur
+    } = this.props;
+    const { title, name } = property;
+
+    return (
+      <TextField
+        id={htmlId}
+        name={name}
+        className={cnStringControlInner(null, [className])}
+        fullWidth={labelInTextField || !inSet}
+        value={fieldValue}
+        error={!!errors?.length}
+        helperText={errors}
+        label={labelInTextField || inSet ? title : undefined}
+        onChange={this.handleChange}
+        onBlur={onBlur}
+        variant={variant}
+        {...textFieldProps}
+      />
+    );
+  }
+
+  @boundMethod
+  private handleChange(event: React.ChangeEvent<{ value: string }>) {
+    this.props.onChange(event.target.value);
+  }
+}

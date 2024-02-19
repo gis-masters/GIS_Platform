@@ -20,7 +20,6 @@ export interface OrgSettings {
   id: number;
   name?: string;
   system?: Settings;
-
   organization?: Settings;
 }
 

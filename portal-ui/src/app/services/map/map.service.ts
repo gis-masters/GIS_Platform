@@ -120,12 +120,12 @@ class MapService {
 
   view?: View;
   scaleLine?: ScaleLine;
-  draftSource?: VectorSource<SimpleGeometry>;
+  draftSource?: VectorSource<Feature<SimpleGeometry>>;
 
   // Подложка
   private basemapLayer = new TileLayer();
 
-  private markersSource?: VectorSource<SimpleGeometry>;
+  private markersSource?: VectorSource<Feature<SimpleGeometry>>;
   private zoom?: number;
 
   private center?: number[];
@@ -142,7 +142,6 @@ class MapService {
   // Hit-detection tolerance. Pixels inside the square around the given position will be checked for features.
   private HIT_TOLERANCE = 10;
 
-  // ZIndex чернового слоя который используется для подсвечивания объектов
   readonly DRAFT_LAYER_ZINDEX = 10_000;
   readonly MEASURE_LAYER_ZINDEX = 10_100;
   readonly LABELS_LAYER_ZINDEX = 10_150;
@@ -189,11 +188,11 @@ class MapService {
   }
 
   createMap(): void {
-    this.markersSource = new VectorSource({
+    this.markersSource = new VectorSource<Feature<SimpleGeometry>>({
       features: []
     });
 
-    this.draftSource = new VectorSource({
+    this.draftSource = new VectorSource<Feature<SimpleGeometry>>({
       features: []
     });
 
@@ -891,7 +890,7 @@ class MapService {
     /* eslint-enable @typescript-eslint/ban-ts-comment, @typescript-eslint/no-unsafe-call */
 
     fill.setColor(imageColor);
-    this.draftStyle?.getStroke().setColor(strokeColor);
+    this.draftStyle?.getStroke()?.setColor(strokeColor);
 
     this.draftSource?.addFeatures([]); // repaint
   }

@@ -28,7 +28,7 @@ export default class FeaturesListSidebar extends Component {
   @observable private search: SearchInfo = {};
   @observable private activeTab = 0;
 
-  private reactionDisposer?: IReactionDisposer;
+  private selectionReactionDisposer?: IReactionDisposer;
   private searchReactionDisposer?: IReactionDisposer;
 
   constructor(props: Record<string, unknown>) {
@@ -40,19 +40,16 @@ export default class FeaturesListSidebar extends Component {
     this.setSearchValue(sidebars.searchValue);
 
     communicationService.featuresUpdated.on(this.close, this);
-    this.reactionDisposer = reaction(
-      () => {
-        return mapStore.selectedFeatures.length;
-      },
+    this.selectionReactionDisposer = reaction(
+      () => mapStore.selectedFeatures.map(({ id }) => id),
       () => {
         this.selectedFeaturesUpdate();
-      }
+      },
+      { fireImmediately: true }
     );
 
     this.searchReactionDisposer = reaction(
-      () => {
-        return sidebars.searchValue;
-      },
+      () => sidebars.searchValue,
       (search: SearchInfo) => {
         this.searchUpdate(search);
       }
@@ -63,7 +60,7 @@ export default class FeaturesListSidebar extends Component {
 
   componentWillUnmount() {
     communicationService.off(this);
-    this.reactionDisposer?.();
+    this.selectionReactionDisposer?.();
     this.searchReactionDisposer?.();
   }
 

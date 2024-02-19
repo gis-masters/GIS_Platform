@@ -1,5 +1,5 @@
 import { reaction, IReactionDisposer } from 'mobx';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { Extent } from 'ol/extent';
@@ -42,6 +42,8 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private reactionDisposer?: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   async ngOnInit() {
     await fetchBasemaps();
@@ -112,6 +114,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(featuresOpen => {
         this.isFeaturesSidebarActive = Boolean(featuresOpen);
+        this.cdRef.detectChanges();
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);
@@ -121,6 +124,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
       .subscribe(editOpen => {
         this.isEditSidebarActive = Boolean(editOpen);
+        this.cdRef.detectChanges();
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);
@@ -130,6 +134,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(bugReportOpen => {
         this.isBugReportSidebarActive = Boolean(bugReportOpen);
+        this.cdRef.detectChanges();
         setTimeout(() => {
           window.dispatchEvent(new Event('resize'));
         }, 0);

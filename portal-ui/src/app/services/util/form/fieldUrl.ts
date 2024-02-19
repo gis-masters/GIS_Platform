@@ -1,7 +1,7 @@
 import { UrlInfo } from '../../../components/Form/Control/_type/Form-Control_type_url';
 import { PropertySchema, PropertySchemaUrl, PropertyType } from '../../data/schema/schema.models';
 
-export function parseUrlValue(value: string, multiple: boolean, editable?: boolean): UrlInfo[] {
+export function parseUrlValue(value: string, multiple?: boolean, editable?: boolean): UrlInfo[] {
   if (value) {
     try {
       const parsedValue = JSON.parse(value) as UrlInfo | UrlInfo[];

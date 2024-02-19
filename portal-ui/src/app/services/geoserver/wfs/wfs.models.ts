@@ -33,7 +33,7 @@ export const supportedGeometryTypes: GeometryType[] & SupportedGeometryType[] = 
 
 interface GeoJSONObject {
   type: string;
-  bbox?: number[];
+  bbox?: [number, number, number, number];
 }
 
 interface Geometry extends GeoJSONObject {
@@ -101,5 +101,5 @@ export interface WfsFeatureCollection extends GeoJSONObject {
   numberMatched: number;
   numberReturned: number;
   timeStamp: string;
-  bbox: number[];
+  bbox: [number, number, number, number];
 }

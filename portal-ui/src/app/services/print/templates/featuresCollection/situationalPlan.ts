@@ -5,10 +5,20 @@ import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.ut
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { schemaService } from '../../../data/schema/schema.service';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
+import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
 import { formPrompt } from '../../../utility-dialogs.service';
 import { PrintTemplate } from '../PrintTemplate';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
+import { FormProps } from '../../../../components/Form/Form';
+import { observable } from 'mobx';
+
+interface SituationalPlanFormData {
+  title: string;
+  image: string;
+  properties: PropertySchema[];
+  displayNumbers: boolean;
+}
 
 export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
   name: 'situationalPlan',
@@ -28,35 +38,64 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const schemaWithAppliedView = applyView(schema, layer.view);
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
+    numberFeaturesOnMap(data);
+
     // карта
-    const mapDialogResult = await formPrompt<{ title: string; image: string; properties: PropertySchema[] }>({
+
+    const formInvoke: FormProps<SituationalPlanFormData>['invoke'] = observable({});
+
+    const mapDialogResult = await formPrompt<SituationalPlanFormData>({
       title: 'Параметры печати',
       message: this.title,
       schema: {
         properties: [
           {
             name: 'title',
-            propertyType: PropertyType.STRING,
             title: 'Название',
+            propertyType: PropertyType.STRING,
             defaultValue: layer.title
           },
           {
             name: 'image',
-            propertyType: PropertyType.CUSTOM,
             title: 'Карта',
+            propertyType: PropertyType.CUSTOM,
             ControlComponent: PrintMapImageControl,
             format: 'a5'
           },
           {
             name: 'properties',
+            title: 'Выбор колонок для печати',
             propertyType: PropertyType.CUSTOM,
             ControlComponent: SelectPropertiesControl,
-            properties,
-            title: 'Выбор колонок для печати'
+            properties
+          },
+          {
+            name: 'displayNumbers',
+            title: 'Выводить номера на карте',
+            description: 'При изменении этой настройки нужно будет заново выбрать фрагмент карты',
+            propertyType: PropertyType.BOOL,
+            defaultValue: true
           }
         ]
+      },
+      formProps: {
+        onFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: SituationalPlanFormData) {
+          if (propertyName === 'displayNumbers' && value !== prevValue) {
+            if (value) {
+              numberFeaturesOnMap(data);
+            } else {
+              hideNumberFeaturesOnMap();
+            }
+
+            formInvoke.setValue?.({ ...formValue, image: '' });
+          }
+        },
+
+        invoke: formInvoke
       }
     });
+
+    hideNumberFeaturesOnMap();
 
     if (!mapDialogResult) {
       return '';
@@ -65,6 +104,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const printableCols = mapDialogResult.properties?.length ? mapDialogResult.properties : properties;
 
     // заголовки таблицы
+
     const headersFragments = await Promise.all(
       printableCols.map(async ({ title }) => {
         return await this.renderFragment('oneTableHeader', { title });
@@ -72,6 +112,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     );
 
     // строки таблицы
+
     const rowsFragments = await Promise.all(
       data.map(async (feature, i) => {
         const cellsFragments = await Promise.all(

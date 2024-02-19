@@ -1,13 +1,13 @@
-body .Form-Control_type_string {
-  &.Form-Control_display_code .MuiInput-root {
-    font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
-  }
-
+body .StringControl {
   fieldset {
     border: none;
   }
 
-  &.Form-Control_fullWidthForOldForm {
+  &_labelInTextField {
+    width: 100%;
+  }
+
+  &.StringControl_fullWidthForOldForm {
     min-height: 38px;
     padding: 10px;
 

@@ -2,6 +2,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { Component, ReactNode } from 'react';
 
 import { SimpleSchema } from '../services/data/schema/schema.models';
+import { FormProps } from '../components/Form/Form';
 
 export interface UtilityDialogInfo {
   id: string;
@@ -14,6 +15,7 @@ export interface UtilityDialogInfo {
   okText?: string;
   cancelText?: string;
   schema?: SimpleSchema;
+  formProps?: Partial<FormProps<unknown>>;
 }
 
 class UtilityDialogsStore {

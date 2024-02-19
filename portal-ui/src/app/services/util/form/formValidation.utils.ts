@@ -3,20 +3,12 @@ import moment from 'moment';
 
 import { FileInfo } from '../../data/files/files.models';
 import { knownRegex } from '../../regexp.service';
-import {
-  PropertyType,
-  PropertySchema,
-  PropertySchemaDatetime,
-  PropertySchemaFloat,
-  PropertySchemaInt,
-  PropertySchemaString,
-  PropertySchemaUrl,
-  ValueFormula
-} from '../../data/schema/schema.models';
+import { PropertyType, PropertySchema, ValueFormula } from '../../data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../data/schema/schema.utils';
 import { notFalsyFilter } from '../NotFalsyFilter';
 import { getMultipleChoiceValue } from './choiceMultiple.util';
 import { getUrlSubFormSchema, parseUrlValue } from './fieldUrl';
+import { isRecordStringUnknown } from '../typeGuards/isRecordStringUnknown';
 
 const messages = {
   required: 'Обязательное поле ',
@@ -58,6 +50,8 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.CUSTOM]: [simpleRequired]
 };
 
+const propertyTypeError = new Error('Ошибка типа свойства');
+
 export function validateFieldValue(value: unknown, property: PropertySchema, formValue: unknown): FieldErrors {
   const validatorsList = [...(fieldValidators[property.propertyType] || [])];
   if (property.validationFormula) {
@@ -73,6 +67,10 @@ export function validateFieldValue(value: unknown, property: PropertySchema, for
 }
 
 export function validateFormValue(formValue: unknown, fields: PropertySchema[]): FieldErrors[] {
+  if (!isRecordStringUnknown(formValue)) {
+    throw new Error('Нет значения формы');
+  }
+
   return fields
     .map(field => validateFieldValue(formValue[field.name], field, formValue))
     .filter(({ messages }) => messages?.length);
@@ -86,8 +84,12 @@ function simpleRequired(value: unknown, { required }: PropertySchema): string[] 
   }
 }
 
-function jsonArrayRequired(value: string, { required }: PropertySchema): string[] | undefined {
+function jsonArrayRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
   if (required) {
+    if (typeof value !== 'string') {
+      return [messages.required];
+    }
+
     try {
       const parsed = JSON.parse(value) as unknown[];
       if (!Array.isArray(parsed) || !parsed.length) {
@@ -103,7 +105,7 @@ function jsonArrayRequired(value: string, { required }: PropertySchema): string[
 
 function choiceRequired(value: unknown, property: PropertySchema): string[] | undefined {
   if (property.propertyType !== PropertyType.CHOICE) {
-    throw new Error('Ошибка типа свойства');
+    throw propertyTypeError;
   }
 
   if (!property.required) {
@@ -130,7 +132,7 @@ function choiceRequired(value: unknown, property: PropertySchema): string[] | un
 
 function choiceValueInOptions(value: unknown, property: PropertySchema): string[] | undefined {
   if (property.propertyType !== PropertyType.CHOICE) {
-    throw new Error('Ошибка типа свойства');
+    throw propertyTypeError;
   }
 
   if (value === '' || value === undefined || value === null) {
@@ -172,7 +174,17 @@ function datetimeValid(value: unknown): string[] | undefined {
   }
 }
 
-function datetimeMinMax(value: unknown, { maxValue, minValue }: PropertySchemaDatetime): string[] | undefined {
+function datetimeMinMax(value: unknown, property: PropertySchema): string[] | undefined {
+  if (property.propertyType !== PropertyType.DATETIME) {
+    throw propertyTypeError;
+  }
+
+  if (!value) {
+    return;
+  }
+
+  const { maxValue, minValue } = property;
+
   if (maxValue && moment(value).isAfter(maxValue)) {
     return [`Максимальная дата ${maxValue} `];
   }
@@ -183,7 +195,13 @@ function datetimeMinMax(value: unknown, { maxValue, minValue }: PropertySchemaDa
 
 // string
 
-function stringLength(value: unknown, { maxLength, minLength }: PropertySchemaString): string[] {
+function stringLength(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.STRING) {
+    throw propertyTypeError;
+  }
+
+  const { maxLength, minLength } = property;
+
   const errors: string[] = [];
   if (maxLength && String(value).length > maxLength && maxLength > 0) {
     errors.push(`Максимальное количество символов ${maxLength} `);
@@ -195,85 +213,142 @@ function stringLength(value: unknown, { maxLength, minLength }: PropertySchemaSt
   return errors;
 }
 
-function stringRegex(value: unknown, { regex, regexErrorMessage }: PropertySchemaString): string[] {
+function stringRegex(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.STRING) {
+    throw propertyTypeError;
+  }
+
+  const { regex, regexErrorMessage } = property;
+
   if (regex && !new RegExp(regex).test(String(value))) {
     return [regexErrorMessage || messages.regexp];
   }
+
+  return [];
 }
 
-function stringWellKnownRegex(value: unknown, { wellKnownRegex, regexErrorMessage }: PropertySchemaString): string[] {
+function stringWellKnownRegex(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.STRING) {
+    throw propertyTypeError;
+  }
+
+  const { regexErrorMessage, wellKnownRegex } = property;
+
+  if (!wellKnownRegex) {
+    return [];
+  }
+
   if (knownRegex[wellKnownRegex]) {
     knownRegex[wellKnownRegex].lastIndex = 0;
   }
 
-  if (wellKnownRegex && !knownRegex[wellKnownRegex]?.test(String(value))) {
+  if (!knownRegex[wellKnownRegex]?.test(String(value))) {
     return [regexErrorMessage || messages.regexp];
   }
+
+  return [];
 }
 
-function stringPassword(value: unknown, { display, regex, wellKnownRegex }: PropertySchemaString): string[] {
+function stringPassword(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.STRING) {
+    throw propertyTypeError;
+  }
+
+  const { display, regex, wellKnownRegex } = property;
+
   if (display === 'password' && !(regex || wellKnownRegex) && !new RegExp(knownRegex.password).test(String(value))) {
     return [
       'Пароль должен состоять только из цифр, заглавных и строчных букв латинского алфавита и содержать не менее 8 символов'
     ];
   }
+
+  return [];
 }
 
-function stringEmail(value: unknown, { display, regex, wellKnownRegex }: PropertySchemaString): string[] {
+function stringEmail(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.STRING) {
+    throw propertyTypeError;
+  }
+
+  const { display, regex, wellKnownRegex } = property;
+
   if (display === 'email' && !(regex || wellKnownRegex) && !new RegExp(knownRegex.email).test(String(value))) {
     return ['Некорректный E-mail'];
   }
+
+  return [];
 }
 
 // url
 
-function urlRequired(value: string, { required, multiple }: PropertySchemaUrl): string[] | undefined {
-  const info = parseUrlValue(value, multiple);
+function urlRequired(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.URL) {
+    throw propertyTypeError;
+  }
+
+  const { required, multiple } = property;
+
+  const info = parseUrlValue(typeof value === 'string' ? value : '', multiple);
 
   if (required && !info[0]?.url) {
     return [messages.required];
   }
+
+  return [];
 }
 
-function urlRegex(value: string, property: PropertySchemaUrl): string[] {
-  const urlValue = parseUrlValue(value, property.multiple);
+function urlRegex(value: unknown, property: PropertySchema): string[] {
+  if (property.propertyType !== PropertyType.URL) {
+    throw propertyTypeError;
+  }
+
+  const { required, multiple } = property;
+
+  const urlValue = parseUrlValue(typeof value === 'string' ? value : '', multiple);
 
   const fields = getUrlSubFormSchema(property);
 
   const errors = urlValue.flatMap(item => {
-    const fieldsErrors = validateFormValue(item, fields as PropertySchemaString[]);
+    const fieldsErrors = validateFormValue(item, fields);
 
     return fieldsErrors.flatMap(({ messages }) => messages);
   });
 
-  if (!property.multiple && !property.required) {
+  if (!multiple && !required) {
     return [];
   }
 
-  return errors.length ? [errors[0]] : [];
+  return errors.length && errors[0] ? [errors[0]] : [];
 }
 
 // number
 
-function numberRequired(value: unknown, { required }: PropertySchema): string[] | undefined {
+function numberRequired(value: unknown, { required }: PropertySchema): string[] {
   if (
     required &&
     !(typeof value === 'number' || (typeof value === 'string' && value && !Number.isNaN(Number(value))))
   ) {
     return [messages.required];
   }
+
+  return [];
 }
 
-function numberInteger(value: number): string[] | undefined {
+function numberInteger(value: unknown): string[] {
   if (!Number.isNaN(value) && String(value).includes('.')) {
     return ['Только целые числа'];
   }
+
+  return [];
 }
 
-function numberMinMax(
-  value: number,
-  { maxValue, minValue }: PropertySchemaInt | PropertySchemaFloat
-): string[] | undefined {
+function numberMinMax(value: unknown, property: PropertySchema): string[] | undefined {
+  if (property.propertyType !== PropertyType.INT && property.propertyType !== PropertyType.FLOAT) {
+    throw propertyTypeError;
+  }
+
+  const { maxValue, minValue } = property;
+
   if (!(typeof value === 'number' || (typeof value === 'string' && value && !Number.isNaN(Number(value))))) {
     return;
   }
@@ -293,15 +368,18 @@ function numberMinMax(
 
 // fias
 
-function fiasSimpleRequired(
-  value: unknown,
-  property: PropertySchema,
-  formValue: Record<string, unknown>
-): string[] | undefined {
+function fiasSimpleRequired(value: unknown, property: PropertySchema, formValue: unknown): string[] {
+  if (!isRecordStringUnknown(formValue)) {
+    return [];
+  }
+
   const fiasValue = formValue[`${property.name}__address`] as string;
+
   if (property.required && !fiasValue) {
     return [messages.required];
   }
+
+  return [];
 }
 
 // file
@@ -320,7 +398,7 @@ function filesRequired(value: unknown, { required }: PropertySchema): string[] |
   }
 }
 
-function filesLoaded(value: FileInfo[] = []): string[] | undefined {
+function filesLoaded(value: unknown): string[] | undefined {
   try {
     if (value && typeof value === 'string') {
       value = JSON.parse(value) as FileInfo[];
@@ -329,20 +407,26 @@ function filesLoaded(value: FileInfo[] = []): string[] | undefined {
     value = [];
   }
 
-  if (value?.some(({ notLoaded }) => notLoaded)) {
+  if ((Array.isArray(value) ? value : [])?.some(({ notLoaded }) => notLoaded)) {
     return ['Загрузка файлов ещё не завершена'];
   }
 }
 
-export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[] {
+export function normalizeServerErrors(errors: ServerFieldError[]): FieldErrors[] | undefined {
   return errors?.map(({ field, message, defaultMessage, messages }) => ({
     field,
-    messages: messages || [message || defaultMessage]
+    messages: messages || [message || defaultMessage || 'ошибка']
   }));
 }
 
+const noObj = new Error('Ожидается объект');
+
 export function calculateValues<T>(obj: T | Partial<T> = {}, properties: PropertySchema[]): T {
-  const value = cloneDeep(obj);
+  if (!isRecordStringUnknown(obj)) {
+    throw noObj;
+  }
+
+  const value: Record<string, unknown> = cloneDeep(obj);
 
   for (const property of properties) {
     value[property.name] = getCalculatedValue(value, property);
@@ -352,7 +436,11 @@ export function calculateValues<T>(obj: T | Partial<T> = {}, properties: Propert
 }
 
 export function cleanCalculatedValues<T>(obj: T | Partial<T>, properties: PropertySchema[]): T {
-  const value = cloneDeep(obj);
+  if (!isRecordStringUnknown(obj)) {
+    throw noObj;
+  }
+
+  const value: Record<string, unknown> = cloneDeep(obj);
 
   for (const property of properties) {
     if (property.calculatedValueFormula || property.calculatedValueWellKnownFormula) {
@@ -364,6 +452,12 @@ export function cleanCalculatedValues<T>(obj: T | Partial<T>, properties: Proper
 }
 
 export function getCalculatedValue<T>(obj: T | Partial<T>, property: PropertySchema): unknown {
+  if (!isRecordStringUnknown(obj)) {
+    throw noObj;
+  }
+
+  const value: Record<string, unknown> = obj;
+
   if (property.calculatedValueFormula) {
     try {
       const formula =
@@ -392,5 +486,5 @@ export function getCalculatedValue<T>(obj: T | Partial<T>, property: PropertySch
     }
   }
 
-  return obj[property.name];
+  return value[property.name];
 }

@@ -25,6 +25,7 @@ import { mapService } from './map.service';
 import { sleep } from '../util/sleep';
 import { MapLabelToolbox } from '../../components/MapLabelToolbox/MapLabelToolbox';
 import { communicationService } from '../communication.service';
+import { Point } from 'ol/geom';
 
 const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
 
@@ -33,6 +34,7 @@ class MapLabelsService {
   private draw?: Draw;
   private modify?: Modify;
   private source = new VectorSource();
+  private sourceForPrintLabels = new VectorSource();
   private selectedFeature?: Feature;
   private modifyingNow = false;
   private currentToolboxRoot?: Root;
@@ -41,6 +43,11 @@ class MapLabelsService {
     source: this.source,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'labels' }
+  });
+  private layerForPrintLabels = new VectorLayer({
+    source: this.sourceForPrintLabels,
+    zIndex: mapService.LABELS_LAYER_ZINDEX,
+    properties: { name: 'printLabels' }
   });
   private renderLabelToolboxDebounced = debounce(this.renderLabelToolbox, 500);
   private removeLabelToolboxDebounced = debounce(this.removeLabelToolbox, 500);
@@ -302,16 +309,15 @@ class MapLabelsService {
 
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
     const properties = feature.getProperties();
-    const text = properties.text as string;
+    if (typeof properties.text !== 'string') {
+      throw new TypeError('Текст не текст');
+    }
     const svg =
       '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
-    const img = new Image();
-    img.src = 'data:image/svg+xml,' + encodeURIComponent(svg);
 
     return new Style({
       image: new Icon({
-        img,
-        imgSize: [20, 20],
+        src: 'data:image/svg+xml,' + encodeURIComponent(svg),
         opacity: selected ? 0.5 : 0
       }),
       text: new Text({
@@ -320,7 +326,7 @@ class MapLabelsService {
         justify: 'left',
         offsetX: 17,
         offsetY: 2,
-        text,
+        text: properties.text,
         fill: new Fill({
           color: [20, 20, 20, 1]
         }),
@@ -328,6 +334,31 @@ class MapLabelsService {
           color: [255, 255, 255, selected ? 0.9 : 0.6]
         }),
         padding: [5, 5, 3, 5]
+      })
+    });
+  }
+
+  private createPrintLabelStyle(feature: Feature): Style {
+    const properties = feature.getProperties();
+    if (typeof properties.text !== 'string') {
+      throw new TypeError('Текст не текст');
+    }
+
+    return new Style({
+      text: new Text({
+        font: '16px sans-serif',
+        textAlign: 'center',
+        justify: 'center',
+        offsetX: 0,
+        offsetY: 0,
+        text: properties.text,
+        fill: new Fill({
+          color: [20, 20, 20, 1]
+        }),
+        stroke: new Stroke({
+          color: '#fff',
+          width: 3
+        })
       })
     });
   }
@@ -424,6 +455,25 @@ class MapLabelsService {
   @boundMethod
   private toolboxMouseLeaveHandler() {
     this.toolboxHovered = false;
+  }
+
+  showPrintLabels() {
+    mapService.map.addLayer(this.layerForPrintLabels);
+  }
+
+  hidePrintLabels() {
+    mapService.map.removeLayer(this.layerForPrintLabels);
+    this.sourceForPrintLabels.clear();
+  }
+
+  addPrintLabel(center: Coordinate, text: string | number) {
+    const feature = new Feature({
+      geometry: new Point(center),
+      type: 'label',
+      text: String(text)
+    });
+    feature.setStyle(this.createPrintLabelStyle(feature));
+    this.sourceForPrintLabels.addFeatures([feature]);
   }
 }
 

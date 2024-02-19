@@ -13,7 +13,7 @@
 
 ##### Менеджер проекта
 
-- [ ] Acceptance Tests проверены и утверждены.
+- [ ] Критерии приёмки проверены.
 - [ ] WorkItems (Bugs\PBI) привязаны к parent Feature в Backlog.
 - [ ] Документ [Функции системы](https://1drv.ms/x/s!Amr-xlRBGCTvgmaq74bgGny-lMja) актуализирован.
 

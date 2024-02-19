@@ -5,6 +5,7 @@ import { UtilityDialogInfo, utilityDialogsStore } from '../stores/UtilityDialogs
 import { UtilityDialogCloseEventDetail, communicationService } from './communication.service';
 import { SimpleSchema } from './data/schema/schema.models';
 import { sleep } from './util/sleep';
+import { FormProps } from '../components/Form/Form';
 
 // диалог с сообщением, аналог alert
 export async function achtung({
@@ -57,13 +58,15 @@ export async function prompto({
 export async function formPrompt<T>({
   title,
   message,
-  schema
+  schema,
+  formProps
 }: {
   title?: ReactNode;
   message?: ReactNode;
   schema?: SimpleSchema;
+  formProps?: FormProps<T>;
 }): Promise<T> {
-  const { formValue } = await doDialog({ id: uuid(), type: 'formPrompt', title, message, schema });
+  const { formValue } = await doDialog({ id: uuid(), type: 'formPrompt', title, message, schema, formProps });
 
   return formValue as T;
 }
