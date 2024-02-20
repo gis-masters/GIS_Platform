@@ -1,4 +1,18 @@
 body .User {
+  &-Info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    max-width: 200px;
+
+    color: var(--gray);
+
+    &_type_action {
+      color: var(--black);
+    }
+  }
+
   & .MuiButton-endIcon {
     margin: 0;
     padding: 0;

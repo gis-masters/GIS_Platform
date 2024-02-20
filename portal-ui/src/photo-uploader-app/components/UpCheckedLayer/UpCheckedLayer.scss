@@ -1,0 +1,30 @@
+.UpCheckedLayer {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  margin-top: 3vh;
+
+  &-Icon {
+    color: var(--blue);
+  }
+
+  &-Title {
+    display: block;
+  }
+
+  &-DataType {
+    display: block;
+
+    color: var(--gray);
+  }
+
+  &-Button {
+    color: var(--gray);
+
+    font-size: 30px;
+    font-weight: 300;
+
+    justify-self: flex-end;
+  }
+}

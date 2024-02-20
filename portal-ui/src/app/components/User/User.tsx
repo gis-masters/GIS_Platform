@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { observable, action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu, MenuItem, ListItemIcon, Tooltip } from '@mui/material';
+import { IClassNameProps } from '@bem-react/core';
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
@@ -15,7 +16,7 @@ import '!style-loader!css-loader!sass-loader!./User.scss';
 const cnUser = cn('User');
 
 @observer
-export class User extends Component {
+export class User extends Component<IClassNameProps> {
   @observable private anchorEl: HTMLElement | null = null;
 
   constructor(props: Record<string, never>) {
@@ -24,11 +25,13 @@ export class User extends Component {
   }
 
   render() {
+    const { className } = this.props;
+
     return (
       <>
         <Tooltip title={currentUser.login}>
           <Button
-            className={cnUser()}
+            className={className || cnUser()}
             onClick={this.toggleMenu}
             endIcon={<AccountCircle />}
             color='inherit'
@@ -38,7 +41,15 @@ export class User extends Component {
         </Tooltip>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.toggleMenu} anchorEl={this.anchorEl}>
-          <MenuItem onClick={this.logout}>
+          <MenuItem>
+            {
+              <div className={cnUser('Info')}>
+                <div>{`${currentUser.surname} ${currentUser.name}`}</div>
+                <div>{currentUser.email}</div>
+              </div>
+            }
+          </MenuItem>
+          <MenuItem className={cnUser('Info', { type: 'action' })} onClick={this.logout}>
             <ListItemIcon>
               <ExitToApp />
             </ListItemIcon>

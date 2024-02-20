@@ -1,7 +1,9 @@
 .PhotoUploader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: auto;
 
   height: 100%;
+
+  & .LoginForm-OrgSelect {
+    max-height: none;
+  }
 }
