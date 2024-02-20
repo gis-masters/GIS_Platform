@@ -1,15 +1,23 @@
 package ru.mycrg.data_service.dto.smev3;
 
 public class GetCadastrialPlanDto implements ISmevRequestDto {
-    private String archiveFilename;
+    private String cadastrialNumber;
+    private String clientId;
 
-    public String getArchiveFilename() {
-        return archiveFilename;
+    public String getCadastrialNumber() {
+        return cadastrialNumber;
     }
 
-    public GetCadastrialPlanDto setArchiveFilename(String archiveFilename) {
-        this.archiveFilename = archiveFilename;
-        return this;
+    public void setCadastrialNumber(String cadastrialNumber) {
+        this.cadastrialNumber = cadastrialNumber;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     //todo заглушка

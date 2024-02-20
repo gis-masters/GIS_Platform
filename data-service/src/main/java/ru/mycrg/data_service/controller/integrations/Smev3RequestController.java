@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.*;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
@@ -12,6 +13,7 @@ import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequest
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 @RestController
@@ -56,14 +58,29 @@ public class Smev3RequestController {
      */
     @PostMapping("/request/egrn")
     public ResponseEntity<XmlBuildMeta> getCadastrialPlan(@RequestBody OrderKptDto body) {
-        body.getOrder().stream()
-                .map(s -> {
-                    getCadastrialPlanRequestService.validateCadastrialNumber(s);
-                    s = "Request_" + s.replace(":", "_") + ".zip";
-                    return s;
-                }).forEach(s -> {
-            var dto = new GetCadastrialPlanDto();
-            dto.setArchiveFilename(s);
+        HashMap<String, String> clientIdToCadastrialNumber = new HashMap<>();
+        body.getOrder().forEach(cadastrialNumber -> {
+            getCadastrialPlanRequestService.validateCadastrialNumber(cadastrialNumber);
+            clientIdToCadastrialNumber.put(UUID.randomUUID().toString(), cadastrialNumber);
+        });
+        String joinedCadastrialNumbers = String.join(", ", body.getOrder());
+        IRecord task = getCadastrialPlanRequestService.createTask(joinedCadastrialNumbers);
+        IRecord folder = getCadastrialPlanRequestService.createFolder(joinedCadastrialNumbers, task);
+        getCadastrialPlanRequestService.createLog("Создание новой папки",
+                "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
+                folder.getContent(),
+                task.getId());
+        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
+            IRecord doc = getCadastrialPlanRequestService.createDoc(clientId, cadastrialNumber, folder.getId());
+            getCadastrialPlanRequestService.createLog("Создание нового документа",
+                    "Создан документ с кадастровым номером " + cadastrialNumber,
+                    doc.getContent(),
+                    task.getId());
+        });
+        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
+            GetCadastrialPlanDto dto = new GetCadastrialPlanDto();
+            dto.setClientId(clientId);
+            dto.setCadastrialNumber(cadastrialNumber);
             getCadastrialPlanRequestService.sendRequest(dto);
         });
 
