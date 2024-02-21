@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.smev3.request;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.dao.BaseDao;
@@ -54,6 +55,10 @@ public abstract class AXmlBuildProcess {
                 this.sourceRecordsMap,
                 this.attachmentsMap
         );
+    }
+
+    public Optional<String> ofNullableString(String value) {
+        return ofNullable(value).map(s -> StringUtils.isNotEmpty(s) ? s : null);
     }
 
     protected Optional<Boolean> asBoolean(IRecord record, String fieldName) {

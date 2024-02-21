@@ -12,10 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
+import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,6 +30,7 @@ import java.util.UUID;
         matchIfMissing = true)
 public class SmevMessageReceiverService {
     private final Logger log = LoggerFactory.getLogger(SmevMessageReceiverService.class);
+    private static final Base64.Encoder base64Encoder = Base64.getEncoder();
     private final SmevMessageService messageService;
     private final RabbitTemplate rabbitTemplate;
     private final Queue adapterReceiveFailQueue;
@@ -61,7 +65,7 @@ public class SmevMessageReceiverService {
                     );
         } catch (Exception e) {
             log.info("Process adapter message fail: " + e.getMessage());
-            receiveFail(body);
+            receiveFail(e, body);
         }
     }
 
@@ -104,10 +108,15 @@ public class SmevMessageReceiverService {
     /**
      * Сохранить сообщение, в случае ошибки обработки
      */
-    private void receiveFail(@NotNull String body) {
+    private void receiveFail(Exception ex, @NotNull String body) {
         try {
             log.error("Send to 'receive fail' queue: " + body);
-            rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), body);
+            var failResponse = new ResponseFailProcess(
+                    ex.getMessage(),
+                    new String(base64Encoder.encode(body.getBytes()))
+            );
+
+            rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), JsonConverter.asJsonString(failResponse));
         } catch (Exception e) {
             log.error("Fail to send to 'receive fail' queue. {}", e.getMessage());
         }

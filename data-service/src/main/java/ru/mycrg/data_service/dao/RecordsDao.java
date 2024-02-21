@@ -109,6 +109,11 @@ public class RecordsDao {
         return baseDao.findById(qualifier, schema);
     }
 
+    public Optional<IRecord> findBy(ResourceQualifier qualifier,
+                                    String ecqlFilter) {
+        return baseDao.findBy(qualifier, ecqlFilter);
+    }
+
     //Сейчас подходит только для третьей библиотеки. Захардкоженнный запрос.
     public List<IRecord> findAllForDataSection3(ResourceQualifier lQualifier, SchemaDto schema, String contentType) {
         try {

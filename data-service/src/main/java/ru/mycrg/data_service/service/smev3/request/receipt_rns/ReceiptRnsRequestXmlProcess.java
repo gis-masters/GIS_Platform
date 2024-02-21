@@ -5,13 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.receipt_rns_1_0_9.ReceiptConstructionType;
 import ru.mycrg.data_service.receipt_rns_1_0_9.ReceiptListConstructionType;
 import ru.mycrg.data_service.receipt_rns_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
+import ru.mycrg.data_service.util.xml.XmlMapper;
 
-import static ru.mycrg.data_service.util.xml.XmlMapper.mapCalendar;
+import static java.util.Optional.ofNullable;
 
 
 public class ReceiptRnsRequestXmlProcess extends AXmlBuildProcess {
@@ -23,12 +25,27 @@ public class ReceiptRnsRequestXmlProcess extends AXmlBuildProcess {
 
     public BuildRequestAndSources<Request> run(@NotNull ReceiptRnsRequestDto rnsRequestDto) {
         try {
-            var receiptConstruction = new ReceiptListConstructionType();
-            receiptConstruction.setConstPermitDateFrom(mapCalendar(rnsRequestDto.getConstPermitDateFrom()));
-            receiptConstruction.setConstPermitDateTo(mapCalendar(rnsRequestDto.getConstPermitDateTo()));
-
             var request = new Request();
-            request.setReceiptListConstruction(receiptConstruction);
+
+            var constPermitDateFrom = ofNullable(rnsRequestDto.getConstPermitDateFrom()).map(XmlMapper::mapCalendar);
+            var constPermitDateTo = ofNullable(rnsRequestDto.getConstPermitDateTo()).map(XmlMapper::mapCalendar);
+            var constPermitNumber = ofNullableString(rnsRequestDto.getConstPermitNumber());
+
+            // запрос списка
+            if (constPermitDateFrom.isPresent() && constPermitDateTo.isPresent()) {
+                var recipList = new ReceiptListConstructionType();
+                constPermitDateFrom.ifPresent(recipList::setConstPermitDateFrom);
+                constPermitDateTo.ifPresent(recipList::setConstPermitDateTo);
+                request.setReceiptListConstruction(recipList);
+
+                // запрос одной записи
+            } else if (constPermitNumber.isPresent()) {
+                var recip = new ReceiptConstructionType();
+                constPermitNumber.ifPresent(recip::setConstPermitNumber);
+                request.setReceiptConstruction(recip);
+            } else {
+                throw new SmevRequestException("request is bad. no params");
+            }
 
             return buildRequest(request);
         } catch (Exception e) {

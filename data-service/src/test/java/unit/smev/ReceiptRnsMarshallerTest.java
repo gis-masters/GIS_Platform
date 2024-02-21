@@ -68,7 +68,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .getResponse();
 
         var content = new ReceiptRnsResponseXmlProcess()
-                .run(responseType)
+                .processOne(responseType.getResponseConstruction())
                 .getContent();
 
         // ChangesConstPermit

@@ -12,7 +12,12 @@ public class ReceiptRnsRequestDto implements ISmevRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate constPermitDateTo;
 
+    private String constPermitNumber;
+
     private Boolean sendToSmev = true;
+
+    //TODO временно
+    private String testBase64;
 
     public LocalDate getConstPermitDateFrom() {
         return constPermitDateFrom;
@@ -36,8 +41,16 @@ public class ReceiptRnsRequestDto implements ISmevRequestDto {
         return sendToSmev;
     }
 
+    public String getConstPermitNumber() {
+        return constPermitNumber;
+    }
+
     public ReceiptRnsRequestDto setSendToSmev(Boolean sendToSmev) {
         this.sendToSmev = sendToSmev;
         return this;
+    }
+
+    public String getTestBase64() {
+        return testBase64;
     }
 }

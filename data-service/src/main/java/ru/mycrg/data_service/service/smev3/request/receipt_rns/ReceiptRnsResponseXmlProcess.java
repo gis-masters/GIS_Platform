@@ -1,9 +1,6 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rns;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -11,27 +8,83 @@ import ru.mycrg.data_service.fields.FieldsEisZs;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.request.AResponseXmlProcess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 
 
 public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnsResponseXmlProcess.class);
+    // папка для РНС имеет id=1
+    private static final String ROOT_1 = "/root/1";
     private final HashMap<String, Object> content = new HashMap<>();
+    private final List<HashMap<String, Object>> contentList = new ArrayList<>();
 
-    public IRecord run(@NotNull ResponseType responseType) {
+    public IRecord processOne(@NotNull ResponseConstructionType type) {
         try {
-            var type = responseType.getResponseConstruction();
             changesConstPermitType(type.getChangesConstPermit());
             constructionType(type.getConstruction());
 
+            content.put(FieldsEisZs.PROPERTY_PATH, ROOT_1);
             return new RecordEntity(content);
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
         }
     }
 
+    public List<IRecord> processList(@NotNull List<ResponseConstructionShortInfoType> constructionShortInfoTypes) {
+        try {
+            constructionShortInfoTypes
+                    .stream()
+                    .map(ResponseConstructionShortInfoType::getVersionInfo)
+                    .forEach(constructionVersionInfoType -> {
+                        var content = new HashMap<String, Object>();
+                        constructionVersionInfoType(content, constructionVersionInfoType);
+                        contentList.add(content);
+                    });
+
+            return contentList
+                    .stream()
+                    .peek(map -> map.put(FieldsEisZs.PROPERTY_PATH, "/root/1"))
+                    .map(RecordEntity::new)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new SmevRequestException("build request error :" + e.getMessage());
+        }
+    }
+
+    // collection
+    private void constructionVersionInfoType(HashMap<String, Object> content, ConstructionVersionInfoType type) {
+        asString(type.getConstPermitID())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_ID, s));
+        asString(type.getConstPermitNumber())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_NUMBER, s));
+        asLocalDateTime(type.getConstPermitDate())
+                .ifPresent(localDateTime -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_DATE, localDateTime));
+        asLocalDateTime(type.getChangesDate())
+                .ifPresent(localDateTime -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_CHANGES_DATE, localDateTime));
+        ofNullable(type.getReasonChanges())
+                .ifPresent(ref -> {
+                    asString(ref.getName()).ifPresent(s -> content.put(FieldsEisZs.PROPERTY_REASON_CHANGES_NAME, s));
+                    asString(ref.getCode()).ifPresent(s -> content.put(FieldsEisZs.PROPERTY_REASON_CHANGES_CODE, s));
+                });
+        ofNullable(type.getObjectShortInfo())
+                .flatMap(types -> types.stream().findFirst())
+                .ifPresent(shortInfoType -> objectShortInfoType(content, shortInfoType));
+    }
+
+    private void objectShortInfoType(HashMap<String, Object> content, ObjectShortInfoType type) {
+        asString(type.getObjectName())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_OBJECT_NAME, s));
+        asString(type.getObjectID())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_OBJECT_ID, s));
+        asString(type.getObjectBusinessID())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_OBJECT_BUSINESS_ID, s));
+    }
+
+    // one record
     private void changesConstPermitType(ChangesConstPermitType type) {
         asString(type.getPrevConstPermitID())
                 .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_ID, s));

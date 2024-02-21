@@ -9,10 +9,12 @@ import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class Smev3RequestController {
 
     private final ReceiptRnsRequestService rnsRequestService;
+    private final ReceiptRnsResponseService rnsResponseService;
     private final ReceiptRnvRequestService rnvRequestService;
     private final RegisterRnsRequestService registerRnsService;
     private final RegisterRnvRequestService registerRnvService;
@@ -32,12 +35,14 @@ public class Smev3RequestController {
     private final SmevMessageService storageService;
 
     public Smev3RequestController(ReceiptRnsRequestService rnsRequestService,
+                                  ReceiptRnsResponseService rnsResponseService,
                                   ReceiptRnvRequestService rnvRequestService,
                                   RegisterRnsRequestService registerRnsService,
                                   RegisterRnvRequestService registerRnvService,
                                   GetCadastrialPlanRequestService getCadastrialPlanRequestService,
                                   SmevMessageService storageService) {
         this.rnsRequestService = rnsRequestService;
+        this.rnsResponseService = rnsResponseService;
         this.rnvRequestService = rnvRequestService;
         this.registerRnsService = registerRnsService;
         this.registerRnvService = registerRnvService;
@@ -102,9 +107,15 @@ public class Smev3RequestController {
      */
     @PostMapping("/request/receipt-rns")
     public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
-        var response = rnsRequestService.sendRequest(rnsRequestDto);
-
-        return ResponseEntity.ok(response);
+        //TODO временно
+        if (rnsRequestDto.getTestBase64() != null) {
+            var b64 = Base64.getDecoder().decode(rnsRequestDto.getTestBase64());
+            rnsResponseService.processMessageFromSmev(new String(b64));
+            return null;
+        } else {
+            var response = rnsRequestService.sendRequest(rnsRequestDto);
+            return ResponseEntity.ok(response);
+        }
     }
 
     /**
