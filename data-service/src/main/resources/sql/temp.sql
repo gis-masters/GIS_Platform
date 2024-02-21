@@ -483,3 +483,14 @@ WHERE class_rule IS NOT NULL AND
              'wildlifeprotection_point',
              'tasks_schema_v1'
         );
+
+--Проставляем всем схемам styleName на основе name, если у них не было 
+UPDATE data.schemas
+SET class_rule = (
+    jsonb_set(
+        class_rule::jsonb,
+        '{styleName}',
+        to_jsonb(name)::jsonb
+    )
+)::json
+WHERE NOT class_rule::jsonb ? 'styleName';
