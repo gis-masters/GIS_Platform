@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { IconButton, TextField } from '@mui/material';
 import { ArrowDropDown, ArrowRight, Clear, SearchOutlined } from '@mui/icons-material';
-import { TreeView } from '@mui/lab';
+import { TreeView } from '@mui/x-tree-view';
 
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { Toc, TocItem } from '../../stores/Help.store';
 import { HelpTocItem } from './Item/HelpToc-Item';
 
@@ -84,20 +85,19 @@ export class HelpToc extends Component<HelpTocProps> {
   @action
   private search(word: string) {
     const regEx = new RegExp('(' + word + ')(?!([^<]+)?>)', 'gi');
+    const toc: Toc = this.flatArray
+      .map(item => {
+        if (item.content && (regEx.test(item.title) || regEx.test(item.content))) {
+          return {
+            ...item,
+            title: this.searchRegExp(item.title, regEx),
+            content: this.searchRegExp(item.content, regEx)
+          };
+        }
+      })
+      .filter(notFalsyFilter);
 
-    this.setSearchResults(
-      this.flatArray
-        .map(item => {
-          if (regEx.test(item.title) || regEx.test(item.content)) {
-            return {
-              ...item,
-              title: this.searchRegExp(item.title, regEx),
-              content: this.searchRegExp(item.content, regEx)
-            };
-          }
-        })
-        .filter(item => item !== undefined)
-    );
+    this.setSearchResults(toc);
   }
 
   private searchRegExp(text: string, regEx: RegExp): string {

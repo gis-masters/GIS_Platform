@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { observer } from 'mobx-react';
-import { TreeItem } from '@mui/lab';
+import { TreeItem } from '@mui/x-tree-view';
 import { action, makeObservable } from 'mobx';
 
 import { TocItem } from '../../../stores/Help.store';
@@ -44,7 +44,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
   @action.bound
   private clickHandler() {
     const { item, onSelect } = this.props;
-    if (!item.children) {
+    if (!item.children && onSelect) {
       onSelect(item);
     }
   }

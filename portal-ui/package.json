@@ -47,6 +47,7 @@
     "@mui/icons-material": "5.15.3",
     "@mui/lab": "5.0.0-alpha.161",
     "@mui/material": "5.15.5",
+    "@mui/x-tree-view": "6.17.0",
     "@stomp/stompjs": "5.4.2",
     "@turf/turf": "6.5.0",
     "autobind-decorator": "2.4.0",
