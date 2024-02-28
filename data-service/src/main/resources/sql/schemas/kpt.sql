@@ -1025,49 +1025,49 @@ SELECT 'borderwaterobj',
       "asTitle": true,
       "required": true,
       "maxLength": 50,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "btypecode",
       "title": "Вид объекта реестра границ (код)",
       "asTitle": true,
       "maxLength": 50,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "btype",
       "title": "Вид объекта реестра границ",
       "asTitle": true,
       "maxLength": 100,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "objectname",
       "title": "Наименование водного объекта",
       "asTitle": true,
       "maxLength": 100,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "wocode",
       "title": "Вид объекта реестра границ (код)",
       "asTitle": true,
       "maxLength": 50,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "wotype",
       "title": "Вид объекта реестра границ",
       "asTitle": true,
       "maxLength": 100,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "rdate",
       "title": "Дата постановки на учет",
       "required": true,
-      "valueType": "DATETIME",
-      "whiteSpace": "preserve"    },
+      "valueType": "DATETIME"
+    },
     {
       "name": "created_at",
       "title": "Дата создания",
@@ -1109,8 +1109,8 @@ SELECT 'borderwaterobj',
       "title": "Идентификатор стиля",
       "hidden": true,
       "required": true,
-      "valueType": "STRING",
-      "whiteSpace": "preserve"    },
+      "valueType": "STRING"
+    },
     {
       "name": "acsept_at",
       "title": "Дата",
