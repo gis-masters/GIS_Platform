@@ -2,9 +2,11 @@ package ru.mycrg.data_service.controller.integrations;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.*;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
@@ -16,10 +18,15 @@ import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvReque
 
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
-@RequestMapping("/integration/smev3")
+@RequestMapping("/integration/smev3/request")
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
@@ -53,7 +60,8 @@ public class Smev3RequestController {
     /**
      * Получить мету запроса по ИД
      */
-    @GetMapping("/request/meta/{id}")
+    @GetMapping("/meta/{id}")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<XmlBuildMeta> getMeta(@PathVariable UUID id) {
         return ResponseEntity.ok(storageService.getMeta(id));
     }
@@ -61,27 +69,31 @@ public class Smev3RequestController {
     /**
      * Отправить запрос в ЕГРН для получения КПТ
      */
-    @PostMapping("/request/egrn")
-    public ResponseEntity<XmlBuildMeta> getCadastrialPlan(@RequestBody OrderKptDto body) {
-        HashMap<String, String> clientIdToCadastrialNumber = new HashMap<>();
+    @PostMapping("/egrn")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) {
+        Map<String, String> clientIdToCadastrialNumber = new HashMap<>();
         body.getOrder().forEach(cadastrialNumber -> {
-            getCadastrialPlanRequestService.validateCadastrialNumber(cadastrialNumber);
+            throwIfCadastrialNumberNotValid(cadastrialNumber);
             clientIdToCadastrialNumber.put(UUID.randomUUID().toString(), cadastrialNumber);
         });
+
         String joinedCadastrialNumbers = String.join(", ", body.getOrder());
         IRecord task = getCadastrialPlanRequestService.createTask(joinedCadastrialNumbers);
         IRecord folder = getCadastrialPlanRequestService.createFolder(joinedCadastrialNumbers, task);
         getCadastrialPlanRequestService.createLog("Создание новой папки",
-                "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
-                folder.getContent(),
-                task.getId());
+                                                  "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
+                                                  folder.getContent(),
+                                                  task.getId());
+
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
             IRecord doc = getCadastrialPlanRequestService.createDoc(clientId, cadastrialNumber, folder.getId());
             getCadastrialPlanRequestService.createLog("Создание нового документа",
-                    "Создан документ с кадастровым номером " + cadastrialNumber,
-                    doc.getContent(),
-                    task.getId());
+                                                      "Создан документ с кадастровым номером " + cadastrialNumber,
+                                                      doc.getContent(),
+                                                      task.getId());
         });
+
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
             GetCadastrialPlanDto dto = new GetCadastrialPlanDto();
             dto.setClientId(clientId);
@@ -95,8 +107,9 @@ public class Smev3RequestController {
     /**
      * urn://x-artefacts-uishc.domrf.ru/receipt-rnv
      */
-    @PostMapping("/request/receipt-rnv")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
+    @PostMapping("/receipt-rnv")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> receiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
         var response = rnvRequestService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
@@ -105,8 +118,9 @@ public class Smev3RequestController {
     /**
      * urn://x-artefacts-uishc.domrf.ru/receipt-rns
      */
-    @PostMapping("/request/receipt-rns")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
+    @PostMapping("/receipt-rns")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> receiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
         //TODO временно
         if (rnsRequestDto.getTestBase64() != null) {
             var b64 = Base64.getDecoder().decode(rnsRequestDto.getTestBase64());
@@ -121,8 +135,9 @@ public class Smev3RequestController {
     /**
      * urn://x-artefacts-uishc.domrf.ru/register-rns
      */
-    @PostMapping("/request/register-rns")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRns(@RequestBody RegisterRnsRequestDto rnsRequestDto) {
+    @PostMapping("/register-rns")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> registerRns(@RequestBody RegisterRnsRequestDto rnsRequestDto) {
         var response = registerRnsService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
@@ -131,10 +146,19 @@ public class Smev3RequestController {
     /**
      * urn://x-artefacts-uishc.domrf.ru/register-rnv
      */
-    @PostMapping("/request/register-rnv")
-    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
+    @PostMapping("/register-rnv")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> registerRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
         var response = registerRnvService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
+    }
+
+    private void throwIfCadastrialNumberNotValid(String number) {
+        Pattern cadNumPattern = Pattern.compile("\\d{2}:\\d{2}:\\d{6}");
+        Matcher matcher = cadNumPattern.matcher(number);
+        if (!matcher.matches()) {
+            throw new BadRequestException("Передан не валидный кадастровый номер: " + number);
+        }
     }
 }

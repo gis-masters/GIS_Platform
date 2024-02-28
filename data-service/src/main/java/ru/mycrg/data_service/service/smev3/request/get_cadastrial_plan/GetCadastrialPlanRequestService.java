@@ -39,8 +39,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
@@ -67,7 +65,6 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     private static final String ORDER_NUMBER_PROPERTY = "order_number";
     private static final String PERFORMER_PROPERTY = "performer";
     private static final String STATUS_PROPERTY = "status";
-
 
     private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
 
@@ -144,8 +141,8 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
         return mediator.execute(
                 new CreateTaskRequest(tasksSchema,
-                        new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
-                        new RecordEntity(body)));
+                                      new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
+                                      new RecordEntity(body)));
     }
 
     private Map<String, Object> prepareTaskBody(String description) {
@@ -167,8 +164,8 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
         return mediator.execute(
                 new CreateLibraryRecordRequest(schema,
-                        new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
-                        new RecordEntity(props)));
+                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
+                                               new RecordEntity(props)));
     }
 
     private Map<String, Object> prepareFolderBody(String order, IRecord createdTask) {
@@ -191,8 +188,8 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
         return mediator.execute(
                 new CreateLibraryRecordRequest(schema,
-                        new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
-                        new RecordEntity(props)));
+                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
+                                               new RecordEntity(props)));
     }
 
     private Map<String, Object> prepareDocBody(String cadastrialNumber, String clientId, Long id) {
@@ -208,7 +205,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         return body;
     }
 
-    public void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId){
+    public void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId) {
         propsMap.put(TASK_DESCRIPTION_PROPERTY, description);
         propsMap.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), TASK_CONTENT_TYPE);
         propsMap.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
@@ -218,24 +215,13 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
     }
 
-    public void validateCadastrialNumber(String number) {
-        String cadastrialNumberRegex = "\\d{2}:\\d{2}:\\d{6}";
-        Pattern pattern = Pattern.compile(cadastrialNumberRegex);
-        Matcher matcher = pattern.matcher(number);
-
-        if (!matcher.matches()) {
-            log.error("Invalid cadastrial number: {}", number);
-            throw new SmevRequestException("Invalid cadastrial number: " + number);
-        }
-    }
-
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
         var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run();
         var clientMessage = clientMessage(buildRequest.getRequest(),
-                getCadastrialPlanDto.getCadastrialNumber(),
-                getCadastrialPlanDto.getClientId());
+                                          getCadastrialPlanDto.getCadastrialNumber(),
+                                          getCadastrialPlanDto.getClientId());
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),

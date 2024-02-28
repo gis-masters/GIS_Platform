@@ -80,6 +80,10 @@ zuul:
       path: /integration/statement/**
       url: http://crg-data-service:8084/integration/statement/
 
+    crg-data-service-integration-smev3-request:
+      path: /integration/smev3/request/**
+      url: http://crg-data-service:8084/integration/smev3/request/
+
     gis-ws:
       path: /crg-ws-endpoint/**
       url: http://crg-data-service:8084/crg-ws-endpoint/

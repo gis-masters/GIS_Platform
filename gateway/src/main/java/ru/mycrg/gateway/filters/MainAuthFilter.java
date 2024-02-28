@@ -58,17 +58,18 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                 authorize(request, response, username, password);
             }
         } else if (isAllowedPaths(request)) {
-            log.debug("Request to: {} Method: {}. Allow without auth", request.getServletPath(), request.getMethod());
+            log.debug("Allow without auth for request to: '{}' and method: '{}'",
+                      request.getServletPath(), request.getMethod());
 
             gotoNextFilter(request, response, chain);
         } else if (isActuatorPaths(request)) {
             gotoNextFilter(request, response, chain);
-        } else if (isIntegrationPaths(request)) {
-            log.debug("Request to: {}", request.getServletPath());
+        } else if (isAuthWithIntegrationTokenPaths(request)) {
+            log.debug("Auth with integration token for path: {}", request.getServletPath());
 
             gotoNextFilter(request, response, chain);
         } else {
-            log.debug("Path: {}", request.getServletPath());
+            log.debug("Default auth for path: {}", request.getServletPath());
 
             tryAuthorize(request, response, chain);
         }
@@ -212,8 +213,12 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         return request.getMethod().equals("GET") && request.getServletPath().equals("/actuator/health");
     }
 
-    private boolean isIntegrationPaths(HttpServletRequest request) {
-        return request.getMethod().equals("POST") && request.getServletPath().contains("/integration/");
+    private boolean isAuthWithIntegrationTokenPaths(HttpServletRequest request) {
+        String method = request.getMethod();
+        String path = request.getServletPath();
+
+        return method.equals("POST")
+                && (path.contains("/integration/ais_ums") || path.contains("/integration/statement"));
     }
 
     private void addOrgInfoToResponse(HttpServletResponse response, List<IdNameProjection> orgs) {
