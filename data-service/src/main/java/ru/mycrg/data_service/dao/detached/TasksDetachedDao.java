@@ -37,9 +37,27 @@ public class TasksDetachedDao {
         int updatedCounter = jdbcTemplate
                 .update("UPDATE data.tasks " +
                                 "SET status = '" + status + "', last_modified = now() " +
-                                "WHERE status <> 'DONE' AND last_modified <= '" + dateTime + "'");
+                                "WHERE status <> 'DONE' AND content_type_id <> 'common_task_kpt_order' AND last_modified <= '" + dateTime + "'");
 
         log.debug("Найдено и переведено в статус '{}' [{}] задач", status, updatedCounter);
+    }
+
+    public void closeOldKptTasks(Long orgId, int deadlineTime) {
+        String databaseName = getDefaultDatabaseName(orgId);
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+
+        String status = TaskStatus.DONE.toString();
+        String dateTime = now().minusHours(deadlineTime).format(DateTimeFormatter.ISO_DATE_TIME);
+
+        log.debug("dateTime: {}", dateTime);
+
+        int updatedCounter = jdbcTemplate
+                .update("UPDATE data.tasks " +
+                        "SET status = '" + status + "', last_modified = now() " +
+                        "WHERE status <> 'DONE' AND content_type_id = 'common_task_kpt_order' AND created_at <= '" + dateTime + "'");
+
+        log.debug("Найдено и переведено в статус '{}' [{}] КПТ задач", status, updatedCounter);
     }
 
     public void updateStatus(String databaseName, Long taskId, TaskStatus newStatus) {

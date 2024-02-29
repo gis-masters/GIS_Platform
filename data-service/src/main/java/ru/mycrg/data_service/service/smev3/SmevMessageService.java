@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.reestrs.Systems;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.ReestrStatus;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.AcceptKptService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,49 +28,54 @@ import java.util.UUID;
         matchIfMissing = true)
 public class SmevMessageService {
     private static final Logger log = LoggerFactory.getLogger(SmevMessageService.class);
+
     private final ReestrIncomingService incomingService;
     private final ReestrOutgoingService outgoingService;
-    private final SmevMessageMetaRepository messageMetaRp;
+    private final SmevMessageMetaRepository smevMsgRepository;
+    private final AcceptKptService acceptKptService;
 
     public SmevMessageService(ReestrIncomingService incomingService,
                               ReestrOutgoingService outgoingService,
-                              SmevMessageMetaRepository messageMetaRp) {
+                              SmevMessageMetaRepository smevMsgRepository,
+                              AcceptKptService acceptKptService) {
         this.incomingService = incomingService;
         this.outgoingService = outgoingService;
-        this.messageMetaRp = messageMetaRp;
+        this.smevMsgRepository = smevMsgRepository;
+        this.acceptKptService = acceptKptService;
     }
 
     @Transactional
     public void saveIncoming(ProcessAdapterMessageResult processResult,
                              SmevMessageMetaEntity originalMessageRecord) {
         try {
-            var reestrMessage = new ReestrIncoming();
-            reestrMessage.setId(UUID.randomUUID());
-            reestrMessage.setResponseTo(originalMessageRecord.getReferenceReestrOutgoing().toString());
-            reestrMessage.setBody(processResult.getXmlBuildMeta().getRequestXmlString());
-            reestrMessage.setDateIn(LocalDateTime.now());
-            reestrMessage.setStatus(processResult.getStatus());
-            reestrMessage.setSystem(Systems.GISOGD_RK);
-            if (processResult.getXmlBuildMeta().getRequestXmlString().contains("RRTR02")) {
-                reestrMessage.setUserFrom(Systems.FGIS_EGRN);
+            var incomingMessage = new ReestrIncoming();
+            incomingMessage.setId(UUID.randomUUID());
+            incomingMessage.setResponseTo(originalMessageRecord.getReferenceReestrOutgoing().toString());
+            incomingMessage.setBody(processResult.getXmlBuildMeta().getRequestXmlString());
+            incomingMessage.setDateIn(LocalDateTime.now());
+            incomingMessage.setStatus(processResult.getStatus());
+            incomingMessage.setSystem(Systems.GISOGD_RK);
+            if (processResult.isFgisEgrnMessage()) {
+                incomingMessage.setUserFrom(Systems.FGIS_EGRN);
+                acceptKptService.acceptKpt(processResult);
             } else {
-                reestrMessage.setUserFrom(Systems.EIS_JS);
+                incomingMessage.setUserFrom(Systems.EIS_JS);
             }
-            incomingService.save(reestrMessage);
+            incomingService.save(incomingMessage);
 
             var smevMessage = SmevMessageMetaEntity.createIncoming(
                             processResult.getXmlBuildMeta().getMnemonic(),
                             processResult.getXmlBuildMeta().getClientId(),
                             processResult.getXmlBuildMeta().getReferenceClientId(),
-                            reestrMessage.getId(),
+                            incomingMessage.getId(),
                             processResult.getXmlBuildMeta().getRequestJson(),
                             processResult.getXmlBuildMeta().getRequestXmlString()
                     )
                     .setRecords(processResult.getXmlBuildMeta().getSources())
                     .setAttachments(processResult.getXmlBuildMeta().getAttachments())
-                    .setCreatedAt(reestrMessage.getDateIn());
+                    .setCreatedAt(incomingMessage.getDateIn());
 
-            messageMetaRp.save(smevMessage);
+            smevMsgRepository.save(smevMessage);
 
             log.info("save smev message. id:{}", smevMessage.getId());
         } catch (Exception e) {
@@ -100,7 +106,7 @@ public class SmevMessageService {
                     .setAttachments(buildMeta.getAttachments())
                     .setCreatedAt(reestrMessage.getDateOut());
 
-            messageMetaRp.save(smevMessage);
+            smevMsgRepository.save(smevMessage);
 
             log.info("save smev message. id:{}", smevMessage.getId());
         } catch (Exception e) {
@@ -110,14 +116,14 @@ public class SmevMessageService {
 
     @Transactional
     public SmevMessageMetaEntity getByClientId(UUID clientId) {
-        return messageMetaRp.findByClientId(clientId)
+        return smevMsgRepository.findByClientId(clientId)
                 .orElseThrow(() -> new SmevRequestException("record not found"));
     }
 
     @Transactional
     public XmlBuildMeta getMeta(UUID id) {
         log.debug("get meta by {}", id);
-        var message = messageMetaRp.findById(id)
+        var message = smevMsgRepository.findById(id)
                 .orElseThrow(() -> new SmevRequestException("record not found"));
         return new XmlBuildMeta(
                 message.mnemonicEnum(),

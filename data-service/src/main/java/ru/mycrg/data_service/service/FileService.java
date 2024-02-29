@@ -211,22 +211,45 @@ public class FileService {
                     .filter(fileDescription -> fileDescription.getId().equals(file.getId()))
                     .findFirst();
 
-            String fileName = description.get().getTitle();
-            String resultFileName = String.format("%s.%s",
-                                                  makeFileName(qualifier, FilenameUtils.removeExtension(fileName)),
-                                                  FileNameUtils.getExtension(fileName).toLowerCase());
-
-            Path targetPath = fileStoragePath.resolve(
-                    String.format("%s/%s/%s/%s",
-                                  getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
-                                  type.toLowerCase(),
-                                  qualifier.getTable(),
-                                  resultFileName));
-
-            fileStorageService.moveFile(Path.of(file.getPath()), targetPath);
-
-            setPathById(targetPath.toString(), file.getId());
+            transferFileFromTempDirectory(qualifier,
+                    description.get().getTitle(),
+                    file.getPath(), file.getId(),
+                    getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
+                    type);
         });
+    }
+
+    public void transferFileFromTempDirectory(File file,
+                                              ResourceQualifier qualifier,
+                                              String type) {
+        transferFileFromTempDirectory(qualifier,
+                file.getTitle(),
+                file.getPath(),
+                file.getId(),
+                "organization_1",
+                type);
+    }
+
+    private void transferFileFromTempDirectory(ResourceQualifier qualifier,
+                                               String fileName,
+                                               String filePath,
+                                               UUID fileId,
+                                               String organizationName,
+                                               String type) {
+        String resultFileName = String.format("%s.%s",
+                makeFileName(qualifier, FilenameUtils.removeExtension(fileName)),
+                FileNameUtils.getExtension(fileName).toLowerCase());
+
+        Path targetPath = fileStoragePath.resolve(
+                String.format("%s/%s/%s/%s",
+                        organizationName,
+                        type.toLowerCase(),
+                        qualifier.getTable(),
+                        resultFileName));
+
+        fileStorageService.moveFile(Path.of(filePath), targetPath);
+
+        setPathById(targetPath.toString(), fileId);
     }
 
     private String makeFileName(ResourceQualifier qualifier, String title) {

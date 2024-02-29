@@ -32,4 +32,8 @@ public class ProcessAdapterMessageResult {
         this.message = message;
         return this;
     }
+
+    public boolean isFgisEgrnMessage(){
+        return xmlBuildMeta.getRequestXmlString().contains("RRTR02");
+    }
 }

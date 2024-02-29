@@ -7,4 +7,5 @@ public class Systems {
     public static final String GISOGD_RK = "ГИСОГД РК";
     public static final String EIS_JS = "ЕИС ЖС";
     public static final String FGIS_EGRN = "ФГИС ЕГРН";
+    public static final String SMEV_3 = "СМЭВ 3";
 }
