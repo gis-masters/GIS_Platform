@@ -9,6 +9,7 @@ import { action, observable, makeObservable } from 'mobx';
 import { ContentCopyOutlined } from '@mui/icons-material';
 
 import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
+import { getProjection, transformGeometry } from '../../services/geoserver/projections.service';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
@@ -109,10 +110,18 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
       const { layer, features } = this.props;
       const createdFeatures: WfsFeature[] = [];
 
-      if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
+      if (layer.type && (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type))) {
         for (const feature of features) {
-          const feat = await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature, true);
-          createdFeatures.push(feat);
+          if (layer.nativeCRS && layer.nativeCRS !== selectedLayer.nativeCRS && feature.geometry) {
+            const selectedProjection = getProjection(selectedLayer.nativeCRS);
+            const currentProjection = getProjection(layer.nativeCRS);
+
+            feature.geometry = transformGeometry(feature.geometry, currentProjection, selectedProjection);
+          }
+
+          const createdFeature = await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature, true);
+
+          createdFeatures.push(createdFeature);
           this.setCreatedFeaturesCounter(this.createdFeaturesCounter + 1);
         }
       } else {

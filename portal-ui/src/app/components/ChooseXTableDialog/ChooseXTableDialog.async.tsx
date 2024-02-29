@@ -39,6 +39,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   additionalAction?: ReactNode;
   onClose(): void;
   onSelect(items: T[]): void;
+  onChange?(items: T[]): void;
 }
 
 interface ChooseXTableDialogSyncProps<T> extends ChooseXTableDialogBaseProps<T> {
@@ -145,6 +146,10 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
   @action.bound
   private select(selected: T[]) {
     this.selected = selected;
+
+    if (this.props.onChange) {
+      this.props.onChange(selected);
+    }
   }
 
   @action.bound

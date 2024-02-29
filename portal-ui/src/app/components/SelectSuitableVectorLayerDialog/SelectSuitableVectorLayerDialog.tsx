@@ -2,7 +2,11 @@ import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { action, observable, makeObservable } from 'mobx';
+import { pluralize } from 'numeralize-ru';
+import { WarningAmberOutlined } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 
+import { getProjection } from '../../services/geoserver/projections.service';
 import { XTableColumn } from '../XTable/XTable.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
@@ -28,6 +32,7 @@ interface SelectSuitableVectorLayerDialogProps {
 @observer
 export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVectorLayerDialogProps> {
   @observable private layersAvailableForCopy: CrgVectorLayer[] = [];
+  @observable warningContent: string | null = null;
   @observable private busy = false;
 
   private fetchingOperation?: Promise<void>;
@@ -60,7 +65,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   }
 
   render() {
-    const { currentLayer, open, customLoading, features, onClose, onSelect } = this.props;
+    const { open, customLoading, features, onClose, onSelect } = this.props;
 
     return (
       <ChooseXTableDialog
@@ -71,14 +76,22 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
         cols={this.layerDialogCols}
         onClose={onClose}
         onSelect={onSelect}
+        onChange={this.onChange}
         loading={this.busy}
         single
         afterTable={customLoading}
-        actionButtonProps={{ children: 'Копировать' }}
+        actionButtonProps={{
+          children: 'Копировать',
+          startIcon: this.warningContent ? (
+            <Tooltip title={this.warningContent}>
+              <WarningAmberOutlined color='warning' />
+            </Tooltip>
+          ) : null
+        }}
         additionalAction={
           <div className={cnSelectSuitableVectorLayerDialog('Description')}>
             Для копирования доступны <b>редактируемые</b> слои, совпадающие по типу геометрии&nbsp;(
-            {features && features[0]?.geometry?.type}) и&nbsp;проекции&nbsp;({currentLayer?.nativeCRS})
+            {features && features[0]?.geometry?.type})
           </div>
         }
       />
@@ -93,6 +106,22 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
   @action.bound
   private setLayersAvailableForCopy(layersAvailableForCopy: CrgVectorLayer[]) {
     this.layersAvailableForCopy = layersAvailableForCopy;
+  }
+
+  @action.bound
+  private onChange(selected: CrgVectorLayer[]): void {
+    if (this.props.currentLayer.nativeCRS === selected[0].nativeCRS) {
+      this.setWarningContent(null);
+
+      return;
+    }
+
+    const objectStringEnd = pluralize(selected.length, 'а', 'ов', 'ов');
+    const changedCrsName = getProjection(selected[0].nativeCRS)?.title || selected[0].nativeCRS;
+
+    this.setWarningContent(
+      `Внимание, будет выполнена трансформация координат объект${objectStringEnd} к проекции выбранного слоя (${changedCrsName})`
+    );
   }
 
   private async fetchAvailableForCopyingLayers() {
@@ -114,7 +143,6 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       if (features && geometryType) {
         return (
           currentLayer.complexName !== layer.complexName &&
-          currentLayer.nativeCRS === layer.nativeCRS &&
           this.isCompatibleByGeometry(features, geometryType) &&
           layersUpdatePermissions[i]
         );
@@ -136,5 +164,10 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
         isPolygonal(geometryType, geometry.type) ||
         isPoint(geometryType, geometry.type)
     );
+  }
+
+  @action
+  private setWarningContent(content: string | null): void {
+    this.warningContent = content;
   }
 }
