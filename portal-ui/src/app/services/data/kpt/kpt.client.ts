@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { KptRequestInfo, KptTaskInfo } from './kpt.models';
+import { KptTaskInfo } from './kpt.models';
 
 @boundClass
 class Kpt extends Client {
@@ -17,14 +17,11 @@ class Kpt extends Client {
   }
 
   private getRequestKptUrl(): string {
-    return (
-      this.getDataUrl() +
-      '/integration/smev3/request/egrn?requestFilename=request.xml&appFilename=app_1.xml&passportFilename=Pasport_Semenov.pdf&archiveFilename=Request.zip'
-    );
+    return this.getDataUrl() + '/integration/smev3/request/egrn';
   }
 
-  async getLibraryRecord(): Promise<KptRequestInfo> {
-    return http.get<KptRequestInfo>(this.getRequestKptUrl());
+  async requestKpt(order: string[]) {
+    return http.post(this.getRequestKptUrl(), { order });
   }
 
   async importKpt(importRequest: Record<string, unknown>): Promise<KptTaskInfo> {

@@ -5,19 +5,22 @@ import { observer } from 'mobx-react';
 import { ForwardToInbox } from '@mui/icons-material';
 import { action, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import moment from 'moment';
 
-import { createLibraryRecord } from '../../services/data/library/library.service';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { communicationService } from '../../services/communication.service';
+import { Library } from '../../services/data/library/library.models';
 import { requestKpt } from '../../services/data/kpt/kpt.service';
-import { currentUser } from '../../stores/CurrentUser.store';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 
 const cnLibraryKptRequest = cn('LibraryKptRequest');
 
 interface LibraryKptRequestProps {
-  path?: number[];
+  library: Library;
+}
+
+interface KptRequest {
+  kptRequest: string;
 }
 
 const requestKptSchema: Schema = {
@@ -67,21 +70,9 @@ export class LibraryKptRequest extends Component<LibraryKptRequestProps> {
   }
 
   @boundMethod
-  private async save() {
-    const requestInfo = await requestKpt();
-    const path = this.props.path ? `/root/${this.props.path.join('/')}` : '/root';
-
-    const requestKptData = {
-      order_number: requestInfo.clientId,
-      title: `Заказ № ${requestInfo.clientId}`,
-      performer: `${currentUser.name} ${currentUser.surname}`,
-      status: 'Заказано',
-      date_order: moment().format('YYYY-MM-DD'),
-      content_type_id: 'folder_v1',
-      path
-    };
-
-    await createLibraryRecord(requestKptData, 'dl_data_kpt', 'dl_data_kpt');
+  private async save(value: KptRequest) {
+    await requestKpt(value.kptRequest.split(','));
+    communicationService.libraryUpdated.emit({ type: 'update', data: this.props.library });
   }
 
   @action.bound

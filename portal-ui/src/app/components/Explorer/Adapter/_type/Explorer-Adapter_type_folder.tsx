@@ -215,7 +215,7 @@ export class ExplorerAdapterTypeFolder {
 
     return (
       <>
-        {currentItem.libraryTableName === 'dl_data_kpt' && <LibraryKptRequest path={path} />}
+        {currentItem.libraryTableName === 'dl_data_kpt' && <LibraryKptRequest library={library} />}
         {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
         {store.explorerRole === 'dm' && (
           <>

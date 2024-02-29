@@ -158,7 +158,7 @@ public class Smev3RequestController {
         Pattern cadNumPattern = Pattern.compile("\\d{2}:\\d{2}:\\d{6}");
         Matcher matcher = cadNumPattern.matcher(number);
         if (!matcher.matches()) {
-            throw new BadRequestException("Передан не валидный кадастровый номер: " + number);
+            throw new BadRequestException("Передан невалидный кадастровый номер: " + number);
         }
     }
 }

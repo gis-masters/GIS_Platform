@@ -214,7 +214,7 @@ export class ExplorerAdapterTypeLibrary {
     return (
       store.explorerRole === 'dm' && (
         <>
-          {currentItem.table_name === 'dl_data_kpt' && <LibraryKptRequest />}
+          {currentItem.table_name === 'dl_data_kpt' && <LibraryKptRequest library={item.payload} />}
           {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
