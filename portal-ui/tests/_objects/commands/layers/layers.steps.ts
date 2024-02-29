@@ -53,6 +53,19 @@ Given('у данного слоя включено представление {s
   await updateLayer(latestLayer.id, { view: view.id }, latestProject.id);
 });
 
+Given(
+  'у созданного слоя настроено масштабирование: минимальное — {int}, максимальное — {int}',
+  async function (this: ScenarioScope, minZoom: number, maxZoom: number) {
+    const { latestLayer, latestProject } = this;
+
+    if (!latestLayer.schemaId || !latestLayer.id) {
+      throw new Error(errorSchemaOrId);
+    }
+
+    await updateLayer(latestLayer.id, { minZoom, maxZoom }, latestProject.id);
+  }
+);
+
 Given('у данного слоя включен фоторежим по полю {string}', async function (this: ScenarioScope, fieldTitle: string) {
   const { latestLayer, latestProject } = this;
 

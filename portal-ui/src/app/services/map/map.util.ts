@@ -1,4 +1,5 @@
 import { extractFeatureId } from '../geoserver/feature.util';
+import { MapPosition } from './map.service';
 
 declare const browser: { options: { baseUrl: string } }; //для автотестов
 
@@ -8,7 +9,8 @@ export function getFeaturesUrl(
   projectId: number,
   datasetIdentifier: string,
   tableIdentifier: string,
-  featureIds: string[]
+  featureIds: string[],
+  position?: MapPosition
 ): string {
   let baseUrl: string;
 
@@ -28,6 +30,10 @@ export function getFeaturesUrl(
     tableIdentifier,
     featureIds.map(featureId => extractFeatureId(featureId))
   );
+
+  if (position) {
+    return `${baseUrl}/projects/${projectId}/map/?zoom=${position.zoom}&center=${position.center.join(',')}&features=${JSON.stringify(featuresUrlFragment)}`;
+  }
 
   return `${baseUrl}/projects/${projectId}/map/?features=${JSON.stringify(featuresUrlFragment)}`;
 }

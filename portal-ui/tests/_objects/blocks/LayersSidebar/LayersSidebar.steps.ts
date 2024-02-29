@@ -1,4 +1,4 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { layersSidebarBlock } from './LayersSidebar.block';
 import { attributesBlock } from '../Attributes/Attributes.block';
@@ -39,4 +39,8 @@ When('жду исчезновения блокирующего список сл
 
 When('я перемещаю слой {string} в группу {string}', async (layerName: string, groupName: string) => {
   await layersSidebarBlock.moveLayerToGroup(layerName, groupName);
+});
+
+Then('в списке слоёв отображается {string}', async (variant: string) => {
+  await layersSidebarBlock.assertSelfie(variant.split(' ').join('-'));
 });

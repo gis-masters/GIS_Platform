@@ -4,6 +4,7 @@ import { muiMenuBlock, MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
 import { changeLayerParent } from '../../commands/layers/changeLayerParent';
 import { layerCardBlock } from '../Layer/Card/Layer-Card.block';
+import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
 
 class LayersSidebarBlock extends Block {
   selectors = {
@@ -12,6 +13,7 @@ class LayersSidebarBlock extends Block {
     editLayersBtn: '.LayersSidebar-EditBtn',
     saveBtn: '.LayersSidebar-SaveBtn',
     loading: '.LayersSidebar .Loading',
+    toolbar: '.LayersSidebar-Toolbar',
     addLayerBtn: '.LayersSidebar-AddLayerBtn',
     layerBurger: '.LayersSidebar .Layer-Burger'
   };
@@ -94,6 +96,16 @@ class LayersSidebarBlock extends Block {
     }
 
     await changeLayerParent(layerTitle, groupTitle);
+  }
+
+  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    await super.assertSelfie(tag, {
+      hideElements: [await this.$('toolbar'), ...(checkElementOptions?.hideElements || [])],
+      ...checkElementOptions
+    });
   }
 }
 

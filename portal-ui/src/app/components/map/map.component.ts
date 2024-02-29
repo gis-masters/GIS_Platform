@@ -51,6 +51,10 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     const queryParams = route.queryParams as { [key: string]: string };
     const basemap = queryParams?.basemap;
 
+    if (queryParams.zoom) {
+      currentProject.changeZoom(Number(queryParams.zoom));
+    }
+
     if (basemap) {
       if (basemapsStore.basemaps.some(({ id }) => id === Number(basemap))) {
         basemapsStore.selectBasemap(Number(basemap));

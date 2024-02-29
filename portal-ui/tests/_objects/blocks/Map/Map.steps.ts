@@ -3,6 +3,8 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { mapBlock } from './Map.block';
 import { getMapPosition } from '../../commands/map/getMapPosition';
 import { getLayerVisibility } from '../../commands/getLayerVisibility';
+import { MapPage } from '../../pages/Map.page';
+import { ScenarioScope } from '../../ScenarioScope';
 
 When('слой {string} не отображается на карте', async (layerName: string) => {
   await browser.waitUntil(async () => !(await getLayerVisibility(layerName)), {
@@ -23,6 +25,22 @@ When('слой {string} отображается на карте', async (layerN
 When('я протыкаю карту в центре', async function () {
   await mapBlock.clickOnMap();
 });
+
+When(
+  'я перехожу на карту к объекту с id:{string} в созданном слое по ссылке с зумом {int} и центром {int},{int}',
+  async function (this: ScenarioScope, id: string, zoom: number, center1: number, center2: number) {
+    const { latestDataset, latestVectorTable, latestProject } = this;
+    const mapPage = new MapPage(latestProject.id);
+    await mapPage.openWithPositionToFeatures(
+      latestProject.id,
+      latestDataset.identifier,
+      latestVectorTable.identifier,
+      [id],
+      { zoom, center: [center1, center2] }
+    );
+    await mapBlock.waitForVisible();
+  }
+);
 
 Then(
   'карта позиционируется на искомом объекте с координатами центра [{int} , {int}] и зумом {float}',

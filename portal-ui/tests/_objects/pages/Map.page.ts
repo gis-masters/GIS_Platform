@@ -1,5 +1,6 @@
 import { Page } from '../Page';
 import { getFeaturesUrl } from '../../../src/app/services/map/map.util';
+import { MapPosition } from '../../../src/app/services/map/map.service';
 
 export class MapPage extends Page {
   selectors = {
@@ -17,9 +18,10 @@ export class MapPage extends Page {
     projectId: number,
     dataset: string,
     table: string,
-    featureIds: string[]
+    featureIds: string[],
+    position?: MapPosition
   ): Promise<void> {
-    await browser.url(getFeaturesUrl(projectId, dataset, table, featureIds));
+    await browser.url(getFeaturesUrl(projectId, dataset, table, featureIds, position));
     await this.waitForVisible();
   }
 }

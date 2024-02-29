@@ -72,7 +72,7 @@ interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
 }
 
-interface MapPosition {
+export interface MapPosition {
   zoom: number;
   center: Coordinate;
 }
