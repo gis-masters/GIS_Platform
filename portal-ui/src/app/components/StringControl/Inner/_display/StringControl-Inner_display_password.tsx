@@ -23,7 +23,7 @@ class StringControlInnerDisplayPassword extends Component<StringControlInnerProp
       <StringControlInnerBase
         {...this.props}
         textFieldProps={{
-          type: 'password',
+          type: this.show ? 'text' : 'password',
           InputProps: {
             endAdornment: (
               <InputAdornment position='end'>
