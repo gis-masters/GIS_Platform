@@ -18,7 +18,6 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.service.schemas.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
 import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
@@ -26,10 +25,12 @@ import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.resources.DatasetService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.data_service.service.schemas.SchemaExtractor;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_contracts.generated.fts.FtsType.FEATURE;
@@ -224,14 +225,14 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private List<FtsResponseDto> fetchEntities(List<FtsItem> tables,
+    private List<FtsResponseDto> fetchEntities(List<FtsItem> ftsItems,
                                                @Nullable Set<String> dictionaryWords) {
         StopWatch fetchEntitiesWatcher = new StopWatch();
         fetchEntitiesWatcher.start();
 
         // Перегруппируем данные, чтобы доставать сущности из отдельных библиотек одним запросом.
         Map<String, List<Long>> featuresByTable = new HashMap<>();
-        tables.forEach(ftsItem -> {
+        ftsItems.forEach(ftsItem -> {
             String key = ftsItem.getSchema() + "." + ftsItem.getTable();
             List<Long> ids = featuresByTable.getOrDefault(key, new ArrayList<>());
             ids.add(ftsItem.getId());
@@ -254,7 +255,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                 List<FtsResponseDto> features = spatialRecordsDao
                         .findByIds(tableQualifier, schema, recordIds)
                         .stream()
-                        .map(feature -> mapToFtsResponseDto(tables, dictionaryWords, feature, tableQualifier, schema))
+                        .map(toResponseDto(ftsItems, dictionaryWords, tableQualifier, schema))
                         .collect(Collectors.toList());
 
                 result.addAll(features);
@@ -274,32 +275,37 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private FtsResponseDto mapToFtsResponseDto(List<FtsItem> tables,
+    private Function<Feature, @NotNull FtsResponseDto> toResponseDto(List<FtsItem> ftsItems,
+                                                                     Set<String> dictionaryWords,
+                                                                     ResourceQualifier tableQualifier,
+                                                                     SchemaDto schema) {
+        return feature -> ftsItems
+                .stream()
+                .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
+                .findFirst()
+                .map(item -> mapToFtsResponseDto(item, dictionaryWords, feature, tableQualifier, schema))
+                .orElseGet(FtsResponseDto::new);
+    }
+
+    @NotNull
+    private FtsResponseDto mapToFtsResponseDto(FtsItem oItem,
                                                Set<String> dictionaryWords,
                                                Feature feature,
                                                ResourceQualifier tableQualifier,
                                                SchemaDto schema) {
-        Optional<FtsItem> oItem = tables.stream()
-                                        .filter(ftsItem -> ftsItem.getId().equals(feature.getId()))
-                                        .findFirst();
-        if (oItem.isEmpty()) {
-            return new FtsResponseDto();
-        }
-
-        Float dist = oItem.map(FtsItem::getDist).orElse(0f);
-
         IResourceModel dataset = datasetService.getInfo(tableQualifier.getSchema());
         IResourceModel table = tableService.getInfo(tableQualifier);
 
         Set<String> headlines = new HashSet<>();
         if (dictionaryWords != null && !dictionaryWords.isEmpty()) {
-            headlines = headlineService.fetchHeadlines(oItem.get().getConcatenatedData(), dictionaryWords);
+            headlines = headlineService.fetchHeadlines(oItem.getConcatenatedData(), dictionaryWords);
 
-            log.debug("Headlines: {}", headlines);
+            log.debug("For input: [{}] and by dictionary words: [{}] Headlines: {}",
+                      oItem.getConcatenatedData(), dictionaryWords, headlines);
         }
 
         return new FtsResponseDto(FEATURE,
-                                  dist,
+                                  oItem.getDist(),
                                   Map.of("dataset",
                                          dataset.getIdentifier(),
                                          "datasetTitle",

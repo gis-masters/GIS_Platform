@@ -3,11 +3,15 @@ package ru.mycrg.data_service.service;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 
-
 @Service
+@ConditionalOnProperty(
+        value = "crg-options.integration.smev3.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class MinioService {
 
     private final MinioClient s3client;
@@ -19,9 +23,9 @@ public class MinioService {
     public byte[] getFile(String id, String bucket) {
         try {
             return s3client.getObject(GetObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(id)
-                    .build()).readAllBytes();
+                                                   .bucket(bucket)
+                                                   .object(id)
+                                                   .build()).readAllBytes();
         } catch (Exception e) {
             throw new BadRequestException("Ошибка загрузки файлов из минио: " + e.getMessage());
         }
@@ -30,9 +34,9 @@ public class MinioService {
     public void deleteFile(String id, String bucket) {
         try {
             s3client.removeObject(RemoveObjectArgs.builder()
-                    .bucket(bucket)
-                    .object(id)
-                    .build());
+                                                  .bucket(bucket)
+                                                  .object(id)
+                                                  .build());
         } catch (Exception e) {
             throw new BadRequestException("Ошибка удаления файла из минио: " + e.getMessage());
         }

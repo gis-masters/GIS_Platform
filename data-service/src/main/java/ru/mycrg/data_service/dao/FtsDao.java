@@ -136,7 +136,7 @@ public class FtsDao {
                                          .collect(Collectors.toSet());
         String query = buildHeadlinesQuery(baseWord, preparedText);
 
-        log.debug("Query for search selection: [{}]", query);
+        log.trace("Query for search selection: [{}]", query);
 
         List<FtsHeadline> headlines = pJdbcTemplate
                 .getJdbcTemplate()
