@@ -57,6 +57,7 @@ import { cqlConcat } from '../util/cqlConcat';
 import { FilterBySelection } from './map.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { Toast } from '../../components/Toast/Toast';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -678,17 +679,27 @@ class MapService {
   }
 
   positionToFeature(feature: WfsFeature, projection: CrgProjection = getFeatureProjection(feature)) {
-    const extent = transformExtent(getFeatureExtent(feature), projection, olProjection);
-    this.positionToExtent(extent, feature.geometry?.type === GeometryType.POINT);
+    const extent = getFeatureExtent(feature);
+    if (extent) {
+      const transformedExtent = transformExtent(extent, projection, olProjection);
+      this.positionToExtent(transformedExtent, feature.geometry?.type === GeometryType.POINT);
+    }
   }
 
   positionToFeatures(features: WfsFeature[], projection?: CrgProjection) {
-    const extents = features.map(feature =>
-      transformExtent(getFeatureExtent(feature), projection || getFeatureProjection(feature), olProjection)
-    );
+    const extents = features
+      .map(feature => {
+        const extent = getFeatureExtent(feature);
+        if (extent) {
+          return transformExtent(extent, projection || getFeatureProjection(feature), olProjection);
+        }
+      })
+      .filter(notFalsyFilter);
     const isSinglePoint = features.length === 1 && features[0].geometry?.type === GeometryType.POINT;
 
-    this.positionToExtent(mergeExtents(extents), isSinglePoint);
+    if (extents.length) {
+      this.positionToExtent(mergeExtents(extents), isSinglePoint);
+    }
   }
 
   private positionToExtent(extent: Extent, pointMode?: boolean) {

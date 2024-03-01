@@ -136,11 +136,11 @@ export function transformDimension(dimension: number | string): number {
   return String(dimension).trim() === '' ? Number.NaN : Number(dimension);
 }
 
-export function getFeatureExtent(feature: WfsFeature): Extent {
+export function getFeatureExtent(feature: WfsFeature): Extent | undefined {
   const olFeature: Feature<SimpleGeometry> = wfsFeatureToFeature(feature);
   const extent: Extent | undefined = olFeature?.getGeometry()?.getExtent();
 
-  if (!olFeature || !extent) {
+  if (!olFeature) {
     throw new Error('Incorrect feature');
   }
 
