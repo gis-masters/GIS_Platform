@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.fields;
+package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsSection {
     public static final String TABLE_13 = "dl_data_section13";
@@ -8,6 +8,12 @@ public class FieldsSection {
     public static final String PROPERTY_DOC_NAME = "docname";
     public static final String PROPERTY_DOC_DATE = "docdate";
     public static final String PROPERTY_VALID_UNTIL = "validuntil";
+    public static final String PROPERTY_RELATIONS = "relations";
+    public static final String PROPERTY_DETAIL = "detail";
+    public static final String PROPERTY_CANCELED_DOC_NUMBER = "canceled_doc_number";
+    public static final String PROPERTY_CANCELED_DOC_DATE = "canceled_doc_date";
+    public static final String PROPERTY_TERMINATION_REASON = "termination_reason";
+    public static final String PROPERTY_ORGANIZATION_2 = "organization_2";
     public static final String PROPERTY_DEVELOPER_DATA_CONNECTION = "developer_data_connection";
     public static final String PROPERTY_SUPPLIER_DATA_CONNECTION = "supplier_data_connection";
     public static final String PROPERTY_ISSUE_PERSON_CONNECTION = "issue_person_connection";
@@ -31,6 +37,7 @@ public class FieldsSection {
     public static final String PROPERTY_OBJECT_NAME_EIS = "object_name_eis";
     public static final String PROPERTY_DEVELOPER_TYPE = "developer_type";
     public static final String PROPERTY_PROJECT_DOC_YEAR = "project_doc_year";
+    public static final String PROPERTY_TERMINATION_REASON_EIS = "termination_reason_eis";
 
     //Иное
     public static final String PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_1 = "1";

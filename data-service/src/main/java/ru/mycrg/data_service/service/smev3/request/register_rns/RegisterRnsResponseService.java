@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request.register_rns;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,13 +30,8 @@ public class RegisterRnsResponseService extends ResponseProcessor {
 
     private final Logger log = LoggerFactory.getLogger(RegisterRnsResponseService.class);
 
-    public RegisterRnsResponseService(RecordsDao recordsDao,
-                                      ISchemaService schemaService) {
-        super(
-                Mnemonic.REGISTER_RNS_1_0_10,
-                recordsDao,
-                schemaService
-        );
+    public RegisterRnsResponseService() {
+        super(Mnemonic.REGISTER_RNS_1_0_10);
     }
 
     @Override

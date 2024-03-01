@@ -7,8 +7,8 @@ import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
+import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.fields.FieldsSection.*;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.*;
 
 public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
     private final Logger log = LoggerFactory.getLogger(RegisterRnvXmlBuildProcess.class);

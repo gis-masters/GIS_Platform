@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.fields.FieldsEisZs;
+import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.request.AResponseXmlProcess;
 
@@ -18,16 +18,25 @@ import static java.util.Optional.ofNullable;
 
 public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
     // папка для РНС имеет id=1
-    private static final String ROOT_1 = "/root/1";
-    private final HashMap<String, Object> content = new HashMap<>();
-    private final List<HashMap<String, Object>> contentList = new ArrayList<>();
+    private static final String RNS_FOLDER = "/root/1";
+    private static final String RNS_CONTENT_TYPE = "doc_rns";
+    private HashMap<String, Object> content = null;
+    private List<HashMap<String, Object>> contentList = null;
 
     public IRecord processOne(@NotNull ResponseConstructionType type) {
         try {
-            changesConstPermitType(type.getChangesConstPermit());
-            constructionType(type.getConstruction());
+            content = new HashMap<>();
 
-            content.put(FieldsEisZs.PROPERTY_PATH, ROOT_1);
+            asString(RNS_FOLDER)
+                    .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PATH, s));
+            asString(RNS_CONTENT_TYPE)
+                    .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONTENT_TYPE_ID, s));
+
+            ofNullable(type.getChangesConstPermit())
+                    .ifPresent(this::changesConstPermitType);
+            ofNullable(type.getConstruction())
+                    .ifPresent(this::constructionType);
+
             return new RecordEntity(content);
         } catch (Exception e) {
             throw new SmevRequestException("build request error :" + e.getMessage());
@@ -36,18 +45,19 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
 
     public List<IRecord> processList(@NotNull List<ResponseConstructionShortInfoType> constructionShortInfoTypes) {
         try {
+            contentList = new ArrayList<>();
+
             constructionShortInfoTypes
                     .stream()
                     .map(ResponseConstructionShortInfoType::getVersionInfo)
                     .forEach(constructionVersionInfoType -> {
-                        var content = new HashMap<String, Object>();
-                        constructionVersionInfoType(content, constructionVersionInfoType);
+                        content = new HashMap<>();
+                        constructionVersionInfoType(constructionVersionInfoType);
                         contentList.add(content);
                     });
 
             return contentList
                     .stream()
-                    .peek(map -> map.put(FieldsEisZs.PROPERTY_PATH, "/root/1"))
                     .map(RecordEntity::new)
                     .collect(Collectors.toList());
         } catch (Exception e) {
@@ -56,13 +66,17 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
     }
 
     // collection
-    private void constructionVersionInfoType(HashMap<String, Object> content, ConstructionVersionInfoType type) {
+    private void constructionVersionInfoType(ConstructionVersionInfoType type) {
+        asString(RNS_FOLDER)
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PATH, s));
+        asString(RNS_CONTENT_TYPE)
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONTENT_TYPE_ID, s));
         asString(type.getConstPermitID())
-                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_ID, s));
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMIT_ID, s));
         asString(type.getConstPermitNumber())
-                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_NUMBER, s));
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, s));
         asLocalDateTime(type.getConstPermitDate())
-                .ifPresent(localDateTime -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_PERMIT_DATE, localDateTime));
+                .ifPresent(localDateTime -> content.put(FieldsEisZs.PROPERTY_CONST_PERMIT_DATE, localDateTime));
         asLocalDateTime(type.getChangesDate())
                 .ifPresent(localDateTime -> content.put(FieldsEisZs.PROPERTY_PREV_CONST_CHANGES_DATE, localDateTime));
         ofNullable(type.getReasonChanges())
@@ -72,10 +86,10 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
                 });
         ofNullable(type.getObjectShortInfo())
                 .flatMap(types -> types.stream().findFirst())
-                .ifPresent(shortInfoType -> objectShortInfoType(content, shortInfoType));
+                .ifPresent(this::objectShortInfoType);
     }
 
-    private void objectShortInfoType(HashMap<String, Object> content, ObjectShortInfoType type) {
+    private void objectShortInfoType(ObjectShortInfoType type) {
         asString(type.getObjectName())
                 .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_OBJECT_NAME, s));
         asString(type.getObjectID())
@@ -108,9 +122,9 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
 
     private void constructionType(ConstructionType type) {
         asString(type.getConstPermitID())
-                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMITED_ID, s));
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMIT_ID, s));
         asString(type.getConstPermitNumber())
-                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMITED_NUMBER, s));
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, s));
         asInt(type.getConstGovernmentOrderId())
                 .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONST_GOVERNMENT_ORDER_ID, s));
         asString(type.getConstCadastralDistrict())
@@ -138,11 +152,15 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
                 .flatMap(fileTypes -> fileTypes.stream().findFirst())
                 .map(FileType::getName)
                 .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_FILE, s));
+        ofNullable(type.getIssuePersonPosition())
+                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_ISSUE_PERSON_POSITION, s));
 
-        recipientInfoType(type.getRecipientInfo());
-        issueOrgan_OrganizationInfoType(type.getIssueOrgan());
-        issueOrgan_FIOType(type.getIssuePerson());
-
+        ofNullable(type.getRecipientInfo())
+                .ifPresent(this::recipientInfoType);
+        ofNullable(type.getIssuePerson())
+                .ifPresent(this::issueOrgan_FIOType);
+        ofNullable(type.getIssueOrgan())
+                .ifPresent(this::issueOrgan_OrganizationInfoType);
         ofNullable(type.getObjectInfo())
                 .flatMap(objectInfoTypes -> objectInfoTypes.stream().findFirst())
                 .ifPresent(this::objectInfoType);
@@ -172,12 +190,11 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
                             .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_RECIPIENT_INFO_REGION, s));
                     asString(addressFullType.getNote())
                             .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_RECIPIENT_INFO_NOTE, s));
-                });
-        ofNullable(type.getMailingAddress())
-                .map(AddressFullType::getLocality)
-                .ifPresent(addressElementType -> {
-                    var locality = String.format("%s %s", addressElementType.getType(), addressElementType.getName());
-                    content.put(FieldsEisZs.PROPERTY_RECIPIENT_INFO_LOCALITY, locality);
+                    ofNullable(addressFullType.getLocality())
+                            .ifPresent(addressElementType -> {
+                                var locality = String.format("%s %s", addressElementType.getType(), addressElementType.getName());
+                                content.put(FieldsEisZs.PROPERTY_RECIPIENT_INFO_LOCALITY, locality);
+                            });
                 });
     }
 
@@ -218,12 +235,11 @@ public class ReceiptRnsResponseXmlProcess extends AResponseXmlProcess {
                             .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_OBJECT_ADDRESS_REGION, s));
                     asString(addressFullType.getNote())
                             .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_OBJECT_ADDRESS_NOTE, s));
-                });
-        ofNullable(type.getObjectAddress())
-                .map(AddressFullType::getLocality)
-                .ifPresent(addressElementType -> {
-                    var locality = String.format("%s %s", addressElementType.getType(), addressElementType.getName());
-                    content.put(FieldsEisZs.PROPERTY_OBJECT_ADDRESS_LOCALITY, locality);
+                    ofNullable(addressFullType.getLocality())
+                            .ifPresent(addressElementType -> {
+                                var locality = String.format("%s %s", addressElementType.getType(), addressElementType.getName());
+                                content.put(FieldsEisZs.PROPERTY_OBJECT_ADDRESS_LOCALITY, locality);
+                            });
                 });
         ofNullable(type.getObjectKind())
                 .ifPresent(ref -> {

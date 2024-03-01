@@ -1,14 +1,15 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rnv;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.QueryResult;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.smev3.DataEisZsService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
@@ -28,21 +29,19 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class ReceiptRnvResponseService extends ResponseProcessor {
-
     private final Logger log = LoggerFactory.getLogger(ReceiptRnvResponseService.class);
+    private final DataEisZsService dataEisZsService;
 
-    public ReceiptRnvResponseService(RecordsDao recordsDao,
-                                     ISchemaService schemaService) {
-        super(
-                Mnemonic.RECEIPT_RNV_1_0_9,
-                recordsDao,
-                schemaService
-        );
+    public ReceiptRnvResponseService(DataEisZsService dataEisZsService) {
+        super(Mnemonic.RECEIPT_RNV_1_0_9);
+        this.dataEisZsService = dataEisZsService;
     }
 
     @Override
     @Transactional
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
+        log.debug("receive message from smev " + messageBody);
+
         try {
             var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
@@ -58,30 +57,27 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
 
             switch (messageType(queryResult)) {
                 case REJECT: {
+                    log.debug("message type is REJECT");
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
                             .setStatus(queryResult.getMessage().getResponseContent().getRejects().get(0).getCode())
                             .setMessage(queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
                 }
                 case STATUS: {
+                    log.debug("message type is STATUS");
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
                             .setStatus(queryResult.getMessage().getResponseContent().getStatus().getCode())
                             .setMessage(queryResult.getMessage().getResponseContent().getStatus().getDescription());
                 }
                 case PRIMARY: {
-                    // todo тут код заглушка
-                    var responseType = queryResult
-                            .getMessage()
-                            .getResponseContent()
-                            .getContent()
-                            .getMessagePrimaryContent()
-                            .getResponse();
+                    log.debug("message type is PRIMARY");
+                    processResponse(queryResult);
 
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus("NotImplemented")
-                            .setMessage("NotImplemented");
+                            .setStatus("saved")
+                            .setMessage("saved");
                 }
             }
 
@@ -89,6 +85,31 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
         } catch (Exception e) {
             log.error("Process adapter message error: {}", e.getMessage());
             throw new SmevRequestException("process adapter message error :" + e.getMessage());
+        }
+    }
+
+    private void processResponse(QueryResult queryResult) {
+        var responseType = queryResult
+                .getMessage()
+                .getResponseContent()
+                .getContent()
+                .getMessagePrimaryContent()
+                .getResponse();
+
+        var process = new ReceiptRnvResponseXmlProcess();
+
+        if (responseType.getResponseExploitation() != null) {
+            var iRecord = process.processOne(responseType.getResponseExploitation());
+            log.info("found one record " + iRecord);
+
+            dataEisZsService.updateExists(FieldsEisZs.PROPERTY_PERMIT_NUMBER, iRecord);
+        } else if (!CollectionUtils.isEmpty(responseType.getResponseListExploitation())) {
+            var iRecords = process.processList(responseType.getResponseListExploitation());
+            log.info("found record count " + iRecords.size());
+
+            dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_PERMIT_NUMBER, iRecords);
+        } else {
+            throw new SmevRequestException("response contains no content");
         }
     }
 

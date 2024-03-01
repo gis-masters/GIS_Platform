@@ -106,6 +106,27 @@ public enum Mnemonic {
                             return "typ";
                     }
                 }
+            }),
+    TERMINATE_RNS_1_0_6(
+            "terminate-rns",
+            "1.0.6",
+            Systems.EIS_JS,
+            "xsd_smev3/terminate_rns_1_0_6/core/service-adapter-types.xsd",
+            "xsd_smev3/terminate_rns_1_0_6/terminate-rns-1.0.6.xsd",
+            new NamespacePrefixMapper() {
+                @Override
+                public String getPreferredPrefix(String urn, String s1, boolean b) {
+                    switch (urn) {
+                        case "urn://x-artefacts-uishc.domrf.ru/terminate-rns/1.0.6":
+                            return "tns";
+                        case "urn://x-artefacts-uishc.domrf.ru/terminate-rns/commons/1.0.6":
+                            return "com";
+                        case "urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0":
+                            return "smev";
+                        default:
+                            return "typ";
+                    }
+                }
             });
     private final String mnemonic;
     private final String version;

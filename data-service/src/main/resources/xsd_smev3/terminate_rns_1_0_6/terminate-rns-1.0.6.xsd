@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:com="urn://x-artefacts-uishc.domrf.ru/terminate-rns/commons/1.0.6"
+           xmlns:smev="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0"
+           xmlns:tns="urn://x-artefacts-uishc.domrf.ru/terminate-rns/1.0.6"
+           targetNamespace="urn://x-artefacts-uishc.domrf.ru/terminate-rns/1.0.6" elementFormDefault="qualified">
+    <xs:import namespace="urn://x-artefacts-uishc.domrf.ru/terminate-rns/commons/1.0.6"
+               schemaLocation="./commons/terminate-rns-common-types-1.0.6.xsd"/>
+    <xs:import namespace="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0"
+               schemaLocation="./commons/smev-supplementary-commons-1.3.0.xsd"/>
+    <!-- Основные элементы Вида сведений -->
+    <xs:element name="Request">
+        <xs:annotation>
+            <xs:documentation>Запрос на прекращение действия РНС (Разрешение на строительство)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="UserType" type="com:UserTypeType">
+                    <xs:annotation>
+                        <xs:documentation>Тип получателя</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ConstPermitID" type="com:stringMaxLength-100">
+                    <xs:annotation>
+                        <xs:documentation>Идентификатор РНС</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ConstPermitNumber" type="com:stringMaxLength-255">
+                    <xs:annotation>
+                        <xs:documentation>Номер РНС, действие которого прекращено</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ConstPermitDate" type="xs:date">
+                    <xs:annotation>
+                        <xs:documentation>Дата выдачи РНС, действие которого прекращено</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ConstPermitExpireDate" type="xs:date">
+                    <xs:annotation>
+                        <xs:documentation>Дата окончания действия РНС, действие которого прекращено</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="IssueOrgan" type="com:OrganizationInfoType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>ОГВ</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Number" type="com:stringMaxLength-2500">
+                    <xs:annotation>
+                        <xs:documentation>Номер решения</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="TerminationDate" type="xs:date">
+                    <xs:annotation>
+                        <xs:documentation>Дата решения (равно соответственно дате прекращения действия)
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="TerminationBasis" type="com:RefBookType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Основание прекращения действия РНС</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Detail" type="com:string-4000" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Уточнение основания</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="CanceledDocNumber" type="com:stringMaxLength-255" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Номер предписания</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="CanceledDocDate" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Дата предписания</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="OrganizationOPF" type="com:RefBookType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>ОПФ организации, выдавшей предписание (ссылка на справочник ОПФ)
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="OrganizationName" type="com:stringMaxLength-2500" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Наименование организации, выдавшей предписание</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="OrganizationINN" type="com:LegalPersonINNType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>ИНН организации, выдавшей предписание</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Response" type="tns:ResponseType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос прекращения действия РНС (Разрешение на строительство)</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <!-- Сведения об ответе -->
+    <xs:complexType name="ResponseType">
+        <xs:annotation>
+            <xs:documentation>Тип Ответ с бизнес-ответом и состоянием запроса</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="DocId" type="xs:long">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор зарегистрированного документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectInfos" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ObjectInfo" type="com:RequestStatusObjectInfoType" minOccurs="1"
+                                    maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

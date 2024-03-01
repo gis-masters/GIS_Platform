@@ -13,8 +13,10 @@ import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadast
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
+import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvResponseService;
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
+import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
 
 import java.util.Base64;
 import java.util.HashMap;
@@ -36,23 +38,29 @@ public class Smev3RequestController {
     private final ReceiptRnsRequestService rnsRequestService;
     private final ReceiptRnsResponseService rnsResponseService;
     private final ReceiptRnvRequestService rnvRequestService;
+    private final ReceiptRnvResponseService rnvResponseService;
     private final RegisterRnsRequestService registerRnsService;
     private final RegisterRnvRequestService registerRnvService;
+    private final TerminateRnsRequestService trminateRnsRequestService;
     private final GetCadastrialPlanRequestService getCadastrialPlanRequestService;
     private final SmevMessageService storageService;
 
     public Smev3RequestController(ReceiptRnsRequestService rnsRequestService,
                                   ReceiptRnsResponseService rnsResponseService,
                                   ReceiptRnvRequestService rnvRequestService,
+                                  ReceiptRnvResponseService rnvResponseService,
                                   RegisterRnsRequestService registerRnsService,
                                   RegisterRnvRequestService registerRnvService,
+                                  TerminateRnsRequestService trminateRnsRequestService,
                                   GetCadastrialPlanRequestService getCadastrialPlanRequestService,
                                   SmevMessageService storageService) {
         this.rnsRequestService = rnsRequestService;
         this.rnsResponseService = rnsResponseService;
         this.rnvRequestService = rnvRequestService;
+        this.rnvResponseService = rnvResponseService;
         this.registerRnsService = registerRnsService;
         this.registerRnvService = registerRnvService;
+        this.trminateRnsRequestService = trminateRnsRequestService;
         this.getCadastrialPlanRequestService = getCadastrialPlanRequestService;
         this.storageService = storageService;
     }
@@ -82,16 +90,16 @@ public class Smev3RequestController {
         IRecord task = getCadastrialPlanRequestService.createTask(joinedCadastrialNumbers);
         IRecord folder = getCadastrialPlanRequestService.createFolder(joinedCadastrialNumbers, task);
         getCadastrialPlanRequestService.createLog("Создание новой папки",
-                                                  "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
-                                                  folder.getContent(),
-                                                  task.getId());
+                "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
+                folder.getContent(),
+                task.getId());
 
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
             IRecord doc = getCadastrialPlanRequestService.createDoc(clientId, cadastrialNumber, folder.getId());
             getCadastrialPlanRequestService.createLog("Создание нового документа",
-                                                      "Создан документ с кадастровым номером " + cadastrialNumber,
-                                                      doc.getContent(),
-                                                      task.getId());
+                    "Создан документ с кадастровым номером " + cadastrialNumber,
+                    doc.getContent(),
+                    task.getId());
         });
 
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
@@ -102,17 +110,6 @@ public class Smev3RequestController {
         });
 
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * urn://x-artefacts-uishc.domrf.ru/receipt-rnv
-     */
-    @PostMapping("/receipt-rnv")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> receiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
-        var response = rnvRequestService.sendRequest(rnvRequestDto);
-
-        return ResponseEntity.ok(response);
     }
 
     /**
@@ -128,6 +125,23 @@ public class Smev3RequestController {
             return null;
         } else {
             var response = rnsRequestService.sendRequest(rnsRequestDto);
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    /**
+     * urn://x-artefacts-uishc.domrf.ru/receipt-rnv
+     */
+    @PostMapping("/receipt-rnv")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
+        //TODO временно
+        if (rnvRequestDto.getTestBase64() != null) {
+            var b64 = Base64.getDecoder().decode(rnvRequestDto.getTestBase64());
+            rnvResponseService.processMessageFromSmev(new String(b64));
+            return null;
+        } else {
+            var response = rnvRequestService.sendRequest(rnvRequestDto);
             return ResponseEntity.ok(response);
         }
     }
@@ -150,6 +164,17 @@ public class Smev3RequestController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<XmlBuildMeta> registerRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
         var response = registerRnvService.sendRequest(rnvRequestDto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * urn://x-artefacts-uishc.domrf.ru/terminate-rns
+     */
+    @PostMapping("/terminate-rns")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<XmlBuildMeta> requestTerminateRns(@RequestBody TerminateRnsRequestDto terminateRnsRequestDto) {
+        var response = trminateRnsRequestService.sendRequest(terminateRnsRequestDto);
 
         return ResponseEntity.ok(response);
     }

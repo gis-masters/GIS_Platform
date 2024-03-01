@@ -16,7 +16,7 @@ import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.mycrg.data_service.fields.FieldsEisZs.*;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.*;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
@@ -50,7 +50,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
     }
 
     @Test
-    public void response_ResponseConstruction() throws Exception {
+    public void responseConstruction() throws Exception {
         var fileContent = readFile("receipt_rns_1_0_9/response_construction.xml");
         var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
 
@@ -184,7 +184,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
 
     @Test
-    public void response_ResponseConstructionList() throws Exception {
+    public void responseConstructionList() throws Exception {
         var fileContent = readFile("receipt_rns_1_0_9/response_list_construction.xml");
         var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
 

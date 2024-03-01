@@ -486,6 +486,23 @@
                     </execution>
 
                     <execution>
+                        <id>terminate_rns_1_0_6</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/terminate_rns_1_0_6/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.terminate_rns_1_0_6</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <execution>
                         <id>kpt_import</id>
                         <goals>
                             <goal>xjc</goal>

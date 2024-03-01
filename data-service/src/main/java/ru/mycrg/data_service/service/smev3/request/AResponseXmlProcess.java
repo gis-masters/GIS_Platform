@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request;
 
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.receipt_rns_1_0_9.FileType;
 import ru.mycrg.data_service.service.smev3.model.ResponseAttachment;
 import ru.mycrg.data_service.util.xml.XmlMapper;
@@ -22,6 +21,9 @@ public abstract class AResponseXmlProcess {
     }
 
     protected Optional<String> asString(String value) {
+        return ofNullable(value);
+    }
+    protected Optional<Long> asLong(Long value) {
         return ofNullable(value);
     }
 

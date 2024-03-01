@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.fields;
+package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsUsersAfterTrigger {
     public static final String TABLE = "users_after_trigger";

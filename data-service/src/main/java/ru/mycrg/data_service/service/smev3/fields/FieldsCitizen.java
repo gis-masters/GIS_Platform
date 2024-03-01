@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.fields;
+package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsCitizen {
     public static final String PROPERTY_ACTUAL_ADDRESS = "actual_address";

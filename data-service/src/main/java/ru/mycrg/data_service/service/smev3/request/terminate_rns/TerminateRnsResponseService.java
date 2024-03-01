@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.request.register_rnv;
+package ru.mycrg.data_service.service.smev3.request.terminate_rns;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
+import ru.mycrg.data_service.terminate_rns_1_0_6.QueryResult;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
@@ -21,12 +21,11 @@ import java.util.UUID;
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class RegisterRnvResponseService extends ResponseProcessor {
+public class TerminateRnsResponseService extends ResponseProcessor {
+    private final Logger log = LoggerFactory.getLogger(TerminateRnsResponseService.class);
 
-    private final Logger log = LoggerFactory.getLogger(RegisterRnvResponseService.class);
-
-    public RegisterRnvResponseService() {
-        super(Mnemonic.REGISTER_RNV_1_0_8);
+    public TerminateRnsResponseService() {
+        super(Mnemonic.TERMINATE_RNS_1_0_6);
     }
 
     @Override
@@ -83,5 +82,4 @@ public class RegisterRnvResponseService extends ResponseProcessor {
     private SmevMessageType messageType(QueryResult queryResult) {
         return SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
     }
-
 }

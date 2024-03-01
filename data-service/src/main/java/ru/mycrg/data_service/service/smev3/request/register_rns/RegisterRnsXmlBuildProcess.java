@@ -8,8 +8,8 @@ import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.fields.*;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
+import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.fields.FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5;
 import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_REGION;
 
 public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {

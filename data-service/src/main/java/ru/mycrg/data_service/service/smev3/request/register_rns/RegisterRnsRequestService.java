@@ -11,14 +11,12 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
-import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
@@ -44,50 +42,7 @@ public class RegisterRnsRequestService extends RequestProcessor {
                                      ResourceLoader resourceLoader,
                                      SmevMessageSenderService messageService,
                                      SmevOutgoingAttachmentService attachmentService) {
-
-        super(
-                Mnemonic.REGISTER_RNS_1_0_10,
-                messageService,
-                baseDao,
-                schemaService,
-                attachmentService,
-                resourceLoader,
-                smev3Config
-        );
-    }
-
-    public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
-        try {
-            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
-
-            var XmlBuildMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    messageBody,
-                    JsonConverter.toJsonNode(queryResult),
-                    null,
-                    null
-            );
-            String status;
-            String message;
-
-            if (queryResult.getMessage().getMessageType().equals("RejectMessage")) {
-                status = queryResult.getMessage().getResponseContent().getRejects().get(0).getCode();
-                message = queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription();
-            } else {
-                status = queryResult.getMessage().getResponseContent().getStatus().getCode();
-                message = queryResult.getMessage().getResponseContent().getStatus().getDescription();
-            }
-
-            return new ProcessAdapterMessageResult()
-                    .setXmlBuildMeta(XmlBuildMeta)
-                    .setStatus(status)
-                    .setMessage(message);
-        } catch (Exception e) {
-            log.error("Process adapter message error: {}", e.getMessage());
-            throw new SmevRequestException("process adapter message error :" + e.getMessage());
-        }
+        super(Mnemonic.REGISTER_RNS_1_0_10, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
     }
 
     @Override

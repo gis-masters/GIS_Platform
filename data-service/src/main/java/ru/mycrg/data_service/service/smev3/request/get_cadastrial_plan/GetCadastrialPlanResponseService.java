@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.QueryResult;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
@@ -27,13 +25,8 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
 
     private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanResponseService.class);
 
-    public GetCadastrialPlanResponseService(RecordsDao recordsDao,
-                                     ISchemaService schemaService) {
-        super(
-                Mnemonic.GET_CADASTRIAL_PLAN_1_1_2,
-                recordsDao,
-                schemaService
-        );
+    public GetCadastrialPlanResponseService() {
+        super(Mnemonic.GET_CADASTRIAL_PLAN_1_1_2);
     }
 
     @Override
