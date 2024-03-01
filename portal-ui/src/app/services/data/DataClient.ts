@@ -15,4 +15,8 @@ export abstract class DataClient extends Client {
   protected getVectorTableUrl(datasetIdentifier: string, tableIdentifier: string): string {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}`;
   }
+
+  protected getAllVectorTablesUrl(): string {
+    return `${this.getDataUrl()}/tables`;
+  }
 }

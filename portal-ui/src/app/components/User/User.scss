@@ -6,6 +6,8 @@ body .User {
 
     max-width: 200px;
 
+    white-space: pre-line;
+
     color: var(--gray);
 
     &_type_action {

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -9,18 +9,14 @@ import '!style-loader!css-loader!sass-loader!./UpActions.scss';
 
 const cnUpActions = cn('UpActions');
 
-export const UpActions: FC = observer(() => {
-  const handlerClick = useCallback(() => {
-    if (!photoUploaderStore.files.length) {
-      return;
-    }
-  }, []);
-
-  return (
-    <div className={cnUpActions()}>
-      <Button disabled={!photoUploaderStore.files.length} className={cnUpActions('MainButton')} onClick={handlerClick}>
-        Загрузить
-      </Button>
-    </div>
-  );
-});
+export const UpActions: FC = observer(() => (
+  <div className={cnUpActions()}>
+    <Button
+      disabled={
+        !photoUploaderStore.files.length || !photoUploaderStore.checkedLayer || !!photoUploaderStore.errors.length
+      }
+    >
+      Загрузить
+    </Button>
+  </div>
+));

@@ -2,20 +2,21 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { currentUser } from '../../../app/stores/CurrentUser.store';
 import { User } from '../../../app/components/User/User';
+import { currentUser } from '../../../app/stores/CurrentUser.store';
+import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { UpHeaderReturnButton } from './ReturnButton/UpHeader-ReturnButton';
 
 import '!style-loader!css-loader!sass-loader!./UpHeader.scss';
-
-interface UpHeaderProps {
-  title?: string;
-}
+import '!style-loader!css-loader!sass-loader!./Title/UpHeader-Title.scss';
+import '!style-loader!css-loader!sass-loader!./User/UpHeader-User.scss';
 
 const cnUpHeader = cn('UpHeader');
 
-export const UpHeader: FC<UpHeaderProps> = observer(({ title }) => (
+export const UpHeader: FC = observer(() => (
   <header className={cnUpHeader()}>
-    <div className={cnUpHeader('Title')}>{title || 'Загрузка фотографий'}</div>
+    {photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERSLIST && <UpHeaderReturnButton />}
+    <div className={cnUpHeader('Title')}>{photoUploaderStore.currentHeaderTitle}</div>
     {currentUser.name && <User className={cnUpHeader('User')} />}
   </header>
 ));

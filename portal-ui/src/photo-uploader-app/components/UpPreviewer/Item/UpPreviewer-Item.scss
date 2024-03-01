@@ -1,10 +1,8 @@
-body .UpPreviewer {
-  &-Item {
-    position: relative;
+body .UpPreviewer-Item {
+  position: relative;
 
-    flex-grow: 1;
+  flex-grow: 1;
 
-    width: 20%;
-    height: 10vh;
-  }
+  width: 20%;
+  height: 10vh;
 }

@@ -3,18 +3,24 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
-import { UpChooseLayer } from '../UpChooseLayer/UpChooseLayer';
 import { UpChoosePhoto } from '../UpChoosePhotos/UpChoosePhotos';
 import { UpPreviewer } from '../UpPreviewer/UpPreviewer';
+import { UpChoiceLayer } from '../UpChoiceLayer/UpChoiceLayer';
+import { UpError } from '../UpError/UpError';
 
 import '!style-loader!css-loader!sass-loader!./UpMain.scss';
 
 const cnUpMain = cn('UpMain');
 
 export const UpMain: FC = observer(() => (
-  <main className={cnUpMain()}>
-    <UpChooseLayer />
-    {!!photoUploaderStore.files.length && <UpPreviewer files={photoUploaderStore.files} />}
-    <UpChoosePhoto />
-  </main>
+  <>
+    {!!photoUploaderStore.errors.length && <UpError />}
+    {!photoUploaderStore.errors.length && (
+      <main className={cnUpMain()}>
+        <UpChoiceLayer />
+        {!!photoUploaderStore.files.length && <UpPreviewer files={photoUploaderStore.files} />}
+        <UpChoosePhoto />
+      </main>
+    )}
+  </>
 ));

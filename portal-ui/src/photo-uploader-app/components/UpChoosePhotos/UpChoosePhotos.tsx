@@ -25,7 +25,7 @@ export const UpChoosePhoto: FC = observer(() => {
           <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={onClickHadler}>
             {photoUploaderStore.files.length} фотографий
           </PseudoLink>
-          {photoUploaderStore.errors && (
+          {!!photoUploaderStore.errors.length && (
             <span className={cnUpChoosePhotos('Counter', { type: 'error' })}>({photoUploaderStore.errors})</span>
           )}
         </div>

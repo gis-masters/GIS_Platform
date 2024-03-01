@@ -120,6 +120,12 @@ export async function getVectorTableConnections(vectorTableIdentifier: string): 
   return vectorDataClient.getVectorTableConnections(vectorTableIdentifier);
 }
 
+export async function getAllVectorTables(pageOptions: PageOptions): Promise<[Omit<VectorTable, 'dataset'>[], number]> {
+  const response = await vectorDataClient.getAllVectorTables(pageOptions);
+
+  return [response.content, response.page.totalPages];
+}
+
 // feature
 
 export async function createFeature(

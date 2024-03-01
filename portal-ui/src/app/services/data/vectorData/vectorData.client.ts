@@ -134,6 +134,13 @@ class VectorDataClient extends DataClient {
     return http.get<VectorTableConnection[]>(this.getTableConnectionsUrl(), { params });
   }
 
+  async getAllVectorTables(pageOptions: PageOptions): Promise<PageableResources<Omit<VectorTable, 'dataset'>>> {
+    const url = this.getAllVectorTablesUrl();
+    const params = preparePageOptions(pageOptions, true);
+
+    return http.get<PageableResources<Omit<VectorTable, 'dataset'>>>(url, { params });
+  }
+
   // feature
 
   async createFeature(

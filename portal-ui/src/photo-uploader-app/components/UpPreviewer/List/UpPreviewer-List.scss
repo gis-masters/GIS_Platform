@@ -1,14 +1,12 @@
-.UpPreviewer {
-  &-List {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+.UpPreviewer-List {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    padding: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0;
 
-    list-style-type: none;
-  }
+  list-style-type: none;
 }

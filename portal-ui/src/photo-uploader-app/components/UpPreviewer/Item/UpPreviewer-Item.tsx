@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./UpPreviewer-Item.scss';
@@ -13,14 +13,8 @@ export interface UploadedFile {
 
 const cnUpPreviewer = cn('UpPreviewer');
 
-export const UpPreviewerItem: FC<UploadedFile> = ({ title, url }) => {
-  const loadHandler = useCallback(() => {
-    URL.revokeObjectURL(url);
-  }, [url]);
-
-  return (
-    <li className={cnUpPreviewer('Item')}>
-      <img className={cnUpPreviewer('Image')} src={url} alt={title} onLoad={loadHandler} />
-    </li>
-  );
-};
+export const UpPreviewerItem: FC<UploadedFile> = ({ title, url }) => (
+  <li className={cnUpPreviewer('Item')}>
+    <img className={cnUpPreviewer('Image')} src={url} alt={title} />
+  </li>
+);

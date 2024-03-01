@@ -110,7 +110,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
 
   @action.bound
   private onChange(selected: CrgVectorLayer[]): void {
-    if (this.props.currentLayer.nativeCRS === selected[0].nativeCRS) {
+    if (!selected.length || this.props.currentLayer.nativeCRS === selected[0].nativeCRS) {
       this.setWarningContent(null);
 
       return;

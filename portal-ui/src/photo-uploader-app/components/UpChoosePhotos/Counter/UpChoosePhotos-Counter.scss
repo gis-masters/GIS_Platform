@@ -1,17 +1,15 @@
-.UpChoosePhotos {
-  &-Counter {
-    margin-top: 1vh;
+.UpChoosePhotos-Counter {
+  margin-top: 1vh;
 
-    text-align: center;
+  text-align: center;
 
-    &_type {
-      &_selected {
-        color: var(--blue);
-      }
+  &_type {
+    &_selected {
+      color: var(--blue);
+    }
 
-      &_error {
-        color: var(--red);
-      }
+    &_error {
+      color: var(--red);
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -9,40 +9,52 @@ import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 import { UploadedFile } from '../../UpPreviewer/Item/UpPreviewer-Item';
 
 import '!style-loader!css-loader!sass-loader!./UpChoosePhotos-Actions.scss';
+import { Toast } from 'src/app/components/Toast/Toast';
+import { pluralize } from 'numeralize-ru';
 
 const cnUpChoosePhotosActions = cn('UpChoosePhotos', 'Actions');
 
-export const UpChoosePhotoActions: FC = observer(() => {
-  const addHandler = useCallback((files: FileList | null) => {
-    if (files?.length) {
-      const uploadedFiles: UploadedFile[] = [...files].map(file => ({
+const addHandler = (files: FileList | null) => {
+  if (files?.length) {
+    const uploadedFiles: UploadedFile[] = [...files]
+      .map(file => ({
         title: file.name,
         size: file.size,
         url: URL.createObjectURL(file)
-      }));
-      photoUploaderStore.addUploadedFiles(uploadedFiles);
-    }
-  }, []);
+      }))
+      .filter(file => photoUploaderStore.files.every(item => item.title !== file.title && item.size !== file.size));
 
-  const clearHandler = useCallback(async () => {
-    if (
-      await konfirmieren({
-        title: 'Вы уверены, что хотите очистить все добавленные фотографии?'
-      })
-    ) {
-      photoUploaderStore.clearUploadedFiles();
-    }
-  }, []);
+    if (files.length !== uploadedFiles.length) {
+      const startInfo = `Добавлен${pluralize(uploadedFiles.length, '', 'о', 'о')} ${uploadedFiles.length} из `;
+      const endInfo = `${files.length} файл${pluralize(files.length, 'а', 'ов', 'ов')}. `;
+      const addInfo = 'Дубликаты недоступны к загрузке';
 
-  return (
-    <div className={cnUpChoosePhotosActions()}>
-      <FileInput
-        onChange={addHandler}
-        nameHidden
-        multiple
-        buttonCaption={photoUploaderStore.files.length ? 'Добавить' : 'Выбрать'}
-      />
-      {!!photoUploaderStore.files.length && <Button onClick={clearHandler}>Очистить</Button>}
-    </div>
-  );
-});
+      Toast.warn(startInfo + endInfo + addInfo);
+    }
+
+    photoUploaderStore.addUploadedFiles(uploadedFiles);
+  }
+};
+
+const clearHandler = async () => {
+  if (
+    await konfirmieren({
+      message: 'Вы уверены, что хотите удалить из списка все добавленные фотографии?'
+    })
+  ) {
+    photoUploaderStore.clearUploadedFiles();
+  }
+};
+
+export const UpChoosePhotoActions: FC = observer(() => (
+  <div className={cnUpChoosePhotosActions()}>
+    <FileInput
+      onChange={addHandler}
+      nameHidden
+      multiple
+      accept='image/*'
+      buttonCaption={photoUploaderStore.files.length ? 'Добавить' : 'Выбрать'}
+    />
+    {!!photoUploaderStore.files.length && <Button onClick={clearHandler}>Очистить</Button>}
+  </div>
+));

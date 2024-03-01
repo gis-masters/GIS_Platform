@@ -9,12 +9,13 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableModel;
-import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.util.StringUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Service
@@ -43,17 +44,20 @@ public class TableRootService {
                                             TableModel.class);
             total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, excludeDatasets);
         } else {
-            List<String> allowedDatasets = datasetService.getAll().stream()
-                                                         .map(SchemasAndTables::getIdentifier)
-                                                         .collect(Collectors.toList());
-            String newFilter = addDatasetsIn(ecqlFilter, allowedDatasets);
-            String excludeDatasets = excludeDatasets(newFilter);
+            List<String> allowedDatasetPaths = datasetService
+                    .getAll().stream()
+                    .map(dataset -> ROOT_FOLDER_PATH + "/" + dataset.getId())
+                    .collect(Collectors.toList());
+            if (allowedDatasetPaths.isEmpty()) {
+                return new PageImpl<>(List.of(), pageable, 0);
+            }
 
+            String newFilter = addDatasetPathsIn(ecqlFilter, allowedDatasetPaths);
             allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                            excludeDatasets,
+                                            newFilter,
                                             pageable,
                                             TableModel.class);
-            total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, excludeDatasets);
+            total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, newFilter);
         }
 
         return new PageImpl<>(unmodifiableList(allowedTables), pageable, total);
@@ -70,12 +74,12 @@ public class TableRootService {
     }
 
     @NotNull
-    private String addDatasetsIn(String ecqlFilter, List<String> datasets) {
-        String joined = String.join(",", datasets);
+    private String addDatasetPathsIn(String ecqlFilter, List<String> datasets) {
+        String joined = StringUtil.joinAndQuoteMark(datasets);
         if (ecqlFilter == null) {
-            ecqlFilter = "identifier IN (" + joined + ")";
+            ecqlFilter = "path IN (" + joined + ")";
         } else {
-            ecqlFilter = ecqlFilter + " AND identifier IN (" + joined + ")";
+            ecqlFilter = ecqlFilter + " AND path IN (" + joined + ")";
         }
 
         return ecqlFilter;
