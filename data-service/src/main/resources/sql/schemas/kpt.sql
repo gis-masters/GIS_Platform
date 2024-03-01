@@ -8,271 +8,257 @@ SELECT 'dl_data_kpt',
     ],
     "name": "dl_data_kpt",
     "title": "КПТ",
-    "relations": [
-        {
-            "type": "feature",
-            "title": "Участок на карте",
-            "layers": [
-                "scratch_database_1: kvartal_kpt2_789_b0d0"
-            ],
-            "property": "title",
-            "projectId": 789,
-            "targetProperty": "cad_num"
-        }
-    ],
-    "styleName": "dl_data_kpt",
     "tableName": "dl_data_kpt",
-    "properties": [
-        {
-            "name": "id",
-            "title": "id",
-            "readOnly": true,
-            "required": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "path",
-            "title": "Путь",
-            "hidden": true,
-            "maxLength": 522,
-            "valueType": "STRING",
-            "description": "Полный путь, отражающий иерархию объектов"
-        },
-        {
-            "name": "is_folder",
-            "title": "Папка/Документ",
-            "valueType": "BOOLEAN",
-            "description": "Папка или Документ"
-        },
-        {
-            "name": "created_at",
-            "title": "Дата создания",
-            "readOnly": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "last_modified",
-            "title": "Дата модификации",
-            "valueType": "DATETIME",
-            "description": "Дата последней модификации документа"
-        },
-        {
-            "name": "updated_by",
-            "title": "Кто обновил",
-            "readOnly": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "content_type_id",
-            "title": "Вид документа",
-            "hidden": true,
-            "maxLength": 522,
-            "valueType": "STRING"
-        },
-        {
-            "name": "title",
-            "title": "Кадастровый квартал",
-            "display": "multiline",
-            "minWidth": 400,
-            "required": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "order_number",
-            "title": "Номер заказа",
-            "display": "multiline",
-            "minWidth": 200,
-            "valueType": "STRING"
-        },
-        {
-            "name": "performer",
-            "title": "Исполнитель",
-            "valueType": "STRING"
-        },
-        {
-            "name": "status",
-            "title": "Статус",
-            "minWidth": 400,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Заказано",
-                    "value": "Заказано"
-                },
-                {
-                    "title": "Получено",
-                    "value": "Получено"
-                }
-            ],
-            "foreignKeyType": "STRING"
-        },
-        {
-            "name": "date_order",
-            "title": "Дата создания заказа",
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "date_order_completion",
-            "title": "Дата завершения заказа",
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "owner_doc",
-            "title": "Орган отправивший документ",
-            "valueType": "STRING"
-        },
-        {
-            "name": "receipt_type",
-            "title": "Способ получение данных",
-            "minWidth": 400,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Бумажный носитель",
-                    "value": "Бумажный носитель"
-                },
-                {
-                    "title": "Электронная форма",
-                    "value": "Электронная форма"
-                }
-            ],
-            "foreignKeyType": "STRING"
-        },
-        {
-            "name": "note",
-            "title": "Примечание",
-            "valueType": "TEXT"
-        },
-        {
-            "name": "file",
-            "title": "КПТ",
-            "maxSize": 90000000,
-            "maxFiles": 1,
-            "valueType": "FILE"
-        },
-        {
-            "name": "created_by",
-            "title": "Создатель",
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias",
-            "title": "Населённый пункт",
-            "required": true,
-            "valueType": "FIAS",
-            "searchMode": "oktmo"
-        },
-        {
-            "name": "fias__oktmo",
-            "title": "ОКТМО",
-            "hidden": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__address",
-            "title": "Адрес",
-            "hidden": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__id",
-            "title": "id",
-            "hidden": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "source_doc",
-            "title": "Версии",
-            "multiple": true,
-            "libraries": [
-                "dl_data_kpt"
-            ],
-            "valueType": "DOCUMENT",
-            "description": "Предыдущая версия данных",
-            "maxDocuments": 5
-        }
-    ],
     "description": "КПТ",
-    "contentTypes": [
+    "styleName": "dl_data_kpt",
+    "readOnly": false,
+    "relations": [
+      {
+        "title": "Участок на карте",
+        "property": "title",
+        "targetProperty": "cad_num",
+        "type": "feature",
+        "projectId": 789,
+        "layers": [
+          "scratch_database_1:kvartal_kpt2_789_b0d0"
+        ]
+      }
+    ],
+    "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "description": "Полный путь, отражающий иерархию объектов",
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "description": "Папка или Документ",
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "description": "Дата последней модификации документа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Кадастровый квартал",
+      "required": true,
+      "display": "multiline",
+      "minWidth": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "order_number",
+      "title": "Номер заказа",
+      "display": "multiline",
+      "minWidth": 200,
+      "valueType": "STRING"
+    },
+    {
+      "name": "performer",
+      "title": "Исполнитель",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Статус",
+      "foreignKeyType": "STRING",
+      "minWidth": 400,
+      "valueType": "CHOICE",
+      "enumerations": [
         {
-            "id": "Карточка",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "Карточка документа",
-            "attributes": [
-                {
-                    "name": "title"
-                },
-                {
-                    "name": "owner_doc"
-                },
-                {
-                    "name": "receipt_type"
-                },
-                {
-                    "name": "fias"
-                },
-                {
-                    "name": "fias__oktmo"
-                },
-                {
-                    "name": "fias__address"
-                },
-                {
-                    "name": "fias__id"
-                },
-                {
-                    "name": "order_number",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "performer",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "source_doc"
-                },
-                {
-                    "name": "file"
-                }
-            ]
+          "value": "Заказано",
+          "title": "Заказано"
         },
         {
-            "id": "folder_v1",
-            "icon": "FOLDER_CREATE",
-            "type": "FOLDER",
-            "title": "Папка",
-            "attributes": [
-                {
-                    "name": "order_number"
-                },
-                {
-                    "name": "title",
-                    "title": "Заказ"
-                },
-                {
-                    "name": "performer"
-                },
-                {
-                    "name": "status"
-                },
-                {
-                    "name": "date_order"
-                },
-                {
-                    "name": "date_order_completion"
-                },
-                {
-                    "name": "source_doc"
-                },
-                {
-                    "name": "note"
-                }
-            ]
+          "value": "Получено",
+          "title": "Получено"
         }
-    ]
+      ]
+    },
+    {
+      "name": "date_order",
+      "title": "Дата создания заказа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "date_order_completion",
+      "title": "Дата завершения заказа",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "owner_doc",
+      "title": "Орган отправивший документ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "receipt_type",
+      "title": "Способ получение данных",
+      "foreignKeyType": "STRING",
+      "minWidth": 400,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "Бумажный носитель",
+          "title": "Бумажный носитель"
+        },
+        {
+          "value": "Электронная форма",
+          "title": "Электронная форма"
+        }
+      ]
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "КПТ",
+      "maxSize": 90000000,
+      "maxFiles": 1,
+      "valueType": "FILE"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "required": true,
+      "searchMode": "oktmo",
+      "valueType": "FIAS"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "source_doc",
+      "title": "Версии",
+      "hidden": true,
+      "multiple": true,
+      "description": "Предыдущая версия данных",
+      "libraries": [
+        "dl_data_kpt"
+      ],
+      "maxDocuments": 5,
+      "valueType": "DOCUMENT"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "Карточка",
+      "type": "DOCUMENT",
+      "title": "Карточка документа",
+      "icon": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "owner_doc"
+        },
+        {
+          "name": "receipt_type"
+        },
+        {
+          "name": "date_order_completion"
+        },
+        {
+          "name": "order_number",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "performer",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "title": "Папка",
+      "icon": "FOLDER_CREATE",
+      "attributes": [
+        {
+          "name": "order_number"
+        },
+        {
+          "name": "title",
+          "title": "Заказ"
+        },
+        {
+          "name": "performer"
+        },
+        {
+          "name": "status"
+        },
+        {
+          "name": "date_order"
+        },
+        {
+          "name": "date_order_completion"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    }
+  ]
 }'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_kpt');
 

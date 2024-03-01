@@ -4,10 +4,12 @@ SELECT 'tasks_schema_v1',
   "name": "tasks_schema_v1",
   "tags": ["system", "Задачи"],
   "title": "Схема задач",
-  "styleName": "tasks_schema_v1",
   "tableName": "tasks",
-  "originName": "tasks",
   "description": "Реестр системных и настраиваемых задач",
+  "originName": "tasks",
+  "styleName": "tasks_schema_v1",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
   "properties": [
     {
       "name": "id",
@@ -20,26 +22,26 @@ SELECT 'tasks_schema_v1',
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Назначаемая",
-          "value": "ASSIGNABLE"
+          "value": "ASSIGNABLE",
+          "title": "Назначаемая"
         },
         {
-          "title": "Настраиваемая",
-          "value": "CUSTOM"
+          "value": "CUSTOM",
+          "title": "Настраиваемая"
         },
         {
-          "title": "Системная",
-          "value": "SYSTEM"
+          "value": "SYSTEM",
+          "title": "Системная"
         }
       ]
     },
     {
       "name": "content_type_id",
       "title": "Вид документа",
-      "display": "radiogroup",
-      "minWidth": 300,
       "readOnly": true,
+      "display": "radiogroup",
       "maxLength": 50,
+      "minWidth": 300,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -49,6 +51,14 @@ SELECT 'tasks_schema_v1',
         {
           "value": "inbox_data",
           "title": "Настраиваемая задача. Внесение и регистрация документов в ГИСОГД РК"
+        },
+        {
+          "value": "common_task_kpt_import",
+          "title": "Обновление данных в слоях КПТ"
+        },
+        {
+          "value": "common_task_kpt_order",
+          "title": "Заказ КПТ из ФГИС ЕГРН"
         }
       ]
     },
@@ -111,22 +121,23 @@ SELECT 'tasks_schema_v1',
     },
     {
       "name": "guid",
+      "title": "guid",
       "hidden": true,
-      "required": true
+      "valueType": "UUID"
     },
     {
       "name": "inbox_data_key_data_connection",
-      "title": "Реестр учета сведений",
+      "title": "Библиотека КПТ",
       "multiple": true,
       "libraries": [
-        "dl_data_inbox_data"
+        "dl_data_kpt"
       ],
-      "valueType": "DOCUMENT",
-      "maxDocuments": 10
+      "maxDocuments": 10,
+      "valueType": "DOCUMENT"
     },
     {
       "name": "data_section_key_data_connection",
-      "title": "Реестр учета сведений",
+      "title": "Связь с библиотеками",
       "multiple": true,
       "libraries": [
         "dl_data_section1",
@@ -148,8 +159,8 @@ SELECT 'tasks_schema_v1',
         "dl_data_section17",
         "dl_data_section18"
       ],
-      "valueType": "DOCUMENT",
-      "maxDocuments": 18
+      "maxDocuments": 18,
+      "valueType": "DOCUMENT"
     }
   ],
   "contentTypes": [
@@ -194,6 +205,99 @@ SELECT 'tasks_schema_v1',
       "id": "inbox_data",
       "type": "DOCUMENT",
       "title": "Настраиваемая задача. Внесение и регистрация документов в ГИСОГД РК",
+      "childOnly": false,
+      "attributes": [
+        {
+          "name": "id",
+          "hidden": true
+        },
+        {
+          "name": "content_type_id",
+          "hidden": true
+        },
+        {
+          "name": "status",
+          "hidden": true
+        },
+        {
+          "name": "owner_id",
+          "required": true
+        },
+        {
+          "name": "assigned_to",
+          "required": true
+        },
+        {
+          "name": "due_date"
+        },
+        {
+          "name": "guid"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "data_section_key_data_connection"
+        }
+      ]
+    },
+    {
+      "id": "common_task_kpt_import",
+      "type": "DOCUMENT",
+      "title": "Обновление данных в слоях КПТ",
+      "childOnly": false,
+      "attributes": [
+        {
+          "name": "id",
+          "hidden": true
+        },
+        {
+          "name": "content_type_id",
+          "hidden": true
+        },
+        {
+          "name": "status",
+          "hidden": true
+        },
+        {
+          "name": "owner_id",
+          "required": true
+        },
+        {
+          "name": "assigned_to",
+          "required": true
+        },
+        {
+          "name": "due_date"
+        },
+        {
+          "name": "guid"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "inbox_data_key_data_connection"
+        },
+        {
+          "name": "data_section_key_data_connection"
+        }
+      ]
+    },
+    {
+      "id": "common_task_kpt_order",
+      "type": "DOCUMENT",
+      "title": "Заказ КПТ из ФГИС ЕГРН",
+      "childOnly": false,
       "attributes": [
         {
           "name": "id",
@@ -235,7 +339,6 @@ SELECT 'tasks_schema_v1',
         }
       ]
     }
-  ],
-  "geometryType": "MultiPolygon"
+  ]
 }'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'tasks_schema_v1');
