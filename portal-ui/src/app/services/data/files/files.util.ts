@@ -114,13 +114,8 @@ export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {
     if (!photoMode) {
       return false;
     }
-    try {
-      const photoModeValue = (JSON.parse(photoMode) as string[]).filter(value => value !== '');
 
-      return Array.isArray(photoModeValue) && !!photoModeValue.length;
-    } catch {
-      return typeof photoMode === 'string' && !!feature.properties[photoMode];
-    }
+    return !!features.flatMap(feature => getPhotoModeFeatureFiles(feature)).length;
   });
 }
 
