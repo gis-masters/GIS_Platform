@@ -86,6 +86,7 @@ export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
         title: template,
         properties,
         readOnly: true,
+        styleName: 'generic',
         geometryType: geometryType as SupportedGeometryType
       };
     }
