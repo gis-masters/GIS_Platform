@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, SyntheticEvent } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Close } from '@mui/icons-material';
@@ -25,7 +25,7 @@ const tabsTitles: string[] = ['Выделенные объекты', 'Резул
 export default class FeaturesListSidebar extends Component {
   @observable private singleTab = false;
   @observable private loading = false;
-  @observable private search: SearchInfo = {};
+  @observable private search?: SearchInfo;
   @observable private activeTab = 0;
 
   private selectionReactionDisposer?: IReactionDisposer;
@@ -37,9 +37,11 @@ export default class FeaturesListSidebar extends Component {
   }
 
   componentDidMount() {
-    this.setSearchValue(sidebars.searchValue);
+    if (sidebars.searchValue) {
+      this.setSearchValue(sidebars.searchValue);
+    }
 
-    communicationService.featuresUpdated.on(this.close, this);
+    communicationService.featuresUpdated.on(this.closeSelectedFeaturesTab, this);
     this.selectionReactionDisposer = reaction(
       () => mapStore.selectedFeatures.map(({ id }) => id),
       () => {
@@ -50,7 +52,7 @@ export default class FeaturesListSidebar extends Component {
 
     this.searchReactionDisposer = reaction(
       () => sidebars.searchValue,
-      (search: SearchInfo) => {
+      (search?: SearchInfo) => {
         this.searchUpdate(search);
       }
     );
@@ -86,7 +88,7 @@ export default class FeaturesListSidebar extends Component {
                       color='inherit'
                       onPointerDown={this.closePointerDownHandler}
                       onMouseDown={this.closePointerDownHandler}
-                      onClick={label === 'Выделенные объекты' ? this.close : this.closeSearchTab}
+                      onClick={label === 'Выделенные объекты' ? this.closeSelectedFeaturesTab : this.closeSearchTab}
                     >
                       <Close fontSize='small' />
                     </IconButton>
@@ -138,7 +140,7 @@ export default class FeaturesListSidebar extends Component {
       this.setActiveTabValue(1);
     }
 
-    if (mapStore.selectedFeatures.length) {
+    if (mapStore.selectedFeatures.length && !sidebars?.searchValue?.searchValue) {
       this.setActiveTabValue(0);
     }
 
@@ -166,7 +168,7 @@ export default class FeaturesListSidebar extends Component {
   }
 
   @action.bound
-  private setSearchValue(search: SearchInfo): void {
+  private setSearchValue(search?: SearchInfo): void {
     this.search = search;
   }
 
@@ -176,7 +178,7 @@ export default class FeaturesListSidebar extends Component {
   }
 
   @boundMethod
-  private changeHandler(event: React.ChangeEvent, value: number) {
+  private changeHandler(event: SyntheticEvent<Element, Event>, value: number) {
     if (!this.singleTab) {
       this.setActiveTab(value);
     }
@@ -194,14 +196,14 @@ export default class FeaturesListSidebar extends Component {
   }
 
   @action.bound
-  private searchUpdate(search: SearchInfo) {
+  private searchUpdate(search?: SearchInfo) {
     this.setSearchValue(search);
     this.setTabState();
     this.setActiveTabValue(1);
   }
 
   @boundMethod
-  private close() {
+  private closeSelectedFeaturesTab() {
     sidebars.setMemorizedFeatures([]);
     mapStore.setSelectedFeatures([]);
     this.setSingleTab(true);
@@ -229,7 +231,7 @@ export default class FeaturesListSidebar extends Component {
       return;
     }
 
-    if (activeTab) {
+    if (activeTab !== undefined) {
       this.setActiveTab(activeTab);
     }
   }

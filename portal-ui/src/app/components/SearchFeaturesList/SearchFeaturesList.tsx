@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { observable, action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
 import { SearchResultHighlightWrapper } from '../SearchResultHighlightWrapper/SearchResultHighlightWrapper';
 import { getSearchResults } from '../../services/data/search/search.service';
@@ -11,6 +13,10 @@ import { SearchInfo } from '../SearchField/SearchField';
 import { services } from '../../services/services';
 import { Loading } from '../Loading/Loading';
 
+import '!style-loader!css-loader!sass-loader!./SearchFeaturesList.scss';
+
+const cnSearchFeaturesList = cn('SearchFeaturesList');
+
 interface SearchFeaturesListProps {
   searchValue?: SearchInfo;
 }
@@ -18,6 +24,7 @@ interface SearchFeaturesListProps {
 @observer
 export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
   @observable private loading = false;
+  @observable private error?: string;
   @observable private foundWfsFeature: FoundWfsFeature[] = [];
 
   constructor(props: SearchFeaturesListProps) {
@@ -42,6 +49,8 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
       <>
         {this.showResults && <FeaturesList items={this.foundWfsFeature} forSearch />}
 
+        {this.error && <div className={cnSearchFeaturesList('Error')}>{this.error}</div>}
+
         <Loading visible={this.loading} />
       </>
     );
@@ -62,8 +71,14 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
     this.loading = isLoading;
   }
 
+  @action.bound
+  private setError(error: string): void {
+    this.error = error;
+  }
+
   private async getFeatures() {
     this.setLoading(true);
+    this.setError('');
 
     const { searchValue } = this.props;
 
@@ -87,6 +102,8 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
           this.setFoundWfsFeature(foundWfsFeature);
         }
       } catch (error) {
+        const err = error as AxiosError<{ message?: string }>;
+        this.setError(err.message || err.response?.data.message || 'Ошибка поиска');
         services.logger.error(error);
         this.setLoading(false);
       }

@@ -1,0 +1,9 @@
+body .SearchFeaturesList {
+  &-Error {
+    padding: 0 20px 12px;
+
+    color: var(--danger);
+
+    font-size: 13px;
+  }
+}

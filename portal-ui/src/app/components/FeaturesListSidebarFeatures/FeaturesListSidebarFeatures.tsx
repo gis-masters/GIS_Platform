@@ -58,7 +58,7 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
             </IconButton>
           </div>
         )}
-        {mapStore.selectedFeatures.length >= mapStore.selectingFeaturesLimit && (
+        {!searchValue && mapStore.selectedFeatures.length >= mapStore.selectingFeaturesLimit && (
           <div className={cnFeaturesListSidebarFeatures('Error')}>
             Максимальное количество выбираемых объектов — {mapStore.selectingFeaturesLimit}
           </div>
@@ -74,6 +74,12 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
       sidebars.setSearchValue({});
     }
 
-    sidebars.closeFeaturesSidebar();
+    if (this.props.singleTab) {
+      sidebars.closeFeaturesSidebar();
+    }
+
+    if (!sidebars.searchValue) {
+      sidebars.closeFeaturesSidebar();
+    }
   }
 }
