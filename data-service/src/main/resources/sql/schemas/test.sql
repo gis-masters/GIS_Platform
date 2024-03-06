@@ -88,7 +88,7 @@ SELECT 'dl_default_schema',
     },
     {
       "name": "path",
-      "title": "Полный путь, отражающий иерархию обьектов",
+      "title": "Полный путь, отражающий иерархию объектов",
       "required": true,
       "valueType": "STRING"
     },
@@ -145,9 +145,7 @@ SELECT 'dl_default_schema',
           "maxLength": 500
         },
         {
-          "name": "binary",
-          "title": "Выбор файла",
-          "required": true
+          "name": "one_file"
         },
         {
           "name": "native_crs"
@@ -183,9 +181,7 @@ SELECT 'dl_default_schema',
           "required": true
         },
         {
-          "name": "binary",
-          "title": "Выбор файла",
-          "required": true
+          "name": "one_file"
         },
         {
           "name": "native_crs"

@@ -1,8 +1,8 @@
 import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { schemaService } from '../../data/schema/schema.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { applyView } from '../../data/schema/schema.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { getLegendGraphic } from '../wms/wms.service';
 import { mapService } from '../../map/map.service';
@@ -155,7 +155,7 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
   const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
   const requestData: FilteredStylesLayerRequest[] = await Promise.all(
     layers.map(async layer => {
-      const { definitionQuery } = await schemaService.getSchemaForVectorLayer(layer);
+      const { definitionQuery } = applyView(await getLayerSchema(layer), layer.view);
 
       let ecqlFilter: string | undefined = definitionQuery;
 

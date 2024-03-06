@@ -5,13 +5,12 @@ import { BugObject } from '../validation/validation.models';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { Toast } from '../../../components/Toast/Toast';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
-import { getLayerSchema } from '../../gis/layers/layers.service';
 import { communicationService } from '../../communication.service';
 import { ImportLayerItem } from '../../geoserver/import/import.models';
 
 import { Schema } from './schema.models';
 import { schemaClient } from './schema.client';
-import { applyView, convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
+import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
 import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
 
 class SchemaService {
@@ -50,10 +49,6 @@ class SchemaService {
   @boundMethod
   async getSchema(name: string): Promise<Schema> {
     return convertOldToNewSchema(await this.getOldSchema(name));
-  }
-
-  async getSchemaForVectorLayer(layer: CrgVectorLayer): Promise<Schema> {
-    return applyView(await getLayerSchema(layer), layer.view);
   }
 
   async getAllOldSchemas(): Promise<OldSchema[]> {

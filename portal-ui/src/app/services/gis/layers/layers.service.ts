@@ -69,7 +69,7 @@ export function alertLayerOperationError(
 }
 
 export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
-  if (layer.type === CrgLayerType.VECTOR) {
+  if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.DXF) {
     if (!layer.schemaId) {
       throw new Error('Схема не указана у слоя ' + layer.complexName);
     }

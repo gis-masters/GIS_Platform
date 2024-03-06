@@ -1,8 +1,15 @@
 import React, { FC } from 'react';
-import { Adjust, PolylineOutlined, SvgIconComponent } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { Tooltip } from '@mui/material';
+import { Adjust, PolylineOutlined, SvgIconComponent, WarningAmberOutlined } from '@mui/icons-material';
 
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { Shape } from '../Icons/Shape';
+import { services } from '../../services/services';
+
+import '!style-loader!css-loader!sass-loader!./FeatureIcon.scss';
+
+const cnFeatureIcon = cn('FeatureIcon');
 
 interface FeatureIconProps {
   geometryType: GeometryType;
@@ -15,6 +22,7 @@ export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) =
   }
 
   let Icon: SvgIconComponent;
+  let error = false;
 
   switch (geometryType) {
     case GeometryType.POLYGON:
@@ -32,7 +40,14 @@ export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) =
       Icon = Adjust;
       break;
     }
+    default: {
+      services.logger.warn(`Тип геометрии: ${geometryType} не поддерживается`);
+      error = true;
+      Icon = WarningAmberOutlined;
+    }
   }
 
-  return <Icon className={className} color='primary' />;
+  const icon = <Icon className={cnFeatureIcon(null, [className])} color={error ? 'warning' : 'primary'} />;
+
+  return error ? <Tooltip title={`Тип геометрии: ${geometryType} не поддерживается`}>{icon}</Tooltip> : icon;
 };

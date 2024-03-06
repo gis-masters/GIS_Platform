@@ -13,10 +13,12 @@ export const supportedTypesForGeneration: PropertyType[] = [
 export function generateObjectBySchema(schema: Schema): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
-  for (const { propertyType, name } of schema.properties) {
-    switch (propertyType) {
+  for (const property of schema.properties) {
+    const { propertyType, name } = property;
+
+    switch (property.propertyType) {
       case PropertyType.STRING: {
-        result[name] = faker.lorem.sentence(10);
+        result[name] = faker.lorem.sentence(10).slice(0, property.maxLength);
 
         break;
       }
