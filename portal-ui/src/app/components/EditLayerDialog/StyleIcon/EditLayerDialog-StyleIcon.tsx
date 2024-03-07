@@ -10,7 +10,7 @@ import '!style-loader!css-loader!sass-loader!./EditLayerDialog-StyleIcon.scss';
 const cnEditLayerDialogStyleIcon = cn('EditLayerDialog', 'StyleIcon');
 
 interface EditLayerDialogStyleIconProps {
-  layerComplexName: string;
+  layerComplexName?: string;
   styleName: string;
 }
 

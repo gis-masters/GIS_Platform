@@ -148,6 +148,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       layer.type === CrgLayerType.VECTOR ||
       layer.type === CrgLayerType.SHP ||
       layer.type === CrgLayerType.TAB ||
+      layer.type === CrgLayerType.DXF ||
       layer.type === CrgLayerType.MID
     ) {
       properties.push({
