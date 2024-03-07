@@ -4,4 +4,9 @@ body .Lookup-Status {
   &_fadeOut {
     opacity: 0;
   }
+
+  &_status_new,
+  &_status_loading {
+    min-width: 16px;
+  }
 }
