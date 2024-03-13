@@ -6,7 +6,6 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
-import { schemaService } from '../../data/schema/schema.service';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { filterFeatures } from '../../util/filterObjects';
@@ -187,6 +186,9 @@ export async function makeXmlPolygonIntersect(
   const tableName = complexName.split(':')[1];
   const layer = currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
+  if (!baseSchema) {
+    throw new Error(`Не найдена схема для слоя ${layer.title}`);
+  }
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);
   const cqlFilter: string = cqlConcat(cqlBuild(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
@@ -215,17 +217,20 @@ export async function makeXmlPolygonIntersect(
 }
 
 export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
-  const { tableName, schemaId } = layer;
-  const schema = await schemaService.getSchema(schemaId);
+  const schema = await getLayerSchema(layer);
+  if (!schema) {
+    throw new Error(`Не найден схема для слоя ${layer.title}`);
+  }
+
   const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
 
   if (!schema.geometryType) {
-    throw new Error(`Не задан тип геометрии для схемы ${schemaId}`);
+    throw new Error(`Не задан тип геометрии для слоя ${layer.title}`);
   }
 
   return {
     type: 'Feature',
-    id: `${tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+    id: `${layer.tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
     geometry: getEmptyGeometry(schema.geometryType),
     geometry_name: getGeometryFieldName(schema),
     properties

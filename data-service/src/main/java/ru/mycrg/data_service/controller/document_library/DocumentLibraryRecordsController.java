@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.controller.document_library;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,15 +20,16 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.*;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -41,7 +41,7 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.throwIfNotMatchSchema;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 
@@ -50,18 +50,15 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 public class DocumentLibraryRecordsController {
 
     private final Mediator mediator;
-    private final ISchemaService schemaService;
     private final OrgSettingsKeeper orgSettingsKeeper;
     private final DocumentLibraryService libraryService;
     private final RecordServiceFactory recordServiceFactory;
 
-    public DocumentLibraryRecordsController(ISchemaService schemaService,
-                                            DocumentLibraryService libraryService,
+    public DocumentLibraryRecordsController(DocumentLibraryService libraryService,
                                             RecordServiceFactory recordServiceFactory,
                                             Mediator mediator,
                                             OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
-        this.schemaService = schemaService;
         this.libraryService = libraryService;
         this.recordServiceFactory = recordServiceFactory;
         this.orgSettingsKeeper = orgSettingsKeeper;
@@ -136,9 +133,10 @@ public class DocumentLibraryRecordsController {
                                                             @RequestParam(value = "body") String jsonBody) {
         orgSettingsKeeper.throwIfCreateLibraryItemNotAllowed();
 
-        Map<String, Object> body = deserializeBody(jsonBody);
+        Map<String, Object> data = fromJson(jsonBody, Map.class)
+                .orElseThrow(() -> new BadRequestException("Передан не корректный body: " + jsonBody));
         SchemaDto schema = libraryService.getSchema(docLibId);
-        Map<String, Object> props = excludeUnknownProperties(schema, body);
+        Map<String, Object> props = excludeUnknownProperties(schema, data);
 
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
@@ -216,25 +214,12 @@ public class DocumentLibraryRecordsController {
         Map<String, Object> body = new HashMap<>();
         pageable.getSort().forEach(order -> body.put(order.getProperty(), ""));
 
-        String schemaId = libraryService.getInfo(docLibId).getSchemaId();
-
-        schemaService.getSchemaByName(schemaId)
-                     .ifPresentOrElse(schema -> throwIfNotMatchSchema(schema, body),
-                                      () -> {
-                                          throw new NotFoundException("Не найдена схема: " + schemaId);
-                                      });
-    }
-
-    private Map<String, Object> deserializeBody(@Nullable String jsonString) {
-        try {
-            if (jsonString == null) {
-                return new LinkedHashMap<>();
-            }
-
-            return mapper.readValue(jsonString, LinkedHashMap.class);
-        } catch (IOException e) {
-            throw new BadRequestException("Incorrect body: " + jsonString);
+        SchemaDto schema = libraryService.getInfo(docLibId).getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема библиотеки: " + docLibId);
         }
+
+        throwIfNotMatchSchema(schema, body);
     }
 
     @NotNull

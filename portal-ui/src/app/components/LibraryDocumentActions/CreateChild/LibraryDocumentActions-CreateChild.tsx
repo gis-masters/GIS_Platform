@@ -13,7 +13,6 @@ import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocume
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
-import { schemaService } from '../../../services/data/schema/schema.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Schema } from '../../../services/data/schema/schema.models';
@@ -169,7 +168,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
 
     for (const { library: libraryTableName = document.libraryTableName, contentType } of schema?.children || []) {
       const library = await getLibrary(libraryTableName);
-      const schema = applyContentType(await schemaService.getSchema(library.schemaId), contentType);
+      const schema = applyContentType(library.schema, contentType);
 
       childrenData.push({
         document,
@@ -254,12 +253,12 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
     if (!this.currentChild) {
       throw new Error('Current child is not defined');
     }
-    const { library, schema } = this.currentChild;
+    const { library } = this.currentChild;
     if (this.folder) {
       value.path = `${this.folder.path}/${this.folder.id}`;
     }
 
-    this.setCreatedDocument(await createLibraryRecord(value, library.table_name, schema.name));
+    this.setCreatedDocument(await createLibraryRecord(value, library.table_name));
     this.openCreatedDocumentDialog();
   }
 }

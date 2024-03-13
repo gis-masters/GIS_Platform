@@ -8,7 +8,6 @@ import { getLibraryRecord } from '../library/library.service';
 import { LibraryRecord } from '../library/library.models';
 import { getVectorTable } from '../vectorData/vectorData.service';
 import { VectorTable } from '../vectorData/vectorData.models';
-import { schemaService } from '../schema/schema.service';
 import { Schema } from '../schema/schema.models';
 import { services } from '../../services';
 import { Toast } from '../../../components/Toast/Toast';
@@ -160,11 +159,7 @@ function checkIsUpdateAllowed(role: Role) {
 
 export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
   if (layer.type === CrgLayerType.VECTOR) {
-    if (!layer.schemaId) {
-      return false;
-    }
-
-    const schema: Schema = await getLayerSchema(layer);
+    const schema = await getLayerSchema(layer);
     if (!schema) {
       return false;
     }
@@ -173,11 +168,11 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
       return false;
     }
 
-    return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, layer.schemaId);
+    return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, await getLayerSchema(layer));
   } else if (layer.type === CrgLayerType.RASTER) {
     return await isRasterReadAllowed(layer);
   } else if (layer.type && isVectorFromFile(layer.type)) {
-    const schema: Schema = await getLayerSchema(layer);
+    const schema = await getLayerSchema(layer);
     if (!schema) {
       return false;
     }
@@ -248,13 +243,13 @@ async function isFeaturesReadAllowed(datasetIdentifier: string, tableIdentifier:
 export function isFeaturesUpdateAllowed(
   datasetIdentifier: string,
   tableIdentifier: string,
-  schemaIdForReadonlyCheck?: string
+  schemaForReadonlyCheck?: Schema
 ): Promise<boolean> {
   return isAllowedWithTable(
     datasetIdentifier,
     tableIdentifier,
     TablePermissionPoint.UPDATE_FEATURES,
-    schemaIdForReadonlyCheck
+    schemaForReadonlyCheck
   );
 }
 
@@ -268,10 +263,9 @@ async function isAllowedWithTable(
   datasetIdentifier: string,
   tableIdentifier: string,
   targetPoint: TablePermissionPoint,
-  schemaIdForReadonlyCheck?: string
+  schemaForReadonlyCheck?: Schema
 ): Promise<boolean> {
-  const schema = (schemaIdForReadonlyCheck && (await schemaService.getSchema(schemaIdForReadonlyCheck))) || undefined;
-  const readOnly = schema?.readOnly;
+  const readOnly = schemaForReadonlyCheck?.readOnly;
   try {
     const table = await getVectorTable(datasetIdentifier, tableIdentifier);
     let role = table?.role;

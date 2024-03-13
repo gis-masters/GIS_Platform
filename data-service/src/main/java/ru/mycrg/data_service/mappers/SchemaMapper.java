@@ -1,59 +1,45 @@
 package ru.mycrg.data_service.mappers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.entity.Schema;
-import ru.mycrg.data_service.exceptions.DataServiceException;
+import com.fasterxml.jackson.databind.node.TextNode;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.io.IOException;
-
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
+/**
+ * Маппер для поля class_rule.
+ */
 public class SchemaMapper {
-
-    private static final Logger log = LoggerFactory.getLogger(SchemaMapper.class);
 
     private SchemaMapper() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static SchemaDto mapToDto(Schema schema) {
-        try {
-            JsonNode classRule = schema.getClassRule();
-
-            final SchemaDto schemaDto = mapper.readValue(classRule.toString(), SchemaDto.class);
-
-            schemaDto.setCustomRuleFunction(schema.getCustomRule());
-            schemaDto.setCalcFiledFunction(schema.getCalculatedFields());
-
-            return schemaDto;
-        } catch (IOException e) {
-            String message = "Failed convert JSON / Error: " + e.getMessage();
-            log.warn(message);
-
-            throw new DataServiceException(message);
+    @Nullable
+    public static SchemaDto jsonToDto(@Nullable String json) {
+        if (json == null) {
+            return null;
         }
+
+        return fromJson(json, SchemaDto.class).orElse(null);
     }
 
-    @NotNull
-    public static Schema mapToEntity(Schema entity, SchemaDto schemaDto) {
-        entity.setName(schemaDto.getName());
-        entity.setClassRule(toJsonNode(schemaDto));
-
-        String customRuleFunction = schemaDto.getCustomRuleFunction();
-        if (customRuleFunction != null) {
-            entity.setCustomRule(customRuleFunction);
+    @Nullable
+    public static SchemaDto jsonToDto(@Nullable JsonNode json) {
+        if (json == null) {
+            return null;
         }
 
-        String calcFiledFunction = schemaDto.getCalcFiledFunction();
-        if (calcFiledFunction != null) {
-            entity.setCalculatedFields(calcFiledFunction);
+        if (json instanceof TextNode) {
+            return fromJson(json.asText(), SchemaDto.class).orElse(null);
         }
 
-        return entity;
+        return fromJson(json.toString(), SchemaDto.class).orElse(null);
+    }
+
+    public static JsonNode dtoToJson(@Nullable SchemaDto schemaDto) {
+        return toJsonNode(schemaDto);
     }
 }

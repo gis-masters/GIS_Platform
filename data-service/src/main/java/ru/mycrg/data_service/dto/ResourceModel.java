@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.dto;
 
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+
 import java.util.Objects;
 
 public class ResourceModel implements IResourceModel {
@@ -11,7 +13,7 @@ public class ResourceModel implements IResourceModel {
     private String identifier;
     private Integer itemsCount;
     private String crs;
-    private String schemaId;
+    private SchemaDto schema;
     private String createdAt;
     private String role;
     private String tableName;
@@ -21,7 +23,7 @@ public class ResourceModel implements IResourceModel {
     }
 
     public ResourceModel(Long id, String title, String details, String type, String identifier, Integer itemsCount,
-                         String crs, String schemaId, String createdAt, String role) {
+                         String crs, SchemaDto schema, String createdAt, String role) {
         this.id = id;
         this.title = title;
         this.details = details;
@@ -29,7 +31,7 @@ public class ResourceModel implements IResourceModel {
         this.identifier = identifier;
         this.itemsCount = itemsCount;
         this.crs = crs;
-        this.schemaId = schemaId;
+        this.schema = schema;
         this.createdAt = createdAt;
         this.role = role;
     }
@@ -118,17 +120,13 @@ public class ResourceModel implements IResourceModel {
         return crs;
     }
 
+    @Override
+    public SchemaDto getSchema() {
+        return schema;
+    }
+
     public void setCrs(String crs) {
         this.crs = crs;
-    }
-
-    @Override
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     public void setTableName(String tableName) {

@@ -9,12 +9,6 @@ import { PageOptions } from '../../../../services/models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: LibraryRecord;
-  }
-}
-
 @staticImplements<Adapter<LibraryRecord, DocumentVersionExtended>>()
 export class ExplorerAdapterTypeDocumentVersionsRoot {
   static getId(): string {

@@ -93,8 +93,8 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
     this.setBusy(true);
 
     const dataSources = Object.values(this.formValue).filter(item => item !== true) as Datasource[];
-    const tables = dataSources.map(table => {
-      return { dataset: table.vectorTable.dataset, table: table.vectorTable.identifier };
+    const tables = dataSources.map(source => {
+      return { dataset: source.vectorTable?.dataset, table: source.vectorTable?.identifier };
     });
 
     const importRequest = {

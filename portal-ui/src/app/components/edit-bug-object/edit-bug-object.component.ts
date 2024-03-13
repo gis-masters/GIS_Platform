@@ -7,13 +7,21 @@ import { BaseEdit } from './base-edit';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { mapService } from '../../services/map/map.service';
-import { communicationService, ObjectDto } from '../../services/communication.service';
+import { communicationService } from '../../services/communication.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { initValidation } from '../../services/data/validation/validation.service';
+import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { schemaService } from '../../services/data/schema/schema.service';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ValueType } from '../../services/data/schema/schemaOld.models';
 import { Toast } from '../Toast/Toast';
+
+export interface ObjectDto {
+  id: string;
+  crgLayer: CrgVectorLayer;
+}
 
 @Component({
   selector: 'crg-edit-bug-object',
@@ -101,12 +109,12 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       this.isFeatureTypeLoaded = true;
 
       this.wfsFeature = wfsFeature;
-      this.featureDescription = await schemaService.getOldSchema(objectDto.crgLayer.schemaId);
+      this.featureDescription = convertNewToOldSchema(await getLayerSchema(objectDto.crgLayer));
 
       if (this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
       } else {
-        this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.schemaId);
+        this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.title);
       }
 
       mapService.highlightFeatures([wfsFeature]);

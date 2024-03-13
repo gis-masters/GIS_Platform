@@ -16,12 +16,6 @@ import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitl
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerStore } from '../../Explorer.store';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.DOCUMENT]: LibraryRecord;
-  }
-}
-
 @staticImplements<Adapter<LibraryRecord, FileInfo>>()
 export class ExplorerAdapterTypeDocument {
   static getId(item: ExplorerItemData<LibraryRecord>): string {

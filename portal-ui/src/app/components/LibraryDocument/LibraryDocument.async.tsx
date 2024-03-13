@@ -12,13 +12,12 @@ import { services } from '../../services/services';
 import { formatDate } from '../../services/util/date.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { Role } from '../../services/data/permissions/permissions.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { applyContentType } from '../../services/data/schema/schema.utils';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { libraryClient } from '../../services/data/library/library.client';
 import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
-import { getLibrary, getLibraryRecord } from '../../services/data/library/library.service';
+import { getLibrary, getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
@@ -35,7 +34,7 @@ export interface LibraryDocumentProps extends IClassNameProps {
 
 @observer
 export default class LibraryDocument extends Component<LibraryDocumentProps> {
-  @observable private schema: Schema;
+  @observable private schema?: Schema;
   @observable private breadcrumbsItems: BreadcrumbsItemData[] = [];
 
   constructor(props: LibraryDocumentProps) {
@@ -78,7 +77,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
 
         <div className={cnLibraryDocument('Date')}>
           <span className={cnLibraryDocument('DateTitle')}>Дата создания:</span>
-          {formatDate(document.created_at, 'LL')}
+          {document.created_at && formatDate(document.created_at, 'LL')}
         </div>
 
         <PermissionsWidget
@@ -93,7 +92,7 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
 
   private async fetchSchema(): Promise<void> {
     const { document } = this.props;
-    const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id);
+    const schema = applyContentType(await getLibrarySchemaByRecord(document), document.content_type_id);
 
     this.setSchema({
       ...schema,

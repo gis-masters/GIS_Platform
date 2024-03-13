@@ -43,12 +43,16 @@ public class RecordsCopyController {
                                                                   copyModel.getTarget().getTable());
 
         IResourceModel sourceTable = tableService.getInfo(sourceQualifier);
-        SchemaDto sourceSchema = schemaService.getSchemaByName(sourceTable.getSchemaId())
-                                              .orElseThrow(() -> new NotFoundException(sourceTable.getSchemaId()));
+        SchemaDto sourceSchema = sourceTable.getSchema();
+        if (sourceSchema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + sourceTable.getIdentifier());
+        }
 
         IResourceModel targetTable = tableService.getInfo(targetQualifier);
-        SchemaDto targetSchema = schemaService.getSchemaByName(targetTable.getSchemaId())
-                                              .orElseThrow(() -> new NotFoundException(targetTable.getSchemaId()));
+        SchemaDto targetSchema = targetTable.getSchema();
+        if (targetSchema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + targetTable.getIdentifier());
+        }
 
         ifNotValidThrow(sourceTable, sourceSchema, targetTable, targetSchema);
 

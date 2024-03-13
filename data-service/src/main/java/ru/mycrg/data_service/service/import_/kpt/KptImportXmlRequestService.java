@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.import_.kpt;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
@@ -13,9 +14,9 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
@@ -29,12 +30,16 @@ import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -116,15 +121,19 @@ public class KptImportXmlRequestService {
 
         List<KptImportTableDto> result = new LinkedList<>();
         for (SchemasAndTables table: schemasAndTables) {
-            Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(table.getSchemaId());
-            if (schemaByName.isEmpty()) {
-                throw new DataServiceException("Не найдена схема таблицы " + table.getIdentifier());
+            JsonNode schema = table.getSchema();
+            String tableIdentifier = table.getIdentifier();
+            if (schema == null) {
+                throw new DataServiceException("Не найдена схема таблицы " + tableIdentifier);
             }
 
-            DatasetResourceQualifierDto qualifier = qualifiers.stream()
-                                                              .filter(it -> it.getTable().equals(table.getIdentifier()))
-                                                              .findFirst().get();
-            result.add(new KptImportTableDto(qualifier, schemaByName.get()));
+            DatasetResourceQualifierDto qualifier = qualifiers
+                    .stream()
+                    .filter(it -> it.getTable().equals(tableIdentifier))
+                    .findFirst()
+                    .orElseThrow(() -> new DataServiceException("Не найдена таблица: " + tableIdentifier));
+
+            result.add(new KptImportTableDto(qualifier, jsonToDto(schema)));
         }
 
         return result;

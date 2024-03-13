@@ -467,6 +467,11 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         body(gson.toJson(geoJsonModel)).
                         post("");
 
+        if (response.statusCode() != 201) {
+            response.prettyPrint();
+            assertEquals(201, response.statusCode());
+        }
+
         currentFeatureId = extractEntityIdFromResponse(response);
     }
 

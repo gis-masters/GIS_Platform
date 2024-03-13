@@ -4,14 +4,14 @@ import { StoryFn } from '@storybook/react';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 
-import { SchemaDialog } from './SchemaDialog';
+import { OpenSchemaAction } from './OpenSchemaAction';
 
 export default {
   title: 'SchemaDialog',
-  component: SchemaDialog
+  component: OpenSchemaAction
 };
 
-const Template: StoryFn<typeof SchemaDialog> = args => <SchemaDialog {...args} />;
+const Template: StoryFn<typeof OpenSchemaAction> = args => <OpenSchemaAction {...args} />;
 
 export const SchemaDialogPreview = Template.bind({});
 SchemaDialogPreview.args = {

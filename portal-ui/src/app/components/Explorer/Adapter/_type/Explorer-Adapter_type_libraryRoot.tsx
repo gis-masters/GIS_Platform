@@ -18,12 +18,6 @@ import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.LIBRARY_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter<null, Library>>()
 export class ExplorerAdapterTypeLibraryRoot {
   static getId(): string {

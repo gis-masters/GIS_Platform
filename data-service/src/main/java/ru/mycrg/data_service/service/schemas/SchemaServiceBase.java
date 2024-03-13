@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.entity.Schema;
-import ru.mycrg.data_service.mappers.SchemaMapper;
+import ru.mycrg.data_service.mappers.SchemaEntityMapper;
 import ru.mycrg.data_service.repository.DataSchemaRepository;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -33,10 +33,10 @@ public class SchemaServiceBase implements ISchemaService {
     public List<SchemaDto> getSchemas(@Nullable List<String> featureNames) {
         return (featureNames == null || featureNames.isEmpty())
                 ? schemaRepository.findAll().stream()
-                                  .map(SchemaMapper::mapToDto)
+                                  .map(SchemaEntityMapper::mapToDto)
                                   .collect(Collectors.toList())
                 : schemaRepository.findByNameIn(featureNames).stream()
-                                  .map(SchemaMapper::mapToDto)
+                                  .map(SchemaEntityMapper::mapToDto)
                                   .collect(Collectors.toList());
     }
 
@@ -44,7 +44,7 @@ public class SchemaServiceBase implements ISchemaService {
     public Optional<SchemaDto> getSchemaByName(@NotNull String name) {
         Optional<SchemaDto> oSchema = schemaRepository.findByName(name).stream()
                                                       .findFirst()
-                                                      .map(SchemaMapper::mapToDto);
+                                                      .map(SchemaEntityMapper::mapToDto);
         if (oSchema.isPresent()) {
             List<SimplePropertyDto> properties = oSchema.get().getProperties();
             enrichPropsBySystemAttributes(properties);
@@ -57,14 +57,14 @@ public class SchemaServiceBase implements ISchemaService {
     public List<SchemaDto> getSchemasWithReglaments() {
         return schemaRepository.findAll().stream()
                                .filter(this::isReglamentsExist)
-                               .map(SchemaMapper::mapToDto)
+                               .map(SchemaEntityMapper::mapToDto)
                                .collect(Collectors.toList());
     }
 
     @Override
     public List<SchemaDto> getBySpecificProperty(String propertyName) {
         return schemaRepository.findBySpecificPropertyName(propertyName).stream()
-                               .map(SchemaMapper::mapToDto)
+                               .map(SchemaEntityMapper::mapToDto)
                                .collect(Collectors.toList());
     }
 

@@ -1,6 +1,6 @@
-import { compose } from '@bem-react/core';
+import { HOC, compose } from '@bem-react/core';
 
-import { ExplorerWidgetsBase } from './Explorer-Widgets.base';
+import { ExplorerWidgetsBase, ExplorerWidgetsProps } from './Explorer-Widgets.base';
 import { withTypeBasemap } from './_type/Explorer-Widgets_type_basemap';
 import { withTypeDataset } from './_type/Explorer-Widgets_type_dataset';
 import { withTypeDocument } from './_type/Explorer-Widgets_type_document';
@@ -14,15 +14,15 @@ import { withTypeTaskHistory } from './_type/Explorer-Widgets_type_taskHistory';
 import { withTypeSearchItem } from './_type/Explorer-Widgets_type_searchItem';
 
 export const ExplorerWidgets = compose(
-  withTypeBasemap,
-  withTypeDataset,
-  withTypeDocument,
-  withTypeFolder,
-  withTypeLibrary,
-  withTypeSchema,
-  withTypeTable,
-  withTypeSearchItem,
-  withTypeDocumentVersion,
-  withTypeTaskHistory,
-  withTypeProject
+  withTypeBasemap as HOC<ExplorerWidgetsProps>,
+  withTypeDataset as HOC<ExplorerWidgetsProps>,
+  withTypeDocument as HOC<ExplorerWidgetsProps>,
+  withTypeFolder as HOC<ExplorerWidgetsProps>,
+  withTypeLibrary as HOC<ExplorerWidgetsProps>,
+  withTypeSchema as HOC<ExplorerWidgetsProps>,
+  withTypeTable as HOC<ExplorerWidgetsProps>,
+  withTypeSearchItem as HOC<ExplorerWidgetsProps>,
+  withTypeDocumentVersion as HOC<ExplorerWidgetsProps>,
+  withTypeTaskHistory as HOC<ExplorerWidgetsProps>,
+  withTypeProject as HOC<ExplorerWidgetsProps>
 )(ExplorerWidgetsBase) as typeof ExplorerWidgetsBase;

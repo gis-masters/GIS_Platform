@@ -28,7 +28,7 @@ interface LibraryDocumentActionsRegisterProps {
 @observer
 export class LibraryDocumentActionsRegister extends Component<LibraryDocumentActionsRegisterProps> {
   @observable private dialogOpen = false;
-  @observable private busy: boolean;
+  @observable private busy: boolean = false;
 
   constructor(props: LibraryDocumentActionsRegisterProps) {
     super(props);

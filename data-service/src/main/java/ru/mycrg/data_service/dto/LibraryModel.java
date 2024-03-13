@@ -7,6 +7,7 @@ import ru.mycrg.data_service.entity.DocumentLibrary;
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class LibraryModel extends ResourceModel {
@@ -32,7 +33,7 @@ public class LibraryModel extends ResourceModel {
               null,
               null,
               null,
-              library.get("schema_id") != null ? String.valueOf(library.get("schema_id")) : null,
+              library.get("schema") != null ? jsonToDto((String) library.get("schema")) : null,
               library.get("created_at") != null ? library.get("created_at").toString() : null,
               null);
 
@@ -49,7 +50,7 @@ public class LibraryModel extends ResourceModel {
               null,
               null,
               null,
-              dl.getSchemaId(),
+              jsonToDto(dl.getSchema()),
               dl.getCreatedAt() == null ? null : dl.getCreatedAt().toString(),
               null);
 
@@ -66,7 +67,7 @@ public class LibraryModel extends ResourceModel {
               null,
               null,
               null,
-              dl.getSchemaId(),
+              jsonToDto(dl.getSchema()),
               dl.getCreatedAt() == null ? null : dl.getCreatedAt().toString(),
               role);
 

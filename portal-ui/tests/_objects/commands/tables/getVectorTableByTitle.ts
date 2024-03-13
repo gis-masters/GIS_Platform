@@ -1,3 +1,4 @@
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
 import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
 import { VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
 import { requestAsAdmin } from '../requestAs';
@@ -11,7 +12,7 @@ export async function getVectorTableByTitle(datasetIdentifier: string, tableTitl
 
   const vectorTables: VectorTable[] = (response.content || []).map(table => ({
     ...table,
-    dataset: datasetIdentifier
+    schema: convertOldToNewSchema(table.schema)
   }));
 
   if (vectorTables.length !== 1) {

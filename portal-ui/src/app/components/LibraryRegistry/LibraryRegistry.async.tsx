@@ -10,10 +10,9 @@ import { AxiosError } from 'axios';
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
-import { PropertySchema, PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
-import { schemaService } from '../../services/data/schema/schema.service';
 import {
   addFilterPart,
   FilterQuery,
@@ -64,7 +63,6 @@ export interface LibraryRegistryProps {
 @observer
 export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @observable private library?: Library;
-  @observable private schema?: Schema;
   @observable private hiddenFields: string[] = [];
   @observable private totalItemCounter?: string;
   @observable private tablePageOptions?: PageOptions;
@@ -101,7 +99,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   render() {
     return (
       <div className={cnLibraryRegistry()}>
-        {this.ready && (
+        {this.library && (
           <>
             {this.showDeletedDocuments && (
               <div className={cnLibraryRegistry('BreadcrumbsTextTitle')}>
@@ -139,12 +137,11 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
                 <>
                   {!this.showDeletedDocuments && (
                     <>
-                      {this.props.id === 'registryPage' && this.tablePageOptions && this.library && this.schema && (
+                      {this.props.id === 'registryPage' && this.tablePageOptions && this.library && (
                         <LibraryRegistryExport
                           tablePageOptions={this.tablePageOptions}
                           properties={this.properties}
                           library={this.library}
-                          schema={this.schema}
                           cols={this.cols}
                         />
                       )}
@@ -171,7 +168,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
             />
           </>
         )}
-        {!this.ready && !this.error && <Loading noBackdrop />}
+        {!this.library && !this.error && <Loading noBackdrop />}
 
         {this.error && <EmptyListView text={this.error} />}
       </div>
@@ -184,7 +181,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get properties(): PropertySchema[] {
-    return (this.schema?.properties || []).filter(
+    return (this.library?.schema.properties || []).filter(
       ({ hidden, propertyType }) =>
         !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
     );
@@ -197,66 +194,69 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @computed
   private get cols(): XTableColumn<LibraryRecord>[] {
-    const pathProperty = this.schema?.properties.find(({ name }) => name === 'path');
+    const pathProperty = this.library?.schema.properties.find(({ name }) => name === 'path');
     const pathHidden = !pathProperty || pathProperty.hidden;
 
-    if (!this.schema) {
+    if (!this.library) {
       return [];
     }
 
-    const cols: XTableColumn<LibraryRecord>[] = [
+    const standardFieldsOverrides: XTableColumn<LibraryRecord>[] = [
       {
-        CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
-        align: 'center',
-        minWidth: 60,
-        cellProps: { padding: 'checkbox' }
+        field: 'id',
+        type: XTableExtraColumnType.ID
       },
-      ...getXTableColumnsFromSchema<LibraryRecord>(this.schema, [
-        {
-          field: 'id',
-          type: XTableExtraColumnType.ID
-        },
-        {
-          field: 'is_deleted',
-          hidden: true,
-          type: PropertyType.BOOL
-        },
-        {
-          field: 'path',
-          type: PropertyType.CUSTOM,
-          CellContent: ({ rowData, filterParams }) =>
-            this.library && (
-              <LibraryRegistryBreadcrumbs
-                size='small'
-                filter={filterParams}
-                library={this.library}
-                path={getIdsFromPath(rowData.path)}
-                onItemClick={this.handleBreadcrumbsItemClick}
-              />
-            ),
-          CustomFilterPanelItemComponent: observer((props: XTableFilterPanelItemContentProps<LibraryRecord>) => (
-            <LibraryRegistryPathFilterPanelItem library={this.library} {...props} />
-          )),
-          width: 150
-        },
-        {
-          field: 'title',
-          AfterCellContent: pathHidden
-            ? ({ rowData, filterParams }) =>
-                this.library && (
-                  <LibraryRegistryBreadcrumbs
-                    size='small'
-                    filter={filterParams}
-                    library={this.library}
-                    path={getIdsFromPath(rowData.path)}
-                    onItemClick={this.handleBreadcrumbsItemClick}
-                    menuButtonOnly
-                  />
-                )
-            : undefined
-        }
-      ])
-      // тут в тайпскрипте какой то адок, я хз как пофиксить
+      {
+        field: 'is_deleted',
+        hidden: true,
+        type: PropertyType.BOOL
+      },
+      {
+        field: 'path',
+        type: PropertyType.CUSTOM,
+        CellContent: ({ rowData, filterParams }) =>
+          this.library && (
+            <LibraryRegistryBreadcrumbs
+              size='small'
+              filter={filterParams}
+              library={this.library}
+              path={getIdsFromPath(rowData.path)}
+              onItemClick={this.handleBreadcrumbsItemClick}
+            />
+          ),
+        CustomFilterPanelItemComponent: observer((props: XTableFilterPanelItemContentProps<LibraryRecord>) => (
+          <LibraryRegistryPathFilterPanelItem library={this.library} {...props} />
+        )),
+        width: 150
+      },
+      {
+        field: 'title',
+        AfterCellContent: pathHidden
+          ? ({ rowData, filterParams }) =>
+              this.library && (
+                <LibraryRegistryBreadcrumbs
+                  size='small'
+                  filter={filterParams}
+                  library={this.library}
+                  path={getIdsFromPath(rowData.path)}
+                  onItemClick={this.handleBreadcrumbsItemClick}
+                  menuButtonOnly
+                />
+              )
+          : undefined
+      }
+    ];
+
+    const checkboxColumn: XTableColumn<LibraryRecord> = {
+      CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
+      align: 'center',
+      minWidth: 60,
+      cellProps: { padding: 'checkbox' }
+    };
+
+    const cols: XTableColumn<LibraryRecord>[] = [
+      checkboxColumn,
+      ...getXTableColumnsFromSchema<LibraryRecord>(this.library.schema, standardFieldsOverrides)
     ].map((item: XTableColumn<LibraryRecord>) => ({
       ...item,
       hidden: this.hiddenFields.includes(String(item.field)) || item.hidden
@@ -270,11 +270,6 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     }
 
     return cols;
-  }
-
-  @computed
-  private get ready(): boolean {
-    return Boolean(this.library && this.schema);
   }
 
   @computed
@@ -336,14 +331,9 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     this.library = library;
   }
 
-  @action
-  private setSchema(schema: Schema) {
-    this.schema = schema;
-  }
-
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[LibraryRecord[], number]> {
-    if (!this.library || !this.schema) {
+    if (!this.library) {
       return [[], 1];
     }
 
@@ -367,7 +357,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
     const [documents, pages] = await getLibraryRecordsAsRegistry(
       this.library.table_name,
-      this.schema.name,
+      this.library.schema.name,
       pageOptions
     );
 
@@ -379,7 +369,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
     return [
       documents.map(document => {
-        const properties = this.schema?.properties || [];
+        const properties = this.library?.schema.properties || [];
         const documentCalculated = calculateValues<LibraryRecord>(document, properties);
 
         for (const property of properties) {
@@ -394,7 +384,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
   @boundMethod
   private async setCounters(): Promise<CounterItem[]> {
-    if (!this.library || !this.schema) {
+    if (!this.library) {
       return [];
     }
 
@@ -402,7 +392,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     if (this.tablePageOptions) {
       const clonedOptionsWithFilters = cloneDeep(this.tablePageOptions);
       const clonedOptionsWithoutFilters = cloneDeep(this.tablePageOptions);
-      const currentIsFolderFilter = getFieldFilterValue(this.tablePageOptions.filter, 'is_folder');
+      const currentIsFolderFilter = getFieldFilterValue(this.tablePageOptions.filter || {}, 'is_folder');
       clonedOptionsWithoutFilters.filter = { $and: [] };
       clonedOptionsWithoutFilters.pageSize = 1;
       addFilterPart(clonedOptionsWithoutFilters.filter, getPathFilter(this.breadcrumbsPath));
@@ -414,14 +404,14 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
       const [, documentsTotal] = await getLibraryRecordsAsRegistry(
         this.library.table_name,
-        this.schema.name,
+        this.library.schema.name,
         clonedOptionsWithoutFilters
       );
       counterInfo = [{ title: 'Всего документов: ', value: documentsTotal.totalElements }];
 
       const [, filteredDocuments] = await getLibraryRecordsAsRegistry(
         this.library.table_name,
-        this.schema.name,
+        this.library.schema.name,
         clonedOptionsWithFilters
       );
 
@@ -436,14 +426,14 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       modifyFieldFilterValue(clonedOptionsWithoutFilters.filter, 'is_folder', true);
       const [, foldersTotal] = await getLibraryRecordsAsRegistry(
         this.library.table_name,
-        this.schema.name,
+        this.library.schema.name,
         clonedOptionsWithoutFilters
       );
       counterInfo.push({ title: 'Всего папок: ', value: foldersTotal.totalElements });
 
       const [, filteredFolders] = await getLibraryRecordsAsRegistry(
         this.library.table_name,
-        this.schema.name,
+        this.library.schema.name,
         clonedOptionsWithFilters
       );
 
@@ -476,9 +466,6 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   private async getInfo() {
     try {
       this.setLibrary(await getLibrary(this.props.libraryTableName));
-      if (this.library?.schemaId) {
-        this.setSchema(await schemaService.getSchema(this.library.schemaId));
-      }
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
 

@@ -9,7 +9,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
-import static ru.mycrg.data_service.mappers.SchemaMapper.mapToEntity;
+import static ru.mycrg.data_service.mappers.SchemaEntityMapper.mapToEntity;
 
 @Component
 public class CreateSchemaRequestHandler implements IRequestHandler<CreateSchemaRequest, Voidy> {

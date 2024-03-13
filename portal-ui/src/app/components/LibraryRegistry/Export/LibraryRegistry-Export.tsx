@@ -9,7 +9,7 @@ import { cn } from '@bem-react/classname';
 import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
-import { PropertySchema, Schema } from '../../../services/data/schema/schema.models';
+import { PropertySchema } from '../../../services/data/schema/schema.models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
 import { sleep } from '../../../services/util/sleep';
@@ -21,7 +21,6 @@ const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 
 interface LibraryRegistryExportProps {
   library: Library;
-  schema: Schema;
   tablePageOptions: PageOptions;
   cols: XTableColumn<LibraryRecord>[];
   properties: PropertySchema[];
@@ -79,9 +78,9 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
   }
 
   private async getData(): Promise<unknown[][]> {
-    const { tablePageOptions, library, schema, properties, cols } = this.props;
+    const { tablePageOptions, library, properties, cols } = this.props;
 
-    const records = await getAllLibraryRecordsAsRegistry(library.table_name, schema.name, tablePageOptions);
+    const records = await getAllLibraryRecordsAsRegistry(library.table_name, library.schema.name, tablePageOptions);
     const fields = cols.filter(({ field }) => field);
     const data: unknown[][] = [fields.map(({ title }) => title)];
 
@@ -89,7 +88,7 @@ export class LibraryRegistryExport extends Component<LibraryRegistryExportProps>
       data.push(
         fields.map(({ field }) =>
           getReadablePropertyValue(
-            record[field],
+            field ? record[field] : undefined,
             properties.find(({ name }) => name === field)
           )
         )

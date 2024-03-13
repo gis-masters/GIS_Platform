@@ -45,12 +45,12 @@ public class AisUmsDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(DATA_SOURCE_NAME));
 
         String query = "SELECT identifier AS table_name " +
-                "FROM data.schemas_and_tables " +
+                "FROM data.schemas_and_tables AS sat " +
                 "WHERE path = (SELECT concat(path, '/', id) AS path " +
                 "              FROM data.schemas_and_tables " +
                 "              WHERE identifier = '" + datasetName + "' " +
                 "                AND is_folder = true) " +
-                "  AND schema_id IN (" + joinAndQuoteMark(schemas) + ")" +
+                "  AND sat.schema->>'name' IN (" + joinAndQuoteMark(schemas) + ")" +
                 "  AND is_folder = FALSE";
 
         log.debug("Query to get all tables names: [{}]", query);

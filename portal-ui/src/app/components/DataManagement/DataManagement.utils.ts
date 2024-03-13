@@ -43,7 +43,7 @@ export function getRegistryUrlWithPath(
   return getRegistryUrlWithFilter(libraryTableName, filterWithPath);
 }
 
-export function getIdsFromPath(path: string): number[] {
+export function getIdsFromPath(path?: string): number[] {
   return (path || '').replaceAll('%', '').split('/').map(Number).filter(notFalsyFilter);
 }
 

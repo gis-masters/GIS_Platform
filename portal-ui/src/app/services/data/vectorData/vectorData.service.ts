@@ -8,6 +8,7 @@ import { PageOptions } from '../../models';
 import { vectorDataClient } from './vectorData.client';
 import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
 import { extractFeatureId } from '../../geoserver/feature.util';
+import { convertOldToNewSchema } from '../schema/schema.utils';
 
 // dataset
 
@@ -50,7 +51,7 @@ export async function deleteDataset(dataset: Dataset): Promise<void> {
 export async function getVectorTable(datasetIdentifier: string, identifier: string): Promise<VectorTable> {
   const response = await vectorDataClient.getVectorTable(datasetIdentifier, identifier);
 
-  return { ...response, dataset: datasetIdentifier };
+  return { ...response, schema: convertOldToNewSchema(response.schema) };
 }
 
 export async function getVectorTables(
@@ -60,7 +61,7 @@ export async function getVectorTables(
   const response = await vectorDataClient.getVectorTables(datasetIdentifier, pageOptions);
   const vectorTables: VectorTable[] = (response.content || []).map(table => ({
     ...table,
-    dataset: datasetIdentifier
+    schema: convertOldToNewSchema(table.schema)
   }));
 
   return [vectorTables, response.page.totalPages];
@@ -79,14 +80,13 @@ export async function getVectorTablesWithParticularOne(
 
   if (response) {
     const [tables, totalPages, page] = response;
-    tables.forEach(table => {
-      table.dataset = datasetIdentifier;
-    });
+    const enriched = tables.map(table => ({
+      ...table,
+      schema: convertOldToNewSchema(table.schema)
+    }));
 
-    return [tables, totalPages, page];
+    return [enriched, totalPages, page];
   }
-
-  return response;
 }
 
 export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<VectorTable[]> {
@@ -94,15 +94,25 @@ export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<Vec
 
   return vectorTables.map(table => ({
     ...table,
-    dataset: dataset.identifier
+    schema: convertOldToNewSchema(table.schema)
   }));
+}
+
+export async function getVectorTablesInAllDatasets(pageOptions: PageOptions): Promise<[VectorTable[], number]> {
+  const response = await vectorDataClient.getVectorTablesInAllDatasets(pageOptions);
+
+  return [
+    response.content.map(table => ({ ...table, schema: convertOldToNewSchema(table.schema) })),
+    response.page.totalPages
+  ];
 }
 
 export async function createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<VectorTable> {
   const response = await vectorDataClient.createVectorTable(datasetIdentifier, table);
-  communicationService.vectorTableUpdated.emit({ type: 'create', data: response });
+  const enriched = { ...response, schema: convertOldToNewSchema(response.schema) };
+  communicationService.vectorTableUpdated.emit({ type: 'create', data: enriched });
 
-  return response;
+  return enriched;
 }
 
 export async function updateVectorTable(vectorTable: VectorTable, patch: Partial<VectorTable>): Promise<void> {
@@ -118,12 +128,6 @@ export async function deleteVectorTable(vectorTable: VectorTable): Promise<void>
 
 export async function getVectorTableConnections(vectorTableIdentifier: string): Promise<VectorTableConnection[]> {
   return vectorDataClient.getVectorTableConnections(vectorTableIdentifier);
-}
-
-export async function getAllVectorTables(pageOptions: PageOptions): Promise<[Omit<VectorTable, 'dataset'>[], number]> {
-  const response = await vectorDataClient.getAllVectorTables(pageOptions);
-
-  return [response.content, response.page.totalPages];
 }
 
 // feature
@@ -159,6 +163,10 @@ export async function copyFeaturesBetweenLayers(
   targetLayer: CrgLayer,
   features: WfsFeature[]
 ): Promise<void> {
+  if (!sourceLayer.dataset || !targetLayer.dataset || !sourceLayer.tableName || !targetLayer.tableName) {
+    throw new Error(`Ошибка копирования: некорректный слой (${sourceLayer.id}, ${targetLayer.id})`);
+  }
+
   const featureIds = features.map(feature => extractFeatureId(feature.id));
 
   await vectorDataClient.copyFeaturesBetweenLayers(

@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.processes.executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +10,6 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
@@ -45,26 +43,24 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
     private final FileStorageService fileStorageService;
     private final Path exportStoragePath;
 
-    private ImportGeometryShapeReport importReport;
-    private ProcessModel processModel;
-    private GeometryFromShapePlacementPayloadModel payload;
-    private final IAuthenticationFacade authenticationFacade;
     private final TableService tableService;
-    private final ISchemaService schemaService;
     private final TableProtector tableProtector;
+    private final IAuthenticationFacade authenticationFacade;
+
+    private ProcessModel processModel;
+    private ImportGeometryShapeReport importReport;
+    private GeometryFromShapePlacementPayloadModel payload;
 
     public GeometryShapeExecutor(IMessageBusProducer messageBus,
                                  FileStorageService fileStorageService,
                                  Environment environment,
                                  IAuthenticationFacade authenticationFacade,
                                  TableService tableService,
-                                 @Qualifier("schemaServiceBase") ISchemaService schemaService,
                                  TableProtector tableProtector) {
         this.messageBus = messageBus;
         this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
         this.tableService = tableService;
-        this.schemaService = schemaService;
         this.tableProtector = tableProtector;
 
         String path = environment.getRequiredProperty("crg-options.exportStoragePath");
@@ -100,11 +96,12 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
         }
 
         IResourceModel table = tableService.getInfo(tQualifier);
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема для: " + tQualifier.getQualifier());
+        }
 
-        SchemaDto schemaByName = schemaService.getSchemaByName(table.getSchemaId())
-                                              .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
-
-        if (schemaByName.isReadOnly()) {
+        if (schema.isReadOnly()) {
             String msg = String.format("Таблица: '%s' не доступна для редактирования.", tQualifier.getTableQualifier());
 
             log.error(msg);
@@ -120,7 +117,7 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
 
         messageBus.produce(
                 new ShapeLoadedEvent(processModel.getId(), dbName, payload.getFilePath(),
-                                     table.getCrs(), tableName, datasetId, schemaByName.getGeometryType().getType()));
+                                     table.getCrs(), tableName, datasetId, schema.getGeometryType().getType()));
 
         importReport.setDatasetIdentifier(datasetId);
         importReport.setTableIdentifier(tableName);

@@ -26,14 +26,13 @@ public class LayerCreateDto {
     }
 
     public LayerCreateDto(String title, String dataset, String tableName, String styleName, String type,
-                          String schemaId, String dataStoreName, String nativeCRS, String dataSourceUri,
-                          String contentType, String style) {
+                          String dataStoreName, String nativeCRS, String dataSourceUri, String contentType,
+                          String style) {
         this.title = title;
         this.dataset = dataset;
         this.tableName = tableName;
         this.styleName = styleName;
         this.type = type;
-        this.schemaId = schemaId;
         this.dataStoreName = dataStoreName;
         this.nativeCRS = nativeCRS;
         this.dataSourceUri = dataSourceUri;

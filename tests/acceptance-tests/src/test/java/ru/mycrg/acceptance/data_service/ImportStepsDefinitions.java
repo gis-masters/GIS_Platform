@@ -154,14 +154,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
         }
         tableName = tableNames.get(0).toString();
 
-        List<Object> schemaIds = path.getList("schemaId");
-        if (schemaIds == null || schemaIds.isEmpty()) {
-            response.prettyPrint();
-
-            throw new IllegalStateException("Не корректное тело ответа, не найден schemaId");
-        }
-        schemaId = schemaIds.get(0).toString();
-
         assertThat(layers.isEmpty(), is(not(true)));
 
         layerId = (Integer) layers.get(0).get("id");

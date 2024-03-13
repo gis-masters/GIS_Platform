@@ -69,11 +69,10 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} {string} " +
+    @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} " +
             "{string} {string} {string} {string} {string}")
-    public void createLayer(String title, String styleName, String type, String schemaId, String epsg,
-                            String dataSourceUri, String libraryId, String recordId, String mode, String contentType,
-                            String style) {
+    public void createLayer(String title, String styleName, String type, String epsg, String dataSourceUri,
+                            String libraryId, String recordId, String mode, String contentType, String style) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -82,7 +81,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             currentTableName,
                                             generateString(styleName),
                                             type,
-                                            generateString(schemaId),
                                             generateString(dataStoreName),
                                             generateString(epsg),
                                             generateString(dataSourceUri),
@@ -120,8 +118,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         layerCreateDto = new LayerCreateDto(generateString("STRING_5"), generateString("STRING_5"),
                                             generateString("STRING_5"), generateString("STRING_5"),
-                                            "vector", generateString("STRING_5"), generateString("STRING_5"),
-                                            "EPSG:28406", generateString("STRING_8"), null, generateString("STRING_8"));
+                                            "vector", generateString("STRING_5"), "EPSG:28406",
+                                            generateString("STRING_8"), null, generateString("STRING_8"));
 
         super.createEntity(layerCreateDto);
     }
@@ -147,7 +145,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getTableName(), jsonPath.get("tableName"));
         assertEquals(layerCreateDto.getStyleName(), jsonPath.get("styleName"));
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
-        assertEquals(layerCreateDto.getSchemaId(), jsonPath.get("schemaId"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(layerCreateDto.getContentType(), jsonPath.get("contentType"));
         assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
@@ -174,9 +171,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
             createLayer(layerTitle,
                         "transportobj",
                         "vector",
-                        "transportobj",
                         "EPSG:28406",
-                        generateString("STRING_6"),
+                        "transportobj",
                         "libraryId",
                         "1",
                         "full",
@@ -192,9 +188,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         createLayer(layerTitle,
                     "transportobj",
                     "vector",
-                    "transportobj",
                     "EPSG:28406",
-                    generateString("STRING_6"),
+                    "transportobj",
                     "libraryId",
                     "1",
                     "",
@@ -297,7 +292,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("minZoom"));
         assertTrue(presentedData.containsKey("styleName"));
         assertTrue(presentedData.containsKey("nativeCRS"));
-        assertTrue(presentedData.containsKey("schemaId"));
         assertTrue(presentedData.containsKey("complexName"));
     }
 

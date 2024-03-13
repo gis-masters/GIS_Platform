@@ -16,17 +16,21 @@ const ImportGmlResultsLinkWithRegistry = withRegistry(registry)(ImportGmlResults
   styleUrls: ['./import-gml-result-button.scss']
 })
 export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() event: IWsMessage;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @Input() event?: IWsMessage;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -34,8 +38,8 @@ export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDest
   }
 
   private renderReactElement() {
-    const payload = this.event.payload as WsImportModel;
-    const reactElement = createElement(ImportGmlResultsLinkWithRegistry, { reports: payload.payload });
+    const payload = this.event?.payload as WsImportModel | undefined;
+    const reactElement = createElement(ImportGmlResultsLinkWithRegistry, { reports: payload?.payload });
 
     this.root?.render(reactElement);
   }

@@ -97,8 +97,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
             ? getValidationResults(
                 {
                   dataset: this.crgLayer.dataset,
-                  table: this.crgLayer.tableName,
-                  schemaId: this.crgLayer.schemaId
+                  table: this.crgLayer.tableName
                 },
                 this.paginator.pageIndex,
                 this.paginator.pageSize,
@@ -122,8 +121,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     const response: ValidationResultsResponse = await getValidationResults(
       {
         dataset: this.crgLayer.dataset,
-        table: this.crgLayer.tableName,
-        schemaId: this.crgLayer.schemaId
+        table: this.crgLayer.tableName
       },
       0,
       this.defaultPageSize,

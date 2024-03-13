@@ -14,16 +14,20 @@ const LoginFormDialogWithRegistry = withRegistry(registry)(LoginFormDialog);
   styleUrls: ['./login-form-dialog.component.scss']
 })
 export class LoginFormDialogComponent implements OnInit, OnDestroy, OnChanges {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {

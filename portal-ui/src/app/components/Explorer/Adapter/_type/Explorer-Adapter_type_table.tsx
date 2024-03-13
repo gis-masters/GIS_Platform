@@ -6,7 +6,6 @@ import { VectorTable } from '../../../../services/data/vectorData/vectorData.mod
 import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-import { LayerIcon } from '../../../LayerIcon/LayerIcon.composed';
 import { formatDate } from '../../../../services/util/date.util';
 import { services } from '../../../../services/services';
 import { Link } from '../../../Link/Link';
@@ -14,12 +13,7 @@ import { Link } from '../../../Link/Link';
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.TABLE]: VectorTable;
-  }
-}
+import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 
 @staticImplements<Adapter<VectorTable>>()
 export class ExplorerAdapterTypeTable {
@@ -32,7 +26,7 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getDescription(item: ExplorerItemData<VectorTable>): ReactNode {
-    const { details, createdAt, schemaId } = item.payload;
+    const { details, createdAt, schema } = item.payload;
 
     return (
       <>
@@ -48,8 +42,8 @@ export class ExplorerAdapterTypeTable {
         {currentUser.isAdmin && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
-            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
-              {schemaId}
+            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schema.name}"%5D`}>
+              {schema.name}
             </Link>
           </ExplorerInfoDescItem>
         )}
@@ -62,7 +56,7 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getIcon(item: ExplorerItemData<VectorTable>): ReactNode {
-    return <LayerIcon type='vector' schemaId={item.payload.schemaId} colorized />;
+    return <GeometryIcon geometryType={item.payload.schema.geometryType} colorized />;
   }
 
   static isFolder(): boolean {

@@ -12,7 +12,6 @@ import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
@@ -28,14 +27,11 @@ public class StylesService {
     private final Logger log = LoggerFactory.getLogger(StylesService.class);
 
     private final RecordsDao recordsDao;
-    private final ISchemaService schemaService;
     private final TableService tableService;
 
     public StylesService(RecordsDao recordsDao,
-                         ISchemaService schemaService,
                          TableService tableService) {
         this.recordsDao = recordsDao;
-        this.schemaService = schemaService;
         this.tableService = tableService;
     }
 
@@ -52,10 +48,10 @@ public class StylesService {
         ResourceQualifier tQualifier = new ResourceQualifier(requestModel.getDataset(), tableName);
 
         try {
-            String schemaId = tableService.getInfo(tQualifier).getSchemaId();
-            SchemaDto schema = schemaService
-                    .getSchemaByName(schemaId)
-                    .orElseThrow(() -> new NotFoundException("Не удалось найти схему: " + schemaId));
+            SchemaDto schema = tableService.getInfo(tQualifier).getSchema();
+            if (schema == null) {
+                throw new NotFoundException("Не удалось найти схему: " + tQualifier.getQualifier());
+            }
 
             List<StyleRule> styleRules = requestModel.getRules();
             List<RuleFilter> ruleFilters = styleRules.stream()

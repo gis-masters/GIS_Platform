@@ -5,7 +5,7 @@ import { createElement } from 'react';
 
 import { route } from '../../stores/Route.store';
 import { registry } from '../../services/di-registry';
-import { VectorTableRegistry } from '../VectorTable/VectorTableRegistry';
+import { VectorTableRegistry } from '../VectorTableRegistry/VectorTableRegistry';
 
 const VectorTableRegistryWithRegistry = withRegistry(registry)(VectorTableRegistry);
 
@@ -15,16 +15,20 @@ const VectorTableRegistryWithRegistry = withRegistry(registry)(VectorTableRegist
   styleUrls: ['./vector-table-registry.component.scss']
 })
 export class VectorTableRegistryComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {

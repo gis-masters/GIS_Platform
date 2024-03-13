@@ -10,7 +10,7 @@ import { authenticateAs, authenticateAsAdmin } from '../auth/authenticate';
 import { TestUser } from '../auth/testUsers';
 import { createGeneratedDocuments } from './createGeneratedDocuments';
 import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
-import { getLibraryRecordsAs } from './getLibraryRecordsAs';
+import { getLibraryRecords } from './getLibraryRecordsAs';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { ScenarioScope } from '../../ScenarioScope';
 import { createFolder } from './createFolder';
@@ -27,19 +27,8 @@ import { deleteLibraryRecord } from './deleteLibraryRecord';
 Given(
   'в библиотеке документов {string} существует минимум {int} документов, доступных пользователю {user}',
   async function (this: ScenarioScope, libraryTitle: string, docsNumber: number, user: TestUser) {
-    await authenticateAs(user);
     const library = await getDocumentsLibraryByTitle(libraryTitle);
-
-    const [records] = await getLibraryRecordsAs(
-      library.table_name,
-      library.schemaId,
-      {
-        page: 0,
-        pageSize: docsNumber
-      },
-      user
-    );
-
+    const [records] = await getLibraryRecords(library.table_name, { page: 0, pageSize: docsNumber });
     const lack = docsNumber - records.length;
     const generated = await createGeneratedDocuments(lack, library, user);
 
@@ -77,8 +66,7 @@ Given(
     this.latestLibraryRecords = [
       {
         ...record,
-        libraryTableName: library.table_name,
-        schemaId: library.schemaId
+        libraryTableName: library.table_name
       }
     ];
   }

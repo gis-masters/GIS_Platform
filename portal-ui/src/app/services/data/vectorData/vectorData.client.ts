@@ -7,7 +7,14 @@ import { preparePageOptions } from '../../api/http.utils';
 import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { PageableResources } from '../../../../server-types/common-contracts';
 
-import { Dataset, NewDataset, VectorTable, VectorTableConnection, NewVectorTable } from './vectorData.models';
+import {
+  Dataset,
+  NewDataset,
+  VectorTable,
+  VectorTableConnection,
+  NewVectorTable,
+  RawVectorTable
+} from './vectorData.models';
 
 @boundClass
 class VectorDataClient extends DataClient {
@@ -76,41 +83,48 @@ class VectorDataClient extends DataClient {
 
   // vector table
 
-  async getVectorTable(datasetIdentifier: string, identifier: string): Promise<Omit<VectorTable, 'dataset'>> {
-    return http.get<Omit<VectorTable, 'dataset'>>(this.getVectorTableUrl(datasetIdentifier, identifier));
+  async getVectorTable(datasetIdentifier: string, identifier: string): Promise<RawVectorTable> {
+    return http.get<RawVectorTable>(this.getVectorTableUrl(datasetIdentifier, identifier));
   }
 
   async getVectorTables(
     datasetIdentifier: string,
     pageOptions: PageOptions
-  ): Promise<PageableResources<Omit<VectorTable, 'dataset'>>> {
+  ): Promise<PageableResources<RawVectorTable>> {
     const url = this.getVectorTablesUrl(datasetIdentifier);
     const params = preparePageOptions(pageOptions, true);
 
-    return http.get<PageableResources<Omit<VectorTable, 'dataset'>>>(url, { params });
+    return http.get<PageableResources<RawVectorTable>>(url, { params });
   }
 
   async getVectorTablesWithParticularOne(
     datasetIdentifier: string,
     vectorTableIdentifier: string,
     pageOptions: PageOptions
-  ): Promise<[VectorTable[], number, number] | undefined> {
-    return http.getPageWithObject<VectorTable>(
+  ): Promise<[RawVectorTable[], number, number] | undefined> {
+    return http.getPageWithObject<RawVectorTable>(
       this.getVectorTablesUrl(datasetIdentifier),
       preparePageOptions(pageOptions, true),
-      (item: VectorTable) => item.identifier === vectorTableIdentifier,
+      (item: RawVectorTable) => item.identifier === vectorTableIdentifier,
       {}
     );
   }
 
-  async getAllVectorTablesInDataset(datasetIdentifier: string): Promise<Omit<VectorTable, 'dataset'>[]> {
-    return http.getPaged<Omit<VectorTable, 'dataset'>>(this.getVectorTablesUrl(datasetIdentifier), {
+  async getAllVectorTablesInDataset(datasetIdentifier: string): Promise<RawVectorTable[]> {
+    return http.getPaged<RawVectorTable>(this.getVectorTablesUrl(datasetIdentifier), {
       params: { sort: 'title,asc' }
     });
   }
 
-  async createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<VectorTable> {
-    return http.post<VectorTable>(this.getVectorTablesUrl(datasetIdentifier), table);
+  async getVectorTablesInAllDatasets(pageOptions: PageOptions): Promise<PageableResources<RawVectorTable>> {
+    const url = this.getAllVectorTablesUrl();
+    const params = preparePageOptions(pageOptions, true);
+
+    return http.get<PageableResources<RawVectorTable>>(url, { params });
+  }
+
+  async createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<RawVectorTable> {
+    return http.post<RawVectorTable>(this.getVectorTablesUrl(datasetIdentifier), table);
   }
 
   async updateVectorTable(
@@ -132,13 +146,6 @@ class VectorDataClient extends DataClient {
     };
 
     return http.get<VectorTableConnection[]>(this.getTableConnectionsUrl(), { params });
-  }
-
-  async getAllVectorTables(pageOptions: PageOptions): Promise<PageableResources<Omit<VectorTable, 'dataset'>>> {
-    const url = this.getAllVectorTablesUrl();
-    const params = preparePageOptions(pageOptions, true);
-
-    return http.get<PageableResources<Omit<VectorTable, 'dataset'>>>(url, { params });
   }
 
   // feature

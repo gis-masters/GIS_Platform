@@ -28,7 +28,7 @@ Feature: Права на библиотеки
     When Текущий пользователь запрашивает библиотеки с фильтрацией "<filter>"
     Then В выборке присутствуют определённое кол-во элементов: <expected>
     Examples:
-      | filter                               | case                                   | expected |
-      | filter=title='Тестовая библиотека'   | фильтрация по полному совпадению title | 1        |
-      | filter=details ilike '%тестовая%'    | фильтрация ilike полю details          | 1        |
-      | filter=schema_id ilike '___default%' | '_' работает как любой одиночный сивол | 1        |
+      | filter                                | case                                   | expected |
+      | filter=title='Тестовая библиотека'    | фильтрация по полному совпадению title | 1        |
+      | filter=details ilike '%тестовая%'     | фильтрация ilike полю details          | 1        |
+      | filter=table_name ilike '___default%' | '_' работает как любой одиночный сивол | 1        |

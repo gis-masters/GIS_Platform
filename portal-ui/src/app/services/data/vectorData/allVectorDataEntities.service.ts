@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { DebouncedFunc, debounce } from 'lodash';
 
 import { allDataEntitiesStore } from '../../../stores/AllDataEntities.store';
 import { communicationService } from '../../communication.service';
@@ -12,8 +12,8 @@ class AllDataEntitiesService {
   private static _instance: AllDataEntitiesService;
 
   private allDataEntitiesStoreInited = false;
-  private fetchingOperationId: symbol;
-  private debouncedFetchAllDataEntitiesStore: () => Promise<void>;
+  private fetchingOperationId?: symbol;
+  private debouncedFetchAllDataEntitiesStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchAllDataEntitiesStore = debounce(this.fetchAllDataEntitiesStore, 300);

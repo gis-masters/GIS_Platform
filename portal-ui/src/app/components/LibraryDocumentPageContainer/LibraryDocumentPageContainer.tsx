@@ -25,8 +25,8 @@ const cnLibraryDocumentPageContainer = cn('LibraryDocumentPageContainer');
 
 @observer
 export class LibraryDocumentPageContainer extends Component {
-  @observable private document: LibraryRecord;
-  @observable private error: string;
+  @observable private document?: LibraryRecord;
+  @observable private error?: string;
   @observable private busy = false;
 
   private operationId?: symbol;

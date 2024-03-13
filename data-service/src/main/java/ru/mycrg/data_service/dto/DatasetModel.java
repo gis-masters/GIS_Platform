@@ -1,12 +1,14 @@
 package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.hateoas.core.Relation;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 
 import java.util.Map;
 
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 
 @Relation(collectionRelation = "datasets")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -24,7 +26,7 @@ public class DatasetModel extends ResourceModel implements IResourceModel {
               resource.getIdentifier(),
               itemCount,
               null,
-              null,
+              jsonToDto(resource.getSchema()),
               resource.getCreatedAt().toString(),
               role);
     }
@@ -37,7 +39,7 @@ public class DatasetModel extends ResourceModel implements IResourceModel {
               String.valueOf(dataset.get("identifier")),
               dataset.get("items_count") != null ? Integer.parseInt(String.valueOf(dataset.get("items_count"))) : 0,
               dataset.get("crs") != null ? String.valueOf(dataset.get("crs")) : null,
-              dataset.get("schema_id") != null ? String.valueOf(dataset.get("schema_id")) : null,
+              dataset.get("schema") != null ? jsonToDto((JsonNode) dataset.get("schema")) : null,
               dataset.get("created_at") != null ? dataset.get("created_at").toString() : null,
               null);
     }

@@ -6,13 +6,7 @@ import { getFileExtension, isTifFile, normalizeExtension } from '../../../../ser
 import { FileIcon } from '../../../FileIcon/FileIcon';
 import { FileTiff } from '../../../Icons/FileTiff';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.FILE]: FileInfo;
-  }
-}
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 @staticImplements<Adapter<FileInfo>>()
 export class ExplorerAdapterTypeFile {

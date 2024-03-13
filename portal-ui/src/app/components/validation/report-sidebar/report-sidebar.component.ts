@@ -7,10 +7,11 @@ import { sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { ProcessStatus, ProcessType } from '../../../services/data/processes/processes.models';
 import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
-import { communicationService, ObjectDto } from '../../../services/communication.service';
+import { communicationService } from '../../../services/communication.service';
 import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
 import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
 import { mapService } from '../../../services/map/map.service';
 
 @Component({

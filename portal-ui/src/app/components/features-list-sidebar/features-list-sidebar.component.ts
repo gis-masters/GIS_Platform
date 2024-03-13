@@ -15,18 +15,22 @@ const FeaturesListSidebarWithRegistry = withRegistry(registry)(FeaturesListSideb
   styleUrls: ['./features-list-sidebar.component.scss']
 })
 export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() features: WfsFeature[];
-  @Input() layerTitle: string;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @Input() features?: WfsFeature[];
+  @Input() layerTitle?: string;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {

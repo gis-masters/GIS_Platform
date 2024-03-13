@@ -7,12 +7,6 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.ROOT]: null;
-  }
-}
-
 function getChildren(): ExplorerItemData[] {
   const baseChildren = [
     {

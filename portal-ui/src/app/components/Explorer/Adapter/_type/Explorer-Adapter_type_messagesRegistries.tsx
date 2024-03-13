@@ -4,24 +4,18 @@ import { Tooltip } from '@mui/material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { MessagesRegistry } from '../../../../services/data/messagesRegistries/messagesRegistries.models';
 import { services } from '../../../../services/services';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.MESSAGES_REGISTRY]: MessagesRegistry;
-  }
-}
-
-@staticImplements<Adapter>()
+@staticImplements<Adapter<MessagesRegistry>>()
 export class ExplorerAdapterTypeMessagesRegistry {
   static getId(item: ExplorerItemData<MessagesRegistry>): string {
-    return item.payload.tableName;
+    return String(item.payload.id);
   }
 
   static getTitle(item: ExplorerItemData<MessagesRegistry>): string {
-    return item.payload.title;
+    return item.payload.title || '';
   }
 
   static getMeta(): string {

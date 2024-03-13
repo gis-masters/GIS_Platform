@@ -9,7 +9,6 @@ import { isFeaturesUpdateAllowed } from '../../services/data/permissions/permiss
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
@@ -93,8 +92,8 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   }
 
   @boundMethod
-  private async handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
-    if (item.type === ExplorerItemType.TABLE && !(await this.testForDisabled(item))) {
+  private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
+    if (item.type === ExplorerItemType.TABLE && !this.testForDisabled(item)) {
       this.select(path[1].payload as Dataset, item.payload as VectorTable);
     } else {
       this.select();
@@ -108,9 +107,9 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   }
 
   @boundMethod
-  private async handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
+  private handleOpen(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.TABLE) {
-      await this.handleSelect(item, path);
+      this.handleSelect(item, path);
       this.submitDialog();
     }
   }
@@ -143,7 +142,7 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   }
 
   @boundMethod
-  private async testForDisabled(item: ExplorerItemData): Promise<boolean> {
+  private testForDisabled(item: ExplorerItemData): boolean {
     if (item.type === ExplorerItemType.TABLE) {
       const table = item.payload as VectorTable;
 
@@ -151,20 +150,9 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
         return !isFeaturesUpdateAllowed(table.dataset, table.identifier);
       }
 
-      if (!table.schemaId) {
-        return true;
-      }
-
-      try {
-        const schema = await schemaService.getSchema(table.schemaId);
-        if (!schema) {
-          return true;
-        }
-      } catch {
-        return true;
-      }
-
-      return this.props.usedVectorTables?.some(({ id, dataset }) => id === table.id && dataset === table.dataset);
+      return Boolean(
+        this.props.usedVectorTables?.some(({ id, dataset }) => id === table.id && dataset === table.dataset)
+      );
     }
 
     return false;

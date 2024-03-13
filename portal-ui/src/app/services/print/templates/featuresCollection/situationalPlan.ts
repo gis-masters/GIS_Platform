@@ -1,9 +1,9 @@
 import moment from 'moment';
+import { observable } from 'mobx';
 
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
-import { schemaService } from '../../../data/schema/schema.service';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
 import { formPrompt } from '../../../utility-dialogs.service';
@@ -11,7 +11,7 @@ import { PrintTemplate } from '../PrintTemplate';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { FormProps } from '../../../../components/Form/Form';
-import { observable } from 'mobx';
+import { getLayerSchema } from '../../../gis/layers/layers.service';
 
 interface SituationalPlanFormData {
   title: string;
@@ -34,7 +34,10 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
       throw new Error('Не найден слой для объекта');
     }
 
-    const schema = await schemaService.getSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
+    if (!schema) {
+      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+    }
     const schemaWithAppliedView = applyView(schema, layer.view);
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 

@@ -39,7 +39,6 @@ export interface CrgRasterLayer extends CrgBaseLayer {
 export interface CrgVectorLayer extends CrgBaseLayer {
   type: CrgLayerType.VECTOR;
   dataStoreName?: string;
-  schemaId: string;
   styleName?: string;
   style?: string;
   dataset: string;

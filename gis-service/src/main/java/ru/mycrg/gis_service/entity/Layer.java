@@ -55,9 +55,6 @@ public class Layer implements Identifiable<Long> {
     private String dataStoreName;
 
     @Column
-    private String schemaId;
-
-    @Column
     private String dataSourceUri;
 
     @Column
@@ -104,7 +101,6 @@ public class Layer implements Identifiable<Long> {
         dataset = dto.getDataset();
         tableName = dto.getTableName();
         type = dto.getType();
-        schemaId = dto.getSchemaId();
         styleName = dto.getStyleName();
         dataStoreName = dto.getDataStoreName();
         nativeCRS = dto.getNativeCRS();
@@ -244,14 +240,6 @@ public class Layer implements Identifiable<Long> {
 
     public void setStyleName(String styleName) {
         this.styleName = styleName;
-    }
-
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     public String getDataSourceUri() {

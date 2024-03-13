@@ -8,14 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.DocumentLibraryDao;
-import ru.mycrg.data_service.dto.RegistryData;
+import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryModel;
+import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -34,19 +34,16 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 @Service
 public class DocumentLibraryService {
 
-    private final ISchemaService schemaService;
     private final DocumentLibraryDao libraryDao;
     private final IAuthenticationFacade authenticationFacade;
     private final DocumentLibraryRepository libraryRepository;
     private final BasePermissionsRepository permissionsRepository;
 
-    public DocumentLibraryService(ISchemaService schemaService,
-                                  DocumentLibraryDao libraryDao,
+    public DocumentLibraryService(DocumentLibraryDao libraryDao,
                                   IAuthenticationFacade authenticationFacade,
                                   DocumentLibraryRepository libraryRepository,
                                   BasePermissionsRepository permissionsRepository) {
         this.libraryDao = libraryDao;
-        this.schemaService = schemaService;
         this.libraryRepository = libraryRepository;
         this.authenticationFacade = authenticationFacade;
         this.permissionsRepository = permissionsRepository;
@@ -65,8 +62,9 @@ public class DocumentLibraryService {
         } else {
             ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries", LIBRARY);
             libraries = permissionsRepository
-                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, null, pageable).stream()
-                    .map(recordDto -> new LibraryModel(recordDto.getContent()))
+                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, pageable, new DocLibraryMapper())
+                    .stream()
+                    .map(LibraryModel::new)
                     .collect(Collectors.toList());
 
             totalLibraries = permissionsRepository.getTotalByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter);
@@ -79,13 +77,16 @@ public class DocumentLibraryService {
         List<LibraryModel> allAllowedLibraries;
         if (authenticationFacade.isOrganizationAdmin()) {
             allAllowedLibraries = libraryDao.findAll(ecqlFilter).stream()
-                                  .map(LibraryModel::new)
-                                  .collect(Collectors.toList());
+                                            .map(LibraryModel::new)
+                                            .collect(Collectors.toList());
         } else {
             ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries", LIBRARY);
             allAllowedLibraries = permissionsRepository
-                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, null).stream()
-                    .map(recordDto -> new LibraryModel(recordDto.getContent()))
+                    .findAllowedByParent(dlQualifier,
+                                         ROOT_FOLDER_PATH,
+                                         ecqlFilter)
+                    .stream()
+                    .map(LibraryModel::new)
                     .collect(Collectors.toList());
         }
 
@@ -136,8 +137,12 @@ public class DocumentLibraryService {
     }
 
     public SchemaDto getSchema(String docLibId) {
-        return schemaService.getSchemaByName(getInfo(docLibId).getSchemaId())
-                            .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + docLibId));
+        IResourceModel library = getInfo(docLibId);
+        if (library.getSchema() == null) {
+            throw new NotFoundException("Не найдена схема библиотеки: " + docLibId);
+        }
+
+        return library.getSchema();
     }
 
     public List<GisogdData> getLibrariesCreatedBySchema(String schemaId) {

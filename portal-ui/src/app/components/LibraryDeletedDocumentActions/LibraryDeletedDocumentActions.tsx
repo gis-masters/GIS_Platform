@@ -52,7 +52,7 @@ export class LibraryDeletedDocumentActions extends Component<LibraryDeletedDocum
 
   async checkUserRole(): Promise<void> {
     const record = await getLibraryRecord(this.props.document.libraryTableName, this.props.document.id);
-    this.setCanEdit([Role.CONTRIBUTOR, Role.OWNER].includes(record.role) || currentUser.isAdmin);
+    this.setCanEdit((record.role && [Role.CONTRIBUTOR, Role.OWNER].includes(record.role)) || currentUser.isAdmin);
   }
 
   @action

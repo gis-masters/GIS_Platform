@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.core.Relation;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 
-import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
 
-import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 
 @Relation(collectionRelation = "tables")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -20,6 +18,7 @@ public class TableModel extends ResourceModel implements IResourceModel {
     private Boolean readyForFts;
     private String docTerminationDate;
     private String docApproveDate;
+    private String dataset;
     private Long fias__id;
     private String fias__address;
     private String fias__oktmo;
@@ -28,49 +27,32 @@ public class TableModel extends ResourceModel implements IResourceModel {
         super();
     }
 
-    public TableModel(Map<String, Object> table) {
-        this(Long.valueOf(String.valueOf(table.get("id"))),
-             String.valueOf(table.get("title")),
-             String.valueOf(table.get("details")),
-             TABLE.name(),
-             String.valueOf(table.get("identifier")),
-             Integer.valueOf(String.valueOf(table.get("items_count"))),
-             String.valueOf(table.get("crs")),
-             String.valueOf(table.get("schema_id")),
-             table.get("created_at").toString(),
-             null, null, null,
-             null, null, null,
-             null, null, null);
-    }
+    public TableModel(SchemasAndTables table, String role, String dataset) {
+        super(table.getId(), table.getTitle(), table.getDetails(), "TABLE", table.getIdentifier(),
+              table.getItemsCount(), table.getCrs(), jsonToDto(table.getSchema()), table.getCreatedAt().toString(),
+              role);
 
-    public TableModel(SchemasAndTables table, String role) {
-        this(table.getId(), table.getTitle(), table.getDetails(), TABLE.name(), table.getIdentifier(),
-             table.getItemsCount(), table.getCrs(), table.getSchemaId(), table.getCreatedAt().toString(), role,
-             table.getDocumentType(), table.getStatus(), table.getIsPublic(), table.getDocTerminationDate(),
-             table.getDocApproveDate(), table.getFiasId(), table.getFiasAddress(), table.getFiasOktmo());
-    }
-
-    public TableModel(Long id, String title, String details, String type, String identifier, Integer itemsCount,
-                      String crs, String schemaId, String createdAt, String role, String documentType,
-                      String status, Boolean isPublic, LocalDateTime docTerminationDate, LocalDateTime docApproveDate,
-                      Long fias__id, String fias__address, String fias__oktmo) {
-        super(id, title, details, type, identifier, itemsCount, crs, schemaId, createdAt, role);
-
-        String docTerminationDateStr = Objects.nonNull(docTerminationDate)
-                ? docTerminationDate.toString()
+        String docTerminationDateStr = Objects.nonNull(table.getDocTerminationDate())
+                ? table.getDocTerminationDate().toString()
                 : null;
-        String docApproveDateStr = Objects.nonNull(docApproveDate)
-                ? docApproveDate.toString()
+        String docApproveDateStr = Objects.nonNull(table.getDocApproveDate())
+                ? table.getDocApproveDate().toString()
                 : null;
 
-        this.documentType = documentType;
-        this.status = status;
-        this.isPublic = isPublic;
+        this.documentType = table.getDocumentType();
+        this.status = table.getStatus();
+        this.isPublic = table.getIsPublic();
         this.docTerminationDate = docTerminationDateStr;
         this.docApproveDate = docApproveDateStr;
-        this.fias__id = fias__id;
-        this.fias__address = fias__address;
-        this.fias__oktmo = fias__oktmo;
+        this.fias__id = table.getFiasId();
+        this.fias__address = table.getFiasAddress();
+        this.fias__oktmo = table.getFiasOktmo();
+        this.readyForFts = table.getReadyForFts();
+        this.dataset = dataset;
+    }
+
+    public TableModel(SchemasAndTables table, String dataset) {
+        this(table, null, dataset);
     }
 
     public String getDocumentType() {
@@ -143,5 +125,13 @@ public class TableModel extends ResourceModel implements IResourceModel {
 
     public void setReadyForFts(Boolean readyForFts) {
         this.readyForFts = readyForFts;
+    }
+
+    public String getDataset() {
+        return dataset;
+    }
+
+    public void setDataset(String dataset) {
+        this.dataset = dataset;
     }
 }

@@ -25,11 +25,11 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь отправляет запрос с валидными данными, имитирующие данные от АИС УМС")
     public void importDataFromAisUms() {
-        importData(generateString("STRING_16"),
-                   generateString("STRING_16"),
-                   generateString("STRING_16"),
-                   generateString("STRING_16"),
-                   generateString("STRING_16"));
+        importAisUms(generateString("STRING_16"),
+                     generateString("STRING_16"),
+                     generateString("STRING_16"),
+                     generateString("STRING_16"),
+                     generateString("STRING_16"));
     }
 
     @Then("Данные записаны в базу данных")
@@ -46,21 +46,21 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
                                                       String regNumTemplate,
                                                       String propertyTypeTemplate,
                                                       String departmentNameTemplate) {
-        importData(generateString(nameTemplate),
-                   generateString(cadNumTemplate),
-                   generateString(regNumTemplate),
-                   generateString(propertyTypeTemplate),
-                   generateString(departmentNameTemplate));
+        importAisUms(generateString(nameTemplate),
+                     generateString(cadNumTemplate),
+                     generateString(regNumTemplate),
+                     generateString(propertyTypeTemplate),
+                     generateString(departmentNameTemplate));
     }
 
     @Given("В БД хранятся данные с одинаковым кадастровым номером от АИС УМС, в кол-ве {int} шт")
     public void initDataInBd(int count) {
         for (int i = 0; i < count; i++) {
-            importData(generateString("STRING_10"),
-                       "98:12:0001:854",
-                       generateString("STRING_10"),
-                       generateString("STRING_10"),
-                       "TEST_DEPARTMENT");
+            importAisUms(generateString("STRING_10"),
+                         "98:12:0001:854",
+                         generateString("STRING_10"),
+                         generateString("STRING_10"),
+                         "TEST_DEPARTMENT");
         }
     }
 
@@ -107,11 +107,11 @@ public class AisUmsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
-    private void importData(String name,
-                            String cadNum,
-                            String regNum,
-                            String propertyType,
-                            String departmentName) {
+    private void importAisUms(String name,
+                              String cadNum,
+                              String regNum,
+                              String propertyType,
+                              String departmentName) {
         AisUmsModel aisUmsModel = new AisUmsModel(
                 List.of(new AisUmsDto(name, cadNum, regNum, propertyType, departmentName)));
 

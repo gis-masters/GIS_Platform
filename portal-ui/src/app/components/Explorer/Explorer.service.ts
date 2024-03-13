@@ -1,26 +1,30 @@
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, debounce } from 'lodash';
+import { DebouncedFunc, cloneDeep, debounce } from 'lodash';
 
 import { DataChangeEventDetail } from '../../services/communication.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
+import { emptyItem, ExplorerItemData, ExplorerItemPayloads, ExplorerItemType } from './Explorer.models';
 import { ExplorerStore } from './Explorer.store';
 
 export class ExplorerService {
   private store: ExplorerStore;
-  private gettingChildrenOperationId: symbol;
+  private gettingChildrenOperationId?: symbol;
+  refreshItems: DebouncedFunc<(e?: CustomEvent<DataChangeEventDetail<unknown>>) => Promise<void>>;
 
   constructor(store: ExplorerStore) {
     this.store = store;
 
-    this.refreshItems = debounce(this.refreshItems.bind(this), 50);
+    this.refreshItems = debounce(this._refreshItems.bind(this), 50);
   }
 
-  async refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): Promise<void> {
+  private async _refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): Promise<void> {
     if (e?.detail?.type === 'delete') {
-      const deletingItemId = getId({ type: this.store.selectedItem.type, payload: e.detail.data });
+      const deletingItemId = getId({
+        type: this.store.selectedItem.type,
+        payload: e.detail.data as ExplorerItemPayloads[keyof ExplorerItemPayloads]
+      });
       if (deletingItemId === getId(this.store.selectedItem)) {
         const selectedItemIndex = this.store.items.findIndex(item => getId(item) === deletingItemId);
         this.store.selectItem(
@@ -31,8 +35,8 @@ export class ExplorerService {
 
     const { selectedItem, openedItem, pageSize, sort, sortOrder, filter } = this.store;
     let { page } = this.store;
-    let children: ExplorerItemData[];
-    let totalPages: number;
+    let children: ExplorerItemData[] = [];
+    let totalPages: number = 0;
 
     this.store.setLoading(true);
 
@@ -40,7 +44,7 @@ export class ExplorerService {
     this.gettingChildrenOperationId = gettingChildrenToken;
 
     if (selectedItem.type === ExplorerItemType.NONE) {
-      [children = [], totalPages = 0] = await getChildren(
+      const result = await getChildren(
         openedItem,
         {
           page,
@@ -52,6 +56,9 @@ export class ExplorerService {
         this.store,
         this
       );
+      if (result) {
+        [children, totalPages = 0] = result;
+      }
     } else {
       const response = await getChildrenWithParticularOne(
         openedItem,
@@ -62,9 +69,9 @@ export class ExplorerService {
       );
 
       if (response) {
-        [children = [], totalPages = 0, page = 0] = response;
+        [children, totalPages, page] = response;
       } else {
-        [children = [], totalPages = 0] = await getChildren(
+        const result = await getChildren(
           openedItem,
           {
             page,
@@ -76,6 +83,9 @@ export class ExplorerService {
           this.store,
           this
         );
+        if (result) {
+          [children, totalPages] = result;
+        }
       }
     }
 
@@ -86,7 +96,11 @@ export class ExplorerService {
         this.store.selectItem(children[0] || emptyItem);
       } else {
         this.store.setPage(page);
-        this.store.selectItem(children.find(item => this.itemsEqual(item, selectedItem)));
+        const foundSelectedItem = children.find(item => this.itemsEqual(item, selectedItem));
+        if (!foundSelectedItem) {
+          throw new Error('Ошибка выделения объекта');
+        }
+        this.store.selectItem(foundSelectedItem);
       }
       this.store.setLoading(false);
     }
@@ -104,19 +118,19 @@ export class ExplorerService {
     return a && b && getId(a) === getId(b) && a.type === b.type;
   }
 
-  mergeCustomFilter(filter: FilterQuery, item: ExplorerItemData, store: ExplorerStore): FilterQuery {
-    let filters = cloneDeep(filter);
+  mergeCustomFilter(filter: FilterQuery | undefined, item: ExplorerItemData, store: ExplorerStore): FilterQuery {
+    let filterCopy: FilterQuery = cloneDeep(filter || {});
 
-    if (filters?.title) {
-      filters.title = { $ilike: `%${String(filter.title)}%` };
-    } else if (!filters?.title) {
-      delete filters.title;
+    if (filterCopy?.title) {
+      filterCopy.title = { $ilike: `%${String(filterCopy.title)}%` };
+    } else if (!filterCopy?.title) {
+      delete filterCopy.title;
     }
 
     if (store.customFilters[item.type]) {
-      filters = { ...filters, ...store.customFilters[item.type] };
+      filterCopy = { ...filterCopy, ...store.customFilters[item.type] };
     }
 
-    return filters || undefined;
+    return filterCopy || undefined;
   }
 }

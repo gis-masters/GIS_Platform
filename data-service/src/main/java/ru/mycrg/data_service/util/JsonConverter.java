@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,11 +29,10 @@ public class JsonConverter {
             .registerModule(new JavaTimeModule())
             .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
 
-    public static JsonNode toJsonNode(Object object) {
+    @NotNull
+    public static JsonNode toJsonNode(@Nullable Object object) {
         if (object == null) {
-            log.warn("toJsonNode input object is 'null'");
-
-            return JacksonUtil.toJsonNode("");
+            return JacksonUtil.toJsonNode("{}");
         }
 
         String jsonString = null;
@@ -43,17 +43,18 @@ public class JsonConverter {
         } catch (JsonProcessingException e) {
             log.warn("Failed convert object: '{}' to jsonNode. Reason: {}", jsonString, e.getMessage());
 
-            return JacksonUtil.toJsonNode("");
+            return JacksonUtil.toJsonNode("{}");
         }
     }
 
+    @NotNull
     public static JsonNode toJsonNodeFromString(String json) {
         try {
             return mapper.readTree(json);
         } catch (IOException e) {
             log.error("Failed convert to toJsonNodeFromString: {}", e.getMessage());
 
-            return JacksonUtil.toJsonNode("");
+            return JacksonUtil.toJsonNode("{}");
         }
     }
 
@@ -61,7 +62,7 @@ public class JsonConverter {
         try {
             return Optional.of(mapper.readValue(stringJson, valueTypeRef));
         } catch (IOException e) {
-            log.error("Failed convert from string to JSON: {}", e.getMessage());
+            log.error("Failed convert from string(as type) to JSON: {}", e.getMessage());
 
             return Optional.empty();
         }
@@ -71,7 +72,7 @@ public class JsonConverter {
         try {
             return Optional.of(mapper.readValue(stringJson, classOfT));
         } catch (IOException e) {
-            log.error("Failed convert from string to JSON: {}", e.getMessage());
+            log.error("Failed convert from string(as class) to JSON: {}", e.getMessage());
 
             return Optional.empty();
         }
@@ -87,9 +88,9 @@ public class JsonConverter {
     @NotNull
     public static String asJsonString(Object value) {
         try {
-            return mapper.writer()
-                         .withDefaultPrettyPrinter()
-                         .writeValueAsString(value);
+            String result = getJsonString(value);
+
+            return result == null ? "FAIL" : result;
         } catch (Exception e) {
             log.error("Не удалось конвертировать объект: [{}] в JSON строку", value);
 
@@ -107,6 +108,7 @@ public class JsonConverter {
         }
     }
 
+    @NotNull
     public static Map<String, Object> asKeyValueMap(Object value) {
         try {
             return mapper.convertValue(value, new TypeReference<Map<String, Object>>() {
@@ -114,7 +116,7 @@ public class JsonConverter {
         } catch (Exception e) {
             log.error("Не удалось конвертировать объект: [{}] в мапу", value);
 
-            return null;
+            return new HashMap<>();
         }
     }
 }

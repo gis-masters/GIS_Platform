@@ -150,14 +150,18 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private featureGeometryChangeHandler(e: BaseEvent, item: MeasureItem = this.sketchItem) {
+  private featureGeometryChangeHandler(e: BaseEvent, item: MeasureItem | undefined = this.sketchItem) {
     const geom = e.target as SimpleGeometry;
-    let tooltipCoord: Coordinate;
+    let tooltipCoord: Coordinate | undefined;
 
     if (geom instanceof Polygon) {
       tooltipCoord = geom.getInteriorPoint().getCoordinates();
     } else if (geom instanceof LineString) {
       tooltipCoord = geom.getLastCoordinate();
+    }
+
+    if (!item || !tooltipCoord) {
+      return;
     }
 
     item.feature.setGeometry(geom);
@@ -168,11 +172,16 @@ class MapMeasureService {
 
   @boundMethod
   private drawEndHandler() {
+    if (!this.sketchItem) {
+      return;
+    }
     this.setHelpMsg('клик для начала измерения');
     this.sketchItem.tooltipOverlay.setOffset([0, -6]);
     this.renderTooltip(this.sketchItem, false);
     mapStore.addMeasureItem(this.sketchItem);
-    unByKey(this.featureGeometryChangeListenersKeys);
+    if (this.featureGeometryChangeListenersKeys) {
+      unByKey(this.featureGeometryChangeListenersKeys);
+    }
     delete this.sketchItem;
   }
 
@@ -198,7 +207,9 @@ class MapMeasureService {
   measureOff() {
     if (this.draw) {
       this.draw.un('drawend', this.drawEndHandler);
-      unByKey(this.featureGeometryChangeListenersKeys);
+      if (this.featureGeometryChangeListenersKeys) {
+        unByKey(this.featureGeometryChangeListenersKeys);
+      }
       if (this.sketchItem) {
         this.clearItem(this.sketchItem);
       }
@@ -300,9 +311,9 @@ class MapMeasureService {
     if (evt.dragging) {
       return;
     }
-    if (this.helpTooltipElement) {
+    if (this.helpTooltipElement && this.helpMsg) {
       this.helpTooltipElement.innerHTML = this.helpMsg;
-      this.helpTooltip.setPosition(evt.coordinate);
+      this.helpTooltip?.setPosition(evt.coordinate);
     }
   }
 

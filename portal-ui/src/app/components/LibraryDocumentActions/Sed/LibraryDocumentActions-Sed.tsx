@@ -25,7 +25,7 @@ interface LibraryDocumentActionsSedProps {
 @observer
 export class LibraryDocumentActionsSed extends Component<LibraryDocumentActionsSedProps> {
   @observable private dialogOpen = false;
-  @observable private btnLoading: boolean;
+  @observable private btnLoading: boolean = false;
 
   constructor(props: LibraryDocumentActionsSedProps) {
     super(props);

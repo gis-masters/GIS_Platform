@@ -31,22 +31,32 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
         title='Связи'
         as={as}
         icon={<LinkOutlined />}
-        submenu={schema.relations.map((relation, i) => {
+        submenu={schema.relations?.map((relation, i) => {
           const targetProperty = relation.targetProperty || relation.property;
 
-          let url: string;
+          let url: string = '';
 
           if (relation.type === 'document') {
+            if (!relation.library) {
+              throw new Error('Ошибка схемы: relations установлен некорректно');
+            }
             url =
-              `/data-management/library/${String(relation.library)}/registry?filter=` +
+              `/data-management/library/${relation.library}/registry?filter=` +
               encodeURI(JSON.stringify({ [targetProperty]: { $ilike: String(document[relation.property]) } }));
           }
 
           if (relation.type === 'feature') {
+            if (!relation.projectId || !relation.layers) {
+              throw new Error('Ошибка схемы: relations установлен некорректно');
+            }
             const cqlFilter = cqlBuild({ [targetProperty]: String(document[relation.property]) });
             url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(
               ','
             )}&queryFilter=${cqlFilter}`;
+          }
+
+          if (!url) {
+            return null;
           }
 
           return (

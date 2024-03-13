@@ -408,9 +408,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async export() {
     const { entity, onClose } = this.props;
-    const { dataset, tableName, schemaId } = entity as CrgVectorLayer;
+    const { dataset, tableName } = entity as CrgVectorLayer;
 
-    await exportVectorTableAsShape([{ dataset, table: tableName, schemaId }]);
+    await exportVectorTableAsShape([{ dataset, table: tableName }]);
     sidebars.openInfo();
 
     onClose();

@@ -8,7 +8,7 @@ Feature: Создание растровых слоёв
   Scenario Outline: Создание растрового слоя на гис-сервисе
     Given Существует проект "STRING_10"
     Given Существует запись в библиотеке на основе растрового файла "raster test"
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "style"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "style"
     Then Сервер отвечает со статус-кодом 201
     And Сервер передаёт ID слоя проекта в ответе
     When Пользователь делает запрос на текущий слой
@@ -21,7 +21,7 @@ Feature: Создание растровых слоёв
     Given Существует проект "STRING_10"
     Given Существует набор данных
     Given Существует таблица
-    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<schemaId>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "style"
+    When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "style"
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | type   | nativeCRS  | libraryId  | recordId | mode        | reason                     |
@@ -30,11 +30,3 @@ Feature: Создание растровых слоёв
       | raster | STRING_0   | dl_default | 1        | gis-service | Пустой nativeCRS (raster)  |
       | raster | EPSG:28406 |            | 1        | gis-service | Пустое поле libraryId      |
       | raster | EPSG:28406 | dl_default | 1        | gis         | Некорректное поле mode     |
-
-#  Ждём принятия решения: нужно ли по-умолчанию ставить белый цвет или нет
-#  Scenario: При создании растрового слоя параметр transparent color по умолчанию чёрный
-#    Given Существует проект "STRING_10"
-#    Given Существует файл "zolotopolenskoe_sp.tif"
-#    Given Существует запись в библиотеке на основе растрового файла "raster transparent test"
-#    When Пользователь делает запрос на размещение растрового слоя в проекте
-#    Then Параметр transparent color по умолчанию чёрный

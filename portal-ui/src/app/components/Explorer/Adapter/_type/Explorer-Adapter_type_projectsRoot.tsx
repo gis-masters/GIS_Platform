@@ -12,12 +12,6 @@ import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Exp
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.PROJECTS_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {
   static getId(): string {
@@ -60,7 +54,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<CrgProject>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<CrgProject>[], number, number] | undefined> {
     const response = await projectsService.getProjectsWithParticularOne(id, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -77,6 +71,10 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<CrgProject>> {
     const project = await projectsService.getById(Number(id));
+
+    if (!project) {
+      throw new Error(`Проект ${id} не найден`);
+    }
 
     return {
       type: ExplorerItemType.PROJECT,

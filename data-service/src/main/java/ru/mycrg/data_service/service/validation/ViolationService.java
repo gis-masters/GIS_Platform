@@ -3,16 +3,16 @@ package ru.mycrg.data_service.service.validation;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationInfo;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.ValidationResponseDto;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
 
 import java.io.IOException;
@@ -31,31 +31,35 @@ public class ViolationService {
     private final Logger log = LoggerFactory.getLogger(ViolationService.class);
 
     private final JdbcTemplate jdbcTemplate;
-    private final ISchemaService schemaService;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public ViolationService(@Qualifier("schemaServiceBase") ISchemaService schemaService,
-                            JdbcTemplate jdbcTemplate) {
-        this.schemaService = schemaService;
+    public ViolationService(JdbcTemplate jdbcTemplate,
+                            SchemasAndTablesRepository schemasAndTablesRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     public synchronized ValidationResponseDto getViolations(ExportResourceModel resource, int pIndex, int pSize) {
-        if (!schemaService.isSchemaExist(resource.getSchemaId())) {
-            throw new NotFoundException(resource.getSchemaId());
+        final String tIdentifier = resource.getTable();
+        SchemasAndTables table = schemasAndTablesRepository
+                .findByIdentifier(tIdentifier)
+                .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tIdentifier));
+
+        if (table.getSchema() == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + tIdentifier);
         }
 
         ValidationResponseDto response = new ValidationResponseDto();
         try {
             final String dataset = resource.getDataset();
-            final String table = resource.getTable();
 
-            Long totalViolations = countTotalViolations(jdbcTemplate, dataset, table);
+            Long totalViolations = countTotalViolations(jdbcTemplate, dataset, tIdentifier);
             if (totalViolations > 0) {
-                List<Map<String, Object>> violations = getViolations(jdbcTemplate, dataset, table, pSize, pIndex);
+                List<Map<String, Object>> violations = getViolations(jdbcTemplate, dataset, tIdentifier, pSize, pIndex);
 
                 log.info("Found {} violations", violations.size());
                 response.setResults(mapToViolations(violations));
-                response.setValidated(isValidated(jdbcTemplate, dataset, table));
+                response.setValidated(isValidated(jdbcTemplate, dataset, tIdentifier));
             }
 
             response.setTotal(totalViolations);

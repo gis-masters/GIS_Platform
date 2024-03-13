@@ -62,9 +62,12 @@ public class AisUmsService {
                                                  "oks_constructions_points",
                                                  "oks_pro");
         try {
-            aisUmsDao.getAllTablesNameBySchemas(datasetName, schemasName).stream()
-                     .map(tableName -> new ResourceQualifier(datasetName, tableName))
-                     .forEach(tQualifier -> aisUmsDao.updateTable(tQualifier, aisUmsData));
+            List<String> allTablesNameBySchemas = aisUmsDao.getAllTablesNameBySchemas(datasetName, schemasName);
+            log.debug("allTablesNameBySchemas: {}", allTablesNameBySchemas);
+
+            allTablesNameBySchemas.stream()
+                                  .map(tableName -> new ResourceQualifier(datasetName, tableName))
+                                  .forEach(tQualifier -> aisUmsDao.updateTable(tQualifier, aisUmsData));
         } catch (DataAccessException ex) {
             String msg = String.format("Не удалось выполнить обновление данных из АИС УМС. Причина: %s",
                                        ex.getMessage());

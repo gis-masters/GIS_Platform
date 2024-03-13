@@ -28,10 +28,10 @@ Given('все наборы данных удалены', async function () {
 Given(
   'у пользователя {user} есть право на {role} на созданный набор данных',
   async function (this: ScenarioScope, user: TestUser, role: Role) {
-    const currentUser = await getUserByEmail(user.email);
+    const userFromApi = await getUserByEmail(user.email);
 
     await addDatasetPermissions(
-      { role, principalId: currentUser.id, principalType: PrincipalType.USER },
+      { role, principalId: userFromApi.id, principalType: PrincipalType.USER },
       this.latestDataset.identifier
     );
   }
@@ -40,11 +40,11 @@ Given(
 Given(
   'у пользователя {user} есть право на {role} на набор данных {string}',
   async function (user: TestUser, role: Role, title: string) {
-    const currentUser = await getUserByEmail(user.email);
+    const userFromApi = await getUserByEmail(user.email);
     const dataset = await getDatasetByTitle(title);
 
     await addDatasetPermissions(
-      { role, principalId: currentUser.id, principalType: PrincipalType.USER },
+      { role, principalId: userFromApi.id, principalType: PrincipalType.USER },
       dataset.identifier
     );
   }

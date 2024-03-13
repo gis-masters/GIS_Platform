@@ -7,12 +7,6 @@ import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.SCHEMA]: Schema;
-  }
-}
-
 @staticImplements<Adapter<Schema>>()
 export class ExplorerAdapterTypeSchema {
   static getId(item: ExplorerItemData<Schema>): string {

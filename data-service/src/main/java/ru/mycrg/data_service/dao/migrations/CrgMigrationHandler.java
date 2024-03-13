@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao.migrations;
 
-import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -17,10 +15,10 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
-import ru.mycrg.data_service.dao.mappers.SchemaMapper;
+import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.entity.DocumentLibrary;
-import ru.mycrg.data_service.entity.Schema;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -28,12 +26,12 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyDataToFtsLayersQuery;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.TableUtils.getParentId;
@@ -86,7 +84,9 @@ public class CrgMigrationHandler {
             log.debug("====== Создаем служебную схему '{}' ======", SYSTEM_SCHEMA_NAME);
             jdbcTemplate.execute("CREATE SCHEMA IF NOT EXISTS " + SYSTEM_SCHEMA_NAME);
         } catch (Exception e) {
-            log.error("Не удалось установить расширения для базы: {} По причине: {}", dbName, e.getMessage());
+            String msg = "Не удалось установить расширения для базы: 'dbName'. \nПо причине: " + e.getMessage();
+
+            throw new DataServiceException(msg);
         }
 
         try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME)) {
@@ -122,8 +122,10 @@ public class CrgMigrationHandler {
                 initFtsForAll(tempDataSource);
             }
         } catch (Exception e) {
-            log.error("Не удалось выполнить миграции в полном объеме для базы данных: {} По причине: {}",
-                      dbName, e.getMessage());
+            String msg = String.format("Не удалось выполнить миграции в полном объеме для базы данных: '%s' " +
+                                               "\nПо причине: %s", dbName, e.getMessage());
+
+            throw new DataServiceException(msg);
         }
     }
 
@@ -139,7 +141,7 @@ public class CrgMigrationHandler {
                 "AND (ready_for_fts ISNULL OR ready_for_fts = false)";
         List<SchemasAndTables> layers = jdbcTemplate.query(query,
                                                            new RowMapperResultSetExtractor<>(
-                                                                   new BeanPropertyRowMapper<>(SchemasAndTables.class)
+                                                                   new SchemasAndTablesMapper()
                                                            ));
         if (layers == null) {
             return;
@@ -147,23 +149,22 @@ public class CrgMigrationHandler {
 
         log.debug("====== FTS: [ Найдено: {} слоёв(я) НЕ подключенных к полнотекстовому поиску ]", layers.size());
 
-        layers.forEach(layer -> initFtsForLayer(jdbcTemplate, layer));
+        layers.forEach(layer -> initFtsForTable(jdbcTemplate, layer));
     }
 
-    private void initFtsForLayer(JdbcTemplate jdbcTemplate, SchemasAndTables layer) {
-        Optional<Schema> oSchema = getSchema(jdbcTemplate, layer.getSchemaId());
-        if (oSchema.isEmpty()) {
-            log.error("Не удалось найти схему: '{}'", layer.getSchemaId());
+    private void initFtsForTable(JdbcTemplate jdbcTemplate, SchemasAndTables table) {
+        if (table.getSchema() == null) {
+            log.error("Для таблицы: {} не определена схема", table.getId());
 
             return;
         }
 
-        String tableName = layer.getIdentifier();
-        Long parentId = getParentId(layer.getPath());
+        String tableName = table.getIdentifier();
+        Long parentId = getParentId(table.getPath());
         String getParentById = "SELECT * FROM data.schemas_and_tables WHERE id = " + parentId;
         List<SchemasAndTables> result = jdbcTemplate.query(getParentById,
                                                            new RowMapperResultSetExtractor<>(
-                                                                   new BeanPropertyRowMapper<>(SchemasAndTables.class)
+                                                                   new SchemasAndTablesMapper()
                                                            ));
         if (result == null || result.isEmpty()) {
             log.error("Не удалось найти набор данных по id: {}", parentId);
@@ -172,7 +173,14 @@ public class CrgMigrationHandler {
         }
 
         DdlTriggers ddlTriggers = new DdlTriggers(jdbcTemplate);
-        List<String> ftsProperties = getFtsProperties(mapToSchemaDto(oSchema.get()));
+        SchemaDto schema = jsonToDto(table.getSchema());
+        if (schema == null) {
+            log.warn("Для библиотеки: {} не определена схема", table.getId());
+
+            return;
+        }
+
+        List<String> ftsProperties = getFtsProperties(schema);
         ResourceQualifier qualifier = new ResourceQualifier(result.get(0).getIdentifier(), tableName);
 
         try {
@@ -218,12 +226,20 @@ public class CrgMigrationHandler {
     }
 
     private void initFtsForLibrary(JdbcTemplate jdbcTemplate, DocumentLibrary library) {
-        Optional<Schema> oSchema = getSchema(jdbcTemplate, library.getSchemaId());
-        if (oSchema.isEmpty()) {
+        if (library.getSchema() == null) {
+            log.warn("Для библиотеки: {} не определена схема", library.getId());
+
             return;
         }
 
-        List<String> ftsProperties = getFtsProperties(mapToSchemaDto(oSchema.get()));
+        SchemaDto schema = jsonToDto(library.getSchema());
+        if (schema == null) {
+            log.warn("Для библиотеки: {} не определена схема", library.getId());
+
+            return;
+        }
+
+        List<String> ftsProperties = getFtsProperties(schema);
 
         String tableName = library.getTableName();
         DdlTriggers ddlTriggers = new DdlTriggers(jdbcTemplate);
@@ -256,24 +272,6 @@ public class CrgMigrationHandler {
         }
     }
 
-    private Optional<Schema> getSchema(JdbcTemplate jdbcTemplate, String schemaId) {
-        String selectSchemaByNameQuery = "SELECT * FROM data.schemas WHERE name = '" + schemaId + "'";
-
-        List<Schema> schemas = jdbcTemplate.query(selectSchemaByNameQuery, new RowMapperResultSetExtractor<>(
-                new SchemaMapper()
-        ));
-
-        if (schemas == null || schemas.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.ofNullable(schemas.get(0));
-    }
-
-    private SchemaDto mapToSchemaDto(Schema schema) {
-        return new Gson().fromJson(schema.getClassRule().textValue(), SchemaDto.class);
-    }
-
     private static Comparator<Resource> bySequenceNumber() {
         return Comparator.comparingInt(resource -> {
             String fileName = resource.getFilename();
@@ -289,8 +287,10 @@ public class CrgMigrationHandler {
         try {
             ScriptUtils.executeSqlScript(connection, resource);
         } catch (Exception e) {
-            log.warn("Не удалось развернуть миграции из файла: '{}'\n По причине: {}",
-                     resource.getFilename(), e.getMessage(), e.getCause());
+            String msg = String.format("Не удалось развернуть миграции из файла: '%s'. \nПо причине: %s",
+                                       resource.getFilename(), e.getMessage());
+
+            throw new DataServiceException(msg);
         }
     }
 

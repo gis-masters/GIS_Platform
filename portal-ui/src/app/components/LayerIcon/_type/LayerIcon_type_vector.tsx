@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import { action, observable, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { Adjust, SvgIconComponent, PolylineOutlined, ReportProblemOutlined } from '@mui/icons-material';
 
-import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { schemaService } from '../../../services/data/schema/schema.service';
+import { SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
-import { Shape } from '../../Icons/Shape';
+import { GeometryIcon } from '../../GeometryIcon/GeometryIcon';
 
 @observer
 class LayerIconTypeVector extends Component<LayerIconProps> {
-  @observable geometryType: SupportedGeometryType | 'unknown' = 'unknown';
+  @observable geometryType: SupportedGeometryType | undefined = undefined;
 
   constructor(props: LayerIconProps) {
     super(props);
@@ -19,54 +18,21 @@ class LayerIconTypeVector extends Component<LayerIconProps> {
   }
 
   async componentDidMount() {
-    const { schemaId } = this.props;
-    if (schemaId) {
-      const schema = await schemaService.getSchema(schemaId);
-      if (schema.geometryType) {
-        this.setGeometryType(schema.geometryType);
-      }
+    const { layer } = this.props;
+    const schema = await getLayerSchema(layer);
+    if (schema?.geometryType) {
+      this.setGeometryType(schema.geometryType);
     }
   }
 
   render() {
     const { className, colorized, size } = this.props;
-    let Icon: SvgIconComponent;
-    let htmlColor: string = '';
 
-    switch (this.geometryType) {
-      case GeometryType.POLYGON:
-      case GeometryType.MULTI_POLYGON: {
-        Icon = Shape;
-        break;
-      }
-      case GeometryType.LINE_STRING:
-      case GeometryType.MULTI_LINE_STRING: {
-        Icon = PolylineOutlined;
-        break;
-      }
-      case GeometryType.POINT:
-      case GeometryType.MULTI_POINT: {
-        Icon = Adjust;
-        break;
-      }
-      default: {
-        Icon = ReportProblemOutlined;
-        htmlColor = '#ffc107';
-      }
-    }
-
-    return (
-      <Icon
-        className={className}
-        color={colorized && !htmlColor ? 'primary' : 'inherit'}
-        htmlColor={colorized && htmlColor ? htmlColor : ''}
-        fontSize={size}
-      />
-    );
+    return <GeometryIcon className={className} colorized={colorized} size={size} geometryType={this.geometryType} />;
   }
 
   @action
-  private setGeometryType(geometryType: SupportedGeometryType | 'unknown') {
+  private setGeometryType(geometryType?: SupportedGeometryType) {
     this.geometryType = geometryType;
   }
 }

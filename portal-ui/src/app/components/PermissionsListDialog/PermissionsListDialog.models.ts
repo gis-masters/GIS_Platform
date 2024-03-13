@@ -49,12 +49,6 @@ export const baseXTablePropsSet: PermissionsXTablePropsSet = {
         field: 'dataset',
         filterable: true,
         sortable: true
-      },
-      {
-        title: 'Схема',
-        field: 'schemaId',
-        filterable: true,
-        sortable: true
       }
     ],
     defaultSort: { field: 'createdAt', asc: false },

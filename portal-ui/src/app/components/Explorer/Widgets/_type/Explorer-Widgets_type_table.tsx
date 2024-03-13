@@ -22,7 +22,7 @@ import { getId } from '../../Adapter/Explorer-Adapter';
 class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
   @observable private url?: string;
   @observable private currentTable?: VectorTable;
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);
@@ -56,7 +56,7 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {this.currentTable && (
+        {this.currentTable && this.url && (
           <>
             <ExplorerInfoDescItem multiline>
               <ViewContentWidget

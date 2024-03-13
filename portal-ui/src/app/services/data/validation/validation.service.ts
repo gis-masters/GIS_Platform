@@ -31,12 +31,9 @@ export async function getExportValidationReport(layers: CrgVectorLayer[]): Promi
 function preparePayload(layers: CrgVectorLayer[]): ValidationPayload {
   return {
     wsUiId: wsService.getId(),
-    resources: layers.map((layer: CrgVectorLayer) => {
-      return {
-        dataset: layer.dataset,
-        table: layer.tableName,
-        schemaId: layer.schemaId
-      };
-    })
+    resources: layers.map(layer => ({
+      dataset: layer.dataset,
+      table: layer.tableName
+    }))
   };
 }

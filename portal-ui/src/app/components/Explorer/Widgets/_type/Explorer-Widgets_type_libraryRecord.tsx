@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { isObject } from 'lodash';
 
-import { getLibraryRecord } from '../../../../services/data/library/library.service';
-import { Library, LibraryRecord } from '../../../../services/data/library/library.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
-import { schemaService } from '../../../../services/data/schema/schema.service';
+import { libraryClient } from '../../../../services/data/library/library.client';
 import { Role } from '../../../../services/data/permissions/permissions.models';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Schema } from '../../../../services/data/schema/schema.models';
+import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
 
 import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
-import { libraryClient } from '../../../../services/data/library/library.client';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
@@ -24,7 +24,7 @@ import { getId } from '../../Adapter/Explorer-Adapter';
 export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsProps> {
   @observable private schema?: Schema;
   @observable private currentRecord?: LibraryRecord;
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);
@@ -59,7 +59,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {this.currentRecord && (
+        {this.currentRecord && this.schema && (
           <>
             <ExplorerInfoDescItem multiline>
               <ViewContentWidget
@@ -96,7 +96,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const schema = await schemaService.getSchema(payload.schemaId);
+    const schema = await getLibrarySchemaByRecord(payload);
     const record = await getLibraryRecord(payload.libraryTableName, payload.id);
 
     if (this.operationId === operationId) {
@@ -107,9 +107,9 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
   @computed
   private get isLibraryVersioned(): boolean {
-    const lib = this.props.store.path.find(({ type }) => type === ExplorerItemType.LIBRARY).payload as Library;
+    const lib = this.props.store.path.find(({ type }) => type === ExplorerItemType.LIBRARY)?.payload;
 
-    return lib.versioned;
+    return Boolean(lib) && isObject(lib) && 'versioned' in lib && Boolean(lib.versioned);
   }
 
   @action

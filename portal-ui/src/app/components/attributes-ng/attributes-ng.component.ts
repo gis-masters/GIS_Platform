@@ -14,10 +14,10 @@ const AttributesWithRegistry = withRegistry(registry)(Attributes);
   styleUrls: ['./attributes-ng.component.scss']
 })
 export class AttributesNgComponent implements OnInit, OnDestroy {
-  @Input() class: string;
+  @Input() class?: string;
   @ViewChild('react', { read: ElementRef, static: true })
-  ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnChanges() {
     this.renderReactElement();
@@ -32,11 +32,15 @@ export class AttributesNgComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 }

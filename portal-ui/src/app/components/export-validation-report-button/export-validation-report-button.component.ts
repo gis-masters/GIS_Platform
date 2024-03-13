@@ -15,17 +15,21 @@ const ExportValidationReportButtonWithRegistry = withRegistry(registry)(ExportVa
   styleUrls: ['./export-validation-report-button.component.scss']
 })
 export class ExportValidationReportButtonComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() layers: CrgVectorLayer[];
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @Input() layers?: CrgVectorLayer[];
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -33,6 +37,9 @@ export class ExportValidationReportButtonComponent implements OnInit, OnDestroy,
   }
 
   private renderReactElement() {
+    if (!this.layers) {
+      return;
+    }
     const reactElement = createElement(ExportValidationReportButtonWithRegistry, { layers: this.layers });
 
     this.root?.render(reactElement);

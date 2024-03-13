@@ -65,7 +65,7 @@ export function generateNextLayerId(): number {
   return Math.max(...currentProject.layers.map(({ id }) => id), 0) + 1;
 }
 
-export function isVectorFromFile(type: CrgLayerType): boolean {
+export function isVectorFromFile(type: CrgLayerType | undefined): boolean {
   return (
     type === CrgLayerType.DXF || type === CrgLayerType.SHP || type === CrgLayerType.TAB || type === CrgLayerType.MID
   );

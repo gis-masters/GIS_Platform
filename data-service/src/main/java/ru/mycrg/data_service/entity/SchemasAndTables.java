@@ -1,5 +1,9 @@
 package ru.mycrg.data_service.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -12,6 +16,10 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
 
 @Entity
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
 @Table(name = "schemas_and_tables")
 public class SchemasAndTables {
 
@@ -38,8 +46,9 @@ public class SchemasAndTables {
     @Column(length = 20)
     private String crs;
 
-    @Column(length = 50)
-    private String schemaId;
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "jsonb")
+    private JsonNode schema;
 
     @Column(name = "items_count")
     private Integer itemsCount;
@@ -50,9 +59,6 @@ public class SchemasAndTables {
     @Column(name = "last_modified")
     private @LastModifiedDate
     LocalDateTime lastModified = now();
-
-    @Column(name = "fias__oktmo")
-    private String fiasOktmo;
 
     @Column(name = "document_type", length = 100)
     private String documentType;
@@ -75,11 +81,15 @@ public class SchemasAndTables {
     @Column(name = "doc_termination_date")
     private LocalDateTime docTerminationDate;
 
+    @Column(name = "fias__id")
+    private Long fiasId;
+
+    @Column(name = "fias__oktmo")
+    private String fiasOktmo;
+
     @Column(name = "fias__address")
     private String fiasAddress;
 
-    @Column(name = "fias__id")
-    private Long fiasId;
 
     @Column(name = "gisogd_rf_publication_order")
     private Integer gisogdRfPublicationOrder;
@@ -95,9 +105,9 @@ public class SchemasAndTables {
              null, null, null, null, null, null, null);
     }
 
-    public SchemasAndTables(TableCreateDto dto, String path, ResourceType type) {
+    public SchemasAndTables(TableCreateDto dto, String path, ResourceType type, JsonNode schema) {
         this(dto.getTitle(), dto.getDetails(), type.equals(DATASET), dto.getName(), path, dto.getCrs(),
-             dto.getSchemaId(), 0, now(), now(), dto.getFias__oktmo(), dto.getDocumentType(),
+             schema, 0, now(), now(), dto.getFias__oktmo(), dto.getDocumentType(),
              dto.getDocApproveDate() != null ? dto.getDocApproveDate().atStartOfDay() : null, dto.getScale(),
              dto.getStatus(), dto.getIsPublic(), dto.getReadyForFts(),
              dto.getDocTerminationDate() != null ? dto.getDocTerminationDate().atStartOfDay() : null,
@@ -105,7 +115,7 @@ public class SchemasAndTables {
     }
 
     public SchemasAndTables(String title, String details, boolean isFolder, String identifier, String path,
-                            String crs, String schemaId, Integer itemsCount, LocalDateTime createdAt,
+                            String crs, JsonNode schema, Integer itemsCount, LocalDateTime createdAt,
                             LocalDateTime lastModified, String fiasOktmo, String documentType,
                             LocalDateTime docApproveDate, Integer scale, String status, Boolean isPublic,
                             Boolean readyForFts, LocalDateTime docTerminationDate, String fiasAddress, Long fiasId,
@@ -116,7 +126,6 @@ public class SchemasAndTables {
         this.identifier = identifier;
         this.path = path;
         this.crs = crs;
-        this.schemaId = schemaId;
         this.itemsCount = itemsCount;
         this.createdAt = createdAt;
         this.lastModified = lastModified;
@@ -131,6 +140,7 @@ public class SchemasAndTables {
         this.fiasAddress = fiasAddress;
         this.fiasId = fiasId;
         this.gisogdRfPublicationOrder = gisogdRfPublicationOrder;
+        this.schema = schema;
     }
 
     public long getId() {
@@ -203,14 +213,6 @@ public class SchemasAndTables {
 
     public void setCrs(String crs) {
         this.crs = crs;
-    }
-
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     public String getPath() {
@@ -311,5 +313,13 @@ public class SchemasAndTables {
 
     public void setReadyForFts(Boolean readyForFts) {
         this.readyForFts = readyForFts;
+    }
+
+    public JsonNode getSchema() {
+        return schema;
+    }
+
+    public void setSchema(JsonNode schema) {
+        this.schema = schema;
     }
 }

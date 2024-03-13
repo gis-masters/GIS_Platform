@@ -54,4 +54,15 @@ public class ExportProcessModel {
     public void setInvertedCoordinates(boolean invertedCoordinates) {
         this.invertedCoordinates = invertedCoordinates;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"docSchema\":" + (docSchema == null ? "null" : "\"" + docSchema + "\"") + ", " +
+                "\"format\":" + (format == null ? "null" : "\"" + format + "\"") + ", " +
+                "\"epsg\":" + (epsg == null ? "null" : "\"" + epsg + "\"") + ", " +
+                "\"invertedCoordinates\":\"" + invertedCoordinates + "\"" + ", " +
+                "\"resourceProjections\":" + (resourceProjections == null ? "null" : resourceProjections) +
+                "}";
+    }
 }

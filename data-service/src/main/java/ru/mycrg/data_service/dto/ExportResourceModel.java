@@ -10,9 +10,6 @@ public class ExportResourceModel {
     @NotEmpty
     private String table;
 
-    @NotEmpty
-    private String schemaId;
-
     public ExportResourceModel() {
         // Framework required
     }
@@ -20,7 +17,6 @@ public class ExportResourceModel {
     public ExportResourceModel(String dataset, String table, String schemaId) {
         this.dataset = dataset;
         this.table = table;
-        this.schemaId = schemaId;
     }
 
     public String getDataset() {
@@ -37,14 +33,6 @@ public class ExportResourceModel {
 
     public void setTable(String table) {
         this.table = table;
-    }
-
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     @Override

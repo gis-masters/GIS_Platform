@@ -6,12 +6,6 @@ import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { BasemapActions } from '../../../BasemapActions/BasemapActions';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.BASEMAP]: Basemap;
-  }
-}
-
 @staticImplements<Adapter<Basemap>>()
 export class ExplorerAdapterTypeBasemap {
   static getId(item: ExplorerItemData<Basemap>): string {

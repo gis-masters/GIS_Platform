@@ -50,7 +50,7 @@ export class LibrarySearchItemActionsOpen extends Component<LibrarySearchItemAct
           onClick={this.openDialog}
         />
 
-        {item?.type === 'FEATURE' && (
+        {item?.type === 'FEATURE' && this.table && (
           <VectorTableFeatureDialog
             vectorTable={this.table}
             feature={item.payload}

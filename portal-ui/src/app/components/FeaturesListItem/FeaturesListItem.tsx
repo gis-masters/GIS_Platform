@@ -159,8 +159,11 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   private async loadSchema(): Promise<void> {
-    if (!this.props.errorData && this.layer && this.layer.schemaId) {
-      this.setRawSchema(await getLayerSchema(this.layer));
+    if (!this.props.errorData && this.layer) {
+      const schema = await getLayerSchema(this.layer);
+      if (schema) {
+        this.setRawSchema(schema);
+      }
     }
   }
 

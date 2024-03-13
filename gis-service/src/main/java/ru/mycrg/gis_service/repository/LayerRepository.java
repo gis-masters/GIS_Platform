@@ -15,8 +15,6 @@ import java.util.Set;
 @RepositoryRestResource(collectionResourceRel = "layers", path = "layers", exported = false)
 public interface LayerRepository extends PagingAndSortingRepository<Layer, Long> {
 
-    Page<Layer> findByTypeAndSchemaId(String type, String schemaId, Pageable pageable);
-
     @Query(value = "SELECT DISTINCT ON (table_name) id," +
             "    title," +
             "    table_name," +
@@ -28,7 +26,6 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
             "    style_name," +
             "    native_crs," +
             "    data_store_name," +
-            "    schema_id," +
             "    created_at," +
             "    last_modified," +
             "    project_id," +

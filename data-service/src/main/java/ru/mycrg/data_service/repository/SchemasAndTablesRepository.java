@@ -8,6 +8,7 @@ import ru.mycrg.data_service.entity.SchemasAndTables;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RepositoryRestResource(exported = false)
 public interface SchemasAndTablesRepository extends PagingAndSortingRepository<SchemasAndTables, Long> {
@@ -19,10 +20,11 @@ public interface SchemasAndTablesRepository extends PagingAndSortingRepository<S
     @Query("SELECT crs FROM SchemasAndTables WHERE identifier = :identifier")
     Optional<String> findCrsByIdentifier(@Param("identifier") String identifier);
 
-    @Query("SELECT schemaId FROM SchemasAndTables WHERE identifier = :identifier")
-    Optional<String> findSchemaIdByIdentifier(@Param("identifier") String identifier);
-
-    List<SchemasAndTables> findBySchemaId(String schemaId);
+    @Query(value = "SELECT * FROM doc_libraries WHERE (schema->>'name')\\:\\:text = :schemaId",
+           nativeQuery = true)
+    List<SchemasAndTables> findBySchemaId(@Param("schemaId") String schemaId);
 
     List<SchemasAndTables> findByIdentifierIn(List<String> identifiers);
+
+    List<SchemasAndTables> findByIdIn(Set<Long> ids);
 }

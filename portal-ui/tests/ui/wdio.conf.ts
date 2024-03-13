@@ -2,6 +2,10 @@ import type { Options } from '@wdio/types';
 
 import { config as baseConfig } from '../wdio.conf';
 
+declare global {
+  var testOrganizationIndex: number | undefined;
+}
+
 if (!baseConfig.baseUrl) {
   throw new Error('Не указан baseUrl');
 }

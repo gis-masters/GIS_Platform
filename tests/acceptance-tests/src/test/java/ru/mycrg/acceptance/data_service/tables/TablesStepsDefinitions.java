@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.data_service.tables;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -15,6 +16,7 @@ import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.schemaId;
@@ -211,6 +213,17 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         schemaId = TEST_TABLE_SCHEMA;
 
         super.createEntity(currentTableDto);
+    }
+
+    @When("Пользователь делает запрос на получение текущей таблицы")
+    public void getCurrentTableByCurrentUser() {
+        getCurrentTable();
+    }
+
+    @Then("Созданная таблица содержит схему в поле: {string}")
+    public void checkCurrentTableSchema(String fieldName) {
+        response.then()
+                .body(fieldName, notNullValue());
     }
 
     @And("Данные о таблице успешно обновлены")

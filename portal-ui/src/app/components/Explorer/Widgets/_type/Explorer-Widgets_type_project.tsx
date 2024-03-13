@@ -21,8 +21,8 @@ import { getId } from '../../Adapter/Explorer-Adapter';
 @observer
 class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
   @observable private url?: string;
-  @observable private currentProject?: CrgProject;
-  private operationId: symbol;
+  @observable private project?: CrgProject;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);
@@ -57,17 +57,17 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {this.currentProject && (
+        {this.project && this.url && (
           <>
             <ExplorerInfoDescItem multiline>
-              <ViewContentWidget schema={crgProjectSchema} data={this.currentProject} title='Свойства проекта' />
+              <ViewContentWidget schema={crgProjectSchema} data={this.project} title='Свойства проекта' />
             </ExplorerInfoDescItem>
 
             <PermissionsWidget
               url={this.url}
-              title={this.currentProject.name}
+              title={this.project.name}
               itemEntityType={ExplorerItemEntityTypeTitle.PROJECT}
-              disabled={!(currentUser.isAdmin || this.currentProject.role === Role.OWNER)}
+              disabled={!(currentUser.isAdmin || this.project.role === Role.OWNER)}
             />
           </>
         )}
@@ -83,11 +83,14 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
     this.operationId = operationId;
 
     const url = permissionsClient.getProjectPermissionsUrl(payload.id);
-    const currentProject = await projectsService.getById(payload.id);
+    const project = await projectsService.getById(payload.id);
 
     if (this.operationId === operationId) {
+      if (!project) {
+        throw new Error(`Проект ${payload.id} not found`);
+      }
       this.setUrl(url);
-      this.setCurrentProject(currentProject);
+      this.setProject(project);
     }
   }
 
@@ -97,8 +100,8 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
   }
 
   @action
-  private setCurrentProject(project: CrgProject) {
-    this.currentProject = project;
+  private setProject(project: CrgProject) {
+    this.project = project;
   }
 }
 

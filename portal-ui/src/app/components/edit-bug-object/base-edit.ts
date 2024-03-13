@@ -7,17 +7,17 @@ import { FeaturePropertyValidators, ValidationError } from '../../services/util/
 type Properties = { [key: string]: string };
 
 export class BaseEdit {
-  editFeatureForm: UntypedFormGroup;
+  editFeatureForm?: UntypedFormGroup;
   editFeatureData: EditedField[] = [];
 
-  protected featureDescription: OldSchema;
+  protected featureDescription?: OldSchema;
 
   protected unsubscribe$: Subject<void> = new Subject<void>();
 
   getActualValuesFromForm(): Properties {
     return this.getDirtyProperties().reduce((newProperties: Properties, item) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      newProperties[item.name] = this.editFeatureForm.controls[item.name].value;
+      newProperties[item.name] = this.editFeatureForm?.controls[item.name].value;
 
       return newProperties;
     }, {});
@@ -25,14 +25,14 @@ export class BaseEdit {
 
   getDirtyProperties(): EditedField[] {
     const result: EditedField[] = [];
-    if (!this.editFeatureForm.dirty) {
+    if (!this.editFeatureForm?.dirty) {
       return result;
     }
 
     this.editFeatureData.forEach((property: EditedField) => {
-      const formProperty = this.editFeatureForm.controls[property.name];
+      const formProperty = this.editFeatureForm?.controls[property.name];
 
-      if (formProperty.dirty) {
+      if (formProperty?.dirty) {
         result.push(property);
       }
     });
@@ -50,7 +50,7 @@ export class BaseEdit {
       this.featureDescription.customRuleFunction,
       this.featureDescription.tableName
     ).forEach((validationError: ValidationError) => {
-      const control = this.editFeatureForm.controls[validationError.attribute];
+      const control = this.editFeatureForm?.controls[validationError.attribute];
       if (control) {
         control.setErrors([validationError.error]);
       }

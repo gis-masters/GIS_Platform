@@ -226,10 +226,6 @@ public class LayerService {
         return layerRepository.findUniqueLayers(layerType, projectIds, pageable);
     }
 
-    public Page<Layer> findLayers(String layerType, String schemaId, Pageable pageable) {
-        return layerRepository.findByTypeAndSchemaId(layerType, schemaId, pageable);
-    }
-
     private void updateGroup(Layer layer, Long parentId, List<Group> groups) {
         if (parentId != null) {
             Group parentGroup = groups

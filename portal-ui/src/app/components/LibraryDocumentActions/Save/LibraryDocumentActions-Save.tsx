@@ -52,8 +52,7 @@ export class LibraryDocumentActionsSave extends Component<LibraryDocumentActions
 
     const created = await createLibraryRecord(
       { ...document, libraryTableName: undefined, schemaId: undefined, role: undefined },
-      document.libraryTableName,
-      document.schemaId
+      document.libraryTableName
     );
 
     if (onSave) {

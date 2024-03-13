@@ -1,9 +1,10 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { viewedProjections } from '../../geoserver/projections.service';
 import { CrgProject } from '../../gis/projects/projects.models';
-import { PropertyType, SimpleSchema } from '../schema/schema.models';
+import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { Role } from '../permissions/permissions.models';
+import { OldSchema } from '../schema/schemaOld.models';
 
 export enum DataEntityType {
   DATASET = 'SCHEMA',
@@ -11,22 +12,19 @@ export enum DataEntityType {
   LIBRARY = 'LIBRARY'
 }
 
-export interface DataEntity {
-  id?: number;
+interface DataEntity {
+  id: number;
   title: string;
   identifier: string;
   details?: string;
   type: DataEntityType;
   createdAt?: string;
   itemsCount?: number;
-  schemaId?: string;
-  role?: Role;
+  role: Role;
 }
 
 export interface Dataset extends DataEntity {
   type: DataEntityType.DATASET;
-  role: Role;
-  id?: number;
 }
 
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
@@ -34,10 +32,8 @@ export type NewDataset = Pick<Dataset, 'title' | 'details'>;
 export interface VectorTable extends DataEntity {
   type: DataEntityType.TABLE;
   crs: string;
-  schemaId: string;
+  schema: Schema;
   dataset: string;
-  role: Role;
-  id?: number;
   documentType?: string;
   status?: string;
   fias?: string;
@@ -46,7 +42,8 @@ export interface VectorTable extends DataEntity {
   isPublic?: boolean;
 }
 
-export type NewVectorTable = Pick<VectorTable, 'title' | 'crs' | 'schemaId'>;
+export type NewVectorTable = Pick<VectorTable, 'title' | 'crs'> & { schemaId: string };
+export type RawVectorTable = Omit<VectorTable, 'schema'> & { schema: OldSchema };
 
 const title = 'Наименование';
 

@@ -14,16 +14,15 @@ import {
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { datasetRootUrlItems } from '../DataManagement/DataManagement.utils';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { FileConnection } from '../../services/data/files/files.models';
 import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
 import { getFeatures } from '../../services/geoserver/wfs/wfs.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
-import { Schema } from '../../services/data/schema/schema.models';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { GlobalSearch } from '../GlobalSearch/GlobalSearch';
 import { XTableColumn } from '../XTable/XTable.models';
 import { PageOptions } from '../../services/models';
 import { Registry } from '../Registry/Registry';
@@ -32,7 +31,6 @@ import { Loading } from '../Loading/Loading';
 import { VectorTableRegistryOpenAction } from './OpenAction/VectorTableRegistry-OpenAction';
 
 import '!style-loader!css-loader!sass-loader!./VectorTableRegistry.scss';
-import { GlobalSearch } from '../GlobalSearch/GlobalSearch';
 
 const cnVectorTableRegistry = cn('VectorTableRegistry');
 
@@ -45,7 +43,6 @@ export interface VectorTableRegistryProps {
 @observer
 export default class VectorTableRegistry extends Component<VectorTableRegistryProps> {
   @observable private loading?: boolean;
-  @observable private schema?: Schema;
   @observable private error: string | undefined;
   @observable private connections: FileConnection[] = [];
   @observable private wfsFeatures: WfsFeature[] = [];
@@ -88,7 +85,7 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
                   <GlobalSearch source={{ table: vectorTableIdentifier, dataset: datasetIdentifier }} />
 
                   <RegistrySettings
-                    properties={this.schema?.properties || []}
+                    properties={this.vectorTable?.schema.properties || []}
                     hiddenFields={this.hiddenFields}
                     onChangeHiddenFields={this.setHiddenFields}
                   />
@@ -150,24 +147,25 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
 
   @computed
   private get cols(): XTableColumn<Record<string, unknown>>[] {
-    if (!this.schema) {
+    if (!this.vectorTable) {
       return [];
     }
 
-    return [
-      {
-        CellContent: this.renderActions,
-        align: 'center',
-        minWidth: 60,
-        filterable: false,
-        cellProps: { padding: 'checkbox' }
-      },
-      ...getXTableColumnsFromSchema<Record<string, unknown>>(this.schema)
-    ].map((item: XTableColumn<Record<string, unknown>>) => ({
-      ...item,
-      hidden: this.hiddenFields.includes(String(item.field)) || item.hidden,
-      filterable: item.filterable
-    }));
+    const checkboxCell: XTableColumn<Record<string, unknown>> = {
+      CellContent: this.renderActions,
+      align: 'center',
+      minWidth: 60,
+      filterable: false,
+      cellProps: { padding: 'checkbox' }
+    };
+
+    return [checkboxCell, ...getXTableColumnsFromSchema<Record<string, unknown>>(this.vectorTable.schema)].map(
+      (item: XTableColumn<Record<string, unknown>>) => ({
+        ...item,
+        hidden: this.hiddenFields.includes(String(item.field)) || item.hidden,
+        filterable: item.filterable
+      })
+    );
   }
 
   @action.bound
@@ -181,38 +179,34 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
       this.getStorageKey(),
       JSON.stringify({
         hiddenFields: this.hiddenFields || [],
-        content_type_id: this.schema?.appliedContentType || null
+        content_type_id: this.vectorTable?.schema.appliedContentType || null
       })
     );
   }
 
   @boundMethod
-  private renderActions({ rowData }: { rowData: WfsFeature }): ReactElement | undefined {
+  private renderActions({ rowData }: { rowData: Record<string, unknown> }): ReactElement | undefined {
     const feature = this.wfsFeatures.find(({ id }) => id === rowData.id);
 
-    if (this.schema && feature && this.vectorTable) {
-      return <VectorTableRegistryOpenAction schema={this.schema} feature={feature} vectorTable={this.vectorTable} />;
+    if (this.vectorTable?.schema && feature) {
+      return (
+        <VectorTableRegistryOpenAction
+          schema={this.vectorTable?.schema}
+          feature={feature}
+          vectorTable={this.vectorTable}
+        />
+      );
     }
   }
 
   @computed
   private get ready(): boolean {
-    return Boolean(this.schema);
-  }
-
-  @action
-  private setSchema(schema: Schema) {
-    this.schema = schema;
+    return Boolean(this.vectorTable);
   }
 
   private async getSchema() {
     try {
-      const table = await getVectorTable(this.props.datasetIdentifier, this.props.vectorTableIdentifier);
-
-      this.setVectorTable(table);
-      const schema = await schemaService.getSchema(table.schemaId);
-
-      this.setSchema(schema);
+      this.setVectorTable(await getVectorTable(this.props.datasetIdentifier, this.props.vectorTableIdentifier));
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
 
@@ -224,7 +218,7 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
   private async getData(pageOptions: PageOptions): Promise<[Record<string, unknown>[], number]> {
     await this.fetchConnections();
 
-    if (!this.schema || !this.connections.length) {
+    if (!this.vectorTable || !this.connections.length) {
       return [[], 1];
     }
 

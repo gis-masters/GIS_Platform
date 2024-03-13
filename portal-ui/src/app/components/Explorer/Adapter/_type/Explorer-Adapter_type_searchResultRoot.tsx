@@ -12,12 +12,6 @@ import { PageOptions } from '../../../../services/models';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.SEARCH_RESULT_ROOT]: ExplorerSearchValue;
-  }
-}
-
 @staticImplements<Adapter<ExplorerSearchValue>>()
 export class ExplorerAdapterTypeSearchResultRoot {
   static getId(): string {

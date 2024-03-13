@@ -16,5 +16,5 @@ export async function createFolder(
 
   const raw = await requestAsAdmin(libraryClient.createLibraryRecord, record, library.table_name);
 
-  return { ...raw, libraryTableName: library.table_name, schemaId: library.schemaId };
+  return { ...raw, libraryTableName: library.table_name };
 }

@@ -5,6 +5,10 @@ public class SchemaChild {
     private String library;
     private String contentType;
 
+    public SchemaChild() {
+        // Required
+    }
+
     public String getLibrary() {
         return library;
     }

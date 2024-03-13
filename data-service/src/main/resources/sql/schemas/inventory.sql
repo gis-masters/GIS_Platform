@@ -4168,7 +4168,6 @@ SELECT 'dl_data_result',
                 "dl_data_limits_balaklava",
                 "dl_data_oks_property_yugip",
                 "dl_data_owners_balaklava",
-                "dl_feature_extract",
                 "dl_zu"
             ],
             "valueType": "DOCUMENT",

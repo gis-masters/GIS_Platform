@@ -7,12 +7,11 @@ import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { getLibraryRecord } from '../../services/data/library/library.service';
+import { getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { applyContentType } from '../../services/data/schema/schema.utils';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
@@ -31,7 +30,7 @@ import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-De
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
 import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
 import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
-import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActionsCreateChild';
+import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 import { LibraryDocumentActionsImportKpt } from './ImportKpt/LibraryDocumentActions-ImportKpt';
 
@@ -104,7 +103,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
         )}
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
         {organizationSettings.SEDDialog && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
-        {this.schema?.relations?.length && this.schema.relations.length > 0 && (
+        {!!this.schema?.relations?.length && this.schema.relations.length > 0 && (
           <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
         )}
         {!isNew && canDelete && (
@@ -127,7 +126,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
 
     document = document.role ? document : await getLibraryRecord(document.libraryTableName, document.id);
 
-    const schema = applyContentType(await schemaService.getSchema(document.schemaId), document.content_type_id || '');
+    const schema = applyContentType(await getLibrarySchemaByRecord(document), document.content_type_id || '');
 
     if (this.operationId === operationId) {
       this.setData(document, schema);

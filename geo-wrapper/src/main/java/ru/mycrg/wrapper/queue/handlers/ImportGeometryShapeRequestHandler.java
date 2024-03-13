@@ -31,7 +31,7 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ShapeLoadedEvent";
+        return ShapeLoadedEvent.class.getSimpleName();
     }
 
     @Override

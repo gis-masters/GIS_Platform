@@ -1,13 +1,13 @@
 import { Given, Then } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
 
-import { getSchema } from '../schemas/getSchema';
 import { CrgLayer, CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { createLayer } from './createLayer';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
+import { getLayerSchema } from './getLayerSchema';
 import { updateLayer } from './updateLayer';
 import { getLayer } from './getLayer';
 
@@ -18,8 +18,6 @@ Given(
   async function (this: ScenarioScope, layerTitle: string) {
     const { latestProject, latestVectorTable, latestDataset } = this;
 
-    const schema = await getSchema(latestVectorTable.schemaId);
-
     const layer: NewCrgLayer = {
       type: CrgLayerType.VECTOR,
       title: layerTitle,
@@ -27,8 +25,7 @@ Given(
       view: '',
       tableName: latestVectorTable.identifier,
       nativeCRS: latestVectorTable.crs,
-      schemaId: latestVectorTable.schemaId,
-      styleName: schema.styleName,
+      styleName: latestVectorTable.schema.styleName,
       enabled: true
     };
 
@@ -39,11 +36,15 @@ Given(
 Given('у данного слоя включено представление {string}', async function (this: ScenarioScope, viewTitle: string) {
   const { latestLayer, latestProject } = this;
 
-  if (!latestLayer.schemaId || !latestLayer.id) {
+  if (!latestLayer.id) {
     throw new Error(errorSchemaOrId);
   }
 
-  const schema = await getSchema(latestLayer.schemaId);
+  if (latestLayer.type !== CrgLayerType.VECTOR) {
+    throw new Error('Слой должен быть векторным');
+  }
+
+  const schema = await getLayerSchema(latestLayer);
   const view = schema.views?.find(view => view.title === viewTitle);
 
   if (!view) {
@@ -58,7 +59,7 @@ Given(
   async function (this: ScenarioScope, minZoom: number, maxZoom: number) {
     const { latestLayer, latestProject } = this;
 
-    if (!latestLayer.schemaId || !latestLayer.id) {
+    if (!latestLayer.id) {
       throw new Error(errorSchemaOrId);
     }
 
@@ -69,11 +70,11 @@ Given(
 Given('у данного слоя включен фоторежим по полю {string}', async function (this: ScenarioScope, fieldTitle: string) {
   const { latestLayer, latestProject } = this;
 
-  if (!latestLayer.schemaId || !latestLayer.id) {
+  if (!latestLayer.id) {
     throw new Error(errorSchemaOrId);
   }
 
-  const schema = await getSchema(latestLayer.schemaId);
+  const schema = await getLayerSchema(latestLayer);
   const property = schema.properties?.find(({ title }) => title === fieldTitle);
 
   if (!property) {
@@ -104,7 +105,6 @@ Given('существует слой с параметрами:', async function
   const dataset = await getDatasetByTitle(datasetTitle);
   const project = await getProjectByTitle(projectTitle);
   const vectorTable = await getVectorTableByTitle(dataset.identifier, tableTitle);
-  const schema = await getSchema(vectorTable.schemaId);
 
   const layer = {
     type: 'vector' as CrgLayerType,
@@ -112,8 +112,7 @@ Given('существует слой с параметрами:', async function
     tableName: vectorTable.identifier,
     title: layerTitle,
     nativeCRS: vectorTable.crs,
-    schemaId: vectorTable.schemaId,
-    styleName: schema.styleName,
+    styleName: vectorTable.schema.styleName,
     enabled: enabled === 'включенный',
     ...(viewId ? { view: viewId } : {})
   };
@@ -126,7 +125,7 @@ Then(
   async function (this: ScenarioScope, fieldName: keyof CrgLayer, fieldValue: string) {
     const { latestLayer, latestProject } = this;
 
-    if (!latestLayer.schemaId || !latestLayer.id) {
+    if (!latestLayer.id) {
       throw new Error('У слоя не указана схема или идентификатор');
     }
 

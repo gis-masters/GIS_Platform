@@ -55,7 +55,7 @@ public class ValidationRequestHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ValidationRequestEvent";
+        return ValidationRequestEvent.class.getSimpleName();
     }
 
     @Override

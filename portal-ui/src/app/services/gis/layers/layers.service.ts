@@ -17,6 +17,7 @@ import { schemaService } from '../../data/schema/schema.service';
 import { getFeatureType } from '../../geoserver/featuretypes.service';
 import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
+import { getVectorTable } from '../../data/vectorData/vectorData.service';
 
 export async function deleteLayer(layerId: number, project: CrgProject = currentProject): Promise<void> {
   await layersClient.deleteLayer(layerId, project.id);
@@ -68,13 +69,20 @@ export function alertLayerOperationError(
   services.logger.error(message, e);
 }
 
-export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
-  if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.DXF) {
-    if (!layer.schemaId) {
-      throw new Error('Схема не указана у слоя ' + layer.complexName);
-    }
+export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefined> {
+  if (!layer) {
+    return undefined;
+  }
 
-    return await schemaService.getSchema(layer.schemaId);
+  if (layer.type === CrgLayerType.VECTOR) {
+    if (!layer.dataset || !layer.tableName) {
+      throw new Error('Векторный слой подключен с ошибкой');
+    }
+    const vectorTable = await getVectorTable(layer.dataset, layer.tableName);
+
+    return vectorTable.schema;
+  } else if (layer.type === CrgLayerType.DXF) {
+    return await schemaService.getSchema('dxf_schema_v1');
   } else if (layer.type && isVectorFromFile(layer.type)) {
     const featureType: FeatureType = await getFeatureType(layer);
     const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);

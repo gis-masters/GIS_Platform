@@ -11,10 +11,10 @@ import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryProtector;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -30,6 +30,7 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Component
@@ -72,7 +73,7 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         DocumentLibrary library = new DocumentLibrary();
         library.setTitle(schema.getTitle());
-        library.setSchemaId(schemaId);
+        library.setSchema(toJsonNode(schema));
         library.setDetails(dto.getDetails());
         library.setTableName(schema.getTableName());
         library.setCreatedBy(authenticationFacade.getLogin());

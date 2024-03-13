@@ -9,11 +9,7 @@ import { FileInfo } from './data/files/files.models';
 import { Schema } from './data/schema/schema.models';
 import { Emitter } from './common/Emitter';
 import { Task } from './data/task/task.models';
-
-export interface ObjectDto {
-  id: string;
-  crgLayer: CrgVectorLayer;
-}
+import { ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
 
 export interface DataChangeEventDetail<T> {
   type: 'create' | 'update' | 'delete';

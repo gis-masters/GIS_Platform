@@ -4,14 +4,14 @@ import { SchemaOutlined } from '@mui/icons-material';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-interface SchemaDialogButtonProps {
-  onOpen(): void;
+interface OpenSchemaActionProps {
+  onClick(): void;
 }
 
-export const SchemaDialogButton: FC<SchemaDialogButtonProps> = ({ onOpen }: SchemaDialogButtonProps) => {
+export const OpenSchemaActionButton: FC<OpenSchemaActionProps> = ({ onClick }: OpenSchemaActionProps) => {
   return (
     <Tooltip title={'Открыть схему'}>
-      <IconButton onClick={onOpen}>
+      <IconButton onClick={onClick}>
         <SchemaOutlined />
       </IconButton>
     </Tooltip>

@@ -3,25 +3,24 @@ package ru.mycrg.data_service.service.export;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.detached.ValidationResultDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.dao.detached.ValidationResultDao;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.CsvHandler;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
 import ru.mycrg.data_service_contract.dto.ResourceReport;
@@ -32,10 +31,12 @@ import ru.mycrg.data_service_contract.dto.ValidationReportModel;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DaoProperties.EXTENSION_POSTFIX;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getEnumerationTitleByValue;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
@@ -55,23 +56,23 @@ public class LayerValidationReportService {
     private CsvHandler csvHandler;
     private ValidationResultDao validationResultDao;
 
-    private final DatasourceFactory datasourceFactory;
-    private final ISchemaService schemaService;
-    private final IAuthenticationFacade authenticationFacade;
     private final ProcessService processService;
+    private final DatasourceFactory datasourceFactory;
+    private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public LayerValidationReportService(@Qualifier("schemaServiceBase") ISchemaService schemaService,
-                                        Environment environment,
+    public LayerValidationReportService(Environment environment,
                                         IAuthenticationFacade authenticationFacade,
                                         ProcessService processService,
                                         DatasourceFactory datasourceFactory,
-                                        WsNotificationService wsNotificationService) {
-        this.schemaService = schemaService;
+                                        WsNotificationService wsNotificationService,
+                                        SchemasAndTablesRepository schemasAndTablesRepository) {
         this.authenticationFacade = authenticationFacade;
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
         this.wsNotificationService = wsNotificationService;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
 
         exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
         header = new String[]{" Класс объектов", " Объект класса", " Идентификатор объекта(GLOBALID)", " Имя атрибута",
@@ -133,16 +134,16 @@ public class LayerValidationReportService {
         csvHandler = new CsvHandler(filePath, header);
 
         resources.forEach(resource -> {
-            String schemaName = resource.getSchemaId();
-            SchemaDto schemaDto = schemas.get(schemaName);
-            if (schemas.containsKey(schemaName)) {
+            String tableIdentifier = resource.getTable();
+            SchemaDto schemaDto = schemas.get(tableIdentifier);
+            if (schemas.containsKey(tableIdentifier)) {
                 ResourceReport resourceReport = handleResource(resource, schemaDto);
 
                 model.addResourceReports(resourceReport);
             } else {
-                csvHandler.append(
-                        new String[]{"", "", resource.toString(), "", NOT_PASSED, schemaName + " не найдена"});
-                model.addResourceReports(new ResourceReport(schemaName, "не найдена", false));
+                String msg = "Не найдена схема слоя: " + tableIdentifier;
+                csvHandler.append(new String[]{"", "", resource.toString(), "", NOT_PASSED, msg});
+                model.addResourceReports(new ResourceReport(tableIdentifier, msg, false));
             }
         });
     }
@@ -254,10 +255,16 @@ public class LayerValidationReportService {
 
     private Map<String, SchemaDto> fetchSchemas(List<ExportResourceModel> resources) {
         Map<String, SchemaDto> schemas = new HashMap<>();
-        resources.forEach(res -> {
-            schemaService.getSchemaByName(res.getSchemaId())
-                         .ifPresent(schemaDto -> schemas.put(res.getSchemaId(), schemaDto));
-        });
+
+        List<String> tableIdentifiers = resources.stream()
+                                                 .map(ExportResourceModel::getTable)
+                                                 .collect(Collectors.toList());
+        schemasAndTablesRepository.findByIdentifierIn(tableIdentifiers)
+                                  .forEach(table -> {
+                                      SchemaDto schema = jsonToDto(table.getSchema());
+
+                                      schemas.put(table.getIdentifier(), schema);
+                                  });
 
         return schemas;
     }

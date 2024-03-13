@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS data.schemas_and_tables
     identifier                  character varying NOT NULL,
     path                        text,
     items_count                 integer DEFAULT 0,
-    schema_id                   character varying(50),
+    schema                      jsonb,
     crs                         character varying(20),
     fias__oktmo                 character varying(50),
     fias__address               varchar,
@@ -55,7 +55,7 @@ ALTER TABLE data.schemas_and_tables
 CREATE TABLE IF NOT EXISTS data.schemas
 (
     id                bigserial         NOT NULL,
-    name              character varying NOT NULL,
+    name              character varying NOT NULL UNIQUE,
     class_rule        json              NOT NULL,
     custom_rule       text,
     calculated_fields text,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS data.doc_libraries
     details                     character varying(1024),
     path                        text,
     table_name                  character varying NOT NULL,
-    schema_id                   character varying(50),
+    schema                      jsonb,
     registry_counter            bigint  DEFAULT 1,
     gisogd_rf_publication_order integer,
     versioned                   boolean DEFAULT false,

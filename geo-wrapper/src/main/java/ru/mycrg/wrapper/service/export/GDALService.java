@@ -55,9 +55,8 @@ public class GDALService implements IExporter {
     public String generate(ExportRequestEvent event) {
         ExportProcessModel payload = event.getPayload();
 
-        String pathToZip;
-
         if (payload.getFormat().equals("ESRI Shapefile")) {
+            String pathToZip;
             List<ResourceProjection> resourceProjections = payload.getResourceProjections();
             if (resourceProjections.size() > 1) {
                 log.warn("Not implemented multiple export. Export only first feature.");

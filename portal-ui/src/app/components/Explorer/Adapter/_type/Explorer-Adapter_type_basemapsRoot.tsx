@@ -16,12 +16,6 @@ import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Exp
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.BASEMAPS_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeBasemapsRoot {
   static getId(): string {
@@ -63,7 +57,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Basemap>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<Basemap>[], number, number] | undefined> {
     const response = await getBasemapsWithParticularOne(Number(id), {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -92,7 +86,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
     return {
       type: ExplorerItemType.BASEMAP,
-      payload: { id: Number(id), ...basemap }
+      payload: basemap
     };
   }
 

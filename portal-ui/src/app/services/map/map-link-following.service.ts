@@ -16,7 +16,7 @@ import { Toast } from '../../components/Toast/Toast';
 import { CrgLayer } from '../gis/layers/layers.models';
 import { projectsService } from '../gis/projects/projects.service';
 import { applyView } from '../data/schema/schema.utils';
-import { schemaService } from '../data/schema/schema.service';
+import { getLayerSchema } from '../gis/layers/layers.service';
 
 export interface FeatureError {
   id: string;
@@ -188,9 +188,17 @@ async function restoreRecentOpenedFeatures() {
       );
 
       if (currentLayer?.complexName) {
-        const schema = applyView(await schemaService.getSchema(currentLayer.schemaId), currentLayer.view);
+        const schema = await getLayerSchema(currentLayer);
         const featuresIds = featuresCutIds.map(cutId => `${currentLayer.tableName}.${cutId}`);
-        const layerFeatures = await getFeaturesById(featuresIds, currentLayer.complexName, schema?.definitionQuery);
+        let layerFeatures: WfsFeature[] = [];
+        if (schema) {
+          const schemaWithAppliedView = applyView(schema, currentLayer.view);
+          layerFeatures = await getFeaturesById(
+            featuresIds,
+            currentLayer.complexName,
+            schemaWithAppliedView.definitionQuery
+          );
+        }
 
         deletedFeatures.push(
           ...featuresIds

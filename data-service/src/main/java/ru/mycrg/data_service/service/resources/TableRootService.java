@@ -7,16 +7,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
-import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.TableModel;
+import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
+import static ru.mycrg.data_service.util.TableUtils.getLatestParentId;
 
 @Service
 public class TableRootService {
@@ -24,26 +30,31 @@ public class TableRootService {
     private final BaseDao baseDao;
     private final DatasetService datasetService;
     private final IAuthenticationFacade authenticationFacade;
+    private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public TableRootService(IAuthenticationFacade authenticationFacade,
                             BaseDao baseDao,
-                            DatasetService datasetService) {
+                            DatasetService datasetService,
+                            SchemasAndTablesRepository schemasAndTablesRepository) {
         this.baseDao = baseDao;
-        this.authenticationFacade = authenticationFacade;
         this.datasetService = datasetService;
+        this.authenticationFacade = authenticationFacade;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
-    public Page<IResourceModel> getPaged(String ecqlFilter, Pageable pageable) {
+    public Page<TableModel> getPaged(String ecqlFilter, Pageable pageable) {
         long total;
-        List<TableModel> allowedTables;
+        List<SchemasAndTables> allowedTables;
         if (authenticationFacade.isOrganizationAdmin()) {
             String excludeDatasets = excludeDatasets(ecqlFilter);
             allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
                                             excludeDatasets,
                                             pageable,
-                                            TableModel.class);
+                                            new SchemasAndTablesMapper());
             total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, excludeDatasets);
         } else {
+            // TODO: Есть кейс с секьюрити, когда доступ дан непосредственно на таблицу, это расшарит все таблицы для
+            //  пользователя, которые находятся в этом же наборе данных.
             List<String> allowedDatasetPaths = datasetService
                     .getAll().stream()
                     .map(dataset -> ROOT_FOLDER_PATH + "/" + dataset.getId())
@@ -56,11 +67,28 @@ public class TableRootService {
             allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
                                             newFilter,
                                             pageable,
-                                            TableModel.class);
+                                            new SchemasAndTablesMapper());
             total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, newFilter);
         }
 
-        return new PageImpl<>(unmodifiableList(allowedTables), pageable, total);
+        Set<Long> parentIds = allowedTables.stream()
+                                           .map(table -> getLatestParentId(table.getPath()))
+                                           .collect(Collectors.toSet());
+
+        List<TableModel> result = new ArrayList<>();
+        schemasAndTablesRepository
+                .findByIdIn(parentIds)
+                .forEach(dataset -> {
+                    String parentPath = ROOT_FOLDER_PATH + "/" + dataset.getId();
+
+                    allowedTables.forEach(table -> {
+                        if (Objects.equals(parentPath, table.getPath())) {
+                            result.add(new TableModel(table, null, dataset.getIdentifier()));
+                        }
+                    });
+                });
+
+        return new PageImpl<>(unmodifiableList(result), pageable, total);
     }
 
     private String excludeDatasets(String ecqlFilter) {

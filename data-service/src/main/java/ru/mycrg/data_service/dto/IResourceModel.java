@@ -1,5 +1,8 @@
 package ru.mycrg.data_service.dto;
 
+import org.jetbrains.annotations.Nullable;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+
 public interface IResourceModel {
 
     Long getId();
@@ -34,7 +37,8 @@ public interface IResourceModel {
 
     String getCrs();
 
-    String getSchemaId();
+    @Nullable
+    SchemaDto getSchema();
 
     String getTableName();
 

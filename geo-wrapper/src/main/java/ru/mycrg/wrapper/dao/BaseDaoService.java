@@ -75,7 +75,7 @@ public class BaseDaoService {
                                                    "                                      WHERE main.objectid is NULL)",
                                            extensionTableName, table, schema);
 
-        log.debug("Sql (deleteFromExtTable): {}, ", deleteFromExtTable);
+        log.debug("deleteAllRecordsFromExtTableWhichNotExist query: [{}]", deleteFromExtTable);
 
         jdbcTemplate.execute(deleteFromExtTable);
     }

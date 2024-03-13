@@ -49,15 +49,16 @@ export class LibraryRegistryPathFilterPanelItem extends Component<LibraryRegistr
 
   private async loadParentFolder() {
     const { library } = this.props;
+    const lastCrumb = this.breadcrumbsPath.at(-1);
 
-    if (!library || !this.breadcrumbsPath.at(-1)) {
+    if (!library || !lastCrumb) {
       return;
     }
 
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const parentFolder = await getLibraryRecord(library.table_name, this.breadcrumbsPath.at(-1));
+    const parentFolder = await getLibraryRecord(library.table_name, lastCrumb);
 
     if (this.operationId === operationId) {
       this.setParentFolder(parentFolder);

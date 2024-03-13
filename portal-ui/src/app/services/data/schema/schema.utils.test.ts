@@ -268,6 +268,9 @@ describe('утилита применения представления applyVi
     const relations: Relation[] = [
       { type: 'document', property: 'title', title: 'Документы по участку', library: 'dl_some' }
     ];
+    if (!schemaWithViews.views) {
+      throw new Error('А где views?');
+    }
     const schemaWithViewsAndRelations: Schema = {
       ...schemaWithViews,
       views: [{ ...schemaWithViews.views[0], relations }, schemaWithViews.views[1]]
@@ -284,6 +287,11 @@ describe('утилита применения представления applyVi
     const schemaRelations: Relation[] = [
       { type: 'document', property: 'title', title: 'Заявления по участку', library: 'dl_other' }
     ];
+
+    if (!schemaWithViews.views) {
+      throw new Error('А где views?');
+    }
+
     const schemaWithViewsAndRelations: Schema = {
       ...schemaWithViews,
       relations: schemaRelations,
@@ -332,6 +340,11 @@ describe('утилита применения типа документа applyC
     const relations: Relation[] = [
       { type: 'document', property: 'title', title: 'Документы по участку', library: 'dl_some' }
     ];
+
+    if (!schemaWithContentTypes.contentTypes) {
+      throw new Error('А где contentTypes?');
+    }
+
     const schemaWithContentTypesAndRelations: Schema = {
       ...schemaWithContentTypes,
       contentTypes: [{ ...schemaWithContentTypes.contentTypes[0], relations }, schemaWithContentTypes.contentTypes[1]]
@@ -348,6 +361,11 @@ describe('утилита применения типа документа applyC
     const schemaRelations: Relation[] = [
       { type: 'document', property: 'title', title: 'Заявления по участку', library: 'dl_other' }
     ];
+
+    if (!schemaWithContentTypes.contentTypes) {
+      throw new Error('А где contentTypes?');
+    }
+
     const schemaWithContentTypesAndRelations: Schema = {
       ...schemaWithContentTypes,
       relations: schemaRelations,

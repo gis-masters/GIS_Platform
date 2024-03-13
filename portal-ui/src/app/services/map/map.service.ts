@@ -29,7 +29,7 @@ import { basemapsStore } from '../../stores/Basemaps.store';
 import { mapStore } from '../../stores/Map.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { CrgExternalLayer, CrgLayer } from '../gis/layers/layers.models';
+import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { communicationService } from '../communication.service';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
@@ -377,7 +377,7 @@ class MapService {
   }
 
   async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
-    const { tableName, complexName, styleName, schemaId, view } = layer;
+    const { tableName, complexName, styleName, view, type } = layer;
 
     if (!tableName || !complexName) {
       throw new Error('Некорректный слой в методе addLayers');
@@ -393,8 +393,12 @@ class MapService {
     const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
     modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
 
-    if (schemaId) {
-      const { definitionQuery }: Schema = applyView(await getLayerSchema(layer), view);
+    if (type === CrgLayerType.VECTOR) {
+      const schema = await getLayerSchema(layer);
+      if (!schema) {
+        throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+      }
+      const { definitionQuery }: Schema = applyView(schema, view);
       if (definitionQuery) {
         params.CQL_FILTER = definitionQuery;
       }

@@ -44,20 +44,24 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   @Input() updatingAllowed?: boolean;
   // eslint-disable-next-line unicorn/prefer-event-target
   @Output() inputModelChange = new EventEmitter<string>();
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
 
-  private onChange: (value: unknown) => void;
+  private onChange?: (value: unknown) => void;
   private value: unknown;
-  editFeatureForm: UntypedFormGroup;
-  private root: Root;
+  editFeatureForm?: UntypedFormGroup;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -65,6 +69,10 @@ export class FormControlComponent implements OnInit, OnDestroy, OnChanges, Contr
   }
 
   private renderReactElement() {
+    if (!this.property) {
+      return;
+    }
+
     const [convertedProperty] = convertOldToNewProperties([this.property]);
     let value = this.value;
     if (typeof this.value === 'string' && convertedProperty.propertyType === PropertyType.FILE) {

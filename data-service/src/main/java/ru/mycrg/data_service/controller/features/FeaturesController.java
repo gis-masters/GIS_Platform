@@ -13,7 +13,6 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.resources.features.IFeaturesReader;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
@@ -25,14 +24,11 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.tableQua
 public class FeaturesController {
 
     private final TableService tableService;
-    private final ISchemaService schemaService;
     private final IFeaturesReader featuresReader;
 
     public FeaturesController(TableService tableService,
-                              ISchemaService schemaService,
                               IFeaturesReader featuresReader) {
         this.tableService = tableService;
-        this.schemaService = schemaService;
         this.featuresReader = featuresReader;
     }
 
@@ -46,8 +42,10 @@ public class FeaturesController {
         ResourceQualifier tableQualifier = tableQualifier(datasetId, tableId);
 
         IResourceModel table = tableService.getInfo(tableQualifier);
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + tableQualifier.getQualifier());
+        }
 
         Page<Feature> features = featuresReader.getAll(tableQualifier, schema, ecqlFilter, pageable);
 

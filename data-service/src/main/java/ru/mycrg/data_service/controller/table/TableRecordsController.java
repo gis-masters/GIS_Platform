@@ -4,12 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
-import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.*;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
@@ -29,16 +28,13 @@ public class TableRecordsController {
 
     private final Mediator mediator;
     private final TableService tableService;
-    private final ISchemaService schemaService;
     private final SpatialRecordsDao spatialRecordsDao;
 
     public TableRecordsController(Mediator mediator,
                                   TableService tableService,
-                                  ISchemaService schemaService,
                                   SpatialRecordsDao spatialRecordsDao) {
         this.mediator = mediator;
         this.tableService = tableService;
-        this.schemaService = schemaService;
         this.spatialRecordsDao = spatialRecordsDao;
     }
 
@@ -49,9 +45,11 @@ public class TableRecordsController {
                                                          @PathVariable List<Long> recordIds) {
         ResourceQualifier qualifier = new ResourceQualifier(datasetId, tableId);
 
-        IResourceModel table = tableService.getInfo(qualifier);
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        TableModel table = tableService.getInfo(qualifier);
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + qualifier.getQualifier());
+        }
 
         List<Feature> features = spatialRecordsDao.findByIds(qualifier, schema, recordIds);
 
@@ -64,11 +62,13 @@ public class TableRecordsController {
                                                      @PathVariable String tableId,
                                                      @RequestParam(required = false, defaultValue = "1") boolean strict,
                                                      @RequestBody Feature feature) {
-        ResourceQualifier resourceQualifier = new ResourceQualifier(datasetId, tableId);
+        ResourceQualifier qualifier = new ResourceQualifier(datasetId, tableId);
 
-        IResourceModel table = tableService.getInfo(resourceQualifier);
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        TableModel table = tableService.getInfo(qualifier);
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + qualifier.getQualifier());
+        }
 
         feature.setSrs(table.getCrs());
         Map<String, Object> props = excludeUnknownProperties(schema, feature.getProperties());
@@ -76,7 +76,7 @@ public class TableRecordsController {
         feature.setProperties(clearProps);
 
         Feature newFeature = mediator.execute(
-                new CreateTableRecordRequest(schema, resourceQualifier, feature, strict));
+                new CreateTableRecordRequest(schema, qualifier, feature, strict));
 
         return new ResponseEntity<>(newFeature, CREATED);
     }
@@ -88,9 +88,11 @@ public class TableRecordsController {
                                                     @PathVariable String tableId,
                                                     @PathVariable Long recordId,
                                                     @RequestBody Feature feature) {
-        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        TableModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + tableId);
+        }
 
         Map<String, Object> props = excludeUnknownProperties(schema, feature.getProperties());
 
@@ -112,9 +114,11 @@ public class TableRecordsController {
                                                             @PathVariable String tableId,
                                                             @PathVariable List<Long> recordIds,
                                                             @RequestBody Map<String, Object> properties) {
-        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
-        SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                        .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+        TableModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        SchemaDto schema = table.getSchema();
+        if (schema == null) {
+            throw new NotFoundException("Не найдена схема таблицы: " + tableId);
+        }
 
         Map<String, Object> props = excludeUnknownProperties(schema, properties);
 
@@ -137,9 +141,12 @@ public class TableRecordsController {
         if (recordIds.size() == 1) {
             ResourceQualifier recordQualifier = new ResourceQualifier(datasetId, tableId, recordIds.get(0), FEATURE);
 
-            IResourceModel table = tableService.getInfo(tableQualifier);
-            SchemaDto schema = schemaService.getSchemaByName(table.getSchemaId())
-                                            .orElseThrow(() -> new NotFoundException(table.getSchemaId()));
+            TableModel table = tableService.getInfo(tableQualifier);
+            SchemaDto schema = table.getSchema();
+            if (schema == null) {
+                throw new NotFoundException("Не найдена схема таблицы: " + tableQualifier.getQualifier());
+            }
+
             Feature feature = spatialRecordsDao.findById(recordQualifier, schema)
                                                .orElseThrow(() -> new NotFoundException(recordIds.get(0)));
 

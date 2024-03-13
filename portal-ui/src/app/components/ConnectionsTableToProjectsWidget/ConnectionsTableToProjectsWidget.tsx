@@ -10,9 +10,7 @@ import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { vectorLayerDefaults } from '../../services/gis/layers/layers.utils';
 import { FileConnection } from '../../services/data/files/files.models';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { createLayer } from '../../services/gis/layers/layers.service';
-import { Schema } from '../../services/data/schema/schema.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
@@ -24,12 +22,8 @@ interface ConnectionsTableToProjectsWidgetProps {
 @observer
 export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTableToProjectsWidgetProps> {
   private currentVectorTableId = '';
-
-  @observable private selectContentTypeDialogOpen = false;
-  @observable private schema?: Schema;
   @observable private connections?: FileConnection[] = [];
   @observable private loading = true;
-  @observable private project: CrgProject;
 
   constructor(props: ConnectionsTableToProjectsWidgetProps) {
     super(props);
@@ -48,13 +42,15 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   }
 
   render() {
+    const { vectorTable } = this.props;
+
     return (
       <ConnectionsToProjectsWidget
         className={cnConnectionsTableToProjectsWidget()}
         onConnect={this.save}
         connections={this.connections}
         loading={this.loading}
-        schema={this.schema}
+        schema={vectorTable.schema}
         showAsExtendList
         dialogTitle='Проекты, в которые подключен векторный слой'
       />
@@ -70,9 +66,6 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
       this.setConnections(vectorTableConnections);
     }
 
-    const schema = await schemaService.getSchema(vectorTable?.schemaId);
-    this.setSchema(schema);
-
     this.setLoading(false);
   }
 
@@ -83,7 +76,7 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
 
   @action
   private dropConnections() {
-    this.connections = null;
+    this.connections = undefined;
   }
 
   @action
@@ -94,30 +87,26 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
   @boundMethod
   private async save(project: CrgProject, view: string) {
     const { vectorTable } = this.props;
-    await this.createLayer(vectorTable, vectorTable.dataset, project, view);
+    await this.createLayer(vectorTable.dataset, project, view);
     await this.fetchConnections();
   }
 
-  private async createLayer(table: VectorTable, dataset: string, project: CrgProject, view: string) {
-    const newStyleName = this.schema.views?.find(({ id }) => id === view)?.styleName;
+  private async createLayer(dataset: string, project: CrgProject, view: string) {
+    const { vectorTable } = this.props;
+    const newStyleName = vectorTable.schema.views?.find(({ id }) => id === view)?.styleName;
 
     const newLayer = {
       ...vectorLayerDefaults(),
       dataset: dataset,
-      tableName: table.identifier,
-      complexName: `${currentUser.workspaceName}:${table.identifier}`,
-      title: table.title,
-      nativeCRS: table.crs,
-      schemaId: table.schemaId,
+      tableName: vectorTable.identifier,
+      complexName: `${currentUser.workspaceName}:${vectorTable.identifier}`,
+      title: vectorTable.title,
+      nativeCRS: vectorTable.crs,
+      schemaId: vectorTable.schema.name,
       view,
-      styleName: newStyleName || this.schema.styleName || table.schemaId
+      styleName: newStyleName || vectorTable.schema.styleName || vectorTable.schema.name
     };
 
     await createLayer(newLayer, project.id);
-  }
-
-  @action
-  private setSchema(schema: Schema) {
-    this.schema = schema;
   }
 }

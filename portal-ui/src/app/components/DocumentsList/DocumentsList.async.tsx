@@ -122,7 +122,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
     }
 
     try {
-      const selectedFile = e.target.files[0];
+      const selectedFile = e.target.files?.[0];
       if (!selectedFile) {
         return;
       }
@@ -139,8 +139,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
           category: 'loaded by old way',
           path
         },
-        'dl_default',
-        'dl_default_schema'
+        'dl_default'
       );
 
       if (crgDocument) {

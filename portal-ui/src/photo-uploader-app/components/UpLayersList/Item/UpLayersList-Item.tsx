@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
 import { VectorTable } from '../../../../app/services/data/vectorData/vectorData.models';
-import { LayerIcon } from '../../../../app/components/LayerIcon/LayerIcon.composed';
+import { GeometryIcon } from '../../../../app/components/GeometryIcon/GeometryIcon';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
 import '!style-loader!css-loader!sass-loader!./UpLayersList-Item.scss';
@@ -12,7 +12,7 @@ import '!style-loader!css-loader!sass-loader!../ItemTitle/UpLayersList-ItemTitle
 import '!style-loader!css-loader!sass-loader!../DataType/UpLayersList-DataType.scss';
 
 export interface UpLayersListItemData {
-  data: Omit<VectorTable, 'dataset'>;
+  data: VectorTable;
 }
 
 type UpLayerListItemProps = UpLayersListItemData & PropsWithChildren & { type: 'button' | 'simple' };
@@ -20,7 +20,6 @@ type UpLayerListItemProps = UpLayersListItemData & PropsWithChildren & { type: '
 const cnUpLayersList = cn('UpLayersList');
 
 const dataType = 'Векторная таблица';
-const photoUploadeSchemaName = 'photo_uploader';
 
 export const UpLayersListItem: FC<UpLayerListItemProps> = observer(({ data, type, children }) => {
   const onClickHandler = useCallback(() => {
@@ -33,7 +32,7 @@ export const UpLayersListItem: FC<UpLayerListItemProps> = observer(({ data, type
       {type === 'button' ? (
         <ListItemButton className={cnUpLayersList('Item')} onClick={onClickHandler}>
           <ListItemIcon>
-            <LayerIcon type='vector' schemaId={photoUploadeSchemaName} />
+            <GeometryIcon geometryType={data.schema.geometryType} colorized />
           </ListItemIcon>
           <ListItemText primary={data.title} secondary={dataType} />
           {children}
@@ -41,7 +40,7 @@ export const UpLayersListItem: FC<UpLayerListItemProps> = observer(({ data, type
       ) : (
         <ListItem className={cnUpLayersList('Item')}>
           <ListItemIcon>
-            <LayerIcon type='vector' schemaId={photoUploadeSchemaName} />
+            <GeometryIcon geometryType={data.schema.geometryType} colorized />
           </ListItemIcon>
           <ListItemText primary={data.title} secondary={dataType} />
           {children}

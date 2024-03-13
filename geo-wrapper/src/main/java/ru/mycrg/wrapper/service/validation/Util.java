@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service_contract.dto.ObjectValidationResult;
@@ -35,6 +36,7 @@ public class Util {
         return "";
     }
 
+    @NotNull
     public static JsonNode convertToJson(ObjectValidationResult object) {
         try {
             String asString = objectMapper.writer()
@@ -44,7 +46,7 @@ public class Util {
         } catch (JsonProcessingException e) {
             log.error("Failed convert to json: {}", e.getMessage());
 
-            return JacksonUtil.toJsonNode("");
+            return JacksonUtil.toJsonNode("{}");
         }
     }
 }

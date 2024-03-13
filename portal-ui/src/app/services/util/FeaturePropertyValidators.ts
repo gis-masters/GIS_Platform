@@ -39,8 +39,8 @@ interface ErrorMessages {
 export class FeaturePropertyValidators {
   static validateCustomRules(
     featureProperties: { [key: string]: unknown },
-    customRuleFunction: string,
-    tableName: string
+    customRuleFunction?: string,
+    tableName?: string
   ): ValidationError[] {
     let errors: ValidationError[] = [];
 

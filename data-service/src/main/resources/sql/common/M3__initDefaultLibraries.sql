@@ -25,11 +25,10 @@ CREATE TABLE IF NOT EXISTS data.dl_default
 ALTER TABLE data.dl_default
     OWNER to fiz;
 
-INSERT INTO data.doc_libraries(title, details, table_name, schema_id, created_by, created_at, last_modified, path)
+INSERT INTO data.doc_libraries(title, details, table_name, created_by, created_at, last_modified, path)
 SELECT 'Тестовая библиотека',
        'Тестовая библиотека с отсылкой к таблице documents',
        'dl_default',
-       'dl_default_schema',
        'fiz@migration',
        now(),
        now(),
@@ -73,11 +72,10 @@ CREATE TABLE IF NOT EXISTS data.dl_zu
 ALTER TABLE data.dl_zu
     OWNER to fiz;
 
-INSERT INTO data.doc_libraries(title, details, table_name, schema_id, created_by, created_at, last_modified, path)
+INSERT INTO data.doc_libraries(title, details, table_name, created_by, created_at, last_modified, path)
 SELECT 'Библиотека ЗУ',
        'ЗУ библиотека',
        'dl_zu',
-       'dl_zu_schema',
        'fiz@fiz',
        now(),
        now(),

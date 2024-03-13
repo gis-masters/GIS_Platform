@@ -13,12 +13,6 @@ import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.SCHEMAS_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter<null, Schema>>()
 export class ExplorerAdapterTypeSchemasRoot {
   static getId(): string {

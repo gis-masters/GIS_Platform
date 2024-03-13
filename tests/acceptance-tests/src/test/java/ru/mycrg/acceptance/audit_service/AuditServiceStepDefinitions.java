@@ -250,7 +250,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
         checkAuditEvent(CREATE.name(), LIBRARY, currentLibraryTableName);
     }
 
-    @Then("Создана запись в журнале аудита об удалении библиотеки докуметов")
+    @Then("Создана запись в журнале аудита об удалении библиотеки документов")
     public void checkDocumentLibraryDelete() {
         checkAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibraryTableName));
     }

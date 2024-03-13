@@ -11,5 +11,4 @@ export interface ExportRequest {
 export interface ExportResourceModel {
   dataset: string;
   table: string;
-  schemaId: string;
 }

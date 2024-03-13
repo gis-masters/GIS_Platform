@@ -53,17 +53,9 @@ public class ReglamentsQuery implements IResourceQueryService {
     }
 
     public Page<IResource> getResources(Pageable pageable) {
-        final List<IResource> result = new ArrayList<>();
-        try {
-            Collection<String> schemasName = getSchemasNameWithReglaments();
-            schemasName.forEach(schemaName -> {
-                result.addAll(layerService.findLayers(layerType, schemaName, pageable).stream()
-                                          .map(this::mapLayerToResource)
-                                          .collect(toList()));
-            });
-        } catch (IOException | HttpClientException e) {
-            throw new GisServiceException("Не удалось получить schemaDto.", e.getCause());
-        }
+        List<IResource> result = new ArrayList<>();
+        // TODO: Регламенты и их анализатор не актуальны.
+        // Collection<String> schemasName = getSchemasNameWithReglaments();
 
         return new PageImpl<>(result, pageable, result.size());
     }

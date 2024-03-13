@@ -18,7 +18,7 @@ import { getId } from '../../Adapter/Explorer-Adapter';
 class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
   @observable private url?: string;
   @observable private currentDataset?: Dataset;
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);
@@ -41,15 +41,13 @@ class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {this.currentDataset && (
-          <>
-            <PermissionsWidget
-              url={this.url}
-              title={this.currentDataset.title}
-              itemEntityType={ExplorerItemEntityTypeTitle.DATASET}
-              disabled={!(currentUser.isAdmin || this.currentDataset.role === Role.OWNER)}
-            />
-          </>
+        {this.currentDataset && this.url && (
+          <PermissionsWidget
+            url={this.url}
+            title={this.currentDataset.title}
+            itemEntityType={ExplorerItemEntityTypeTitle.DATASET}
+            disabled={!(currentUser.isAdmin || this.currentDataset.role === Role.OWNER)}
+          />
         )}
       </div>
     );

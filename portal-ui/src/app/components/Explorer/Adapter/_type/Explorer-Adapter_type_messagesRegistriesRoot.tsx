@@ -14,12 +14,6 @@ import { PageOptions } from '../../../../services/models';
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeMessagesRegistriesRoot {
   static getId(): string {
@@ -62,7 +56,7 @@ export class ExplorerAdapterTypeMessagesRegistriesRoot {
     tableName: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<MessagesRegistry>[], number, number]> | undefined {
+  ): Promise<[ExplorerItemData<MessagesRegistry>[], number, number] | undefined> {
     const response = await getMessagesRegistriesWithParticularOne(tableName, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)

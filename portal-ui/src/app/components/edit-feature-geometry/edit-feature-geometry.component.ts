@@ -15,18 +15,22 @@ const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeomet
   styleUrls: ['./edit-feature-geometry.component.scss']
 })
 export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() store: EditFeatureGeometryStore;
-  @Input() readOnly: boolean;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @Input() store?: EditFeatureGeometryStore;
+  @Input() readOnly?: boolean;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -34,9 +38,12 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
+    if (!this.store) {
+      return;
+    }
     const reactElement = createElement(EditFeatureGeometryWithRegistry, {
       store: this.store,
-      readOnly: this.readOnly
+      readOnly: Boolean(this.readOnly)
     });
 
     this.root?.render(reactElement);

@@ -17,6 +17,13 @@ public class TableUtils {
         return Long.valueOf(parentIdSplitted[1]);
     }
 
+    public static Long getLatestParentId(String path) {
+        int latestSplitter = path.lastIndexOf('/');
+        String folderId = path.substring(latestSplitter + 1);
+
+        return Long.valueOf(folderId);
+    }
+
     public static void throwIfNotMatchTableColumns(Set<String> propsBySchema, List<String> dbColumns) {
         List<String> notMatchingColumns = getNotMatchingColumns(propsBySchema, dbColumns);
 

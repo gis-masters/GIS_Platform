@@ -16,12 +16,6 @@ import { SortOrder } from '../../../../services/models';
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { getIcon } from '../Explorer-Adapter';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.SEARCH_ITEM]: SearchItemData;
-  }
-}
-
 @staticImplements<Adapter<SearchItemData>>()
 export class ExplorerAdapterTypeSearchItem {
   static getId(item: ExplorerItemData<SearchItemData>): string {
@@ -50,13 +44,11 @@ export class ExplorerAdapterTypeSearchItem {
   }
 
   static getDescription(item: ExplorerItemData<SearchItemData>): ReactNode {
-    let createdAt: string;
+    let createdAt: string = '';
 
     if (item.payload.type === 'DOCUMENT' && item.payload.payload.created_at) {
       createdAt = item.payload.payload.created_at;
-    }
-
-    if (item.payload.type === 'FEATURE' && item.payload.payload.properties.created_at) {
+    } else if (item.payload.type === 'FEATURE' && item.payload.payload.properties.created_at) {
       createdAt = item.payload.payload.properties.created_at as string;
     }
 

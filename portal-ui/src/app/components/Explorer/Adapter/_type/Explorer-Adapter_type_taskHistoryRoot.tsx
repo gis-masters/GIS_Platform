@@ -7,12 +7,6 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { getTaskHistory } from '../../../../services/data/task/task.service';
 import { PageOptions } from '../../../../services/models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.TASK_HISTORY_ROOT]: Task;
-  }
-}
-
 @staticImplements<Adapter<Task>>()
 export class ExplorerAdapterTypeTaskHistoryRoot {
   static getId(): string {

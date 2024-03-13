@@ -11,12 +11,10 @@ import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -28,6 +26,7 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
@@ -37,7 +36,6 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
     private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
-    private final ISchemaService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
@@ -45,14 +43,12 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
     public UpdateTableRequestHandler(FtsDao ftsDao,
                                      DdlTriggers ddlTriggers,
-                                     ISchemaService schemaService,
                                      PermissionsService permissionsService,
                                      IAuthenticationFacade authenticationFacade,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      BasePermissionsRepository permissionsRepository) {
         this.ftsDao = ftsDao;
         this.ddlTriggers = ddlTriggers;
-        this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
@@ -102,17 +98,15 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
             if (dto.getReadyForFts()) {
                 log.debug("Добавляем таблицу: '{}' к полнотекстовому поиску", qualifier.getQualifier());
 
-                SchemaDto schema = schemaService
-                        .getSchemaByName(tableForUpdate.getSchemaId())
-                        .orElseThrow(() -> new BadRequestException(
-                                "Не возможно обновить таблицу. Не существует схемы: " + tableForUpdate.getSchemaId()));
+                SchemaDto schema = jsonToDto(tableForUpdate.getSchema());
+                if (schema != null) {
+                    List<String> ftsProperties = getFtsProperties(schema);
+                    ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
+                    ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
+                    ddlTriggers.createDeleteTrigger(qualifier);
 
-                List<String> ftsProperties = getFtsProperties(schema);
-                ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-                ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-                ddlTriggers.createDeleteTrigger(qualifier);
-
-                ftsDao.copySourceData(qualifier, schema);
+                    ftsDao.copySourceData(qualifier, schema);
+                }
             } else {
                 log.debug("Удаляем таблицу: '{}' из полнотекстового поиска", qualifier.getQualifier());
 

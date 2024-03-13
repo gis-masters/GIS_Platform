@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.resources.protectors.DatasetProtector;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
@@ -74,9 +74,10 @@ public class DatasetService {
             return new PageImpl<>(Collections.unmodifiableList(datasetsWithItemsCount), pageable, total);
         } else {
             List<IResourceModel> allowedResources = permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, null, pageable)
+                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable,
+                                         new SchemasAndTablesMapper())
                     .stream()
-                    .map(record -> new DatasetModel(record.getContent()))
+                    .map(record -> new DatasetModel(record, null, 0))
                     .collect(Collectors.toList());
 
             List<IResourceModel> datasetsWithItemsCount = allowedResources
@@ -95,11 +96,7 @@ public class DatasetService {
         if (authenticationFacade.isOrganizationAdmin()) {
             return baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER, null, SchemasAndTables.class);
         } else {
-            return permissionsRepository
-                    .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH, null, null)
-                    .stream()
-                    .map(SchemasAndTablesMapper::mapToEntity)
-                    .collect(Collectors.toList());
+            return permissionsRepository.findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, ROOT_FOLDER_PATH);
         }
     }
 

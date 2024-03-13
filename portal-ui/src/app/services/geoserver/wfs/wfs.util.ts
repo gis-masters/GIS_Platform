@@ -61,19 +61,19 @@ export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdit
   throw new Error(`Неподдерживаемый тип геометрии: ${type}`);
 }
 
-export function isLinear(...geometryTypes: GeometryType[]): boolean {
+export function isLinear(...geometryTypes: (GeometryType | undefined)[]): boolean {
   return geometryTypes.every(
     geometryType => geometryType === GeometryType.LINE_STRING || geometryType === GeometryType.MULTI_LINE_STRING
   );
 }
 
-export function isPolygonal(...geometryTypes: GeometryType[]): boolean {
+export function isPolygonal(...geometryTypes: (GeometryType | undefined)[]): boolean {
   return geometryTypes.every(
     geometryType => geometryType === GeometryType.POLYGON || geometryType === GeometryType.MULTI_POLYGON
   );
 }
 
-export function isPoint(...geometryTypes: GeometryType[]): boolean {
+export function isPoint(...geometryTypes: (GeometryType | undefined)[]): boolean {
   return geometryTypes.every(
     geometryType => geometryType === GeometryType.POINT || geometryType === GeometryType.MULTI_POINT
   );

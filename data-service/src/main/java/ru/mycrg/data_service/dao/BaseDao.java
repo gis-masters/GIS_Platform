@@ -41,12 +41,6 @@ public class BaseDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public <T> Optional<T> findBy(ResourceQualifier qualifier,
-                                  String ecqlFilter,
-                                  Class<T> clazz) {
-        return findBy(qualifier, ecqlFilter, new BeanPropertyRowMapper<>(clazz));
-    }
-
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
                                     String ecqlFilter) {
         return findBy(qualifier, ecqlFilter, new RecordRowMapper(null));
@@ -188,7 +182,7 @@ public class BaseDao {
      * $idvalue )', '{"idvalue":26410}');
      */
     public Optional<IRecord> findByJson(ResourceJsonCondition qualifier,
-                                         @Nullable SchemaDto schema) {
+                                        @Nullable SchemaDto schema) {
         var query = String.format(
                 "SELECT * FROM %s WHERE jsonb_path_exists(%s::jsonb, '$[*] ? (@.id == $idvalue )', '{\"idvalue\":%s}');",
                 qualifier.getTableQualifier(),

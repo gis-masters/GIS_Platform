@@ -3,12 +3,12 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
+import { getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { communicationService } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { schemaService } from '../../../../services/data/schema/schema.service';
 import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
@@ -17,7 +17,7 @@ import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 @observer
 class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps> {
   @observable private schema?: Schema;
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);
@@ -61,7 +61,7 @@ class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps>
     const operationId = Symbol();
 
     this.operationId = operationId;
-    const schema = await schemaService.getSchema(payload.document.schemaId);
+    const schema = await getLibrarySchemaByRecord(payload.document);
 
     if (this.operationId === operationId) {
       this.setSchema(applyContentType(schema, payload.document.content_type_id));

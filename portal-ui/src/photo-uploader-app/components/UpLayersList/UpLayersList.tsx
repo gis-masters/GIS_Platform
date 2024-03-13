@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 import { List } from '@mui/material';
 import { observer, useLocalObservable } from 'mobx-react';
 
-import { getAllVectorTables } from '../../../app/services/data/vectorData/vectorData.service';
+import { getVectorTablesInAllDatasets } from '../../../app/services/data/vectorData/vectorData.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpLayersListItem, UpLayersListItemData } from './Item/UpLayersList-Item';
 import { UpError } from '../UpError/UpError';
@@ -18,7 +18,7 @@ interface UpLayersListStore {
 
 const cnUpLayersList = cn('UpLayersList');
 
-const photoLayerSchema = 'photo_uploader';
+const photoLayerTitle = 'photo_uploader';
 
 export const UpLayersList: FC = observer(() => {
   const store = useLocalObservable(
@@ -32,7 +32,7 @@ export const UpLayersList: FC = observer(() => {
 
   const { dataList, setDataList } = store;
 
-  const layersList =
+  const layers =
     photoUploaderStore.searchValue !== '' && !!dataList.length
       ? dataList.filter(item =>
           item.data.title.toLocaleLowerCase().includes(photoUploaderStore.searchValue.toLocaleLowerCase())
@@ -43,9 +43,8 @@ export const UpLayersList: FC = observer(() => {
     void (async () => {
       photoUploaderStore.setBusy(true);
       try {
-        const pageOptions = { page: 0, pageSize: 20, filter: { schema_id: photoLayerSchema } };
-        const response = await getAllVectorTables(pageOptions);
-
+        const pageOptions = { page: 0, pageSize: 20, filter: { title: photoLayerTitle } };
+        const response = await getVectorTablesInAllDatasets(pageOptions);
         if (!response) {
           photoUploaderStore.addError('Загрузка фотографий недоступна');
           photoUploaderStore.closeLayersList();
@@ -66,9 +65,9 @@ export const UpLayersList: FC = observer(() => {
     <>
       <UpSearch />
       <List className={cnUpLayersList()}>
-        {!!dataList.length && layersList.map((item, idx) => <UpLayersListItem type='button' {...item} key={idx} />)}
+        {!!dataList.length && layers.map((item, idx) => <UpLayersListItem type='button' {...item} key={idx} />)}
       </List>
-      {photoUploaderStore.searchValue !== '' && !layersList.length && <UpError message='... ничего не найдено' />}
+      {photoUploaderStore.searchValue !== '' && !layers.length && <UpError message='... ничего не найдено' />}
     </>
   );
 });

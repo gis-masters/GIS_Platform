@@ -18,7 +18,6 @@ import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.import_.exceptions.ImportException;
 import ru.mycrg.data_service.service.parsers.GmlParser;
@@ -27,6 +26,7 @@ import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -198,7 +198,7 @@ public class GmlImporter {
                 geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
 
                 if (countOfAddedRecords > 0) {
-                    runValidation(datasetIdentifier, schema.getName(), table.getName());
+                    runValidation(datasetIdentifier, table.getName());
                 }
 
                 importLayerReport.setSuccess(true);
@@ -346,10 +346,9 @@ public class GmlImporter {
         }
     }
 
-    private void runValidation(String datasetIdentifier, String schemaId, String tableName) {
+    private void runValidation(String datasetIdentifier, String tableName) {
         ExportResourceModel resourceModel = new ExportResourceModel();
         resourceModel.setDataset(datasetIdentifier);
-        resourceModel.setSchemaId(schemaId);
         resourceModel.setTable(tableName);
 
         List<ExportResourceModel> exportResourceModels = new ArrayList<>();

@@ -1,7 +1,7 @@
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
-import { schemaService } from '../../../data/schema/schema.service';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 
 import { PrintTemplate } from '../PrintTemplate';
@@ -20,7 +20,10 @@ export const rawFeatureData: PrintTemplate<WfsFeature> = new PrintTemplate({
       throw new Error('Layer not found');
     }
 
-    const schema = await schemaService.getSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
+    if (!schema) {
+      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+    }
     const schemaWithAppliedView = applyView(schema, layer.view);
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);
 
@@ -52,7 +55,10 @@ export const rawFeatureData: PrintTemplate<WfsFeature> = new PrintTemplate({
       throw new Error('Layer not found');
     }
 
-    const schema = await schemaService.getSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
+    if (!schema) {
+      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+    }
     const schemaWithAppliedView = applyView(schema, layer.view);
 
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);

@@ -16,18 +16,22 @@ const EditFeatureActionsName = withRegistry(registry)(EditFeatureActions);
   styleUrls: ['./edit-feature-actions.component.scss']
 })
 export class EditFeatureActionsComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() feature: WfsFeature;
-  @Input() layer: CrgVectorLayer;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @Input() feature?: WfsFeature;
+  @Input() layer?: CrgVectorLayer;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -35,6 +39,10 @@ export class EditFeatureActionsComponent implements OnInit, OnDestroy, OnChanges
   }
 
   private renderReactElement() {
+    if (!this.feature || !this.layer) {
+      return;
+    }
+
     const reactElement = createElement(EditFeatureActionsName, {
       feature: this.feature,
       layer: this.layer

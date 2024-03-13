@@ -1,5 +1,6 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 import { Library } from '../../../../src/app/services/data/library/library.models';
+import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
 import { requestAsAdmin } from '../requestAs';
 
 export async function getDocumentsLibraryByTitle(title: string): Promise<Library> {
@@ -9,5 +10,5 @@ export async function getDocumentsLibraryByTitle(title: string): Promise<Library
     throw new Error(`Ошибка получения библиотеки документов "${title}"`);
   }
 
-  return response.content[0];
+  return { ...response.content[0], schema: convertOldToNewSchema(response.content[0].schema) };
 }

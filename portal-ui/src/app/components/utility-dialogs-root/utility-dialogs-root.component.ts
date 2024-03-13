@@ -14,16 +14,20 @@ const UtilityDialogsRootWithRegistry = withRegistry(registry)(UtilityDialogsRoot
   styleUrls: ['./utility-dialogs-root.component.scss']
 })
 export class UtilityDialogsRootComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
+    if (!this.ref) {
+      throw new Error('Ошибка: не найден root для react компонента');
+    }
+
     this.root = createRoot(this.ref.nativeElement);
     this.renderReactElement();
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {

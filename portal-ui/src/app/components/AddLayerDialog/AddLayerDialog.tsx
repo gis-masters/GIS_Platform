@@ -15,14 +15,19 @@ import {
 } from '../../services/gis/layers/layers.utils';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { ContentType, PropertySchema, PropertyType, ValueFormula } from '../../services/data/schema/schema.models';
+import {
+  ContentType,
+  PropertySchema,
+  PropertyType,
+  Schema,
+  ValueFormula
+} from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
 import { getDefaultValues, getViewChoiceOptions } from '../Form/Form.utils';
 import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';
 import { FileInfo } from '../../services/data/files/files.models';
@@ -71,7 +76,6 @@ const minZoomTitle = 'Уровень масштабной детализации
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private usedVectorTables: VectorTable[] = [];
   private usedVectorTablesRequest?: Promise<VectorTable[]>;
-  @observable private views: ContentType[] = [];
   @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
 
   constructor(props: AddLayerDialogProps) {
@@ -110,6 +114,16 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     return !validateFormValue(this.formValue, this.fields).length;
   }
 
+  @computed
+  private get schema(): Schema | undefined {
+    return this.formValue?.datasource?.vectorTable?.schema;
+  }
+
+  @computed
+  private get views(): ContentType[] {
+    return this.schema?.views || [];
+  }
+
   @action.bound
   private close() {
     this.clearForm();
@@ -124,21 +138,11 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @action.bound
   private handleFormChange(formValue: FormValue) {
     this.formValue = formValue;
-    const schemaId = formValue?.datasource?.vectorTable?.schemaId;
-    if (schemaId && formValue.datasource && formValue.layerType === CrgLayerType.VECTOR) {
-      void this.getSchema(schemaId);
-    }
-  }
-
-  private async getSchema(schemaId: string) {
-    const schema = await schemaService.getSchema(schemaId);
-    this.setViews(schema.views);
   }
 
   @action.bound
   private clearForm() {
     this.formValue = getDefaultValues(this.fields);
-    this.views = [];
   }
 
   private getDescription() {
@@ -314,13 +318,16 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const { dataset, vectorTable, library } = datasource;
     const dataStoreName = currentUser.workspaceName;
 
+    if (!this.schema) {
+      throw new Error('Отсутствует схема');
+    }
+
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       if (!dataset || !vectorTable) {
         throw new Error('Не указаны обязательные параметры');
       }
 
-      const schema = await schemaService.getSchema(vectorTable.schemaId);
-      const styleName = schema?.views?.find(({ id }) => id === view)?.styleName;
+      const styleName = this.views.find(({ id }) => id === view)?.styleName;
 
       this.props.onAdd({
         ...vectorLayerDefaults(),
@@ -330,9 +337,8 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         complexName: `${dataStoreName}:${vectorTable?.identifier}`,
         title,
         nativeCRS: vectorTable.crs,
-        schemaId: vectorTable.schemaId,
         minZoom,
-        styleName: styleName || schema.styleName || vectorTable.schemaId,
+        styleName: styleName || this.schema.styleName || this.schema.name,
         view
       });
       this.clearForm();
@@ -441,11 +447,6 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     if (alreadyUsedVectorTables.length !== this.usedVectorTables.length || newUsedVectorTables.length > 0) {
       this.setUsedVectorTables([...alreadyUsedVectorTables, ...newUsedVectorTables]);
     }
-  }
-
-  @action
-  private setViews(views: ContentType[] = []) {
-    this.views = views;
   }
 
   private calculateTitle: ValueFormula = (value): string => {

@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.cqrs.tables.requests.DeleteTableRequest;
@@ -34,18 +34,18 @@ public class TablesController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping("/datasets/{datasetId}/tables")
-    public ResponseEntity<IResourceModel> createTable(@PathVariable String datasetId,
-                                                      @Valid @RequestBody TableCreateDto dto) {
+    public ResponseEntity<TableModel> createTable(@PathVariable String datasetId,
+                                                  @Valid @RequestBody TableCreateDto dto) {
         ResourceQualifier tQualifier = new ResourceQualifier(datasetId, dto.getName());
 
-        IResourceModel resourceModel = mediator.execute(new CreateTableRequest(dto, tQualifier));
+        TableModel tableModel = mediator.execute(new CreateTableRequest(dto, tQualifier));
 
-        return new ResponseEntity<>(resourceModel, CREATED);
+        return new ResponseEntity<>(tableModel, CREATED);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PutMapping("/datasets/{datasetId}/tables/{tableId}")
-    public ResponseEntity<IResourceModel> updateTable(@PathVariable String datasetId,
+    public ResponseEntity<TableModel> updateTable(@PathVariable String datasetId,
                                                       @PathVariable String tableId,
                                                       @Valid @RequestBody TableUpdateDto dto) {
         ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
@@ -60,7 +60,7 @@ public class TablesController {
     public ResponseEntity<?> getTables(@PathVariable String datasetId,
                                        @RequestParam(name = "filter", required = false) String ecqlFilter,
                                        Pageable pageable) {
-        Page<IResourceModel> tables = tableService.getPaged(datasetId, ecqlFilter, pageable);
+        Page<TableModel> tables = tableService.getPaged(datasetId, ecqlFilter, pageable);
 
         return ResponseEntity.ok(pageFromList(tables, pageable));
     }
@@ -69,7 +69,7 @@ public class TablesController {
     @GetMapping("/datasets/{datasetId}/tables/{tableId}")
     public ResponseEntity<?> getTable(@PathVariable String datasetId,
                                       @PathVariable String tableId) {
-        IResourceModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
+        TableModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
         return ResponseEntity.ok(table);
     }

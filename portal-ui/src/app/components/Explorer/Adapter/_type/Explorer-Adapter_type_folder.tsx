@@ -9,13 +9,13 @@ import { formatDate } from '../../../../services/util/date.util';
 import { CommonDiRegistry } from '../../../../services/di-registry';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { schemaService } from '../../../../services/data/schema/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import {
   getLibraryRecord,
   getLibraryRecords,
-  getLibraryRecordsWithParticularOne
+  getLibraryRecordsWithParticularOne,
+  getLibrarySchemaByRecord
 } from '../../../../services/data/library/library.service';
 import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
@@ -28,12 +28,6 @@ import { ExplorerStore } from '../../Explorer.store';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
-
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.FOLDER]: LibraryRecord;
-  }
-}
 
 @staticImplements<Adapter<LibraryRecord, LibraryRecord>>()
 export class ExplorerAdapterTypeFolder {
@@ -91,15 +85,15 @@ export class ExplorerAdapterTypeFolder {
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
-    const { libraryTableName, schemaId, id } = explorerItem.payload;
+    const { libraryTableName, id } = explorerItem.payload;
 
-    const [libraryRecords, pagesCount] = await getLibraryRecords(libraryTableName, schemaId, {
+    const [libraryRecords, pagesCount] = await getLibraryRecords(libraryTableName, {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, explorerItem, store),
       queryParams: { parent: id }
     });
 
-    const { contentTypes } = await schemaService.getSchema(schemaId);
+    const { contentTypes } = await getLibrarySchemaByRecord(explorerItem.payload);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
@@ -123,17 +117,12 @@ export class ExplorerAdapterTypeFolder {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
-    const response = await getLibraryRecordsWithParticularOne(
-      item.payload.libraryTableName,
-      item.payload.schemaId,
-      Number(id),
-      {
-        ...options,
-        filter: service.mergeCustomFilter(filter || {}, item, store),
-        page,
-        queryParams: { parent: item.payload.id }
-      }
-    );
+    const response = await getLibraryRecordsWithParticularOne(item.payload.libraryTableName, Number(id), {
+      ...options,
+      filter: service.mergeCustomFilter(filter || {}, item, store),
+      page,
+      queryParams: { parent: item.payload.id }
+    });
 
     if (!response) {
       return;
@@ -141,7 +130,7 @@ export class ExplorerAdapterTypeFolder {
 
     const [records, totalPages, pageNumber] = response;
 
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await getLibrarySchemaByRecord(item.payload);
 
     return [
       records.map(payload => {
@@ -178,7 +167,7 @@ export class ExplorerAdapterTypeFolder {
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.libraryTableName, Number(recordId));
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = await getLibrarySchemaByRecord(item.payload);
     const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
     return {

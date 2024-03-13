@@ -16,7 +16,6 @@ public class LayerProjection {
     private final int minZoom;
     private final String styleName;
     private final String nativeCRS;
-    private final String schemaId;
     private final String dataSourceUri;
     private final Long parentId;
     private final String complexName;
@@ -42,7 +41,6 @@ public class LayerProjection {
         this.minZoom = layer.getMinZoom();
         this.styleName = layer.getStyleName();
         this.nativeCRS = layer.getNativeCRS();
-        this.schemaId = layer.getSchemaId();
         this.dataSourceUri = layer.getDataSourceUri();
         this.parentId = layer.getParent() != null ? layer.getParent().getId() : null;
         this.libraryId = layer.getLibraryId();
@@ -102,10 +100,6 @@ public class LayerProjection {
 
     public String getNativeCRS() {
         return nativeCRS;
-    }
-
-    public String getSchemaId() {
-        return schemaId;
     }
 
     public String getDataSourceUri() {

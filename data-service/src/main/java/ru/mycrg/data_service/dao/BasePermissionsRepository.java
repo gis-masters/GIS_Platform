@@ -1,18 +1,23 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
+import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
+import ru.mycrg.data_service.entity.DocumentLibrary;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,49 +72,45 @@ public class BasePermissionsRepository {
                                    ));
     }
 
-    public List<IRecord> findAllowedByParent(ResourceQualifier qualifier,
-                                             String parent,
-                                             String ecqlFilter,
-                                             SchemaDto schema,
-                                             Pageable pageable) {
-        List<String> allPrincipalIds = principalService.getAllIds();
-        if (allPrincipalIds.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        String query = buildFindAllowedQuery(parent, ecqlFilter, qualifier, allPrincipalIds);
-
-        String requestTemplate = query +
-                " " + buildOrderBySection(pageable.getSort()) +
-                "LIMIT " + pageable.getPageSize() + " OFFSET " + pageable.getOffset();
-
-        log.debug("Request to find allowed resources by parent: [{}]", requestTemplate);
-
-        return pJdbcTemplate.getJdbcTemplate()
-                            .query(requestTemplate,
-                                   new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper(schema)
-                                   ));
+    public List<SchemasAndTables> findAllowedByParent(ResourceQualifier qualifier,
+                                                      String parent) {
+        return findAllowedByParent(qualifier,
+                                   parent,
+                                   null,
+                                   Pageable.unpaged(),
+                                   new SchemasAndTablesMapper());
     }
 
-    public List<IRecord> findAllowedByParent(ResourceQualifier qualifier,
-                                             String parent,
-                                             String ecqlFilter,
-                                             SchemaDto schema) {
+    public List<DocumentLibrary> findAllowedByParent(ResourceQualifier qualifier,
+                                                     String parent,
+                                                     String ecqlFilter) {
+        return findAllowedByParent(qualifier,
+                                   parent,
+                                   ecqlFilter,
+                                   Pageable.unpaged(),
+                                   new DocLibraryMapper());
+    }
+
+    public <T> List<T> findAllowedByParent(ResourceQualifier qualifier,
+                                           String parent,
+                                           String ecqlFilter,
+                                           @Nullable Pageable pageable,
+                                           RowMapper<T> rowMapper) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return new ArrayList<>();
         }
 
         String query = buildFindAllowedQuery(parent, ecqlFilter, qualifier, allPrincipalIds);
+        if (pageable != null && !pageable.isUnpaged()) {
+            query = String.format("%s %s LIMIT %d OFFSET %d",
+                                  query, buildOrderBySection(pageable.getSort()),
+                                  pageable.getPageSize(), pageable.getOffset());
+        }
 
         log.debug("Request to find allowed resources by parent: [{}]", query);
 
-        return pJdbcTemplate.getJdbcTemplate()
-                            .query(query,
-                                   new RowMapperResultSetExtractor<>(
-                                           new RecordRowMapper(schema)
-                                   ));
+        return pJdbcTemplate.query(query, rowMapper);
     }
 
     public boolean isAllowedByParentsPermissions(ResourceQualifier targetTable, Set<String> parentFolderIds) {

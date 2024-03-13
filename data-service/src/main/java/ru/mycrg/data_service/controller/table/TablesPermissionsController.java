@@ -8,9 +8,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
+import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.service.PermissionsService;
@@ -56,7 +56,7 @@ public class TablesPermissionsController {
 
         ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
 
-        IResourceModel table = tableService.getInfo(tQualifier);
+        TableModel table = tableService.getInfo(tQualifier);
 
         PermissionProjection permission = mediator.execute(
                 new CreatePermissionRequest(tQualifier, table.getId(), dto));
@@ -79,7 +79,7 @@ public class TablesPermissionsController {
         try {
             ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
 
-            IResourceModel table = tableService.getInfo(tQualifier);
+            TableModel table = tableService.getInfo(tQualifier);
 
             permissions = permissionsService.getAllByResourceId(tQualifier, table.getId(), pageable);
         } catch (ForbiddenException e) {

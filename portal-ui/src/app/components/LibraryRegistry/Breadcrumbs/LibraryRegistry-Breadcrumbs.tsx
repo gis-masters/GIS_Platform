@@ -36,7 +36,7 @@ interface LibraryRegistryBreadcrumbsProps extends IClassNameProps {
 
 @observer
 export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcrumbsProps> {
-  private operationId: symbol;
+  private operationId?: symbol;
   @observable private records?: LibraryRecord[] = [];
 
   constructor(props: LibraryRegistryBreadcrumbsProps) {
@@ -107,7 +107,7 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
           onClick: onItemClick,
           payload: []
         },
-        ...this.records.map(({ title, path, id }) => {
+        ...(this.records || []).map(({ title, path, id }) => {
           const pathIds = [...getIdsFromPath(path), id];
 
           return {

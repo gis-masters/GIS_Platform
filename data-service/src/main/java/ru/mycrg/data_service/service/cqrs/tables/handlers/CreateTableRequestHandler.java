@@ -42,6 +42,7 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
 @Component
 public class CreateTableRequestHandler implements IRequestHandler<CreateTableRequest, TableModel> {
@@ -102,14 +103,15 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
 
         // Add record to schemasAndTables table
-        SchemasAndTables table = new SchemasAndTables(dto, dataset.getPath() + "/" + dataset.getId(), TABLE);
+        String pathToParent = dataset.getPath() + "/" + dataset.getId();
+        SchemasAndTables table = new SchemasAndTables(dto, pathToParent, TABLE, toJsonNode(schema));
         SchemasAndTables newEntity = schemasAndTablesRepository.save(table);
         request.setEntity(newEntity);
 
         // Create OWNER permission
         permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
-        return new TableModel(newEntity, OWNER.name());
+        return new TableModel(newEntity, OWNER.name(), dataset.getIdentifier());
     }
 
     private SchemasAndTables getDataset(CreateTableRequest request) {
@@ -194,7 +196,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
     private String buildTableName(String sTableName, long datasetId, String nameFromDto) {
         if (nameFromDto == null || nameFromDto.isEmpty()) {
-            return String.format("%s_%d_%s", sTableName, datasetId, UUID.randomUUID().toString().substring(0, 4));
+            return String.format("%s_%d_%s", sTableName, datasetId, UUID.randomUUID().toString().substring(0, 5));
         } else {
             return nameFromDto;
         }

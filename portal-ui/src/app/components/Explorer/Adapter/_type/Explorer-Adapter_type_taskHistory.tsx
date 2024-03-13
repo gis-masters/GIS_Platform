@@ -6,12 +6,6 @@ import { TaskHistory } from '../../../../services/data/task/task.models';
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { formatDate } from '../../../../services/util/date.util';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.TASK_HISTORY]: TaskHistory;
-  }
-}
-
 @staticImplements<Adapter<TaskHistory>>()
 export class ExplorerAdapterTypeTaskHistory {
   static getId(item: ExplorerItemData<TaskHistory>): string {

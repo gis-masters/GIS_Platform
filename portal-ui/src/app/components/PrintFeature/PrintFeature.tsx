@@ -6,12 +6,12 @@ import { cn } from '@bem-react/classname';
 import { featureExtract } from '../../services/print/templates/feature/featureExtract';
 import { PrintTemplate } from '../../services/print/templates/PrintTemplate';
 import { featurePrintTemplates } from '../../services/print/print.service';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { Schema } from '../../services/data/schema/schema.models';
 import { PrintAction } from '../PrintAction/PrintAction';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
 
 const cnPrintFeature = cn('PrintFeature');
 
@@ -50,11 +50,14 @@ export class PrintFeature extends Component<PrintFeatureProps> {
 
   private async loadSchema(): Promise<void> {
     const { layer } = this.props;
-    if (!layer?.schemaId) {
+    if (!layer) {
       // нет слоя — нет мультиков
       return;
     }
-    const schema = await schemaService.getSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
+    if (!schema) {
+      return;
+    }
     this.setSchemaWithAppliedView(applyView(schema, layer.view));
   }
 

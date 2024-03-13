@@ -17,13 +17,13 @@ import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.currentPermissionId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryBasePermissions.makeLibraryPermissionUrl;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentFolderId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.*;
 
 public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -68,6 +68,11 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         getLibrary(libraryName);
     }
 
+    @When("Пользователь делает запрос на получение текущей библиотеки")
+    public void getCurrentLibrary() {
+        getLibrary(currentLibraryModel.getTableName());
+    }
+
     @Then("Отправляется запрос на создание правила для библиотеки: {string}, {string} {string} {string}")
     public void createPermissionForCurrentLibrary(String libraryName,
                                                   String role,
@@ -82,6 +87,12 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("/" + libraryName + "/roleAssignment");
+    }
+
+    @Then("Созданная библиотека содержит схему в поле: {string}")
+    public void shouldReturnSchema(String fieldName) {
+        response.then()
+                .body(fieldName, notNullValue());
     }
 
     @And("Сервер передаёт Location созданного правила библиотеки: {string}")

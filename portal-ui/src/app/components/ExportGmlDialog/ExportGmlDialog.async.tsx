@@ -192,8 +192,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
     const resources: ExportResourceModel[] = this.selectedLayers.map(layer => {
       return {
         dataset: layer.dataset,
-        table: layer.tableName,
-        schemaId: layer.schemaId
+        table: layer.tableName
       };
     });
 

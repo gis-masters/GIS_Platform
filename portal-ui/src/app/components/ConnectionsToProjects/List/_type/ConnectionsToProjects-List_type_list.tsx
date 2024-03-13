@@ -5,7 +5,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import { FileConnection } from '../../../../services/data/files/files.models';
 import { Link } from '../../../Link/Link';
 
-import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List';
+import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List.base';
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjects-List_type_list.scss';
 

@@ -21,7 +21,7 @@ interface LibraryViewSwitchProps {
 
 @observer
 export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
-  private operationId: symbol;
+  private operationId?: symbol;
   @observable private currentFolderTitle?: string;
 
   constructor(props: LibraryViewSwitchProps) {
@@ -59,8 +59,9 @@ export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
 
   private async fetchCurrentFolderTitle() {
     const { path, library } = this.props;
-    if (!path.length) {
-      this.setCurrentFolderTitle(null);
+    const lastPathItem = path.at(-1);
+    if (!lastPathItem) {
+      this.setCurrentFolderTitle(undefined);
 
       return;
     }
@@ -68,7 +69,7 @@ export class LibraryViewSwitch extends Component<LibraryViewSwitchProps> {
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const { title } = await getLibraryRecord(library.table_name, path.at(-1));
+    const { title } = await getLibraryRecord(library.table_name, lastPathItem);
 
     if (operationId === this.operationId) {
       this.setCurrentFolderTitle(title);

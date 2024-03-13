@@ -4,6 +4,7 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 import { Page } from '../../../../server-types/common-contracts';
+import { Schema } from '../schema/schema.models';
 
 import {
   Library,
@@ -14,48 +15,72 @@ import {
   LibraryNew
 } from './library.models';
 import { libraryClient } from './library.client';
+import { convertOldToNewSchema } from '../schema/schema.utils';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {
   const response = await libraryClient.getLibraries(pageOptions);
 
-  return [response.content || [], response.page.totalPages];
+  return [
+    response.content?.map(library => ({ ...library, schema: convertOldToNewSchema(library.schema) })) || [],
+    response.page.totalPages
+  ];
 }
 
 export async function getLibrariesWithParticularOne(
   libraryTableName: string,
   pageOptions: PageOptions
 ): Promise<[Library[], number, number] | undefined> {
-  return await libraryClient.getLibrariesWithParticularOne(libraryTableName, pageOptions);
+  const response = await libraryClient.getLibrariesWithParticularOne(libraryTableName, pageOptions);
+
+  if (!response) {
+    return;
+  }
+
+  const [libraries, totalPages, pageNumber] = response;
+
+  return [
+    libraries.map(library => ({ ...library, schema: convertOldToNewSchema(library.schema) })),
+    totalPages,
+    pageNumber
+  ];
 }
 
 export async function getLibrary(libraryTableName: string): Promise<Library> {
-  return await libraryClient.getLibrary(libraryTableName);
+  const library = await libraryClient.getLibrary(libraryTableName);
+
+  return { ...library, schema: convertOldToNewSchema(library.schema) };
 }
 
 export async function createLibrary({ details, schemaId, versioned, readyForFts }: LibraryNew): Promise<Library> {
-  const result = await libraryClient.createLibrary(details || '', schemaId, versioned, readyForFts);
+  const rawLibrary = await libraryClient.createLibrary(details || '', schemaId, versioned, readyForFts);
+  const newLibrary = { ...rawLibrary, schema: convertOldToNewSchema(rawLibrary.schema) };
 
-  communicationService.libraryUpdated.emit({ type: 'create', data: result });
+  communicationService.libraryUpdated.emit({ type: 'create', data: newLibrary });
 
-  return result;
+  return newLibrary;
 }
 
 export async function getLibraryRecord(libraryTableName: string, recordId: number): Promise<LibraryRecord> {
-  const { schemaId } = await getLibrary(libraryTableName);
+  const { schema } = await getLibrary(libraryTableName);
   const response = await libraryClient.getLibraryRecord(libraryTableName, recordId);
 
-  return { ...response, libraryTableName, schemaId };
+  return { ...response, libraryTableName, schemaId: schema.name };
 }
 
 export async function getLibraryRecords(
   libraryTableName: string,
-  schemaId: string,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number]> {
   const response = await libraryClient.getLibraryRecords(libraryTableName, pageOptions);
-  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName, schemaId);
+  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName);
 
   return [libraryRecords, response.page.totalPages];
+}
+
+export async function getLibrarySchemaByRecord(record: LibraryRecord): Promise<Schema> {
+  const library = await getLibrary(record.libraryTableName);
+
+  return library.schema;
 }
 
 export async function getDocumentVersions(libraryTableName: string, id: number): Promise<[DocumentVersion]> {
@@ -68,7 +93,7 @@ export async function getLibraryRecordsAsRegistry(
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], Page]> {
   const response = await libraryClient.getLibraryRecordsAsRegistry(libraryTableName, pageOptions);
-  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName, schemaId);
+  const libraryRecords = enrichLibraryRecordsResponse(response.content || [], libraryTableName);
 
   return [libraryRecords, response.page];
 }
@@ -80,26 +105,23 @@ export async function getAllLibraryRecordsAsRegistry(
 ): Promise<LibraryRecord[]> {
   const response = await libraryClient.getAllLibraryRecordsAsRegistry(libraryTableName, pageOptions);
 
-  return enrichLibraryRecordsResponse(response, libraryTableName, schemaId);
+  return enrichLibraryRecordsResponse(response, libraryTableName);
 }
 
 function enrichLibraryRecordsResponse(
   responseItems: { content: LibraryRecordRaw }[],
-  libraryTableName: string,
-  schemaId: string
+  libraryTableName: string
 ): LibraryRecord[] {
   return responseItems.map(
     (linkedHashMap: { content: LibraryRecordRaw }): LibraryRecord => ({
       ...linkedHashMap.content,
-      libraryTableName,
-      schemaId
+      libraryTableName
     })
   );
 }
 
 export async function getLibraryRecordsWithParticularOne(
   libraryTableName: string,
-  schemaId: string,
   id: number,
   pageOptions: PageOptions
 ): Promise<[LibraryRecord[], number, number] | undefined> {
@@ -109,20 +131,16 @@ export async function getLibraryRecordsWithParticularOne(
     const [content, totalPages, page] = response;
 
     const records: LibraryRecord[] = content.map(item => {
-      return { schemaId, libraryTableName, ...item.content };
+      return { libraryTableName, ...item.content };
     });
 
     return [records, totalPages, page];
   }
 }
 
-export async function createLibraryRecord(
-  data: LibraryRecordNew,
-  libraryTableName: string,
-  schemaId: string
-): Promise<LibraryRecord> {
+export async function createLibraryRecord(data: LibraryRecordNew, libraryTableName: string): Promise<LibraryRecord> {
   const record = await libraryClient.createLibraryRecord(data, libraryTableName);
-  const result = { schemaId, libraryTableName, ...record };
+  const result = { libraryTableName, ...record };
   communicationService.libraryRecordUpdated.emit({ type: 'create', data: result });
 
   return result;
@@ -195,9 +213,6 @@ export async function sendToSed(libraryTableName: string, recordId: number): Pro
 // for autotests
 if (typeof window !== 'undefined') {
   Object.assign(window, {
-    getLibraries,
-    setLibraryPermission,
-    getLibraryRecords,
-    createLibraryRecord
+    setLibraryPermission
   });
 }

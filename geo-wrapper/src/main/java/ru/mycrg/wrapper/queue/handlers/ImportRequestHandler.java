@@ -58,7 +58,7 @@ public class ImportRequestHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ImportRequestEvent";
+        return ImportRequestEvent.class.getSimpleName();
     }
 
     @Override

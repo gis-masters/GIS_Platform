@@ -15,6 +15,7 @@ import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layer
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
 import { communicationService } from '../../services/communication.service';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
 import { getViewChoiceOptions } from '../Form/Form.utils';
@@ -144,13 +145,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     const { layer, schema } = this.props;
     const properties: PropertySchema[] = [...crgLayerSchema.properties];
 
-    if (
-      layer.type === CrgLayerType.VECTOR ||
-      layer.type === CrgLayerType.SHP ||
-      layer.type === CrgLayerType.TAB ||
-      layer.type === CrgLayerType.DXF ||
-      layer.type === CrgLayerType.MID
-    ) {
+    if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
       properties.push({
         propertyType: PropertyType.CHOICE,
         name: 'styleName',
@@ -250,7 +245,10 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         let title: string = styleName;
         try {
           const sldStyle = await getStyleSld(styleName);
-          title = getStyleTitle(sldStyle);
+          const titleFromStyle = getStyleTitle(sldStyle);
+          if (typeof titleFromStyle === 'string') {
+            title = titleFromStyle;
+          }
         } catch {
           // ничего не делаем, так как если не удалось получить название стиля, то мы выводим его имя
         }

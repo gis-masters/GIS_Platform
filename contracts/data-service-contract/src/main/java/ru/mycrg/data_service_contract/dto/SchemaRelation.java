@@ -13,6 +13,10 @@ public class SchemaRelation {
     private int projectId;
     private List<String> layers = new ArrayList<>();
 
+    public SchemaRelation() {
+        // Required
+    }
+
     public String getTitle() {
         return title;
     }

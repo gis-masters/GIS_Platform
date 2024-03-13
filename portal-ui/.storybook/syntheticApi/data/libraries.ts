@@ -1,14 +1,27 @@
 import { DataEntityType } from '../../../src/app/services/data/vectorData/vectorData.models';
-import { Library } from '../../../src/app/services/data/library/library.models';
+import { LibraryRaw } from '../../../src/app/services/data/library/library.models';
+import { schemas } from './schemas';
+import { OldSchema } from '../../../src/app/services/data/schema/schemaOld.models';
 
-export const libraries: Omit<Library, 'role'>[] = [
+function getSchema(schemaName: string): OldSchema {
+  const schema = schemas.find(({ name }) => name === schemaName);
+  if (!schema) {
+    console.log(`Не найдена схема: ${schemaName}`);
+
+    return schemas[0];
+  }
+
+  return schema;
+}
+
+export const libraries: Omit<LibraryRaw, 'role'>[] = [
   {
     id: 103,
     title: 'Библиотека ЗУ',
     details: 'ЗУ библиотека',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_zu',
-    schemaId: 'dl_zu_schema',
+    schema: getSchema('dl_zu_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-06-08T16:09:19.811232'
@@ -19,7 +32,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     details: 'Раздел 5',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section5',
-    schemaId: 'dl_data_section5_schema',
+    schema: getSchema('dl_data_section5_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.528988'
@@ -29,7 +42,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     title: 'Документы по проектам Геоплан',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_projects_geoplan',
-    schemaId: 'dl_data_projects_geoplan_schema',
+    schema: getSchema('dl_data_projects_geoplan_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529002'
@@ -40,7 +53,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     details: 'Раздел3',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section3',
-    schemaId: 'dl_data_section3_schema',
+    schema: getSchema('dl_data_section3_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529022'
@@ -51,7 +64,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     details: 'Раздел8',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section8',
-    schemaId: 'dl_data_section8_schema',
+    schema: getSchema('dl_data_section8_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529048'
@@ -62,7 +75,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     details: 'Раздел16',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section16',
-    schemaId: 'dl_data_section16_schema',
+    schema: getSchema('dl_data_section16_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529072'
@@ -73,7 +86,7 @@ export const libraries: Omit<Library, 'role'>[] = [
     details: 'Раздел7',
     type: DataEntityType.LIBRARY,
     table_name: 'dl_data_section7',
-    schemaId: 'dl_data_section7_schema',
+    schema: getSchema('dl_data_section7_schema'),
     versioned: false,
     readyForFts: false,
     createdAt: '2022-10-28T16:01:03.529090'

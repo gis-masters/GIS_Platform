@@ -90,15 +90,13 @@ describe('утилита выборки объектов queryObjects', () => {
 
   test('если номер страницы превышает границы выборки, то возвращается пустой массив', () => {
     const pageOptions: PageOptions = { page: 600, pageSize: 5 };
-    const output = [];
 
-    expect(queryObjects(arr, pageOptions)).toStrictEqual(output);
+    expect(queryObjects(arr, pageOptions)).toStrictEqual([]);
   });
 
   test('если под фильтр не подходит ни один объект, то возвращается пустой массив', () => {
     const pageOptions: PageOptions = { page: 0, pageSize: 3, filter: { title: 'красный' } };
-    const output = [];
 
-    expect(queryObjects(arr, pageOptions)).toStrictEqual(output);
+    expect(queryObjects(arr, pageOptions)).toStrictEqual([]);
   });
 });

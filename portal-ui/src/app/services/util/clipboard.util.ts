@@ -24,8 +24,8 @@ export function copyNodeToClipboard(node: HTMLElement): void {
   const selection = window.getSelection();
   const range = document.createRange();
   range.selectNodeContents(node);
-  selection.removeAllRanges();
-  selection.addRange(range);
+  selection?.removeAllRanges();
+  selection?.addRange(range);
 
   try {
     document.execCommand('copy');
@@ -33,5 +33,5 @@ export function copyNodeToClipboard(node: HTMLElement): void {
     throw new Error('Не копируется :(');
   }
 
-  selection.removeAllRanges();
+  selection?.removeAllRanges();
 }

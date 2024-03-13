@@ -7,9 +7,9 @@ import { ConnectionsToProjectsType } from '../ConnectionsToProjects';
 
 export const cnConnectionsToProjectsList = cn('ConnectionsToProjects', 'List');
 
-interface ConnectionsToProjectsListProps {
+export interface ConnectionsToProjectsListProps {
   connections: FileConnection[];
   type: ConnectionsToProjectsType;
 }
 
-export const ConnectionsToProjectsList: FC<ConnectionsToProjectsListProps> = () => null;
+export const ConnectionsToProjectsListBase: FC<ConnectionsToProjectsListProps> = () => null;

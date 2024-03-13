@@ -14,27 +14,28 @@ import { Card } from '../Card/Card';
 import { CardDescription } from '../Card/Description/Card-Description';
 import { CardRowTitle } from '../Card/RowTitle/Card-RowTitle';
 import { CardValue } from '../Card/Value/Card-Value';
-import { LayerIcon } from '../LayerIcon/LayerIcon.composed';
-import { Select } from '../../components/Select/Select';
+import { Select } from '../Select/Select';
 import { SchemaProperties } from '../SchemaProperties/SchemaProperties';
 import { SchemaActions } from '../SchemaActions/SchemaActions';
-import { SchemaDialogButton } from './Button/SchemaDialog-Button';
+
+import { OpenSchemaActionButton } from './Button/OpenSchemaAction-Button';
+import { GeometryIcon } from '../GeometryIcon/GeometryIcon';
 
 const EMPTY = '~~~empty_value~~~';
 
-export const cnSchemaDialog = cn('SchemaDialog');
+export const cnOpenSchemaAction = cn('OpenSchemaAction');
 
-export interface SchemaDialogProps extends IClassNameProps {
+export interface OpenSchemaActionProps extends IClassNameProps {
   schema: Schema;
 }
 
 @observer
-export class SchemaDialog extends Component<SchemaDialogProps> {
+export class OpenSchemaAction extends Component<OpenSchemaActionProps> {
   @observable private selectedViewId: string = EMPTY;
   @observable private selectedContentTypeId: string = EMPTY;
 
   @observable open: boolean = false;
-  constructor(props: SchemaDialogProps) {
+  constructor(props: OpenSchemaActionProps) {
     super(props);
     makeObservable(this);
   }
@@ -44,11 +45,11 @@ export class SchemaDialog extends Component<SchemaDialogProps> {
 
     return (
       <>
-        <SchemaDialogButton onOpen={this.openDialog} />
+        <OpenSchemaActionButton onClick={this.openDialog} />
 
-        <Dialog open={this.open} fullWidth maxWidth='md' className={cnSchemaDialog(null, [className])}>
+        <Dialog open={this.open} fullWidth maxWidth='md' className={cnOpenSchemaAction(null, [className])}>
           <DialogTitle>{schema.title}</DialogTitle>
-          <DialogContent className={cnSchemaDialog('Content')}>
+          <DialogContent className={cnOpenSchemaAction('Content')}>
             <Card>
               <CardRow>
                 <CardRowTitle>Описание:</CardRowTitle>
@@ -73,7 +74,7 @@ export class SchemaDialog extends Component<SchemaDialogProps> {
                   <CardRowTitle>Тип геометрии:</CardRowTitle>
                   <Tooltip title={this.getGeometryType()}>
                     <CardValue>
-                      <LayerIcon colorized size='small' type='vector' schemaId={schema.name} />
+                      <GeometryIcon colorized size='small' geometryType={schema.geometryType} />
                     </CardValue>
                   </Tooltip>
                 </CardRow>
@@ -81,7 +82,7 @@ export class SchemaDialog extends Component<SchemaDialogProps> {
               {schema.views?.length ? (
                 <CardRow>
                   <CardRowTitle>Представление:</CardRowTitle>
-                  <Select options={this.viewsOptions} onChange={this.changeViewHadler} value={this.selectedViewId} />
+                  <Select options={this.viewsOptions} onChange={this.changeViewHandler} value={this.selectedViewId} />
                 </CardRow>
               ) : null}
               {schema.contentTypes?.length ? (
@@ -171,7 +172,7 @@ export class SchemaDialog extends Component<SchemaDialogProps> {
   }
 
   @boundMethod
-  private changeViewHadler(event: SelectChangeEvent<unknown>) {
+  private changeViewHandler(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }

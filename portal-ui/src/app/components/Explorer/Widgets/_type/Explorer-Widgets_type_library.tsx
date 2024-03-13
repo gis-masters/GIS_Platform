@@ -17,7 +17,7 @@ import { libraryClient } from '../../../../services/data/library/library.client'
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
   @observable private currentLibrary?: Library;
-  private operationId: symbol;
+  private operationId?: symbol;
 
   constructor(props: ExplorerWidgetsProps) {
     super(props);

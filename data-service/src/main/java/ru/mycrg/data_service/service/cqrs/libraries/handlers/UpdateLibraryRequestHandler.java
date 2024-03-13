@@ -11,7 +11,6 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
@@ -25,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
@@ -34,18 +34,15 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
 
     private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
-    private final ISchemaService schemaService;
     private final IMasterResourceProtector resourceProtector;
     private final DocumentLibraryRepository libraryRepository;
 
     public UpdateLibraryRequestHandler(FtsDao ftsDao,
                                        DdlTriggers ddlTriggers,
-                                       ISchemaService schemaService,
                                        MasterResourceProtector resourceProtector,
                                        DocumentLibraryRepository libraryRepository) {
         this.ftsDao = ftsDao;
         this.ddlTriggers = ddlTriggers;
-        this.schemaService = schemaService;
         this.resourceProtector = resourceProtector;
         this.libraryRepository = libraryRepository;
     }
@@ -80,14 +77,11 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
             if (updateDto.isReadyForFts()) {
                 log.debug("Добавляем библиотеку: '{}' к полнотекстовому поиску", qualifier.getQualifier());
 
-                if (library.getSchemaId() == null) {
-                    throw new ForbiddenException("Не задана схема для библиотеки: " + qualifier.getQualifier());
+                SchemaDto schema = jsonToDto(library.getSchema());
+                if (schema == null) {
+                    throw new BadRequestException(
+                            "Не возможно обновить библиотеку. Не существует схемы для: " + qualifier.getQualifier());
                 }
-
-                SchemaDto schema = schemaService
-                        .getSchemaByName(library.getSchemaId())
-                        .orElseThrow(() -> new BadRequestException(
-                                "Не возможно обновить библиотеку. Не существует схемы: " + library.getSchemaId()));
 
                 List<String> ftsProperties = getFtsProperties(schema);
                 ddlTriggers.createInsertTrigger(qualifier, ftsProperties);

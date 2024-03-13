@@ -12,7 +12,6 @@ export type LayerIconType = 'vector' | 'dxf' | 'tab' | 'mid' | 'shp' | 'raster' 
 export interface LayerIconProps extends IClassNameProps {
   type: LayerIconType;
   layer?: CrgLayer;
-  schemaId?: string;
   colorized?: boolean;
   expanded?: boolean;
   size?: SvgIconProps['fontSize'];

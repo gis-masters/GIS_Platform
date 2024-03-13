@@ -85,6 +85,6 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
 
   @action
   private dropConnections() {
-    this.connections = null;
+    this.connections = undefined;
   }
 }

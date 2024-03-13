@@ -29,7 +29,6 @@ import { LayerAdd } from '../../Icons/LayerAdd';
 import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
-import { schemaService } from '../../../services/data/schema/schema.service';
 
 const cnDatasetActionsAddToProject = cn('DatasetActions', 'AddToProject');
 
@@ -39,11 +38,11 @@ interface DatasetActionsAddToProjectProps {
 
 @observer
 export class DatasetActionsAddToProject extends Component<DatasetActionsAddToProjectProps> {
-  @observable private vectorTablesLayers: NewCrgLayer[];
+  @observable private vectorTablesLayers?: NewCrgLayer[];
   @observable private projectsListDialogOpen = false;
   @observable private dialogOpen = false;
   @observable private addedLayers = 0;
-  @observable private projectId: number;
+  @observable private projectId?: number;
   @observable private busy = false;
 
   constructor(props: DatasetActionsAddToProjectProps) {
@@ -88,7 +87,11 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
           </DialogActions>
         </Dialog>
 
-        <Loading visible={this.busy} global value={(this.addedLayers / this.vectorTablesLayers?.length) * 100} />
+        <Loading
+          visible={this.busy}
+          global
+          value={this.vectorTablesLayers?.length && (this.addedLayers / this.vectorTablesLayers.length) * 100}
+        />
       </>
     );
   }
@@ -110,7 +113,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
       project.id
     );
 
-    let vectorTables: VectorTable[];
+    let vectorTables: VectorTable[] = [];
     try {
       vectorTables = await getAllVectorTablesInDataset(dataset);
     } catch {
@@ -121,34 +124,28 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
 
     const vectorDefaults = vectorLayerDefaults();
 
-    const vectorTablesLayers = await Promise.all(
-      vectorTables.map(async (table, index) => {
-        const schema = await schemaService.getSchema(table.schemaId);
-
-        return {
-          ...vectorDefaults,
-          parentId: group.id,
-          enabled: false,
-          dataset: dataset?.identifier,
-          tableName: table?.identifier,
-          title: table.title,
-          position: index,
-          nativeCRS: table.crs,
-          schemaId: table.schemaId,
-          styleName: schema.styleName || table.schemaId
-        };
-      })
-    );
+    const vectorTablesLayers = vectorTables.map((table, index) => ({
+      ...vectorDefaults,
+      parentId: group.id,
+      enabled: false,
+      dataset: dataset?.identifier,
+      tableName: table?.identifier,
+      title: table.title,
+      position: index,
+      nativeCRS: table.crs,
+      schemaId: table.schema.name,
+      styleName: table.schema.styleName || table.schema.name
+    }));
 
     this.setVectorTablesLayers(vectorTablesLayers);
 
-    for (const layer of this.vectorTablesLayers) {
+    for (const layer of vectorTablesLayers) {
       try {
         await createLayer(layer, project.id);
         this.setAddedLayers(this.addedLayers + 1);
       } catch (error) {
         const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-        if (err.response.status === 409) {
+        if (err?.response?.status === 409) {
           Toast.warn({ message: `Слой ${layer.title} уже существует в проекте` });
         } else {
           alertLayerOperationError(err, layer, 'создать слой', layer.title);

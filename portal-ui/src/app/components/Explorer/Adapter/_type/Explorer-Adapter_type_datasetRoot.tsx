@@ -17,12 +17,6 @@ import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Exp
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.DATASET_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDatasetRoot {
   static getId(): string {

@@ -1,7 +1,6 @@
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { applyContentType } from '../../../../src/app/services/data/schema/schema.utils';
 import { Library, LibraryRecord } from '../../../../src/app/services/data/library/library.models';
-import { getSchema } from '../schemas/getSchema';
 import { generateObjectBySchema, supportedTypesForGeneration } from '../../utils/generateObjectBySchema';
 import { createLibraryRecordAs } from './createLibraryRecordAs';
 import { TestUser } from '../auth/testUsers';
@@ -11,10 +10,9 @@ export async function createGeneratedDocuments(
   library: Library,
   user: TestUser
 ): Promise<LibraryRecord[]> {
-  const schema = await getSchema(library.schemaId);
   const schemasWithContentTypes: Schema[] =
-    schema.contentTypes
-      ?.map(({ id }) => applyContentType(schema, id))
+    library.schema.contentTypes
+      ?.map(({ id }) => applyContentType(library.schema, id))
       .filter(({ properties }) =>
         properties.every(
           ({ propertyType, required }) => !required || supportedTypesForGeneration.includes(propertyType)
@@ -31,8 +29,7 @@ export async function createGeneratedDocuments(
     const record = await createLibraryRecordAs(generateObjectBySchema(selectedSchema), library.table_name, user);
     created.push({
       ...record,
-      libraryTableName: library.table_name,
-      schemaId: library.schemaId
+      libraryTableName: library.table_name
     });
   }
 

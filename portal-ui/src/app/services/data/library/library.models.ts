@@ -1,22 +1,31 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { Role } from '../permissions/permissions.models';
-import { PropertyType, SimpleSchema } from '../schema/schema.models';
-import { DataEntity, DataEntityType } from '../vectorData/vectorData.models';
+import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
+import { OldSchema } from '../schema/schemaOld.models';
+import { DataEntityType } from '../vectorData/vectorData.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'
 }
 
-export interface Library extends Omit<DataEntity, 'identifier'> {
+export interface Library {
+  id: number;
+  title: string;
+  details?: string;
+  readyForFts: boolean;
+  createdAt: string;
   type: DataEntityType.LIBRARY;
   table_name: string;
-  schemaId: string;
-  role: Role;
   versioned: boolean;
-  readyForFts: boolean;
+  schema: Schema;
+  role: Role;
 }
 
-export type LibraryNew = Pick<Library, 'schemaId' | 'details' | 'versioned' | 'readyForFts'>;
+export interface LibraryRaw extends Omit<Library, 'schema'> {
+  schema: OldSchema;
+}
+
+export type LibraryNew = Pick<Library, 'details' | 'versioned' | 'readyForFts'> & { schemaId: string };
 
 export const librarySchema: SimpleSchema = {
   properties: [
@@ -65,7 +74,6 @@ export interface LibraryRecordRaw extends Record<string, unknown> {
 
 export interface LibraryRecord extends LibraryRecordRaw {
   libraryTableName: string;
-  schemaId: string;
 }
 
 export interface DocumentVersion {

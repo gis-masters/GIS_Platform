@@ -79,6 +79,10 @@ public class SimplePropertyDto {
     private List<ValueTitleProjection> enumerations;
     private List<String> allowedValues;
 
+    public SimplePropertyDto() {
+        // Required
+    }
+
     public String getName() {
         return name;
     }

@@ -23,11 +23,10 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.FileService;
+import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.SchemaServiceBase;
-import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -35,19 +34,16 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.*;
-import static ru.mycrg.data_service.service.reestrs.Systems.*;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
-import static ru.mycrg.data_service.util.JsonConverter.*;
+import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
+import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
@@ -57,6 +53,7 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
         havingValue = "true",
         matchIfMissing = true)
 public class AcceptKptService {
+
     private static final Logger log = LoggerFactory.getLogger(AcceptKptService.class);
     private static final String KPT_TABLE_NAME = "dl_data_kpt";
     private static final String DESCRIPTION_ATTRIBUTE = "description";
@@ -73,7 +70,6 @@ public class AcceptKptService {
     private final TasksDetachedDao tasksDetachedDao;
     private final DocumentLibraryRepository libraryRepository;
     private final FileRepository fileRepository;
-    private final SchemaServiceBase schemaServiceBase;
     private final TaskLogService taskLogService;
     private final FileStorageService fileStorageService;
     private final FileService fileService;
@@ -83,7 +79,6 @@ public class AcceptKptService {
 
     public AcceptKptService(RecordsDao recordsDao,
                             DocumentLibraryRepository libraryRepository,
-                            SchemaServiceBase schemaServiceBase,
                             TaskLogService taskLogService,
                             MinioService minioService,
                             FileStorageService fileStorageService,
@@ -94,7 +89,6 @@ public class AcceptKptService {
                             TasksDetachedDao tasksDetachedDao) {
         this.recordsDao = recordsDao;
         this.libraryRepository = libraryRepository;
-        this.schemaServiceBase = schemaServiceBase;
         this.taskLogService = taskLogService;
         this.minioService = minioService;
         this.fileStorageService = fileStorageService;
@@ -109,22 +103,21 @@ public class AcceptKptService {
     public void acceptKpt(ProcessAdapterMessageResult processResult) {
         try {
             if (!processResult.getXmlBuildMeta().getRequestXmlString().contains("PrimaryMessage")) {
-
                 return;
             }
 
             UUID referenceClientId = processResult.getXmlBuildMeta().getReferenceClientId();
-            String filter = String.format("order_number like '%s'",
-                    referenceClientId);
+            String filter = String.format("order_number like '%s'", referenceClientId);
             log.debug("Reference client-id: {}", referenceClientId);
             ResourceQualifier libraryQualifier = libraryQualifier(KPT_TABLE_NAME);
-            IRecord docRecord = recordsDao.findBy(libraryQualifier, filter)
-                    .orElseThrow(() -> new SmevRequestException("Не найден документ с order_number: " +
-                            referenceClientId));
+            IRecord docRecord = recordsDao
+                    .findBy(libraryQualifier, filter)
+                    .orElseThrow(
+                            () -> new SmevRequestException("Не найден документ с order_number: " + referenceClientId));
             String docPath = docRecord.getAsString(PATH.getName());
             if (StringUtils.isEmpty(docPath)) {
                 throw new SmevRequestException("Атрибут path не заполнен у найденного документа с id: "
-                        + docRecord.getId());
+                                                       + docRecord.getId());
             }
             int lastIndex = docPath.lastIndexOf('/');
             String folderId = docPath.substring(lastIndex + 1);
@@ -134,13 +127,13 @@ public class AcceptKptService {
                     .findByTableName(KPT_TABLE_NAME)
                     .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
                     .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
-                            + KPT_TABLE_NAME));
-            SchemaDto schema = schemaServiceBase.getSchemaByName(libraryModel.getSchemaId())
-                    .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + KPT_TABLE_NAME));
-            ResourceQualifier libraryRecordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_TABLE_NAME,
-                    Long.parseLong(folderId), LIBRARY_RECORD);
+                                                                     + KPT_TABLE_NAME));
+            SchemaDto schema = libraryModel.getSchema();
+            ResourceQualifier libraryRecordQualifier =
+                    new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_TABLE_NAME, Long.parseLong(folderId), LIBRARY_RECORD);
             IRecord folder = recordsDao.findById(libraryRecordQualifier, schema)
-                    .orElseThrow(() -> new SmevRequestException("Не найдена папка с id: " + folderId));
+                                       .orElseThrow(
+                                               () -> new SmevRequestException("Не найдена папка с id: " + folderId));
             if (!StringUtils.isNumeric(folder.getTitle())) {
                 throw new SmevRequestException("У папки некорректно заполнен атрибут title: " + folder.getTitle());
             }
@@ -152,19 +145,19 @@ public class AcceptKptService {
             taskLogService.create(new TaskLogDto("Получение ответа", taskId), acceptLog);
 
             uploadFileToDocument(docRecord,
-                    processResult.getXmlBuildMeta().getClientId().toString(),
-                    libraryRecordQualifier, schema);
+                                 processResult.getXmlBuildMeta().getClientId().toString(),
+                                 libraryRecordQualifier, schema);
 
             Map<String, Object> attachmentLog = new HashMap<>();
             attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " + docRecord.getTitle());
             taskLogService.create(new TaskLogDto("Добавление ответа", taskId), attachmentLog);
 
             updateFolderAndTaskIfAllFileProcessed(docRecord,
-                    folder,
-                    libraryQualifier,
-                    libraryRecordQualifier,
-                    taskId,
-                    schema);
+                                                  folder,
+                                                  libraryQualifier,
+                                                  libraryRecordQualifier,
+                                                  taskId,
+                                                  schema);
         } catch (Exception e) {
             throw new SmevRequestException("Ошибка во время приёма КПТ :" + e.getMessage());
         }
@@ -177,9 +170,9 @@ public class AcceptKptService {
 
         byte[] fileBytes = minioService.getFile(clientId + "/" + DEFAULT_FILENAME, smev3Config.getS3bucketIncoming());
         MultipartFile multipartFile = new CustomMultipartFile(fileBytes,
-                clientId + DEFAULT_FILE_FORMAT,
-                DEFAULT_FILENAME,
-                DEFAULT_CONTENT_TYPE);
+                                                              clientId + DEFAULT_FILE_FORMAT,
+                                                              DEFAULT_FILENAME,
+                                                              DEFAULT_CONTENT_TYPE);
         String path = fileStorageService.storeFile(multipartFile, fileStorageService.generateFileName(multipartFile));
         String intents = simpleIntentHandler.defineIntent(multipartFile);
         File entity = new File(multipartFile, intents, path, SMEV_3);
@@ -188,8 +181,8 @@ public class AcceptKptService {
         fileQualifier.setFieldName(FILE_ATTRIBUTE);
         String type = fileQualifier.getType().name();
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(qualifier.getSchema(),
-                qualifier.getTable(),
-                docId);
+                                                                           qualifier.getTable(),
+                                                                           docId);
         JsonNode jsonNode = toJsonNode(fileResQualifier);
         fileRepository.setQualifier(type, jsonNode, Set.of(savedEntity.getId()));
         fileService.transferFileFromTempDirectory(savedEntity, fileQualifier, type);
@@ -207,9 +200,9 @@ public class AcceptKptService {
         payload.put(OWNER_DOC_ATTRIBUTE, FGIS_EGRN);
         payload.put(RECEIPT_TYPE_ATTRIBUTE, SMEV_3);
         ResourceQualifier resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                KPT_TABLE_NAME,
-                docId,
-                LIBRARY_RECORD);
+                                                                    KPT_TABLE_NAME,
+                                                                    docId,
+                                                                    LIBRARY_RECORD);
         recordsDao.updateRecordById(resourceQualifier, payload, schema);
     }
 
@@ -219,10 +212,9 @@ public class AcceptKptService {
                                                        ResourceQualifier libraryRecordQualifier,
                                                        Long taskId,
                                                        SchemaDto schema) throws CrgDaoException {
-        String folderFilter = String.format("path like '%s'",
-                docRecord.getContent().get(PATH.getName()));
+        String folderFilter = String.format("path like '%s'", docRecord.getContent().get(PATH.getName()));
         boolean isAllFileProcessed = recordsDao.findAll(libraryQualifier, folderFilter, schema).stream()
-                .allMatch(iRecord -> iRecord.getContent().get(FILE_ATTRIBUTE) != null);
+                                               .allMatch(iRecord -> iRecord.getContent().get(FILE_ATTRIBUTE) != null);
         if (isAllFileProcessed) {
             Map<String, Object> folderPayload = folder.getContent();
             folderPayload.put(DATE_ORDER_COMPLETION, LocalDateTime.now());

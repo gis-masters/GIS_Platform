@@ -1,2 +1,2 @@
 ALTER TABLE IF EXISTS data.files
-    ADD COLUMN crs character varying(20);
+    ADD COLUMN IF NOT EXISTS crs character varying(20);

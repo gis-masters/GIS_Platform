@@ -8,12 +8,6 @@ import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.PROJECT]: CrgProject;
-  }
-}
-
 @staticImplements<Adapter<CrgProject>>()
 export class ExplorerAdapterTypeProject {
   static getId(item: ExplorerItemData<CrgProject>): string {

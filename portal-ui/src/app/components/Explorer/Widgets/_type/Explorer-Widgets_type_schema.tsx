@@ -15,7 +15,7 @@ import { CardRowTitle } from '../../../../components/Card/RowTitle/Card-RowTitle
 import { CardValue } from '../../../../components/Card/Value/Card-Value';
 import { ContentType, PropertyOption, Schema } from '../../../../services/data/schema/schema.models';
 import { Select } from '../../../../components/Select/Select';
-import { LayerIcon } from '../../../../components/LayerIcon/LayerIcon.composed';
+import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { cnExplorerWidgets } from '../Explorer-Widgets.base';
 
@@ -62,7 +62,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
               <CardRowTitle>Тип геометрии:</CardRowTitle>
               <Tooltip title={this.getGeometryType()}>
                 <CardValue>
-                  <LayerIcon colorized size='small' type='vector' schemaId={schema.name} />
+                  <GeometryIcon colorized size='small' geometryType={schema.geometryType} />
                 </CardValue>
               </Tooltip>
             </CardRow>
@@ -71,7 +71,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
             <CardRow>
               <CardRowTitle>Представление:</CardRowTitle>
               <CardValue>
-                <Select options={this.viewsOptions} onChange={this.changeViewHadler} value={this.selectedViewId} />
+                <Select options={this.viewsOptions} onChange={this.changeViewHandler} value={this.selectedViewId} />
               </CardValue>
             </CardRow>
           ) : null}
@@ -142,7 +142,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
   }
 
   @boundMethod
-  private changeViewHadler(event: SelectChangeEvent<unknown>) {
+  private changeViewHandler(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }

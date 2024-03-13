@@ -28,7 +28,6 @@ export const cnCreateLibraryRecordItem = cn('CreateLibraryRecord', 'Item');
 
 export interface CreateLibraryRecordItemProps extends IClassNameProps {
   contentType: ContentType;
-  schema: Schema;
   library: Library;
   parent?: LibraryRecord;
   ButtonComponent?: ComponentType<CreateLibraryRecordItemSingleButtonProps>;
@@ -57,7 +56,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
   render() {
     const { contentType, parent, className, ButtonComponent } = this.props;
     const Icon: SvgIconComponent =
-      icons[contentType.icon] || (contentType.type === 'FOLDER' ? icons.FOLDER : icons.DOCUMENT);
+      (contentType.icon && icons[contentType.icon]) || (contentType.type === 'FOLDER' ? icons.FOLDER : icons.DOCUMENT);
     const title = contentType.title || (contentType.type === 'FOLDER' ? 'Раздел' : 'Документ');
 
     return (
@@ -93,14 +92,14 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
 
   @computed
   private get preparedSchema(): Schema {
-    const { contentType, schema } = this.props;
+    const { contentType, library } = this.props;
 
-    return applyContentType(schema, contentType.id);
+    return applyContentType(library.schema, contentType.id);
   }
 
   @boundMethod
   private async create(formValue: LibraryRecord) {
-    const { library, schema, contentType, onCreate } = this.props;
+    const { library, contentType, onCreate } = this.props;
 
     const newRecord = this.fillSystemAttributes(
       cleanCalculatedValues<LibraryRecord>(formValue, this.preparedSchema.properties)
@@ -109,7 +108,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
     this.setLoading(true);
 
     try {
-      const createdRecord = await createLibraryRecord(newRecord, library.table_name, schema.name);
+      const createdRecord = await createLibraryRecord(newRecord, library.table_name);
       onCreate(createdRecord, contentType.type === 'FOLDER');
       this.closeDialog();
     } catch (error) {

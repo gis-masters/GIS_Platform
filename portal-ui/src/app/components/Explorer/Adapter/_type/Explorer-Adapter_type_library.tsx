@@ -29,12 +29,6 @@ import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitl
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.LIBRARY]: Library;
-  }
-}
-
 @staticImplements<Adapter<Library, LibraryRecord>>()
 export class ExplorerAdapterTypeLibrary {
   static getId(item: ExplorerItemData<Library>): string {
@@ -46,7 +40,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getDescription(item: ExplorerItemData<Library>): ReactNode {
-    const { details, createdAt, schemaId } = item.payload;
+    const { details, createdAt, schema } = item.payload;
 
     return (
       <>
@@ -62,8 +56,8 @@ export class ExplorerAdapterTypeLibrary {
         {currentUser.isAdmin && (
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
-            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schemaId}"%5D`}>
-              {schemaId}
+            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schema.name}"%5D`}>
+              {schema.name}
             </Link>
           </ExplorerInfoDescItem>
         )}
@@ -91,16 +85,12 @@ export class ExplorerAdapterTypeLibrary {
   ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
     const result: ExplorerItemData<LibraryRecord>[] = [];
 
-    const [libraryRecords, pagesCount] = await getLibraryRecords(
-      explorerItem.payload.table_name,
-      explorerItem.payload.schemaId,
-      {
-        ...options,
-        filter: service.mergeCustomFilter(filter || {}, explorerItem, store)
-      }
-    );
+    const [libraryRecords, pagesCount] = await getLibraryRecords(explorerItem.payload.table_name, {
+      ...options,
+      filter: service.mergeCustomFilter(filter, explorerItem, store)
+    });
 
-    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schemaId);
+    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schema.name);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
@@ -135,7 +125,7 @@ export class ExplorerAdapterTypeLibrary {
     recordId: string
   ): Promise<ExplorerItemData<LibraryRecord>> {
     const payload = await getLibraryRecord(item.payload.table_name, Number(recordId));
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = item.payload.schema;
     const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
 
     return {
@@ -154,23 +144,18 @@ export class ExplorerAdapterTypeLibrary {
     store: ExplorerStore,
     service: ExplorerService
   ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
-    const response = await getLibraryRecordsWithParticularOne(
-      item.payload.table_name,
-      item.payload.schemaId,
-      Number(id),
-      {
-        ...options,
-        filter: service.mergeCustomFilter(filter || {}, item, store),
-        page
-      }
-    );
+    const response = await getLibraryRecordsWithParticularOne(item.payload.table_name, Number(id), {
+      ...options,
+      filter: service.mergeCustomFilter(filter || {}, item, store),
+      page
+    });
 
     if (!response) {
       return;
     }
 
     const [records, totalPages, pageNumber] = response;
-    const { contentTypes } = await schemaService.getSchema(item.payload.schemaId);
+    const { contentTypes } = item.payload.schema;
 
     return [
       records.map(payload => {

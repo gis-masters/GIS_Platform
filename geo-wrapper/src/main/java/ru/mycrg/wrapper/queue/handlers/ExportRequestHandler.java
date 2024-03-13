@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -17,7 +18,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 
 /**
- * Сервис обрабатывающий события експорта.
+ * Сервис обрабатывающий события экспорта.
  */
 @Service
 public class ExportRequestHandler implements IEventHandler {
@@ -36,7 +37,7 @@ public class ExportRequestHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ExportRequestEvent";
+        return ExportRequestEvent.class.getSimpleName();
     }
 
     @Override
@@ -44,16 +45,26 @@ public class ExportRequestHandler implements IEventHandler {
         final ExportRequestEvent event = (ExportRequestEvent) mqEvent;
         try {
             ExportProcessModel payload = event.getPayload();
+            if (payload.getResourceProjections().isEmpty()) {
+                log.debug("Не найдено ресурсов для экспорта. {}", payload);
+                messageBus.produce(
+                        new ExportResponseEvent(event, ERROR, "Завершено", "Не найдено ресурсов для экспорта"));
 
-            String path;
+                return;
+            }
+
+            log.debug("Try handle export event: {}", payload);
+            String pathToZip;
             if ("ESRI Shapefile".equals(payload.getFormat())) {
-                path = gdalService.generate(event);
+                pathToZip = gdalService.generate(event);
 
-                messageBus.produce(new ExportResponseEvent(event, DONE, getDescription(payload, "SHP"), 100, path));
+                messageBus.produce(
+                        new ExportResponseEvent(event, DONE, getDescription(payload, "SHP"), 100, pathToZip));
             } else if ("GML".equals(payload.getFormat())) {
-                path = gmlGenerator.generate(event);
+                pathToZip = gmlGenerator.generate(event);
 
-                messageBus.produce(new ExportResponseEvent(event, DONE, getDescription(payload, "GML"), 100, path));
+                messageBus.produce(
+                        new ExportResponseEvent(event, DONE, getDescription(payload, "GML"), 100, pathToZip));
             } else {
                 final String msg = "Incorrect export format: " + payload.getFormat();
                 log.warn(msg);
@@ -69,13 +80,18 @@ public class ExportRequestHandler implements IEventHandler {
 
     @NotNull
     private String getDescription(ExportProcessModel payload, String fileType) {
-        String description = fileType;
-        if (payload.getResourceProjections().size() <= 1) {
-            description = description + " " + payload.getResourceProjections().get(0).getSchema().getTitle();
+        if (payload.getResourceProjections().isEmpty()) {
+            return String.format("Из %s экспортировано 0 слоёв", fileType);
+        } else if (payload.getResourceProjections().size() == 1) {
+            SchemaDto schema = payload.getResourceProjections().get(0).getSchema();
+            if (schema != null) {
+                return String.format("Из %s экспортирован 1 слой: %s", fileType, schema.getTitle());
+            }
         } else {
-            description = description + " Экспортировано: " + payload.getResourceProjections().size() + " слоя(ёв)";
+            return String.format("Из %s экспортировано: %d слоя(ёв)",
+                                 fileType, payload.getResourceProjections().size());
         }
 
-        return description;
+        return fileType;
     }
 }

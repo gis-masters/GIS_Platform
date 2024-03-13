@@ -24,12 +24,6 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.DATASET]: Dataset;
-  }
-}
-
 @staticImplements<Adapter<Dataset, VectorTable>>()
 export class ExplorerAdapterTypeDataset {
   static getId(item: ExplorerItemData<Dataset>): string {

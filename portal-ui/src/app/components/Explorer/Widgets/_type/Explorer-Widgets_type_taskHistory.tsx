@@ -33,7 +33,7 @@ class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {
     return (
       <div className={cnExplorerWidgets(null, [className])}>
         <ExplorerInfoDescItem multiline>
-          <ViewContentWidget schema={this.schema} data={payload.massage} title='Свойства задачи' />
+          {this.schema && <ViewContentWidget schema={this.schema} data={payload.massage} title='Свойства задачи' />}
         </ExplorerInfoDescItem>
       </div>
     );

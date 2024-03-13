@@ -1,5 +1,9 @@
 package ru.mycrg.data_service.entity;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -9,6 +13,10 @@ import java.time.LocalDateTime;
 import static java.time.LocalDateTime.now;
 
 @Entity
+@TypeDef(
+        name = "jsonb-node",
+        typeClass = JsonNodeBinaryType.class
+)
 @Table(name = "doc_libraries")
 public class DocumentLibrary {
 
@@ -29,8 +37,9 @@ public class DocumentLibrary {
     @Column(nullable = false)
     private String tableName;
 
-    @Column(length = 50)
-    private String schemaId;
+    @Type(type = "jsonb-node")
+    @Column(columnDefinition = "jsonb")
+    private JsonNode schema;
 
     @Column
     private Long registryCounter;
@@ -90,15 +99,6 @@ public class DocumentLibrary {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
-    }
-
-    @Nullable
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     @Nullable
@@ -167,5 +167,13 @@ public class DocumentLibrary {
 
     public void setReadyForFts(Boolean readyForFts) {
         this.readyForFts = readyForFts;
+    }
+
+    public JsonNode getSchema() {
+        return schema;
+    }
+
+    public void setSchema(JsonNode schema) {
+        this.schema = schema;
     }
 }

@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+
 public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
 
     @Override
@@ -18,10 +20,12 @@ public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
         dl.setDetails(rs.getString("details"));
         dl.setPath(rs.getString("path"));
         dl.setTableName(rs.getString("table_name"));
-        dl.setSchemaId(rs.getString("schema_id"));
         dl.setCreatedBy(rs.getString("created_by"));
         dl.setVersioned(rs.getBoolean("versioned"));
         dl.setReadyForFts(rs.getBoolean("ready_for_fts"));
+
+        String schemaAsJson = rs.getString("schema");
+        dl.setSchema(toJsonNode(schemaAsJson));
 
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {

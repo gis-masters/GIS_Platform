@@ -8,12 +8,6 @@ import { formatDate } from '../../../../services/util/date.util';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.DOCUMENT_VERSION]: DocumentVersionExtended;
-  }
-}
-
 @staticImplements<Adapter<DocumentVersionExtended>>()
 export class ExplorerAdapterTypeDocumentVersion {
   static getId(item: ExplorerItemData<DocumentVersionExtended>): string {

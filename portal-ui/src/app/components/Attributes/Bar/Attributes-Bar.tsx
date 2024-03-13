@@ -76,7 +76,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
   }
 
   async componentDidUpdate(prevProps: AttributesBarProps) {
-    if (this.props.layer?.schemaId !== prevProps.layer?.schemaId) {
+    if (this.props.layer?.id !== prevProps.layer?.id) {
       await this.fetchSchema();
     }
   }
@@ -211,7 +211,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
     this.fetchingSchemaOperationId = operationId;
 
     const schema = await getLayerSchema(this.props.layer);
-    if (this.fetchingSchemaOperationId === operationId) {
+    if (this.fetchingSchemaOperationId === operationId && schema) {
       this.setSchema(schema);
     }
   }

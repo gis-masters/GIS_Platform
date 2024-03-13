@@ -3,7 +3,7 @@ import { getIdsFromPath } from '../DataManagement/DataManagement.utils';
 
 export function getBreadcrumbsPathFromFilter(filter: FilterQuery): number[] {
   const [and, index] = getFilterRootAnd(filter || {}, 'path');
-  let path: string;
+  let path: string | undefined;
 
   if (index !== -1 && and[index].$or) {
     path = (((and[index].$or as FilterQuery)[0] as FilterQuery).path as FilterQuery).$like as string;

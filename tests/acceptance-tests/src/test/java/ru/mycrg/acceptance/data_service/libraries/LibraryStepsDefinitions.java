@@ -338,9 +338,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Запись успешно создана")
     public void checkRecordCreation() {
-        String newTitle = response.jsonPath().get("title");
-
-        assertEquals("test", newTitle);
+        response.prettyPrint();
+        response.then()
+                .body("title", equalTo("test"))
+                .body("native_crs", equalTo("EPSG:28406"))
+                .body("content_type_id", equalTo("doc_v4"))
+                .body("oktmo", equalTo("123123"));
     }
 
     @And("Тело ответа содержит ошибку о том что данные не были сохранены")
@@ -815,7 +818,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 .given().
                         contentType("multipart/form-data").
                         multiPart("body", body)
-                .when().
+                .when().log().all().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);

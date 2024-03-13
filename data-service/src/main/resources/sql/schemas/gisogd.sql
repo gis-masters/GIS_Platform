@@ -4836,7 +4836,7 @@ SELECT 'eng_survey',
   "description": "Материалы инженерных изысканий",
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'feature_extract');
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'eng_survey');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'feedback',

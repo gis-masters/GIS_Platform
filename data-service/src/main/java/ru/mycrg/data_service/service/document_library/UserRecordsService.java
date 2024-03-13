@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -88,7 +89,8 @@ public class UserRecordsService implements IRecordsService {
                 records = recordsDao.findAll(lQualifier, ecqlFilter, schema, pageable);
                 total = recordsDao.getTotal(lQualifier, ecqlFilter);
             } else {
-                records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, schema, pageable);
+                records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable,
+                                                                    new RecordRowMapper(schema));
                 total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
             }
         } else {
@@ -97,7 +99,8 @@ public class UserRecordsService implements IRecordsService {
                     ? ecqlFilter
                     : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
-            records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, schema, pageable);
+            records = permissionsRepository.findAllowedByParent(lQualifier, path, ecqlFilter, pageable,
+                                                                new RecordRowMapper(schema));
             total = permissionsRepository.getTotalByParent(lQualifier, path, ecqlFilter);
         }
 

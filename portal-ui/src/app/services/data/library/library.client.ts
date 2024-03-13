@@ -7,7 +7,7 @@ import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
-import { Library, DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
+import { DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw, LibraryRaw } from './library.models';
 
 @boundClass
 class LibraryClient extends Client {
@@ -71,30 +71,35 @@ class LibraryClient extends Client {
     return `${this.getDocLibraryRecordUrl(libraryTableName, recordId)}/integration`;
   }
 
-  async getLibraries(pageOptions: PageOptions): Promise<PageableResources<Library>> {
+  async getLibraries(pageOptions: PageOptions): Promise<PageableResources<LibraryRaw>> {
     const params = preparePageOptions(pageOptions, true);
 
-    return await http.get<PageableResources<Library>>(this.getDocLibrariesUrl(), { params });
+    return await http.get<PageableResources<LibraryRaw>>(this.getDocLibrariesUrl(), { params });
   }
 
   async getLibrariesWithParticularOne(
     libraryTableName: string,
     pageOptions: PageOptions
-  ): Promise<[Library[], number, number] | undefined> {
-    return await http.getPageWithObject<Library>(
+  ): Promise<[LibraryRaw[], number, number] | undefined> {
+    return await http.getPageWithObject<LibraryRaw>(
       this.getDocLibrariesUrl(),
       preparePageOptions(pageOptions, true),
-      (item: Library) => item.table_name === libraryTableName,
+      (item: LibraryRaw) => item.table_name === libraryTableName,
       {}
     );
   }
 
-  async createLibrary(details: string, schemaId: string, versioned: boolean, readyForFts?: boolean): Promise<Library> {
-    return await http.post<Library>(this.getDocLibrariesUrl(), { details, schemaId, versioned, readyForFts });
+  async createLibrary(
+    details: string,
+    schemaId: string,
+    versioned: boolean,
+    readyForFts?: boolean
+  ): Promise<LibraryRaw> {
+    return await http.post<LibraryRaw>(this.getDocLibrariesUrl(), { details, schemaId, versioned, readyForFts });
   }
 
-  async getLibrary(libraryTableName: string): Promise<Library> {
-    return await http.get<Library>(this.getDocLibraryUrl(libraryTableName));
+  async getLibrary(libraryTableName: string): Promise<LibraryRaw> {
+    return await http.get<LibraryRaw>(this.getDocLibraryUrl(libraryTableName));
   }
 
   async getLibraryPermissions(libraryTableName: string): Promise<RoleAssignmentBody[]> {

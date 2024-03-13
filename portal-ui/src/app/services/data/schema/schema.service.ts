@@ -8,10 +8,11 @@ import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { communicationService } from '../../communication.service';
 import { ImportLayerItem } from '../../geoserver/import/import.models';
 
-import { Schema } from './schema.models';
+import { PropertySchemaChoice, PropertyType, Schema } from './schema.models';
 import { schemaClient } from './schema.client';
 import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
-import { OldSchema, OldPropertySchema, OldPropertySchemaChoice, ValueType } from './schemaOld.models';
+import { OldSchema, OldPropertySchema } from './schemaOld.models';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -115,7 +116,7 @@ class SchemaService {
    * @deprecated костыль, do not use
    */
   async getClassIdAlias(layer: CrgVectorLayer, bugObject: BugObject): Promise<string> {
-    const schema = await this.getOldSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
 
     if (!schema) {
       return '';
@@ -125,13 +126,13 @@ class SchemaService {
     // @ts-ignore
     return (
       schema.properties
-        .filter(simpleProperty => simpleProperty.valueType === ValueType.CHOICE && simpleProperty.enumerations)
+        .filter(simpleProperty => simpleProperty.propertyType === PropertyType.CHOICE && simpleProperty.options)
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
         // @ts-ignore
-        .reduce<string>((val: string, simpleProperty: OldPropertySchemaChoice) => {
+        .reduce<string>((val: string, simpleProperty: PropertySchemaChoice) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- legacy
           // @ts-ignore
-          return simpleProperty.enumerations.reduce<string>((title: string, item) => {
+          return simpleProperty.options.reduce<string>((title: string, item) => {
             return String(bugObject.classId) === item.value ? item.title : title;
           }, val);
         }, '')
@@ -146,7 +147,7 @@ class SchemaService {
    * @param propertyName код свойства
    */
   async getPropertyAlias(layer: CrgVectorLayer, propertyName: string): Promise<string> {
-    const schema = await this.getOldSchema(layer.schemaId);
+    const schema = await getLayerSchema(layer);
 
     if (schema) {
       const property = schema.properties.find(prop => prop.name.toLowerCase() === propertyName.toLowerCase());

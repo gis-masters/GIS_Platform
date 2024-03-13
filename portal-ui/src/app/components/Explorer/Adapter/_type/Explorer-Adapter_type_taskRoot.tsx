@@ -7,12 +7,6 @@ import { Adapter } from '../../Explorer.models';
 
 import { Tooltip } from '@mui/material';
 
-declare module '../../Explorer.models' {
-  export interface ExplorerItemPayloads {
-    [ExplorerItemType.TASKS_ROOT]: null;
-  }
-}
-
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTasksRoot {
   static getId(): string {

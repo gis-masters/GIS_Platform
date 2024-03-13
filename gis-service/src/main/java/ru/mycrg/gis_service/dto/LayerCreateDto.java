@@ -48,9 +48,6 @@ public class LayerCreateDto {
     @Length(min = 2, max = 255)
     private String styleName;
 
-    @Length(min = 2, max = 100)
-    private String schemaId;
-
     @Length(min = 3, max = 100)
     private String dataStoreName;
 
@@ -122,14 +119,6 @@ public class LayerCreateDto {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getSchemaId() {
-        return schemaId;
-    }
-
-    public void setSchemaId(String schemaId) {
-        this.schemaId = schemaId;
     }
 
     public String getDataStoreName() {
@@ -282,7 +271,6 @@ public class LayerCreateDto {
                 "\"maxZoom\":\"" + maxZoom + "\"" + ", " +
                 "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
-                "\"schemaId\":" + (schemaId == null ? "null" : "\"" + schemaId + "\"") + ", " +
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +

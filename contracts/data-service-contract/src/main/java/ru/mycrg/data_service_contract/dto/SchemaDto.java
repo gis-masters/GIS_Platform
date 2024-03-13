@@ -41,6 +41,10 @@ public class SchemaDto {
     private List<SchemaRelation> relations = new ArrayList<>();
     private List<SchemaChild> children = new ArrayList<>();
 
+    public SchemaDto() {
+        // Required
+    }
+
     public void addProperty(SimplePropertyDto propertyDto) {
         properties.add(propertyDto);
     }
