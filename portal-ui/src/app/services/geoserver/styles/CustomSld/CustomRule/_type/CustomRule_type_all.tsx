@@ -14,10 +14,16 @@ export const CustomRuleTypeAll: FC<CustomRuleProps> = ({ rule, type }) => {
   const [pointRule, lineRule, polygonRule] = rule;
 
   return (
-    <Rule>
-      <CustomRuleTypePoint rule={pointRule} type='point' bare />
-      <CustomRuleTypeLine rule={lineRule} type='line' bare />
-      <CustomRuleTypePolygon rule={polygonRule} type='polygon' bare />
-    </Rule>
+    <>
+      <Rule>
+        <CustomRuleTypePolygon rule={polygonRule} type='polygon' bare />
+      </Rule>
+      <Rule>
+        <CustomRuleTypeLine rule={lineRule} type='line' bare />
+      </Rule>
+      <Rule>
+        <CustomRuleTypePoint rule={pointRule} type='point' bare />
+      </Rule>
+    </>
   );
 };

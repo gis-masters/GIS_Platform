@@ -79,7 +79,7 @@ export class CustomStyleControl extends Component<FormControlProps> {
       throw new Error('Некорректная схема слоя: отсутствует geometryType');
     }
 
-    if (isVectorFromFile(layer.type)) {
+    if (layer?.type && isVectorFromFile(layer.type)) {
       this.setType('all');
     } else {
       this.setType(getSupGeometryType(schema.geometryType));
@@ -137,10 +137,5 @@ export class CustomStyleControl extends Component<FormControlProps> {
   @action
   private setType(type: CustomStyleDescription['type']) {
     this.type = type;
-  }
-
-  @action
-  private setPreview(preview: string) {
-    this.preview = preview;
   }
 }

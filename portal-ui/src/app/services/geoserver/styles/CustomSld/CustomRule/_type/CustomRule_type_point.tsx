@@ -9,6 +9,7 @@ import { WellKnownName } from '../../WellKnownName/WellKnownName';
 import { Fill } from '../../Fill/Fill';
 import { Size } from '../../Size/Size';
 import { CustomRuleProps } from '../CustomRule';
+import { ElseFilter } from '../../ElseFilter/ElseFilter';
 
 export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'point') {
@@ -19,6 +20,8 @@ export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) =
 
   return (
     <Wrapper>
+      <ElseFilter />
+
       <PointSymbolizer>
         <Graphic>
           <Mark>

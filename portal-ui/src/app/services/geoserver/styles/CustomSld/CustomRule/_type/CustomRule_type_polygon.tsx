@@ -11,6 +11,10 @@ import { Rule } from '../../Rule/Rule';
 import { Mark } from '../../Mark/Mark';
 import { Size } from '../../Size/Size';
 import { CustomRuleProps } from '../CustomRule';
+import { Filter } from '../../Filter/Filter';
+import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
+import { Function } from '../../Function/Function';
+import { Literal } from '../../Literal/Literal';
 
 export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'polygon') {
@@ -21,6 +25,15 @@ export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare })
 
   return (
     <Wrapper>
+      <Filter>
+        <PropertyIsEqualTo>
+          <Function name='dimension'>
+            <Function name='geometry' />
+          </Function>
+          <Literal>2</Literal>
+        </PropertyIsEqualTo>
+      </Filter>
+
       <PolygonSymbolizer>
         <Fill>
           {rule.fillColor && !rule.fillGraphic && <SvgParameter name='fill'>{rule.fillColor}</SvgParameter>}
