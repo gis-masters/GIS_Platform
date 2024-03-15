@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { Button } from '../../../app/components/Button/Button';
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 
@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./Button/UpChoiceLayer-Button.scss'
 const cnUpChoiceLayer = cn('UpChoiceLayer');
 
 const clickHandler = () => {
-  photoUploaderStore.openLayersList();
+  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.LAYERSLIST);
 };
 
 export const UpChoiceLayer: FC = observer(() => (

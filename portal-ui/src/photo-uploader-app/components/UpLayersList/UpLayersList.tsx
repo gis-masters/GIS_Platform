@@ -18,7 +18,7 @@ interface UpLayersListStore {
 
 const cnUpLayersList = cn('UpLayersList');
 
-const photoLayerTitle = 'photo_uploader';
+const photoVectorTableTitle = 'photo uploader';
 
 export const UpLayersList: FC = observer(() => {
   const store = useLocalObservable(
@@ -43,11 +43,14 @@ export const UpLayersList: FC = observer(() => {
     void (async () => {
       photoUploaderStore.setBusy(true);
       try {
-        const pageOptions = { page: 0, pageSize: 20, filter: { title: photoLayerTitle } };
+        const pageOptions = { page: 0, pageSize: 20, filter: { title: photoVectorTableTitle } };
         const response = await getVectorTablesInAllDatasets(pageOptions);
+
         if (!response) {
           photoUploaderStore.addError('Загрузка фотографий недоступна');
-          photoUploaderStore.closeLayersList();
+          photoUploaderStore.returnToMainScreen();
+
+          return;
         }
 
         const data = response[0].map(item => ({ data: item }));
@@ -55,7 +58,7 @@ export const UpLayersList: FC = observer(() => {
         setDataList(data);
       } catch {
         photoUploaderStore.addError('Загрузка фотографий недоступна');
-        photoUploaderStore.closeLayersList();
+        photoUploaderStore.returnToMainScreen();
       }
       photoUploaderStore.setBusy(false);
     })();
@@ -67,7 +70,7 @@ export const UpLayersList: FC = observer(() => {
       <List className={cnUpLayersList()}>
         {!!dataList.length && layers.map((item, idx) => <UpLayersListItem type='button' {...item} key={idx} />)}
       </List>
-      {photoUploaderStore.searchValue !== '' && !layers.length && <UpError message='... ничего не найдено' />}
+      {photoUploaderStore.searchValue !== '' && !layers.length && <UpError message='ничего не найдено' />}
     </>
   );
 });

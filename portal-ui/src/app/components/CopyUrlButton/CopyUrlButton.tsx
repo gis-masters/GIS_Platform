@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { Toast } from '../Toast/Toast';
 import { IconButton } from '../IconButton/IconButton';
 import { getFeaturesUrl } from '../../services/map/map.util';
@@ -19,6 +20,7 @@ const cnCopyUrlButton = cn('CopyUrlButton');
 interface CopyUrlButtonProps extends IClassNameProps {
   inHeader?: boolean;
   features?: WfsFeature[];
+  vectorTable?: VectorTable;
   onClick?: () => void;
 }
 
@@ -47,13 +49,19 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
 
   @boundMethod
   private clickHandler() {
+    const { features, vectorTable } = this.props;
+
     let urlForClipboard = location.href;
-    if (this.props.features) {
+    if (features) {
       /* количество объектов может быть больше одного; сейчас это сломано, но уже есть задача на починку #5229 */
       const firstFeature = this.props.features[0];
       const layer = getLayerByFeatureInCurrentProject(firstFeature);
 
       urlForClipboard = getFeaturesUrl(currentProject.id, layer.dataset, layer.tableName, [firstFeature.id]);
+    } else if (vectorTable) {
+      const { dataset, identifier } = vectorTable;
+
+      urlForClipboard = `${window.location.origin}/data-management/dataset/${dataset}/vectorTable/${identifier}/registry`;
     }
 
     copyToClipboard(urlForClipboard);

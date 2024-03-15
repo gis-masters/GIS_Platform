@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 import { IconButton } from '../../../app/components/IconButton/IconButton';
 import { UpLayersListItem } from '../UpLayersList/Item/UpLayersList-Item';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { CopyUrlButton } from 'src/app/components/CopyUrlButton/CopyUrlButton';
 
 import '!style-loader!css-loader!sass-loader!./UpSelectedLayer.scss';
 import '!style-loader!css-loader!sass-loader!./DataType/UpSelectedLayer-DataType.scss';
@@ -15,7 +16,7 @@ import '!style-loader!css-loader!sass-loader!./Icon/UpSelectedLayer-Icon.scss';
 
 const cnUpSelectedLayer = cn('UpSelectedLayer');
 
-export const UpSelectedLayer: FC = observer(() => {
+export const UpSelectedLayer: FC<{ atResultsScreen?: boolean }> = observer(({ atResultsScreen }) => {
   const removeCheckedLayer = useCallback(() => {
     photoUploaderStore.setCheckedLayer(null);
   }, []);
@@ -27,9 +28,13 @@ export const UpSelectedLayer: FC = observer(() => {
           type='simple'
           {...photoUploaderStore.checkedLayer}
           children={
-            <IconButton className={cnUpSelectedLayer('Button')} onClick={removeCheckedLayer} size='large'>
-              <Clear />
-            </IconButton>
+            atResultsScreen ? (
+              <CopyUrlButton vectorTable={photoUploaderStore.checkedLayer.data} />
+            ) : (
+              <IconButton className={cnUpSelectedLayer('Button')} onClick={removeCheckedLayer} size='large'>
+                <Clear />
+              </IconButton>
+            )
           }
         />
       )}

@@ -11,6 +11,9 @@ import { UpHeader } from '../UpHeader/UpHeader';
 import { UpMain } from '../UpMain/UpMain';
 import { UpActions } from '../UpActions/UpActions';
 import { UpLayersList } from '../UpLayersList/UpLayersList';
+import { UpPhotoList } from '../UpPhotoList/UpPhotoList';
+import { UpLoader } from '../UpLoader/UpLoader';
+import { UpLoadResult } from '../UpLoadResult/UpLoadResult';
 
 import '!style-loader!css-loader!sass-loader!./PhotoUploader.scss';
 
@@ -32,6 +35,15 @@ const PhotoUploader: FC = observer(() => (
         <UpMain />
         <UpActions />
       </>
+    )}
+    {photoUploaderStore.currentScreen === PhotoUploaderScreens.PHOTOLIST && !!photoUploaderStore.files.length && (
+      <UpPhotoList />
+    )}
+    {photoUploaderStore.currentScreen === PhotoUploaderScreens.LOADER && !!photoUploaderStore.files.length && (
+      <UpLoader />
+    )}
+    {photoUploaderStore.currentScreen === PhotoUploaderScreens.UPLOAD_RESULT && photoUploaderStore.uploadResult && (
+      <UpLoadResult />
     )}
   </div>
 ));

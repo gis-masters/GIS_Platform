@@ -1,8 +1,8 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpChoosePhotoActions } from './Actions/UpChoosePhotos-Actions';
 import { PseudoLink } from '../../../app/components/PseudoLink/PseudoLink';
 
@@ -12,21 +12,21 @@ import '!style-loader!css-loader!sass-loader!./Counter/UpChoosePhotos-Counter.sc
 
 const cnUpChoosePhotos = cn('UpChoosePhotos');
 
-export const UpChoosePhoto: FC = observer(() => {
-  const onClickHadler = useCallback(() => {
-    //do nothing
-  }, []);
+const clickHandler = () => {
+  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.PHOTOLIST);
+};
 
+export const UpChoosePhoto: FC = observer(() => {
   return (
     <div className={cnUpChoosePhotos()}>
       {!!photoUploaderStore.files.length && (
         <div className={cnUpChoosePhotos('Counter')}>
           Выбрано:{' '}
-          <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={onClickHadler}>
+          <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={clickHandler}>
             {photoUploaderStore.files.length} фотографий
           </PseudoLink>
-          {!!photoUploaderStore.errors.length && (
-            <span className={cnUpChoosePhotos('Counter', { type: 'error' })}>({photoUploaderStore.errors})</span>
+          {!!photoUploaderStore.filesWithError && (
+            <span className={cnUpChoosePhotos('Counter', { type: 'error' })}> (есть ошибки)</span>
           )}
         </div>
       )}

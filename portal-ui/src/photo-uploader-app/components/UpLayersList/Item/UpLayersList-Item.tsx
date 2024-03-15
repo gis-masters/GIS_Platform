@@ -24,7 +24,7 @@ const dataType = 'Векторная таблица';
 export const UpLayersListItem: FC<UpLayerListItemProps> = observer(({ data, type, children }) => {
   const onClickHandler = useCallback(() => {
     photoUploaderStore.setCheckedLayer({ data });
-    photoUploaderStore.closeLayersList();
+    photoUploaderStore.returnToMainScreen();
   }, [data]);
 
   return (

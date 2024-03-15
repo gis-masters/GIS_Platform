@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 
 import { User } from '../../../app/components/User/User';
 import { currentUser } from '../../../app/stores/CurrentUser.store';
-import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
-import { UpHeaderReturnButton } from './ReturnButton/UpHeader-ReturnButton';
+import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { UpHeaderLeftIcon } from './LeftIcon/UpHeader-LeftIcon';
 
 import '!style-loader!css-loader!sass-loader!./UpHeader.scss';
 import '!style-loader!css-loader!sass-loader!./Title/UpHeader-Title.scss';
@@ -15,7 +15,7 @@ const cnUpHeader = cn('UpHeader');
 
 export const UpHeader: FC = observer(() => (
   <header className={cnUpHeader()}>
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERSLIST && <UpHeaderReturnButton />}
+    {photoUploaderStore.needReturnButton && <UpHeaderLeftIcon />}
     <div className={cnUpHeader('Title')}>{photoUploaderStore.currentHeaderTitle}</div>
     {currentUser.name && <User className={cnUpHeader('User')} />}
   </header>

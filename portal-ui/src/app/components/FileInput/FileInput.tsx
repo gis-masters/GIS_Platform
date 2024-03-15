@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./FileInput.scss';
 
 const cnFileInput = cn('FileInput');
 
-interface FileInputProps
+export interface FileInputProps
   extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
   onChange?: (selectedFiles: FileList | null) => void;
   fullWidth?: boolean;

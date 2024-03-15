@@ -2,7 +2,8 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 
-import { UpPreviewerItem, UploadedFile } from './Item/UpPreviewer-Item';
+import { UploadedFile } from '../../services/photoUploader.models';
+import { UpPreviewerItem } from './Item/UpPreviewer-Item';
 import { UpPreviewerAdditionalCounter } from './AdditionalCounter/UpPreviewer-AdditionalCounter';
 
 import '!style-loader!css-loader!sass-loader!./UpPreviewer.scss';
@@ -20,8 +21,8 @@ export const UpPreviewer: FC<UpPreviewerProps> = observer(({ files }) => {
   return (
     <div className={cnUpPreviewer()}>
       <ul className={cnUpPreviewer('List')}>
-        {filesToRender.map((file, id) => (
-          <UpPreviewerItem {...file} key={id} />
+        {filesToRender.map(({ title, url }, id) => (
+          <UpPreviewerItem title={title} url={url} key={id} />
         ))}
         {files.length > 12 && <UpPreviewerAdditionalCounter count={files.length - 11} />}
       </ul>
