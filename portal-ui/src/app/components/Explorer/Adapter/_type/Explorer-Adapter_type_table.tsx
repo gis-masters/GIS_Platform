@@ -5,10 +5,8 @@ import { Tooltip } from '@mui/material';
 import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { formatDate } from '../../../../services/util/date.util';
 import { services } from '../../../../services/services';
-import { Link } from '../../../Link/Link';
 
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
@@ -26,7 +24,7 @@ export class ExplorerAdapterTypeTable {
   }
 
   static getDescription(item: ExplorerItemData<VectorTable>): ReactNode {
-    const { details, createdAt, schema } = item.payload;
+    const { details, createdAt } = item.payload;
 
     return (
       <>
@@ -36,15 +34,6 @@ export class ExplorerAdapterTypeTable {
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {formatDate(createdAt, 'LL')}
-          </ExplorerInfoDescItem>
-        )}
-
-        {currentUser.isAdmin && (
-          <ExplorerInfoDescItem>
-            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
-            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schema.name}"%5D`}>
-              {schema.name}
-            </Link>
           </ExplorerInfoDescItem>
         )}
       </>

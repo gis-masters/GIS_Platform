@@ -6,9 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { Schema, schemaForSchema } from '../../../services/data/schema/schema.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { schemaService } from '../../../services/data/schema/schema.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 const cnSchemaActionsEdit = cn('SchemaActions', 'Edit');

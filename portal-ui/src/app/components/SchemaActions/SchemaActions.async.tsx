@@ -17,6 +17,7 @@ export const cnSchemaActions = cn('SchemaActions');
 export interface SchemaActionsProps extends IClassNameProps {
   schema: Schema;
   as: ActionsItemVariant;
+  readonly?: boolean;
   forDialog?: boolean;
   onClose?(): void;
 }
@@ -24,11 +25,11 @@ export interface SchemaActionsProps extends IClassNameProps {
 @observer
 export default class SchemaActions extends Component<SchemaActionsProps> {
   render() {
-    const { as, schema, className, forDialog, onClose } = this.props;
+    const { as, schema, className, forDialog, readonly, onClose } = this.props;
 
     return (
       <Actions className={cnSchemaActions({ forDialog }, [className])} as={as}>
-        {currentUser.isAdmin && <SchemaActionsEdit schema={schema} as={as} />}
+        {currentUser.isAdmin && !readonly && <SchemaActionsEdit schema={schema} as={as} />}
         <SchemaActionsPreview schema={schema} as={as} />
         {forDialog && <SchemaActionsClose as={as} onClick={onClose} />}
       </Actions>

@@ -27,6 +27,7 @@ export const cnOpenSchemaAction = cn('OpenSchemaAction');
 
 export interface OpenSchemaActionProps extends IClassNameProps {
   schema: Schema;
+  readonly?: boolean;
 }
 
 @observer
@@ -41,7 +42,7 @@ export class OpenSchemaAction extends Component<OpenSchemaActionProps> {
   }
 
   render() {
-    const { className, schema } = this.props;
+    const { className, schema, readonly } = this.props;
 
     return (
       <>
@@ -104,7 +105,7 @@ export class OpenSchemaAction extends Component<OpenSchemaActionProps> {
             </Card>
           </DialogContent>
           <DialogActions>
-            <SchemaActions forDialog onClose={this.closeDialog} schema={schema} as='button' />
+            <SchemaActions readonly={readonly} forDialog onClose={this.closeDialog} schema={schema} as='button' />
           </DialogActions>
         </Dialog>
       </>

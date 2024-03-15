@@ -9,7 +9,6 @@ import {
   getLibraryRecordsWithParticularOne
 } from '../../../../services/data/library/library.service';
 import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
-import { Link } from '../../../Link/Link';
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
@@ -28,6 +27,7 @@ import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Exp
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
+import { LibraryActions } from '../../../LibraryActions/LibraryActions';
 
 @staticImplements<Adapter<Library, LibraryRecord>>()
 export class ExplorerAdapterTypeLibrary {
@@ -40,7 +40,7 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static getDescription(item: ExplorerItemData<Library>): ReactNode {
-    const { details, createdAt, schema } = item.payload;
+    const { details, createdAt } = item.payload;
 
     return (
       <>
@@ -50,15 +50,6 @@ export class ExplorerAdapterTypeLibrary {
           <ExplorerInfoDescItem>
             <ExplorerInfoDescTitle>Дата создания:</ExplorerInfoDescTitle>
             {formatDate(createdAt, 'LL')}
-          </ExplorerInfoDescItem>
-        )}
-
-        {currentUser.isAdmin && (
-          <ExplorerInfoDescItem>
-            <ExplorerInfoDescTitle>Схема:</ExplorerInfoDescTitle>
-            <Link href={`/data-management?path_dm=%5B"r","root","sr","schemasRoot","schema","${schema.name}"%5D`}>
-              {schema.name}
-            </Link>
           </ExplorerInfoDescItem>
         )}
       </>
@@ -75,6 +66,10 @@ export class ExplorerAdapterTypeLibrary {
 
   static isFolder(): boolean {
     return true;
+  }
+
+  static getActions(item: ExplorerItemData<Library>): ReactNode {
+    return <LibraryActions library={item.payload} />;
   }
 
   static async getChildren(

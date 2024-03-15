@@ -11,6 +11,7 @@ import { Role } from '../../services/data/permissions/permissions.models';
 
 import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
 import { VectorTableActionsEdit } from './Edit/VectorTableActions-Edit';
+import { OpenSchemaAction } from '../OpenSchemaAction/OpenSchemaAction';
 
 const cnVectorTableActions = cn('VectorTableActions');
 
@@ -20,8 +21,8 @@ interface VectorTableActionsProps {
 
 @observer
 export class VectorTableActions extends Component<VectorTableActionsProps> {
-  @observable private vectorTable: VectorTable;
-  private operationId: symbol;
+  @observable private vectorTable?: VectorTable;
+  private operationId?: symbol;
 
   constructor(props: VectorTableActionsProps) {
     super(props);
@@ -43,6 +44,7 @@ export class VectorTableActions extends Component<VectorTableActionsProps> {
 
     return (
       <div className={cnVectorTableActions()}>
+        {this.vectorTable && <OpenSchemaAction readonly schema={this.vectorTable.schema} />}
         {actionAllowed && this.vectorTable && (
           <>
             <VectorTableActionsEdit vectorTable={this.vectorTable} />
