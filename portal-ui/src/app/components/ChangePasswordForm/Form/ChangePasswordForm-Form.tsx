@@ -53,7 +53,7 @@ export const ChangePasswordFormForm: FC<ChangePasswordFormFormProps> = ({ action
       id={htmlId}
       schema={schema}
       auto
-      labelInTextField
+      labelInField
       actionFunction={actionFunction}
       actions={
         <Button disabled={loading} form={htmlId} type='submit' color='primary'>

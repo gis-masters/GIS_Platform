@@ -63,7 +63,7 @@ export default class RestorePasswordForm extends Component {
           schema={schema as unknown as Schema}
           value={this.formValue}
           auto
-          labelInTextField
+          labelInField
           actionFunction={this.restorePassword}
           onActionSuccess={this.showSuccessMessage}
           actions={

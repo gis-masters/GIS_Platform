@@ -4,6 +4,7 @@ import Checkbox from '@mui/material/Checkbox';
 import {
   Box,
   Chip,
+  InputLabel,
   ListItemText,
   MenuItem,
   Select,
@@ -37,7 +38,7 @@ const emptyTitle = 'Не выбрано';
 @observer
 class FormControlTypeChoice extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, property, errors, fullWidthForOldForm, variant = 'standard' } = this.props;
+    const { htmlId, className, property, errors, fullWidthForOldForm, labelInField, variant = 'standard' } = this.props;
 
     if (property.propertyType !== PropertyType.CHOICE) {
       throw new Error('Ошибка типа свойства');
@@ -58,9 +59,15 @@ class FormControlTypeChoice extends Component<FormControlProps> {
     const renderOptions = multiple ? options.filter(option => option.title !== emptyTitle) : options;
 
     return (
-      <div className={cnFormControl({ fullWidthForOldForm }, [className])}>
+      <div className={cnFormControl({ fullWidthForOldForm, labelInField }, [className])}>
         {display === 'select' && !!options && (
           <>
+            {labelInField && (
+              <InputLabel shrink htmlFor={htmlId}>
+                {property.title}
+              </InputLabel>
+            )}
+
             <Select
               id={htmlId}
               name={name}
@@ -70,6 +77,9 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               multiple={multiple}
               onChange={this.handleChangeSelect}
               error={!!errors?.length}
+              inputProps={{
+                id: htmlId
+              }}
               renderValue={selected => {
                 if (multiple) {
                   return this.renderValue(selected, value);

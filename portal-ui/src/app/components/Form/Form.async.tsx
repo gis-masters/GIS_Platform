@@ -43,7 +43,7 @@ export interface FormProps<T>
   actions?: ReactNode;
   readonly?: boolean;
   formRole?: FormRole;
-  labelInTextField?: boolean;
+  labelInField?: boolean;
   auto?: boolean;
   actionFunction?(value: T | Partial<T>): Promise<void> | void;
   invoke?: {
@@ -121,7 +121,7 @@ export default class Form<T> extends Component<FormProps<T>> {
       actions,
       readonly,
       formRole,
-      labelInTextField,
+      labelInField,
       actionFunction,
       auto,
       invoke,
@@ -141,7 +141,7 @@ export default class Form<T> extends Component<FormProps<T>> {
             onFieldNeedValidate={this.fieldValidate}
             errors={[...(errors || []), ...(this.serverErrors || []), ...(this.errors || [])]}
             readonly={readonly}
-            labelInTextField={labelInTextField}
+            labelInField={labelInField}
           />
         )}
         <FormErrors errors={[...this.hiddenFieldsErrors, ...this.generalServerErrors]} />

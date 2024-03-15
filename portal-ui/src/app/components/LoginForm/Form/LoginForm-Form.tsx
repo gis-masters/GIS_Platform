@@ -60,7 +60,7 @@ export class LoginFormForm extends Component<LoginFormFormProps> {
         schema={schema}
         value={userData}
         auto
-        labelInTextField
+        labelInField
         actionFunction={actionFunction}
         actions={
           <>

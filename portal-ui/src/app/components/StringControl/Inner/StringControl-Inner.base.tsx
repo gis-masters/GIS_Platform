@@ -18,18 +18,8 @@ export interface StringControlInnerProps extends Omit<FormControlProps, 'onChang
 
 export class StringControlInnerBase extends Component<StringControlInnerProps> {
   render() {
-    const {
-      htmlId,
-      inSet,
-      labelInTextField,
-      fieldValue,
-      errors,
-      property,
-      variant,
-      textFieldProps,
-      className,
-      onBlur
-    } = this.props;
+    const { htmlId, inSet, labelInField, fieldValue, errors, property, variant, textFieldProps, className, onBlur } =
+      this.props;
     const { title, name } = property;
 
     return (
@@ -37,11 +27,11 @@ export class StringControlInnerBase extends Component<StringControlInnerProps> {
         id={htmlId}
         name={name}
         className={cnStringControlInner(null, [className])}
-        fullWidth={labelInTextField || !inSet}
+        fullWidth={labelInField || !inSet}
         value={fieldValue}
         error={!!errors?.length}
         helperText={errors}
-        label={labelInTextField || inSet ? title : undefined}
+        label={labelInField || inSet ? title : undefined}
         onChange={this.handleChange}
         onBlur={onBlur}
         variant={variant}

@@ -21,7 +21,7 @@ export interface FormControlProps extends IClassNameProps, ChildrenProps {
   errors?: string[];
   variant?: 'standard' | 'outlined';
   fullWidthForOldForm?: boolean;
-  labelInTextField?: boolean;
+  labelInField?: boolean;
   onChange?(params: { value: unknown; propertyName: string }): void;
   onNeedValidate?(params: { value: unknown; propertyName: string }): void;
 }

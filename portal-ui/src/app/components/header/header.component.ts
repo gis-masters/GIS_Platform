@@ -1,14 +1,18 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { IReactionDisposer, reaction } from 'mobx';
 
 import { Platform, environment } from '../../services/environment';
+import { route } from '../../stores/Route.store';
 
 @Component({
   selector: 'crg-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit, OnDestroy {
+  currentPage = '';
+  reactionDisposer?: IReactionDisposer;
   envPlatform: Platform = 'simf';
   envRegistration: boolean;
 
@@ -17,6 +21,17 @@ export class HeaderComponent {
   ngOnInit() {
     this.envPlatform = environment.platform;
     this.envRegistration = !!environment.registration;
+    this.reactionDisposer = reaction(
+      () => route.data.page,
+      () => {
+        this.currentPage = route.data.page;
+      },
+      { fireImmediately: true }
+    );
+  }
+
+  ngOnDestroy() {
+    this.reactionDisposer?.();
   }
 
   how(): void {

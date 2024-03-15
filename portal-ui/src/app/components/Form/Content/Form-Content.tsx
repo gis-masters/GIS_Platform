@@ -34,13 +34,13 @@ interface FormContentProps<T> extends IClassNameProps {
   onFieldChange?: (value: T[keyof T & string], propertyName: keyof T & string, prevValue: T[keyof T & string]) => void;
   onFieldNeedValidate?: (value: T[keyof T & string], propertyName: keyof T & string) => void;
   readonly?: boolean;
-  labelInTextField?: boolean;
+  labelInField?: boolean;
 }
 
 @observer
 export class FormContent<T> extends Component<FormContentProps<T>> {
   render() {
-    const { schema, formValue, className, formRole, errors = [], readonly, labelInTextField } = this.props;
+    const { schema, formValue, className, formRole, errors = [], readonly, labelInField } = this.props;
 
     return (
       <div className={cnFormContent(null, [className])}>
@@ -69,7 +69,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
 
           return (
             <FormField key={i} withRelations={!!relations.length}>
-              {!labelInTextField && (
+              {!labelInField && (
                 <FormLabel
                   htmlFor={htmlId}
                   required={propertySchema.required}
@@ -99,7 +99,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   onNeedValidate={this.fieldNeedValidateHandler}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={formValue}
-                  labelInTextField={labelInTextField}
+                  labelInField={labelInField}
                   errors={propertyErrors}
                 >
                   {String(formValue[propertySchema.name])}

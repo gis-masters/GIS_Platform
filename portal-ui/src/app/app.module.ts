@@ -76,6 +76,7 @@ import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.
 import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
 import { PhotoModePreviewerComponent } from './components/photo-mode-previewer/photo-mode-previewer.component';
 import { VectorTableRegistryComponent } from './components/vector-table-registry/vector-table-registry.component';
+import { OrgRegistrationFormComponent } from './components/org-registration-form/org-registration-form.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { VectorTableRegistryComponent } from './components/vector-table-registry
     LoginFormDialogComponent,
     ProgressItemComponent,
     ProjectsComponent,
+    OrgRegistrationFormComponent,
     ConfirmDialogComponent,
     EditFeaturesSidebarComponent,
     EditFeatureComponent,

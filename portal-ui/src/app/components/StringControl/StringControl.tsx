@@ -20,7 +20,7 @@ export class StringControl extends Component<FormControlProps> {
       inSet,
       property,
       variant = 'standard',
-      labelInTextField,
+      labelInField,
       fullWidthForOldForm,
       ...props
     } = this.props;
@@ -30,13 +30,13 @@ export class StringControl extends Component<FormControlProps> {
     const { display } = property;
 
     return (
-      <div className={cnStringControl({ inSet, fullWidthForOldForm, labelInTextField, display }, [className])}>
+      <div className={cnStringControl({ inSet, fullWidthForOldForm, labelInField, display }, [className])}>
         <StringControlInner
           {...props}
           display={display}
           variant={variant}
           property={property}
-          labelInTextField={labelInTextField}
+          labelInField={labelInField}
           onChange={this.handleChange}
           onBlur={this.handleBlur}
         />

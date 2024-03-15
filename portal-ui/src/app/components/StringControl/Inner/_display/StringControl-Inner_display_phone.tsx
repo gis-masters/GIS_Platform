@@ -16,7 +16,7 @@ import {
 @observer
 class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> {
   render() {
-    const { fieldValue, errors, htmlId, property, variant, inSet } = this.props;
+    const { fieldValue, errors, htmlId, property, variant, labelInField, inSet } = this.props;
 
     return (
       <InputMask
@@ -24,6 +24,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
         value={fieldValue ? String(fieldValue) : ''}
         onChange={this.handleChange}
         onBlur={this.handleBlur}
+        alwaysShowMask
       >
         {
           // @ts-expect-error беда в типах react-input-mask
@@ -40,7 +41,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
               fullWidth={!inSet}
               error={!!errors?.length}
               helperText={errors}
-              label={inSet ? property.title : undefined}
+              label={inSet || labelInField ? property.title : undefined}
               variant={variant}
             />
           )
