@@ -6651,6 +6651,7 @@ SELECT 'hydro_point_123',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_point_123');
@@ -16159,22 +16160,26 @@ SELECT 'forest_123',
         if (obj.forest_cat) {
         errors.push({attribute: ''forest_cat'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
 
       if (!(obj.classid == ''706010100'')) {
         if (obj.forest_os) {
         errors.push({attribute: ''forest_os'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''3'')) {
         if (obj.forest_t) {
         errors.push({attribute: ''forest_t'', error: ''Значение заполняется только для объекта "Леса защитные" и защитных лесов, выполняющих функции защиты природных и иных объектов''});
+        }
       }
+      
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''4'')) {
         if (obj.forest_val) {
         errors.push({attribute: ''forest_val'', error: ''Значение заполняется только для объекта "Леса защитные" и защитных лесов, ценных лесов ''});
       }
-
+    }
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
@@ -19886,6 +19891,7 @@ SELECT 'hydraulicstructures_point_123',
         }
       } else if (obj.fact_use) {
         errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_point_123');
@@ -21925,6 +21931,7 @@ SELECT 'pipeline_line_123',
         if (obj.cat_main) {
           errors.push({attribute: ''cat_main'', error: ''Значение заполняется только для объекта "Мостовое сооружение"''});
       }
+    }
 
       
 if (obj.status == ''3'' || obj.status == ''4'') {
@@ -26930,6 +26937,7 @@ SELECT 'resortarea_123',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_123');
@@ -31158,6 +31166,7 @@ SELECT 'traditionalarea_123',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea_123');
@@ -40966,6 +40975,7 @@ SELECT 'resortarea_point_123',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_point_123');
@@ -41212,6 +41222,7 @@ SELECT 'prison_point_123',
         }
       } else if (obj.kadastrzu) {
           errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих, планируемых к реконструкции или планируемых к ликвидации объектов''});
+        }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison_point_123');

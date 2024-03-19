@@ -6060,6 +6060,7 @@ SELECT 'hydro_point',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_point');
@@ -15477,21 +15478,25 @@ SELECT 'forest',
         if (obj.forest_cat) {
         errors.push({attribute: ''forest_cat'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
 
       if (!(obj.classid == ''706010100'')) {
         if (obj.forest_os) {
         errors.push({attribute: ''forest_os'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''3'')) {
         if (obj.forest_t) {
         errors.push({attribute: ''forest_t'', error: ''Значение заполняется только для объекта "Леса защитные" и защитных лесов, выполняющих функции защиты природных и иных объектов''});
       }
+    }
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''4'')) {
         if (obj.forest_val) {
         errors.push({attribute: ''forest_val'', error: ''Значение заполняется только для объекта "Леса защитные" и защитных лесов, ценных лесов ''});
       }
+    }
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -25778,6 +25783,7 @@ SELECT 'resortarea',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea');
@@ -29694,6 +29700,7 @@ SELECT 'traditionalarea',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea');
@@ -38759,6 +38766,7 @@ SELECT 'resortarea_point',
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_point');
