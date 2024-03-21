@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties } from 'react';
+import React, { Component, createRef, CSSProperties, RefObject } from 'react';
 import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { Subject } from 'rxjs';
@@ -28,6 +28,8 @@ import {
   loadingItem
 } from './Explorer.models';
 import {
+  customOpenAction,
+  customOpenActionIcon,
   getChildById,
   getChildrenSortDefaultOrder,
   getChildrenSortDefaultValue,
@@ -81,6 +83,7 @@ export default class Explorer extends Component<ExplorerProps> {
   private service: ExplorerService;
   private channels: Emitter[] = [];
   private savingToUrl = false;
+  private explorerRef: RefObject<HTMLDivElement> = createRef();
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -236,6 +239,7 @@ export default class Explorer extends Component<ExplorerProps> {
       <div
         className={cnExplorer({ withInfoPanel }, [className])}
         onKeyDown={this.keyDownHandler}
+        ref={this.explorerRef}
         tabIndex={0}
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
       >
@@ -279,7 +283,11 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   @boundMethod
-  private keyDownHandler(e: React.KeyboardEvent<HTMLDivElement>) {
+  private keyDownHandler(e: React.KeyboardEvent<HTMLElement>) {
+    if (!this.explorerRef.current?.contains(e.target as HTMLElement)) {
+      return;
+    }
+
     if (document.querySelector('input:focus,textarea:focus')) {
       return;
     }
@@ -309,7 +317,11 @@ export default class Explorer extends Component<ExplorerProps> {
     }
 
     if (action === KeyAction.OPEN) {
-      void this.openItem(selectedItem);
+      if (customOpenActionIcon(selectedItem)) {
+        void customOpenAction(selectedItem);
+      } else {
+        void this.openItem(selectedItem);
+      }
     }
   }
 
