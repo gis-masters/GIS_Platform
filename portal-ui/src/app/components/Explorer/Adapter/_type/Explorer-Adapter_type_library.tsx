@@ -12,7 +12,6 @@ import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/d
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { schemaService } from '../../../../services/data/schema/schema.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
@@ -85,7 +84,7 @@ export class ExplorerAdapterTypeLibrary {
       filter: service.mergeCustomFilter(filter, explorerItem, store)
     });
 
-    const { contentTypes } = await schemaService.getSchema(explorerItem.payload.schema.name);
+    const { contentTypes } = explorerItem.payload.schema;
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
