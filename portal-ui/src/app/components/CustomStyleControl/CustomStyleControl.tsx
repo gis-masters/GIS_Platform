@@ -27,7 +27,9 @@ const cnCustomStyleControl = cn('CustomStyleControl');
 const defaultPointRule: PointRule = {
   markType: 'circle',
   markSize: 20,
-  markColor: '#ed5c57'
+  markColor: '#ed5c57',
+  strokeColor: '#0f5c1a',
+  strokeWidth: 2
 };
 
 const defaultLineRule: LineRule = {
@@ -75,7 +77,7 @@ export class CustomStyleControl extends Component<FormControlProps> {
 
     const schema = await getLayerSchema(layer);
 
-    if (!schema.geometryType) {
+    if (!schema?.geometryType) {
       throw new Error('Некорректная схема слоя: отсутствует geometryType');
     }
 

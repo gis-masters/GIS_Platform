@@ -8,6 +8,9 @@ import { Mime } from '../../util/Mime';
 import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
 import { CustomSld } from './CustomSld/CustomSld';
 
+const stroke = 'SvgParameter[name="stroke"]';
+const strokeWidth = 'SvgParameter[name="stroke-width"]';
+
 export function createImageFromBlob(image: Blob): Promise<string> {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -78,6 +81,8 @@ function parsePointSymbolizer(pointSymbolizerNode: Element): PointRule {
   const markTypeNode = pointSymbolizerNode.querySelector('Mark > WellKnownName');
   const markSizeNode = pointSymbolizerNode.querySelector('Size');
   const markColorNode = pointSymbolizerNode.querySelector('Mark > Fill > SvgParameter[name="fill"]');
+  const strokeNode = pointSymbolizerNode.querySelector(stroke);
+  const strokeWidthNode = pointSymbolizerNode.querySelector(strokeWidth);
 
   if (!markColorNode || !markColorNode.textContent || !markSizeNode || !markTypeNode) {
     throw new Error('Отсутствуют обязательные параметры для стиля точки');
@@ -86,7 +91,9 @@ function parsePointSymbolizer(pointSymbolizerNode: Element): PointRule {
   return {
     markColor: markColorNode.textContent,
     markSize: Number(markSizeNode.textContent),
-    markType: markTypeNode.textContent as PointRule['markType']
+    markType: markTypeNode.textContent as PointRule['markType'],
+    strokeColor: strokeNode?.textContent || '#0f5c1a',
+    strokeWidth: strokeWidthNode?.textContent ? Number(strokeWidthNode.textContent) : 2
   };
 }
 
@@ -103,8 +110,8 @@ export function getStyleTitle(sldStyle: string): string | null | undefined {
 }
 
 function parseLineSymbolizer(lineSymbolizerNode: Element): LineRule {
-  const strokeNode = lineSymbolizerNode.querySelector('SvgParameter[name="stroke"]');
-  const strokeWidthNode = lineSymbolizerNode.querySelector('SvgParameter[name="stroke-width"]');
+  const strokeNode = lineSymbolizerNode.querySelector(stroke);
+  const strokeWidthNode = lineSymbolizerNode.querySelector(strokeWidth);
   const strokeDashArrayNode = lineSymbolizerNode.querySelector('SvgParameter[name="stroke-dasharray"]');
 
   if (!strokeNode || !strokeWidthNode || !strokeNode.textContent) {
@@ -156,8 +163,8 @@ function parsePolygonSymbolizer(polygonSymbolizerNode: Element): PolygonRule {
 
   if (graphicNode) {
     const graphicTypeNode = graphicNode.querySelector('Mark > WellKnownName');
-    const graphicStrokeColorNode = graphicNode.querySelector('SvgParameter[name="stroke"]');
-    const graphicStrokeWidthNode = graphicNode.querySelector('SvgParameter[name="stroke-width"]');
+    const graphicStrokeColorNode = graphicNode.querySelector(stroke);
+    const graphicStrokeWidthNode = graphicNode.querySelector(strokeWidth);
     const graphicSizeNode = graphicNode.querySelector('Size');
 
     if (

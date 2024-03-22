@@ -71,6 +71,8 @@ export interface PointRule {
   markColor: string;
   markSize: number;
   markType: 'circle' | 'square' | 'triangle' | 'star';
+  strokeColor: string;
+  strokeWidth: number;
 }
 
 export interface LineRule {

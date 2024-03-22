@@ -10,6 +10,7 @@ import { Fill } from '../../Fill/Fill';
 import { Size } from '../../Size/Size';
 import { CustomRuleProps } from '../CustomRule';
 import { ElseFilter } from '../../ElseFilter/ElseFilter';
+import { Stroke } from '../../Stroke/Stroke';
 
 export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'point') {
@@ -27,6 +28,10 @@ export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) =
           <Mark>
             <WellKnownName>{rule.markType}</WellKnownName>
             <Fill>{rule.markColor && <SvgParameter name='fill'>{rule.markColor}</SvgParameter>}</Fill>
+            <Stroke>
+              <SvgParameter name='stroke'>{rule.strokeColor}</SvgParameter>
+              <SvgParameter name='stroke-width'>{rule.strokeWidth}</SvgParameter>
+            </Stroke>
           </Mark>
           <Size>{rule.markSize}</Size>
         </Graphic>

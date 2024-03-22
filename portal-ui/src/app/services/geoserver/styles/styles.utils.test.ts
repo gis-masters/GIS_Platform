@@ -8,7 +8,9 @@ const pointRedCircle: CustomStyleDescription = {
   rule: {
     markColor: '#ff0000',
     markSize: 10,
-    markType: 'circle'
+    markType: 'circle',
+    strokeColor: '#0f5c1a',
+    strokeWidth: 2
   }
 };
 
@@ -68,7 +70,9 @@ const allTypesDefault: CustomStyleDescription = {
     {
       markType: 'circle',
       markSize: 20,
-      markColor: '#ed5c57'
+      markColor: '#ed5c57',
+      strokeColor: '#0f5c1a',
+      strokeWidth: 2
     },
     {
       strokeColor: '#0f5c1a',
@@ -83,7 +87,7 @@ const allTypesDefault: CustomStyleDescription = {
 };
 
 const pointRedCircleSld =
-  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><ElseFilter></ElseFilter><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ff0000</SvgParameter></Fill></Mark><Size>10</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><ElseFilter></ElseFilter><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ff0000</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>10</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const lineBlueSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#0000ff</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
@@ -101,7 +105,7 @@ const withoutFillPolygonSld =
   '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>2</Literal></PropertyIsEqualTo></Filter><PolygonSymbolizer><Fill><SvgParameter name="fill">#ffffffff</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0000bb</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const allTypesDefaultSld =
-  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>2</Literal></PropertyIsEqualTo></Filter><PolygonSymbolizer><Fill><SvgParameter name="fill">#80ff80</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer></Rule><Rule><ElseFilter></ElseFilter><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ed5c57</SvgParameter></Fill></Mark><Size>20</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
+  '<?xml version="1.0" encoding="UTF-8"?><StyledLayerDescriptor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0"><NamedLayer><Name>dummy:complex_name</Name><UserStyle><FeatureTypeStyle><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>2</Literal></PropertyIsEqualTo></Filter><PolygonSymbolizer><Fill><SvgParameter name="fill">#80ff80</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></PolygonSymbolizer></Rule><Rule><Filter><PropertyIsEqualTo><Function name="dimension"><Function name="geometry"></Function></Function><Literal>1</Literal></PropertyIsEqualTo></Filter><LineSymbolizer><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter><SvgParameter name="stroke-linejoin">bevel</SvgParameter></Stroke></LineSymbolizer></Rule><Rule><ElseFilter></ElseFilter><PointSymbolizer><Graphic><Mark><WellKnownName>circle</WellKnownName><Fill><SvgParameter name="fill">#ed5c57</SvgParameter></Fill><Stroke><SvgParameter name="stroke">#0f5c1a</SvgParameter><SvgParameter name="stroke-width">2</SvgParameter></Stroke></Mark><Size>20</Size></Graphic></PointSymbolizer></Rule></FeatureTypeStyle></UserStyle></NamedLayer></StyledLayerDescriptor>';
 
 const dummyComplexName = 'dummy:complex_name';
 

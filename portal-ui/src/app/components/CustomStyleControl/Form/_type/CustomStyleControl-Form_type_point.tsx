@@ -37,6 +37,13 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
           value={value.rule.markColor}
           onChange={this.colorChangeHandler}
         />
+
+        <CustomStyleControlColorSelect
+          label='цвет обводки'
+          colors={customStyleStrokeColors}
+          value={value.rule.strokeColor}
+          onChange={this.strokeColorChangeHandler}
+        />
       </div>
     );
   }
@@ -58,6 +65,22 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
+  private strokeColorChangeHandler(color: string) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'point') {
+      throw this.ruleTypeError;
+    }
+
+    const rule: PointRule = {
+      ...value.rule,
+      strokeColor: color
+    };
+
+    onChange({ ...value, rule });
+  }
+
+  @boundMethod
   private markChangeHandler(mark: Pick<PointRule, 'markSize' | 'markType'>) {
     const { onChange, value } = this.props;
 
@@ -68,7 +91,8 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
     const rule: PointRule = {
       ...value.rule,
       markSize: mark.markSize,
-      markType: mark.markType
+      markType: mark.markType,
+      strokeWidth: mark.markSize / 10
     };
 
     onChange({ ...value, rule });
