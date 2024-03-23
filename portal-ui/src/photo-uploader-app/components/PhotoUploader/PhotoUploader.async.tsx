@@ -29,22 +29,24 @@ const PhotoUploader: FC = observer(() => (
         <UpHeader />
       </>
     )}
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERSLIST && <UpLayersList />}
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.MAIN && (
-      <>
-        <UpMain />
-        <UpActions />
-      </>
-    )}
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.PHOTOLIST && !!photoUploaderStore.files.length && (
-      <UpPhotoList />
-    )}
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.LOADER && !!photoUploaderStore.files.length && (
-      <UpLoader />
-    )}
-    {photoUploaderStore.currentScreen === PhotoUploaderScreens.UPLOAD_RESULT && photoUploaderStore.uploadResult && (
-      <UpLoadResult />
-    )}
+    <div className={cnPhotoUploader('Container ')}>
+      {photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERSLIST && <UpLayersList />}
+      {photoUploaderStore.currentScreen === PhotoUploaderScreens.MAIN && (
+        <>
+          <UpMain />
+          <UpActions />
+        </>
+      )}
+      {photoUploaderStore.currentScreen === PhotoUploaderScreens.PHOTOLIST && !!photoUploaderStore.files.length && (
+        <UpPhotoList />
+      )}
+      {photoUploaderStore.currentScreen === PhotoUploaderScreens.LOADER && !!photoUploaderStore.files.length && (
+        <UpLoader />
+      )}
+      {photoUploaderStore.currentScreen === PhotoUploaderScreens.UPLOAD_RESULT && photoUploaderStore.uploadResult && (
+        <UpLoadResult />
+      )}
+    </div>
   </div>
 ));
 

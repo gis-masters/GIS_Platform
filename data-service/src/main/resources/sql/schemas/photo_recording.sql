@@ -1,5 +1,10 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'photo_uploader',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'photo_uploader');
+
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -76,21 +81,21 @@ SELECT 'photo_uploader',
             },
             {
                 "name": "last_modified",
-                "title": "Последние изменение",
+                "title": "Дата последнего изменения",
                 "hidden": true,
                 "required": true,
                 "valueType": "DATETIME"
             },
             {
                 "name": "created_at",
-                "title": "Время создания",
+                "title": "Дата создания",
                 "hidden": true,
                 "required": true,
                 "valueType": "STRING"
             },
             {
                 "name": "created_by",
-                "title": "Кем создан",
+                "title": "Создатель",
                 "readOnly": true,
                 "required": true,
                 "valueType": "STRING"
@@ -121,4 +126,4 @@ SELECT 'photo_uploader',
         "description": "Объекты для привязки фото к слою",
         "geometryType": "Point"
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'photo_uploader');
+WHERE name = 'photo_uploader';

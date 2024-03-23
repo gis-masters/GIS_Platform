@@ -164,7 +164,7 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
       creationtime: moment().format('YYYY-MM-DD'),
       name: file.name,
       photographytime: photoTime,
-      sender: `${currentUser.name} ${currentUser.surname}`,
+      sender: currentUser.id,
       color: '399959',
       color2: '292919',
       rotation:

@@ -6,6 +6,7 @@ import { Button } from '../../../app/components/Button/Button';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 import { UpLoadResultContent } from './Content/UpLoadResult-Content';
+import { UpConnectionsToProjects } from '../UpConnectionsToProjects/UpConnectionsToProjects';
 
 import '!style-loader!css-loader!sass-loader!./UpLoadResult.scss';
 import '!style-loader!css-loader!sass-loader!./Button/UpLoadResult-Button.scss';
@@ -22,7 +23,12 @@ const loadMore = () => {
 export const UpLoadResult: FC = observer(() => (
   <div className={cnUpLoadResult()}>
     <UpSelectedLayer atResultsScreen />
-    {!!photoUploaderStore.uploadResult && <UpLoadResultContent />}
+    {!!photoUploaderStore.uploadResult && (
+      <>
+        <UpConnectionsToProjects />
+        <UpLoadResultContent />
+      </>
+    )}
     <Button className={cnUpLoadResult('Button')} onClick={loadMore}>
       Загрузить еще
     </Button>

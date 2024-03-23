@@ -72,7 +72,10 @@ class PhotoUploaderStore {
         break;
       }
       case PhotoUploaderScreens.LOADER: {
-        headerTitle = 'Загружаем...';
+        headerTitle =
+          this.files.length === this.filesHandled
+            ? `Загружено (${this.filesSucceeded}/${this.files.length})`
+            : `Загружаем (${this.filesHandled}/${this.files.length})`;
         break;
       }
       case PhotoUploaderScreens.UPLOAD_RESULT: {
