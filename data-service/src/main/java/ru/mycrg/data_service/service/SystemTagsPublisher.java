@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_service_contract.events.response.SystemTagsUpdatedEvent;
 import ru.mycrg.data_service.queue.MessageBusProducer;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.support_classes.TransationWrapper;
 
 import java.util.ArrayList;
@@ -17,11 +17,11 @@ public class SystemTagsPublisher {
 
     private final Logger log = LoggerFactory.getLogger(SystemTagsPublisher.class);
 
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final TransationWrapper contextWrapper;
     private final MessageBusProducer messageBusProducer;
 
-    public SystemTagsPublisher(@Qualifier("schemaServiceBase") ISchemaService schemaService,
+    public SystemTagsPublisher(@Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                TransationWrapper contextWrapper,
                                MessageBusProducer messageBusProducer) {
         this.schemaService = schemaService;

@@ -16,7 +16,7 @@ import javax.persistence.*;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class Schema {
+public class SchemaTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class Schema {
     @Type(type="text")
     private String calculatedFields;
 
-    public Schema() {
+    public SchemaTemplate() {
         // Required
     }
 

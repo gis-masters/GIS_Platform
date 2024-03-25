@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
@@ -38,7 +38,7 @@ public abstract class RequestProcessor {
     // общие бины
     private final BaseDao baseDao;
     private final SmevMessageSenderService messageService;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final SmevOutgoingAttachmentService attachmentService;
     private final ResourceLoader resourceLoader;
 
@@ -53,7 +53,7 @@ public abstract class RequestProcessor {
     public RequestProcessor(Mnemonic mnemonic,
                             SmevMessageSenderService messageService,
                             BaseDao baseDao,
-                            ISchemaService schemaService,
+                            ISchemaTemplateService schemaService,
                             SmevOutgoingAttachmentService attachmentService,
                             ResourceLoader resourceLoader,
                             Smev3Config smev3Config) {
@@ -72,7 +72,7 @@ public abstract class RequestProcessor {
         return baseDao;
     }
 
-    public ISchemaService getSchemaService() {
+    public ISchemaTemplateService getSchemaService() {
         return schemaService;
     }
 

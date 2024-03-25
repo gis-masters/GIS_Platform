@@ -20,7 +20,7 @@ import ru.mycrg.data_service.service.parsers.XmlParser;
 import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.util.ImportValidationHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -39,7 +39,7 @@ public class MpImporter implements Importer<Long> {
 
     private final RecordsDao recordsDao;
     private final XmlParser xmlParser;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final TableService tableService;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final SystemAttributeHandler systemAttributeHandler;
@@ -48,7 +48,7 @@ public class MpImporter implements Importer<Long> {
 
     public MpImporter(RecordsDao recordsDao,
                       XmlParser xmlParser,
-                      @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                       TableService tableService,
                       DdlTablesSpecial ddlTablesSpecial,
                       SystemAttributeHandler systemAttributeHandler) {

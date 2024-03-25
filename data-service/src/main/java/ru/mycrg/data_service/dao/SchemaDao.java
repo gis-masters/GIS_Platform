@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.JsonConverter;
 
@@ -24,13 +24,13 @@ public class SchemaDao {
         this.baseDao = baseDao;
     }
 
-    public Schema find(@NotNull String schemaName) throws CrgDaoException {
+    public SchemaTemplate find(@NotNull String schemaName) throws CrgDaoException {
         log.debug("get schema by name : " + schemaName);
         var byName = "name = '" + schemaName + "'";
         return baseDao.findBy(new ResourceQualifier("data", "schemas"), byName)
                 .map(IRecord::getContent)
                 .map(map -> {
-                    var schema = new Schema();
+                    var schema = new SchemaTemplate();
                     schema.setId(Long.parseLong(map.get("id").toString()));
                     schema.setName(map.get("name").toString());
                     schema.setClassRule(JsonConverter.toJsonNodeFromString(map.get("class_rule").toString()));

@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
@@ -39,7 +39,7 @@ public class RegisterRnvRequestService extends RequestProcessor {
     public RegisterRnvRequestService(SmevMessageSenderService messageService,
                                      Smev3Config smev3Config,
                                      BaseDao baseDao,
-                                     @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                                     @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
                                      SmevOutgoingAttachmentService attachmentService) {
         super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);

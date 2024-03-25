@@ -20,7 +20,7 @@ public class DeleteLibraryRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "DeleteLibraryRequest";
+        return DeleteLibraryRequest.class.getSimpleName();
     }
 
     @Override

@@ -26,7 +26,7 @@ public class CreateTableRequest implements IRequest<TableModel>, Auditable {
 
     @Override
     public String getType() {
-        return "CreateTableRequest";
+        return CreateTableRequest.class.getSimpleName();
     }
 
     @Override

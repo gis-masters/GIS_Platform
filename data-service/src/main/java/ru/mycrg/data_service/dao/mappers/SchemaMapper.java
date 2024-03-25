@@ -1,25 +1,25 @@
 package ru.mycrg.data_service.dao.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
-import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SchemaMapper implements RowMapper<Schema> {
+public class SchemaMapper implements RowMapper<SchemaTemplate> {
 
     @Override
-    public Schema mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Schema schema = new Schema();
+    public SchemaTemplate mapRow(ResultSet rs, int rowNum) throws SQLException {
+        SchemaTemplate schemaTemplate = new SchemaTemplate();
 
-        schema.setName(rs.getString("name"));
-        schema.setCalculatedFields(rs.getString("calculated_fields"));
-        schema.setCustomRule(rs.getString("custom_rule"));
+        schemaTemplate.setName(rs.getString("name"));
+        schemaTemplate.setCalculatedFields(rs.getString("calculated_fields"));
+        schemaTemplate.setCustomRule(rs.getString("custom_rule"));
 
         String classRule = rs.getString("class_rule");
-        schema.setClassRule(JsonConverter.toJsonNode(classRule));
+        schemaTemplate.setClassRule(JsonConverter.toJsonNode(classRule));
 
-        return schema;
+        return schemaTemplate;
     }
 }

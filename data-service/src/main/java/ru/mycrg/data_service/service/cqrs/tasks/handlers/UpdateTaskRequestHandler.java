@@ -10,7 +10,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
@@ -32,13 +32,13 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
     private final RecordsDao recordsDao;
     private final TaskService taskService;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final TaskLogService taskLogService;
     private final IAuthenticationFacade authenticationFacade;
 
     public UpdateTaskRequestHandler(RecordsDao recordsDao,
                                     TaskService taskService,
-                                    ISchemaService schemaService,
+                                    ISchemaTemplateService schemaService,
                                     TaskLogService taskLogService,
                                     IAuthenticationFacade authenticationFacade) {
         this.recordsDao = recordsDao;

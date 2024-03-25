@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.controller.table;
+package ru.mycrg.data_service.controller.table.records;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

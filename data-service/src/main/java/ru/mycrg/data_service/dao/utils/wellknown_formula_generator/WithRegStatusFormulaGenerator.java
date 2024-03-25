@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 /**
@@ -20,7 +21,7 @@ public class WithRegStatusFormulaGenerator implements IWellKnownFormulaGenerator
     public WithRegStatusFormulaGenerator() {
         this.allowedFieldTypes = new HashMap<>();
         allowedFieldTypes.put("classid", List.of(CHOICE.name(), STRING.name(), INT.name(), LONG.name()));
-        allowedFieldTypes.put("ruleid", List.of(STRING.name()));
+        allowedFieldTypes.put(RULE_ID, List.of(STRING.name()));
         allowedFieldTypes.put("status", List.of(CHOICE.name(), STRING.name(), INT.name(), LONG.name()));
         allowedFieldTypes.put("reg_status", List.of(CHOICE.name(), STRING.name(), INT.name(), LONG.name()));
     }

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -20,6 +19,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.gisogd.GisogdData;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 import java.util.Objects;
@@ -54,13 +54,6 @@ public class TableService {
         this.permissionsRepository = permissionsRepository;
         this.systemAttributeHandler = systemAttributeHandler;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
-    }
-
-    public List<GisogdData> getTablesCreatedBySchema(String schemaId) {
-        return schemasAndTablesRepository.findBySchemaId(schemaId).stream()
-                                         .map(buildFullQualifier())
-                                         .filter(Objects::nonNull)
-                                         .collect(Collectors.toList());
     }
 
     public Page<TableModel> getPaged(String datasetIdentifier, String ecqlFilter, Pageable pageable) {
@@ -137,10 +130,36 @@ public class TableService {
         return allowedTables;
     }
 
-    public Long getAllowedTablesCount(String datasetId) {
-        Page<TableModel> page = getPaged(datasetId, null, PageRequest.of(0, 1));
+    public TableModel getInfo(ResourceQualifier tQualifier) {
+        if (authenticationFacade.isOrganizationAdmin()) {
+            SchemasAndTables table = schemasAndTablesRepository
+                    .findByIdentifier(tQualifier.getTable())
+                    .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
 
-        return page.getTotalElements();
+            return new TableModel(table, OWNER.name(), tQualifier.getSchema());
+        } else {
+            Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
+            if (oRole.isPresent()) {
+                SchemasAndTables table = schemasAndTablesRepository
+                        .findByIdentifier(tQualifier.getTable())
+                        .orElseThrow(() -> new NotFoundException(tQualifier.getQualifier()));
+
+                return new TableModel(table, oRole.get(), tQualifier.getSchema());
+            } else {
+                throw new ForbiddenException("Недостаточно прав для просмотра таблицы: " + tQualifier.getQualifier());
+            }
+        }
+    }
+
+    public List<GisogdData> getTablesCreatedBySchema(String schemaId) {
+        return schemasAndTablesRepository.findBySchemaId(schemaId).stream()
+                                         .map(buildFullQualifier())
+                                         .filter(Objects::nonNull)
+                                         .collect(Collectors.toList());
+    }
+
+    public SchemaDto getSchema(ResourceQualifier qualifier) {
+        return getInfo(qualifier).getSchema();
     }
 
     public String getDatasetByTableName(String tableName) {
@@ -163,33 +182,6 @@ public class TableService {
         }
 
         return parentDataset.get().getIdentifier();
-    }
-
-    public TableModel getInfo(ResourceQualifier tQualifier) {
-        if (authenticationFacade.isOrganizationAdmin()) {
-            SchemasAndTables table = schemasAndTablesRepository
-                    .findByIdentifier(tQualifier.getTable())
-                    .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
-
-            return new TableModel(table, OWNER.name(), tQualifier.getSchema());
-        } else {
-            Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
-            if (oRole.isPresent()) {
-                SchemasAndTables table = schemasAndTablesRepository
-                        .findByIdentifier(tQualifier.getTable())
-                        .orElseThrow(() -> new NotFoundException(tQualifier.getQualifier()));
-
-                return new TableModel(table, oRole.get(), tQualifier.getSchema());
-            } else {
-                throw new ForbiddenException("Недостаточно прав для просмотра таблицы: " + tQualifier.getQualifier());
-            }
-        }
-    }
-
-    public String getTableCrs(String identifier) {
-        return schemasAndTablesRepository
-                .findCrsByIdentifier(identifier)
-                .orElseThrow(() -> new NotFoundException("Не задан crs для таблицы: " + identifier));
     }
 
     @NotNull

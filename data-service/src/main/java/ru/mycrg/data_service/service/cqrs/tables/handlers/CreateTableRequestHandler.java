@@ -17,7 +17,7 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
@@ -50,7 +50,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final Logger log = LoggerFactory.getLogger(CreateTableRequestHandler.class);
 
     private final DdlTriggers ddlTriggers;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final DdlTablesSpecial ddlTablesSpecial;
     private final IResourceProtector datasetProtector;
     private final PermissionsService permissionsService;
@@ -58,7 +58,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final Map<String, IWellKnownFormulaGenerator> wellKnownFormulaGenerators;
 
     public CreateTableRequestHandler(DdlTriggers ddlTriggers,
-                                     ISchemaService schemaService,
+                                     ISchemaTemplateService schemaService,
                                      DdlTablesSpecial ddlTablesSpecial,
                                      IResourceProtector datasetProtector,
                                      PermissionsService permissionsService,
@@ -130,7 +130,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private void createTable(SchemaDto schema, String datasetId, TableCreateDto dto) {
         try {
             List<SimplePropertyDto> schemaProperties = schema.getProperties();
-            generateSystemAttributes(schemaProperties);
+            enrichPropsByRuleId(schemaProperties);
 
             ddlTablesSpecial.create(datasetId, dto, schemaProperties);
         } catch (BadSqlGrammarException e) {
@@ -182,23 +182,24 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
     }
 
-    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
+    private void enrichPropsByRuleId(List<SimplePropertyDto> schemaProperties) {
         List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
                                                           .collect(Collectors.toList());
         if (!schemaPropertyName.contains(RULE_ID)) {
             SimplePropertyDto ruleId = new SimplePropertyDto();
             ruleId.setName(RULE_ID);
+            ruleId.setTitle("Идентификатор стиля");
             ruleId.setValueType(ValueType.STRING);
 
             schemaProperties.add(ruleId);
         }
     }
 
-    private String buildTableName(String sTableName, long datasetId, String nameFromDto) {
-        if (nameFromDto == null || nameFromDto.isEmpty()) {
-            return String.format("%s_%d_%s", sTableName, datasetId, UUID.randomUUID().toString().substring(0, 5));
-        } else {
-            return nameFromDto;
+    private String buildTableName(String nameFromSchema, long datasetId, String requiredName) {
+        if (requiredName != null && !requiredName.isBlank()) {
+            return requiredName;
         }
+
+        return String.format("%s_%d_%s", nameFromSchema, datasetId, UUID.randomUUID().toString().substring(0, 5));
     }
 }

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
 /**
  * Маппер для поля class_rule.
@@ -37,9 +36,5 @@ public class SchemaMapper {
         }
 
         return fromJson(json.toString(), SchemaDto.class).orElse(null);
-    }
-
-    public static JsonNode dtoToJson(@Nullable SchemaDto schemaDto) {
-        return toJsonNode(schemaDto);
     }
 }

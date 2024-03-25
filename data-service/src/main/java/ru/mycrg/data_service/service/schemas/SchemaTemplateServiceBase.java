@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service.mappers.SchemaEntityMapper;
-import ru.mycrg.data_service.repository.DataSchemaRepository;
+import ru.mycrg.data_service.repository.SchemaTemplateRepository;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
@@ -19,13 +19,13 @@ import static ru.mycrg.data_service.service.schemas.SchemaUtil.enrichPropsBySyst
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
-public class SchemaServiceBase implements ISchemaService {
+public class SchemaTemplateServiceBase implements ISchemaTemplateService {
 
     private final static String SYSTEM_TAG_NAME = "system";
 
-    private final DataSchemaRepository schemaRepository;
+    private final SchemaTemplateRepository schemaRepository;
 
-    public SchemaServiceBase(DataSchemaRepository schemaRepository) {
+    public SchemaTemplateServiceBase(SchemaTemplateRepository schemaRepository) {
         this.schemaRepository = schemaRepository;
     }
 
@@ -84,9 +84,9 @@ public class SchemaServiceBase implements ISchemaService {
      * Проверяем у схемы в "properties" наличие поля "valueType":"URL", что является косвенным признаком наличия
      * регламентов
      */
-    private boolean isReglamentsExist(Schema schema) {
+    private boolean isReglamentsExist(SchemaTemplate schemaTemplate) {
         AtomicBoolean isReglamentExist = new AtomicBoolean(false);
-        schema.getClassRule().get("properties").forEach(props -> {
+        schemaTemplate.getClassRule().get("properties").forEach(props -> {
             JsonNode valueType = props.get("valueType");
             if (valueType != null && valueType.toString().equals("\"" + URL.name() + "\"")) {
                 isReglamentExist.set(true);

@@ -26,7 +26,7 @@ import ru.mycrg.data_service.service.parsers.model.FeatureObject;
 import ru.mycrg.data_service.service.parsers.model.FeatureProperty;
 import ru.mycrg.data_service.service.parsers.model.SimpleFeatureData;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.validation.ValidationService;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
@@ -51,7 +51,7 @@ public class GmlImporter {
     private static final Logger log = LoggerFactory.getLogger(GmlImporter.class);
 
     private final RecordsDao recordsDao;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final GeometryDao geometryDao;
     private final GmlParser gmlParser;
     private final ValidationService validationService;
@@ -60,7 +60,7 @@ public class GmlImporter {
     private final FileStorageService fileStorageService;
 
     public GmlImporter(RecordsDao recordsDao,
-                       @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                       @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                        GeometryDao geometryDao,
                        GmlParser gmlParser,
                        ValidationService validationService,

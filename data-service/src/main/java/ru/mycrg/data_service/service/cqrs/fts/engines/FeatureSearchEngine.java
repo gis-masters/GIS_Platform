@@ -247,15 +247,15 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                 String tableId = split[1];
                 ResourceQualifier tableQualifier = new ResourceQualifier(datasetId, tableId);
 
-                SchemaDto schema = schemaExtractor.get(tableQualifier).orElse(null);
-                if (schema == null) {
+                Optional<SchemaDto> oSchema = schemaExtractor.get(tableQualifier);
+                if (oSchema.isEmpty()) {
                     return;
                 }
 
                 List<FtsResponseDto> features = spatialRecordsDao
-                        .findByIds(tableQualifier, schema, recordIds)
+                        .findByIds(tableQualifier, oSchema.get(), recordIds)
                         .stream()
-                        .map(toResponseDto(ftsItems, dictionaryWords, tableQualifier, schema))
+                        .map(toResponseDto(ftsItems, dictionaryWords, tableQualifier, oSchema.get()))
                         .collect(Collectors.toList());
 
                 result.addAll(features);

@@ -24,7 +24,7 @@ public class UpdateLibraryRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateLibraryRequest";
+        return UpdateLibraryRequest.class.getSimpleName();
     }
 
     @Override

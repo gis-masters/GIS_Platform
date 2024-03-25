@@ -20,7 +20,7 @@ public class DeleteTableRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "DeleteTableRequest";
+        return DeleteTableRequest.class.getSimpleName();
     }
 
     @Override

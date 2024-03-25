@@ -13,7 +13,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
@@ -274,7 +274,7 @@ public abstract class AXmlBuildProcess {
         return requestProcessor.getBaseDao();
     }
 
-    public ISchemaService schemaService() {
+    public ISchemaTemplateService schemaService() {
         return requestProcessor.getSchemaService();
     }
 

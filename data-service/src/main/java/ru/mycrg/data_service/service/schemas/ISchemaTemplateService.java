@@ -7,7 +7,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface ISchemaService {
+public interface ISchemaTemplateService {
 
     List<SchemaDto> getSchemas(@Nullable List<String> featureNames);
 

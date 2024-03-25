@@ -9,7 +9,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.WorkImport;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -34,14 +34,14 @@ public class ImportService {
     private static final Logger log = LoggerFactory.getLogger(ImportService.class);
 
     private final Environment environment;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final IMessageBusProducer messageBus;
     private final ProcessService processService;
     private final IAuthenticationFacade authenticationFacade;
 
     public ImportService(IMessageBusProducer messageBus,
                          Environment environment,
-                         @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                         @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                          ProcessService processService,
                          IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;

@@ -14,7 +14,7 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
@@ -38,9 +38,9 @@ public class TaskController {
 
     private final Mediator mediator;
     private final TaskService taskService;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
 
-    public TaskController(Mediator mediator, TaskService taskService, ISchemaService schemaService) {
+    public TaskController(Mediator mediator, TaskService taskService, ISchemaTemplateService schemaService) {
         this.mediator = mediator;
         this.taskService = taskService;
         this.schemaService = schemaService;

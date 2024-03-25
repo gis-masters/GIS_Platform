@@ -2,6 +2,7 @@ package ru.mycrg.data_service.service.resources;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -100,14 +101,15 @@ public class DatasetService {
         }
     }
 
-    public IResourceModel getInfo(String datasetIdentifier) {
-        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
+    public IResourceModel getInfo(String datasetId) {
+        ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetId);
 
-        Integer allowedTablesCount = tableService.getAllowedTablesCount(datasetIdentifier).intValue();
+        Integer allowedTablesCount = (int) tableService.getPaged(datasetId, null, PageRequest.of(0, 1))
+                                                       .getTotalElements();
 
         SchemasAndTables dataset = schemasAndTablesRepository
-                .findByIdentifier(datasetIdentifier)
-                .orElseThrow(() -> new NotFoundException(datasetIdentifier));
+                .findByIdentifier(datasetId)
+                .orElseThrow(() -> new NotFoundException(datasetId));
 
         if (datasetProtector.isOwner(dQualifier)) {
             return new DatasetModel(dataset, "OWNER", allowedTablesCount);
@@ -122,7 +124,7 @@ public class DatasetService {
             if (canBeViewed) {
                 return new DatasetModel(dataset, "VIEWER", allowedTablesCount);
             } else {
-                throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetIdentifier);
+                throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetId);
             }
         }
     }

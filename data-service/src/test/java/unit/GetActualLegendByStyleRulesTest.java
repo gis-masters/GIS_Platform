@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
+import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
 import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectOneQueryWithBbox;
 import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectQueryWithBbox;
 import static ru.mycrg.data_service.dto.styles.ComparisonRuleOperator.IS_EQUAL_TO;
@@ -24,7 +25,7 @@ public class GetActualLegendByStyleRulesTest {
         String tableName = "test_table";
         ResourceQualifier tQualifier = new ResourceQualifier(schemaName, tableName);
         SpatialRuleFilter bboxFilter = prepareBboxFilter();
-        String propertyName = "ruleid";
+        String propertyName = RULE_ID;
         String value = "100";
 
         ComparisonRuleFilter isEqualToFilter = new ComparisonRuleFilter(IS_EQUAL_TO, propertyName, value);

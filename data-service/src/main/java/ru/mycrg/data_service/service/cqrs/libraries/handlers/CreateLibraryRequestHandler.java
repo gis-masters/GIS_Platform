@@ -14,7 +14,7 @@ import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryProtector;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -38,13 +38,13 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
     private final DdlTriggers ddlTriggers;
     private final DdlTablesBase ddlTablesBase;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final DocLibraryProtector docLibraryProtector;
     private final IAuthenticationFacade authenticationFacade;
     private final DocumentLibraryRepository libraryRepository;
 
     public CreateLibraryRequestHandler(DdlTriggers ddlTriggers,
-                                       ISchemaService schemaService,
+                                       ISchemaTemplateService schemaService,
                                        DdlTablesBase ddlTablesBase,
                                        DocumentLibraryRepository libraryRepository,
                                        IAuthenticationFacade authenticationFacade,

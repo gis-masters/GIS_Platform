@@ -11,7 +11,7 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.TerminateRnsRequestDto;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
@@ -37,7 +37,7 @@ public class TerminateRnsRequestService extends RequestProcessor {
     public TerminateRnsRequestService(SmevMessageSenderService messageService,
                                       Smev3Config smev3Config,
                                       BaseDao baseDao,
-                                      @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       ResourceLoader resourceLoader,
                                       SmevOutgoingAttachmentService attachmentService) {
         super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);

@@ -121,7 +121,7 @@ public class BasePermissionsRepository {
 
         String tableQualifier = targetTable.getTableQualifier();
         String tableName = targetTable.getTable();
-        String requestTemplate = "" +
+        String query = "" +
                 "SELECT exists (" +
                 "  SELECT res.id AS allowed_res_id" +
                 "  FROM " + tableQualifier + " AS res" +
@@ -131,9 +131,9 @@ public class BasePermissionsRepository {
                 "  AND res.id IN (" + joinAndQuoteMark(parentFolderIds) + ")" +
                 ")";
 
-        log.debug("Request is allowed by parents permissions: [{}]", requestTemplate);
+        log.debug("Request is allowed by parents permissions: [{}]", query);
 
-        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Boolean.class);
+        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Boolean.class);
 
         return Boolean.TRUE.equals(result);
     }
@@ -147,7 +147,7 @@ public class BasePermissionsRepository {
             return 0L;
         }
 
-        String requestTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  count(allowed_res_id) " +
                 "FROM " +
@@ -179,9 +179,9 @@ public class BasePermissionsRepository {
                 "  JOIN " + tableQualifier + " AS n2 ON n1.allowed_res_id = n2.id " +
                 " " + buildWhereSection(ecqlFilter);
 
-        log.debug("Request to total allowed resources by path: [{}]", requestTemplate);
+        log.debug("Request to total allowed resources by path: [{}]", query);
 
-        return pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
+        return pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
     }
 
     public void decreasePermissionsToViewerForAll(ResourceQualifier rQualifier) {
@@ -210,7 +210,7 @@ public class BasePermissionsRepository {
             return Optional.empty();
         }
 
-        String requestTemplate = "" +
+        String query = "" +
                 "SELECT max(p.role_id) FROM data.schemas_and_tables AS res " +
                 "JOIN data.acl_permissions AS p " +
                 "ON p.resource_id = res.id " +
@@ -221,9 +221,10 @@ public class BasePermissionsRepository {
                 "   OR res.identifier = '" + schemaName + "'" +
                 ")";
 
-        log.debug("Request bestRoleForTable: [{}]", requestTemplate);
+        log.debug("Request bestRoleForTable: [{}]", query);
 
-        Long roleId = pJdbcTemplate.getJdbcTemplate().queryForObject(requestTemplate, Long.class);
+        Long roleId = pJdbcTemplate.getJdbcTemplate()
+                                   .queryForObject(query, Long.class);
 
         return defineRoleById(roleId);
     }
@@ -241,7 +242,7 @@ public class BasePermissionsRepository {
             return false;
         }
 
-        String queryTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  exists (" +
                 "    SELECT " +
@@ -254,9 +255,9 @@ public class BasePermissionsRepository {
                 "      AND res.path LIKE '" + path + "%'" +
                 ")";
 
-        log.debug("Query: is pass-through folder: [{}]", queryTemplate);
+        log.debug("Query: is pass-through folder: [{}]", query);
 
-        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Boolean.class);
+        Boolean result = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Boolean.class);
 
         return Boolean.TRUE.equals(result);
     }
@@ -278,7 +279,7 @@ public class BasePermissionsRepository {
             return Optional.empty();
         }
 
-        String queryTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  max(p.role_id) " +
                 "FROM " +
@@ -288,9 +289,9 @@ public class BasePermissionsRepository {
                 "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ")" +
                 "  AND res.id IN (" + joinAndQuoteMark(parentFolderIds) + ")";
 
-        log.debug("Query: best role inherited from parent: [{}]", queryTemplate);
+        log.debug("Query: best role inherited from parent: [{}]", query);
 
-        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(queryTemplate, new SingleColumnRowMapper<>());
+        List<Long> results = pJdbcTemplate.getJdbcTemplate().query(query, new SingleColumnRowMapper<>());
         if (results.isEmpty()) {
             return Optional.empty();
         } else {
@@ -304,7 +305,7 @@ public class BasePermissionsRepository {
             return Optional.empty();
         }
 
-        String queryTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  max(p.role_id) " +
                 "FROM " +
@@ -314,9 +315,9 @@ public class BasePermissionsRepository {
                 "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.table_name = '" + tableName + "'";
 
-        log.debug("Request getRoleForLibrary: [{}]", queryTemplate);
+        log.debug("Request getRoleForLibrary: [{}]", query);
 
-        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
 
         return defineRoleById(results);
     }
@@ -329,7 +330,7 @@ public class BasePermissionsRepository {
 
         String identifier = dQualifier.getTable() != null ? dQualifier.getTable() : dQualifier.getSchema();
 
-        String queryTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  max(p.role_id) " +
                 "FROM " +
@@ -339,9 +340,9 @@ public class BasePermissionsRepository {
                 "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.identifier = '" + identifier + "'";
 
-        log.debug("Request getRoleForDataset: [{}]", queryTemplate);
+        log.debug("Request getRoleForDataset: [{}]", query);
 
-        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
 
         return defineRoleById(results);
     }
@@ -365,7 +366,7 @@ public class BasePermissionsRepository {
             return Optional.empty();
         }
 
-        String queryTemplate = "" +
+        String query = "" +
                 "SELECT " +
                 "  max(p.role_id) " +
                 "FROM " +
@@ -375,9 +376,9 @@ public class BasePermissionsRepository {
                 "  AND p.principal_id IN (" + joinAndQuoteMark(allPrincipalIds) + ") " +
                 "  AND res.id = " + recordId;
 
-        log.debug("Query: role for record: [{}]", queryTemplate);
+        log.debug("Query: role for record: [{}]", query);
 
-        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(queryTemplate, Long.class);
+        Long results = pJdbcTemplate.getJdbcTemplate().queryForObject(query, Long.class);
 
         return defineRoleById(results);
     }

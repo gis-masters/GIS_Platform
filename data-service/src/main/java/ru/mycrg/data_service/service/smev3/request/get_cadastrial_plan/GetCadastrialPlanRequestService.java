@@ -23,7 +23,7 @@ import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibrary
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
@@ -68,7 +68,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
     private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
 
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final Mediator mediator;
     private final DocumentLibraryService documentLibraryService;
@@ -77,7 +77,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     public GetCadastrialPlanRequestService(Smev3Config smev3Config,
                                            ResourceLoader resourceLoader,
                                            SmevMessageSenderService messageService,
-                                           ISchemaService schemaService,
+                                           ISchemaTemplateService schemaService,
                                            IAuthenticationFacade authenticationFacade,
                                            Mediator mediator,
                                            DocumentLibraryService documentLibraryService,

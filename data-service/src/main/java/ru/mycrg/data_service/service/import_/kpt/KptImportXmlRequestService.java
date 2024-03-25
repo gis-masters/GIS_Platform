@@ -16,7 +16,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
@@ -58,14 +58,14 @@ public class KptImportXmlRequestService {
     private static final String TASK_CONTENT_TYPE = "common_task_kpt_import";
 
     private final IMessageBusProducer messageBus;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final KptSourceFilesService kptSourceFilesService;
     private final Mediator mediator;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public KptImportXmlRequestService(IMessageBusProducer messageBus,
-                                      @Qualifier("schemaServiceBase") ISchemaService schemaService,
+                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       IAuthenticationFacade authenticationFacade,
                                       KptSourceFilesService kptSourceFilesService,
                                       Mediator mediator,

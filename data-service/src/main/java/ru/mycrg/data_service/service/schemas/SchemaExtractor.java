@@ -22,14 +22,14 @@ public class SchemaExtractor {
 
     private final Logger log = LoggerFactory.getLogger(SchemaExtractor.class);
 
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaTemplateService;
     private final DocumentLibraryService libraryService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public SchemaExtractor(ISchemaService schemaService,
+    public SchemaExtractor(ISchemaTemplateService schemaTemplateService,
                            DocumentLibraryService documentLibraryService,
                            SchemasAndTablesRepository schemasAndTablesRepository) {
-        this.schemaService = schemaService;
+        this.schemaTemplateService = schemaTemplateService;
         this.libraryService = documentLibraryService;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
@@ -46,7 +46,7 @@ public class SchemaExtractor {
 
                 return Optional.ofNullable(jsonToDto(schemasAndTables.getSchema()));
             } else if (TASK.equals(type)) {
-                return schemaService.getSchemaByName(TASKS_SCHEMA);
+                return schemaTemplateService.getSchemaByName(TASKS_SCHEMA);
             } else {
                 log.warn("Не удалось достать схему. Unknown resource type: [{}]", qualifier.getQualifier());
 

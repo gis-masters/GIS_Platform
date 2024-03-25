@@ -159,36 +159,41 @@ public class SchemaUtil {
     }
 
     public static void enrichPropsBySystemAttributes(List<SimplePropertyDto> schemaProperties) {
-        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
-                                                          .collect(Collectors.toList());
+        List<String> propertyNames = schemaProperties.stream()
+                                                     .map(SimplePropertyDto::getName)
+                                                     .collect(Collectors.toList());
 
-        if (!schemaPropertyName.contains(CREATED_BY.getName())) {
+        if (!propertyNames.contains(CREATED_BY.getName())) {
             SimplePropertyDto createdBy = new SimplePropertyDto();
             createdBy.setName(CREATED_BY.getName());
+            createdBy.setTitle("Кем создано");
             createdBy.setValueType(ValueType.STRING);
 
             schemaProperties.add(createdBy);
         }
 
-        if (!schemaPropertyName.contains(CREATED_AT.getName())) {
+        if (!propertyNames.contains(CREATED_AT.getName())) {
             SimplePropertyDto createdAt = new SimplePropertyDto();
             createdAt.setName(CREATED_AT.getName());
+            createdAt.setTitle("Дата создания");
             createdAt.setValueType(ValueType.DATETIME);
 
             schemaProperties.add(createdAt);
         }
 
-        if (!schemaPropertyName.contains(UPDATED_BY.getName())) {
+        if (!propertyNames.contains(UPDATED_BY.getName())) {
             SimplePropertyDto updatedBy = new SimplePropertyDto();
             updatedBy.setName(UPDATED_BY.getName());
+            updatedBy.setTitle("Кто обновил");
             updatedBy.setValueType(ValueType.STRING);
 
             schemaProperties.add(updatedBy);
         }
 
-        if (!schemaPropertyName.contains(LAST_MODIFIED.getName())) {
+        if (!propertyNames.contains(LAST_MODIFIED.getName())) {
             SimplePropertyDto lastModified = new SimplePropertyDto();
             lastModified.setName(LAST_MODIFIED.getName());
+            lastModified.setTitle("Дата последнего изменения");
             lastModified.setValueType(ValueType.DATETIME);
 
             schemaProperties.add(lastModified);

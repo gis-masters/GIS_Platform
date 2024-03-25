@@ -33,29 +33,6 @@ public class TablesController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/datasets/{datasetId}/tables")
-    public ResponseEntity<TableModel> createTable(@PathVariable String datasetId,
-                                                  @Valid @RequestBody TableCreateDto dto) {
-        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, dto.getName());
-
-        TableModel tableModel = mediator.execute(new CreateTableRequest(dto, tQualifier));
-
-        return new ResponseEntity<>(tableModel, CREATED);
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PutMapping("/datasets/{datasetId}/tables/{tableId}")
-    public ResponseEntity<TableModel> updateTable(@PathVariable String datasetId,
-                                                      @PathVariable String tableId,
-                                                      @Valid @RequestBody TableUpdateDto dto) {
-        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
-
-        mediator.execute(new UpdateTableRequest(tQualifier, dto));
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/datasets/{datasetId}/tables")
     public ResponseEntity<?> getTables(@PathVariable String datasetId,
                                        @RequestParam(name = "filter", required = false) String ecqlFilter,
@@ -72,6 +49,29 @@ public class TablesController {
         TableModel table = tableService.getInfo(new ResourceQualifier(datasetId, tableId));
 
         return ResponseEntity.ok(table);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/datasets/{datasetId}/tables")
+    public ResponseEntity<TableModel> createTable(@PathVariable String datasetId,
+                                                  @Valid @RequestBody TableCreateDto dto) {
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, dto.getName());
+
+        TableModel tableModel = mediator.execute(new CreateTableRequest(dto, tQualifier));
+
+        return new ResponseEntity<>(tableModel, CREATED);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PutMapping("/datasets/{datasetId}/tables/{tableId}")
+    public ResponseEntity<TableModel> updateTable(@PathVariable String datasetId,
+                                                  @PathVariable String tableId,
+                                                  @Valid @RequestBody TableUpdateDto dto) {
+        ResourceQualifier tQualifier = new ResourceQualifier(datasetId, tableId);
+
+        mediator.execute(new UpdateTableRequest(tQualifier, dto));
+
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

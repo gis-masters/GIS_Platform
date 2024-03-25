@@ -19,13 +19,14 @@ import java.util.stream.Collectors;
  */
 @Service
 @Primary
-public class SchemaServiceProtected implements ISchemaService {
+public class SchemaTemplateServiceProtected implements ISchemaTemplateService {
 
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final OrgSettingsKeeper orgSettingsKeeper;
 
-    public SchemaServiceProtected(@Qualifier("schemaServiceBase") ISchemaService schemaServiceBase,
-                                  OrgSettingsKeeper orgSettingsKeeper) {
+    public SchemaTemplateServiceProtected(@Qualifier("schemaTemplateServiceBase")
+                                          ISchemaTemplateService schemaServiceBase,
+                                          OrgSettingsKeeper orgSettingsKeeper) {
         this.schemaService = schemaServiceBase;
         this.orgSettingsKeeper = orgSettingsKeeper;
     }

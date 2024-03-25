@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.schemas.requests;
+package ru.mycrg.data_service.service.cqrs.schema_temaplates.requests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
@@ -10,11 +10,11 @@ import ru.mycrg.mediator.Voidy;
 import static ru.mycrg.data_service.dto.ResourceType.SCHEMA;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
-public class CreateSchemaRequest implements IRequest<Voidy>, Auditable {
+public class CreateSchemaTemplateRequest implements IRequest<Voidy>, Auditable {
 
     private final SchemaDto schema;
 
-    public CreateSchemaRequest(SchemaDto schemaDto) {
+    public CreateSchemaTemplateRequest(SchemaDto schemaDto) {
         this.schema = schemaDto;
     }
 
@@ -29,7 +29,7 @@ public class CreateSchemaRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "CreateSchemaRequest";
+        return CreateSchemaTemplateRequest.class.getSimpleName();
     }
 
     public SchemaDto getSchema() {

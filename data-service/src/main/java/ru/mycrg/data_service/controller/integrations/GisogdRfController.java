@@ -79,15 +79,15 @@ public class GisogdRfController {
         return ResponseEntity.status(ACCEPTED).body("Accepted. Full publication with limit: " + limit);
     }
 
-    private ResourceQualifier makeQualifier(String entityName, Long entityId) {
-        if (entityName.equalsIgnoreCase(INBOX_MARKER)) {
+    private ResourceQualifier makeQualifier(String tableName, Long entityId) {
+        if (tableName.equalsIgnoreCase(INBOX_MARKER)) {
             return new ResourceQualifier(TASK_QUALIFIER, entityId, TASK);
-        } else if (itIsLibrary(entityName)) {
-            return new ResourceQualifier(SYSTEM_SCHEMA_NAME, entityName, entityId, LIBRARY);
+        } else if (itIsLibrary(tableName)) {
+            return new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName, entityId, LIBRARY);
         } else {
-            String dataset = tableService.getDatasetByTableName(entityName);
+            String dataset = tableService.getDatasetByTableName(tableName);
 
-            return new ResourceQualifier(dataset, entityName, entityId, TABLE);
+            return new ResourceQualifier(dataset, tableName, entityId, TABLE);
         }
     }
 

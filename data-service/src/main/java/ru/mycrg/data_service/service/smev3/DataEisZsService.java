@@ -9,7 +9,7 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -26,11 +26,11 @@ import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 public class DataEisZsService {
     private final Logger log = LoggerFactory.getLogger(DataEisZsService.class);
     private final RecordsDao recordsDao;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, FieldsEisZs.TABLE);
     private SchemaDto schema = null;
 
-    public DataEisZsService(RecordsDao recordsDao, ISchemaService schemaService) {
+    public DataEisZsService(RecordsDao recordsDao, ISchemaTemplateService schemaService) {
         this.recordsDao = recordsDao;
         this.schemaService = schemaService;
     }

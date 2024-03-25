@@ -17,7 +17,7 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.service.schemas.ISchemaService;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
@@ -41,11 +41,11 @@ public class TaskService {
     private final Logger log = LoggerFactory.getLogger(TaskService.class);
 
     private final BaseDao baseDao;
-    private final ISchemaService schemaService;
+    private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
     public TaskService(BaseDao baseDao,
-                       ISchemaService schemaService,
+                       ISchemaTemplateService schemaService,
                        IAuthenticationFacade authenticationFacade) {
         this.baseDao = baseDao;
         this.schemaService = schemaService;

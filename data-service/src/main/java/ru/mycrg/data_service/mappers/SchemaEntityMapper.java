@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.mappers;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.data_service.entity.Schema;
+import ru.mycrg.data_service.entity.SchemaTemplate;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -16,33 +16,33 @@ public class SchemaEntityMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    public static SchemaDto mapToDto(Schema schema) {
-        SchemaDto schemaDto = SchemaMapper.jsonToDto(schema.getClassRule());
+    public static SchemaDto mapToDto(SchemaTemplate schemaTemplate) {
+        SchemaDto schemaDto = SchemaMapper.jsonToDto(schemaTemplate.getClassRule());
         if (schemaDto == null) {
             throw new DataServiceException("Не удалось прочитать схему");
         }
 
-        schemaDto.setCustomRuleFunction(schema.getCustomRule());
-        schemaDto.setCalcFiledFunction(schema.getCalculatedFields());
+        schemaDto.setCustomRuleFunction(schemaTemplate.getCustomRule());
+        schemaDto.setCalcFiledFunction(schemaTemplate.getCalculatedFields());
 
         return schemaDto;
     }
 
     @NotNull
-    public static Schema mapToEntity(Schema entity, SchemaDto schemaDto) {
-        entity.setName(schemaDto.getName());
-        entity.setClassRule(toJsonNode(schemaDto));
+    public static SchemaTemplate mapToEntity(SchemaTemplate template, SchemaDto schemaDto) {
+        template.setName(schemaDto.getName());
+        template.setClassRule(toJsonNode(schemaDto));
 
         String customRuleFunction = schemaDto.getCustomRuleFunction();
         if (customRuleFunction != null) {
-            entity.setCustomRule(customRuleFunction);
+            template.setCustomRule(customRuleFunction);
         }
 
         String calcFiledFunction = schemaDto.getCalcFiledFunction();
         if (calcFiledFunction != null) {
-            entity.setCalculatedFields(calcFiledFunction);
+            template.setCalculatedFields(calcFiledFunction);
         }
 
-        return entity;
+        return template;
     }
 }

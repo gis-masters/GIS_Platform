@@ -9,10 +9,10 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.LibraryCreateDto;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.LibraryUpdateDto;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryRequest;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.DeleteLibraryRequest;
 import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryRequest;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
@@ -50,12 +50,6 @@ public class DocumentLibraryController {
         IResourceModel dl = librariesService.getInfo(docLibId);
 
         return ResponseEntity.ok(dl);
-    }
-
-    @GetMapping("/document-libraries/{docLibId}/schema")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Object getLibrarySchema(@PathVariable String docLibId) {
-        return librariesService.getSchema(docLibId);
     }
 
     @PreAuthorize(ORG_ADMIN_AUTHORITY)

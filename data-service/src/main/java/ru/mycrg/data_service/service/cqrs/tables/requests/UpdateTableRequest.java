@@ -25,7 +25,7 @@ public class UpdateTableRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateTableRequest";
+        return UpdateTableRequest.class.getSimpleName();
     }
 
     @Override
