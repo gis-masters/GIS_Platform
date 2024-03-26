@@ -9,18 +9,18 @@ import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { CommonDiRegistry } from '../../services/di-registry';
+import { isLayersManagementAllowed } from '../../services/data/permissions/permissions.service';
+import { PropertyOption, PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { FileConnection } from '../../services/data/files/files.models';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { CommonDiRegistry } from '../../services/di-registry';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
-import { isLayersManagementAllowed } from '../../services/data/permissions/permissions.service';
-import { PseudoLink } from '../PseudoLink/PseudoLink';
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
-import { getViewChoiceOptions } from '../Form/Form.utils';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 
@@ -167,7 +167,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   }
 
   @action
-  private setSelectedProject(project: CrgProject | null) {
+  private setSelectedProject(project: CrgProject | undefined) {
     this.selectedProject = project;
   }
 
@@ -177,16 +177,20 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
   }
 
   @boundMethod
-  private handleSelect({ type, payload }: ExplorerItemData<CrgProject>) {
-    if (type === ExplorerItemType.PROJECT && !this.selectedItem(payload) && isLayersManagementAllowed(payload)) {
-      this.setSelectedProject(payload);
+  private handleSelect(explorerItem: ExplorerItemData) {
+    if (
+      explorerItem.type === ExplorerItemType.PROJECT &&
+      !this.isAlreadyConnected(explorerItem.payload) &&
+      isLayersManagementAllowed(explorerItem.payload)
+    ) {
+      this.setSelectedProject(explorerItem.payload);
     } else {
-      this.setSelectedProject(null);
+      this.setSelectedProject(undefined);
     }
   }
 
   @boundMethod
-  private handleOpen(item: ExplorerItemData<CrgProject>) {
+  private handleOpen(item: ExplorerItemData) {
     if (item.type === ExplorerItemType.PROJECT) {
       this.handleSelect(item);
       this.submitProjectSelection();
@@ -195,30 +199,31 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   @boundMethod
   private submitProjectSelection() {
-    const { onConnect } = this.props;
-    onConnect(this.selectedProject, this.view);
-    this.setSelectedProject(null);
+    if (!this.selectedProject) {
+      return;
+    }
+
+    this.props.onConnect(this.selectedProject, this.view);
+
+    this.setSelectedProject(undefined);
     this.closeSelectProjectDialog();
   }
 
   @boundMethod
-  private testForDisabled({ payload }: ExplorerItemData<CrgProject>): boolean {
-    return payload.role !== Role.OWNER || this.selectedItem(payload);
+  private testForDisabled(item: ExplorerItemData): boolean {
+    return (
+      item.type !== ExplorerItemType.PROJECT ||
+      item.payload.role !== Role.OWNER ||
+      this.isAlreadyConnected(item.payload)
+    );
   }
 
-  private selectedItem(payload: CrgProject): boolean {
-    const { connections } = this.props;
-    let selectedItem: boolean;
-
-    if (connections) {
-      selectedItem = connections.some(connection => connection.project.id === payload.id);
-    }
-
-    return selectedItem;
+  private isAlreadyConnected(payload: CrgProject): boolean {
+    return this.props.connections?.some(connection => connection.project.id === payload.id) || false;
   }
 
   @computed
-  private get options() {
-    return getViewChoiceOptions(this.props.schema?.views);
+  private get options(): PropertyOption[] {
+    return getViewChoiceOptions(this.props.schema?.views) || [];
   }
 }

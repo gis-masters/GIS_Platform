@@ -9,7 +9,7 @@ import '!style-loader!css-loader!sass-loader!./ConnectionsToProjects.scss';
 
 interface ConnectionsToProjectsProps {
   type: ConnectionsToProjectsType;
-  connections: FileConnection[];
+  connections?: FileConnection[];
 }
 
 export type ConnectionsToProjectsType = 'list' | 'text';

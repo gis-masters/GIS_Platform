@@ -2,28 +2,45 @@ import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { Schema } from '../../../../services/data/schema/schema.models';
 import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 
-@staticImplements<Adapter<Schema>>()
+export function assertExplorerItemDataTypeSchema(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.SCHEMA] {
+  if (item.type !== ExplorerItemType.SCHEMA) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeSchema {
-  static getId(item: ExplorerItemData<Schema>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeSchema(item);
+
     return item.payload.name;
   }
 
-  static getTitle(item: ExplorerItemData<Schema>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeSchema(item);
+
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<Schema>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSchema(item);
+
     return item.payload.description;
   }
 
-  static getMeta(item: ExplorerItemData<Schema>): string {
-    return item.payload.name;
-  }
+  static getMeta = ExplorerAdapterTypeSchema.getId;
 
   static getIcon(): ReactNode {
     return <SchemaOutlined />;
@@ -33,7 +50,9 @@ export class ExplorerAdapterTypeSchema {
     return false;
   }
 
-  static getActions(item: ExplorerItemData<Schema>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSchema(item);
+
     return <SchemaActions schema={item.payload} as='iconButton' />;
   }
 }

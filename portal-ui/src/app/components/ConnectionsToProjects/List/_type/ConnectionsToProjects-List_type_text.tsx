@@ -7,7 +7,7 @@ import { Link } from '../../../Link/Link';
 import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List.base';
 
 interface ConnectionsToProjectsListProps {
-  connections: FileConnection[];
+  connections?: FileConnection[];
   className: string;
 }
 

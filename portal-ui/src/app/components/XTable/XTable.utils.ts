@@ -18,12 +18,10 @@ const filterableTypes = new Set([
 
 const sortableTypes = new Set([
   PropertyType.BOOL,
-  PropertyType.CALCULATED,
   PropertyType.CHOICE,
   PropertyType.USER_ID,
   PropertyType.USER,
   PropertyType.DATETIME,
-  PropertyType.DURATION,
   PropertyType.FLOAT,
   PropertyType.INT,
   PropertyType.STRING,

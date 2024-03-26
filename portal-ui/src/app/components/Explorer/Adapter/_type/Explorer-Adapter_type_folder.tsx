@@ -20,7 +20,14 @@ import {
 import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  SortItem,
+  itemTypeError
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
@@ -29,17 +36,31 @@ import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsS
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
 
-@staticImplements<Adapter<LibraryRecord, LibraryRecord>>()
+function assertExplorerItemDataTypeFolder(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.FOLDER] {
+  if (item.type !== ExplorerItemType.FOLDER) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeFolder {
-  static getId(item: ExplorerItemData<LibraryRecord>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeFolder(item);
+
     return String(item.payload.id);
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeFolder(item);
+
     return item.payload.title || '';
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeFolder(item);
+
     const { details, created_at: createdAt } = item.payload;
 
     return (
@@ -56,9 +77,7 @@ export class ExplorerAdapterTypeFolder {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
-    return String(item.payload.id);
-  }
+  static getMeta = ExplorerAdapterTypeFolder.getId;
 
   static getIcon(): ReactNode {
     return <FolderOutlined color='primary' />;
@@ -68,7 +87,9 @@ export class ExplorerAdapterTypeFolder {
     return true;
   }
 
-  static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeFolder(item);
+
     return (
       <RegistryConsumer id='common'>
         {({ LibraryDocumentActions }: CommonDiRegistry) => (
@@ -79,21 +100,23 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static async getChildren(
-    explorerItem: ExplorerItemData<LibraryRecord>,
+    item: ExplorerItemData,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
-    const result: ExplorerItemData<LibraryRecord>[] = [];
-    const { libraryTableName, id } = explorerItem.payload;
+  ): Promise<[ExplorerItemData[], number]> {
+    assertExplorerItemDataTypeFolder(item);
+
+    const result: ExplorerItemData[] = [];
+    const { libraryTableName, id } = item.payload;
 
     const [libraryRecords, pagesCount] = await getLibraryRecords(libraryTableName, {
       ...options,
-      filter: service.mergeCustomFilter(filter || {}, explorerItem, store),
+      filter: service.mergeCustomFilter(filter || {}, item, store),
       queryParams: { parent: id }
     });
 
-    const { contentTypes } = await getLibrarySchemaByRecord(explorerItem.payload);
+    const { contentTypes } = await getLibrarySchemaByRecord(item.payload);
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
@@ -111,12 +134,14 @@ export class ExplorerAdapterTypeFolder {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<LibraryRecord>,
+    item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
+    assertExplorerItemDataTypeFolder(item);
+
     const response = await getLibraryRecordsWithParticularOne(item.payload.libraryTableName, Number(id), {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store),
@@ -162,10 +187,9 @@ export class ExplorerAdapterTypeFolder {
     ];
   }
 
-  static async getChildById(
-    item: ExplorerItemData<LibraryRecord>,
-    recordId: string
-  ): Promise<ExplorerItemData<LibraryRecord>> {
+  static async getChildById(item: ExplorerItemData, recordId: string): Promise<ExplorerItemData> {
+    assertExplorerItemDataTypeFolder(item);
+
     const payload = await getLibraryRecord(item.payload.libraryTableName, Number(recordId));
     const { contentTypes } = await getLibrarySchemaByRecord(item.payload);
     const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
@@ -187,7 +211,9 @@ export class ExplorerAdapterTypeFolder {
     return SortOrder.DESC;
   }
 
-  static async getToolbarActions(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): Promise<ReactNode> {
+  static async getToolbarActions(item: ExplorerItemData, store: ExplorerStore): Promise<ReactNode> {
+    assertExplorerItemDataTypeFolder(item);
+
     const currentItem = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
     const createEnabled =
       currentUser.isAdmin ||

@@ -12,7 +12,8 @@ import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemType } from '../../Explorer.models';
+import { assertExplorerItemDataTypeDocumentVersion } from '../../Adapter/_type/Explorer-Adapter_type_documentVersion';
 
 @observer
 class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps> {
@@ -57,14 +58,16 @@ class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps>
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<DocumentVersionExtended>;
+
+    assertExplorerItemDataTypeDocumentVersion(item);
+
     const operationId = Symbol();
 
     this.operationId = operationId;
-    const schema = await getLibrarySchemaByRecord(payload.document);
+    const schema = await getLibrarySchemaByRecord(item.payload.document);
 
     if (this.operationId === operationId) {
-      this.setSchema(applyContentType(schema, payload.document.content_type_id));
+      this.setSchema(applyContentType(schema, item.payload.document.content_type_id));
     }
   }
 

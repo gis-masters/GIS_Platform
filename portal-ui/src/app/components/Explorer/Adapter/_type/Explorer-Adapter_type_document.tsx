@@ -3,7 +3,6 @@ import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
 import { FileInfo } from '../../../../services/data/files/files.models';
 import { CommonDiRegistry } from '../../../../services/di-registry';
@@ -11,22 +10,42 @@ import { formatDate } from '../../../../services/util/date.util';
 import { PageOptions } from '../../../../services/models';
 import { FileTiff } from '../../../Icons/FileTiff';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerStore } from '../../Explorer.store';
 
-@staticImplements<Adapter<LibraryRecord, FileInfo>>()
+function assertExplorerItemDataTypeDocument(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.DOCUMENT] {
+  if (item.type !== ExplorerItemType.DOCUMENT) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocument {
-  static getId(item: ExplorerItemData<LibraryRecord>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDocument(item);
+
     return String(item.payload.id);
   }
 
-  static getTitle(item: ExplorerItemData<LibraryRecord>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDocument(item);
+
     return item.payload.title || '';
   }
 
-  static getDescription(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDocument(item);
+
     const { details, created_at: createdAt } = item.payload;
 
     return (
@@ -43,15 +62,17 @@ export class ExplorerAdapterTypeDocument {
     );
   }
 
-  static getMeta(item: ExplorerItemData<LibraryRecord>): string {
-    return String(item.payload.id);
-  }
+  static getMeta = ExplorerAdapterTypeDocument.getId;
 
-  static getIcon(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getIcon(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDocument(item);
+
     return item.payload.type === 'tif' ? <FileTiff color='primary' /> : <InsertDriveFile color='primary' />;
   }
 
-  static isFolder(item: ExplorerItemData<LibraryRecord>, store: ExplorerStore): boolean {
+  static isFolder(item: ExplorerItemData, store: ExplorerStore): boolean {
+    assertExplorerItemDataTypeDocument(item);
+
     if (store.explorerRole === 'dm') {
       return false;
     }
@@ -59,7 +80,9 @@ export class ExplorerAdapterTypeDocument {
     return !!getLibraryRecordFiles(item.payload).length;
   }
 
-  static getActions(item: ExplorerItemData<LibraryRecord>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDocument(item);
+
     return (
       <RegistryConsumer id='common'>
         {({ LibraryDocumentActions }: CommonDiRegistry) => (
@@ -69,21 +92,22 @@ export class ExplorerAdapterTypeDocument {
     );
   }
 
-  static getChildren(
-    explorerItem: ExplorerItemData<LibraryRecord>,
-    pageOptions: PageOptions
-  ): [ExplorerItemData<FileInfo>[], number] {
-    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
+  static getChildren(item: ExplorerItemData, pageOptions: PageOptions): [ExplorerItemData[], number] {
+    assertExplorerItemDataTypeDocument(item);
+
+    const files: FileInfo[] = getLibraryRecordFiles(item.payload);
     const pagesCount = Math.ceil(files.length / pageOptions.pageSize);
     const pageStart =
       files.length > pageOptions.page * pageOptions.pageSize ? pageOptions.page * pageOptions.pageSize : 0;
     const pageEnd = pageStart + pageOptions.pageSize;
 
-    return [files.slice(pageStart, pageEnd).map(item => ({ type: ExplorerItemType.FILE, payload: item })), pagesCount];
+    return [files.slice(pageStart, pageEnd).map(payload => ({ type: ExplorerItemType.FILE, payload })), pagesCount];
   }
 
-  static getChildById(explorerItem: ExplorerItemData<LibraryRecord>, fileId: string): ExplorerItemData<FileInfo> {
-    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
+  static getChildById(item: ExplorerItemData, fileId: string): ExplorerItemData {
+    assertExplorerItemDataTypeDocument(item);
+
+    const files: FileInfo[] = getLibraryRecordFiles(item.payload);
     const payload = files.find(file => file.id === fileId);
 
     if (!payload) {
@@ -94,11 +118,13 @@ export class ExplorerAdapterTypeDocument {
   }
 
   static getChildrenWithParticularOne(
-    explorerItem: ExplorerItemData<LibraryRecord>,
+    item: ExplorerItemData,
     { page, ...options }: PageOptions,
     fileId: string
-  ): [ExplorerItemData<FileInfo>[], number, number] | undefined {
-    const files: FileInfo[] = getLibraryRecordFiles(explorerItem.payload);
+  ): [ExplorerItemData[], number, number] | undefined {
+    assertExplorerItemDataTypeDocument(item);
+
+    const files: FileInfo[] = getLibraryRecordFiles(item.payload);
     const fileIndex = files.findIndex(file => file.id === fileId);
     const totalPages = Math.round(files.length / options.pageSize);
     const filePage = Math.round(fileIndex / options.pageSize);

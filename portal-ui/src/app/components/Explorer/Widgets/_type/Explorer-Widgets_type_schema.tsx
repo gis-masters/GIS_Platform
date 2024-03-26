@@ -16,28 +16,25 @@ import { CardValue } from '../../../../components/Card/Value/Card-Value';
 import { ContentType, PropertyOption, Schema } from '../../../../services/data/schema/schema.models';
 import { Select } from '../../../../components/Select/Select';
 import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { cnExplorerWidgets } from '../Explorer-Widgets.base';
+import { ExplorerItemType } from '../../Explorer.models';
+import { ExplorerWidgetsProps, cnExplorerWidgets } from '../Explorer-Widgets.base';
+import { assertExplorerItemDataTypeSchema } from '../../Adapter/_type/Explorer-Adapter_type_schema';
 
 const EMPTY = '~~~empty_value~~~';
 
-interface ExplorerWidgetsTypeSchemaProps {
-  className: string;
-  item: ExplorerItemData<Schema>;
-}
-
 @observer
-export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSchemaProps> {
+export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
   @observable private selectedViewId: string = EMPTY;
   @observable private selectedContentTypeId: string = EMPTY;
 
-  constructor(props: ExplorerWidgetsTypeSchemaProps) {
+  constructor(props: ExplorerWidgetsProps) {
     super(props);
     makeObservable(this);
   }
 
   render() {
     const { className, item } = this.props;
+    assertExplorerItemDataTypeSchema(item);
     const schema = item.payload;
 
     return (
@@ -98,28 +95,41 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
 
   @computed
   private get schemaWithAppliedType(): Schema {
+    const { item } = this.props;
+    assertExplorerItemDataTypeSchema(item);
+    const schema = item.payload;
+
     if (this.selectedViewId !== EMPTY) {
-      return applyView(this.props.item.payload, this.selectedViewId);
+      return applyView(schema, this.selectedViewId);
     }
     if (this.selectedContentTypeId !== EMPTY) {
-      return applyContentType(this.props.item.payload, this.selectedContentTypeId);
+      return applyContentType(schema, this.selectedContentTypeId);
     }
 
-    return this.props.item.payload;
+    return schema;
   }
 
   @computed
   private get viewsOptions(): PropertyOption[] {
-    return [{ title: 'Без представления', value: EMPTY }, ...this.getOptions(this.props.item.payload.views)];
+    const { item } = this.props;
+    assertExplorerItemDataTypeSchema(item);
+
+    return [{ title: 'Без представления', value: EMPTY }, ...this.getOptions(item.payload.views)];
   }
 
   @computed
   private get contentTypesOptions(): PropertyOption[] {
-    return [{ title: 'Все свойства', value: EMPTY }, ...this.getOptions(this.props.item.payload.contentTypes)];
+    const { item } = this.props;
+    assertExplorerItemDataTypeSchema(item);
+
+    return [{ title: 'Все свойства', value: EMPTY }, ...this.getOptions(item.payload.contentTypes)];
   }
 
   private getGeometryType() {
-    const geometryType = this.props.item.payload.geometryType;
+    const { item } = this.props;
+    assertExplorerItemDataTypeSchema(item);
+
+    const geometryType = item.payload.geometryType;
     if (isLinear(geometryType)) {
       return 'линейный';
     } else if (isPoint(geometryType)) {
@@ -172,7 +182,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsTypeSche
   }
 }
 
-export const withTypeSchema = withBemMod<ExplorerWidgetsTypeSchemaProps>(
+export const withTypeSchema = withBemMod<ExplorerWidgetsProps>(
   cnExplorerWidgets(),
   { type: ExplorerItemType.SCHEMA },
   () => ExplorerWidgetsTypeSchema

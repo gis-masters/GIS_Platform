@@ -39,7 +39,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<CrgProject>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
     const [projects, pagesCount] = await projectsService.getProjects({
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -54,7 +54,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<CrgProject>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const response = await projectsService.getProjectsWithParticularOne(id, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -69,7 +69,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     return [libraries.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), totalPages, pageNumber];
   }
 
-  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<CrgProject>> {
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
     const project = await projectsService.getById(Number(id));
 
     if (!project) {

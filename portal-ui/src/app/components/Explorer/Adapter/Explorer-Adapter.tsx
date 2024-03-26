@@ -3,13 +3,13 @@ import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
 import { DataChangeEventDetail } from '../../../services/communication.service';
-import { PageOptions, SortOrder, ValueOf } from '../../../services/models';
+import { PageOptions, SortOrder } from '../../../services/models';
 import { Emitter } from '../../../services/common/Emitter';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 import { ExplorerStore } from '../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemPayloads, ExplorerItemType, SortItem } from '../Explorer.models';
+import { Adapter, ExplorerItemData, ExplorerItemDataAllTypes, ExplorerItemType, SortItem } from '../Explorer.models';
 import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
@@ -28,7 +28,7 @@ import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_sc
 import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
 import { ExplorerAdapterTypeDocumentVersionsRoot } from './_type/Explorer-Adapter_type_documentVersionsRoot';
-import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistries';
+import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistry';
 import { ExplorerAdapterTypeDocumentVersion } from './_type/Explorer-Adapter_type_documentVersion';
 import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
 import { ExplorerAdapterTypeTaskHistoryRoot } from './_type/Explorer-Adapter_type_taskHistoryRoot';
@@ -37,7 +37,7 @@ import { ExplorerAdapterTypeSearchResultRoot } from './_type/Explorer-Adapter_ty
 import { ExplorerAdapterTypeSearchItem } from './_type/Explorer-Adapter_type_searchItem';
 import { ExplorerService } from '../Explorer.service';
 
-const adapters: Record<keyof ExplorerItemPayloads, Adapter<ValueOf<ExplorerItemPayloads>>> = {
+const adapters: Record<keyof ExplorerItemDataAllTypes, Adapter> = {
   [ExplorerItemType.NONE]: ExplorerAdapterTypeNone,
   [ExplorerItemType.DATASET]: ExplorerAdapterTypeDataset,
   [ExplorerItemType.TABLE]: ExplorerAdapterTypeTable,
@@ -72,12 +72,12 @@ export function getId(item: ExplorerItemData): string {
   return adapters[item.type].getId(item);
 }
 
-export function getTitle(item: ExplorerItemData, store?: ExplorerStore): ReactNode {
+export function getTitle(item: ExplorerItemData, store: ExplorerStore): ReactNode {
   return adapters[item.type].getTitle(item, store);
 }
 
 export function getDescription(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].getDescription && adapters[item.type].getDescription(item);
+  return adapters[item.type].getDescription?.(item);
 }
 
 export function getMeta(item: ExplorerItemData): string {
@@ -85,11 +85,11 @@ export function getMeta(item: ExplorerItemData): string {
 }
 
 export function getIcon(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].getIcon ? adapters[item.type].getIcon(item) : <InsertDriveFileOutlined />;
+  return adapters[item.type].getIcon?.(item) || <InsertDriveFileOutlined />;
 }
 
 export function additionalInfo(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].additionalInfo && adapters[item.type].additionalInfo(item);
+  return adapters[item.type].additionalInfo?.(item);
 }
 
 export function isFolder(item: ExplorerItemData, store: ExplorerStore): boolean {
@@ -97,11 +97,11 @@ export function isFolder(item: ExplorerItemData, store: ExplorerStore): boolean 
 }
 
 export function customOpenActionIcon(item: ExplorerItemData): ReactNode {
-  return adapters[item.type].customOpenActionIcon && adapters[item.type].customOpenActionIcon(item);
+  return adapters[item.type].customOpenActionIcon?.(item);
 }
 
 export function customOpenAction(item: ExplorerItemData): void {
-  return adapters[item.type].customOpenAction && adapters[item.type].customOpenAction(item);
+  return adapters[item.type].customOpenAction?.(item);
 }
 
 export async function getChildren(
@@ -112,20 +112,20 @@ export async function getChildren(
 ): Promise<[ExplorerItemData[], number] | undefined> {
   if (isFolder(item, store) && adapters[item.type].getChildren) {
     try {
-      return await adapters[item.type].getChildren(item, pageOptions, store, service);
+      return await adapters[item.type].getChildren?.(item, pageOptions, store, service);
     } catch (error) {
       const err = error as AxiosError;
 
       let message: ReactNode = 'Элементы не найдены';
       let details: ReactNode = (
         <>
-          Не найдены элементы для {getTitle(item)}. {(error as Error).message}
+          Не найдены элементы для {getTitle(item, store)}. {(error as Error).message}
         </>
       );
 
       if (err?.response?.status === 403) {
         message = lackOfRightMessage;
-        details = <>Недостаточно прав для просмотра элементов {getTitle(item)}</>;
+        details = <>Недостаточно прав для просмотра элементов {getTitle(item, store)}</>;
       }
 
       services.logger?.error(message, error);
@@ -145,20 +145,20 @@ export async function getChildrenWithParticularOne(
 ): Promise<[ExplorerItemData[], number, number] | undefined> {
   if (adapters[item.type].getChildrenWithParticularOne) {
     try {
-      return await adapters[item.type].getChildrenWithParticularOne(item, pageOptions, id, store, service);
+      return await adapters[item.type].getChildrenWithParticularOne?.(item, pageOptions, id, store, service);
     } catch (error) {
       const err = error as AxiosError;
 
       let message: ReactNode = objectNotFound;
       let details: ReactNode = (
         <>
-          Не найден объект для {getTitle(item)}. {(error as Error).message}
+          Не найден объект для {getTitle(item, store)}. {(error as Error).message}
         </>
       );
 
       if (err?.response?.status === 403) {
         message = lackOfRightMessage;
-        details = <>Недостаточно прав для просмотра элементов {getTitle(item)}</>;
+        details = <>Недостаточно прав для просмотра элементов {getTitle(item, store)}</>;
       }
 
       services.logger.error(message, error);
@@ -168,7 +168,7 @@ export async function getChildrenWithParticularOne(
 }
 
 export function getChildrenSortItems(item: ExplorerItemData): SortItem[] | undefined {
-  return adapters[item.type].getChildrenSortItems && adapters[item.type].getChildrenSortItems(item);
+  return adapters[item.type].getChildrenSortItems?.(item);
 }
 
 export async function getChildById(
@@ -179,14 +179,14 @@ export async function getChildById(
 ): Promise<ExplorerItemData | undefined> {
   if (adapters[item.type].getChildById) {
     try {
-      return await adapters[item.type].getChildById(item, id, type, store);
+      return await adapters[item.type].getChildById?.(item, id, type, store);
     } catch (error) {
       const err = error as AxiosError;
 
       let message: ReactNode = objectNotFound;
       let details: ReactNode = (
         <>
-          Объект [${id}] не найден в {getTitle(item)}. {(error as Error).message}
+          Объект [${id}] не найден в {getTitle(item, store)}. {(error as Error).message}
         </>
       );
 
@@ -194,7 +194,7 @@ export async function getChildById(
         message = lackOfRightMessage;
         details = (
           <>
-            Недостаточно прав для просмотра [${id}] в {getTitle(item)}
+            Недостаточно прав для просмотра [${id}] в {getTitle(item, store)}
           </>
         );
       }
@@ -206,19 +206,19 @@ export async function getChildById(
 }
 
 export function getChildrenSortDefaultValue(item: ExplorerItemData): string | undefined {
-  return adapters[item.type].getChildrenSortDefaultValue && adapters[item.type].getChildrenSortDefaultValue(item);
+  return adapters[item.type].getChildrenSortDefaultValue?.(item);
 }
 
 export function getChildrenSortDefaultOrder(item: ExplorerItemData): SortOrder | undefined {
-  return adapters[item.type].getChildrenSortDefaultOrder && adapters[item.type].getChildrenSortDefaultOrder(item);
+  return adapters[item.type].getChildrenSortDefaultOrder?.(item);
 }
 
 export function getChildrenFilterField(item: ExplorerItemData): string | undefined {
-  return adapters[item.type].getChildrenFilterField && adapters[item.type].getChildrenFilterField(item);
+  return adapters[item.type].getChildrenFilterField?.(item);
 }
 
 export function getChildrenFilterLabel(item: ExplorerItemData): string | undefined {
-  return adapters[item.type].getChildrenFilterLabel && adapters[item.type].getChildrenFilterLabel(item);
+  return adapters[item.type].getChildrenFilterLabel?.(item);
 }
 
 export function getToolbarActions(
@@ -227,17 +227,17 @@ export function getToolbarActions(
   service: ExplorerService,
   full: boolean
 ): Promise<ReactNode> | ReactNode | undefined {
-  return adapters[item.type].getToolbarActions && adapters[item.type].getToolbarActions(item, store, service, full);
+  return adapters[item.type].getToolbarActions?.(item, store, service, full);
 }
 
 export function getRefreshEmitters(item: ExplorerItemData): Emitter<DataChangeEventDetail<unknown>>[] {
-  return (adapters[item.type].getRefreshEmitters && adapters[item.type].getRefreshEmitters(item)) || [];
+  return adapters[item.type].getRefreshEmitters?.(item) || [];
 }
 
 export function getActions(item: ExplorerItemData): ReactNode | undefined {
-  return adapters[item.type].getActions && adapters[item.type].getActions(item);
+  return adapters[item.type].getActions?.(item);
 }
 
 export function hasSearch(item: ExplorerItemData): boolean {
-  return adapters[item.type].hasSearch && adapters[item.type].hasSearch();
+  return adapters[item.type].hasSearch?.() || false;
 }

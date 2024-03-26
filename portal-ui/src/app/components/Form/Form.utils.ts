@@ -1,12 +1,8 @@
-import { createElement } from 'react';
-import { ListItemIcon, Tooltip } from '@mui/material';
-import { FilterAltOutlined } from '@mui/icons-material';
 import { isEqual } from 'lodash';
 import { action } from 'mobx';
 
 import {
-  ContentType,
-  PropertyOption,
+  PropertyFormula,
   PropertySchema,
   PropertyType,
   Schema,
@@ -64,7 +60,7 @@ export const applyFieldValue = action(_applyFieldValue);
 
 export function convertToComplexField<T>(field: PropertySchema, formValue: Partial<T>): unknown {
   if (toComplex[field.propertyType]) {
-    return toComplex[field.propertyType]<T>(field, formValue);
+    return toComplex[field.propertyType]?.<T>(field, formValue);
   }
 
   return formValue[field.name];
@@ -85,30 +81,6 @@ export function isEqualExceptCalculated<T>(
   return true;
 }
 
-export function getViewChoiceOptions(views: ContentType[]): PropertyOption[] | undefined {
-  return [
-    { title: 'Вид по умолчанию', value: '' },
-    ...(views?.map(type => {
-      return {
-        title: type.title,
-        value: type.id,
-        endIcon: type.definitionQuery
-          ? createElement(Tooltip, {
-              title: createElement(
-                'span',
-                {},
-                'Для этого представления задан определяющий запрос (Definition Query). Будут отображены только объекты, удовлетворяющие условию запроса:',
-                createElement('br'),
-                createElement('code', { children: type.definitionQuery })
-              ),
-              children: createElement(ListItemIcon, {}, createElement(FilterAltOutlined, { fontSize: 'small' }))
-            })
-          : undefined
-      };
-    }) || [])
-  ];
-}
-
 export function getDefaultValues<T>(properties: PropertySchema[], parent: unknown = {}): Partial<T> {
   const values: Partial<T> = {};
   for (const property of properties) {
@@ -116,7 +88,7 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
       Object.assign(
         values,
         fromComplex[property.propertyType]
-          ? fromComplex[property.propertyType](property, values, property.defaultValue)
+          ? fromComplex[property.propertyType]?.(property, values, property.defaultValue)
           : { [property.name]: property.defaultValue }
       );
     }
@@ -132,7 +104,7 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
         Object.assign(
           values,
           fromComplex[property.propertyType]
-            ? fromComplex[property.propertyType](property, values, formula(values, property, parent))
+            ? fromComplex[property.propertyType]?.(property, values, formula(values, property, parent))
             : { [property.name]: formula(values, property, parent) }
         );
       } catch (error) {
@@ -147,7 +119,7 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
         Object.assign(
           values,
           fromComplex[property.propertyType]
-            ? fromComplex[property.propertyType](property, values, formula(values, property, parent))
+            ? fromComplex[property.propertyType]?.(property, values, formula(values, property, parent))
             : { [property.name]: formula(values, property, parent) }
         );
       } catch (error) {
@@ -161,4 +133,33 @@ export function getDefaultValues<T>(properties: PropertySchema[], parent: unknow
   }
 
   return values;
+}
+
+export function computeDynamicProperties<T extends SimpleSchema>(formValue: unknown, schema: T): T {
+  return {
+    ...schema,
+    properties: schema.properties.map(property => {
+      if (!property.dynamicPropertyFormula) {
+        return property;
+      }
+
+      let formula = property.dynamicPropertyFormula;
+
+      try {
+        if (typeof formula === 'string') {
+          // eslint-disable-next-line @typescript-eslint/no-implied-eval
+          formula = new Function('obj', 'property', formula) as PropertyFormula;
+        }
+
+        return {
+          ...property,
+          ...formula(formValue, property)
+        } as PropertySchema;
+      } catch (error) {
+        console.error('Ошибка при обработке динамического поля формы', error);
+
+        return property;
+      }
+    })
+  };
 }

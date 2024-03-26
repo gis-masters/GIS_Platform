@@ -38,12 +38,9 @@ export class ExplorerAdapterTypeBasemapsRoot {
     return true;
   }
 
-  static async getChildren(
-    item: ExplorerItemData,
-    pageOptions: PageOptions
-  ): Promise<[ExplorerItemData<Basemap>[], number]> {
+  static async getChildren(item: ExplorerItemData, pageOptions: PageOptions): Promise<[ExplorerItemData[], number]> {
     const [basemaps, totalPages] = await getBasemaps(pageOptions);
-    const items: ExplorerItemData<Basemap>[] = basemaps.map(basemap => ({
+    const items: ExplorerItemData[] = basemaps.map(basemap => ({
       type: ExplorerItemType.BASEMAP,
       payload: basemap
     }));
@@ -57,7 +54,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Basemap>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const response = await getBasemapsWithParticularOne(Number(id), {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -81,7 +78,7 @@ export class ExplorerAdapterTypeBasemapsRoot {
     ];
   }
 
-  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData<Basemap>> {
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
     const basemap = await getBasemap(Number(id));
 
     return {

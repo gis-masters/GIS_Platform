@@ -1,5 +1,8 @@
-import { AxiosError } from 'axios';
+import { createElement } from 'react';
+import { ListItemIcon, Tooltip } from '@mui/material';
+import { FilterAltOutlined } from '@mui/icons-material';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
+import { AxiosError } from 'axios';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { services } from '../../services';
@@ -8,7 +11,7 @@ import { Toast } from '../../../components/Toast/Toast';
 
 import { layersClient } from './layers.client';
 import { isVectorFromFile } from './layers.utils';
-import { Schema } from '../../data/schema/schema.models';
+import { ContentType, PropertyOption, Schema } from '../../data/schema/schema.models';
 import {
   convertGeoserverPropertiesToSchemaProperties,
   getGeometryTypeFromGeoserverAttributes
@@ -105,4 +108,26 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
   }
 
   throw new Error(`Тип слоя: ${layer.type} не поддерживается`);
+}
+
+export function getViewChoiceOptions(views: ContentType[] = []): PropertyOption[] {
+  return [
+    { title: 'Вид по умолчанию', value: '' },
+    ...(views.map(type => ({
+      title: type.title || '',
+      value: type.id,
+      endIcon: type.definitionQuery
+        ? createElement(Tooltip, {
+            title: createElement(
+              'span',
+              {},
+              'Для этого представления задан определяющий запрос (Definition Query). Будут отображены только объекты, удовлетворяющие условию запроса:',
+              createElement('br'),
+              createElement('code', { children: type.definitionQuery })
+            ),
+            children: createElement(ListItemIcon, {}, createElement(FilterAltOutlined, { fontSize: 'small' }))
+          })
+        : undefined
+    })) || [])
+  ];
 }

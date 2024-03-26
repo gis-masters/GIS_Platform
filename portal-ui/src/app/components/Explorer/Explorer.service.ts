@@ -5,7 +5,7 @@ import { DataChangeEventDetail } from '../../services/communication.service';
 import { FilterQuery } from '../../services/util/filterObjects';
 
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
-import { emptyItem, ExplorerItemData, ExplorerItemPayloads, ExplorerItemType } from './Explorer.models';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
 import { ExplorerStore } from './Explorer.store';
 
 export class ExplorerService {
@@ -23,8 +23,8 @@ export class ExplorerService {
     if (e?.detail?.type === 'delete') {
       const deletingItemId = getId({
         type: this.store.selectedItem.type,
-        payload: e.detail.data as ExplorerItemPayloads[keyof ExplorerItemPayloads]
-      });
+        payload: e.detail.data
+      } as ExplorerItemData);
       if (deletingItemId === getId(this.store.selectedItem)) {
         const selectedItemIndex = this.store.items.findIndex(item => getId(item) === deletingItemId);
         this.store.selectItem(

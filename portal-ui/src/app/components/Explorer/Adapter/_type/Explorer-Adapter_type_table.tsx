@@ -2,28 +2,47 @@ import React, { ReactNode } from 'react';
 import { ViewListOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 
-import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
 import { services } from '../../../../services/services';
 
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 
-@staticImplements<Adapter<VectorTable>>()
+export function assertExplorerItemDataTypeTable(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.TABLE] {
+  if (item.type !== ExplorerItemType.TABLE) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeTable {
-  static getId(item: ExplorerItemData<VectorTable>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeTable(item);
+
     return item.payload.identifier;
   }
 
-  static getTitle(item: ExplorerItemData<VectorTable>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeTable(item);
+
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<VectorTable>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeTable(item);
+
     const { details, createdAt } = item.payload;
 
     return (
@@ -40,11 +59,11 @@ export class ExplorerAdapterTypeTable {
     );
   }
 
-  static getMeta(item: ExplorerItemData<VectorTable>): string {
-    return item.payload.identifier;
-  }
+  static getMeta = ExplorerAdapterTypeTable.getId;
 
-  static getIcon(item: ExplorerItemData<VectorTable>): ReactNode {
+  static getIcon(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeTable(item);
+
     return <GeometryIcon geometryType={item.payload.schema.geometryType} colorized />;
   }
 
@@ -52,7 +71,9 @@ export class ExplorerAdapterTypeTable {
     return true;
   }
 
-  static getActions(item: ExplorerItemData<VectorTable>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeTable(item);
+
     return <VectorTableActions vectorTable={item.payload} />;
   }
 
@@ -64,7 +85,9 @@ export class ExplorerAdapterTypeTable {
     );
   }
 
-  static async customOpenAction(item: ExplorerItemData<VectorTable>): Promise<void> {
+  static async customOpenAction(item: ExplorerItemData): Promise<void> {
+    assertExplorerItemDataTypeTable(item);
+
     await services.provided;
 
     services.ngZone.run(() => {

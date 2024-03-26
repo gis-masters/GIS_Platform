@@ -6,6 +6,7 @@ import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutlin
 
 import { sleep } from '../../services/util/sleep';
 import { PropertyType, PropertySchema, SimpleSchema } from '../../services/data/schema/schema.models';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
@@ -413,4 +414,43 @@ DefaultValue.args = {
   id: 'defaultValue',
   schema: schemaWithDefaultValue,
   value: getDefaultValues(schemaWithDefaultValue.properties, { surname: 'Doe' })
+};
+
+const schemaWithDynamicProperties: SimpleSchema = {
+  properties: [
+    {
+      name: 'name',
+      title: 'Название',
+      propertyType: PropertyType.STRING
+    },
+    {
+      name: 'caption',
+      title: 'Надпись',
+      description:
+        'Тут формула динамического свойства указана строкой. Изменяется title в зависимости от значения поля "Название".',
+      propertyType: PropertyType.STRING,
+      dynamicPropertyFormula: 'return { title: "Надпись" + (obj?.name ? " на " + obj?.name : "") }'
+    },
+    {
+      name: 'hasDescription',
+      title: 'Есть описание',
+      description: 'Если включить, то станет видимым ещё одно поле.',
+      propertyType: PropertyType.BOOL
+    },
+    {
+      name: 'description',
+      title: 'Описание',
+      description:
+        'Тут формула динамического свойства указана функцией. Изменяется hidden в зависимости от значения поля "Есть описание".',
+      propertyType: PropertyType.STRING,
+      dynamicPropertyFormula: obj => ({ hidden: !(isRecordStringUnknown(obj) && obj.hasDescription) })
+    }
+  ]
+};
+
+export const DynamicProperties = Template.bind({});
+DynamicProperties.args = {
+  id: 'dynamicProperty',
+  schema: schemaWithDynamicProperties,
+  value: getDefaultValues(schemaWithDynamicProperties.properties)
 };

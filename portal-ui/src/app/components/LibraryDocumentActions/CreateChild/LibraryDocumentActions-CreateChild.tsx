@@ -154,7 +154,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   }
 
   @boundMethod
-  private customTestForDisabled(item: ExplorerItemData<LibraryRecord>) {
+  private customTestForDisabled(item: ExplorerItemData) {
     if (item.type === ExplorerItemType.LIBRARY && this.childrenData) {
       return !this.childrenData.some(child => child.library.id === item.payload.id);
     }

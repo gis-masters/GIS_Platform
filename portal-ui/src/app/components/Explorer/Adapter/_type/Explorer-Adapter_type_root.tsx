@@ -8,7 +8,7 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
 function getChildren(): ExplorerItemData[] {
-  const baseChildren = [
+  const baseChildren: ExplorerItemData[] = [
     {
       type: ExplorerItemType.DATASET_ROOT,
       payload: null
@@ -117,12 +117,6 @@ export class ExplorerAdapterTypeRoot {
     if (id === 'tasksRoot') {
       return {
         type: ExplorerItemType.TASKS_ROOT,
-        payload: null
-      };
-    }
-    if (id === 'searchResultRoot') {
-      return {
-        type: ExplorerItemType.SEARCH_RESULT_ROOT,
         payload: null
       };
     }

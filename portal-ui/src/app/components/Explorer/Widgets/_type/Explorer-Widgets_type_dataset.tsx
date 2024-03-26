@@ -11,8 +11,9 @@ import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { assertExplorerItemDataTypeDataset } from '../../Adapter/_type/Explorer-Adapter_type_dataset';
 
 @observer
 class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
@@ -55,13 +56,14 @@ class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<Dataset>;
+
+    assertExplorerItemDataTypeDataset(item);
 
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = permissionsClient.getDatasetRoleAssignmentsUrl(payload.identifier);
-    const dataset = await getDataset(payload.identifier);
+    const url = permissionsClient.getDatasetRoleAssignmentsUrl(item.payload.identifier);
+    const dataset = await getDataset(item.payload.identifier);
 
     if (this.operationId === operationId) {
       this.setUrl(url);

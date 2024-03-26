@@ -12,9 +12,7 @@ export enum PropertyType {
   BOOL = 'bool',
   DATETIME = 'dateTime',
   TIME = 'time',
-  DURATION = 'duration',
   URL = 'url',
-  CALCULATED = 'calculated',
   CHOICE = 'choice',
   GEOMETRY = 'geometry',
   LOOKUP = 'lookup',
@@ -106,6 +104,7 @@ export interface Relation {
 }
 
 export type ValueFormula = (obj: unknown, property: PropertySchema, parent?: unknown) => unknown;
+export type PropertyFormula = (obj: unknown, property: PropertySchema) => Partial<PropertySchema>;
 
 interface BasePropertySchema<T = Record<string, unknown>> {
   name: keyof T & string;
@@ -125,6 +124,7 @@ interface BasePropertySchema<T = Record<string, unknown>> {
   calculatedValueWellKnownFormula?: string;
   valueFormulaParams?: Record<string, unknown>;
   validationFormula?: FieldValidator;
+  dynamicPropertyFormula?: string | PropertyFormula;
 }
 
 export interface PropertySchemaString extends BasePropertySchema {

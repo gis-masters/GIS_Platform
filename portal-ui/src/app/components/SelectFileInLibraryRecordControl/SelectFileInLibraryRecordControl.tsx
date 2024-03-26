@@ -140,7 +140,7 @@ export class SelectFileInLibraryRecordControl extends Component<FormControlProps
   @boundMethod
   private testForDisabled(item: ExplorerItemData): boolean {
     if (item.type === ExplorerItemType.FILE) {
-      return !isTifFile(item.payload as FileInfo);
+      return !isTifFile(item.payload);
     }
 
     return false;

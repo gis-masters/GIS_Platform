@@ -7,11 +7,11 @@ import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget'
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getTaskSchema } from '../../../../services/data/task/task.service';
-import { TaskHistory } from '../../../../services/data/task/task.models';
 import { Schema } from '../../../../services/data/schema/schema.models';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemType } from '../../Explorer.models';
+import { assertExplorerItemDataTypeTaskHistory } from '../../Adapter/_type/Explorer-Adapter_type_taskHistory';
 
 @observer
 class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {
@@ -28,12 +28,15 @@ class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {
 
   render() {
     const { className, item } = this.props;
-    const { payload } = item as ExplorerItemData<TaskHistory>;
+
+    assertExplorerItemDataTypeTaskHistory(item);
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
         <ExplorerInfoDescItem multiline>
-          {this.schema && <ViewContentWidget schema={this.schema} data={payload.massage} title='Свойства задачи' />}
+          {this.schema && (
+            <ViewContentWidget schema={this.schema} data={item.payload.massage} title='Свойства задачи' />
+          )}
         </ExplorerInfoDescItem>
       </div>
     );
@@ -42,9 +45,10 @@ class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {
   @action
   private setSchema(schema: Schema) {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<TaskHistory>;
 
-    this.schema = applyContentType(schema, payload.massage.content_type_id);
+    assertExplorerItemDataTypeTaskHistory(item);
+
+    this.schema = applyContentType(schema, item.payload.massage.content_type_id);
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { Component, ReactNode } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, IReactionDisposer, observable, reaction, makeObservable, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
@@ -18,7 +18,7 @@ import {
 import { services } from '../../services/services';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 
-import { getDefaultValues, isEqualExceptCalculated } from './Form.utils';
+import { computeDynamicProperties, getDefaultValues, isEqualExceptCalculated } from './Form.utils';
 import { FormContent } from './Content/Form-Content';
 import { FormActions } from './Actions/Form-Actions';
 import { FormErrors } from './Errors/Form-Errors';
@@ -131,9 +131,9 @@ export default class Form<T> extends Component<FormProps<T>> {
     return (
       <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm({ readonly }, [className])}>
         {children}
-        {!!schema && (
+        {!!this.schema && (
           <FormContent<T>
-            schema={schema}
+            schema={this.schema}
             formRole={formRole}
             formValue={this.value || {}}
             onFormChange={this.changeHandler}
@@ -148,6 +148,14 @@ export default class Form<T> extends Component<FormProps<T>> {
         {actions && <FormActions>{actions}</FormActions>}
       </form>
     );
+  }
+
+  @computed
+  get schema(): Schema | SimpleSchema | undefined {
+    const { schema } = this.props;
+    if (schema) {
+      return computeDynamicProperties(this.value, schema);
+    }
   }
 
   @boundMethod

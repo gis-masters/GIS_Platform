@@ -48,7 +48,7 @@ export class ExplorerAdapterTypeDatasetRoot {
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Dataset>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
     const [dataSets, pagesCount] = await getDatasets({
       ...options,
       filter: filter && service.mergeCustomFilter(filter, item, store)
@@ -63,7 +63,7 @@ export class ExplorerAdapterTypeDatasetRoot {
     identifier: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Dataset>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const response = await getDatasetsWithParticularOne(identifier, {
       ...options,
       filter: filter && service.mergeCustomFilter(filter, item, store),
@@ -79,7 +79,7 @@ export class ExplorerAdapterTypeDatasetRoot {
     return [datasets.map(payload => ({ type: ExplorerItemType.DATASET, payload })), totalPages, pageNumber];
   }
 
-  static async getChildById(item: ExplorerItemData, identifier: string): Promise<ExplorerItemData<Dataset>> {
+  static async getChildById(item: ExplorerItemData, identifier: string): Promise<ExplorerItemData> {
     const payload = await getDataset(identifier);
 
     return { type: ExplorerItemType.DATASET, payload };

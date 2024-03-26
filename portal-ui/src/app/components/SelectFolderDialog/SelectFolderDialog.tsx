@@ -26,7 +26,7 @@ interface SelectFolderDialogProps {
   subtitle?: string;
   loading?: boolean;
   document?: LibraryRecord;
-  customTestForDisabled?: (item: ExplorerItemData<LibraryRecord>) => boolean | undefined;
+  customTestForDisabled?: (item: ExplorerItemData) => boolean | undefined;
   onSelect?: (folder: LibraryRecord) => void;
 }
 
@@ -92,12 +92,12 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
 
   @boundMethod
   private async handleSelect(item: ExplorerItemData) {
-    if (item.type !== ExplorerItemType.FOLDER) {
+    if (item.type === ExplorerItemType.FOLDER) {
+      this.setSelectedFolder(item.payload);
+    } else {
       this.setSelectedFolder();
       this.setDisabled(true);
     }
-
-    this.setSelectedFolder((item as ExplorerItemData<LibraryRecord>).payload);
 
     if (this.selectedFolder?.is_folder) {
       this.setDisabled(!(await isRecordUpdateAllowed(this.selectedFolder)));
@@ -112,7 +112,7 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
   }
 
   @boundMethod
-  private async testForDisabled(item: ExplorerItemData<LibraryRecord>): Promise<boolean> {
+  private async testForDisabled(item: ExplorerItemData): Promise<boolean> {
     const { customTestForDisabled } = this.props;
 
     if (item.type === ExplorerItemType.FOLDER) {
@@ -128,6 +128,8 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
     if (customTestForDisabled) {
       return customTestForDisabled(item) || false;
     }
+
+    return false;
   }
 
   @action.bound

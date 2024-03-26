@@ -63,6 +63,7 @@ public class SimplePropertyDto {
     private String calculatedValueWellKnownFormula;
     private String defaultValueFormula;
     private String defaultValueWellKnownFormula;
+    private String dynamicPropertyFormula;
     private Object valueFormulaParams;
 
     private Integer length;
@@ -459,6 +460,14 @@ public class SimplePropertyDto {
 
     public void setDefaultValueWellKnownFormula(String defaultValueWellKnownFormula) {
         this.defaultValueWellKnownFormula = defaultValueWellKnownFormula;
+    }
+
+    public String getDynamicPropertyFormula() {
+        return dynamicPropertyFormula;
+    }
+
+    public void setDynamicPropertyFormula(String dynamicPropertyFormula) {
+        this.dynamicPropertyFormula = dynamicPropertyFormula;
     }
 
     public Boolean getAsTitle() {

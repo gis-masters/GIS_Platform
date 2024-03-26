@@ -10,9 +10,10 @@ import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { libraryClient } from '../../../../services/data/library/library.client';
+import { assertExplorerItemDataTypeLibrary } from '../../Adapter/_type/Explorer-Adapter_type_library';
 
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
@@ -37,14 +38,15 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
 
   render() {
     const { className, item } = this.props;
-    const { payload } = item as ExplorerItemData<Library>;
+
+    assertExplorerItemDataTypeLibrary(item);
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
         {this.currentLibrary && (
           <>
             <PermissionsWidget
-              url={libraryClient.getDocumentLibraryRoleAssignmentUrl(payload.table_name)}
+              url={libraryClient.getDocumentLibraryRoleAssignmentUrl(item.payload.table_name)}
               title={this.currentLibrary.title}
               itemEntityType={ExplorerItemEntityTypeTitle.LIBRARY}
               disabled={!(currentUser.isAdmin || this.currentLibrary.role === Role.OWNER)}
@@ -57,12 +59,13 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<Library>;
+
+    assertExplorerItemDataTypeLibrary(item);
 
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const library = await getLibrary(payload.table_name);
+    const library = await getLibrary(item.payload.table_name);
 
     if (this.operationId === operationId) {
       this.setCurrentLibrary(library);

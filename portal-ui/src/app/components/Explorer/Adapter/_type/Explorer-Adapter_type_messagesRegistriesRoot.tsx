@@ -9,7 +9,6 @@ import {
   getMessagesRegistriesWithParticularOne,
   getMessagesRegistry
 } from '../../../../services/data/messagesRegistries/messagesRegistries.service';
-import { MessagesRegistry } from '../../../../services/data/messagesRegistries/messagesRegistries.models';
 import { PageOptions } from '../../../../services/models';
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
@@ -41,7 +40,7 @@ export class ExplorerAdapterTypeMessagesRegistriesRoot {
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<MessagesRegistry>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
     const [messagesRegistries, pagesCount] = await getMessagesRegistries({
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -56,7 +55,7 @@ export class ExplorerAdapterTypeMessagesRegistriesRoot {
     tableName: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<MessagesRegistry>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const response = await getMessagesRegistriesWithParticularOne(tableName, {
       ...options,
       filter: service.mergeCustomFilter(filter, item, store)
@@ -71,7 +70,7 @@ export class ExplorerAdapterTypeMessagesRegistriesRoot {
     return [libraries.map(payload => ({ type: ExplorerItemType.MESSAGES_REGISTRY, payload })), totalPages, pageNumber];
   }
 
-  static async getChildById(item: ExplorerItemData, tableName: string): Promise<ExplorerItemData<MessagesRegistry>> {
+  static async getChildById(item: ExplorerItemData, tableName: string): Promise<ExplorerItemData> {
     const messagesRegistry = await getMessagesRegistry(tableName);
 
     return {

@@ -94,7 +94,7 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   @boundMethod
   private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.TABLE && !this.testForDisabled(item)) {
-      this.select(path[1].payload as Dataset, item.payload as VectorTable);
+      this.select(path[1].payload as Dataset, item.payload);
     } else {
       this.select();
     }
@@ -144,7 +144,7 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   @boundMethod
   private testForDisabled(item: ExplorerItemData): boolean {
     if (item.type === ExplorerItemType.TABLE) {
-      const table = item.payload as VectorTable;
+      const table = item.payload;
 
       if (this.props.writableOnly) {
         return !isFeaturesUpdateAllowed(table.dataset, table.identifier);

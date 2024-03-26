@@ -2,23 +2,42 @@ import React, { ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
 
 import { LibraryDocumentVersionsActions } from '../../../LibraryDocumentVersionsActions/LibraryDocumentVersionsActions';
-import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
 
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 
-@staticImplements<Adapter<DocumentVersionExtended>>()
+export function assertExplorerItemDataTypeDocumentVersion(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.DOCUMENT_VERSION] {
+  if (item.type !== ExplorerItemType.DOCUMENT_VERSION) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocumentVersion {
-  static getId(item: ExplorerItemData<DocumentVersionExtended>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDocumentVersion(item);
+
     return item.payload.updatedTime;
   }
 
-  static getTitle(item: ExplorerItemData<DocumentVersionExtended>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDocumentVersion(item);
+
     return item.payload.updatedByUser;
   }
 
-  static getMeta(item: ExplorerItemData<DocumentVersionExtended>): string {
+  static getMeta(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDocumentVersion(item);
+
     return formatDate(item.payload.updatedTime, 'HH:mm DD.MM.YYYY');
   }
 
@@ -30,7 +49,9 @@ export class ExplorerAdapterTypeDocumentVersion {
     return false;
   }
 
-  static getActions(item: ExplorerItemData<DocumentVersionExtended>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDocumentVersion(item);
+
     return (
       <LibraryDocumentVersionsActions
         as='iconButton'

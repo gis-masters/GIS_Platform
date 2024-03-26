@@ -28,7 +28,7 @@ export interface BasemapsSelectAddButtonProps {
 @observer
 export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonProps> {
   @observable private dialogOpen = false;
-  @observable private basemap: Basemap;
+  @observable private basemap?: Basemap;
 
   constructor(props: BasemapsSelectAddButtonProps) {
     super(props);
@@ -82,7 +82,11 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
 
   @action.bound
   private setSelectedProject(item: ExplorerItemData | null) {
-    this.basemap = item.payload as Basemap;
+    if (!item) {
+      this.basemap = undefined;
+    } else if (item.type === ExplorerItemType.BASEMAP) {
+      this.basemap = item?.payload;
+    }
   }
 
   @action.bound
@@ -95,14 +99,21 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
 
   @action.bound
   private async submitBasemapSelection() {
+    if (!this.basemap) {
+      return;
+    }
+
     await connectBasemapToProject(currentProject, this.basemap);
     this.closeSelectBasemapDialog();
     await fetchBasemaps();
   }
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   @boundMethod
-  private async testForDisabled({ payload }: ExplorerItemData<Basemap>): Promise<boolean> {
-    return this.props.disabledItems.some(basemap => basemap.id === payload.id);
+  private testForDisabled(item: ExplorerItemData): boolean {
+    if (item.type !== ExplorerItemType.BASEMAP) {
+      return false;
+    }
+
+    return this.props.disabledItems.some(basemap => basemap.id === item.payload.id);
   }
 }

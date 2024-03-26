@@ -26,7 +26,8 @@ import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
-import { getDefaultValues, getViewChoiceOptions } from '../Form/Form.utils';
+import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { getDefaultValues } from '../Form/Form.utils';
 import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { getFile } from '../../services/data/files/files.service';

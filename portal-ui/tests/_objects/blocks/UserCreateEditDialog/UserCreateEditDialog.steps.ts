@@ -4,7 +4,7 @@ import { formControlTypeUserIdBlock } from '../Form/Control/Form-Control_type_us
 import { formControlTypeUserBlock } from '../Form/Control/Form-Control_type_user.block';
 import { userCreateEditDialogBlock } from './UserCreateEditDialog.block';
 import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
-import { formContentBlock } from '../Form/Form-Content.block';
+import { formContentBlock } from '../Form/Content/Form-Content.block';
 
 When(
   'в диалоговом окне редактирования пользователя я нажимаю на кнопку `Выбрать пользователя` в поле {string}',

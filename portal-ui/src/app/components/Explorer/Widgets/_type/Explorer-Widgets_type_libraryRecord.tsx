@@ -15,7 +15,7 @@ import { Role } from '../../../../services/data/permissions/permissions.models';
 import { Schema } from '../../../../services/data/schema/schema.models';
 import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
 
-import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType, itemTypeError } from '../../Explorer.models';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
@@ -55,7 +55,10 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
   render() {
     const { className, type, item } = this.props;
-    const { payload } = item as ExplorerItemData<LibraryRecord>;
+
+    if (item.type !== ExplorerItemType.FOLDER && item.type !== ExplorerItemType.DOCUMENT) {
+      throw itemTypeError;
+    }
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
@@ -71,11 +74,14 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
             </ExplorerInfoDescItem>
 
             {this.isLibraryVersioned && type === ExplorerItemType.DOCUMENT && (
-              <DocumentVersionsWidget document={payload} />
+              <DocumentVersionsWidget document={item.payload} />
             )}
 
             <PermissionsWidget
-              url={libraryClient.getDocumentLibraryRecordRoleAssignmentUrl(payload.libraryTableName, payload.id)}
+              url={libraryClient.getDocumentLibraryRecordRoleAssignmentUrl(
+                item.payload.libraryTableName,
+                item.payload.id
+              )}
               title={this.currentRecord.title}
               itemEntityType={
                 type === ExplorerItemType.DOCUMENT
@@ -92,15 +98,19 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<LibraryRecord>;
+
+    if (item.type !== ExplorerItemType.FOLDER && item.type !== ExplorerItemType.DOCUMENT) {
+      throw itemTypeError;
+    }
+
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const schema = await getLibrarySchemaByRecord(payload);
-    const record = await getLibraryRecord(payload.libraryTableName, payload.id);
+    const schema = await getLibrarySchemaByRecord(item.payload);
+    const record = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
 
     if (this.operationId === operationId) {
-      this.setSchema(applyContentType(schema, payload.content_type_id));
+      this.setSchema(applyContentType(schema, item.payload.content_type_id));
       this.setCurrentRecord(record);
     }
   }

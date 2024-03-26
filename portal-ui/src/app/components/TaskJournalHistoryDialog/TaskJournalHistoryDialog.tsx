@@ -6,7 +6,7 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { Task, TaskHistory } from '../../services/data/task/task.models';
+import { Task } from '../../services/data/task/task.models';
 import { Schema } from '../../services/data/schema/schema.models';
 import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
@@ -60,6 +60,6 @@ export class TaskJournalHistoryDialog extends Component<TaskJournalHistoryDialog
 
   @computed
   private get path(): ExplorerItemData[] | undefined {
-    return [{ type: ExplorerItemType.TASK_HISTORY_ROOT, payload: this.props.task as unknown as TaskHistory }];
+    return [{ type: ExplorerItemType.TASK_HISTORY_ROOT, payload: this.props.task }];
   }
 }

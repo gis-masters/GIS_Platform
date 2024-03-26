@@ -7,7 +7,7 @@ import {
   getVectorTable,
   getDataset
 } from '../../../../services/data/vectorData/vectorData.service';
-import { Dataset, VectorTable } from '../../../../services/data/vectorData/vectorData.models';
+import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { Emitter } from '../../../../services/common/Emitter';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -16,7 +16,14 @@ import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable'
 import { formatDate } from '../../../../services/util/date.util';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  SortItem,
+  itemTypeError
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { DatasetActions } from '../../../DatasetActions/DatasetActions';
@@ -24,17 +31,31 @@ import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
 
-@staticImplements<Adapter<Dataset, VectorTable>>()
+export function assertExplorerItemDataTypeDataset(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.DATASET] {
+  if (item.type !== ExplorerItemType.DATASET) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeDataset {
-  static getId(item: ExplorerItemData<Dataset>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDataset(item);
+
     return item.payload.identifier;
   }
 
-  static getTitle(item: ExplorerItemData<Dataset>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeDataset(item);
+
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<Dataset>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDataset(item);
+
     const { details, itemsCount, createdAt } = item.payload;
 
     return (
@@ -56,9 +77,7 @@ export class ExplorerAdapterTypeDataset {
     );
   }
 
-  static getMeta(item: ExplorerItemData<Dataset>): string {
-    return item.payload.identifier;
-  }
+  static getMeta = ExplorerAdapterTypeDataset.getId;
 
   static getIcon(): ReactNode {
     return <Storage color='primary' />;
@@ -68,16 +87,20 @@ export class ExplorerAdapterTypeDataset {
     return true;
   }
 
-  static getActions(item: ExplorerItemData<Dataset>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeDataset(item);
+
     return <DatasetActions dataset={item.payload} />;
   }
 
   static async getChildren(
-    item: ExplorerItemData<Dataset>,
+    item: ExplorerItemData,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<VectorTable>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
+    assertExplorerItemDataTypeDataset(item);
+
     const [tables, totalPages] = await getVectorTables(item.payload.identifier, {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store)
@@ -87,12 +110,14 @@ export class ExplorerAdapterTypeDataset {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<Dataset>,
+    item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
     identifier: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<VectorTable>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
+    assertExplorerItemDataTypeDataset(item);
+
     const response = await getVectorTablesWithParticularOne(item.payload.identifier, identifier, {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store),
@@ -121,10 +146,9 @@ export class ExplorerAdapterTypeDataset {
     ];
   }
 
-  static async getChildById(
-    item: ExplorerItemData<Dataset>,
-    identifier: string
-  ): Promise<ExplorerItemData<VectorTable>> {
+  static async getChildById(item: ExplorerItemData, identifier: string): Promise<ExplorerItemData> {
+    assertExplorerItemDataTypeDataset(item);
+
     const payload = await getVectorTable(item.payload.identifier, identifier);
 
     return { type: ExplorerItemType.TABLE, payload };
@@ -146,7 +170,9 @@ export class ExplorerAdapterTypeDataset {
     return 'Фильтр по названию';
   }
 
-  static async getToolbarActions(item: ExplorerItemData<Dataset>): Promise<ReactNode> {
+  static async getToolbarActions(item: ExplorerItemData): Promise<ReactNode> {
+    assertExplorerItemDataTypeDataset(item);
+
     const currentItem = await getDataset(item.payload.identifier);
     const createEnabled = currentUser.isAdmin || [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role);
 

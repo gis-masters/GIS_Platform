@@ -3,18 +3,35 @@ import { EmailOutlined, ViewListOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
-import { MessagesRegistry } from '../../../../services/data/messagesRegistries/messagesRegistries.models';
 import { services } from '../../../../services/services';
 
-@staticImplements<Adapter<MessagesRegistry>>()
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
+
+function assertExplorerItemDataTypeMessagesRegistry(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.MESSAGES_REGISTRY] {
+  if (item.type !== ExplorerItemType.MESSAGES_REGISTRY) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeMessagesRegistry {
-  static getId(item: ExplorerItemData<MessagesRegistry>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeMessagesRegistry(item);
+
     return String(item.payload.id);
   }
 
-  static getTitle(item: ExplorerItemData<MessagesRegistry>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeMessagesRegistry(item);
+
     return item.payload.title || '';
   }
 
@@ -38,7 +55,9 @@ export class ExplorerAdapterTypeMessagesRegistry {
     );
   }
 
-  static async customOpenAction(item: ExplorerItemData<MessagesRegistry>): Promise<void> {
+  static async customOpenAction(item: ExplorerItemData): Promise<void> {
+    assertExplorerItemDataTypeMessagesRegistry(item);
+
     await services.provided;
 
     services.ngZone.run(() => {

@@ -8,7 +8,7 @@ import {
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
 } from '../../../../services/data/library/library.service';
-import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
+import { ContentTypeTypes, LibraryRecord } from '../../../../services/data/library/library.models';
 import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
@@ -22,23 +22,44 @@ import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsS
 import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
 
 import { ExplorerStore } from '../../Explorer.store';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  SortItem,
+  itemTypeError
+} from '../../Explorer.models';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
 import { LibraryActions } from '../../../LibraryActions/LibraryActions';
 
-@staticImplements<Adapter<Library, LibraryRecord>>()
+export function assertExplorerItemDataTypeLibrary(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.LIBRARY] {
+  if (item.type !== ExplorerItemType.LIBRARY) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibrary {
-  static getId(item: ExplorerItemData<Library>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeLibrary(item);
+
     return item.payload.table_name;
   }
 
-  static getTitle(item: ExplorerItemData<Library>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeLibrary(item);
+
     return item.payload.title;
   }
 
-  static getDescription(item: ExplorerItemData<Library>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeLibrary(item);
+
     const { details, createdAt } = item.payload;
 
     return (
@@ -55,7 +76,9 @@ export class ExplorerAdapterTypeLibrary {
     );
   }
 
-  static getMeta(item: ExplorerItemData<Library>): string {
+  static getMeta(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeLibrary(item);
+
     return String(item.payload.table_name);
   }
 
@@ -67,24 +90,28 @@ export class ExplorerAdapterTypeLibrary {
     return true;
   }
 
-  static getActions(item: ExplorerItemData<Library>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeLibrary(item);
+
     return <LibraryActions library={item.payload} />;
   }
 
   static async getChildren(
-    explorerItem: ExplorerItemData<Library>,
+    item: ExplorerItemData,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number]> {
-    const result: ExplorerItemData<LibraryRecord>[] = [];
+  ): Promise<[ExplorerItemData[], number]> {
+    assertExplorerItemDataTypeLibrary(item);
 
-    const [libraryRecords, pagesCount] = await getLibraryRecords(explorerItem.payload.table_name, {
+    const result: ExplorerItemData[] = [];
+
+    const [libraryRecords, pagesCount] = await getLibraryRecords(item.payload.table_name, {
       ...options,
-      filter: service.mergeCustomFilter(filter, explorerItem, store)
+      filter: service.mergeCustomFilter(filter, item, store)
     });
 
-    const { contentTypes } = explorerItem.payload.schema;
+    const { contentTypes } = item.payload.schema;
 
     libraryRecords.forEach(record => {
       const contentType = contentTypes?.find(cType => cType.id === record.content_type_id);
@@ -114,10 +141,9 @@ export class ExplorerAdapterTypeLibrary {
     ];
   }
 
-  static async getChildById(
-    item: ExplorerItemData<Library>,
-    recordId: string
-  ): Promise<ExplorerItemData<LibraryRecord>> {
+  static async getChildById(item: ExplorerItemData, recordId: string): Promise<ExplorerItemData> {
+    assertExplorerItemDataTypeLibrary(item);
+
     const payload = await getLibraryRecord(item.payload.table_name, Number(recordId));
     const { contentTypes } = item.payload.schema;
     const contentType = contentTypes?.find(cType => cType.id === payload.content_type_id);
@@ -132,12 +158,14 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<Library>,
+    item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<LibraryRecord>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
+    assertExplorerItemDataTypeLibrary(item);
+
     const response = await getLibraryRecordsWithParticularOne(item.payload.table_name, Number(id), {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store),
@@ -177,11 +205,13 @@ export class ExplorerAdapterTypeLibrary {
   }
 
   static async getToolbarActions(
-    item: ExplorerItemData<Library>,
+    item: ExplorerItemData,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
   ): Promise<ReactNode> {
+    assertExplorerItemDataTypeLibrary(item);
+
     const currentItem = await getLibrary(item.payload.table_name);
     const enabled =
       currentUser.isAdmin ||

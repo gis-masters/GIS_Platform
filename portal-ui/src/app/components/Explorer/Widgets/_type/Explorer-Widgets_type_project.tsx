@@ -15,8 +15,9 @@ import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { assertExplorerItemDataTypeProject } from '../../Adapter/_type/Explorer-Adapter_type_project';
 
 @observer
 class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
@@ -77,17 +78,18 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<CrgProject>;
+
+    assertExplorerItemDataTypeProject(item);
 
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = permissionsClient.getProjectPermissionsUrl(payload.id);
-    const project = await projectsService.getById(payload.id);
+    const url = permissionsClient.getProjectPermissionsUrl(item.payload.id);
+    const project = await projectsService.getById(item.payload.id);
 
     if (this.operationId === operationId) {
       if (!project) {
-        throw new Error(`Проект ${payload.id} not found`);
+        throw new Error(`Проект ${item.payload.id} not found`);
       }
       this.setUrl(url);
       this.setProject(project);

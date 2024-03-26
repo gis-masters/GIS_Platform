@@ -13,7 +13,7 @@ import { Emitter } from '../../../../services/common/Emitter';
 
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
-@staticImplements<Adapter<null, Schema>>()
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeSchemasRoot {
   static getId(): string {
     return 'schemasRoot';
@@ -40,9 +40,9 @@ export class ExplorerAdapterTypeSchemasRoot {
   }
 
   static async getChildren(
-    item: ExplorerItemData<null>,
+    item: ExplorerItemData,
     { page, pageSize, sort, sortOrder, filter }: PageOptions
-  ): Promise<[ExplorerItemData<Schema>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
     const all = await schemaService.getAllSchemas();
     const filtered = filter?.text
       ? filterObjects(all, {
@@ -51,16 +51,16 @@ export class ExplorerAdapterTypeSchemasRoot {
       : all;
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
-    const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
+    const wrapped: ExplorerItemData[] = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
     return [wrapped, Math.floor(sorted.length / pageSize) + Number(Boolean(sorted.length / pageSize))];
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<null>,
+    item: ExplorerItemData,
     { pageSize, sort, sortOrder, filter }: PageOptions,
     id: string
-  ): Promise<[ExplorerItemData<Schema>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const all = await schemaService.getAllSchemas();
     const filtered = filterObjects(all, filter || {});
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');
@@ -72,12 +72,12 @@ export class ExplorerAdapterTypeSchemasRoot {
 
     const page = Math.floor(index / pageSize);
     const paged = sorted.slice(page * pageSize, page * pageSize + pageSize);
-    const wrapped = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
+    const wrapped: ExplorerItemData[] = paged.map(schema => ({ type: ExplorerItemType.SCHEMA, payload: schema }));
 
     return [wrapped, Math.floor(sorted.length / pageSize) + Number(Boolean(sorted.length / pageSize)), page];
   }
 
-  static async getChildById(item: ExplorerItemData<null>, id: string): Promise<ExplorerItemData<Schema>> {
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
     return {
       type: ExplorerItemType.SCHEMA,
       payload: await schemaService.getSchema(id)

@@ -14,9 +14,10 @@ import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget'
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemData, ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { assertExplorerItemDataTypeTable } from '../../Adapter/_type/Explorer-Adapter_type_table';
 
 @observer
 class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
@@ -82,13 +83,14 @@ class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<VectorTable>;
+
+    assertExplorerItemDataTypeTable(item);
 
     const operationId = Symbol();
     this.operationId = operationId;
 
-    const url = permissionsClient.getTableRoleAssignmentsUrl(payload.dataset, payload.identifier);
-    const table = await getVectorTable(payload.dataset, payload.identifier);
+    const url = permissionsClient.getTableRoleAssignmentsUrl(item.payload.dataset, item.payload.identifier);
+    const table = await getVectorTable(item.payload.dataset, item.payload.identifier);
 
     if (this.operationId === operationId) {
       this.setUrl(url);

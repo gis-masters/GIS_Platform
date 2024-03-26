@@ -1,13 +1,26 @@
 import React, { ReactNode } from 'react';
 import { ArticleOutlined } from '@mui/icons-material';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { Task, TaskHistory } from '../../../../services/data/task/task.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { getTaskHistory } from '../../../../services/data/task/task.service';
 import { PageOptions } from '../../../../services/models';
 
-@staticImplements<Adapter<Task>>()
+function assertExplorerItemDataTypeTaskHistoryRoot(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.TASK_HISTORY_ROOT] {
+  if (item.type !== ExplorerItemType.TASK_HISTORY_ROOT) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeTaskHistoryRoot {
   static getId(): string {
     return 'taskHistory';
@@ -33,10 +46,9 @@ export class ExplorerAdapterTypeTaskHistoryRoot {
     return true;
   }
 
-  static async getChildren(
-    item: ExplorerItemData<Task>,
-    pageOptions: PageOptions
-  ): Promise<[ExplorerItemData<TaskHistory>[], number]> {
+  static async getChildren(item: ExplorerItemData, pageOptions: PageOptions): Promise<[ExplorerItemData[], number]> {
+    assertExplorerItemDataTypeTaskHistoryRoot(item);
+
     const tasks = await getTaskHistory(item.payload.id);
 
     const pagesCount = Math.ceil(tasks.length / pageOptions.pageSize);

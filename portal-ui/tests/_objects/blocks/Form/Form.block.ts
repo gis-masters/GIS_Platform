@@ -70,7 +70,7 @@ export class FormBlock extends Block {
     return itemsValues;
   }
 
-  async getField(fieldName: string): Promise<WebdriverIO.Element> {
+  async getField(fieldTitle: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
     const $content = await this.$('content');
     await $content.waitForDisplayed();
@@ -82,13 +82,23 @@ export class FormBlock extends Block {
     }
 
     for (const $field of $$fields) {
-      const name = await $field.$('.Form-Label').getText();
+      const title = await $field.$('.Form-Label').getText();
 
-      if (name === fieldName) {
+      if (title === fieldTitle) {
         return $field;
       }
     }
 
-    throw new Error(`Не найден элемент ${fieldName}`);
+    throw new Error(`Не найден элемент ${fieldTitle}`);
+  }
+
+  async hasField(fieldTitle: string): Promise<boolean> {
+    try {
+      await this.getField(fieldTitle);
+
+      return true;
+    } catch {
+      return false;
+    }
   }
 }

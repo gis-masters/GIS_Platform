@@ -68,42 +68,44 @@ export enum ExplorerItemType {
   SCHEMA = 'schema'
 }
 
-export interface ExplorerItemPayloads {
-  [ExplorerItemType.NONE]: { loading?: boolean };
-  [ExplorerItemType.ROOT]: null;
+export interface ExplorerItemDataAllTypes {
+  [ExplorerItemType.NONE]: { type: ExplorerItemType.NONE; payload: { loading?: boolean } };
+  [ExplorerItemType.ROOT]: { type: ExplorerItemType.ROOT; payload: null };
 
-  [ExplorerItemType.DATASET_ROOT]: null;
-  [ExplorerItemType.DATASET]: Dataset;
-  [ExplorerItemType.TABLE]: VectorTable;
+  [ExplorerItemType.DATASET_ROOT]: { type: ExplorerItemType.DATASET_ROOT; payload: null };
+  [ExplorerItemType.DATASET]: { type: ExplorerItemType.DATASET; payload: Dataset };
+  [ExplorerItemType.TABLE]: { type: ExplorerItemType.TABLE; payload: VectorTable };
 
-  [ExplorerItemType.PROJECTS_ROOT]: null;
-  [ExplorerItemType.PROJECT]: CrgProject;
+  [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT; payload: null };
+  [ExplorerItemType.PROJECT]: { type: ExplorerItemType.PROJECT; payload: CrgProject };
 
-  [ExplorerItemType.LIBRARY_ROOT]: null;
-  [ExplorerItemType.LIBRARY]: Library;
-  [ExplorerItemType.FOLDER]: LibraryRecord;
-  [ExplorerItemType.DOCUMENT]: LibraryRecord;
-  [ExplorerItemType.FILE]: FileInfo;
+  [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT; payload: null };
+  [ExplorerItemType.LIBRARY]: { type: ExplorerItemType.LIBRARY; payload: Library };
+  [ExplorerItemType.FOLDER]: { type: ExplorerItemType.FOLDER; payload: LibraryRecord };
+  [ExplorerItemType.DOCUMENT]: { type: ExplorerItemType.DOCUMENT; payload: LibraryRecord };
+  [ExplorerItemType.FILE]: { type: ExplorerItemType.FILE; payload: FileInfo };
 
-  [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: LibraryRecord;
-  [ExplorerItemType.DOCUMENT_VERSION]: DocumentVersionExtended;
+  [ExplorerItemType.DOCUMENT_VERSIONS_ROOT]: { type: ExplorerItemType.DOCUMENT_VERSIONS_ROOT; payload: LibraryRecord };
+  [ExplorerItemType.DOCUMENT_VERSION]: { type: ExplorerItemType.DOCUMENT_VERSION; payload: DocumentVersionExtended };
 
-  [ExplorerItemType.BASEMAPS_ROOT]: null;
-  [ExplorerItemType.BASEMAP]: Basemap;
+  [ExplorerItemType.BASEMAPS_ROOT]: { type: ExplorerItemType.BASEMAPS_ROOT; payload: null };
+  [ExplorerItemType.BASEMAP]: { type: ExplorerItemType.BASEMAP; payload: Basemap };
 
-  [ExplorerItemType.TASKS_ROOT]: null;
-  [ExplorerItemType.TASK_HISTORY_ROOT]: Task;
-  [ExplorerItemType.TASK_HISTORY]: TaskHistory;
+  [ExplorerItemType.TASKS_ROOT]: { type: ExplorerItemType.TASKS_ROOT; payload: null };
+  [ExplorerItemType.TASK_HISTORY_ROOT]: { type: ExplorerItemType.TASK_HISTORY_ROOT; payload: Task };
+  [ExplorerItemType.TASK_HISTORY]: { type: ExplorerItemType.TASK_HISTORY; payload: TaskHistory };
 
-  [ExplorerItemType.SEARCH_RESULT_ROOT]: ExplorerSearchValue;
-  [ExplorerItemType.SEARCH_ITEM]: SearchItemData;
+  [ExplorerItemType.SEARCH_RESULT_ROOT]: { type: ExplorerItemType.SEARCH_RESULT_ROOT; payload: ExplorerSearchValue };
+  [ExplorerItemType.SEARCH_ITEM]: { type: ExplorerItemType.SEARCH_ITEM; payload: SearchItemData };
 
-  [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: null;
-  [ExplorerItemType.MESSAGES_REGISTRY]: MessagesRegistry;
+  [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: { type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT; payload: null };
+  [ExplorerItemType.MESSAGES_REGISTRY]: { type: ExplorerItemType.MESSAGES_REGISTRY; payload: MessagesRegistry };
 
-  [ExplorerItemType.SCHEMAS_ROOT]: null;
-  [ExplorerItemType.SCHEMA]: Schema;
+  [ExplorerItemType.SCHEMAS_ROOT]: { type: ExplorerItemType.SCHEMAS_ROOT; payload: null };
+  [ExplorerItemType.SCHEMA]: { type: ExplorerItemType.SCHEMA; payload: Schema };
 }
+
+export type ExplorerItemData = ValueOf<ExplorerItemDataAllTypes>;
 
 export enum ExplorerItemEntityTypeTitle {
   DATASET = 'набора данных',
@@ -114,11 +116,6 @@ export enum ExplorerItemEntityTypeTitle {
   DOCUMENT = 'документа',
 
   PROJECT = 'проекта'
-}
-
-export interface ExplorerItemData<T = ExplorerItemPayloads[ExplorerItemType]> {
-  type: ExplorerItemType;
-  payload: T;
 }
 
 export interface ExplorerSearchValue {
@@ -159,50 +156,49 @@ export const keyActions: { [key in KeyAction]: string[] } = {
 
 export const pageSizeVariants = [5, 10, 20, 50, 100];
 
-export interface Adapter<T = ValueOf<ExplorerItemPayloads>, C = ValueOf<ExplorerItemPayloads>> {
-  getId: (item: ExplorerItemData<T>) => string;
-  getTitle: (item: ExplorerItemData<T>, store: ExplorerStore) => ReactNode;
-  getMeta: (item: ExplorerItemData<T>) => string;
-  getDescription?: (item: ExplorerItemData<T>) => ReactNode;
-  getIcon?: (item: ExplorerItemData<T>) => ReactNode;
-  additionalInfo?: (item: ExplorerItemData<T>) => ReactNode;
-  isFolder: (item: ExplorerItemData<T>, store: ExplorerStore) => boolean;
-  customOpenActionIcon?: (item: ExplorerItemData<T>) => ReactNode;
-  customOpenAction?: (item: ExplorerItemData<T>) => void;
+export interface Adapter {
+  getId: (item: ExplorerItemData) => string;
+  getTitle: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
+  getMeta: (item: ExplorerItemData) => string;
+  getDescription?: (item: ExplorerItemData) => ReactNode;
+  getIcon?: (item: ExplorerItemData) => ReactNode;
+  additionalInfo?: (item: ExplorerItemData) => ReactNode;
+  isFolder: (item: ExplorerItemData, store: ExplorerStore) => boolean;
+  customOpenActionIcon?: (item: ExplorerItemData) => ReactNode;
+  customOpenAction?: (item: ExplorerItemData) => void;
   getChildren?: (
-    item: ExplorerItemData<T>,
+    item: ExplorerItemData,
     pageOptions: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ) => [ExplorerItemData<C>[], number] | Promise<[ExplorerItemData<C>[], number]>;
+  ) => [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
   getChildrenWithParticularOne?: (
-    item: ExplorerItemData<T>,
+    item: ExplorerItemData,
     pageOptions: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ) =>
-    | [ExplorerItemData<C>[], number, number]
-    | Promise<[ExplorerItemData<C>[], number, number] | undefined>
-    | undefined;
+  ) => [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number] | undefined> | undefined;
   getChildrenSortItems?: (item: ExplorerItemData) => SortItem[];
   getChildById?: (
-    item: ExplorerItemData<T>,
+    item: ExplorerItemData,
     id: string,
     type: ExplorerItemType,
     store: ExplorerStore
-  ) => ExplorerItemData<C> | Promise<ExplorerItemData<C>> | undefined;
-  getChildrenSortDefaultValue?: (item: ExplorerItemData<T>) => string;
-  getChildrenSortDefaultOrder?: (item: ExplorerItemData<T>) => SortOrder;
-  getChildrenFilterField?: (item: ExplorerItemData<T>) => string;
-  getChildrenFilterLabel?: (item: ExplorerItemData<T>) => string;
+  ) => ExplorerItemData | Promise<ExplorerItemData> | undefined;
+  getChildrenSortDefaultValue?: (item: ExplorerItemData) => string;
+  getChildrenSortDefaultOrder?: (item: ExplorerItemData) => SortOrder;
+  getChildrenFilterField?: (item: ExplorerItemData) => string;
+  getChildrenFilterLabel?: (item: ExplorerItemData) => string;
   getToolbarActions?: (
-    item: ExplorerItemData<T>,
+    item: ExplorerItemData,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
   ) => Promise<ReactNode> | ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData<T>) => Emitter<DataChangeEventDetail<unknown>>[];
-  getActions?: (item: ExplorerItemData<T>) => ReactNode;
+  getRefreshEmitters?: (item: ExplorerItemData) => Emitter<DataChangeEventDetail<unknown>>[];
+  getActions?: (item: ExplorerItemData) => ReactNode;
   hasSearch?: () => boolean;
 }
+
+export const itemTypeError: Error = new Error('Некорректный тип данных в Explorer');

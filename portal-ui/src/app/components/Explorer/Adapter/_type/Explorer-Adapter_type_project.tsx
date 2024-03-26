@@ -2,23 +2,42 @@ import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
 
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 
-@staticImplements<Adapter<CrgProject>>()
+export function assertExplorerItemDataTypeProject(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.PROJECT] {
+  if (item.type !== ExplorerItemType.PROJECT) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeProject {
-  static getId(item: ExplorerItemData<CrgProject>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeProject(item);
+
     return String(item.payload.id);
   }
 
-  static getTitle(item: ExplorerItemData<CrgProject>): string {
+  static getTitle(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeProject(item);
+
     return item.payload.name;
   }
 
-  static getMeta(item: ExplorerItemData<CrgProject>): string {
+  static getMeta(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeProject(item);
+
     const { createdAt, id } = item.payload;
     const date = createdAt ? `${formatDate(createdAt, 'LL')}` : '';
 
@@ -33,7 +52,9 @@ export class ExplorerAdapterTypeProject {
     return false;
   }
 
-  static getActions({ payload }: ExplorerItemData<CrgProject>): ReactNode {
-    return <ProjectsActions project={payload} />;
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeProject(item);
+
+    return <ProjectsActions project={item.payload} />;
   }
 }

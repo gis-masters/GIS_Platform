@@ -1,24 +1,38 @@
 import React, { ReactNode } from 'react';
-import { FolderOutlined } from '@mui/icons-material';
+import { FolderOutlined, InsertDriveFile } from '@mui/icons-material';
 
 import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
 import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
 import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { SearchItemData } from '../../../../services/data/search/search.model';
 import { extractFeatureId } from '../../../../services/geoserver/feature.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
 import { FeatureIcon } from '../../../FeatureIcon/FeatureIcon';
 import { SortOrder } from '../../../../services/models';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
-import { getIcon } from '../Explorer-Adapter';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 
-@staticImplements<Adapter<SearchItemData>>()
+export function assertExplorerItemDataTypeSearchItem(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.SEARCH_ITEM] {
+  if (item.type !== ExplorerItemType.SEARCH_ITEM) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeSearchItem {
-  static getId(item: ExplorerItemData<SearchItemData>): string {
+  static getId(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeSearchItem(item);
+
     const searchItem = item.payload;
     if (searchItem.type === 'DOCUMENT') {
       return String(searchItem.payload.id) + searchItem.source.library;
@@ -31,7 +45,9 @@ export class ExplorerAdapterTypeSearchItem {
     throw new Error('id элемента не найдено');
   }
 
-  static getTitle(item: ExplorerItemData<SearchItemData>): ReactNode {
+  static getTitle(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSearchItem(item);
+
     if (item.payload.type === 'DOCUMENT' && item.payload.payload.title) {
       return item.payload.payload.title;
     }
@@ -43,7 +59,9 @@ export class ExplorerAdapterTypeSearchItem {
     return '';
   }
 
-  static getDescription(item: ExplorerItemData<SearchItemData>): ReactNode {
+  static getDescription(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSearchItem(item);
+
     let createdAt: string = '';
 
     if (item.payload.type === 'DOCUMENT' && item.payload.payload.created_at) {
@@ -64,17 +82,21 @@ export class ExplorerAdapterTypeSearchItem {
     );
   }
 
-  static getActions(item: ExplorerItemData<SearchItemData>): ReactNode {
+  static getActions(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSearchItem(item);
+
     return <LibrarySearchItemActions as='iconButton' item={item.payload} />;
   }
 
-  static getIcon(item: ExplorerItemData<SearchItemData>): ReactNode {
+  static getIcon(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSearchItem(item);
+
     if (item.payload.type === 'DOCUMENT') {
       if (item.payload.payload.is_folder) {
         return <FolderOutlined color='primary' />;
       }
 
-      return getIcon({ type: ExplorerItemType.DOCUMENT, payload: {} });
+      return <InsertDriveFile color='primary' />;
     }
 
     if (item.payload.type === 'FEATURE') {
@@ -82,11 +104,15 @@ export class ExplorerAdapterTypeSearchItem {
     }
   }
 
-  static additionalInfo(item: ExplorerItemData<SearchItemData>): ReactNode {
+  static additionalInfo(item: ExplorerItemData): ReactNode {
+    assertExplorerItemDataTypeSearchItem(item);
+
     return <SearchResultHighlight item={item.payload} />;
   }
 
-  static getMeta(item: ExplorerItemData<SearchItemData>): string {
+  static getMeta(item: ExplorerItemData): string {
+    assertExplorerItemDataTypeSearchItem(item);
+
     if (item.payload.type === 'DOCUMENT') {
       const record = item.payload.payload;
 

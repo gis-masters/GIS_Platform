@@ -10,7 +10,7 @@ import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List.base'
 import '!style-loader!css-loader!sass-loader!./ConnectionsToProjects-List_type_list.scss';
 
 interface ConnectionsToProjectsListProps {
-  connections: FileConnection[];
+  connections?: FileConnection[];
   className: string;
 }
 

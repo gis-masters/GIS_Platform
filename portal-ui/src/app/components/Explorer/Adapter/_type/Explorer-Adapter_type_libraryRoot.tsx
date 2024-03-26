@@ -18,7 +18,7 @@ import { ExplorerStore } from '../../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerService } from '../../Explorer.service';
 
-@staticImplements<Adapter<null, Library>>()
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibraryRoot {
   static getId(): string {
     return 'libraryRoot';
@@ -41,11 +41,11 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static async getChildren(
-    item: ExplorerItemData<null>,
+    item: ExplorerItemData,
     { filter, ...options }: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Library>[], number]> {
+  ): Promise<[ExplorerItemData[], number]> {
     const [libraries, pagesCount] = await getLibraries({
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store)
@@ -55,12 +55,12 @@ export class ExplorerAdapterTypeLibraryRoot {
   }
 
   static async getChildrenWithParticularOne(
-    item: ExplorerItemData<null>,
+    item: ExplorerItemData,
     { filter, page, ...options }: PageOptions,
     tableName: string,
     store: ExplorerStore,
     service: ExplorerService
-  ): Promise<[ExplorerItemData<Library>[], number, number] | undefined> {
+  ): Promise<[ExplorerItemData[], number, number] | undefined> {
     const response = await getLibrariesWithParticularOne(tableName, {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store),
@@ -89,7 +89,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     ];
   }
 
-  static async getChildById(item: ExplorerItemData<null>, id: string): Promise<ExplorerItemData<Library>> {
+  static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
     const payload = await getLibrary(id);
 
     return {
@@ -106,7 +106,7 @@ export class ExplorerAdapterTypeLibraryRoot {
     return SortOrder.ASC;
   }
 
-  static getToolbarActions(item: ExplorerItemData<null>, store: ExplorerStore): ReactNode {
+  static getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode {
     if (currentUser.isAdmin && store.explorerRole === 'dm') {
       return <CreateLibrary />;
     }

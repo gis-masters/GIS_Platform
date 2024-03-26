@@ -107,7 +107,7 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
           }
         } else {
           const pathParts = document.path.split('/').slice(2);
-          const parents = await Promise.all(
+          const parents: ExplorerItemData[] = await Promise.all(
             pathParts.map(async part => {
               const folder = await getLibraryRecord(document.libraryTableName, Number(part));
 

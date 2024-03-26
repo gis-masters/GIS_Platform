@@ -27,7 +27,7 @@ interface AttributesRowHeadProps {
 
 @observer
 export class AttributesRowHead extends Component<AttributesRowHeadProps> {
-  private fetchingPermissionOperationId: symbol;
+  private fetchingPermissionOperationId?: symbol;
   @observable private editable = false;
 
   constructor(props: AttributesRowHeadProps) {
@@ -47,11 +47,11 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
 
   render() {
     const { rowData } = this.props;
-    const opened = sidebars.editOpen && sidebars.editFeaturesData.features.some(({ id }) => id === rowData.feature.id);
+    const opened = sidebars.editOpen && sidebars.editFeaturesData?.features.some(({ id }) => id === rowData.feature.id);
 
     return (
       <span className={cnAttributesRowHead()}>
-        <AttributesRowActions feature={rowData.feature} editable={this.editable} layer={this.layer} />
+        {this.layer && <AttributesRowActions feature={rowData.feature} editable={this.editable} layer={this.layer} />}
 
         {opened && <AttributesEditMark readonly={!this.editable} />}
 

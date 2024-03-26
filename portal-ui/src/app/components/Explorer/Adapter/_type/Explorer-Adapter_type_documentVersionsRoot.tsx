@@ -1,15 +1,29 @@
 import React, { ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
 
-import { DocumentVersionExtended, LibraryRecord } from '../../../../services/data/library/library.models';
+import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { getDocumentVersions } from '../../../../services/data/library/library.service';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { usersService } from '../../../../services/auth/users/users.service';
 import { PageOptions } from '../../../../services/models';
 
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import {
+  Adapter,
+  ExplorerItemData,
+  ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  itemTypeError
+} from '../../Explorer.models';
 
-@staticImplements<Adapter<LibraryRecord, DocumentVersionExtended>>()
+function assertExplorerItemDataTypeDocumentVersionsRoot(
+  item: ExplorerItemData
+): asserts item is ExplorerItemDataAllTypes[ExplorerItemType.DOCUMENT_VERSIONS_ROOT] {
+  if (item.type !== ExplorerItemType.DOCUMENT_VERSIONS_ROOT) {
+    throw itemTypeError;
+  }
+}
+
+@staticImplements<Adapter>()
 export class ExplorerAdapterTypeDocumentVersionsRoot {
   static getId(): string {
     return 'documentVersionsRoot';
@@ -31,12 +45,11 @@ export class ExplorerAdapterTypeDocumentVersionsRoot {
     return true;
   }
 
-  static async getChildren(
-    item: ExplorerItemData<LibraryRecord>,
-    pageOptions: PageOptions
-  ): Promise<[ExplorerItemData<DocumentVersionExtended>[], number]> {
+  static async getChildren(item: ExplorerItemData, pageOptions: PageOptions): Promise<[ExplorerItemData[], number]> {
+    assertExplorerItemDataTypeDocumentVersionsRoot(item);
+
     const response = await getDocumentVersions(item.payload.libraryTableName, item.payload.id);
-    const documentVersions = await Promise.all(
+    const documentVersions: ExplorerItemData[] = await Promise.all(
       response.map(async version => {
         const content = version as DocumentVersionExtended;
         const user = await usersService.getUser(version.updatedBy);

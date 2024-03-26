@@ -13,12 +13,12 @@ import {
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
 import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layers/layers.models';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
+import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
 import { communicationService } from '../../services/communication.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
-import { getViewChoiceOptions } from '../Form/Form.utils';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { TextBadge } from '../TextBadge/TextBadge';

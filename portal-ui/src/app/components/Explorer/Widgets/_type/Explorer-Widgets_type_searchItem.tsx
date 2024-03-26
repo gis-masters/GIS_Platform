@@ -8,13 +8,13 @@ import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeature
 import { communicationService } from '../../../../services/communication.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { schemaService } from '../../../../services/data/schema/schema.service';
-import { SearchItemData } from '../../../../services/data/search/search.model';
 import { Schema } from '../../../../services/data/schema/schema.models';
 
-import { ExplorerItemType, ExplorerItemData } from '../../Explorer.models';
+import { ExplorerItemType } from '../../Explorer.models';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';
 
 @observer
 class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
@@ -42,18 +42,20 @@ class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
 
   render() {
     const { className, item } = this.props;
-    const { payload } = item as ExplorerItemData<SearchItemData>;
-    const cardTitle = payload.type === 'DOCUMENT' ? 'документа' : 'объекта';
+
+    assertExplorerItemDataTypeSearchItem(item);
+
+    const cardTitle = item.payload.type === 'DOCUMENT' ? 'документа' : 'объекта';
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
-        {payload.type === 'FEATURE' && <ConnectionsFeaturesToProjectsWidget feature={payload} />}
+        {item.payload.type === 'FEATURE' && <ConnectionsFeaturesToProjectsWidget feature={item.payload} />}
 
         {this.schema && (
           <ExplorerInfoDescItem multiline>
             <ViewContentWidget
               schema={this.schema}
-              data={payload.type === 'DOCUMENT' ? payload.payload : payload.payload.properties}
+              data={item.payload.type === 'DOCUMENT' ? item.payload.payload : item.payload.payload.properties}
               title={`Карточка ${cardTitle}`}
             />
           </ExplorerInfoDescItem>
@@ -64,16 +66,18 @@ class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {
 
   private async fetchData() {
     const { item } = this.props;
-    const { payload } = item as ExplorerItemData<SearchItemData>;
+
+    assertExplorerItemDataTypeSearchItem(item);
+
     const operationId = Symbol();
 
     this.operationId = operationId;
-    if (payload.type === 'DOCUMENT' || payload.type === 'FEATURE') {
-      let schema = await schemaService.getSchema(payload.source.schema);
+    if (item.payload.type === 'DOCUMENT' || item.payload.type === 'FEATURE') {
+      let schema = await schemaService.getSchema(item.payload.source.schema);
 
       if (this.operationId === operationId) {
-        if (payload.type === 'DOCUMENT' && payload.payload.content_type_id) {
-          schema = applyContentType(schema, payload.payload.content_type_id);
+        if (item.payload.type === 'DOCUMENT' && item.payload.payload.content_type_id) {
+          schema = applyContentType(schema, item.payload.payload.content_type_id);
         }
 
         this.setSchema(schema);
