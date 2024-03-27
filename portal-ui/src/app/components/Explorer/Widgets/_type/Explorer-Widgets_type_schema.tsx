@@ -19,6 +19,7 @@ import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 import { ExplorerItemType } from '../../Explorer.models';
 import { ExplorerWidgetsProps, cnExplorerWidgets } from '../Explorer-Widgets.base';
 import { assertExplorerItemDataTypeSchema } from '../../Adapter/_type/Explorer-Adapter_type_schema';
+import { TagsList } from '../../../TagsList/TagsList';
 
 const EMPTY = '~~~empty_value~~~';
 
@@ -36,6 +37,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
     const { className, item } = this.props;
     assertExplorerItemDataTypeSchema(item);
     const schema = item.payload;
+    const { tags } = schema;
 
     return (
       <div className={cnExplorerWidgets(null, [className])}>
@@ -82,6 +84,13 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
               />
             </CardRow>
           ) : null}
+          {!!tags?.length && (
+            <CardRow>
+              <CardRowTitle>
+                Тэги: <TagsList tags={tags} />
+              </CardRowTitle>
+            </CardRow>
+          )}
           <CardRow alignBlock>
             <CardRowTitle>Свойства:</CardRowTitle>
             <CardValue block>

@@ -50,7 +50,11 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
 
   @action.bound
   private handleMouseEnter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const itemTitle = e.currentTarget.children[0] as Partial<HTMLDivElement>;
+    const itemTitle = e.currentTarget.children[0];
+
+    if (!(itemTitle instanceof HTMLElement)) {
+      return;
+    }
     this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
   }
 }

@@ -46,7 +46,11 @@ export class ExplorerAdapterTypeSchemasRoot {
     const all = await schemaService.getAllSchemas();
     const filtered = filter?.text
       ? filterObjects(all, {
-          $or: [{ name: { $ilike: `%${String(filter.text)}%` } }, { title: { $ilike: `%${String(filter.text)}%` } }]
+          $or: [
+            { name: { $ilike: `%${String(filter.text)}%` } },
+            { title: { $ilike: `%${String(filter.text)}%` } },
+            { tags: { $elemMatch: { $ilike: `%${String(filter.text)}%` } } }
+          ]
         })
       : all;
     const sorted = sortObjects<Schema>(filtered, sort as keyof Schema, sortOrder === SortOrder.ASC, 'name');

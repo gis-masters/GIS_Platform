@@ -76,6 +76,7 @@ export interface Schema {
 
   calcFiledFunction?: string;
   customRuleFunction?: string;
+  tags?: string[];
 }
 
 export interface ContentType {
