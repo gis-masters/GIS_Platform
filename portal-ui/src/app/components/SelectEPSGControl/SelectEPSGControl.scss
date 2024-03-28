@@ -1,0 +1,12 @@
+.SelectEPSGControl {
+  &-Wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &-Button {
+    display: block;
+
+    margin-top: 5px;
+  }
+}

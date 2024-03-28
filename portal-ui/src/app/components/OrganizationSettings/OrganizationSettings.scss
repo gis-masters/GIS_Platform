@@ -1,4 +1,20 @@
 .OrganizationSettings {
+  overflow: hidden;
+
+  max-height: 100%;
+
+  &-Form {
+    height: 100%;
+    max-height: 100%;
+
+    & .Form-Content {
+      overflow: scroll;
+      overflow-x: hidden;
+
+      max-height: calc(100% - 150px);
+    }
+  }
+
   &-Title {
     margin: 20px 0;
 

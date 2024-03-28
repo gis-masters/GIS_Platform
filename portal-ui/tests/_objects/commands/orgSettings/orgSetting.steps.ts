@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { setOrgSetting } from './setOrgSetting';
-import { OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { OrgSettings, Settings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
 import { requestAsAdmin } from '../requestAs';
 
@@ -16,30 +16,45 @@ Given('в настройках организации отключен пунк�
 async function setOption(setting: string, status: boolean): Promise<OrgSettings> {
   const user = await requestAsAdmin(usersClient.getCurrentUser);
 
-  const payload: { id: number; settings: Record<string, unknown> } = {
-    id: user.orgId,
-    settings: {}
+  const settings: Settings = {
+    createLibraryItem: false,
+    createProject: false,
+    dataManagement: false,
+    downloadFiles: false,
+    downloadXml: false,
+    editProjectLayer: false,
+    reestrs: false,
+    sedDialog: false,
+    taskManagement: false,
+    favorites_epsg: [
+      '{"authName":"EPSG","authSrid":3857,"srtext":"PROJCS[\\"WGS 84 / Pseudo-Mercator\\",GEOGCS[\\"WGS 84\\",DATUM[\\"WGS_1984\\",SPHEROID[\\"WGS 84\\",6378137,298.257223563,AUTHORITY[\\"EPSG\\",\\"7030\\"]],AUTHORITY[\\"EPSG\\",\\"6326\\"]],PRIMEM[\\"Greenwich\\",0,AUTHORITY[\\"EPSG\\",\\"8901\\"]],UNIT[\\"degree\\",0.0174532925199433,AUTHORITY[\\"EPSG\\",\\"9122\\"]],AUTHORITY[\\"EPSG\\",\\"4326\\"]],PROJECTION[\\"Mercator_1SP\\"],PARAMETER[\\"central_meridian\\",0],PARAMETER[\\"scale_factor\\",1],PARAMETER[\\"false_easting\\",0],PARAMETER[\\"false_northing\\",0],UNIT[\\"metre\\",1,AUTHORITY[\\"EPSG\\",\\"9001\\"]],AXIS[\\"X\\",EAST],AXIS[\\"Y\\",NORTH],EXTENSION[\\"PROJ4\\",\\"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs\\"],AUTHORITY[\\"EPSG\\",\\"3857\\"]]","proj4Text":"+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs","title":"WGS 84 / Pseudo-Mercator, EPSG:3857, метры","auth_srid":3857}'
+    ],
+    default_epsg: 'WGS 84 / Pseudo-Mercator, EPSG:3857, метры',
+    tags: ['НТО']
   };
 
-  if (payload.settings) {
-    switch (setting) {
-      case 'Управление задачами': {
-        payload.settings.taskManagement = status;
+  const payload: { id: number; settings: Settings } = {
+    id: user.orgId,
+    settings
+  };
 
-        break;
-      }
+  switch (setting) {
+    case 'Управление задачами': {
+      payload.settings.taskManagement = status;
 
-      case 'Создание проекта': {
-        payload.settings.createProject = status;
+      break;
+    }
 
-        break;
-      }
+    case 'Создание проекта': {
+      payload.settings.createProject = status;
 
-      case 'Скачать документ': {
-        payload.settings.downloadFiles = status;
+      break;
+    }
 
-        break;
-      }
+    case 'Скачать документ': {
+      payload.settings.downloadFiles = status;
+
+      break;
     }
   }
 

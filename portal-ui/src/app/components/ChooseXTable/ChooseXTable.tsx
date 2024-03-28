@@ -30,6 +30,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   secondarySortField?: keyof T;
   getRowId?: (rowData: T) => string | number;
   single?: boolean;
+  withoutSelectAll?: boolean;
   loading?: boolean;
   filterable?: boolean;
   filtersAlwaysEnabled?: boolean;
@@ -103,13 +104,15 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
   get cols(): XTableColumn<T>[] {
     return [
       {
-        title: !this.props.single && (
-          <Checkbox
-            indeterminate={this.selected.length > 0 && !this.allSelected}
-            checked={this.allSelected}
-            onChange={this.selectAll}
-          />
-        ),
+        title: this.props.withoutSelectAll
+          ? null
+          : !this.props.single && (
+              <Checkbox
+                indeterminate={this.selected.length > 0 && !this.allSelected}
+                checked={this.allSelected}
+                onChange={this.selectAll}
+              />
+            ),
         cellProps: { padding: 'checkbox' },
         CellContent: this.renderCheckbox
       },

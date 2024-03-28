@@ -43,7 +43,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
     const { schema, formValue, className, formRole, errors = [], readonly, labelInField } = this.props;
 
     return (
-      <div className={cnFormContent(null, [className])}>
+      <div className={cnFormContent(null, [className, 'scroll'])}>
         {schema.properties.map((propertySchema: PropertySchema, i) => {
           const htmlId = 'formField_' + generateRandomId();
           const relations = getFieldRelations(propertySchema.name, schema);

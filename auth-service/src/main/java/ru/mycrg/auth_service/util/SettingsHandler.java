@@ -148,24 +148,24 @@ public class SettingsHandler {
             }
 
             // Process favoriteEpsg props
-            if ("favorites_epsg".equals(name)) {
-                List<String> resultEpsg = new ArrayList<>();
-                List<String> epsg = (List<String>) result.get(name);
-                if (epsg == null || epsg.isEmpty()) {
-                    result.put("favorites_epsg", resultEpsg);
-
-                    continue;
-                }
-
-                property.getEnumerations().forEach(item -> {
-                    String value = item.getValue();
-                    if (epsg.contains(value)) {
-                        resultEpsg.add(item.getValue());
-                    }
-                });
-
-                result.put("favorites_epsg", resultEpsg);
-            }
+//            if ("favorites_epsg".equals(name)) {
+//                List<String> resultEpsg = new ArrayList<>();
+//                List<String> epsg = (List<String>) result.get(name);
+//                if (epsg == null || epsg.isEmpty()) {
+//                    result.put("favorites_epsg", resultEpsg);
+//
+//                    continue;
+//                }
+//
+//                property.getEnumerations().forEach(item -> {
+//                    String value = item.getValue();
+//                    if (epsg.contains(value)) {
+//                        resultEpsg.add(item.getValue());
+//                    }
+//                });
+//
+//                result.put("favorites_epsg", resultEpsg);
+//            }
         }
 
         return result;
@@ -217,34 +217,34 @@ public class SettingsHandler {
             }
 
             // Process favorites_epsg props
-            if ("favorites_epsg".equals(property.getName())) {
-                try {
-                    List<String> resultEpsg = new ArrayList<>();
-
-                    List<String> epsg = (List<String>) result.get(name);
-                    if (epsg == null || epsg.isEmpty()) {
-                        continue;
-                    }
-
-                    property.getEnumerations().forEach(item -> {
-                        String value = item.getValue();
-                        if (epsg.contains(value)) {
-                            resultEpsg.add(item.getValue());
-                        }
-                    });
-
-                    if (resultEpsg.isEmpty()) {
-                        result.remove("favorites_epsg");
-                    } else {
-                        result.put("favorites_epsg", resultEpsg);
-                    }
-                } catch (Exception e) {
-                    String msg = "Структура поля favorites_epsg не соответствует ожиданию.";
-                    log.error(msg + ". По причине: {}", e.getMessage(), e);
-
-                    throw new BadRequestException(msg);
-                }
-            }
+//            if ("favorites_epsg".equals(property.getName())) {
+//                try {
+//                    List<String> resultEpsg = new ArrayList<>();
+//
+//                    List<String> epsg = (List<String>) result.get(name);
+//                    if (epsg == null || epsg.isEmpty()) {
+//                        continue;
+//                    }
+//
+//                    property.getEnumerations().forEach(item -> {
+//                        String value = item.getValue();
+//                        if (epsg.contains(value)) {
+//                            resultEpsg.add(item.getValue());
+//                        }
+//                    });
+//
+//                    if (resultEpsg.isEmpty()) {
+//                        result.remove("favorites_epsg");
+//                    } else {
+//                        result.put("favorites_epsg", resultEpsg);
+//                    }
+//                } catch (Exception e) {
+//                    String msg = "Структура поля favorites_epsg не соответствует ожиданию.";
+//                    log.error(msg + ". По причине: {}", e.getMessage(), e);
+//
+//                    throw new BadRequestException(msg);
+//                }
+//            }
         }
 
         return result;

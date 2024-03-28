@@ -282,12 +282,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   private async getProjections(pageOptions: PageOptions): Promise<[ProjectionModified[], number]> {
     const [projections, totalPages] = await getKnownEpsg(pageOptions);
 
-    const modifiedProjections: ProjectionModified[] = projections.map(proj => ({
-      ...proj,
-      auth_srid: proj.authSrid
-    }));
-
-    return [modifiedProjections, totalPages];
+    return [projections, totalPages];
   }
 
   private getRowId(rowData: Projection) {

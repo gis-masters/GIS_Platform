@@ -2,6 +2,7 @@ import { observable, action, computed, makeObservable } from 'mobx';
 
 import { currentUser } from './CurrentUser.store';
 import { Schema } from '../services/data/schema/schema.models';
+import { EpsgModelModified } from '../services/data/epsg/epsg.models';
 
 export interface Settings {
   createLibraryItem: boolean;
@@ -13,6 +14,8 @@ export interface Settings {
   reestrs: boolean;
   sedDialog: boolean;
   taskManagement: boolean;
+  favorites_epsg: EpsgModelModified[] | string[];
+  default_epsg: string;
   tags: string | string[];
 }
 
@@ -20,6 +23,7 @@ export interface OrgSettings {
   id: number;
   name?: string;
   system?: Settings;
+  settings?: Settings;
   organization?: Settings;
 }
 
@@ -44,8 +48,8 @@ export class OrganizationSettings {
     if (Array.isArray(settings)) {
       this.systemSettings = settings;
     } else {
-      const tags = settings.organization.tags;
-      if (tags.length) {
+      const tags = settings?.organization?.tags;
+      if (tags?.length && settings?.organization) {
         settings.organization.tags = tags;
       }
       this.orgSettings = settings;

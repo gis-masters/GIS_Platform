@@ -1,11 +1,10 @@
 import { boundClass } from 'autobind-decorator';
 
-import { Projection } from '../../geoserver/projections.service';
 import { PageOptions } from '../../models';
 import { preparePageOptions } from '../../api/http.utils';
 import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { EpsgModel, PageableResources } from '../../../../server-types/common-contracts';
 
 @boundClass
 class EpsgClient extends Client {
@@ -19,10 +18,10 @@ class EpsgClient extends Client {
     return this.getDataUrl() + '/epsg';
   }
 
-  async getKnownEpsg(pageOptions: PageOptions): Promise<PageableResources<Projection>> {
+  async getKnownEpsg(pageOptions: PageOptions): Promise<PageableResources<EpsgModel>> {
     const params = preparePageOptions(pageOptions, true);
 
-    return await http.get<PageableResources<Projection>>(this.getEpsgUrl(), { params });
+    return await http.get<PageableResources<EpsgModel>>(this.getEpsgUrl(), { params });
   }
 }
 

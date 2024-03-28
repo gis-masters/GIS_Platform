@@ -36,6 +36,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   afterTable?: ReactNode;
   getRowId?: (rowData: T) => string | number;
   single?: boolean;
+  withoutSelectAll?: boolean;
   additionalAction?: ReactNode;
   onClose(): void;
   onSelect(items: T[]): void;
@@ -71,6 +72,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       secondarySortField,
       actionButtonProps = {},
       single,
+      withoutSelectAll,
       loading,
       afterTable,
       maxWidth = 'xl',
@@ -102,6 +104,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
             loading={loading}
             filtersAlwaysEnabled
             single={single}
+            withoutSelectAll={withoutSelectAll}
             selectedItems={selectedItems}
             onSelect={this.select}
             getRowId={getRowId}

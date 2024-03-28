@@ -1,7 +1,7 @@
 import { isObject } from 'lodash';
 
 export function isRecordStringUnknown(value: unknown): value is Record<string, unknown> {
-  if (Array.isArray(value) || !isObject) {
+  if (Array.isArray(value) || !isObject(value)) {
     return false;
   }
 
