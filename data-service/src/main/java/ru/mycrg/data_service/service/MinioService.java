@@ -2,10 +2,14 @@ package ru.mycrg.data_service.service;
 
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+
+import java.io.ByteArrayInputStream;
+
 
 @Service
 @ConditionalOnProperty(
@@ -39,6 +43,20 @@ public class MinioService {
                                                   .build());
         } catch (Exception e) {
             throw new BadRequestException("Ошибка удаления файла из минио: " + e.getMessage());
+        }
+    }
+
+    public void uploadFile(String fileName, byte[] bytes, String bucket){
+        try {
+            var putObject = PutObjectArgs
+                                                   .builder()
+                                                   .bucket(bucket)
+                                                   .object(fileName)
+                                                   .stream(new ByteArrayInputStream(bytes), bytes.length, -1)
+                                                   .build();
+            s3client.putObject(putObject);
+        } catch (Exception e) {
+            throw new BadRequestException("Ошибка загрузки файла в минио: " + e.getMessage());
         }
     }
 }

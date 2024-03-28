@@ -51,11 +51,16 @@ management:
       enabled: false
 
 crg-options:
+  taskDb: database_1
+  taskDeadlineTime: 5
+  kptTaskJobCron: ${CRG_OPTIONS_KPT_TASK_JOB_CRON:0 0 0 * * *}
+  kptTaskDeadlineTime: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:720}
   auth-service-url: http://127.0.0.1:9000
   gis-service-url: http://127.0.0.1:8082
   data-service-url: http://127.0.0.1:8084
   ui-service-url: http://127.0.0.1:80
   fileStoragePath: /opt/file_storage
+  kptArchivesPath: /opt/kpt_order/
   geoserverDbName: geoserver_db
   exportStoragePath: /opt/export/
   client_id: admin

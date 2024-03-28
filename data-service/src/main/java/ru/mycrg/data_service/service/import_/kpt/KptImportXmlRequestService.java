@@ -40,8 +40,9 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
-import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
-import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
 /**
@@ -51,17 +52,12 @@ import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 public class KptImportXmlRequestService {
 
     private static final int DEFAULT_ALLOWED_RECORDS_DIFF = 10;
-    private static final String TASK_TYPE_PROPERTY = "type";
-    private static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
-    private static final String TASK_OWNER_ID_PROPERTY = "owner_id";
-    private static final String TASK_DATA_SECTION_PROPERTY = "data_section_key_data_connection";
-    private static final String TASK_CONTENT_TYPE = "common_task_kpt_import";
 
-    private final IMessageBusProducer messageBus;
+    private final Mediator mediator;
     private final ISchemaTemplateService schemaService;
+    private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
     private final KptSourceFilesService kptSourceFilesService;
-    private final Mediator mediator;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
     public KptImportXmlRequestService(IMessageBusProducer messageBus,
@@ -170,9 +166,9 @@ public class KptImportXmlRequestService {
         body.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
         body.put(TASK_ASSIGNED_TO_PROPERTY, userDetails.getUserId());
         body.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
-        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), TASK_CONTENT_TYPE);
+        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
         body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
-        body.put(TASK_DATA_SECTION_PROPERTY, toJsonNode(typeDocumentData).toString());
+        body.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, toJsonNode(typeDocumentData).toString());
         return body;
     }
 

@@ -60,8 +60,10 @@ public class AcceptKptService {
     private static final String FILE_ATTRIBUTE = "file";
     private static final String DATE_ORDER_COMPLETION = "date_order_completion";
     private static final String STATUS_ATTRIBUTE = "status";
+    private static final String CAD_KVARTAL_ATTRIBUTE = "cad_kvartal";
     private static final String OWNER_DOC_ATTRIBUTE = "owner_doc";
     private static final String RECEIPT_TYPE_ATTRIBUTE = "receipt_type";
+    private static final String ORDER_TASK_NUMBER_ATTRIBUTE = "order_task_number";
     private static final String DEFAULT_FILENAME = "result.zip";
     private static final String DEFAULT_CONTENT_TYPE = "application/zip";
     private static final String DEFAULT_FILE_FORMAT = ".zip";
@@ -132,16 +134,18 @@ public class AcceptKptService {
             ResourceQualifier libraryRecordQualifier =
                     new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_TABLE_NAME, Long.parseLong(folderId), LIBRARY_RECORD);
             IRecord folder = recordsDao.findById(libraryRecordQualifier, schema)
-                                       .orElseThrow(
-                                               () -> new SmevRequestException("Не найдена папка с id: " + folderId));
-            if (!StringUtils.isNumeric(folder.getTitle())) {
-                throw new SmevRequestException("У папки некорректно заполнен атрибут title: " + folder.getTitle());
+                    .orElseThrow(() -> new SmevRequestException("Не найдена папка с id: " + folderId));
+            String taskNumber = folder.getAsString(ORDER_TASK_NUMBER_ATTRIBUTE);
+            if (!StringUtils.isNumeric(taskNumber)) {
+                throw new SmevRequestException("У папки некорректно заполнен атрибут : " + ORDER_TASK_NUMBER_ATTRIBUTE
+                        + ": " + taskNumber);
             }
-            long taskId = Long.parseLong(folder.getTitle());
+            long taskId = Long.parseLong(taskNumber);
             log.debug("Найдена задача с id: {}", taskId);
 
             Map<String, Object> acceptLog = new HashMap<>();
-            acceptLog.put(DESCRIPTION_ATTRIBUTE, "Пришёл результат для квартала " + docRecord.getTitle());
+            acceptLog.put(DESCRIPTION_ATTRIBUTE, "Пришёл результат для квартала " +
+                    docRecord.getAsString(CAD_KVARTAL_ATTRIBUTE));
             taskLogService.create(new TaskLogDto("Получение ответа", taskId), acceptLog);
 
             uploadFileToDocument(docRecord,
@@ -149,7 +153,8 @@ public class AcceptKptService {
                                  libraryRecordQualifier, schema);
 
             Map<String, Object> attachmentLog = new HashMap<>();
-            attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " + docRecord.getTitle());
+            attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " +
+                    docRecord.getAsString(CAD_KVARTAL_ATTRIBUTE));
             taskLogService.create(new TaskLogDto("Добавление ответа", taskId), attachmentLog);
 
             updateFolderAndTaskIfAllFileProcessed(docRecord,
@@ -195,6 +200,7 @@ public class AcceptKptService {
         fileMap.put(SIZE.getName(), savedEntity.getSize());
         String jacksonData = mapper.writeValueAsString(fileMap);
         Map<String, Object> payload = docRecord.getContent();
+        payload.remove(TITLE.getName());
         payload.put(FILE_ATTRIBUTE, List.of(jacksonData));
         payload.put(DATE_ORDER_COMPLETION, LocalDateTime.now());
         payload.put(OWNER_DOC_ATTRIBUTE, FGIS_EGRN);
@@ -217,6 +223,7 @@ public class AcceptKptService {
                                                .allMatch(iRecord -> iRecord.getContent().get(FILE_ATTRIBUTE) != null);
         if (isAllFileProcessed) {
             Map<String, Object> folderPayload = folder.getContent();
+            folderPayload.remove(TITLE.getName());
             folderPayload.put(DATE_ORDER_COMPLETION, LocalDateTime.now());
             folderPayload.put(STATUS_ATTRIBUTE, "Получено");
             recordsDao.updateRecordById(libraryRecordQualifier, folderPayload, schema);

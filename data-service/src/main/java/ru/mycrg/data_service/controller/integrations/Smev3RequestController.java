@@ -4,9 +4,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.smev3.*;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
@@ -17,13 +16,11 @@ import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRespons
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
+import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 
+import java.io.IOException;
 import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
@@ -41,7 +38,7 @@ public class Smev3RequestController {
     private final ReceiptRnvResponseService rnvResponseService;
     private final RegisterRnsRequestService registerRnsService;
     private final RegisterRnvRequestService registerRnvService;
-    private final TerminateRnsRequestService trminateRnsRequestService;
+    private final TerminateRnsRequestService terminateRnsRequestService;
     private final GetCadastrialPlanRequestService getCadastrialPlanRequestService;
     private final SmevMessageService storageService;
 
@@ -51,7 +48,7 @@ public class Smev3RequestController {
                                   ReceiptRnvResponseService rnvResponseService,
                                   RegisterRnsRequestService registerRnsService,
                                   RegisterRnvRequestService registerRnvService,
-                                  TerminateRnsRequestService trminateRnsRequestService,
+                                  TerminateRnsRequestService terminateRnsRequestService,
                                   GetCadastrialPlanRequestService getCadastrialPlanRequestService,
                                   SmevMessageService storageService) {
         this.rnsRequestService = rnsRequestService;
@@ -60,7 +57,7 @@ public class Smev3RequestController {
         this.rnvResponseService = rnvResponseService;
         this.registerRnsService = registerRnsService;
         this.registerRnvService = registerRnvService;
-        this.trminateRnsRequestService = trminateRnsRequestService;
+        this.terminateRnsRequestService = terminateRnsRequestService;
         this.getCadastrialPlanRequestService = getCadastrialPlanRequestService;
         this.storageService = storageService;
     }
@@ -79,35 +76,9 @@ public class Smev3RequestController {
      */
     @PostMapping("/egrn")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) {
-        Map<String, String> clientIdToCadastrialNumber = new HashMap<>();
-        body.getOrder().forEach(cadastrialNumber -> {
-            throwIfCadastrialNumberNotValid(cadastrialNumber);
-            clientIdToCadastrialNumber.put(UUID.randomUUID().toString(), cadastrialNumber);
-        });
-
-        String joinedCadastrialNumbers = String.join(", ", body.getOrder());
-        IRecord task = getCadastrialPlanRequestService.createTask(joinedCadastrialNumbers);
-        IRecord folder = getCadastrialPlanRequestService.createFolder(joinedCadastrialNumbers, task);
-        getCadastrialPlanRequestService.createLog("Создание новой папки",
-                "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
-                folder.getContent(),
-                task.getId());
-
-        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
-            IRecord doc = getCadastrialPlanRequestService.createDoc(clientId, cadastrialNumber, folder.getId());
-            getCadastrialPlanRequestService.createLog("Создание нового документа",
-                    "Создан документ с кадастровым номером " + cadastrialNumber,
-                    doc.getContent(),
-                    task.getId());
-        });
-
-        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
-            GetCadastrialPlanDto dto = new GetCadastrialPlanDto();
-            dto.setClientId(clientId);
-            dto.setCadastrialNumber(cadastrialNumber);
-            getCadastrialPlanRequestService.sendRequest(dto);
-        });
+    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) throws IOException, CrgDaoException,
+            StorageException {
+        getCadastrialPlanRequestService.processMessageFromSmev(body);
 
         return ResponseEntity.ok().build();
     }
@@ -174,16 +145,8 @@ public class Smev3RequestController {
     @PostMapping("/terminate-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<XmlBuildMeta> requestTerminateRns(@RequestBody TerminateRnsRequestDto terminateRnsRequestDto) {
-        var response = trminateRnsRequestService.sendRequest(terminateRnsRequestDto);
+        var response = terminateRnsRequestService.sendRequest(terminateRnsRequestDto);
 
         return ResponseEntity.ok(response);
-    }
-
-    private void throwIfCadastrialNumberNotValid(String number) {
-        Pattern cadNumPattern = Pattern.compile("\\d{2}:\\d{2}:\\d{6}");
-        Matcher matcher = cadNumPattern.matcher(number);
-        if (!matcher.matches()) {
-            throw new BadRequestException("Передан невалидный кадастровый номер: " + number);
-        }
     }
 }

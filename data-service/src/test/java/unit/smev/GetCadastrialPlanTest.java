@@ -28,7 +28,7 @@ public class GetCadastrialPlanTest {
                 null,
                 null,
                 null,
-                null);
+                null, null, null, null);
 
         var meta = new GetCadastrialPlanXmlBuildProcess(processor).run();
 

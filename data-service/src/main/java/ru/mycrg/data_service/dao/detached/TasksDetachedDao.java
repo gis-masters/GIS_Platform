@@ -8,10 +8,12 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
-import java.time.format.DateTimeFormatter;
+import java.sql.Timestamp;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 @Repository
 public class TasksDetachedDao {
@@ -24,40 +26,39 @@ public class TasksDetachedDao {
         this.datasourceFactory = datasourceFactory;
     }
 
-    public void closeOldTasks(Long orgId, int deadlineTime) {
-        String databaseName = getDefaultDatabaseName(orgId);
+    public List<Long> findTasksForCancel(String dbName, int deadline, String contentType) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(dbName));
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+        Timestamp timestamp = Timestamp.valueOf(now().minusHours(deadline));
+        log.debug("dateTime: {}", timestamp);
 
-        String status = TaskStatus.DONE.toString();
-        String dateTime = now().minusHours(deadlineTime).format(DateTimeFormatter.ISO_DATE_TIME);
+        String query = "SELECT id FROM data.tasks " +
+                "WHERE status <> '" + DONE + "' AND " +
+                "      status <> '" + CANCELED + "' AND " +
+                "      content_type_id = '" + contentType + "' AND " +
+                "      created_at <= ?";
 
-        log.debug("dateTime: {}", dateTime);
-
-        int updatedCounter = jdbcTemplate
-                .update("UPDATE data.tasks " +
-                                "SET status = '" + status + "', last_modified = now() " +
-                                "WHERE status <> 'DONE' AND content_type_id <> 'common_task_kpt_order' AND last_modified <= '" + dateTime + "'");
-
-        log.debug("Найдено и переведено в статус '{}' [{}] задач", status, updatedCounter);
+        return jdbcTemplate.query(query,
+                                  new Object[]{timestamp},
+                                  (rs, rowNum) -> rs.getLong("id"));
     }
 
-    public void closeOldKptTasks(Long orgId, int deadlineTime) {
-        String databaseName = getDefaultDatabaseName(orgId);
-
+    public void closeOldTasks(String databaseName, int deadline, String contentType) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
 
-        String status = TaskStatus.DONE.toString();
-        String dateTime = now().minusHours(deadlineTime).format(DateTimeFormatter.ISO_DATE_TIME);
+        String dateTime = now().minusHours(deadline).format(ISO_DATE_TIME);
+        String query = "UPDATE data.tasks " +
+                "SET status = '" + DONE + "', " +
+                "    last_modified = now() " +
+                "WHERE status <> '" + DONE + "' AND " +
+                "      content_type_id <> '" + contentType + "' AND " +
+                "      last_modified <= '" + dateTime + "'";
 
-        log.debug("dateTime: {}", dateTime);
+        log.debug("Close old tasks query: {}", query);
 
-        int updatedCounter = jdbcTemplate
-                .update("UPDATE data.tasks " +
-                        "SET status = '" + status + "', last_modified = now() " +
-                        "WHERE status <> 'DONE' AND content_type_id = 'common_task_kpt_order' AND created_at <= '" + dateTime + "'");
+        int updatedCounter = jdbcTemplate.update(query);
 
-        log.debug("Найдено и переведено в статус '{}' [{}] КПТ задач", status, updatedCounter);
+        log.debug("Найдено и закрыто [{}] задач типа: '{}'", updatedCounter, contentType);
     }
 
     public void updateStatus(String databaseName, Long taskId, TaskStatus newStatus) {
@@ -76,14 +77,14 @@ public class TasksDetachedDao {
 
         try {
             statusString = jdbcTemplate.queryForObject("SELECT t.status FROM data.tasks t WHERE id = ?",
-                                                              String.class, taskId);
+                                                       String.class, taskId);
         } catch (DataAccessException e) {
             log.error("Ошибка получения статуса задачи по id={}", taskId, e);
         }
 
         if (statusString != null) {
             try {
-                status = TaskStatus.valueOf(statusString);
+                status = valueOf(statusString);
             } catch (IllegalArgumentException e) {
                 log.error("Неизвестный статус задачи '{}'", statusString);
             }

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import ru.mycrg.data_service.entity.DocumentLibrary;
 
-import java.util.Map;
-
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 
@@ -23,23 +21,6 @@ public class LibraryModel extends ResourceModel {
 
     public LibraryModel() {
         super();
-    }
-
-    public LibraryModel(Map<String, Object> library) {
-        super(Long.valueOf(String.valueOf(library.get("id"))),
-              String.valueOf(library.get("title")),
-              String.valueOf(library.get("details")),
-              LIBRARY.name(),
-              null,
-              null,
-              null,
-              library.get("schema") != null ? jsonToDto((String) library.get("schema")) : null,
-              library.get("created_at") != null ? library.get("created_at").toString() : null,
-              null);
-
-        this.tableName = String.valueOf(library.get("table_name"));
-        this.versioned = Boolean.parseBoolean(String.valueOf(library.get("versioned")));
-        this.readyForFts = Boolean.parseBoolean(String.valueOf(library.get("readyForFts")));
     }
 
     public LibraryModel(DocumentLibrary dl) {

@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,15 +10,18 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.dto.smev3.GetCadastrialPlanDto;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
+import ru.mycrg.data_service.dto.smev3.OrderKptDto;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.register_rnv_1_0_8.QueryResult;
+import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
@@ -26,26 +30,36 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
-import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
-import ru.mycrg.data_service.util.JsonConverter;
-import ru.mycrg.data_service.util.SystemLibraryAttributes;
+import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.enums.TaskType;
+import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.mediator.Mediator;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
-import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
-import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
+import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
 
 @Service
 @ConditionalOnProperty(
@@ -54,25 +68,28 @@ import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownPro
         matchIfMissing = true)
 public class GetCadastrialPlanRequestService extends RequestProcessor {
 
-    private static final String TASK_TYPE_PROPERTY = "type";
-    private static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
-    private static final String TASK_DESCRIPTION_PROPERTY = "description";
-    private static final String TASK_OWNER_ID_PROPERTY = "owner_id";
-    private static final String TASK_CONTENT_TYPE = "common_task_kpt_order";
+    private static final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
+
+    public static final String KPT_CONTENT_TYPE = "common_task_kpt_order";
+    public static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
+
     private static final String FOLDER_CONTENT_TYPE = "folder_v1";
     private static final String DOC_CONTENT_TYPE = "Карточка";
     private static final String KPT_LIBRARY_ID = "dl_data_kpt";
     private static final String ORDER_NUMBER_PROPERTY = "order_number";
     private static final String PERFORMER_PROPERTY = "performer";
     private static final String STATUS_PROPERTY = "status";
-
-    private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
+    private static final String CAD_KVARTAL_PROPERTY = "cad_kvartal";
+    private static final String ORDER_TASK_NUMBER_PROPERTY = "order_task_number";
 
     private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final Mediator mediator;
     private final DocumentLibraryService documentLibraryService;
     private final TaskLogService taskLogService;
+    private final FileStorageService fileStorageService;
+    private final MinioService minioService;
+    private final RecordsDao recordsDao;
 
     public GetCadastrialPlanRequestService(Smev3Config smev3Config,
                                            ResourceLoader resourceLoader,
@@ -81,7 +98,10 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                                            IAuthenticationFacade authenticationFacade,
                                            Mediator mediator,
                                            DocumentLibraryService documentLibraryService,
-                                           TaskLogService taskLogService) {
+                                           TaskLogService taskLogService,
+                                           FileStorageService fileStorageService,
+                                           MinioService minioService,
+                                           RecordsDao recordsDao) {
         super(
                 Mnemonic.GET_CADASTRIAL_PLAN_1_1_2,
                 messageService,
@@ -96,45 +116,63 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         this.mediator = mediator;
         this.documentLibraryService = documentLibraryService;
         this.taskLogService = taskLogService;
+        this.fileStorageService = fileStorageService;
+        this.minioService = minioService;
+        this.recordsDao = recordsDao;
     }
 
-    public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
-        try {
-            //TODO тут ошибка, так как импорт некорректного класса
-            var queryResult = xmlMarshaller()
-                    .unmarshall(messageBody, QueryResult.class);
+    public void processMessageFromSmev(OrderKptDto orderKptDto) throws IOException, StorageException, CrgDaoException {
+        Map<String, String> clientIdToCadastrialNumber = new HashMap<>();
+        orderKptDto.getOrder().forEach(cadastrialNumber -> {
+            throwIfCadastrialNumberNotValid(cadastrialNumber);
+            clientIdToCadastrialNumber.put(UUID.randomUUID().toString(), cadastrialNumber);
+        });
+        throwIfCadasrialNumberArchiveNotExists(orderKptDto.getOrder());
+        String joinedCadastrialNumbers = String.join(", ", orderKptDto.getOrder());
+        IRecord task = createTask(joinedCadastrialNumbers);
+        IRecord folder = createFolder(joinedCadastrialNumbers, task);
+        linkFolderToTask(folder, task);
+        createLog("Создание новой папки",
+                  "Создана папка с кадастровыми номерами " + joinedCadastrialNumbers,
+                  folder.getContent(),
+                  task.getId());
 
-            var XmlBuildMeta = new XmlBuildMeta(
-                    mnemonicEnum(),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
-                    UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
-                    messageBody,
-                    JsonConverter.toJsonNode(queryResult),
-                    null,
-                    null
-            );
-            String status;
-            String message;
+        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
+            IRecord doc = createDoc(clientId, cadastrialNumber, folder.getId());
+            createLog("Создание нового документа",
+                      "Создан документ с кадастровым номером " + cadastrialNumber,
+                      doc.getContent(),
+                      task.getId());
+        });
 
-            if (queryResult.getMessage().getMessageType().equals("RejectMessage")) {
-                status = queryResult.getMessage().getResponseContent().getRejects().get(0).getCode();
-                message = queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription();
-            } else {
-                status = queryResult.getMessage().getResponseContent().getStatus().getCode();
-                message = queryResult.getMessage().getResponseContent().getStatus().getDescription();
+        AtomicInteger counter = new AtomicInteger(0);
+        clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
+            String archiveFileName = convertCadastrialNumberToArchiveFileName(cadastrialNumber);
+            try {
+                File kptArchive = fileStorageService.loadKptArchive(archiveFileName);
+                byte[] archiveBytes = Files.readAllBytes(kptArchive.toPath());
+                minioService.uploadFile(kptArchive.getName(), archiveBytes, getSmev3Config().getS3bucketOutgoing());
+            } catch (Exception e) {
+                log.error("Возникла ошибка при попытке загрузить архив в Minio: {}", e.getMessage());
+                throw new BadRequestException("Ошибка загрузки файла в минио: " + e.getMessage());
             }
+            GetCadastrialPlanDto dto = new GetCadastrialPlanDto();
+            dto.setClientId(clientId);
+            dto.setArchiveFilename(archiveFileName);
+            sendRequest(dto);
 
-            return new ProcessAdapterMessageResult()
-                    .setXmlBuildMeta(XmlBuildMeta)
-                    .setStatus(status)
-                    .setMessage(message);
-        } catch (Exception e) {
-            log.error("Process adapter message error: {}", e.getMessage());
-            throw new SmevRequestException("process adapter message error :" + e.getMessage());
-        }
+            if (counter.incrementAndGet() % 5 == 0) {
+                try {
+                    Thread.sleep(10_000);
+                } catch (InterruptedException e) {
+                    log.error("Возникла ошибка при попытке усыпить поток");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
     }
 
-    public IRecord createTask(String description) {
+    private IRecord createTask(String description) {
         Map<String, Object> body = prepareTaskBody(description);
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
@@ -148,16 +186,16 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     private Map<String, Object> prepareTaskBody(String description) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Map<String, Object> body = new HashMap<>();
-        body.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
+        body.put(TASK_TYPE_PROPERTY, CUSTOM.name());
         body.put(TASK_ASSIGNED_TO_PROPERTY, userDetails.getUserId());
         body.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
         body.put(TASK_DESCRIPTION_PROPERTY, description);
-        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), TASK_CONTENT_TYPE);
-        body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
+        body.put(CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
+        body.put(CREATED_AT.getName(), LocalDate.now());
         return body;
     }
 
-    public IRecord createFolder(String order, IRecord createdTask) {
+    private IRecord createFolder(String order, IRecord createdTask) {
         Map<String, Object> body = prepareFolderBody(order, createdTask);
         SchemaDto schema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
         Map<String, Object> props = excludeUnknownProperties(schema, body);
@@ -171,17 +209,17 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     private Map<String, Object> prepareFolderBody(String order, IRecord createdTask) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Map<String, Object> body = new HashMap<>();
-        body.put(SystemLibraryAttributes.IS_FOLDER.getName(), true);
+        body.put(IS_FOLDER.getName(), true);
         body.put(ORDER_NUMBER_PROPERTY, order);
-        body.put(SystemLibraryAttributes.TITLE.getName(), createdTask.getId());
+        body.put(ORDER_TASK_NUMBER_PROPERTY, createdTask.getId());
         body.put(PERFORMER_PROPERTY, userDetails.getUserId());
         body.put(STATUS_PROPERTY, "Заказано");
-        body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
-        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), FOLDER_CONTENT_TYPE);
+        body.put(CREATED_AT.getName(), LocalDate.now());
+        body.put(CONTENT_TYPE_ID.getName(), FOLDER_CONTENT_TYPE);
         return body;
     }
 
-    public IRecord createDoc(String clientId, String cadastrialNumber, Long id) {
+    private IRecord createDoc(String clientId, String cadastrialNumber, Long id) {
         Map<String, Object> body = prepareDocBody(cadastrialNumber, clientId, id);
         SchemaDto schema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
         Map<String, Object> props = excludeUnknownProperties(schema, body);
@@ -195,24 +233,40 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     private Map<String, Object> prepareDocBody(String cadastrialNumber, String clientId, Long id) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Map<String, Object> body = new HashMap<>();
-        body.put(SystemLibraryAttributes.IS_FOLDER.getName(), false);
+        body.put(IS_FOLDER.getName(), false);
         body.put(ORDER_NUMBER_PROPERTY, clientId);
-        body.put(SystemLibraryAttributes.TITLE.getName(), cadastrialNumber);
+        body.put(CAD_KVARTAL_PROPERTY, cadastrialNumber);
         body.put(PERFORMER_PROPERTY, userDetails.getUserId());
-        body.put(SystemLibraryAttributes.PATH.getName(), "/root/" + id);
-        body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
-        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), DOC_CONTENT_TYPE);
+        body.put(PATH.getName(), "/root/" + id);
+        body.put(CREATED_AT.getName(), LocalDate.now());
+        body.put(CONTENT_TYPE_ID.getName(), DOC_CONTENT_TYPE);
         return body;
     }
 
-    public void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId) {
+    private void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId) {
         propsMap.put(TASK_DESCRIPTION_PROPERTY, description);
-        propsMap.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), TASK_CONTENT_TYPE);
-        propsMap.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
+        propsMap.put(CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
+        propsMap.put(TASK_TYPE_PROPERTY, CUSTOM.name());
         propsMap.put(STATUS_PROPERTY, "IN_PROGRESS");
         propsMap.put(TASK_ASSIGNED_TO_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
         propsMap.put(TASK_OWNER_ID_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
+    }
+
+    private void linkFolderToTask(IRecord folder, IRecord task) throws JsonProcessingException, CrgDaoException {
+        TypeDocumentData typeDocumentData = new TypeDocumentData();
+        typeDocumentData.setId(folder.getId());
+        typeDocumentData.setTitle("Заказ номер " + task.getId());
+        typeDocumentData.setLibraryTableName(KPT_LIBRARY_ID);
+        Map<String, Object> taskPayload = task.getContent();
+        String jacksonData = mapper.writeValueAsString(List.of(typeDocumentData));
+        taskPayload.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, jacksonData);
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
+                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+        recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, task.getId()),
+                                    taskPayload,
+                                    tasksSchema);
     }
 
     @Override
@@ -220,14 +274,14 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
         var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run();
         var clientMessage = clientMessage(buildRequest.getRequest(),
-                                          getCadastrialPlanDto.getCadastrialNumber(),
+                                          getCadastrialPlanDto.getArchiveFilename(),
                                           getCadastrialPlanDto.getClientId());
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
-                JsonConverter.toJsonNode(clientMessage),
+                toJsonNode(clientMessage),
                 buildRequest.getSourcesJson(),
                 buildRequest.getAttachmentsJson()
         );
@@ -236,14 +290,14 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         return meta;
     }
 
-    private ClientMessage clientMessage(Request request, String cadastrialNumber, String clientId) {
+    private ClientMessage clientMessage(Request request, String archiveFilename, String clientId) {
         ClientMessage clientMessage = new ClientMessage();
         MessagePrimaryContent messagePrimaryContent = new MessagePrimaryContent();
         messagePrimaryContent.setRequest(request);
         Content content = new Content();
         AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
         AttachmentHeaderType attachmentHeaderType = new AttachmentHeaderType();
-        attachmentHeaderType.setFilePath("Request_" + cadastrialNumber.replace(":", "_") + ".zip");
+        attachmentHeaderType.setFilePath(archiveFilename);
         attachmentHeaderList.getAttachmentHeader().add(attachmentHeaderType);
         content.setAttachmentHeaderList(attachmentHeaderList);
         content.setMessagePrimaryContent(messagePrimaryContent);
@@ -258,5 +312,39 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         clientMessage.setRequestMessage(requestMessageType);
 
         return clientMessage;
+    }
+
+    private void throwIfCadastrialNumberNotValid(String number) {
+        Pattern cadNumPattern = Pattern.compile("\\d{2}:\\d{2}:\\d{6}");
+        Matcher matcher = cadNumPattern.matcher(number);
+        if (!matcher.matches()) {
+            throw new BadRequestException("Передан невалидный кадастровый номер: " + number);
+        }
+    }
+
+    private void throwIfCadasrialNumberArchiveNotExists(List<String> cadastrialNumbers)
+            throws StorageException, IOException {
+        List<String> archiveFileNames = cadastrialNumbers.stream()
+                                                         .map(this::convertCadastrialNumberToArchiveFileName)
+                                                         .collect(Collectors.toList());
+
+        List<String> nonExistentArchives = fileStorageService.getNonExistentFileNames(archiveFileNames);
+
+        if (!nonExistentArchives.isEmpty()) {
+            List<String> nonExistentCadasrialNumbers = nonExistentArchives.stream()
+                                                                          .map(this::convertArchiveFileNameToCadastrialNumber)
+                                                                          .collect(Collectors.toList());
+            throw new BadRequestException("В папке КПТ отсутствуют архивы по следующим кадастровым номерам: "
+                                                  + nonExistentCadasrialNumbers);
+        }
+    }
+
+    private String convertCadastrialNumberToArchiveFileName(String cadastrialNumber) {
+        return "Request_" + cadastrialNumber.replace(":", "_") + ".zip";
+    }
+
+    private String convertArchiveFileNameToCadastrialNumber(String archiveFileName) {
+        return archiveFileName.replaceAll("Request_(.*?)\\.zip", "$1")
+                              .replace("_", ":");
     }
 }

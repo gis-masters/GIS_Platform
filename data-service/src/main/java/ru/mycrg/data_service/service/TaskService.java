@@ -33,12 +33,16 @@ import static ru.mycrg.data_service.util.StringUtil.join;
 @Transactional(readOnly = true)
 public class TaskService {
 
+    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
+
     public static final String TASK_TABLE_NAME = "tasks";
     public static final String TASKS_SCHEMA = "tasks_schema_v1";
-    public static final ResourceQualifier TASK_QUALIFIER = new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME,
-                                                                                 TASK);
-
-    private final Logger log = LoggerFactory.getLogger(TaskService.class);
+    public static final ResourceQualifier TASK_QUALIFIER =
+            new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK);
+    public static final String TASK_TYPE_PROPERTY = "type";
+    public static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
+    public static final String TASK_OWNER_ID_PROPERTY = "owner_id";
+    public static final String TASK_DESCRIPTION_PROPERTY = "description";
 
     private final BaseDao baseDao;
     private final ISchemaTemplateService schemaService;
