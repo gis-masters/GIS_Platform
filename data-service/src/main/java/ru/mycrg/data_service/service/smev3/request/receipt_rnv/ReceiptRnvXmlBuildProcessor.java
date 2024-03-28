@@ -9,16 +9,16 @@ import ru.mycrg.data_service.receipt_rnv_1_0_9.ReceiptExploitationType;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.ReceiptListExploitationType;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 
 import static java.util.Optional.ofNullable;
 
-public class ReceiptRnvXmlBuildProcess extends AXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnvXmlBuildProcess.class);
+public class ReceiptRnvXmlBuildProcessor extends AXmlBuildProcessor {
+    private final Logger log = LoggerFactory.getLogger(ReceiptRnvXmlBuildProcessor.class);
 
-    public ReceiptRnvXmlBuildProcess(RequestProcessor requestProcessor) {
+    public ReceiptRnvXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
     }
 

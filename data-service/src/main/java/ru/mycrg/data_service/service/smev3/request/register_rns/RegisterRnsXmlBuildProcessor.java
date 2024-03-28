@@ -11,7 +11,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
 import java.math.BigInteger;
@@ -23,14 +23,14 @@ import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5;
 import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_REGION;
 
-public class RegisterRnsXmlBuildProcess extends AXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcess.class);
+public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
+    private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcessor.class);
     private final ReusableElements rue = new ReusableElements();
 
     // Заглушка
     private final FileType stubScan = new FileType();
 
-    public RegisterRnsXmlBuildProcess(RequestProcessor requestProcessor) {
+    public RegisterRnsXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
 
         var attachmentRefType = new AttachmentRefType();

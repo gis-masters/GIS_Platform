@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
 
@@ -18,7 +19,7 @@ public class DocLibraryMapper implements RowMapper<DocumentLibrary> {
         dl.setId(rs.getInt("id"));
         dl.setTitle(rs.getString("title"));
         dl.setDetails(rs.getString("details"));
-        dl.setPath(rs.getString("path"));
+        dl.setPath(rs.getString(PATH.getName()));
         dl.setTableName(rs.getString("table_name"));
         dl.setCreatedBy(rs.getString("created_by"));
         dl.setVersioned(rs.getBoolean("versioned"));

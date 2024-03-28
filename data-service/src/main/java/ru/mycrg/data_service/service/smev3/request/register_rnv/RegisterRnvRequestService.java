@@ -35,21 +35,34 @@ import java.util.stream.Collectors;
         matchIfMissing = true)
 public class RegisterRnvRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(RegisterRnvRequestService.class);
+    private final RegisterRnvResponseService registerRnvResponseService;
 
     public RegisterRnvRequestService(SmevMessageSenderService messageService,
                                      Smev3Config smev3Config,
                                      BaseDao baseDao,
                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
-                                     SmevOutgoingAttachmentService attachmentService) {
+                                     SmevOutgoingAttachmentService attachmentService,
+                                     RegisterRnvResponseService registerRnvResponseService) {
         super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
+        this.registerRnvResponseService = registerRnvResponseService;
+    }
+
+    @Override
+    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        if (dto.isStubResponse()) {
+            registerRnvResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
+            return null;
+        } else {
+            return super.sendRequest(dto);
+        }
     }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("build xml request " + dto);
 
-        var buildRequest = new RegisterRnvXmlBuildProcess(this).run((RegisterRnvRequestDto) dto);
+        var buildRequest = new RegisterRnvXmlBuildProcessor(this).run((RegisterRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

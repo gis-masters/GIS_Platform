@@ -12,17 +12,19 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
-public abstract class AResponseXmlProcess {
+public abstract class AResponseXmlProcessor {
 
     protected Optional<ResponseAttachment> asFileType(List<FileType> value) {
         return ofNullable(value)
                 .flatMap(files -> files.stream().findFirst())
-                .map(fileType -> new ResponseAttachment(fileType.getName(), fileType.getAttachmentRef().getAttachmentId()));
+                .map(fileType -> new ResponseAttachment(fileType.getName(),
+                                                        fileType.getAttachmentRef().getAttachmentId()));
     }
 
     protected Optional<String> asString(String value) {
         return ofNullable(value);
     }
+
     protected Optional<Long> asLong(Long value) {
         return ofNullable(value);
     }

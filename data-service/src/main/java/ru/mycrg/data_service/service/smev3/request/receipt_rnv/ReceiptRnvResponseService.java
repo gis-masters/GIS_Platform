@@ -96,7 +96,7 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var process = new ReceiptRnvResponseXmlProcess();
+        var process = new ReceiptRnvResponseXmlProcessor();
 
         if (responseType.getResponseExploitation() != null) {
             var iRecord = process.processOne(responseType.getResponseExploitation());

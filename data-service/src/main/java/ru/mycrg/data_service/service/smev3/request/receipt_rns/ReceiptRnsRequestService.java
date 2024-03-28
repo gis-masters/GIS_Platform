@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rns;
 
-
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 
-
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
  */
@@ -29,19 +27,34 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class ReceiptRnsRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
+
+    private final ReceiptRnsResponseService rnsResponseService;
 
     public ReceiptRnsRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
-                                    SmevMessageSenderService messageService) {
+                                    SmevMessageSenderService messageService,
+                                    ReceiptRnsResponseService rnsResponseService) {
         super(Mnemonic.RECEIPT_RNS_1_0_9, messageService, null, null, null, resourceLoader, smev3Config);
+        this.rnsResponseService = rnsResponseService;
+    }
+
+    @Override
+    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        if (dto.isStubResponse()) {
+            rnsResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
+            return null;
+        } else {
+            return super.sendRequest(dto);
+        }
     }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("build xml request " + dto);
 
-        var buildRequest = new ReceiptRnsRequestXmlProcess(this).run((ReceiptRnsRequestDto) dto);
+        var buildRequest = new ReceiptRnsRequestXmlProcessor(this).run((ReceiptRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

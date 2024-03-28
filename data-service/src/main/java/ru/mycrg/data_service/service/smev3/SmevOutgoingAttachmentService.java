@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 
@@ -17,13 +16,19 @@ import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.util.UUID;
 
+import static ru.mycrg.data_service.service.smev3.fields.FieldsFiles.PROPERTY_ID;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsFiles.PROPERTY_TITLE;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+
 @Service
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
 public class SmevOutgoingAttachmentService {
+
     private final Logger log = LoggerFactory.getLogger(SmevOutgoingAttachmentService.class);
+
     private final FileStorageService fileStorageService;
     private final MinioClient s3client;
     private final Smev3Config smev3Config;
@@ -39,9 +44,9 @@ public class SmevOutgoingAttachmentService {
     public SmevAttachment pushAttachment(IRecord fileRecord) {
         try {
             var attachmentId = UUID.randomUUID();
-            var fileId = fileRecord.getAsString(FieldsFiles.PROPERTY_ID);
-            var fileTitle = fileRecord.getAsString(FieldsFiles.PROPERTY_TITLE);
-            var filePath = fileRecord.getAsString(FieldsFiles.PROPERTY_PATH);
+            var fileId = fileRecord.getAsString(PROPERTY_ID);
+            var fileTitle = fileRecord.getAsString(PROPERTY_TITLE);
+            var filePath = fileRecord.getAsString(PATH.getName());
 
             var resource = fileStorageService.loadAsResource(filePath);
             byte[] fileBytes = Files.readAllBytes(resource.getFile().toPath());

@@ -5,7 +5,7 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.Request;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
-import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanXmlBuildProcessor;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import javax.xml.bind.JAXBException;
@@ -30,7 +30,7 @@ public class GetCadastrialPlanTest {
                 null,
                 null, null, null, null);
 
-        var meta = new GetCadastrialPlanXmlBuildProcess(processor).run();
+        var meta = new GetCadastrialPlanXmlBuildProcessor(processor).run();
 
         // to xml
         var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);

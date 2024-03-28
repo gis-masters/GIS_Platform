@@ -75,7 +75,7 @@ public class UserRecordsService implements IRecordsService {
             IRecord parent = recordsDao.findById(recordQualifier, schema)
                                        .orElseThrow(() -> new NotFoundException("Запись не найдена: " + parentId));
 
-            path = String.format("%s/%d", parent.getContent().get("path"), parentId);
+            path = String.format("%s/%d", parent.getContent().get(PATH.getName()), parentId);
 
             ecqlFilter = addAsEqual(ecqlFilter, PATH.getName(), path);
             ecqlFilter = ecqlFilter.toLowerCase().contains(IS_DELETED.getName())

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 public class SchemasAndTablesMapper implements RowMapper<SchemasAndTables> {
 
@@ -20,7 +21,7 @@ public class SchemasAndTablesMapper implements RowMapper<SchemasAndTables> {
         sat.setDetails(rs.getString("details"));
         sat.setFolder(rs.getBoolean("is_folder"));
         sat.setIdentifier(rs.getString("identifier"));
-        sat.setPath(rs.getString("path"));
+        sat.setPath(rs.getString(PATH.getName()));
         sat.setCrs(rs.getString("crs"));
         sat.setSchema(
                 toJsonNode(rs.getString("schema")));

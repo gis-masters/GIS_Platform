@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
 import java.util.UUID;
@@ -13,10 +13,10 @@ import java.util.UUID;
 import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_REGION;
 
 
-public class GetCadastrialPlanXmlBuildProcess extends AXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanXmlBuildProcess.class);
+public class GetCadastrialPlanXmlBuildProcessor extends AXmlBuildProcessor {
+    private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanXmlBuildProcessor.class);
 
-    public GetCadastrialPlanXmlBuildProcess(RequestProcessor requestProcessor) {
+    public GetCadastrialPlanXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
     }
 

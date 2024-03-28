@@ -16,11 +16,18 @@ public class ReceiptRnsRequestDto implements ISmevRequestDto {
 
     private Boolean sendToSmev = true;
 
-    //TODO временно
-    private String testBase64;
+    private String stubSmevResponse;
 
     public LocalDate getConstPermitDateFrom() {
         return constPermitDateFrom;
+    }
+
+    public LocalDate getConstPermitDateTo() {
+        return constPermitDateTo;
+    }
+
+    public String getConstPermitNumber() {
+        return constPermitNumber;
     }
 
     public ReceiptRnsRequestDto setConstPermitDateFrom(LocalDate constPermitDateFrom) {
@@ -28,29 +35,23 @@ public class ReceiptRnsRequestDto implements ISmevRequestDto {
         return this;
     }
 
-    public LocalDate getConstPermitDateTo() {
-        return constPermitDateTo;
-    }
-
     public ReceiptRnsRequestDto setConstPermitDateTo(LocalDate constPermitDateTo) {
         this.constPermitDateTo = constPermitDateTo;
         return this;
     }
 
-    public Boolean sendToSmev() {
-        return sendToSmev;
-    }
-
-    public String getConstPermitNumber() {
-        return constPermitNumber;
-    }
-
-    public ReceiptRnsRequestDto setSendToSmev(Boolean sendToSmev) {
-        this.sendToSmev = sendToSmev;
+    public ReceiptRnsRequestDto setConstPermitNumber(String constPermitNumber) {
+        this.constPermitNumber = constPermitNumber;
         return this;
     }
 
-    public String getTestBase64() {
-        return testBase64;
+    @Override
+    public Boolean isSendToSmev() {
+        return sendToSmev;
+    }
+
+    @Override
+    public String getStubSmevResponse() {
+        return stubSmevResponse;
     }
 }

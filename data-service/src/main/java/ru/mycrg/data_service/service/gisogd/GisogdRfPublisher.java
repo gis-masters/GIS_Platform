@@ -17,10 +17,10 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
-import ru.mycrg.data_service.service.schemas.SchemaExtractor;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.schemas.SchemaExtractor;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
@@ -648,7 +648,7 @@ public class GisogdRfPublisher {
                 return Optional.empty();
             }
 
-            long datasetId = Long.parseLong(oLayer.get().getContent().get("path").toString().split("root/")[1]);
+            long datasetId = Long.parseLong(oLayer.get().getContent().get(PATH.getName()).toString().split("root/")[1]);
 
             // Тащим запись о наборе данных, чтобы достать его название
             IRecord dataset = baseDao

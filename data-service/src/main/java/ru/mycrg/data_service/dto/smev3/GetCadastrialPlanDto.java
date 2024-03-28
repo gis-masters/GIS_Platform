@@ -22,7 +22,12 @@ public class GetCadastrialPlanDto implements ISmevRequestDto {
 
     //todo заглушка
     @Override
-    public Boolean sendToSmev() {
+    public Boolean isSendToSmev() {
         return true;
+    }
+
+    @Override
+    public String getStubSmevResponse() {
+        return null;
     }
 }

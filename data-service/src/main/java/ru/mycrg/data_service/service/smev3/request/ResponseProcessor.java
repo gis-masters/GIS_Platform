@@ -7,6 +7,7 @@ import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 public class ResponseProcessor {
+
     private final Mnemonic mnemonic;
     private final XmlMarshaller marshaller;
 

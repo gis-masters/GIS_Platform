@@ -1,15 +1,9 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsEisZs {
+
     public static final String TABLE = "dl_data_eis_zs";
-    public static final String ID = "id";
-    public static final String PROPERTY_PATH = "path";
-    public static final String PROPERTY_IS_FOLDER = "is_folder";
-    public static final String PROPERTY_CREATED_AT = "created_at";
-    public static final String PROPERTY_LAST_MODIFIED = "last_modified";
-    public static final String PROPERTY_UPDATED_BY = "updated_by";
     public static final String PROPERTY_CONTENT_TYPE_ID = "content_type_id";
-    public static final String PROPERTY_TITLE = "title";
     public static final String PROPERTY_PREV_CONST_PERMIT_ID = "prev_const_permit_id";
     public static final String PROPERTY_PREV_CONST_PERMIT_NUMBER = "prev_const_permit_number";
     public static final String PROPERTY_PREV_CONST_PERMIT_DATE = "prev_const_permit_date";
@@ -365,7 +359,6 @@ public class FieldsEisZs {
     public static final String PROPERTY_INSULATED_MATERIALS_FA = "insulated_materials_fa";
     public static final String PROPERTY_SKYLIGHTS_IN_PROJECT = "skylights_in_project";
     public static final String PROPERTY_SKYLIGHTS_IN_FACT = "skylights_in_fact";
-    public static final String PROPERTY_CREATED_BY = "created_by";
 
     //
 

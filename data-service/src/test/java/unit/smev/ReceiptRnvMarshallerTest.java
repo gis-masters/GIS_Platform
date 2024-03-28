@@ -8,8 +8,8 @@ import ru.mycrg.data_service.receipt_rnv_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
-import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvResponseXmlProcess;
-import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvResponseXmlProcessor;
+import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvXmlBuildProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
@@ -31,13 +31,13 @@ public class ReceiptRnvMarshallerTest extends AMarshallerTest {
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
 
-        var processor = new ReceiptRnvRequestService(smev3Config, null, null);
+        var processor = new ReceiptRnvRequestService(smev3Config, null, null, null);
 
         var dto = new ReceiptRnvRequestDto();
         dto.setPermitDateFrom(LocalDate.of(2022, 1, 1));
         dto.setPermitDateTo(LocalDate.of(2022, 1, 1));
 
-        var meta = new ReceiptRnvXmlBuildProcess(processor).run(dto);
+        var meta = new ReceiptRnvXmlBuildProcessor(processor).run(dto);
 
         // to xml
         var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
@@ -70,7 +70,7 @@ public class ReceiptRnvMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var content = new ReceiptRnvResponseXmlProcess()
+        var content = new ReceiptRnvResponseXmlProcessor()
                 .processOne(response.getResponseExploitation())
                 .getContent();
 

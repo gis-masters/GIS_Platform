@@ -11,7 +11,7 @@ import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.smev3.fields.*;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
-import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcess;
+import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
 import java.util.ArrayList;
@@ -22,11 +22,11 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.*;
 
-public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
-    private final Logger log = LoggerFactory.getLogger(RegisterRnvXmlBuildProcess.class);
+public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
+    private final Logger log = LoggerFactory.getLogger(RegisterRnvXmlBuildProcessor.class);
     private final ReusableElements rue = new ReusableElements();
 
-    public RegisterRnvXmlBuildProcess(RequestProcessor requestProcessor) {
+    public RegisterRnvXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
     }
 
@@ -961,7 +961,7 @@ public class RegisterRnvXmlBuildProcess extends AXmlBuildProcess {
         asXMLGregorianCalendar(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_REGISTRY_DATE)
                 .ifPresent(engineerType::setDCertificate);
         asString(rue.techPlanRecord, FieldsTechPlan.PROPERTY_CADASTRE_ENGINEER_FULL_NAME)
-                .map(RegisterRnvXmlBuildProcess::mapFio)
+                .map(RegisterRnvXmlBuildProcessor::mapFio)
                 .ifPresent(engineerType::setEngineerFIO);
 
         var docType = new DocType();

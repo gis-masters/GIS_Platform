@@ -10,11 +10,11 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
+import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
@@ -39,13 +39,14 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
-public abstract class AXmlBuildProcess {
+public abstract class AXmlBuildProcessor {
+
     protected final RequestProcessor requestProcessor;
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
     protected final Map<RecordData, IRecord> sourceRecordsMap = new HashMap<>();
     protected final Map<String, SmevAttachment> attachmentsMap = new HashMap<>();
 
-    public AXmlBuildProcess(RequestProcessor requestProcessor) {
+    public AXmlBuildProcessor(RequestProcessor requestProcessor) {
         this.requestProcessor = requestProcessor;
     }
 
@@ -126,7 +127,7 @@ public abstract class AXmlBuildProcess {
     protected List<IRecord> asFileRecord(IRecord record, String fieldName) {
         return asString(record, fieldName)
                 .flatMap(jsonString -> fromJson(jsonString, new TypeReference<List<FileDescription>>() {
-                        })
+                         })
                 )
                 .map(object -> (List<FileDescription>) object)
                 .map(fileDescriptions -> fileDescriptions

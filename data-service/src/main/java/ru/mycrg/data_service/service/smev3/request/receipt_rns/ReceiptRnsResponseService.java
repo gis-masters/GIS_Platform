@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rns;
 
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,10 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
 import ru.mycrg.data_service.service.smev3.DataEisZsService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
+import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
@@ -19,7 +18,6 @@ import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
-
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
@@ -30,6 +28,7 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class ReceiptRnsResponseService extends ResponseProcessor {
+
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsResponseService.class);
     private final DataEisZsService dataEisZsService;
 
@@ -62,7 +61,8 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
                             .setStatus(queryResult.getMessage().getResponseContent().getRejects().get(0).getCode())
-                            .setMessage(queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
+                            .setMessage(
+                                    queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
                 }
                 case STATUS: {
                     log.debug("message type is STATUS");
@@ -101,7 +101,7 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var process = new ReceiptRnsResponseXmlProcess();
+        var process = new ReceiptRnsResponseXmlProcessor();
 
         if (responseType.getResponseConstruction() != null) {
             var iRecord = process.processOne(responseType.getResponseConstruction());

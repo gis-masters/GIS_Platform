@@ -18,11 +18,26 @@ public class ReceiptRnvRequestDto implements ISmevRequestDto {
     private String permitNumber;
     private String docId;
     private Boolean sendToSmev = true;
-    //TODO временно
-    private String testBase64;
+    private String stubSmevResponse;
 
     public LocalDate getPermitDate() {
         return permitDate;
+    }
+
+    public LocalDate getPermitDateFrom() {
+        return permitDateFrom;
+    }
+
+    public LocalDate getPermitDateTo() {
+        return permitDateTo;
+    }
+
+    public String getPermitNumber() {
+        return permitNumber;
+    }
+
+    public String getDocId() {
+        return docId;
     }
 
     public ReceiptRnvRequestDto setPermitDate(LocalDate permitDate) {
@@ -30,17 +45,9 @@ public class ReceiptRnvRequestDto implements ISmevRequestDto {
         return this;
     }
 
-    public LocalDate getPermitDateFrom() {
-        return permitDateFrom;
-    }
-
     public ReceiptRnvRequestDto setPermitDateFrom(LocalDate permitDateFrom) {
         this.permitDateFrom = permitDateFrom;
         return this;
-    }
-
-    public LocalDate getPermitDateTo() {
-        return permitDateTo;
     }
 
     public ReceiptRnvRequestDto setPermitDateTo(LocalDate permitDateTo) {
@@ -48,17 +55,9 @@ public class ReceiptRnvRequestDto implements ISmevRequestDto {
         return this;
     }
 
-    public String getPermitNumber() {
-        return permitNumber;
-    }
-
     public ReceiptRnvRequestDto setPermitNumber(String permitNumber) {
         this.permitNumber = permitNumber;
         return this;
-    }
-
-    public String getDocId() {
-        return docId;
     }
 
     public ReceiptRnvRequestDto setDocId(String docId) {
@@ -66,17 +65,13 @@ public class ReceiptRnvRequestDto implements ISmevRequestDto {
         return this;
     }
 
-    public String getTestBase64() {
-        return testBase64;
-    }
-
-    public ReceiptRnvRequestDto setTestBase64(String testBase64) {
-        this.testBase64 = testBase64;
-        return this;
+    @Override
+    public Boolean isSendToSmev() {
+        return sendToSmev;
     }
 
     @Override
-    public Boolean sendToSmev() {
-        return sendToSmev;
+    public String getStubSmevResponse() {
+        return stubSmevResponse;
     }
 }

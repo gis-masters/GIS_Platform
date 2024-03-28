@@ -4,5 +4,4 @@ public class FieldsFiles {
     public static final String TABLE = "files";
     public static final String PROPERTY_ID = "id";
     public static final String PROPERTY_TITLE = "title";
-    public static final String PROPERTY_PATH = "path";
 }

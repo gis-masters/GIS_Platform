@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public abstract class RequestProcessor {
+
     private static final Logger log = LoggerFactory.getLogger(RequestProcessor.class);
     private static final SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
@@ -103,7 +104,7 @@ public abstract class RequestProcessor {
             var xmlMeta = buildRequest(dto);
 
             log.info("Request is valid. Try send to SMEV. Client ID: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, dto.sendToSmev(), mnemonic.getSystem());
+            messageService.sendMessage(xmlMeta, dto.isSendToSmev(), mnemonic.getSystem());
 
             return xmlMeta;
         } catch (Exception e) {
@@ -142,7 +143,9 @@ public abstract class RequestProcessor {
 
     private Schema loadSchema(String schemaPath) {
         try {
-            if (resourceLoader == null) return null;
+            if (resourceLoader == null) {
+                return null;
+            }
             var xmlUrl = resourceLoader.getResource("classpath:" + schemaPath).getURL();
             return schemaFactory.newSchema(xmlUrl);
         } catch (SAXException | IOException e) {

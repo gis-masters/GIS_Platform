@@ -5,11 +5,12 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
 import ru.mycrg.data_service.receipt_rns_1_0_9.Request;
+import ru.mycrg.data_service.receipt_rns_1_0_9.ResponseConstructionShortInfoType;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
-import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestXmlProcess;
-import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseXmlProcess;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestXmlProcessor;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseXmlProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
@@ -29,13 +30,13 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
 
-        var processor = new ReceiptRnsRequestService(smev3Config, null, null);
+        var processor = new ReceiptRnsRequestService(smev3Config, null, null, null);
 
         var dto = new ReceiptRnsRequestDto();
         dto.setConstPermitDateFrom(LocalDate.of(2022, 1, 1));
         dto.setConstPermitDateTo(LocalDate.of(2022, 1, 1));
 
-        var meta = new ReceiptRnsRequestXmlProcess(processor).run(dto);
+        var meta = new ReceiptRnsRequestXmlProcessor(processor).run(dto);
 
         // to xml
         var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
@@ -67,7 +68,7 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var content = new ReceiptRnsResponseXmlProcess()
+        var content = new ReceiptRnsResponseXmlProcessor()
                 .processOne(responseType.getResponseConstruction())
                 .getContent();
 
@@ -182,6 +183,22 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
     }
 
+    @Test
+    public void responseReject() throws Exception {
+        var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
+        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+
+        var smevMeta = queryResult.getSmevMetadata();
+        assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());
+        assertEquals("18434900-f30b-48ea-90e0-9e2ef3ae40b5", smevMeta.getTransactionCode());
+        assertEquals("809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e", smevMeta.getOriginalMessageID());
+        assertEquals("777002", smevMeta.getSender());
+        assertEquals("U629301", smevMeta.getRecipient());
+
+        var message = queryResult.getMessage();
+        assertEquals("RejectMessage", message.getMessageType());
+        assertEquals("RejectMessage", message.getMessageType());
+    }
 
     @Test
     public void responseConstructionList() throws Exception {
@@ -204,19 +221,102 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
     }
 
     @Test
-    public void responseReject() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
+    public void responseConstructionList_2() throws Exception {
+        var fileContent = readFile("receipt_rns_1_0_9/response_list_construction_2.xml");
         var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
 
-        var smevMeta = queryResult.getSmevMetadata();
-        assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());
-        assertEquals("18434900-f30b-48ea-90e0-9e2ef3ae40b5", smevMeta.getTransactionCode());
-        assertEquals("809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e", smevMeta.getOriginalMessageID());
-        assertEquals("777002", smevMeta.getSender());
-        assertEquals("U629301", smevMeta.getRecipient());
+        // messageType
+        var messageType = SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
+        assertEquals(SmevMessageType.PRIMARY, messageType);
 
-        var message = queryResult.getMessage();
-        assertEquals("RejectMessage", message.getMessageType());
-        assertEquals("RejectMessage", message.getMessageType());
+        var response = queryResult
+                .getMessage()
+                .getResponseContent()
+                .getContent()
+                .getMessagePrimaryContent()
+                .getResponse();
+
+        // все имеют ConstPermitNumber
+        var constPermitNumberExist = response.getResponseListConstruction()
+                .stream()
+                .map(ResponseConstructionShortInfoType::getVersionInfo)
+                .filter(constructionVersionInfoType -> constructionVersionInfoType.getConstPermitNumber() != null)
+                .count();
+
+        assertEquals(80, constPermitNumberExist);
+
+        var contentList = new ReceiptRnsResponseXmlProcessor()
+                .processList(response.getResponseListConstruction());
+
+        // size
+        assertEquals(80, contentList.size());
+
+        // ConstPermitID = 76416
+        var constPermitID = "76416";
+
+        var contentXml = response.getResponseListConstruction()
+                .stream()
+                .filter(responseConstructionShortInfoType -> responseConstructionShortInfoType.getVersionInfo().getConstPermitID().equals(constPermitID))
+                .findFirst()
+                .get()
+                .getVersionInfo();
+
+        var content = contentList
+                .stream()
+                .filter(iRecord -> iRecord.getContent().get(PROPERTY_CONST_PERMIT_ID).equals(constPermitID))
+                .findFirst()
+                .get()
+                .getContent();
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_ID));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_ID), contentXml.getConstPermitID());
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_DATE));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_DATE), XmlMapper.mapLocalDateTime(contentXml.getConstPermitDate()));
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_NUMBER));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_NUMBER), contentXml.getConstPermitNumber());
+
+        assertNotNull(content.get(PROPERTY_EXPIRE_DATE));
+        assertEquals(content.get(PROPERTY_EXPIRE_DATE), XmlMapper.mapLocalDateTime(contentXml.getExpireDate()));
+
+        // IssueOrgan
+        var issueOrgan = contentXml.getIssueOrgan();
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_ORGANIZATION_NAME));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_ORGANIZATION_NAME), issueOrgan.getOrganizationName());
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_OGRN));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_OGRN), issueOrgan.getOGRN());
+
+        assertNotNull(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_INN));
+        assertEquals(content.get(PROPERTY_CONST_PERMIT_ISSUE_ORGAN_INN), issueOrgan.getINN());
+
+        // RecipientInfo
+        var recipientInfo = contentXml.getRecipientInfo().getOrganizationInfo();
+
+        assertNotNull(content.get(PROPERTY_RECEPIENT_INFO_ORGANIZATION_NAME));
+        assertEquals(content.get(PROPERTY_RECEPIENT_INFO_ORGANIZATION_NAME), recipientInfo.getOrganizationName());
+
+        assertNotNull(content.get(PROPERTY_RECEPIENT_INFO_OGRN));
+        assertEquals(content.get(PROPERTY_RECEPIENT_INFO_OGRN), recipientInfo.getOGRN());
+
+        assertNotNull(content.get(PROPERTY_RECEPIENT_INFO_INN));
+        assertEquals(content.get(PROPERTY_RECEPIENT_INFO_INN), recipientInfo.getINN());
+
+        // ObjectShortInfo
+        var objectShortInfo = contentXml.getObjectShortInfo()
+                .stream()
+                .findFirst()
+                .get();
+
+        assertNotNull(content.get(PROPERTY_CONST_OBJECT_NAME));
+        assertEquals(content.get(PROPERTY_CONST_OBJECT_NAME), objectShortInfo.getObjectName());
+
+        assertNotNull(content.get(PROPERTY_CONST_OBJECT_ID));
+        assertEquals(content.get(PROPERTY_CONST_OBJECT_ID), objectShortInfo.getObjectID());
+
+        assertNotNull(content.get(PROPERTY_OBJECT_BUSINESS_ID));
+        assertEquals(content.get(PROPERTY_OBJECT_BUSINESS_ID), objectShortInfo.getObjectBusinessID());
     }
 }

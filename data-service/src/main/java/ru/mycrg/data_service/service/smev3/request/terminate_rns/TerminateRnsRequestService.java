@@ -33,21 +33,34 @@ import java.util.UUID;
         matchIfMissing = true)
 public class TerminateRnsRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(TerminateRnsRequestService.class);
+    private final TerminateRnsResponseService terminateRnsResponseService;
 
     public TerminateRnsRequestService(SmevMessageSenderService messageService,
                                       Smev3Config smev3Config,
                                       BaseDao baseDao,
                                       @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       ResourceLoader resourceLoader,
-                                      SmevOutgoingAttachmentService attachmentService) {
+                                      SmevOutgoingAttachmentService attachmentService,
+                                      TerminateRnsResponseService terminateRnsResponseService) {
         super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
+        this.terminateRnsResponseService = terminateRnsResponseService;
+    }
+
+    @Override
+    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        if (dto.isStubResponse()) {
+            terminateRnsResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
+            return null;
+        } else {
+            return super.sendRequest(dto);
+        }
     }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("build xml request " + dto);
 
-        var buildRequest = new TerminateRnsXmlBuildProcess(this).run((TerminateRnsRequestDto) dto);
+        var buildRequest = new TerminateRnsXmlBuildProcessor(this).run((TerminateRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

@@ -293,7 +293,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
-        var buildRequest = new GetCadastrialPlanXmlBuildProcess(this).run();
+        var buildRequest = new GetCadastrialPlanXmlBuildProcessor(this).run();
         var clientMessage = clientMessage(buildRequest.getRequest(),
                                           getCadastrialPlanDto.getArchiveFilename(),
                                           getCadastrialPlanDto.getClientId());

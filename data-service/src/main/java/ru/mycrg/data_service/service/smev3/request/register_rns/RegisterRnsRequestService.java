@@ -35,21 +35,34 @@ import java.util.stream.Collectors;
         matchIfMissing = true)
 public class RegisterRnsRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
+    private final RegisterRnsResponseService registerRnsResponseService;
 
     public RegisterRnsRequestService(Smev3Config smev3Config,
                                      BaseDao baseDao,
                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
                                      SmevMessageSenderService messageService,
-                                     SmevOutgoingAttachmentService attachmentService) {
+                                     SmevOutgoingAttachmentService attachmentService,
+                                     RegisterRnsResponseService registerRnsResponseService) {
         super(Mnemonic.REGISTER_RNS_1_0_10, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
+        this.registerRnsResponseService = registerRnsResponseService;
+    }
+
+    @Override
+    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        if (dto.isStubResponse()) {
+            registerRnsResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
+            return null;
+        } else {
+            return super.sendRequest(dto);
+        }
     }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("build xml request " + dto);
 
-        var buildRequest = new RegisterRnsXmlBuildProcess(this).run((RegisterRnsRequestDto) dto);
+        var buildRequest = new RegisterRnsXmlBuildProcessor(this).run((RegisterRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.service.import_.ImportType.EXCEL;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
 @Service
@@ -99,7 +100,7 @@ public class ExcelImporter implements Importer<List<ImportRecordReport>> {
         records.forEach(record -> {
             record.put("title", "test");
             record.put("content_type_id", "test content type");
-            record.put("path", "/root");
+            record.put(PATH.getName(), "/root");
             record.put("is_folder", false);
             record.put("created_at", new Date());
         });

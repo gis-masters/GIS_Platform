@@ -1,9 +1,10 @@
 package ru.mycrg.data_service.dto.smev3;
 
-public class TerminateRnsRequestDto implements ISmevRequestDto{
+public class TerminateRnsRequestDto implements ISmevRequestDto {
 
     private Long recId;
     private Boolean sendToSmev = true;
+    private String stubSmevResponse;
 
     public Long getRecId() {
         return recId;
@@ -14,12 +15,13 @@ public class TerminateRnsRequestDto implements ISmevRequestDto{
         return this;
     }
 
-    public Boolean sendToSmev() {
+    @Override
+    public Boolean isSendToSmev() {
         return sendToSmev;
     }
 
-    public TerminateRnsRequestDto setSendToSmev(Boolean sendToSmev) {
-        this.sendToSmev = sendToSmev;
-        return this;
+    @Override
+    public String getStubSmevResponse() {
+        return stubSmevResponse;
     }
 }

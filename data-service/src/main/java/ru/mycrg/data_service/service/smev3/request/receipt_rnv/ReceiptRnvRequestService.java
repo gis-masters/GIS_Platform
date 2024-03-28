@@ -29,19 +29,31 @@ import java.util.UUID;
         matchIfMissing = true)
 public class ReceiptRnvRequestService extends RequestProcessor {
     private final Logger log = LoggerFactory.getLogger(ReceiptRnvRequestService.class);
+    private final ReceiptRnvResponseService rnvResponseService;
 
     public ReceiptRnvRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
-                                    SmevMessageSenderService messageService) {
+                                    SmevMessageSenderService messageService,
+                                    ReceiptRnvResponseService rnvResponseService) {
         super(Mnemonic.RECEIPT_RNV_1_0_9, messageService, null, null, null, resourceLoader, smev3Config);
+        this.rnvResponseService = rnvResponseService;
     }
 
+    @Override
+    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        if (dto.isStubResponse()) {
+            rnvResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
+            return null;
+        } else {
+            return super.sendRequest(dto);
+        }
+    }
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("build xml request " + dto);
 
-        var buildRequest = new ReceiptRnvXmlBuildProcess(this).run((ReceiptRnvRequestDto) dto);
+        var buildRequest = new ReceiptRnvXmlBuildProcessor(this).run((ReceiptRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
         var meta = new XmlBuildMeta(
                 mnemonicEnum(),

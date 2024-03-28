@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
+
 @Service
 public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
 
@@ -80,10 +82,10 @@ public class FilePhysicalExistenceAnalyzer implements IResourceAnalyzer {
     }
 
     private ResourceAnalyzerResult analyzeRasterLayerForPhysicalExistence(IResource resource) {
-        boolean isExistOnMachine = true;
+        boolean isExistOnMachine;
 
         try {
-            File file = new File(resource.getResourceProperties().get("path").toString());
+            File file = new File(resource.getResourceProperties().get(PATH.getName()).toString());
             isExistOnMachine = file.exists();
             if (!file.exists()) {
                 log.warn("File doesn't exist on machine: {}", resource.getId());

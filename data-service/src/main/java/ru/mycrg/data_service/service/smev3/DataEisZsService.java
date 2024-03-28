@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.config.DaoProperties;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -36,33 +37,28 @@ public class DataEisZsService {
     }
 
     @Transactional
-    public void updateExists(String fieldName, IRecord record) {
-        log.debug("try to update 'dl_data_eis_zs' record: " + record);
+    public void updateExists(String fieldName, IRecord recordXml) {
+        log.debug("try to update 'dl_data_eis_zs' recordXml: " + recordXml);
+        loadSchema();
 
-        if (schema == null) {
-            schema = schemaService.getSchemaByName(FieldsEisZs.TABLE).orElseThrow();
-        }
-
-        findByPermitNumber(fieldName, record.getAsString(fieldName)).ifPresentOrElse(
-                iRecord -> {
+        findByPermitNumber(fieldName, recordXml.getAsString(fieldName)).ifPresentOrElse(
+                existsRecord -> {
                     try {
-                        record.getContent().put(FieldsEisZs.ID, iRecord.getId());
-                        var updateQualifier = new ResourceQualifier(
-                                SYSTEM_SCHEMA_NAME,
-                                FieldsEisZs.TABLE,
-                                iRecord.getId(),
-                                TABLE
+                        recordXml.getContent().put(DaoProperties.ID, existsRecord.getId());
+                        recordsDao.updateRecordById(
+                                new ResourceQualifier(qualifier, existsRecord.getId(), TABLE),
+                                recordXml.getContent(),
+                                schema
                         );
-                        recordsDao.updateRecordById(updateQualifier, record.getContent(), schema);
-                        log.info("record 'dl_data_eis_zs' updated: " + record);
+                        log.info("recordXml 'dl_data_eis_zs' updated: " + recordXml);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException("Не удалось обновить запись " + e.getMessage());
                     }
                 },
                 () -> {
                     try {
-                        recordsDao.addRecord(qualifier, record, schema);
-                        log.info("record 'dl_data_eis_zs' added: " + record);
+                        recordsDao.addRecord(qualifier, recordXml, schema);
+                        log.info("recordXml 'dl_data_eis_zs' added: " + recordXml);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException("Не удалось создать запись " + e.getMessage());
                     }
@@ -71,33 +67,37 @@ public class DataEisZsService {
     }
 
     @Transactional
-    public void addOrIgnoreRecords(String fieldName, List<IRecord> records) {
-        log.debug("try to add 'dl_data_eis_zs' records count: " + records.size());
+    public void addOrIgnoreRecords(String fieldName, List<IRecord> recordsXml) {
+        log.debug("try to add 'dl_data_eis_zs' recordsXml count: " + recordsXml.size());
+        loadSchema();
 
-        if (schema == null) {
-            schema = schemaService.getSchemaByName(FieldsEisZs.TABLE)
-                    .orElseThrow(() -> new SmevRequestException("Не удалось найти схему таблицы " + FieldsEisZs.TABLE));
-        }
-
-        records
+        recordsXml
                 .stream()
                 .filter(iRecord -> ifRecordNotExist(iRecord, fieldName))
                 .forEach(iRecord -> {
                     try {
                         recordsDao.addRecord(qualifier, iRecord, schema);
-                        log.info("record 'dl_data_eis_zs' added: " + iRecord);
+                        log.info("recordXml 'dl_data_eis_zs' added: " + iRecord);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException(e.getMessage());
                     }
                 });
     }
 
-    private boolean ifRecordNotExist(IRecord iRecord, String fieldName) {
-        return findByPermitNumber(fieldName, iRecord.getAsString(fieldName)).isEmpty();
+    private boolean ifRecordNotExist(IRecord record, String fieldName) {
+        return findByPermitNumber(fieldName, record.getAsString(fieldName)).isEmpty();
     }
 
     private Optional<IRecord> findByPermitNumber(String fieldName, String permitNumber) {
         var condition = String.format("%s = '%s'", fieldName, permitNumber);
         return recordsDao.findBy(qualifier, condition);
+    }
+
+    private void loadSchema() {
+        if (schema == null) {
+            schema = schemaService
+                    .getSchemaByName(qualifier.getTable())
+                    .orElseThrow(() -> new SmevRequestException("Не удалось найти схему таблицы " + qualifier.getTable()));
+        }
     }
 }

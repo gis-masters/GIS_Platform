@@ -6,7 +6,7 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.*;
-import ru.mycrg.data_service.service.smev3.request.AResponseXmlProcess;
+import ru.mycrg.data_service.service.smev3.request.AResponseXmlProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
-public class ReceiptRnvResponseXmlProcess extends AResponseXmlProcess {
+public class ReceiptRnvResponseXmlProcessor extends AResponseXmlProcessor {
 
     private static final String RNV_FOLDER = "/root/1";
     private static final String RNV_CONTENT_TYPE = "doc_rnv";
@@ -28,7 +29,7 @@ public class ReceiptRnvResponseXmlProcess extends AResponseXmlProcess {
             content = new HashMap<>();
 
             asString(RNV_FOLDER)
-                    .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PATH, s));
+                    .ifPresent(s -> content.put(PATH.getName(), s));
             asString(RNV_CONTENT_TYPE)
                     .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONTENT_TYPE_ID, s));
             asString(type.getPermitNumber())
@@ -100,7 +101,7 @@ public class ReceiptRnvResponseXmlProcess extends AResponseXmlProcess {
     // collection
     private void exploitationVersionInfoType(ExploitationVersionInfoType type) {
         asString(RNV_FOLDER)
-                .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_PATH, s));
+                .ifPresent(s -> content.put(PATH.getName(), s));
         asString(RNV_CONTENT_TYPE)
                 .ifPresent(s -> content.put(FieldsEisZs.PROPERTY_CONTENT_TYPE_ID, s));
         asString(type.getPermitNumber())
