@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.concurrent.DelegatingSecurityContextRunnable;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
@@ -20,6 +23,7 @@ import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
@@ -33,13 +37,11 @@ import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.mediator.Mediator;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -121,7 +123,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         this.recordsDao = recordsDao;
     }
 
-    public void processMessageFromSmev(OrderKptDto orderKptDto) throws IOException, StorageException, CrgDaoException {
+    public void processMessageFromSmev(OrderKptDto orderKptDto) {
         Map<String, String> clientIdToCadastrialNumber = new HashMap<>();
         orderKptDto.getOrder().forEach(cadastrialNumber -> {
             throwIfCadastrialNumberNotValid(cadastrialNumber);
@@ -129,6 +131,24 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         });
         throwIfCadasrialNumberArchiveNotExists(orderKptDto.getOrder());
         String joinedCadastrialNumbers = String.join(", ", orderKptDto.getOrder());
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
+            try {
+                processMessageFromSmev(clientIdToCadastrialNumber, joinedCadastrialNumbers);
+            } catch (Exception e) {
+                String msg = "Во время обработки запроса на получение КПТ произошла ошибка: " + e.getMessage();
+                log.error(msg);
+                throw new DataServiceException(msg);
+            }
+        }, securityContext);
+
+        new Thread(wrappedRunnable).start();
+    }
+
+    private void processMessageFromSmev(Map<String, String> clientIdToCadastrialNumber, String joinedCadastrialNumbers)
+            throws JsonProcessingException, CrgDaoException {
+
         IRecord task = createTask(joinedCadastrialNumbers);
         IRecord folder = createFolder(joinedCadastrialNumbers, task);
         linkFolderToTask(folder, task);
@@ -170,6 +190,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 }
             }
         });
+
     }
 
     private IRecord createTask(String description) {
@@ -322,18 +343,23 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         }
     }
 
-    private void throwIfCadasrialNumberArchiveNotExists(List<String> cadastrialNumbers)
-            throws StorageException, IOException {
+    private void throwIfCadasrialNumberArchiveNotExists(List<String> cadastrialNumbers) {
         List<String> archiveFileNames = cadastrialNumbers.stream()
-                                                         .map(this::convertCadastrialNumberToArchiveFileName)
-                                                         .collect(Collectors.toList());
+                .map(this::convertCadastrialNumberToArchiveFileName)
+                .collect(Collectors.toList());
 
-        List<String> nonExistentArchives = fileStorageService.getNonExistentFileNames(archiveFileNames);
+        List<String> nonExistentArchives;
+        try {
+            nonExistentArchives = fileStorageService.getNonExistentFileNames(archiveFileNames);
+        } catch (Exception e) {
+            log.error("Во время проверки наличия на диске архивов КПТ произошла ошибка: {}", e.getMessage());
+            throw new DataServiceException(e.getMessage());
+        }
 
         if (!nonExistentArchives.isEmpty()) {
             List<String> nonExistentCadasrialNumbers = nonExistentArchives.stream()
-                                                                          .map(this::convertArchiveFileNameToCadastrialNumber)
-                                                                          .collect(Collectors.toList());
+                    .map(this::convertArchiveFileNameToCadastrialNumber)
+                    .collect(Collectors.toList());
             throw new BadRequestException("В папке КПТ отсутствуют архивы по следующим кадастровым номерам: "
                                                   + nonExistentCadasrialNumbers);
         }
@@ -345,6 +371,6 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
     private String convertArchiveFileNameToCadastrialNumber(String archiveFileName) {
         return archiveFileName.replaceAll("Request_(.*?)\\.zip", "$1")
-                              .replace("_", ":");
+                .replace("_", ":");
     }
 }

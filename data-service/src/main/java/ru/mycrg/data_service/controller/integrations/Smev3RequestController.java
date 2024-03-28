@@ -4,7 +4,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.smev3.*;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
@@ -16,9 +15,7 @@ import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRespons
 import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
-import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 
-import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -76,8 +73,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/egrn")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) throws IOException, CrgDaoException,
-            StorageException {
+    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) {
         getCadastrialPlanRequestService.processMessageFromSmev(body);
 
         return ResponseEntity.ok().build();
