@@ -114,11 +114,11 @@ export class OrganizationSettings {
 
   @computed
   get SEDDialog(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.sedDialog, this.orgSettings?.organization?.sedDialog);
+    return this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog;
   }
 
   private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {
-    const setting = systemSetting ? orgSetting : systemSetting;
+    const setting = systemSetting && orgSetting;
 
     return Boolean(currentUser.isAdmin || setting);
   }
