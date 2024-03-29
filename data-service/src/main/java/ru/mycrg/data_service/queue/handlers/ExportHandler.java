@@ -30,7 +30,7 @@ public class ExportHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ExportResponseEvent";
+        return ExportResponseEvent.class.getSimpleName();
     }
 
     @Override

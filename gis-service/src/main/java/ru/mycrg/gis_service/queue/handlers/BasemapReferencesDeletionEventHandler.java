@@ -26,7 +26,7 @@ public class BasemapReferencesDeletionEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "BasemapReferencesDeletionEvent";
+        return BasemapReferencesDeletionEvent.class.getSimpleName();
     }
 
     @Override

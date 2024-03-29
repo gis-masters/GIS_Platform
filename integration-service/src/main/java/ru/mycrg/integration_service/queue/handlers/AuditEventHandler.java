@@ -36,7 +36,7 @@ public class AuditEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "CrgAuditEvent";
+        return CrgAuditEvent.class.getSimpleName();
     }
 
     @Override

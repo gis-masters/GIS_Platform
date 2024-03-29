@@ -39,7 +39,7 @@ public class GisogdRfEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ResponseFromGisogdRfEvent";
+        return ResponseFromGisogdRfEvent.class.getSimpleName();
     }
 
     @Override

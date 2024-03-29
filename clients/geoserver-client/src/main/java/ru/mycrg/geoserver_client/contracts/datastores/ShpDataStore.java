@@ -1,5 +1,7 @@
 package ru.mycrg.geoserver_client.contracts.datastores;
 
+import ru.mycrg.geoserver_client.contracts.datastores.base.BaseParameterizedDataStore;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,17 +26,5 @@ public class ShpDataStore extends BaseParameterizedDataStore<Map<String, Object>
         connectionParameters.put("memory mapped buffer", false);
         connectionParameters.put("cache and reuse memory maps", true);
         connectionParameters.put("url", "file://" + pathToFile);
-    }
-
-    public ShpDataStore(String name, Map<String, Object> connectionParameters) {
-        super(name, connectionParameters);
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "\"connectionParameters\":" + (connectionParameters == null ? "null" : connectionParameters) + ", " +
-                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") +
-                "}";
     }
 }

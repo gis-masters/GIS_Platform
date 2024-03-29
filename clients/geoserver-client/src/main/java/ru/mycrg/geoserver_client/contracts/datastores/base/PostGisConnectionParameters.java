@@ -1,4 +1,4 @@
-package ru.mycrg.geoserver_client.contracts.datastores;
+package ru.mycrg.geoserver_client.contracts.datastores.base;
 
 public class PostGisConnectionParameters {
 

@@ -38,7 +38,7 @@ public class UserCreatedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "UserCreatedEvent";
+        return UserCreatedEvent.class.getSimpleName();
     }
 
     @Override

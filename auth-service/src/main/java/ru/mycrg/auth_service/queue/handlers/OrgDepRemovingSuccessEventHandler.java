@@ -24,7 +24,7 @@ public class OrgDepRemovingSuccessEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrganizationDependencyRemovingSucceededEvent";
+        return OrganizationDependencyRemovingSucceededEvent.class.getSimpleName();
     }
 
     @Override

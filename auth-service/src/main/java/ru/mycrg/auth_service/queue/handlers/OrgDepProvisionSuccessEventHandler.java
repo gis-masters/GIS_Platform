@@ -33,7 +33,7 @@ public class OrgDepProvisionSuccessEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrganizationDependencyProvisionSucceededEvent";
+        return OrganizationDependencyProvisionSucceededEvent.class.getSimpleName();
     }
 
     @Override

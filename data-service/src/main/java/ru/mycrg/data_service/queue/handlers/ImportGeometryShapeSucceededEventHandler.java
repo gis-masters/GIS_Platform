@@ -42,7 +42,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ShapeImportedSucceededEvent";
+        return ShapeImportedSucceededEvent.class.getSimpleName();
     }
 
     @Override

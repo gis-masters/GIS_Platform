@@ -24,7 +24,7 @@ public class UserProvisioningFailedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "UserProvisioningFailedEvent";
+        return UserProvisioningFailedEvent.class.getSimpleName();
     }
 
     @Override

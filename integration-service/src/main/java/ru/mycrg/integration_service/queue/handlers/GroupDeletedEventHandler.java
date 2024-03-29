@@ -27,7 +27,7 @@ public class GroupDeletedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "UserGroupDeletedEvent";
+        return UserGroupDeletedEvent.class.getSimpleName();
     }
 
     @Override

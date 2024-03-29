@@ -24,7 +24,7 @@ public class UserProvisioningSucceedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "UserProvisioningSucceedEvent";
+        return UserProvisioningSucceedEvent.class.getSimpleName();
     }
 
     @Override

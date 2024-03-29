@@ -26,7 +26,7 @@ public class FileDeletedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "FileDeletedEvent";
+        return FileDeletedEvent.class.getSimpleName();
     }
 
     @Override

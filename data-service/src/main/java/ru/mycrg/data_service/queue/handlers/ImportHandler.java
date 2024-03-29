@@ -33,7 +33,7 @@ public class ImportHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ImportResponseEvent";
+        return ImportResponseEvent.class.getSimpleName();
     }
 
     @Override

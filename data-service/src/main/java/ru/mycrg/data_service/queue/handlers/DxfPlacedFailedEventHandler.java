@@ -36,7 +36,7 @@ public class DxfPlacedFailedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "DxfPlacedFailedEvent";
+        return DxfPlacedFailedEvent.class.getSimpleName();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class ShpPlacedFailedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ShpPlacedFailedEvent";
+        return ShpPlacedFailedEvent.class.getSimpleName();
     }
 
     @Override

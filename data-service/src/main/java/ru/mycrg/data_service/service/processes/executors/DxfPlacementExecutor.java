@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
@@ -48,6 +49,8 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
     private final Logger log = LoggerFactory.getLogger(DxfPlacementExecutor.class);
 
+    private final String DEFAULT_DXF_STYLE = "dxf_style";
+
     private final FileRepository fileRepository;
     private final IMessageBusProducer messageBus;
     private final FileStorageService fileStorageService;
@@ -72,6 +75,7 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
     }
 
     @Override
+    @Transactional
     public ImportReport execute() {
         log.debug("Начало публикации DXF: {}", this.payload);
 
@@ -102,12 +106,12 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                                  frQualifier.getRecordId(),
                                                  stripFilenameExtension(file.getTitle()),
                                                  getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                 join(getDefaultStoreName("dfx"), featureName),
+                                                 join(getDefaultStoreName(getFileType().name().toLowerCase()), featureName),
                                                  featureName,
                                                  resultFilePath,
                                                  payload.getCrs(),
                                                  "dxf_schema_v1",
-                                                 "dxf_style"));
+                                                 DEFAULT_DXF_STYLE));
 
         return importReport;
     }

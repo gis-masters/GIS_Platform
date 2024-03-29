@@ -30,7 +30,7 @@ public class ValidationHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ValidationResponseEvent";
+        return ValidationResponseEvent.class.getSimpleName();
     }
 
     @Override

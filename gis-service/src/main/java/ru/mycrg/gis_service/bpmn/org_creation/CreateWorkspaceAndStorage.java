@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import ru.mycrg.geoserver_client.contracts.datastores.PostGisConnectionParameters;
+import ru.mycrg.geoserver_client.contracts.datastores.base.PostGisConnectionParameters;
 import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;

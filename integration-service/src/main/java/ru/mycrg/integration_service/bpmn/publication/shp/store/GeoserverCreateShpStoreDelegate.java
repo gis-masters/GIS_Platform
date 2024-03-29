@@ -35,10 +35,9 @@ public class GeoserverCreateShpStoreDelegate implements JavaDelegate {
                 log.debug("Successfully created SHP store with params: [{}]", dto);
 
                 execution.setVariable(IS_CREATED_VAR_NAME, true);
-                execution.setVariable("CreateFeatureDto",
-                                      new CreateFeatureDto(event.getFeatureName(),
-                                                           dto.getWorkspaceName(),
-                                                           dto.getStoreName()));
+                execution.setVariable("CreateFeatureDto", new CreateFeatureDto(event.getFeatureName(),
+                                                                               dto.getWorkspaceName(),
+                                                                               dto.getStoreName()));
             } else {
                 String body = (String) response.getBody();
                 if (body.contains("already exists")) {

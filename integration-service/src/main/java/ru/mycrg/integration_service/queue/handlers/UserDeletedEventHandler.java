@@ -26,7 +26,7 @@ public class UserDeletedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "UserDeletedEvent";
+        return UserDeletedEvent.class.getSimpleName();
     }
 
     @Override

@@ -35,7 +35,7 @@ public class CreateOrganizationHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrganizationInitializedEvent";
+        return OrganizationInitializedEvent.class.getSimpleName();
     }
 
     @Override

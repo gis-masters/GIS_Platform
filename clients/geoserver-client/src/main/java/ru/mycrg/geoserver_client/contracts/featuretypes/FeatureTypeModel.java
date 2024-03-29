@@ -5,8 +5,7 @@ public class FeatureTypeModel {
     private final String name;
     private final String nativeName;
     private final boolean enabled;
-
-    private String srs;
+    private final String srs;
 
     public FeatureTypeModel(String name, String nativeName, String srs) {
         this(name, nativeName, true, srs);

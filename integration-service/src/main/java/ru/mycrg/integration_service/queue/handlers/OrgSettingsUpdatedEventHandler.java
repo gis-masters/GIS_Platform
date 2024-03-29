@@ -14,7 +14,7 @@ public class OrgSettingsUpdatedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrgSettingsUpdatedEvent";
+        return OrgSettingsUpdatedEvent.class.getSimpleName();
     }
 
     @Override

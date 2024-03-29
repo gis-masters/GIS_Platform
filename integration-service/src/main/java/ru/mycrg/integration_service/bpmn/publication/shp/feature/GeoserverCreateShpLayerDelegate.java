@@ -34,13 +34,16 @@ public class GeoserverCreateShpLayerDelegate implements JavaDelegate {
 
             log.debug("Create feature based on SHP file: [{}]", filename);
 
-            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(), filename, crs);
+            FeatureTypeModel featureType = new FeatureTypeModel(dto.getFeatureName(),
+                                                                filename,
+                                                                crs);
             DxfLayer shpLayer = new DxfLayer(event.getProjectId(),
                                              event.getFeatureName(),
                                              event.getLayerTitle(),
                                              crs,
                                              event.getLibraryId(),
                                              event.getRecordId(),
+                                             "schema_shp",
                                              event.getStyleName(),
                                              event.getWorkspaceName());
 

@@ -39,6 +39,8 @@ public class GisCreateShpLayerDelegate implements JavaDelegate {
         try {
             String token = (String) execution.getVariable(TOKEN_VAR_NAME);
             DxfLayer dto = (DxfLayer) execution.getVariable("DxfLayer");
+            dto.setType("shp");
+
             CreateGeoserverStoreDto storeDto =
                     (CreateGeoserverStoreDto) execution.getVariable("CreateGeoserverStoreDto");
             dto.setDataStoreName(storeDto.getStoreName());

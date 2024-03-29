@@ -23,7 +23,7 @@ public class LayerReferencesDeletionEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "LayerReferencesDeletionEvent";
+        return LayerReferencesDeletionEvent.class.getSimpleName();
     }
 
     @Override

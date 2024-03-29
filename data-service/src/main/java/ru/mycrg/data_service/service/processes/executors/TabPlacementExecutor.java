@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.processes.executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.WsMessageDto;
@@ -24,7 +25,6 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.PlaceTabFileEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.HashMap;
 import java.util.UUID;
 
 import static org.springframework.util.StringUtils.stripFilenameExtension;
@@ -63,6 +63,7 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
     }
 
     @Override
+    @Transactional
     public ImportReport execute() {
         log.debug("Начало публикации Tab: {}", this.payload);
 
@@ -83,20 +84,21 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                   file.getId().toString(),
                                   extractCrsNumber(payload.getCrs()).toString());
 
-        messageBus.produce(new PlaceTabFileEvent(authenticationFacade.getAccessToken(),
-                                                 this.processModel,
-                                                 this.wsMsgId,
-                                                 this.payload.getWsUiId(),
-                                                 payload.getProjectId(),
-                                                 frQualifier.getTable(),
-                                                 frQualifier.getRecordId(),
-                                                 stripFilenameExtension(file.getTitle()),
-                                                 getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
-                                                 join(getDefaultStoreName("tab"), featureName),
-                                                 featureName,
-                                                 file.getPath(),
-                                                 payload.getCrs(),
-                                                 DEFAULT_TAB_STYLE));
+        messageBus.produce(
+                new PlaceTabFileEvent(authenticationFacade.getAccessToken(),
+                                      this.processModel,
+                                      this.wsMsgId,
+                                      this.payload.getWsUiId(),
+                                      payload.getProjectId(),
+                                      frQualifier.getTable(),
+                                      frQualifier.getRecordId(),
+                                      stripFilenameExtension(file.getTitle()),
+                                      getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
+                                      join(getDefaultStoreName(getFileType().name().toLowerCase()), featureName),
+                                      featureName,
+                                      file.getPath(),
+                                      payload.getCrs(),
+                                      DEFAULT_TAB_STYLE));
 
         return importReport;
     }
@@ -118,15 +120,9 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         this.wsMsgId = UUID.randomUUID();
 
         try {
-            HashMap<?, ?> parsed = mapper.convertValue(data, HashMap.class);
-
-            this.payload = new FilePlacementPayloadModel();
-            this.payload.setWsUiId(String.valueOf(parsed.get("wsUiId")));
-            this.payload.setProjectId(Long.valueOf(parsed.get("projectId").toString()));
-            this.payload.setFileId(UUID.fromString(parsed.get("fileId").toString()));
-            this.payload.setCrs(parsed.get("crs").toString());
+            this.payload = mapper.convertValue(data, FilePlacementPayloadModel.class);
         } catch (Exception e) {
-            String msg = String.format("Задана некорректная модель Shape импорта: %s", data);
+            String msg = String.format("Задана некорректная модель TAB импорта: %s", data);
             log.error(msg, e.getCause());
 
             throw new BadRequestException(msg);

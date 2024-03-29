@@ -1,4 +1,4 @@
-package ru.mycrg.geoserver_client.contracts.datastores;
+package ru.mycrg.geoserver_client.contracts.datastores.base;
 
 public class BaseParameterizedDataStore<T> extends BaseDataStore {
 
@@ -16,5 +16,13 @@ public class BaseParameterizedDataStore<T> extends BaseDataStore {
 
     public void setConnectionParameters(T connectionParameters) {
         this.connectionParameters = connectionParameters;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"connectionParameters\":" + (connectionParameters == null ? "null" : connectionParameters) + ", " +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") +
+                "}";
     }
 }

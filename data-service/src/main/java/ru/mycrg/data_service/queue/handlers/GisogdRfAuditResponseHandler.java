@@ -34,7 +34,7 @@ public class GisogdRfAuditResponseHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "AuditResponseGisogdRfEvent";
+        return AuditResponseGisogdRfEvent.class.getSimpleName();
     }
 
     @Override

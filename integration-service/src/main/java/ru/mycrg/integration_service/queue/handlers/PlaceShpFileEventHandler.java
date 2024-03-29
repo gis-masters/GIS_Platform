@@ -34,12 +34,12 @@ public class PlaceShpFileEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "PlaceShapeFileEvent";
+        return PlaceShapeFileEvent.class.getSimpleName();
     }
 
     @Override
     public void handle(IMessageBusEvent event) {
-        log.debug("Init 'PlaceShapeFileEvent': {}", event.toString());
+        log.debug("Init 'PlaceShapeFileEvent'");
 
         PlaceShapeFileEvent placeShpEvent = null;
         try {

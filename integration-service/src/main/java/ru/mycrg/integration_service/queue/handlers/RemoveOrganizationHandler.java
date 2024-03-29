@@ -35,7 +35,7 @@ public class RemoveOrganizationHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "OrganizationRemovedEvent";
+        return OrganizationRemovedEvent.class.getSimpleName();
     }
 
     @Override

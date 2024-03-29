@@ -25,7 +25,7 @@ public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
 
     @Override
     public String getEventType() {
-        return "ShapeImportedFailedEvent";
+        return ShapeImportedFailedEvent.class.getSimpleName();
     }
 
     @Override
