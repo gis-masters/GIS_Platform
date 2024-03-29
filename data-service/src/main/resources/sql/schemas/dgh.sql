@@ -1,5 +1,75 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'garbage_border',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_border');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'garbage_buildings',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_buildings');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'garbage_respons_poly',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_respons_poly');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gratuitous',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gratuitous');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'lease',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'lease');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'lease_buffer',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'lease_buffer');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'municipal',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'municipal');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'red_lines_2019',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'red_lines_2019');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'responsible',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'responsible');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zu_buffer',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_buffer');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zu2',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu2');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'garbage_containers',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_containers');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'garbage_responsible',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_responsible');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'streets_cleaning',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'streets_cleaning');
+
+UPDATE data.schemas  
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -35,10 +105,10 @@ SELECT 'garbage_border',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_border');
+WHERE name = 'garbage_border';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'garbage_buildings',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "garbage_buildings",
     "tags": [
@@ -86,10 +156,10 @@ SELECT 'garbage_buildings',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_buildings');
+WHERE name = 'garbage_buildings';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'garbage_respons_poly',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "garbage_respons_poly",
     "tags": [
@@ -274,10 +344,10 @@ SELECT 'garbage_respons_poly',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_respons_poly');
+WHERE name = 'garbage_respons_poly';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'gratuitous',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "gratuitous",
     "tags": [
@@ -653,10 +723,10 @@ SELECT 'gratuitous',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gratuitous');
+WHERE name = 'gratuitous';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'lease',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "lease",
     "tags": [
@@ -1032,10 +1102,10 @@ SELECT 'lease',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'lease');
+WHERE name = 'lease';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'lease_buffer',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "lease_buffer",
     "tags": [
@@ -1376,10 +1446,10 @@ SELECT 'lease_buffer',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'lease_buffer');
+WHERE name = 'lease_buffer';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'municipal',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "municipal",
     "tags": [
@@ -1755,10 +1825,10 @@ SELECT 'municipal',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'municipal');
+WHERE name = 'municipal';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'red_lines_2019',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "red_lines_2019",
     "tags": [
@@ -1793,10 +1863,10 @@ SELECT 'red_lines_2019',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'red_lines_2019');
+WHERE name = 'red_lines_2019';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'responsible',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "responsible",
     "tags": [
@@ -1863,10 +1933,10 @@ SELECT 'responsible',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'responsible');
+WHERE name = 'responsible';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zu_buffer',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "zu_buffer",
     "tags": [
@@ -2207,10 +2277,10 @@ SELECT 'zu_buffer',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_buffer');
+WHERE name = 'zu_buffer';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zu2',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "zu2",
     "tags": [
@@ -2582,10 +2652,10 @@ SELECT 'zu2',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu2');
+WHERE name = 'zu2';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'garbage_containers',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "garbage_containers",
     "tags": [
@@ -2714,10 +2784,10 @@ SELECT 'garbage_containers',
     ],
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_containers');
+WHERE name = 'garbage_containers';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'garbage_responsible',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "garbage_responsible",
     "tags": [
@@ -2923,10 +2993,10 @@ SELECT 'garbage_responsible',
     ],
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_responsible');
+WHERE name = 'garbage_responsible';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'streets_cleaning',
+UPDATE data.schemas  
+SET class_rule =
     '{
     "styleName": "streets_cleaning",
     "tags": [
@@ -3000,4 +3070,4 @@ SELECT 'streets_cleaning',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'streets_cleaning');
+WHERE name = 'streets_cleaning';

@@ -1,5 +1,107 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'building',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'building');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'buildings_construction_electro',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_construction_electro');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'buildings_mis_desc',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_mis_desc');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'buildings_new',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_new');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'buildings_valuation',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_valuation');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'buildings_valuation_new',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_valuation_new');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_archive',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_archive');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_general',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_general');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_krymtel',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_krymtel');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zouit',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zu_new_k',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_new_k');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_2_surveys_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_2_surveys_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_court_cases',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_court_cases');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_documents',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_documents');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_law_doc_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_law_doc_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_limits_balaklava_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_limits_balaklava_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_result',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_result');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_dtp',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_dtp');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_flats',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_flats');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_initial',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_initial');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_flats',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_flats');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_owners_balaklava_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners_balaklava_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_oks_property_yugip_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_oks_property_yugip_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_flats_balaklava_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_flats_balaklava_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_rentobject',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_rentobject');
+
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -53,10 +155,10 @@ SELECT 'building',
     "description": "Здания",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'building');
+WHERE name = 'building';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'buildings_construction_electro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "buildings_construction_electro",
     "tags": [
@@ -205,10 +307,10 @@ SELECT 'buildings_construction_electro',
     "description": "Здания и сооружения",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_construction_electro');
+WHERE name = 'buildings_construction_electro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'buildings_mis_desc',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "buildings_mis_desc",
     "tags": [
@@ -246,10 +348,10 @@ SELECT 'buildings_mis_desc',
     "description": "Здания и сооружения",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_mis_desc');
+WHERE name = 'buildings_mis_desc';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'buildings_new',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -437,10 +539,10 @@ SELECT 'buildings_new',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_new');
+WHERE name = 'buildings_new';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'buildings_valuation',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -774,10 +876,10 @@ SELECT 'buildings_valuation',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_valuation');
+WHERE name = 'buildings_valuation';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'buildings_valuation_new',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1122,10 +1224,10 @@ SELECT 'buildings_valuation_new',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'buildings_valuation_new');
+WHERE name = 'buildings_valuation_new';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_archive',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_archive",
     "tags": [
@@ -1273,10 +1375,10 @@ SELECT 'oks_archive',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_archive');
+WHERE name = 'oks_archive';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_general',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_general",
     "tags": [
@@ -1463,10 +1565,10 @@ SELECT 'oks_general',
     "description": "Объекты капитального строительства",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_general');
+WHERE name = 'oks_general';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_krymtel',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_krymtel",
     "tags": [
@@ -1637,10 +1739,10 @@ SELECT 'oks_krymtel',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_krymtel');
+WHERE name = 'oks_krymtel';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zouit',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zouit",
     "tags": [
@@ -1690,10 +1792,10 @@ SELECT 'zouit',
     "description": "ЗОУИТ",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit');
+WHERE name = 'zouit';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zu_new_k',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1803,10 +1905,10 @@ SELECT 'zu_new_k',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_new_k');
+WHERE name = 'zu_new_k';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_2_surveys_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -2512,10 +2614,10 @@ SELECT 'dl_data_2_surveys_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_2_surveys_schema');
+WHERE name = 'dl_data_2_surveys_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_court_cases',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -2946,10 +3048,10 @@ SELECT 'dl_data_court_cases',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_court_cases');
+WHERE name = 'dl_data_court_cases';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_documents',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -3439,10 +3541,10 @@ SELECT 'dl_data_documents',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_documents');
+WHERE name = 'dl_data_documents';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_law_doc_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -3665,11 +3767,11 @@ SELECT 'dl_data_law_doc_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_law_doc_schema');
+WHERE name = 'dl_data_law_doc_schema';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_limits_balaklava_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -3940,10 +4042,10 @@ SELECT 'dl_data_limits_balaklava_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_limits_balaklava_schema');
+WHERE name = 'dl_data_limits_balaklava_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_result',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -4269,10 +4371,10 @@ SELECT 'dl_data_result',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_result');
+WHERE name = 'dl_data_result';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_dtp',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -4587,10 +4689,10 @@ SELECT 'dl_dtp',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_dtp');
+WHERE name = 'dl_dtp';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_flats',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -4995,10 +5097,10 @@ SELECT 'dl_flats',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_flats');
+WHERE name = 'dl_flats';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_initial',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -5257,10 +5359,10 @@ SELECT 'dl_initial',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_initial');
+WHERE name = 'dl_initial';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_flats',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -5628,12 +5730,12 @@ SELECT 'dl_data_flats',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_flats');
+WHERE name = 'dl_data_flats';
 
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_owners_balaklava_schema',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -5924,10 +6026,10 @@ SELECT 'dl_data_owners_balaklava_schema',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners_balaklava_schema');
+WHERE name = 'dl_data_owners_balaklava_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_oks_property_yugip_schema',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -6124,10 +6226,10 @@ SELECT 'dl_data_oks_property_yugip_schema',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_oks_property_yugip_schema');
+WHERE name = 'dl_data_oks_property_yugip_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_flats_balaklava_schema',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -6429,10 +6531,10 @@ SELECT 'dl_data_flats_balaklava_schema',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_flats_balaklava_schema');
+WHERE name = 'dl_data_flats_balaklava_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_rentobject',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -6759,4 +6861,4 @@ SELECT 'dl_rentobject',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_rentobject');
+WHERE name = 'dl_rentobject';

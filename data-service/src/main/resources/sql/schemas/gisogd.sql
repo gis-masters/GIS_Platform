@@ -1,5 +1,459 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_section2',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section2');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section4',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section4');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section6',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section6');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section8_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section8_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'documents',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'documents');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'easement',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'easement');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'editing',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'editing');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'element_planning_structure',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'element_planning_structure');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'eng_survey',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'eng_survey');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'feedback',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'feedback');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'formed_land',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'formed_land');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'frames',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'frames');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'funzone',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'funzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'garbage_areas',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_areas');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gpzu',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gpzu');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hanging_objects',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hanging_objects');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'indent_line',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'indent_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'inspection_result',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'inspection_result');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'inspection_territory',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'inspection_territory');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'investmentzone_point',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'investmentzone_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'leasechange',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'leasechange');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'limitpamdev',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'limitpamdev');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_building',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_building');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_building_polyline',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_building_polyline');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_constructions',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_constructions_polyline',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions_polyline');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_polyline',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_polyline');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_unfinished',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_unfinished');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_unfinished_polyline',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_unfinished_polyline');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'parcels_coordination',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'parcels_coordination');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'planned_territory_inspection',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'planned_territory_inspection');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'projects',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'projects');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'public_territory_borders',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'public_territory_borders');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'pzz',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'pzz');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'red_line',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'red_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'roads_facilities',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'soils',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'soils');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'srzu_approv',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'srzu_approv');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'swamps_soils',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'swamps_soils');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzone',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzonealushta',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonealushta');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzoneeast',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneeast');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzoneevpator',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneevpator');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzonesaki',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesaki');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzonesimf',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesimf');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzonesimfgor',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesimfgor');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzonesudak',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesudak');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terzoneyalta',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneyalta');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'trading_point',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'trading_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'unaut_constr_not',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'unaut_constr_not');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'undeveloped_lease',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'undeveloped_lease');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'unsched_inspection',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'unsched_inspection');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'urbcondissuance',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'urbcondissuance');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'urbregextr',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'urbregextr');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone_a',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_a');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone_b',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_b');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone_c',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_c');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone_d',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_d');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone500',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone500');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zouit',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zouit_7mo',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit_7mo');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'data_oks_purpose',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'data_oks_purpose');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_artland',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_artland');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_citizen',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_citizen');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_contracts_buyout_schema',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_contracts_buyout_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_customer',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_customer');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_escalators',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_escalators');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu_info_p2_3',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_3');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu_info_p2_4',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_4');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu_info_p2_5',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_5');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu_info_p4_1',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p4_1');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gpzu_info_p6',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p6');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_inbox_data',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_inbox_data');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_lifts',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_lifts');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_rsoks',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rsoks');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_rsoks_part',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rsoks_part');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_rveoks',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rveoks');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_rveoks_part',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rveoks_part');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section11',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section11');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section12',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section12');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section15',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section15');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section16',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section16');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section3',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section3');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section5',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section5');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section7',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section7');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section9',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section9');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_supplier',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_supplier');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_tech_plan',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_tech_plan');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_terzone',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_terzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_town_planning_regulations',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_town_planning_regulations');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_udrizs',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_udrizs');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_uge',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_uge');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_uszizs',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_uszizs');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_wheelchair_lifts',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_wheelchair_lifts');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_work_type',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_work_type');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'territory',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'territory');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'users_after_trigger',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'users_after_trigger');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_organization',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_organization');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_permitted_land_use_types',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_permitted_land_use_types');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_permitted_use_parameters',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_permitted_use_parameters');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_planning_indicators',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_planning_indicators');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_project_developer',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_project_developer');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section10', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section10');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section11', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section11');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section13', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section13');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section14', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section14');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section17', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section17');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section18', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section18');
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'dl_data_section19_schema', 
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section19_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section1',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section1');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'smev_message_meta_schema',
+ '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'smev_message_meta_schema');
+
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -666,10 +1120,10 @@ SELECT 'dl_data_section2',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section2');
+WHERE name = 'dl_data_section2';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section4',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1583,10 +2037,10 @@ SELECT 'dl_data_section4',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section4');
+WHERE name = 'dl_data_section4';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section6',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -2053,10 +2507,10 @@ SELECT 'dl_data_section6',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section6');
+WHERE name = 'dl_data_section6';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section8_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -3598,10 +4052,10 @@ SELECT 'dl_data_section8_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section8_schema');
+WHERE name = 'dl_data_section8_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'documents',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "documents",
     "tags": [
@@ -3764,10 +4218,10 @@ SELECT 'documents',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'documents');
+WHERE name = 'documents';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'easement',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -4050,10 +4504,10 @@ SELECT 'easement',
     "description": "Сервитут, публичный сервитут",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'easement');
+WHERE name = 'easement';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'editing',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "editing",
     "tags": [
@@ -4152,10 +4606,10 @@ SELECT 'editing',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'editing');
+WHERE name = 'editing';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'element_planning_structure',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -4369,10 +4823,10 @@ SELECT 'element_planning_structure',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'element_planning_structure');
+WHERE name = 'element_planning_structure';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'eng_survey',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "eng_survey",
     "tags": [
@@ -4836,10 +5290,10 @@ SELECT 'eng_survey',
   "description": "Материалы инженерных изысканий",
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'eng_survey');
+WHERE name = 'eng_survey';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'feedback',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "feedback",
     "tags": [
@@ -4914,10 +5368,10 @@ SELECT 'feedback',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'feedback');
+WHERE name = 'feedback';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'formed_land',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -5172,10 +5626,10 @@ SELECT 'formed_land',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'formed_land');
+WHERE name = 'formed_land';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'frames',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "frames",
     "tags": [
@@ -5297,10 +5751,10 @@ SELECT 'frames',
     "description": "Класс объектов «Разграфка планшетов»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'frames');
+WHERE name = 'frames';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'funzone',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "funzone",
     "tags": [
@@ -5511,10 +5965,10 @@ SELECT 'funzone',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'funzone');
+WHERE name = 'funzone';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'garbage_areas',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "garbage_areas",
     "tags": [
@@ -5578,10 +6032,10 @@ SELECT 'garbage_areas',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'garbage_areas');
+WHERE name = 'garbage_areas';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'gpzu',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "gpzu",
     "tags": [
@@ -7049,10 +7503,10 @@ SELECT 'gpzu',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gpzu');
+WHERE name = 'gpzu';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'hanging_objects',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "hanging_objects",
     "tags": [
@@ -7113,10 +7567,10 @@ SELECT 'hanging_objects',
     "description": "Класс объектов «Геодезические пункты»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hanging_objects');
+WHERE name = 'hanging_objects';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'indent_line',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -7252,10 +7706,10 @@ SELECT 'indent_line',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'indent_line');
+WHERE name = 'indent_line';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'inspection_result',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "inspection_result",
     "tags": [
@@ -7373,10 +7827,10 @@ SELECT 'inspection_result',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'inspection_result');
+WHERE name = 'inspection_result';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'inspection_territory',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "inspection_territory",
     "tags": [
@@ -7497,10 +7951,10 @@ SELECT 'inspection_territory',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'inspection_territory');
+WHERE name = 'inspection_territory';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'investmentzone_point',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "investmentzone_point",
     "tags": [
@@ -7672,10 +8126,10 @@ SELECT 'investmentzone_point',
     "description": "Класс объектов «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'investmentzone_point');
+WHERE name = 'investmentzone_point';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'leasechange',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "leasechange",
     "tags": [
@@ -8478,10 +8932,10 @@ SELECT 'leasechange',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'leasechange');
+WHERE name = 'leasechange';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'limitpamdev',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "limitpamdev",
     "tags": [
@@ -9283,10 +9737,10 @@ SELECT 'limitpamdev',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'limitpamdev');
+WHERE name = 'limitpamdev';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks",
     "tags": [
@@ -9451,10 +9905,10 @@ SELECT 'oks',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks');
+WHERE name = 'oks';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_building',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_building",
     "tags": [
@@ -9655,10 +10109,10 @@ SELECT 'oks_building',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_building');
+WHERE name = 'oks_building';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_building_polyline',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_building_polyline",
     "tags": [
@@ -9832,10 +10286,10 @@ SELECT 'oks_building_polyline',
     ], 
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_building_polyline');
+WHERE name = 'oks_building_polyline';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_constructions',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_constructions",
     "tags": [
@@ -10024,10 +10478,10 @@ SELECT 'oks_constructions',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions');
+WHERE name = 'oks_constructions';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_constructions_polyline',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_constructions_polyline",
     "tags": [
@@ -10216,10 +10670,10 @@ SELECT 'oks_constructions_polyline',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions_polyline');
+WHERE name = 'oks_constructions_polyline';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_polyline',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_polyline",
     "tags": [
@@ -10363,10 +10817,10 @@ SELECT 'oks_polyline',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_polyline');
+WHERE name = 'oks_polyline';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_unfinished',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_unfinished",
     "tags": [
@@ -10556,10 +11010,10 @@ SELECT 'oks_unfinished',
     "description": "Объекты незавершенного строительства",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_unfinished');
+WHERE name = 'oks_unfinished';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_unfinished_polyline',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "oks_unfinished_polyline",
     "tags": [
@@ -10735,10 +11189,10 @@ SELECT 'oks_unfinished_polyline',
     "description": "Объекты незавершенного строительства",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_unfinished_polyline');
+WHERE name = 'oks_unfinished_polyline';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'parcels_coordination',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "parcels_coordination",
     "tags": [
@@ -11095,10 +11549,10 @@ SELECT 'parcels_coordination',
     "description": "Предварительное согласование ЗУ",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'parcels_coordination');
+WHERE name = 'parcels_coordination';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'planned_territory_inspection',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "planned_territory_inspection",
     "tags": [
@@ -11203,10 +11657,10 @@ SELECT 'planned_territory_inspection',
     "description": "Плановый (рейдовый) осмотр территории",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'planned_territory_inspection');
+WHERE name = 'planned_territory_inspection';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'projects',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "projects",
     "tags": [
@@ -11376,10 +11830,10 @@ SELECT 'projects',
     "description": "Проекты",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'projects');
+WHERE name = 'projects';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'public_territory_borders',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -11625,10 +12079,10 @@ SELECT 'public_territory_borders',
     "description": "Границы территории общего пользования",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'public_territory_borders');
+WHERE name = 'public_territory_borders';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'pzz',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "pzz",
     "tags": [
@@ -11813,10 +12267,10 @@ SELECT 'pzz',
     "description": "Правила землепользования и застройки",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'pzz');
+WHERE name = 'pzz';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'red_line',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -11983,10 +12437,10 @@ SELECT 'red_line',
     "description": "Красные линии",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'red_line');
+WHERE name = 'red_line';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'roads_facilities',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "roads_facilities",
     "tags": [
@@ -12047,10 +12501,10 @@ SELECT 'roads_facilities',
     "description": "Класс объектов «Придорожные сооружения точечные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities');
+WHERE name = 'roads_facilities';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'soils',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "soils",
     "tags": [
@@ -12169,10 +12623,10 @@ SELECT 'soils',
     "description": "Почвы",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'soils');
+WHERE name = 'soils';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'srzu_approv',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "srzu_approv",
     "tags": [
@@ -12975,10 +13429,10 @@ SELECT 'srzu_approv',
     "description": "Утверждение СРЗУ",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'srzu_approv');
+WHERE name = 'srzu_approv';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'swamps_soils',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "swamps_soils",
     "tags": [
@@ -13039,10 +13493,10 @@ SELECT 'swamps_soils',
     "description": "Класс объектов «Болота и грунты площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'swamps_soils');
+WHERE name = 'swamps_soils';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzone',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzone",
     "tags": [
@@ -13134,10 +13588,10 @@ SELECT 'terzone',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzone');
+WHERE name = 'terzone';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzonealushta',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzonealushta",
     "tags": [
@@ -13203,10 +13657,10 @@ SELECT 'terzonealushta',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonealushta');
+WHERE name = 'terzonealushta';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzoneeast',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzoneeast",
     "tags": [
@@ -13284,10 +13738,10 @@ SELECT 'terzoneeast',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneeast');
+WHERE name = 'terzoneeast';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzoneevpator',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzoneevpator",
     "tags": [
@@ -13353,10 +13807,10 @@ SELECT 'terzoneevpator',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneevpator');
+WHERE name = 'terzoneevpator';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzonesaki',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzonesaki",
     "tags": [
@@ -13420,10 +13874,10 @@ SELECT 'terzonesaki',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesaki');
+WHERE name = 'terzonesaki';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzonesimf',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzonesimf",
     "tags": [
@@ -13501,10 +13955,10 @@ SELECT 'terzonesimf',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesimf');
+WHERE name = 'terzonesimf';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzonesimfgor',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzonesimfgor",
     "tags": [
@@ -13582,10 +14036,10 @@ SELECT 'terzonesimfgor',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesimfgor');
+WHERE name = 'terzonesimfgor';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzonesudak',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzonesudak",
     "tags": [
@@ -13651,10 +14105,10 @@ SELECT 'terzonesudak',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzonesudak');
+WHERE name = 'terzonesudak';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terzoneyalta',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terzoneyalta",
     "tags": [
@@ -13726,10 +14180,10 @@ SELECT 'terzoneyalta',
     "description": "Территориальные зоны",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terzoneyalta');
+WHERE name = 'terzoneyalta';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'trading_point',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "trading_point",
     "tags": [
@@ -13985,10 +14439,10 @@ SELECT 'trading_point',
     "description": "Класс объектов «Торговые конструкции точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'trading_point');
+WHERE name = 'trading_point';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'unaut_constr_not',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "unaut_constr_not",
     "tags": [
@@ -14085,10 +14539,10 @@ SELECT 'unaut_constr_not',
     "description": "Уведомление о выявлении самовольной постройки",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'unaut_constr_not');
+WHERE name = 'unaut_constr_not';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'undeveloped_lease',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "undeveloped_lease",
     "tags": [
@@ -14182,10 +14636,10 @@ SELECT 'undeveloped_lease',
     "description": "Неосвоенная аренда",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'undeveloped_lease');
+WHERE name = 'undeveloped_lease';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'unsched_inspection',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "unsched_inspection",
     "tags": [
@@ -14303,10 +14757,10 @@ SELECT 'unsched_inspection',
     "description": "Внеплановые проверки",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'unsched_inspection');
+WHERE name = 'unsched_inspection';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'urbcondissuance',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "urbcondissuance",
     "tags": [
@@ -15109,10 +15563,10 @@ SELECT 'urbcondissuance',
     "description": "Выдача градостроительных условий и ограничений застройки",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'urbcondissuance');
+WHERE name = 'urbcondissuance';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'urbregextr',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "urbregextr",
     "tags": [
@@ -15915,10 +16369,10 @@ SELECT 'urbregextr',
     "description": "Выдача градостроительных условий и ограничений застройки",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'urbregextr');
+WHERE name = 'urbregextr';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone_a',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone_a",
     "tags": [
@@ -15942,10 +16396,10 @@ SELECT 'zone_a',
     "description": "Зона А",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_a');
+WHERE name = 'zone_a';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone_b',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone_b",
     "tags": [
@@ -15969,10 +16423,10 @@ SELECT 'zone_b',
     "description": "Зона Б",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_b');
+WHERE name = 'zone_b';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone_c',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone_c",
     "tags": [
@@ -15996,10 +16450,10 @@ SELECT 'zone_c',
     "description": "Зона В",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_c');
+WHERE name = 'zone_c';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone_d',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone_d",
     "tags": [
@@ -16023,10 +16477,10 @@ SELECT 'zone_d',
     "description": "Зона Г",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_d');
+WHERE name = 'zone_d';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone500",
     "tags": [
@@ -16050,10 +16504,10 @@ SELECT 'zone500',
     "description": "Пятисотметровая зона",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone500');
+WHERE name = 'zone500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zouit',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zouit",
     "tags": [
@@ -16100,10 +16554,10 @@ SELECT 'zouit',
     "description": "ЗОУИТ",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit');
+WHERE name = 'zouit';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zouit_7mo',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zouit_7mo",
     "tags": [
@@ -16156,10 +16610,10 @@ SELECT 'zouit_7mo',
     "description": "ЗОУИТ 7МО",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit_7mo');
+WHERE name = 'zouit_7mo';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'data_oks_purpose',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -16283,10 +16737,10 @@ SELECT 'data_oks_purpose',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'data_oks_purpose');
+WHERE name = 'data_oks_purpose';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_artland',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -16455,10 +16909,10 @@ SELECT 'dl_data_artland',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_artland');
+WHERE name = 'dl_data_artland';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_citizen',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -16674,10 +17128,10 @@ SELECT 'dl_data_citizen',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_citizen');
+WHERE name = 'dl_data_citizen';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_contracts_buyout_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -16929,10 +17383,10 @@ SELECT 'dl_data_contracts_buyout_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_contracts_buyout_schema');
+WHERE name = 'dl_data_contracts_buyout_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_customer',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -17141,10 +17595,10 @@ SELECT 'dl_data_customer',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_customer');
+WHERE name = 'dl_data_customer';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_escalators',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -17372,10 +17826,10 @@ SELECT 'dl_data_escalators',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_escalators');
+WHERE name = 'dl_data_escalators';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -17753,10 +18207,10 @@ SELECT 'dl_data_gpzu',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu');
+WHERE name = 'dl_data_gpzu';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu_info_p2_3',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -18044,10 +18498,10 @@ SELECT 'dl_data_gpzu_info_p2_3',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_3');
+WHERE name = 'dl_data_gpzu_info_p2_3';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu_info_p2_4',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -18318,10 +18772,10 @@ SELECT 'dl_data_gpzu_info_p2_4',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_4');
+WHERE name = 'dl_data_gpzu_info_p2_4';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu_info_p2_5',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -18616,10 +19070,10 @@ SELECT 'dl_data_gpzu_info_p2_5',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p2_5');
+WHERE name = 'dl_data_gpzu_info_p2_5';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu_info_p4_1',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -18928,10 +19382,10 @@ SELECT 'dl_data_gpzu_info_p4_1',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p4_1');
+WHERE name = 'dl_data_gpzu_info_p4_1';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gpzu_info_p6',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -19151,10 +19605,10 @@ SELECT 'dl_data_gpzu_info_p6',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gpzu_info_p6');
+WHERE name = 'dl_data_gpzu_info_p6';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_inbox_data',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -20010,10 +20464,10 @@ SELECT 'dl_data_inbox_data',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_inbox_data');
+WHERE name = 'dl_data_inbox_data';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_lifts',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -20241,10 +20695,10 @@ SELECT 'dl_data_lifts',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_lifts');
+WHERE name = 'dl_data_lifts';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_rsoks',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -20724,10 +21178,10 @@ SELECT 'dl_data_rsoks',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rsoks');
+WHERE name = 'dl_data_rsoks';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_rsoks_part',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -22817,10 +23271,10 @@ SELECT 'dl_data_rsoks_part',
     }
   ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rsoks_part');
+WHERE name = 'dl_data_rsoks_part';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_rveoks',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -23218,10 +23672,10 @@ SELECT 'dl_data_rveoks',
     }
   ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rveoks');
+WHERE name = 'dl_data_rveoks';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_rveoks_part',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -24814,10 +25268,10 @@ SELECT 'dl_data_rveoks_part',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_rveoks_part');
+WHERE name = 'dl_data_rveoks_part';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section11',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -25674,10 +26128,10 @@ SELECT 'dl_data_section11',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section11');
+WHERE name = 'dl_data_section11';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section12',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -26496,10 +26950,10 @@ SELECT 'dl_data_section12',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section12');
+WHERE name = 'dl_data_section12';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section15',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -26985,10 +27439,10 @@ SELECT 'dl_data_section15',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section15');
+WHERE name = 'dl_data_section15';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section16',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -27695,10 +28149,10 @@ SELECT 'dl_data_section16',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section16');
+WHERE name = 'dl_data_section16';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section3',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -28912,10 +29366,10 @@ SELECT 'dl_data_section3',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section3');
+WHERE name = 'dl_data_section3';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section5',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -30013,10 +30467,10 @@ SELECT 'dl_data_section5',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section5');
+WHERE name = 'dl_data_section5';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section7',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -31303,10 +31757,10 @@ SELECT 'dl_data_section7',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section7');
+WHERE name = 'dl_data_section7';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section9',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -32003,10 +32457,10 @@ SELECT 'dl_data_section9',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section9');
+WHERE name = 'dl_data_section9';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_supplier',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -32195,10 +32649,10 @@ SELECT 'dl_data_supplier',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_supplier');
+WHERE name = 'dl_data_supplier';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_tech_plan',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -32446,10 +32900,10 @@ SELECT 'dl_data_tech_plan',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_tech_plan');
+WHERE name = 'dl_data_tech_plan';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_terzone',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -32643,10 +33097,10 @@ SELECT 'dl_data_terzone',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_terzone');
+WHERE name = 'dl_data_terzone';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_town_planning_regulations',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -32882,10 +33336,10 @@ SELECT 'dl_data_town_planning_regulations',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_town_planning_regulations');
+WHERE name = 'dl_data_town_planning_regulations';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_udrizs',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -33177,10 +33631,10 @@ SELECT 'dl_data_udrizs',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_udrizs');
+WHERE name = 'dl_data_udrizs';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_uge',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -33514,10 +33968,10 @@ SELECT 'dl_data_uge',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_uge');
+WHERE name = 'dl_data_uge';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_uszizs',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -33809,10 +34263,10 @@ SELECT 'dl_data_uszizs',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_uszizs');
+WHERE name = 'dl_data_uszizs';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_wheelchair_lifts',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -34041,10 +34495,10 @@ SELECT 'dl_data_wheelchair_lifts',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_wheelchair_lifts');
+WHERE name = 'dl_data_wheelchair_lifts';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_work_type',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -34232,10 +34686,10 @@ SELECT 'dl_data_work_type',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_work_type');
+WHERE name = 'dl_data_work_type';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'territory',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -34445,10 +34899,10 @@ SELECT 'territory',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'territory');
+WHERE name = 'territory';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'users_after_trigger',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -34685,10 +35139,10 @@ SELECT 'users_after_trigger',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'users_after_trigger');
+WHERE name = 'users_after_trigger';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_organization',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -35070,10 +35524,10 @@ SELECT 'dl_data_organization',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_organization');
+WHERE name = 'dl_data_organization';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_permitted_land_use_types',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -35934,10 +36388,10 @@ SELECT 'dl_data_permitted_land_use_types',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_permitted_land_use_types');
+WHERE name = 'dl_data_permitted_land_use_types';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_permitted_use_parameters',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -36159,10 +36613,10 @@ SELECT 'dl_data_permitted_use_parameters',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_permitted_use_parameters');
+WHERE name = 'dl_data_permitted_use_parameters';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_planning_indicators',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -36400,10 +36854,10 @@ SELECT 'dl_data_planning_indicators',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_planning_indicators');
+WHERE name = 'dl_data_planning_indicators';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_project_developer',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -36612,10 +37066,10 @@ SELECT 'dl_data_project_developer',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_project_developer');
+WHERE name = 'dl_data_project_developer';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section10', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -37214,10 +37668,10 @@ SELECT 'dl_data_section10',
         }
     ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section10');
+WHERE name = 'dl_data_section10';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section11', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -38075,10 +38529,10 @@ SELECT 'dl_data_section11',
         }
     ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section11');
+WHERE name = 'dl_data_section11';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section13', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -43494,10 +43948,10 @@ SELECT 'dl_data_section13',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section13');
+WHERE name = 'dl_data_section13';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section14', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -44531,10 +44985,10 @@ SELECT 'dl_data_section14',
             ]
         }
     ]
-}'WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section14');
+}'WHERE name = 'dl_data_section14';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section17', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -45070,10 +45524,10 @@ SELECT 'dl_data_section17',
             ]
         }
     ]
-}'WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section17');
+}'WHERE name = 'dl_data_section17';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section18', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -45542,10 +45996,10 @@ SELECT 'dl_data_section18',
             ]
         }
     ]
-}'WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section18');
+}'WHERE name = 'dl_data_section18';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'dl_data_section19_schema', 
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -46406,10 +46860,11 @@ SELECT 'dl_data_section19_schema',
         }
     ],
     "geometryType": "MultiPolygon"
-}'WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section19_schema');
+}'
+WHERE name = 'dl_data_section19_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_section1',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "System",
@@ -46986,9 +47441,9 @@ SELECT 'dl_data_section1',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section1');
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'smev_message_meta_schema',
+WHERE name = 'dl_data_section1';
+UPDATE data.schemas 
+SET class_rule =
        '{
     "name": "smev_message_meta_schema",
     "tags": ["system",
@@ -47073,4 +47528,4 @@ SELECT 'smev_message_meta_schema',
         }
     ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'smev_message_meta_schema');
+WHERE name = 'smev_message_meta_schema';

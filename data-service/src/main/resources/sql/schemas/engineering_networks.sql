@@ -1,5 +1,41 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'pipeline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'pipeline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electricline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'electricline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gaspipeline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gaspipeline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sewerpipeline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'sewerpipeline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'telecomline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'telecomline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'thermalpipeline_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'thermalpipeline_topo_500');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'building_topo_500',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'building_topo_500');
+
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "pipeline_topo_500",
     "tags": [
@@ -112,10 +148,10 @@ SELECT 'pipeline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'pipeline_topo_500');
+WHERE name = 'pipeline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'electricline_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -279,10 +315,10 @@ SELECT 'electricline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'electricline_topo_500');
+WHERE name = 'electricline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'gaspipeline_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -451,10 +487,10 @@ SELECT 'gaspipeline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'gaspipeline_topo_500');
+WHERE name = 'gaspipeline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'sewerpipeline_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -634,10 +670,10 @@ SELECT 'sewerpipeline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'sewerpipeline_topo_500');
+WHERE name = 'sewerpipeline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'telecomline_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -788,10 +824,10 @@ SELECT 'telecomline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'telecomline_topo_500');
+WHERE name = 'telecomline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'thermalpipeline_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -940,10 +976,10 @@ SELECT 'thermalpipeline_topo_500',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'thermalpipeline_topo_500');
+WHERE name = 'thermalpipeline_topo_500';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'building_topo_500',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "building_topo_500",
     "tags": [
@@ -1092,4 +1128,4 @@ SELECT 'building_topo_500',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'building_topo_500');
+WHERE name = 'building_topo_500';

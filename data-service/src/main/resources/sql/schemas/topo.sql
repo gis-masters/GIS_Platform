@@ -1,6 +1,130 @@
-
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'vegetation_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'vegetation_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'vegetation_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'swamps_soils_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'swamps_soils_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terrain_microforms_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terrain_microforms_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'terrain_microforms_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'supports_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'supports_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'supports_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'roads_facilities_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'roads_facilities_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'social_culture_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'social_culture_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'social_culture_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'social_culture_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'road_covers_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'road_covers_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'markers_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'markers_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'labels_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'labels_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'landmarks_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'landmarks_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'horizontals_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'horizontals_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydrography_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydrography_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydrography_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'geodetic_network_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'geodetic_network_point_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'fences_line_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'fences_line_topo_2000');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'elevation_marks_point_topo_2000',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'elevation_marks_point_topo_2000');
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "vegetation",
     "tags": [
@@ -61,10 +185,10 @@ SELECT 'vegetation_topo_2000',
     "description": "Класс объектов «Растительность площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_topo_2000');
+WHERE name = 'vegetation_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'vegetation_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "vegetation_line",
     "tags": [
@@ -118,10 +242,10 @@ SELECT 'vegetation_line_topo_2000',
     "description": "Класс объектов «Растительность линейная»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_line_topo_2000');
+WHERE name = 'vegetation_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'vegetation_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "vegetation_point",
     "tags": [
@@ -168,10 +292,10 @@ SELECT 'vegetation_point_topo_2000',
     "description": "Класс объектов «Растительность точечная»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'vegetation_point_topo_2000');
+WHERE name = 'vegetation_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'swamps_soils_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "swamps_soils_point",
     "tags": [
@@ -218,10 +342,10 @@ SELECT 'swamps_soils_point_topo_2000',
     "description": "Класс объектов «Болота и грунты точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'swamps_soils_point_topo_2000');
+WHERE name = 'swamps_soils_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terrain_microforms_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terrain_microforms",
     "tags": [
@@ -282,10 +406,10 @@ SELECT 'terrain_microforms_topo_2000',
     "description": "Класс объектов «Микроформы рельефа площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_topo_2000');
+WHERE name = 'terrain_microforms_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terrain_microforms_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terrain_microforms_line",
     "tags": [
@@ -346,10 +470,10 @@ SELECT 'terrain_microforms_line_topo_2000',
     "description": "Класс объектов «Микроформы рельефа линейные»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_line_topo_2000');
+WHERE name = 'terrain_microforms_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'terrain_microforms_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "terrain_microforms_point",
     "tags": [
@@ -403,10 +527,10 @@ SELECT 'terrain_microforms_point_topo_2000',
     "description": "Класс объектов «Микроформы рельефа точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'terrain_microforms_point_topo_2000');
+WHERE name = 'terrain_microforms_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'supports_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "supports",
     "tags": [
@@ -467,10 +591,10 @@ SELECT 'supports_topo_2000',
     "description": "Класс объектов «Опоры площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_topo_2000');
+WHERE name = 'supports_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'supports_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "supports_line",
     "tags": [
@@ -524,10 +648,10 @@ SELECT 'supports_line_topo_2000',
     "description": "Класс объектов «Опоры линейные»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_line_topo_2000');
+WHERE name = 'supports_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'supports_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "supports_point",
     "tags": [
@@ -574,10 +698,10 @@ SELECT 'supports_point_topo_2000',
     "description": "Класс объектов «Опоры точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'supports_point_topo_2000');
+WHERE name = 'supports_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'roads_facilities_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "roads_facilities_line",
     "tags": [
@@ -631,10 +755,10 @@ SELECT 'roads_facilities_line_topo_2000',
     "description": "Класс объектов «Дороги и придорожные сооружения линейные»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities_line_topo_2000');
+WHERE name = 'roads_facilities_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'roads_facilities_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "roads_facilities_point",
     "tags": [
@@ -681,10 +805,10 @@ SELECT 'roads_facilities_point_topo_2000',
     "description": "Класс объектов «Придорожные сооружения точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'roads_facilities_point_topo_2000');
+WHERE name = 'roads_facilities_point_topo_2000';
     
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'social_culture_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "social_culture",
     "tags": [
@@ -745,10 +869,10 @@ SELECT 'social_culture_topo_2000',
     "description": "Класс объектов «Соцкульт и сельхоз площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'social_culture_topo_2000');
+WHERE name = 'social_culture_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'social_culture_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "social_culture_point",
     "tags": [
@@ -795,10 +919,10 @@ SELECT 'social_culture_point_topo_2000',
     "description": "Класс объектов «Соцкульт и сельхоз точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'social_culture_point_topo_2000');
+WHERE name = 'social_culture_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'road_covers_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "road_covers",
     "tags": [
@@ -881,10 +1005,10 @@ SELECT 'road_covers_topo_2000',
     "description": "Класс объектов «Покрытие дорог»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'road_covers_topo_2000');
+WHERE name = 'road_covers_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'markers_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "markers_point",
     "tags": [
@@ -978,10 +1102,10 @@ SELECT 'markers_point_topo_2000',
     "description": "Класс объектов «Маркеры»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'markers_point_topo_2000');
+WHERE name = 'markers_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'labels_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "labels_line",
     "tags": [
@@ -1059,10 +1183,10 @@ SELECT 'labels_line_topo_2000',
     "description": "Класс объектов «Подписи»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'labels_line_topo_2000');
+WHERE name = 'labels_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'landmarks_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "landmarks_point",
     "tags": [
@@ -1109,10 +1233,10 @@ SELECT 'landmarks_point_topo_2000',
     "description": "Класс объектов «Знаки межевые»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'landmarks_point_topo_2000');
+WHERE name = 'landmarks_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'horizontals_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "horizontals_line",
     "tags": [
@@ -1173,10 +1297,10 @@ SELECT 'horizontals_line_topo_2000',
     "description": "Класс объектов «Горизонтали»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'horizontals_line_topo_2000');
+WHERE name = 'horizontals_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'hydrography_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "hydrography",
     "tags": [
@@ -1301,10 +1425,10 @@ SELECT 'hydrography_topo_2000',
     "description": "Класс объектов «Элементы гидрографии площадные»",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_topo_2000');
+WHERE name = 'hydrography_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'hydrography_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "hydrography_line",
     "tags": [
@@ -1437,10 +1561,10 @@ SELECT 'hydrography_line_topo_2000',
     "description": "Класс объектов «Гидрография линейная»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_line_topo_2000');
+WHERE name = 'hydrography_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'hydrography_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "hydrography_point",
     "tags": [
@@ -1487,10 +1611,10 @@ SELECT 'hydrography_point_topo_2000',
     "description": "Класс объектов «Элементы гидрографии точечные»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'hydrography_point_topo_2000');
+WHERE name = 'hydrography_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'geodetic_network_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "geodetic_network_point",
     "tags": [
@@ -1551,10 +1675,10 @@ SELECT 'geodetic_network_point_topo_2000',
     "description": "Класс объектов «Геодезические пункты»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'geodetic_network_point_topo_2000');
+WHERE name = 'geodetic_network_point_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'fences_line_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "fences_line",
     "tags": [
@@ -1609,10 +1733,10 @@ SELECT 'fences_line_topo_2000',
     "description": "Класс объектов «Ограждения»",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'fences_line_topo_2000');
+WHERE name = 'fences_line_topo_2000';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'elevation_marks_point_topo_2000',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "elevation_marks_point",
     "tags": [
@@ -1667,4 +1791,4 @@ SELECT 'elevation_marks_point_topo_2000',
     "description": "Класс объектов «Отметки высот»",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'elevation_marks_point_topo_2000');
+WHERE name = 'elevation_marks_point_topo_2000';

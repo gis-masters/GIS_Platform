@@ -1,6 +1,11 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dxf_schema_v1',
-       '{
+       '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dxf_schema_v1');
+
+UPDATE data.schemas 
+SET class_rule =
+        '{
             "name": "dxf_schema_v1",
             "title": "Схема DFX файла",
             "tags": ["DFX"],
@@ -59,4 +64,4 @@ SELECT 'dxf_schema_v1',
             "description": "Схема, описывающая DXF файлы",
             "geometryType": "MultiPolygon"
         }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dxf_schema_v1');
+WHERE name = 'dxf_schema_v1';

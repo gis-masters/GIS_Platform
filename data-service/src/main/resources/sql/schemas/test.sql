@@ -1,5 +1,16 @@
-INSERT INTO data.schemas (name, class_rule, calculated_fields)
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'schema_for_test_table',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'schema_for_test_table');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'advertising_point_simf_2022',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'advertising_point_simf_2022');
+
+
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "schema_for_test_table",
   "title": "Схема для тестов",
@@ -78,16 +89,14 @@ SELECT 'schema_for_test_table',
       "calculatedValueWellKnownFormula": "st_length"
     }
   ],
-   "geometryType": "MultiPolygon",
-   "customRuleFunction": null
-}',
-       'var results = {};
+   "geometryType": "MultiPolygon"}',
+calculated_fields = 'var results = {};
        results.objectname = obj.objectname + ''_test_''+ obj.objectid;
-       return results;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'schema_for_test_table');
+              return results;'
+WHERE name = 'schema_for_test_table';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'advertising_point_simf_2022',
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "advertising_point_simf_2022",
   "title": "Рекламные конструкции города Симферополь",
@@ -139,4 +148,4 @@ SELECT 'advertising_point_simf_2022',
   ],
   "geometryType": "Point"
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'advertising_point_simf_2022');
+WHERE name = 'advertising_point_simf_2022';

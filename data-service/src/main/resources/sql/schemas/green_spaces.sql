@@ -1,5 +1,37 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'footpath',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'footpath');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'greenery',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'greenery');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'park_building',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'park_building');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'park_structures',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'park_structures');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'trees',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'trees');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zone_park',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_park');
+
+
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "footpath",
     "tags": [
@@ -42,10 +74,10 @@ SELECT 'footpath',
     "description": "Транспортные и пешеходные пути",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'footpath');
+WHERE name = 'footpath';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'greenery',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "greenery",
     "tags": [
@@ -107,10 +139,10 @@ SELECT 'greenery',
     "description": "Участки растительности",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'greenery');
+WHERE name = 'greenery';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'park_building',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "park_building",
     "tags": [
@@ -153,10 +185,10 @@ SELECT 'park_building',
     "description": "Здания и сооружения",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'park_building');
+WHERE name = 'park_building';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'park_structures',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "park_structures",
     "tags": [
@@ -199,10 +231,10 @@ SELECT 'park_structures',
     "description": "Защитные сооружения",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'park_structures');
+WHERE name = 'park_structures';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'trees',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "trees",
     "tags": [
@@ -322,10 +354,10 @@ SELECT 'trees',
     "description": "Древесная растительность",
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'trees');
+WHERE name = 'trees';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zone_park',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "styleName": "zone_park",
     "tags": [
@@ -367,4 +399,4 @@ SELECT 'zone_park',
     "description": "Парковое зонирование",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zone_park');
+WHERE name = 'zone_park';

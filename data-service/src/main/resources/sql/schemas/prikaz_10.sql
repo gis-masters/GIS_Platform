@@ -1,5 +1,587 @@
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'thermalpipeline_line',
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'thermalpipeline_line',  
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalpipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oilpipeline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilpipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'telecomnetworkline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomnetworkline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electrictransformer_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'railwayfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility_point');
+INSERT INTO data.schemas (name, class_rule )
+SELECT 'admesrf',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admesrf');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'wastefacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'waterfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportservice_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'airtransportobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'autoservice_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'heritage_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritage_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'resort_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'servicefacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sewerfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'culture_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'mineraldep_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transplogisticobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'envmonitoring_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydro_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'engprotectionobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'waterpipeline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterpipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'culture',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'manufacturing',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'authorityservice',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sport',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'naturalriskzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'natureprotectarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gasfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gasfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'thermalfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'envmonitoring',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'thermalfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'road_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'road_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'telecomfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'customcontrol',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'education',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'telecomfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'resort',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'servicefacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'admenp',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admenp');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transportobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transportobj_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transportobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'wastefacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'waterfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'otherobject',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'forest',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forest');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'education_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electricpowerstation',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportservice',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'airtransportobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electricpowerstation_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'autoservice',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydraulicstructures_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'gaspipeline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gaspipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'street_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'street_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydraulicstructures_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'health',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'customcontrol_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'health_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'railwayline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'pipeline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'pipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'cemetery_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'cemetery',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'investmentzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'investmentzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'watertransportobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electricline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'watertransportobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'historicsettlement',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'historicsettlement');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'public',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sewerfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'functionalzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'functionalzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'technoriskarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'coastalprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'coastalprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportstops',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hazardarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hazardarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'publictransportstops_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'otherobject_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'resortarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'social',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'agriculture',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'social_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'agriculture_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'wildlifeprotection',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'heritagearea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritagearea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'mineraldep',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transplogisticobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'heritageprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritageprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'engprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'foreshore',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'foreshore');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transpprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'recreation',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'natureprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'traditionalarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'specialeconomicarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'specialeconomicarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'emergencyprotectionobj',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'electrictransformer',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'railwayfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'admemo',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admemo');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oilfacility',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'emergencyprotectionobj_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'manufacturing_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'authorityservice_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sport_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'recreation_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'public_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'waterprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'envdanger_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'prison',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'greeneryplanting',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'greeneryplanting');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'forestpark',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forestpark');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oilfacility_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'transpsanitarygapzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpsanitarygapzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sanitaryprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sanitaryprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'drinkwaterprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'drinkwaterprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'admerf',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admerf');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'resortprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'landuse',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'landuse');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'mineralarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineralarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'engsanitarygapzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engsanitarygapzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'otherzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'envdanger',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'streetv_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'streetv_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'otherprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'protectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'protectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydro',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'floodarea',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'floodarea');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'areabasedevelopment',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'areabasedevelopment');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'fishprotectionzone',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'fishprotectionzone');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'waterways_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterways_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'admborder_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admborder_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'hydro_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'sewerpipeline_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerpipeline_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'engprotectionobj_line',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_line');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'naturalriskzone_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'natureprotectarea_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'technoriskarea_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'resortarea_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'prison_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'wildlifeprotection_point',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection_point');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'mp',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp');
+
+
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "thermalpipeline_line",
         "title": "Сети теплоснабжения",
@@ -225,8 +807,8 @@ SELECT 'thermalpipeline_line',
         ],
         "description": "Класс объектов «Сети теплоснабжения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
        if (obj.status == ''2'') {
          if (!obj.function) {
            errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
@@ -244,11 +826,11 @@ SELECT 'thermalpipeline_line',
        }
  
        return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalpipeline_line');
+WHERE name = 'thermalpipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'oilpipeline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "oilpipeline_line",
         "title": "Магистральные трубопроводы жидких углеводородов",
@@ -476,8 +1058,8 @@ SELECT 'oilpipeline_line',
         ],
         "description": "Класс объектов «Магистральные трубопроводы жидких углеводородов»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
       if (obj.status == ''2'') {
         if (!obj.function) {
           errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
@@ -495,11 +1077,11 @@ SELECT 'oilpipeline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilpipeline_line');
+WHERE name = 'oilpipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'telecomnetworkline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "telecomnetworkline_line",
         "title": "Сети электросвязи",
@@ -774,8 +1356,8 @@ SELECT 'telecomnetworkline_line',
         ],
         "description": "Класс объектов «Сети электросвязи»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041602'') {
         if (!obj.comm_ctype) {
@@ -810,11 +1392,11 @@ SELECT 'telecomnetworkline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomnetworkline_line');
+WHERE name = 'telecomnetworkline_line';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'electrictransformer_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "electrictransformer_point",
         "title": "Электрические подстанции",
@@ -1200,11 +1782,11 @@ SELECT 'electrictransformer_point',
         "geometryType": "Point"
       }'
 
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer_point');
+WHERE name = 'electrictransformer_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'railwayfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "railwayfacility_point",
         "title": "Объекты железнодорожного транспорта",
@@ -1577,8 +2159,8 @@ SELECT 'railwayfacility_point',
         ],
         "description": "Класс объектов «Объекты железнодорожного транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602030201'')) {
         if (obj.rst_type) {
@@ -1621,11 +2203,11 @@ SELECT 'railwayfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility_point');
+WHERE name = 'railwayfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule )
-SELECT 'admesrf',
+UPDATE data.schemas 
+SET class_rule  =
        '{
         "name": "admesrf",
         "title": "Территория субъекта Российской Федерации",
@@ -1722,11 +2304,11 @@ SELECT 'admesrf',
         "description": "Класс объектов «Территория субъекта Российской Федерации»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admesrf');
+WHERE name = 'admesrf';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'wastefacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "wastefacility_point",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
@@ -2159,8 +2741,8 @@ SELECT 'wastefacility_point',
         ],
         "description": "Класс объектов «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602020401'') {
         if (!obj.oro_number) {
@@ -2219,11 +2801,11 @@ SELECT 'wastefacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility_point');
+WHERE name = 'wastefacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'waterfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "waterfacility_point",
         "title": "Объекты водоснабжения",
@@ -2478,8 +3060,8 @@ SELECT 'waterfacility_point',
         ],
         "description": "Класс объектов «Объекты водоснабжения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041101'') {
         if (!obj.water_stype) {
@@ -2506,11 +3088,11 @@ SELECT 'waterfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility_point');
+WHERE name = 'waterfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportservice_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportservice_point",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
@@ -2739,8 +3321,8 @@ SELECT 'publictransportservice_point',
         ],
         "description": "Класс объектов «Объекты хранения и обслуживания общественного пассажирского транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -2759,11 +3341,11 @@ SELECT 'publictransportservice_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice_point');
+WHERE name = 'publictransportservice_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'airtransportobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "airtransportobj_point",
         "title": "Объекты воздушного транспорта",
@@ -3082,8 +3664,8 @@ SELECT 'airtransportobj_point',
         ],
         "description": "Класс объектов «Объекты воздушного транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602031201'' || obj.classid == ''602031202'' || obj.classid == ''602031203'' || obj.classid == ''602031204'')) {
         if (obj.rdwin_type) {
@@ -3108,11 +3690,11 @@ SELECT 'airtransportobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj_point');
+WHERE name = 'airtransportobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'autoservice_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "autoservice_point",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
@@ -3395,8 +3977,8 @@ SELECT 'autoservice_point',
         ],
         "description": "Класс объектов «Объекты обслуживания и хранения автомобильного транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602030901'') {
         if (!obj.gas_st_type) {
@@ -3471,11 +4053,11 @@ SELECT 'autoservice_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice_point');
+WHERE name = 'autoservice_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'heritage_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "heritage_point",
         "title": "Объекты культурного наследия (ОКН)",
@@ -3805,8 +4387,8 @@ SELECT 'heritage_point',
         ],
         "description": "Класс объектов «Объекты культурного наследия (ОКН)»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''604010101'') {
         if (!obj.her_type) {
@@ -3830,11 +4412,11 @@ SELECT 'heritage_point',
       }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritage_point');
+WHERE name = 'heritage_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'resort_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "resort_point",
         "title": "Объекты санаторно-курортного назначения",
@@ -4054,8 +4636,8 @@ SELECT 'resort_point',
         ],
         "description": "Класс объектов «Объекты санаторно-курортного назначения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -4074,11 +4656,11 @@ SELECT 'resort_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort_point');
+WHERE name = 'resort_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'servicefacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "servicefacility_point",
         "title": "Прочие объекты, связанные с производственной деятельностью",
@@ -4452,8 +5034,8 @@ SELECT 'servicefacility_point',
         ],
         "description": "Класс объектов «Прочие объекты, связанные с производственной деятельностью»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -4472,11 +5054,11 @@ SELECT 'servicefacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility_point');
+WHERE name = 'servicefacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'sewerfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sewerfacility_point",
         "title": "Объекты водоотведения",
@@ -4727,8 +5309,8 @@ SELECT 'sewerfacility_point',
         ],
         "description": "Класс объектов «Объекты водоотведения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041306'') {
         if (!obj.snow_type) {
@@ -4755,11 +5337,11 @@ SELECT 'sewerfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility_point');
+WHERE name = 'sewerfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'culture_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "culture_point",
         "title": "Объекты культуры и искусства",
@@ -5035,8 +5617,8 @@ SELECT 'culture_point',
         ],
         "description": "Класс объектов «Объекты культуры и искусства»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010201'') {
         if (!obj.cu_type) {
@@ -5095,11 +5677,11 @@ SELECT 'culture_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture_point');
+WHERE name = 'culture_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'mineraldep_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "mineraldep_point",
         "title": "Месторождения и проявления полезных ископаемых",
@@ -5317,8 +5899,8 @@ SELECT 'mineraldep_point',
         ],
         "description": "Класс объектов «Месторождения и проявления полезных ископаемых»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''609010204'') {
         if (!obj.min_mtype) {
@@ -5337,11 +5919,11 @@ SELECT 'mineraldep_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep_point');
+WHERE name = 'mineraldep_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'transplogisticobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transplogisticobj_point",
         "title": "Комплексные объекты транспортной инфраструктуры",
@@ -5514,8 +6096,8 @@ SELECT 'transplogisticobj_point',
         ],
         "description": "Класс объектов «Комплексные объекты транспортной инфраструктуры»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -5534,11 +6116,11 @@ SELECT 'transplogisticobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj_point');
+WHERE name = 'transplogisticobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportobj_point",
         "title": "Объекты автомобильного пассажирского транспорта",
@@ -5700,8 +6282,8 @@ SELECT 'publictransportobj_point',
         ],
         "description": "Класс объектов «Объекты автомобильного пассажирского транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -5720,11 +6302,11 @@ SELECT 'publictransportobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj_point');
+WHERE name = 'publictransportobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'envmonitoring_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "envmonitoring_point",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
@@ -5889,8 +6471,8 @@ SELECT 'envmonitoring_point',
         ],
         "description": "Класс объектов «Объекты государственной системы наблюдений за состоянием окружающей среды»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -5909,11 +6491,11 @@ SELECT 'envmonitoring_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring_point');
+WHERE name = 'envmonitoring_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'hydro_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hydro_point",
         "title": "Поверхностные водные объекты",
@@ -6053,8 +6635,8 @@ SELECT 'hydro_point',
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -6063,11 +6645,11 @@ SELECT 'hydro_point',
     }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_point');
+WHERE name = 'hydro_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'engprotectionobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "engprotectionobj_point",
         "title": "Объекты инженерной защиты от опасных геологических процессов",
@@ -6256,8 +6838,8 @@ SELECT 'engprotectionobj_point',
         ],
         "description": "Класс объектов «Объекты инженерной защиты от опасных геологических процессов»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -6276,11 +6858,11 @@ SELECT 'engprotectionobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_point');
+WHERE name = 'engprotectionobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'waterpipeline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "waterpipeline_line",
         "title": "Сети водоснабжения",
@@ -6494,8 +7076,8 @@ SELECT 'waterpipeline_line',
         ],
         "description": "Класс объектов «Сети водоснабжения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
        if (obj.classid == ''602041201'') {
          if (!obj.zone_size) {
@@ -6522,11 +7104,11 @@ SELECT 'waterpipeline_line',
        }
 
        return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterpipeline_line');
+WHERE name = 'waterpipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'culture',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "culture",
         "title": "Объекты культуры и искусства",
@@ -6802,8 +7384,8 @@ SELECT 'culture',
         ],
         "description": "Класс объектов «Объекты культуры и искусства»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010201'') {
         if (!obj.cu_type) {
@@ -6862,11 +7444,11 @@ SELECT 'culture',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'culture');
+WHERE name = 'culture';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'manufacturing',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "manufacturing",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
@@ -7245,8 +7827,8 @@ SELECT 'manufacturing',
         ],
         "description": "Класс объектов «Предприятия и объекты добывающей и обрабатывающей промышленности»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010901'') {
         if (!obj.tpark_type) {
@@ -7279,11 +7861,11 @@ SELECT 'manufacturing',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing');
+WHERE name = 'manufacturing';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'authorityservice',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "authorityservice",
         "title": "Прочие объекты обслуживания",
@@ -7621,8 +8203,8 @@ SELECT 'authorityservice',
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010801'') {
         if (!obj.ab_stype) {
@@ -7705,11 +8287,11 @@ SELECT 'authorityservice',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice');
+WHERE name = 'authorityservice';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'sport',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sport",
         "title": "Объекты физкультурного и спортивного назначения",
@@ -8011,8 +8593,8 @@ SELECT 'sport',
         ],
         "description": "Класс объектов «Объекты физкультурного и спортивного назначения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010302'') {
         if (!obj.af_type) {
@@ -8039,11 +8621,11 @@ SELECT 'sport',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport');
+WHERE name = 'sport';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'naturalriskzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "naturalriskzone",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
@@ -8307,11 +8889,11 @@ SELECT 'naturalriskzone',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone');
+WHERE name = 'naturalriskzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'natureprotectarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "natureprotectarea",
         "title": "Особо охраняемые природные территории",
@@ -8336,7 +8918,7 @@ SELECT 'natureprotectarea',
           },
           {
             "name": "classid",
-            "title": " «Особо охраняемые природные территории»",
+            "title": "«Особо охраняемые природные территории»",
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -8483,8 +9065,8 @@ SELECT 'natureprotectarea',
         ],
         "description": "Класс объектов «Особо охраняемые природные территории»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -8503,11 +9085,11 @@ SELECT 'natureprotectarea',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea');
+WHERE name = 'natureprotectarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'gasfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "gasfacility",
         "title": "Объекты добычи и транспортировки газа",
@@ -8795,8 +9377,8 @@ SELECT 'gasfacility',
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки газа»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -8815,11 +9397,11 @@ SELECT 'gasfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility');
+WHERE name = 'gasfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'gasfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "gasfacility_point",
         "title": "Объекты добычи и транспортировки газа",
@@ -9107,8 +9689,8 @@ SELECT 'gasfacility_point',
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки газа»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -9127,11 +9709,11 @@ SELECT 'gasfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gasfacility_point');
+WHERE name = 'gasfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportobj",
         "title": "Объекты автомобильного пассажирского транспорта",
@@ -9293,8 +9875,8 @@ SELECT 'publictransportobj',
         ],
         "description": "Класс объектов «Объекты автомобильного пассажирского транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -9313,11 +9895,11 @@ SELECT 'publictransportobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportobj');
+WHERE name = 'publictransportobj';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'thermalfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "thermalfacility",
         "title": "Объекты теплоснабжения",
@@ -9618,8 +10200,8 @@ SELECT 'thermalfacility',
         ],
         "description": "Класс объектов «Объекты теплоснабжения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602040901'') {
         if (!obj.fuel_type) {
@@ -9646,11 +10228,11 @@ SELECT 'thermalfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility');
+WHERE name = 'thermalfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'envmonitoring',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "envmonitoring",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
@@ -9815,8 +10397,8 @@ SELECT 'envmonitoring',
         ],
         "description": "Класс объектов «Объекты государственной системы наблюдений за состоянием окружающей среды»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -9835,11 +10417,11 @@ SELECT 'envmonitoring',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envmonitoring');
+WHERE name = 'envmonitoring';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'thermalfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "thermalfacility_point",
         "title": "Объекты теплоснабжения",
@@ -10140,8 +10722,8 @@ SELECT 'thermalfacility_point',
         ],
         "description": "Класс объектов «Объекты теплоснабжения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602040901'') {
         if (!obj.fuel_type) {
@@ -10168,11 +10750,11 @@ SELECT 'thermalfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'thermalfacility_point');
+WHERE name = 'thermalfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'road_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "road_line",
         "title": "Автомобильные дороги",
@@ -10540,8 +11122,8 @@ SELECT 'road_line',
         ],
         "description": "Класс объектов «Автомобильные дороги»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602030302'') {
         if (!obj.reg_rdtype) {
@@ -10614,11 +11196,11 @@ SELECT 'road_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'road_line');
+WHERE name = 'road_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'telecomfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "telecomfacility",
         "title": "Объекты связи",
@@ -10906,8 +11488,8 @@ SELECT 'telecomfacility',
         ],
         "description": "Класс объектов «Объекты связи»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041501'') {
         if (!obj.capacity) {
@@ -10934,11 +11516,11 @@ SELECT 'telecomfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility');
+WHERE name = 'telecomfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'customcontrol',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "customcontrol",
         "title": "Пункт пропуска через Государственную границу",
@@ -11184,8 +11766,8 @@ SELECT 'customcontrol',
         ],
         "description": "Класс объектов «Пункт пропуска через Государственную границу»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -11204,11 +11786,11 @@ SELECT 'customcontrol',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol');
+WHERE name = 'customcontrol';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'education',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "education",
         "title": "Объекты образования и науки",
@@ -11602,8 +12184,8 @@ SELECT 'education',
         ],
         "description": "Класс объектов «Объекты образования и науки»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010102'') {
         if (!obj.edu_stype) {
@@ -11660,11 +12242,11 @@ SELECT 'education',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education');
+WHERE name = 'education';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportline_line",
         "title": "Линии общественного пассажирского транспорта",
@@ -11906,8 +12488,8 @@ SELECT 'publictransportline_line',
         ],
         "description": "Класс объектов «Линии общественного пассажирского транспорта»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -11926,11 +12508,11 @@ SELECT 'publictransportline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportline_line');
+WHERE name = 'publictransportline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'telecomfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "telecomfacility_point",
         "title": "Объекты связи",
@@ -12218,8 +12800,8 @@ SELECT 'telecomfacility_point',
         ],
         "description": "Класс объектов «Объекты связи»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041501'') {
         if (!obj.capacity) {
@@ -12246,11 +12828,11 @@ SELECT 'telecomfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'telecomfacility_point');
+WHERE name = 'telecomfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'resort',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "resort",
         "title": "Объекты санаторно-курортного назначения",
@@ -12470,8 +13052,8 @@ SELECT 'resort',
         ],
         "description": "Класс объектов «Объекты санаторно-курортного назначения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -12490,11 +13072,11 @@ SELECT 'resort',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resort');
+WHERE name = 'resort';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'servicefacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "servicefacility",
         "title": "Прочие объекты, связанные с производственной деятельностью",
@@ -12868,8 +13450,8 @@ SELECT 'servicefacility',
         ],
         "description": "Класс объектов «Прочие объекты, связанные с производственной деятельностью»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -12888,11 +13470,11 @@ SELECT 'servicefacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'servicefacility');
+WHERE name = 'servicefacility';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'admenp',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "admenp",
         "title": "Территория населенного пункта",
@@ -13297,11 +13879,11 @@ SELECT 'admenp',
         "description": "Класс объектов «Территория населенного пункта»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admenp');
+WHERE name = 'admenp';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'transportobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transportobj",
         "title": "Искусственные дорожные сооружения",
@@ -13555,8 +14137,8 @@ SELECT 'transportobj',
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031601'') {
         if (!obj.bridge_t) {
@@ -13599,11 +14181,11 @@ SELECT 'transportobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj');
+WHERE name = 'transportobj';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'transportobj_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transportobj_line",
         "title": "Искусственные дорожные сооружения",
@@ -13857,8 +14439,8 @@ SELECT 'transportobj_line',
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031601'') {
         if (!obj.bridge_t) {
@@ -13901,11 +14483,11 @@ SELECT 'transportobj_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_line');
+WHERE name = 'transportobj_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'transportobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transportobj_point",
         "title": "Искусственные дорожные сооружения",
@@ -14159,8 +14741,8 @@ SELECT 'transportobj_point',
         ],
         "description": "Класс объектов «Искусственные дорожные сооружения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031601'') {
         if (!obj.bridge_t) {
@@ -14203,11 +14785,11 @@ SELECT 'transportobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transportobj_point');
+WHERE name = 'transportobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'wastefacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "wastefacility",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
@@ -14640,8 +15222,8 @@ SELECT 'wastefacility',
         ],
         "description": "Класс объектов «Объекты утилизации, обезвреживания, размещения отходов производства и потребления»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602020401'') {
         if (!obj.oro_number) {
@@ -14700,11 +15282,11 @@ SELECT 'wastefacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wastefacility');
+WHERE name = 'wastefacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'waterfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "waterfacility",
         "title": "Объекты водоснабжения",
@@ -14959,8 +15541,8 @@ SELECT 'waterfacility',
         ],
         "description": "Класс объектов «Объекты водоснабжения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041101'') {
         if (!obj.water_stype) {
@@ -14987,11 +15569,11 @@ SELECT 'waterfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterfacility');
+WHERE name = 'waterfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'otherobject',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "otherobject",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
@@ -15220,8 +15802,8 @@ SELECT 'otherobject',
         ],
         "description": "Класс объектов «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -15240,11 +15822,11 @@ SELECT 'otherobject',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject');
+WHERE name = 'otherobject';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'forest',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "forest",
         "title": "Леса",
@@ -15471,8 +16053,8 @@ SELECT 'forest',
         ],
         "description": "Класс объектов «Леса»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''706010100'')) {
         if (obj.forest_cat) {
@@ -15504,11 +16086,11 @@ SELECT 'forest',
       }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forest');
+WHERE name = 'forest';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'education_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "education_point",
         "title": "Объекты образования и науки",
@@ -15901,8 +16483,8 @@ SELECT 'education_point',
         ],
         "description": "Класс объектов «Объекты образования и науки»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010102'') {
         if (!obj.edu_stype) {
@@ -15959,11 +16541,11 @@ SELECT 'education_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'education_point');
+WHERE name = 'education_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'electricpowerstation',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "electricpowerstation",
         "title": "Электростанции",
@@ -16394,8 +16976,8 @@ SELECT 'electricpowerstation',
         ],
         "description": "Класс объектов «Электростанции»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -16414,11 +16996,11 @@ SELECT 'electricpowerstation',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation');
+WHERE name = 'electricpowerstation';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportservice',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportservice",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
@@ -16647,8 +17229,8 @@ SELECT 'publictransportservice',
         ],
         "description": "Класс объектов «Объекты хранения и обслуживания общественного пассажирского транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -16667,11 +17249,11 @@ SELECT 'publictransportservice',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportservice');
+WHERE name = 'publictransportservice';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'airtransportobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "airtransportobj",
         "title": "Объекты воздушного транспорта",
@@ -16990,8 +17572,8 @@ SELECT 'airtransportobj',
         ],
         "description": "Класс объектов «Объекты воздушного транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602031201'' || obj.classid == ''602031202'' || obj.classid == ''602031203'' || obj.classid == ''602031204'')) {
         if (obj.rdwin_type) {
@@ -17016,11 +17598,11 @@ SELECT 'airtransportobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'airtransportobj');
+WHERE name = 'airtransportobj';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'electricpowerstation_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "electricpowerstation_point",
         "title": "Электростанции",
@@ -17451,8 +18033,8 @@ SELECT 'electricpowerstation_point',
         ],
         "description": "Класс объектов «Электростанции»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -17471,11 +18053,11 @@ SELECT 'electricpowerstation_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricpowerstation_point');
+WHERE name = 'electricpowerstation_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'autoservice',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "autoservice",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
@@ -17758,8 +18340,8 @@ SELECT 'autoservice',
         ],
         "description": "Класс объектов «Объекты обслуживания и хранения автомобильного транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602030901'') {
         if (!obj.gas_st_type) {
@@ -17834,11 +18416,11 @@ SELECT 'autoservice',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'autoservice');
+WHERE name = 'autoservice';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'hydraulicstructures_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hydraulicstructures_line",
         "title": "Гидротехнические сооружения",
@@ -18107,8 +18689,8 @@ SELECT 'hydraulicstructures_line',
         ],
         "description": "Класс объектов «Гидротехнические сооружения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -18127,11 +18709,11 @@ SELECT 'hydraulicstructures_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_line');
+WHERE name = 'hydraulicstructures_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'gaspipeline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "gaspipeline_line",
         "title": "Трубопроводы для транспортировки газа",
@@ -18403,8 +18985,8 @@ SELECT 'gaspipeline_line',
         ],
         "description": "Класс объектов «Трубопроводы для транспортировки газа»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -18423,11 +19005,11 @@ SELECT 'gaspipeline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'gaspipeline_line');
+WHERE name = 'gaspipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'street_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "street_line",
         "title": "Улично-дорожная сеть городского поселения",
@@ -18680,8 +19262,8 @@ SELECT 'street_line',
         ],
         "description": "Класс объектов «Улично-дорожная сеть городского поселения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602030405'') {
         if (!obj.str_r_type) {
@@ -18733,11 +19315,11 @@ SELECT 'street_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'street_line');
+WHERE name = 'street_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'hydraulicstructures_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hydraulicstructures_point",
         "title": "Гидротехнические сооружения",
@@ -19006,8 +19588,8 @@ SELECT 'hydraulicstructures_point',
         ],
         "description": "Класс объектов «Гидротехнические сооружения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -19026,11 +19608,11 @@ SELECT 'hydraulicstructures_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydraulicstructures_point');
+WHERE name = 'hydraulicstructures_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'health',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "health",
         "title": "Объекты здравоохранения",
@@ -19453,8 +20035,8 @@ SELECT 'health',
         ],
         "description": "Класс объектов «Объекты здравоохранения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010401'') {
         if (!obj.MD_STYPE) {
@@ -19551,11 +20133,11 @@ SELECT 'health',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health');
+WHERE name = 'health';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'customcontrol_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "customcontrol_point",
         "title": "Пункт пропуска через Государственную границу",
@@ -19801,8 +20383,8 @@ SELECT 'customcontrol_point',
         ],
         "description": "Класс объектов «Пункт пропуска через Государственную границу»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -19821,11 +20403,11 @@ SELECT 'customcontrol_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'customcontrol_point');
+WHERE name = 'customcontrol_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'health_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "health_point",
         "title": "Объекты здравоохранения",
@@ -20248,8 +20830,8 @@ SELECT 'health_point',
         ],
         "description": "Класс объектов «Объекты здравоохранения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010401'') {
         if (!obj.MD_STYPE) {
@@ -20346,11 +20928,11 @@ SELECT 'health_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'health_point');
+WHERE name = 'health_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'railwayline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "railwayline_line",
         "title": "Железнодорожные пути",
@@ -20687,8 +21269,8 @@ SELECT 'railwayline_line',
         ],
         "description": "Класс объектов «Железнодорожные пути»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -20707,11 +21289,11 @@ SELECT 'railwayline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayline_line');
+WHERE name = 'railwayline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'pipeline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "pipeline_line",
         "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
@@ -20958,8 +21540,8 @@ SELECT 'pipeline_line',
         ],
         "description": "Класс объектов «Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602040403'')) {
         if (obj.cat_main) {
@@ -20983,11 +21565,11 @@ SELECT 'pipeline_line',
       }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'pipeline_line');
+WHERE name = 'pipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'cemetery_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "cemetery_point",
         "title": "Места погребения",
@@ -21252,8 +21834,8 @@ SELECT 'cemetery_point',
         ],
         "description": "Класс объектов «Места погребения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
        if (obj.classid == ''602050301'') {
          if (!obj.cemet_type) {
@@ -21298,11 +21880,11 @@ SELECT 'cemetery_point',
        }
 
        return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery_point');
+WHERE name = 'cemetery_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'cemetery',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "cemetery",
         "title": "Места погребения",
@@ -21567,8 +22149,8 @@ SELECT 'cemetery',
         ],
         "description": "Класс объектов «Места погребения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602050301'') {
         if (!obj.cemet_type) {
@@ -21619,11 +22201,11 @@ SELECT 'cemetery',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'cemetery');
+WHERE name = 'cemetery';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'investmentzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "investmentzone",
         "title": "Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности",
@@ -21795,8 +22377,8 @@ SELECT 'investmentzone',
         ],
         "description": "Класс объектов «Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -21804,11 +22386,11 @@ SELECT 'investmentzone',
         }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'investmentzone');
+WHERE name = 'investmentzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'watertransportobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "watertransportobj",
         "title": "Объекты водного транспорта",
@@ -22143,8 +22725,8 @@ SELECT 'watertransportobj',
         ],
         "description": "Класс объектов «Объекты водного транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031301'' || obj.classid == ''602031303'' || obj.classid == ''602031305'') {
         if (!obj.pass_term) {
@@ -22211,11 +22793,11 @@ SELECT 'watertransportobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj');
+WHERE name = 'watertransportobj';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'electricline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "electricline_line",
         "title": "Линии электропередачи (ЛЭП)",
@@ -22625,8 +23207,8 @@ SELECT 'electricline_line',
         ],
         "description": "Класс объектов «Линии электропередачи (ЛЭП)»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -22645,11 +23227,11 @@ SELECT 'electricline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electricline_line');
+WHERE name = 'electricline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'watertransportobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "watertransportobj_point",
         "title": "Объекты водного транспорта",
@@ -22984,8 +23566,8 @@ SELECT 'watertransportobj_point',
         ],
         "description": "Класс объектов «Объекты водного транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031301'' || obj.classid == ''602031303'' || obj.classid == ''602031305'') {
         if (!obj.pass_term) {
@@ -23052,11 +23634,11 @@ SELECT 'watertransportobj_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'watertransportobj_point');
+WHERE name = 'watertransportobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'historicsettlement',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "historicsettlement",
         "title": "Границы территории исторического поселения",
@@ -23135,11 +23717,11 @@ SELECT 'historicsettlement',
         "description": "Класс объектов «Границы территории исторического поселения»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'historicsettlement');
+WHERE name = 'historicsettlement';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'public',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "public",
         "title": "Прочие объекты обслуживания",
@@ -23447,8 +24029,8 @@ SELECT 'public',
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010901'') {
         if (!obj.tpark_type) {
@@ -23499,11 +24081,11 @@ SELECT 'public',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public');
+WHERE name = 'public';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'sewerfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sewerfacility",
         "title": "Объекты водоотведения",
@@ -23754,8 +24336,8 @@ SELECT 'sewerfacility',
         ],
         "description": "Класс объектов «Объекты водоотведения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602041306'') {
         if (!obj.snow_type) {
@@ -23782,11 +24364,11 @@ SELECT 'sewerfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerfacility');
+WHERE name = 'sewerfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'functionalzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "functionalzone",
         "title": "Функциональные зоны",
@@ -24312,8 +24894,8 @@ SELECT 'functionalzone',
         ],
         "description": "Класс объектов «Функциональные зоны»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''701010301'') {
         if (!obj.fz_mfstp) {
@@ -24416,11 +24998,11 @@ SELECT 'functionalzone',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'functionalzone');
+WHERE name = 'functionalzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'technoriskarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "technoriskarea",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
@@ -24612,11 +25194,11 @@ SELECT 'technoriskarea',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea');
+WHERE name = 'technoriskarea';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'coastalprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "coastalprotectionzone",
         "title": "Прибрежные защитные полосы",
@@ -24694,11 +25276,11 @@ SELECT 'coastalprotectionzone',
         "description": "Класс объектов «Прибрежные защитные полосы»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'coastalprotectionzone');
+WHERE name = 'coastalprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportstops',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportstops",
         "title": "Остановочные пункты общественного пассажирского транспорта",
@@ -24973,8 +25555,8 @@ SELECT 'publictransportstops',
         ],
         "description": "Класс объектов «Остановочные пункты общественного пассажирского транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031106'') {
         if (!obj.stop_type) {
@@ -25001,11 +25583,11 @@ SELECT 'publictransportstops',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops');
+WHERE name = 'publictransportstops';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'hazardarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hazardarea",
         "title": "Зона экстренного оповещения",
@@ -25056,11 +25638,11 @@ SELECT 'hazardarea',
         "description": "Класс объектов «Зона экстренного оповещения»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hazardarea');
+WHERE name = 'hazardarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'publictransportstops_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "publictransportstops_point",
         "title": "Остановочные пункты общественного пассажирского транспорта",
@@ -25335,8 +25917,8 @@ SELECT 'publictransportstops_point',
         ],
         "description": "Класс объектов «Остановочные пункты общественного пассажирского транспорта»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602031106'') {
         if (!obj.stop_type) {
@@ -25363,11 +25945,11 @@ SELECT 'publictransportstops_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'publictransportstops_point');
+WHERE name = 'publictransportstops_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'otherobject_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "otherobject_point",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
@@ -25596,8 +26178,8 @@ SELECT 'otherobject_point',
         ],
         "description": "Класс объектов «Иные объекты федерального значения, объекты регионального значения, объекты местного значения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -25616,11 +26198,11 @@ SELECT 'otherobject_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherobject_point');
+WHERE name = 'otherobject_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'resortarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "resortarea",
         "title": "Лечебно-оздоровительные местности и курорты",
@@ -25768,8 +26350,8 @@ SELECT 'resortarea',
         ],
         "description": "Класс объектов «Лечебно-оздоровительные местности и курорты»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -25786,11 +26368,11 @@ SELECT 'resortarea',
     }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea');
+WHERE name = 'resortarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'social',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "social",
         "title": "Объекты социального обслуживания",
@@ -26147,8 +26729,8 @@ SELECT 'social',
         ],
         "description": "Класс объектов «Объекты социального обслуживания»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010501'') {
         if (!obj.st_stype) {
@@ -26223,11 +26805,11 @@ SELECT 'social',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social');
+WHERE name = 'social';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'agriculture',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "agriculture",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
@@ -26742,8 +27324,8 @@ SELECT 'agriculture',
         ],
         "description": "Класс объектов «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -26762,11 +27344,11 @@ SELECT 'agriculture',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture');
+WHERE name = 'agriculture';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'social_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "social_point",
         "title": "Объекты социального обслуживания",
@@ -27123,8 +27705,8 @@ SELECT 'social_point',
         ],
         "description": "Класс объектов «Объекты социального обслуживания»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010501'') {
         if (!obj.st_stype) {
@@ -27199,11 +27781,11 @@ SELECT 'social_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'social_point');
+WHERE name = 'social_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'agriculture_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "agriculture_point",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
@@ -27718,8 +28300,8 @@ SELECT 'agriculture_point',
         ],
         "description": "Класс объектов «Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -27738,11 +28320,11 @@ SELECT 'agriculture_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'agriculture_point');
+WHERE name = 'agriculture_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'wildlifeprotection',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "wildlifeprotection",
         "title": "Объекты охраны животного мира",
@@ -27931,8 +28513,8 @@ SELECT 'wildlifeprotection',
         ],
         "description": "Класс объектов «Объекты охраны животного мира»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -27951,11 +28533,11 @@ SELECT 'wildlifeprotection',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection');
+WHERE name = 'wildlifeprotection';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'heritagearea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "heritagearea",
         "title": "Границы территорий объектов культурного наследия и историко-культурных заповедников",
@@ -28133,11 +28715,11 @@ SELECT 'heritagearea',
         "description": "Класс объектов «Границы территорий объектов культурного наследия и историко-культурных заповедников»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritagearea');
+WHERE name = 'heritagearea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'mineraldep',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "mineraldep",
         "title": "Месторождения и проявления полезных ископаемых",
@@ -28355,8 +28937,8 @@ SELECT 'mineraldep',
         ],
         "description": "Класс объектов «Месторождения и проявления полезных ископаемых»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''609010204'') {
         if (!obj.min_mtype) {
@@ -28375,11 +28957,11 @@ SELECT 'mineraldep',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineraldep');
+WHERE name = 'mineraldep';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'transplogisticobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transplogisticobj",
         "title": "Комплексные объекты транспортной инфраструктуры",
@@ -28552,8 +29134,8 @@ SELECT 'transplogisticobj',
         ],
         "description": "Класс объектов «Комплексные объекты транспортной инфраструктуры»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -28572,11 +29154,11 @@ SELECT 'transplogisticobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transplogisticobj');
+WHERE name = 'transplogisticobj';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'heritageprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "heritageprotectionzone",
         "title": "Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
@@ -28675,11 +29257,11 @@ SELECT 'heritageprotectionzone',
         "description": "Класс объектов «Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'heritageprotectionzone');
+WHERE name = 'heritageprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'engprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "engprotectionzone",
         "title": "Охранная зона инженерных коммуникаций",
@@ -28786,11 +29368,11 @@ SELECT 'engprotectionzone',
         "description": "Класс объектов «Охранная зона инженерных коммуникаций»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionzone');
+WHERE name = 'engprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'foreshore',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "foreshore",
         "title": "Береговые полосы",
@@ -28868,11 +29450,11 @@ SELECT 'foreshore',
         "description": "Класс объектов «Береговые полосы»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'foreshore');
+WHERE name = 'foreshore';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'transpprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transpprotectionzone",
         "title": "Охранная зона транспортных коммуникаций",
@@ -28963,11 +29545,11 @@ SELECT 'transpprotectionzone',
         "description": "Класс объектов «Охранная зона транспортных коммуникаций»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpprotectionzone');
+WHERE name = 'transpprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'recreation',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "recreation",
         "title": "Объекты отдыха и туризма",
@@ -29348,8 +29930,8 @@ SELECT 'recreation',
         ],
         "description": "Класс объектов «Объекты отдыха и туризма»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010601'') {
         if (!obj.hot_stype) {
@@ -29442,11 +30024,11 @@ SELECT 'recreation',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation');
+WHERE name = 'recreation';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'natureprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "natureprotectionzone",
         "title": "Охранная зона особо охраняемых природных территорий",
@@ -29564,11 +30146,11 @@ SELECT 'natureprotectionzone',
         "description": "Класс объектов «Охранная зона особо охраняемых природных территорий»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectionzone');
+WHERE name = 'natureprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'traditionalarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "traditionalarea",
         "title": "Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ",
@@ -29693,8 +30275,8 @@ SELECT 'traditionalarea',
         ],
         "description": "Класс объектов «Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -29703,11 +30285,11 @@ SELECT 'traditionalarea',
     }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea');
+WHERE name = 'traditionalarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'specialeconomicarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "specialeconomicarea",
         "title": "Особые экономические зоны",
@@ -29884,8 +30466,8 @@ SELECT 'specialeconomicarea',
         ],
         "description": "Класс объектов «Особые экономические зоны»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -29904,11 +30486,11 @@ SELECT 'specialeconomicarea',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'specialeconomicarea');
+WHERE name = 'specialeconomicarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'emergencyprotectionobj',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "emergencyprotectionobj",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
@@ -30240,8 +30822,8 @@ SELECT 'emergencyprotectionobj',
         ],
         "description": "Класс объектов «Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602050202'') {
         if (!obj.fp_type) {
@@ -30316,11 +30898,11 @@ SELECT 'emergencyprotectionobj',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj');
+WHERE name = 'emergencyprotectionobj';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'electrictransformer',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "electrictransformer",
         "title": "Электрические подстанции",
@@ -30705,11 +31287,11 @@ SELECT 'electrictransformer',
         "description": "Класс объектов «Электрические подстанции»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'electrictransformer');
+WHERE name = 'electrictransformer';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'railwayfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "railwayfacility",
         "title": "Объекты железнодорожного транспорта",
@@ -31082,8 +31664,8 @@ SELECT 'railwayfacility',
         ],
         "description": "Класс объектов «Объекты железнодорожного транспорта»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602030201'')) {
         if (obj.rst_type) {
@@ -31126,11 +31708,11 @@ SELECT 'railwayfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'railwayfacility');
+WHERE name = 'railwayfacility';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'admemo',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "admemo",
         "title": "Территория муниципального образования",
@@ -31244,11 +31826,11 @@ SELECT 'admemo',
         "description": "Класс объектов «Территория муниципального образования»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admemo');
+WHERE name = 'admemo';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'oilfacility',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "oilfacility",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
@@ -31528,8 +32110,8 @@ SELECT 'oilfacility',
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки жидких углеводородов»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -31548,11 +32130,11 @@ SELECT 'oilfacility',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility');
+WHERE name = 'oilfacility';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'emergencyprotectionobj_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "emergencyprotectionobj_point",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
@@ -31884,8 +32466,8 @@ SELECT 'emergencyprotectionobj_point',
         ],
         "description": "Класс объектов «Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
        if (obj.classid == ''602050202'') {
          if (!obj.fp_type) {
@@ -31960,11 +32542,11 @@ SELECT 'emergencyprotectionobj_point',
        }
 
        return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'emergencyprotectionobj_point');
+WHERE name = 'emergencyprotectionobj_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'manufacturing_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "manufacturing_point",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
@@ -32343,8 +32925,8 @@ SELECT 'manufacturing_point',
         ],
         "description": "Класс объектов «Предприятия и объекты добывающей и обрабатывающей промышленности»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010901'') {
         if (!obj.tpark_type) {
@@ -32377,11 +32959,11 @@ SELECT 'manufacturing_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'manufacturing_point');
+WHERE name = 'manufacturing_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'authorityservice_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "authorityservice_point",
         "title": "Прочие объекты обслуживания",
@@ -32719,8 +33301,8 @@ SELECT 'authorityservice_point',
         ],
         "description": "Класс объектов «Прочие объекты обслуживания»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010801'') {
         if (!obj.ab_stype) {
@@ -32803,11 +33385,11 @@ SELECT 'authorityservice_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'authorityservice_point');
+WHERE name = 'authorityservice_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'sport_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sport_point",
         "title": "Объекты физкультурного и спортивного назначения",
@@ -33109,8 +33691,8 @@ SELECT 'sport_point',
         ],
         "description": "Класс объектов «Объекты физкультурного и спортивного назначения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010302'') {
         if (!obj.af_type) {
@@ -33137,11 +33719,11 @@ SELECT 'sport_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sport_point');
+WHERE name = 'sport_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'recreation_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "recreation_point",
         "title": "Объекты отдыха и туризма",
@@ -33522,8 +34104,8 @@ SELECT 'recreation_point',
         ],
         "description": "Класс объектов «Объекты отдыха и туризма»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010601'') {
         if (!obj.hot_stype) {
@@ -33616,11 +34198,11 @@ SELECT 'recreation_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'recreation_point');
+WHERE name = 'recreation_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'public_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "public_point",
         "title": "Общественные пространства",
@@ -33928,8 +34510,8 @@ SELECT 'public_point',
         ],
         "description": "Класс объектов «Общественные пространства»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010901'') {
         if (!obj.tpark_type) {
@@ -33980,11 +34562,11 @@ SELECT 'public_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'public_point');
+WHERE name = 'public_point';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'waterprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "waterprotectionzone",
         "title": "Водоохранные зоны",
@@ -34062,11 +34644,11 @@ SELECT 'waterprotectionzone',
         "description": "Класс объектов «Водоохранные зоны»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterprotectionzone');
+WHERE name = 'waterprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'envdanger_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "envdanger_point",
         "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
@@ -34164,11 +34746,11 @@ SELECT 'envdanger_point',
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "Point"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger_point');
+WHERE name = 'envdanger_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'prison',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "prison",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
@@ -34365,8 +34947,8 @@ SELECT 'prison',
         ],
         "description": "Класс объектов «Объекты ФСИН России, иные объекты федерального значения»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -34385,11 +34967,11 @@ SELECT 'prison',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison');
+WHERE name = 'prison';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'greeneryplanting',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "greeneryplanting",
         "title": "Территории зеленого фонда городских и сельских поселений ",
@@ -34531,8 +35113,8 @@ SELECT 'greeneryplanting',
         ],
         "description": "Класс объектов «Территории зеленого фонда городских и сельских поселений »",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''705010500'') {
         if (!obj.ozsn_type) {
@@ -34543,11 +35125,11 @@ SELECT 'greeneryplanting',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'greeneryplanting');
+WHERE name = 'greeneryplanting';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'forestpark',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "forestpark",
         "title": "Лесопарковый зеленый пояс",
@@ -34648,11 +35230,11 @@ SELECT 'forestpark',
         "description": "Класс объектов «Лесопарковый зеленый пояс»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'forestpark');
+WHERE name = 'forestpark';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'oilfacility_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "oilfacility_point",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
@@ -34932,8 +35514,8 @@ SELECT 'oilfacility_point',
         ],
         "description": "Класс объектов «Объекты добычи и транспортировки жидких углеводородов»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -34952,11 +35534,11 @@ SELECT 'oilfacility_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oilfacility_point');
+WHERE name = 'oilfacility_point';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'transpsanitarygapzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "transpsanitarygapzone",
         "title": "Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
@@ -35055,11 +35637,11 @@ SELECT 'transpsanitarygapzone',
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'transpsanitarygapzone');
+WHERE name = 'transpsanitarygapzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'sanitaryprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sanitaryprotectionzone",
         "title": "Санитарно-защитная зона",
@@ -35215,11 +35797,11 @@ SELECT 'sanitaryprotectionzone',
         "description": "Класс объектов «Санитарно-защитная зона»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sanitaryprotectionzone');
+WHERE name = 'sanitaryprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'drinkwaterprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "drinkwaterprotectionzone",
         "title": "Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
@@ -35314,11 +35896,11 @@ SELECT 'drinkwaterprotectionzone',
         "description": "Класс объектов «Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'drinkwaterprotectionzone');
+WHERE name = 'drinkwaterprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'admerf',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "admerf",
         "title": "Территория Российской Федерации",
@@ -35383,11 +35965,11 @@ SELECT 'admerf',
         "description": "Класс объектов «Территория Российской Федерации»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admerf');
+WHERE name = 'admerf';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'resortprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "resortprotectionzone",
         "title": "Зоны округов санитарной (горно-санитарной) охраны",
@@ -35478,11 +36060,11 @@ SELECT 'resortprotectionzone',
         "description": "Класс объектов «Зоны округов санитарной (горно-санитарной) охраны»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortprotectionzone');
+WHERE name = 'resortprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'landuse',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "landuse",
         "title": "Земли по категориям",
@@ -35569,11 +36151,11 @@ SELECT 'landuse',
         "description": "Класс объектов «Земли по категориям»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'landuse');
+WHERE name = 'landuse';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'mineralarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "mineralarea",
         "title": "Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
@@ -35675,11 +36257,11 @@ SELECT 'mineralarea',
         "description": "Класс объектов «Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mineralarea');
+WHERE name = 'mineralarea';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'engsanitarygapzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "engsanitarygapzone",
         "title": "Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций",
@@ -35770,11 +36352,11 @@ SELECT 'engsanitarygapzone',
         "description": "Класс объектов «Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engsanitarygapzone');
+WHERE name = 'engsanitarygapzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'otherzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "otherzone",
         "title": "Иные зоны с особыми условиями использования",
@@ -35903,8 +36485,8 @@ SELECT 'otherzone',
         ],
         "description": "Класс объектов «Иные зоны с особыми условиями использования»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''603011702'') {
         if (!obj.aeroszone) {
@@ -35915,11 +36497,11 @@ SELECT 'otherzone',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherzone');
+WHERE name = 'otherzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'envdanger',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "envdanger",
         "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
@@ -36017,11 +36599,11 @@ SELECT 'envdanger',
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'envdanger');
+WHERE name = 'envdanger';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'streetv_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "streetv_line",
         "title": "Улично-дорожная сеть сельского населенного пункта",
@@ -36239,8 +36821,8 @@ SELECT 'streetv_line',
         ],
         "description": "Класс объектов «Улично-дорожная сеть сельского населенного пункта»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''1'') {
         if (!obj.surface_exist) {
@@ -36276,11 +36858,11 @@ SELECT 'streetv_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'streetv_line');
+WHERE name = 'streetv_line';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'otherprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "otherprotectionzone",
         "title": "Охранная зона иного назначения",
@@ -36367,11 +36949,11 @@ SELECT 'otherprotectionzone',
         "description": "Класс объектов «Охранная зона иного назначения»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'otherprotectionzone');
+WHERE name = 'otherprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'protectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "protectionzone",
         "title": "Зоны охраняемых объектов",
@@ -36465,11 +37047,11 @@ SELECT 'protectionzone',
         "description": "Класс объектов «Зоны охраняемых объектов»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'protectionzone');
+WHERE name = 'protectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'hydro',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hydro",
         "title": "Поверхностные водные объекты",
@@ -36609,8 +37191,8 @@ SELECT 'hydro',
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -36618,11 +37200,11 @@ SELECT 'hydro',
       }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro');
+WHERE name = 'hydro';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'floodarea',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "floodarea",
         "title": "Зоны затопления и подтопления",
@@ -36745,8 +37327,8 @@ SELECT 'floodarea',
         ],
         "description": "Класс объектов «Зоны затопления и подтопления»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.classid == ''603011401'') {
         if (!obj.flooding_t) {
@@ -36765,11 +37347,11 @@ SELECT 'floodarea',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'floodarea');
+WHERE name = 'floodarea';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'areabasedevelopment',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "areabasedevelopment",
         "title": "Комплексное развитие территорий",
@@ -36925,8 +37507,8 @@ SELECT 'areabasedevelopment',
         ],
         "description": "Класс объектов «Комплексное развитие территорий»",
         "geometryType": "MultiPolygon"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -36934,11 +37516,11 @@ SELECT 'areabasedevelopment',
       }
       }
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'areabasedevelopment');
+WHERE name = 'areabasedevelopment';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'fishprotectionzone',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "fishprotectionzone",
         "title": "Рыбоохранная и рыбохозяйственная заповедная зоны",
@@ -37025,11 +37607,11 @@ SELECT 'fishprotectionzone',
         "description": "Класс объектов «Рыбоохранная и рыбохозяйственная заповедная зоны»",
         "geometryType": "MultiPolygon"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'fishprotectionzone');
+WHERE name = 'fishprotectionzone';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'waterways_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "waterways_line",
         "title": "Водные пути",
@@ -37196,8 +37778,8 @@ SELECT 'waterways_line',
         ],
         "description": "Класс объектов «Водные пути»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -37216,11 +37798,11 @@ SELECT 'waterways_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'waterways_line');
+WHERE name = 'waterways_line';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'admborder_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "admborder_line",
         "title": "Границы единиц административно-территориального деления Российской Федерации",
@@ -37325,11 +37907,11 @@ SELECT 'admborder_line',
         "description": "Границы единиц административно-территориального деления Российской Федерации",
         "geometryType": "MultiLineString"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'admborder_line');
+WHERE name = 'admborder_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'hydro_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "hydro_line",
         "title": "Поверхностные водные объекты",
@@ -37469,8 +38051,8 @@ SELECT 'hydro_line',
         ],
         "description": "Класс объектов «Поверхностные водные объекты»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.event_time) {
@@ -37479,11 +38061,11 @@ SELECT 'hydro_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'hydro_line');
+WHERE name = 'hydro_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'sewerpipeline_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "sewerpipeline_line",
         "title": "Сети водоотведения",
@@ -37706,8 +38288,8 @@ SELECT 'sewerpipeline_line',
         ],
         "description": "Класс объектов «Сети водоотведения»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -37726,11 +38308,11 @@ SELECT 'sewerpipeline_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'sewerpipeline_line');
+WHERE name = 'sewerpipeline_line';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'engprotectionobj_line',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "engprotectionobj_line",
         "title": "Объекты инженерной защиты от опасных геологических процессов",
@@ -37919,8 +38501,8 @@ SELECT 'engprotectionobj_line',
         ],
         "description": "Класс объектов «Объекты инженерной защиты от опасных геологических процессов»",
         "geometryType": "MultiLineString"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -37939,11 +38521,11 @@ SELECT 'engprotectionobj_line',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'engprotectionobj_line');
+WHERE name = 'engprotectionobj_line';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'naturalriskzone_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "naturalriskzone_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
@@ -38207,11 +38789,11 @@ SELECT 'naturalriskzone_point',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера»",
         "geometryType": "Point"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'naturalriskzone_point');
+WHERE name = 'naturalriskzone_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'natureprotectarea_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "natureprotectarea_point",
         "title": "Особо охраняемые природные территории",
@@ -38383,8 +38965,8 @@ SELECT 'natureprotectarea_point',
         ],
         "description": "Класс объектов «Особо охраняемые природные территории»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -38403,11 +38985,11 @@ SELECT 'natureprotectarea_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'natureprotectarea_point');
+WHERE name = 'natureprotectarea_point';
 
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'technoriskarea_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "technoriskarea_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
@@ -38599,11 +39181,11 @@ SELECT 'technoriskarea_point',
         "description": "Класс объектов «Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера»",
         "geometryType": "Point"
       }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'technoriskarea_point');
+WHERE name = 'technoriskarea_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'resortarea_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "resortarea_point",
         "title": "Лечебно-оздоровительные местности и курорты",
@@ -38751,8 +39333,8 @@ SELECT 'resortarea_point',
         ],
         "description": "Класс объектов «Лечебно-оздоровительные местности и курорты»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -38769,11 +39351,11 @@ SELECT 'resortarea_point',
     }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'resortarea_point');
+WHERE name = 'resortarea_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'prison_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "prison_point",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
@@ -38970,8 +39552,8 @@ SELECT 'prison_point',
         ],
         "description": "Класс объектов «Объекты ФСИН России, иные объекты федерального значения»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -38990,11 +39572,11 @@ SELECT 'prison_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'prison_point');
+WHERE name = 'prison_point';
 
 
-INSERT INTO data.schemas (name, class_rule, custom_rule)
-SELECT 'wildlifeprotection_point',
+UPDATE data.schemas 
+SET class_rule =
        '{
         "name": "wildlifeprotection_point",
         "title": "Объекты охраны животного мира",
@@ -39183,8 +39765,8 @@ SELECT 'wildlifeprotection_point',
         ],
         "description": "Класс объектов «Объекты охраны животного мира»",
         "geometryType": "Point"
-      }',
-       'var errors = [];
+}',
+custom_rule = 'var errors = [];
 
       if (obj.status == ''2'') {
         if (!obj.function) {
@@ -39203,10 +39785,10 @@ SELECT 'wildlifeprotection_point',
       }
 
       return errors;'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'wildlifeprotection_point');
+WHERE name = 'wildlifeprotection_point';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'mp',
+UPDATE data.schemas 
+SET class_rule =
        '{
           "name": "mp",
           "title": "Образуемые земельные участки",
@@ -39330,4 +39912,4 @@ SELECT 'mp',
           "description": "Образуемые земельные участки",
           "geometryType": "MultiPolygon"
         }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'mp');
+WHERE name = 'mp';

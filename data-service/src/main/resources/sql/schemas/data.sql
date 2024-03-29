@@ -1,5 +1,40 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_cad_work',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_cad_work');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_1_surveys_schema',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_1_surveys_schema');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_3_ofp_topo_schema',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_3_ofp_topo_schema');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_docflow',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_docflow');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_projects_geoplan_schema',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_projects_geoplan_schema');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'research_type',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'research_type');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_owners',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners');
+
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -664,10 +699,10 @@ SELECT 'dl_cad_work',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_cad_work');
+WHERE name = 'dl_cad_work';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_1_surveys_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1369,10 +1404,10 @@ SELECT 'dl_data_1_surveys_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_1_surveys_schema');
+WHERE name = 'dl_data_1_surveys_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_3_ofp_topo_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -2059,10 +2094,10 @@ SELECT 'dl_data_3_ofp_topo_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_3_ofp_topo_schema');
+WHERE name = 'dl_data_3_ofp_topo_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_docflow',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -2517,10 +2552,10 @@ SELECT 'dl_data_docflow',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_docflow');
+WHERE name = 'dl_data_docflow';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_projects_geoplan_schema',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -3258,10 +3293,10 @@ SELECT 'dl_data_projects_geoplan_schema',
         }
     ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_projects_geoplan_schema');
+WHERE name = 'dl_data_projects_geoplan_schema';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'research_type',
+UPDATE data.schemas 
+SET class_rule =
     '{
         "tags": [
             "system",
@@ -3447,10 +3482,10 @@ SELECT 'research_type',
             }
         ]
     }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'research_type');
+WHERE name = 'research_type';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_owners',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -3692,6 +3727,14 @@ SELECT 'dl_data_owners',
       "valueType": "FILE"
     },
     {
+      "name": "file_2",
+      "title": "Согласие на обработку перссональных данных",
+      "maxSize": 50000000,
+      "maxFiles": 10,
+      "multiple": true,
+      "valueType": "FILE"
+    },
+    {
       "name": "document_feedback",
       "title": "Квартиры и помещения",
       "valueType": "URL",
@@ -3735,31 +3778,16 @@ SELECT 'dl_data_owners',
           "name": "tel"
         },
         {
-          "name": "file",
-          "title": "Личные данные",
-          "maxSize": 50000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
-          "name": "file_1",
-          "title": "Реквизиты счета",
-          "maxSize": 50000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "valueType": "FILE"
+          "name": "file_1"
         },
         {
           "name": "inn"
         },
         {
-          "name": "file_2",
-          "title": "Согласие на обработку перссональных данных",
-          "maxSize": 50000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "valueType": "FILE"
+          "name": "file_2"
         },
         {
           "name": "document_feedback"
@@ -3794,4 +3822,4 @@ SELECT 'dl_data_owners',
   ],
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners');
+WHERE name = 'dl_data_owners';

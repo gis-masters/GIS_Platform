@@ -1,5 +1,11 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'tasks_schema_v1',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'tasks_schema_v1');
+
+
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "tasks_schema_v1",
   "tags": ["system", "Задачи"],
@@ -341,4 +347,4 @@ SELECT 'tasks_schema_v1',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'tasks_schema_v1');
+WHERE name = 'tasks_schema_v1';

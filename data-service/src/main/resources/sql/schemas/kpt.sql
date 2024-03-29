@@ -1,49 +1,99 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_kpt',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_kpt');
+
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'borderwaterobj_polilyne_pro',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj_polilyne_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'zu_pro',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_pro',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_polyline_pro',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_polyline_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'borderwaterobj',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'borderwaterobj');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'kvartal_kpt',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'kvartal_kpt');
+
+INSERT INTO data.schemas (name, class_rule) 
+SELECT 'zouit_pro',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_pro');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'oks_constructions_points',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions_points');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'municipality_boundaries_egrn',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
+
+
+UPDATE data.schemas 
+SET class_rule =
     '{
-    "tags": [
-        "system",
-        "КПТ",
-            "Библиотека"
-    ],
-    "name": "dl_data_kpt",
-    "title": "КПТ",
-    "tableName": "dl_data_kpt",
-    "description": "КПТ",
-    "styleName": "dl_data_kpt",
-    "readOnly": false,
-    "relations": [
-      {
-        "title": "Участок на карте",
-        "property": "title",
-        "targetProperty": "cad_num",
-        "type": "feature",
-        "projectId": 789,
-        "layers": [
-          "scratch_database_1:kvartal_kpt2_789_b0d0"
-        ]
-      }
-    ],
-    "properties": [
+  "name": "dl_data_kpt",
+  "tags": [
+    "system",
+    "КПТ",
+    "Библиотека"
+  ],
+  "title": "КПТ",
+  "relations": [
+    {
+      "type": "feature",
+      "title": "Участок на карте",
+      "layers": [
+        "scratch_database_1:kvartal_kpt2_789_b0d0"
+      ],
+      "property": "title",
+      "projectId": 789,
+      "targetProperty": "cad_num"
+    }
+  ],
+  "styleName": "dl_data_kpt",
+  "tableName": "dl_data_kpt",
+  "properties": [
     {
       "name": "id",
       "title": "id",
       "readOnly": true,
+      "required": true,
       "valueType": "INT"
     },
     {
       "name": "path",
       "title": "Путь",
       "hidden": true,
-      "description": "Полный путь, отражающий иерархию объектов",
       "maxLength": 522,
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
     },
     {
       "name": "is_folder",
       "title": "Папка/Документ",
-      "description": "Папка или Документ",
-      "valueType": "BOOLEAN"
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
     },
     {
       "name": "created_at",
@@ -54,8 +104,8 @@ SELECT 'dl_data_kpt',
     {
       "name": "last_modified",
       "title": "Дата модификации",
-      "description": "Дата последней модификации документа",
-      "valueType": "DATETIME"
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
     },
     {
       "name": "updated_by",
@@ -74,9 +124,9 @@ SELECT 'dl_data_kpt',
     {
       "name": "title",
       "title": "Кадастровый квартал",
-      "required": true,
       "display": "multiline",
       "minWidth": 400,
+      "required": true,
       "valueType": "STRING"
     },
     {
@@ -89,24 +139,24 @@ SELECT 'dl_data_kpt',
     {
       "name": "performer",
       "title": "Исполнитель",
-      "valueType": "STRING"
+      "valueType": "USER_ID"
     },
     {
       "name": "status",
       "title": "Статус",
-      "foreignKeyType": "STRING",
       "minWidth": 400,
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "value": "Заказано",
-          "title": "Заказано"
+          "title": "Заказано",
+          "value": "Заказано"
         },
         {
-          "value": "Получено",
-          "title": "Получено"
+          "title": "Получено",
+          "value": "Получено"
         }
-      ]
+      ],
+      "foreignKeyType": "STRING"
     },
     {
       "name": "date_order",
@@ -126,19 +176,19 @@ SELECT 'dl_data_kpt',
     {
       "name": "receipt_type",
       "title": "Способ получение данных",
-      "foreignKeyType": "STRING",
       "minWidth": 400,
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "value": "Бумажный носитель",
-          "title": "Бумажный носитель"
+          "title": "Бумажный носитель",
+          "value": "Бумажный носитель"
         },
         {
-          "value": "Электронная форма",
-          "title": "Электронная форма"
+          "title": "Электронная форма",
+          "value": "Электронная форма"
         }
-      ]
+      ],
+      "foreignKeyType": "STRING"
     },
     {
       "name": "note",
@@ -162,8 +212,8 @@ SELECT 'dl_data_kpt',
       "name": "fias",
       "title": "Населённый пункт",
       "required": true,
-      "searchMode": "oktmo",
-      "valueType": "FIAS"
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
     },
     {
       "name": "fias__oktmo",
@@ -188,23 +238,39 @@ SELECT 'dl_data_kpt',
       "title": "Версии",
       "hidden": true,
       "multiple": true,
-      "description": "Предыдущая версия данных",
       "libraries": [
         "dl_data_kpt"
       ],
-      "maxDocuments": 5,
-      "valueType": "DOCUMENT"
+      "valueType": "DOCUMENT",
+      "description": "Предыдущая версия данных",
+      "maxDocuments": 5
+    },
+    {
+      "name": "cad_kvartal",
+      "title": "Кадастровый квартал",
+      "valueType": "STRING",
+      "whiteSpace": "preserve",
+      "description": "Кадастровый квартал заказанной XML"
+    },
+    {
+      "name": "order_task_number",
+      "title": "Номер задачи",
+      "hidden": true,
+      "valueType": "STRING",
+      "whiteSpace": "preserve",
+      "description": "Номер настраиваемой задачи созданной для заказа КПТ из ФГИС ЕГРН"
     }
   ],
+  "description": "КПТ",
   "contentTypes": [
     {
       "id": "Карточка",
+      "icon": "DOCUMENT",
       "type": "DOCUMENT",
       "title": "Карточка документа",
-      "icon": "DOCUMENT",
       "attributes": [
         {
-          "name": "title"
+          "name": "cad_kvartal"
         },
         {
           "name": "owner_doc"
@@ -213,7 +279,16 @@ SELECT 'dl_data_kpt',
           "name": "receipt_type"
         },
         {
-          "name": "date_order_completion"
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
         },
         {
           "name": "order_number",
@@ -224,22 +299,31 @@ SELECT 'dl_data_kpt',
           "defaultValueWellKnownFormula": "inherit"
         },
         {
+          "name": "source_doc"
+        },
+        {
           "name": "file"
         }
       ]
     },
     {
       "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
       "type": "FOLDER",
       "title": "Папка",
-      "icon": "FOLDER_CREATE",
       "attributes": [
         {
-          "name": "order_number"
+          "name": "order_task_number",
+          "hidden": false
         },
         {
           "name": "title",
-          "title": "Заказ"
+          "required": false,
+          "hidden": true
+        },
+        {
+          "name": "fias",
+          "required": false
         },
         {
           "name": "performer"
@@ -254,17 +338,20 @@ SELECT 'dl_data_kpt',
           "name": "date_order_completion"
         },
         {
+          "name": "source_doc"
+        },
+        {
           "name": "note"
         }
       ]
     }
   ]
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_kpt');
+WHERE name = 'dl_data_kpt';
 
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'borderwaterobj_polilyne_pro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "System",
@@ -390,10 +477,10 @@ SELECT 'borderwaterobj_polilyne_pro',
     "description": "Береговые линии (границы водных объектов)",
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'borderwaterobj_polilyne_pro');
+WHERE name = 'borderwaterobj_polilyne_pro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zu_pro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -616,10 +703,10 @@ SELECT 'zu_pro',
     "description": "Земельные участки",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_pro');
+WHERE name = 'zu_pro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_pro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -793,10 +880,10 @@ SELECT 'oks_pro',
     ],
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_pro');
+WHERE name = 'oks_pro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_polyline_pro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -989,10 +1076,10 @@ SELECT 'oks_polyline_pro',
     ],
     "geometryType": "MultiLineString"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_polyline_pro');
+WHERE name = 'oks_polyline_pro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'borderwaterobj',
+UPDATE data.schemas 
+SET class_rule =
 '{
     "tags": [
         "system",
@@ -1117,10 +1204,10 @@ SELECT 'borderwaterobj',
   "description": "Береговые линии (границы водных объектов)",
   "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'borderwaterobj');
+WHERE name = 'borderwaterobj';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'kvartal_kpt',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1224,10 +1311,10 @@ SELECT 'kvartal_kpt',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'kvartal_kpt');
+WHERE name = 'kvartal_kpt';
 
-INSERT INTO data.schemas (name, class_rule) 
-SELECT 'zouit_pro',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "System",
@@ -1333,10 +1420,10 @@ SELECT 'zouit_pro',
     "description": "Зоны с особыми условиями использования территорий",
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_pro');
+WHERE name = 'zouit_pro';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'oks_constructions_points',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1666,10 +1753,10 @@ SELECT 'oks_constructions_points',
     ],
     "geometryType": "Point"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_constructions_points');
+WHERE name = 'oks_constructions_points';
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'municipality_boundaries_egrn',
+UPDATE data.schemas 
+SET class_rule =
     '{
     "tags": [
         "system",
@@ -1766,4 +1853,4 @@ SELECT 'municipality_boundaries_egrn',
     ], 
     "geometryType": "MultiPolygon"
 }'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'municipality_boundaries_egrn');
+WHERE name = 'municipality_boundaries_egrn';

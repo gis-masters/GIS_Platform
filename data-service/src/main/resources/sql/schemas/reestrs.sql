@@ -1,5 +1,21 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'reestr_common_schema',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_common_schema');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'reestr_incoming_schema',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_incoming_schema');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'reestr_outgoing_schema',
+'{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_outgoing_schema');
+
+
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "reestr_common_schema",
   "tags": ["system","Реестры"],
@@ -65,10 +81,10 @@ SELECT 'reestr_common_schema',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_common_schema');
+WHERE name = 'reestr_common_schema' ;
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'reestr_incoming_schema',
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "reestr_incoming_schema",
   "tags": ["system", "Реестры"],
@@ -150,10 +166,10 @@ SELECT 'reestr_incoming_schema',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_incoming_schema');
+WHERE name = 'reestr_incoming_schema' ;
 
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'reestr_outgoing_schema',
+UPDATE data.schemas 
+SET class_rule =
        '{
   "name": "reestr_outgoing_schema",
   "tags": ["system", "Реестры"],
@@ -226,4 +242,4 @@ SELECT 'reestr_outgoing_schema',
     }
   ]
 }'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'reestr_outgoing_schema');
+WHERE name = 'reestr_outgoing_schema' ;
