@@ -13,7 +13,6 @@ import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -24,6 +23,8 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 /**
  * Сервис поиска файлов-источников для импорта КПТ из XML
@@ -37,18 +38,18 @@ public class KptSourceFilesService {
     private static final String FILE_PROPERTY = "file";
     private static final String DATA_ORDER_COMPLETION_PROPERTY = "date_order_completion";
 
-    private final RecordServiceFactory recordServiceFactory;
-    private final FileRepository fileRepository;
     private final RecordsDao recordsDao;
+    private final FileRepository fileRepository;
+    private final RecordServiceFactory recordServiceFactory;
     private final DocumentLibraryService documentLibraryService;
 
     public KptSourceFilesService(RecordServiceFactory recordServiceFactory,
                                  FileRepository fileRepository,
                                  RecordsDao recordsDao,
                                  DocumentLibraryService documentLibraryService) {
-        this.recordServiceFactory = recordServiceFactory;
-        this.fileRepository = fileRepository;
         this.recordsDao = recordsDao;
+        this.fileRepository = fileRepository;
+        this.recordServiceFactory = recordServiceFactory;
         this.documentLibraryService = documentLibraryService;
     }
 
@@ -58,94 +59,103 @@ public class KptSourceFilesService {
      * @return Пара из файлов источников и даты "свежести" кпт
      */
     public Pair<List<ImportSourceFileDto>, String> getSourceFiles(IRecord kptRecord) {
-        SchemaDto kptLibSchema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
         List<ImportSourceFileDto> sourceFiles;
         if (kptRecord.isFolder()) {
+            SchemaDto kptLibSchema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
+
             sourceFiles = getSourceFilesByDirectory(kptRecord, kptLibSchema);
         } else {
             sourceFiles = Collections.singletonList(getSingleSourceFile(kptRecord));
         }
+
         return new ImmutablePair<>(sourceFiles, (String) kptRecord.getContent().get(DATA_ORDER_COMPLETION_PROPERTY));
     }
 
-    public IRecord getKptRecord(long kptId) {
-        ResourceQualifier qualifier = new ResourceQualifier(
-                SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, kptId, LIBRARY_RECORD
-        );
-        return recordServiceFactory.get().getById(qualifier, kptId);
+    public IRecord getKptByFileId(long kptId) {
+        return recordServiceFactory
+                .get()
+                .getById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, kptId, LIBRARY_RECORD), kptId);
     }
 
     /**
      * Ищет файл, привязанный к документу КПТ
      */
-    private ImportSourceFileDto getSingleSourceFile(IRecord kptRecord) {
-        FileDescription fileDescription = extractKptFileDescription(kptRecord).orElseThrow(
-                () -> new IllegalStateException("Не приложен файл для импорта КПТ id=" + kptRecord.getId())
-        );
-        File file = fileRepository.findById(fileDescription.getId()).orElseThrow(
-                () -> new DataServiceException("Не найден файл fileId=" + fileDescription.getId())
-        );
-        ImportSourceFileDto fileDto = fileToImportSourceFileDto(file, kptRecord);
+    private ImportSourceFileDto getSingleSourceFile(IRecord record) {
+        FileDescription fileDescription = extractKptFileDescription(record)
+                .orElseThrow(() -> new IllegalStateException("Не приложен файл для импорта КПТ id: " + record.getId()));
+
+        File file = fileRepository
+                .findById(fileDescription.getId())
+                .orElseThrow(() -> new DataServiceException("Не найден файл fileId: " + fileDescription.getId()));
+
+        ImportSourceFileDto fileDto = mapToImportSourceFileDto(file, record);
         if (fileDto.getPath() == null || fileDto.getPath().isBlank()) {
-            throw new IllegalStateException("Пустой путь к файлу для импорта КПТ fileId=" + file.getId());
+            throw new IllegalStateException("Пустой путь к файлу для импорта КПТ fileId: " + file.getId());
         }
+
         return fileDto;
     }
 
     /**
      * Ищет файлы, привязанные к документам КПТ внутри директории
      */
-    private List<ImportSourceFileDto> getSourceFilesByDirectory(IRecord kptRecord, SchemaDto kptLibSchema) {
-        ResourceQualifier resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID);
-        String pathProperty = SystemLibraryAttributes.PATH.getName();
-        String directoryPath = (String) kptRecord.getContent().get(pathProperty);
-        int directoryId = (int) kptRecord.getContent().get(SystemLibraryAttributes.ID.getName());
-        String filter = String.format("%s like '%s/%d'", pathProperty, directoryPath, directoryId);
+    private List<ImportSourceFileDto> getSourceFilesByDirectory(IRecord directory, SchemaDto kptLibSchema) {
+        log.debug("Ищем документы в каталоге: {}", directory);
 
-        List<IRecord> kptRecords = recordsDao.findAll(resourceQualifier, filter, kptLibSchema);
-        Set<UUID> fileIds = kptRecords
+        String recordsInDir = String.format("%s LIKE '%s/%d'",
+                                            PATH.getName(), directory.getAsString(PATH.getName()), directory.getId());
+
+        List<IRecord> records = recordsDao.findAll(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID),
+                                                   recordsInDir,
+                                                   kptLibSchema);
+        Set<UUID> fileIds = records
                 .stream()
                 .map(this::extractKptFileDescription)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .map(FileDescription::getId)
                 .collect(Collectors.toSet());
-        List<File> files = fileRepository.findAllByIdIn(fileIds);
-        return files.stream()
-                    .map(file -> fileToImportSourceFileDto(file, findKptRecordByFileId(kptRecords, file.getId())))
-                    .collect(Collectors.toList());
+
+        return fileRepository.findAllByIdIn(fileIds)
+                             .stream()
+                             .map(file -> mapToImportSourceFileDto(file, findKptRecordByFileId(records, file.getId())))
+                             .collect(Collectors.toList());
     }
 
-    private IRecord findKptRecordByFileId(List<IRecord> kptRecords, UUID fileId) {
-        return kptRecords.stream()
-                         .filter(rec -> {
-                             Optional<FileDescription> fd = extractKptFileDescription(rec);
-                             return fd.filter(fileDescription -> fileId.equals(fileDescription.getId())).isPresent();
-                         })
-                         .findFirst()
-                         .get();
+    private IRecord findKptRecordByFileId(List<IRecord> records, UUID fileId) {
+        return records.stream()
+                      .filter(record -> {
+                          Optional<FileDescription> description = extractKptFileDescription(record);
+
+                          return description.filter(fileDescription -> fileId.equals(fileDescription.getId()))
+                                            .isPresent();
+                      })
+                      .findFirst()
+                      .orElseThrow(() -> new IllegalStateException("Не найдена запись с файлом: " + fileId));
     }
 
     private Optional<FileDescription> extractKptFileDescription(IRecord kptRecord) {
         List<FileDescription> filesDescriptions = (List<FileDescription>) kptRecord.getContent().get(FILE_PROPERTY);
         if (filesDescriptions == null || filesDescriptions.isEmpty()) {
             int id = (int) kptRecord.getContent()
-                                    .get(SystemLibraryAttributes.ID.getName());
+                                    .get(ID.getName());
             log.warn("Невозможно определить файл для импорта кпт с id = " + id);
+
             return Optional.empty();
         }
+
         return Optional.of(filesDescriptions.get(0));
     }
 
-    private ImportSourceFileDto fileToImportSourceFileDto(File file, IRecord kptRecord) {
+    private ImportSourceFileDto mapToImportSourceFileDto(File file, IRecord record) {
         TypeDocumentData typeDocumentData = new TypeDocumentData();
-        typeDocumentData.setId(kptRecord.getId());
-        typeDocumentData.setTitle(kptRecord.getTitle());
+        typeDocumentData.setId(record.getId());
+        typeDocumentData.setTitle(record.getTitle());
         typeDocumentData.setLibraryTableName(KPT_LIBRARY_ID);
-        return new ImportSourceFileDto(
-                file.getId(),
-                file.getPath(),
-                typeDocumentData
+
+        return new ImportSourceFileDto(file.getId(),
+                                       file.getPath(),
+                                       typeDocumentData
         );
     }
 }

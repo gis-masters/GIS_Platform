@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -261,57 +262,72 @@ public class SettingsHandler {
      * @return Схема измененная по заданным системным администратором и владельцем организации настройкам.
      */
     public static SchemaDto buildSchema(SchemaDto baseSchema, OrgSettingsResponseDto orgSettings) {
-        SchemaDto newSchema = new SchemaDto();
-        newSchema.setName(baseSchema.getName());
-        newSchema.setTableName(baseSchema.getTableName());
-        newSchema.setTitle(baseSchema.getTitle());
-        newSchema.setDescription(baseSchema.getDescription());
+        try {
+            SchemaDto newSchema = new SchemaDto();
+            newSchema.setName(baseSchema.getName());
+            newSchema.setTableName(baseSchema.getTableName());
+            newSchema.setTitle(baseSchema.getTitle());
+            newSchema.setDescription(baseSchema.getDescription());
 
-        Map<String, Object> systemSettings = orgSettings.getSystem();
-        if (systemSettings == null || systemSettings.isEmpty()) {
-            return newSchema;
-        }
+            Map<String, Object> systemSettings = orgSettings.getSystem();
+            if (systemSettings == null || systemSettings.isEmpty()) {
+                return newSchema;
+            }
 
-        List<SimplePropertyDto> newProperties = new ArrayList<>(baseSchema.getProperties());
-        for (SimplePropertyDto property: baseSchema.getProperties()) {
-            String name = property.getName();
-            if (Objects.equals(name, "tags")) {
-                if (systemSettings.containsKey(name)) {
-                    List<String> tags = (List<String>) systemSettings.get(name);
-                    List<ValueTitleProjection> allowedTags = property.getEnumerations().stream()
-                                                                     .filter(item -> tags.contains(item.getTitle()))
-                                                                     .collect(Collectors.toList());
+            List<SimplePropertyDto> newProperties = new ArrayList<>(baseSchema.getProperties());
+            for (SimplePropertyDto property: baseSchema.getProperties()) {
+                String name = property.getName();
+                boolean propertyExistAndNotNull = systemSettings.containsKey(name) && systemSettings.get(name) != null;
+                switch (name) {
+                    case "tags":
+                        if (propertyExistAndNotNull) {
+                            List<String> tags = (List<String>) systemSettings.get(name);
+                            List<ValueTitleProjection> allowedTags = property
+                                    .getEnumerations().stream()
+                                    .filter(item -> tags.contains(item.getTitle()))
+                                    .collect(Collectors.toList());
 
-                    newProperties.stream()
-                                 .filter(propertyDto -> propertyDto.getName().equals("tags"))
-                                 .findFirst()
-                                 .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedTags));
-                }
-            } else if (Objects.equals(name, "favorites_epsg")) {
-                if (systemSettings.containsKey(name)) {
-                    List<String> epsg = (List<String>) systemSettings.get(name);
-                    List<ValueTitleProjection> allowedEpsg = property.getEnumerations().stream()
-                                                                     .filter(item -> epsg.contains(item.getTitle()))
-                                                                     .collect(Collectors.toList());
+                            newProperties.stream()
+                                         .filter(propertyDto -> propertyDto.getName().equals("tags"))
+                                         .findFirst()
+                                         .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedTags));
+                        }
+                        break;
+                    case "favorites_epsg":
+                        if (propertyExistAndNotNull) {
+                            List<String> epsg = (List<String>) systemSettings.get(name);
+                            List<ValueTitleProjection> allowedEpsg = property
+                                    .getEnumerations()
+                                    .stream()
+                                    .filter(item -> epsg.contains(item.getTitle()))
+                                    .collect(Collectors.toList());
 
-                    newProperties.stream()
-                                 .filter(propertyDto -> propertyDto.getName().equals("favorites_epsg"))
-                                 .findFirst()
-                                 .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedEpsg));
-                }
-            } else {
-                if (systemSettings.containsKey(name)) {
-                    if (FALSE.equals(systemSettings.get(name))) {
-                        newProperties.removeIf(p -> Objects.equals(name, p.getName()));
-                    }
-                } else {
-                    newProperties.removeIf(p -> Objects.equals(name, p.getName()));
+                            newProperties.stream()
+                                         .filter(propertyDto -> propertyDto.getName().equals("favorites_epsg"))
+                                         .findFirst()
+                                         .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedEpsg));
+                        }
+                        break;
+                    default:
+                        if (propertyExistAndNotNull) {
+                            if (FALSE.equals(systemSettings.get(name))) {
+                                newProperties.removeIf(p -> Objects.equals(name, p.getName()));
+                            }
+                        } else {
+                            newProperties.removeIf(p -> Objects.equals(name, p.getName()));
+                        }
+                        break;
                 }
             }
+
+            newSchema.setProperties(newProperties);
+
+            return newSchema;
+        } catch (Exception e) {
+            String msg = "Не удалось сформировать схему настроек организации";
+            log.error("{}. По причине: {}", msg, e.getMessage(), e);
+
+            throw new AuthServiceException(msg);
         }
-
-        newSchema.setProperties(newProperties);
-
-        return newSchema;
     }
 }

@@ -41,6 +41,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -82,29 +83,24 @@ public class KptImportXmlRequestService {
      * @return task импорта
      */
     public IRecord initImport(KptImportXmlRequest request) {
-        IRecord kptRecord = kptSourceFilesService.getKptRecord(request.getFileId());
-        if (kptRecord == null) {
-            throw new DataServiceException("Не найден КПТ id=" + request.getFileId());
+        IRecord kpt = kptSourceFilesService.getKptByFileId(request.getFileId());
+        if (kpt == null) {
+            throw new DataServiceException("Не найден КПТ id: " + request.getFileId());
         }
-        IRecord task = createTask(kptRecord);
-        Pair<List<ImportSourceFileDto>, String> sourceFilesPair =
-                kptSourceFilesService.getSourceFiles(kptRecord);
-        handleValidationSettings(request.getValidationSettings(), sourceFilesPair.getRight());
-        KptImportXmlRequestEvent event = new KptImportXmlRequestEvent(
-                sourceFilesPair.getLeft(),
-                getDatabaseName(),
-                buildTableImportDtoList(request.getTables()),
-                authenticationFacade.getLogin(),
-                task.getId(),
-                request.getValidationSettings()
-        );
-        messageBus.produce(event);
-        return task;
-    }
 
-    private String getDatabaseName() {
-        Long orgId = authenticationFacade.getOrganizationId();
-        return getDefaultDatabaseName(orgId);
+        IRecord task = createTask(kpt);
+
+        Pair<List<ImportSourceFileDto>, String> sourceFilesPair = kptSourceFilesService.getSourceFiles(kpt);
+        handleValidationSettings(request.getValidationSettings(), sourceFilesPair.getRight());
+        messageBus.produce(
+                new KptImportXmlRequestEvent(sourceFilesPair.getLeft(),
+                                             getDefaultDatabaseName(authenticationFacade.getOrganizationId()),
+                                             buildTableImportDtoList(request.getTables()),
+                                             authenticationFacade.getLogin(),
+                                             task.getId(),
+                                             request.getValidationSettings()));
+
+        return task;
     }
 
     private List<KptImportTableDto> buildTableImportDtoList(List<DatasetResourceQualifierDto> qualifiers) {
@@ -152,6 +148,7 @@ public class KptImportXmlRequestService {
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+
         return mediator.execute(
                 new CreateTaskRequest(tasksSchema,
                                       new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
@@ -160,8 +157,10 @@ public class KptImportXmlRequestService {
 
     private Map<String, Object> prepareTaskBody(IRecord kptRecord) {
         UserDetails userDetails = authenticationFacade.getUserDetails();
-        TypeDocumentData typeDocumentData = new TypeDocumentData(
-                kptRecord.getId(), kptRecord.getTitle(), KptSourceFilesService.KPT_LIBRARY_ID);
+        TypeDocumentData typeDocumentData = new TypeDocumentData(kptRecord.getId(),
+                                                                 kptRecord.getTitle(),
+                                                                 KPT_LIBRARY_ID);
+
         Map<String, Object> body = new HashMap<>();
         body.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
         body.put(TASK_ASSIGNED_TO_PROPERTY, userDetails.getUserId());
@@ -169,17 +168,21 @@ public class KptImportXmlRequestService {
         body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
         body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
         body.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, toJsonNode(typeDocumentData).toString());
+
         return body;
     }
 
     private void handleValidationSettings(@Nullable KptImportValidationSettings settings, String dateOrderCompletion) {
-        if (settings != null) {
-            if (settings.isValidateRecordsCount() && settings.getAllowedDiff() == null) {
-                settings.setAllowedDiff(DEFAULT_ALLOWED_RECORDS_DIFF);
-            }
-            if (settings.isValidateFreshness()) {
-                settings.setDateOrderCompletion(dateOrderCompletion);
-            }
+        if (settings == null) {
+            return;
+        }
+
+        if (settings.isValidateRecordsCount() && settings.getAllowedDiff() == null) {
+            settings.setAllowedDiff(DEFAULT_ALLOWED_RECORDS_DIFF);
+        }
+
+        if (settings.isValidateFreshness()) {
+            settings.setDateOrderCompletion(dateOrderCompletion);
         }
     }
 }

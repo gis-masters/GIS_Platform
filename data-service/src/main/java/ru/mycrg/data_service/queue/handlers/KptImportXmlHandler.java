@@ -11,6 +11,7 @@ import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.kpt_import.TmpTablesCreator;
 import ru.mycrg.data_service.kpt_import.model.*;
 import ru.mycrg.data_service.kpt_import.model.oks.OksBuildingElement;
@@ -52,6 +53,7 @@ import java.util.zip.ZipFile;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 
@@ -132,82 +134,90 @@ public class KptImportXmlHandler implements IEventHandler {
 
     @Override
     public void handle(IMessageBusEvent event) {
-        StopWatch importTimer = new StopWatch();
-        importTimer.start();
-        KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
-        log.info("Получено событие импорта КПТ из XML id: {}, taskId: {}", event.getId(), importEvent.getTaskId());
-        String dbName = importEvent.getDbName();
-
-        if (taskFinished(dbName, importEvent.getTaskId())) {
-            return;
-        }
-        tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.IN_PROGRESS);
-        running.set(true);
-
-        List<KptImportTableDto> targetTables = importEvent.getTables();
-        Collection<SchemaDto> requiredSchemas = targetTables.stream()
-                                                            .map(KptImportTableDto::getSchemaDto)
-                                                            .collect(Collectors.toList());
-        Map<Class<? extends KptElement>, KptElementWriter> requiredWriters = chooseWriters(requiredSchemas);
-        Set<String> requiredTags = getRequiredTags(requiredSchemas);
-
         try {
-            tmpTablesCreator.createIfNotExists(dbName, requiredSchemas);
-        } catch (Exception e) {
-            String message = "Не удалось создать временные таблицы для импорта!";
-            log.error(message, e);
-            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR, message);
-            return;
-        }
+            StopWatch importTimer = new StopWatch();
+            importTimer.start();
+            KptImportXmlRequestEvent importEvent = (KptImportXmlRequestEvent) event;
+            log.info("Получено событие импорта КПТ из XML id: {}, taskId: {}", event.getId(), importEvent.getTaskId());
+            String dbName = importEvent.getDbName();
 
-        try {
-            cleanTmpTables(requiredSchemas, dbName);
-        } catch (CrgDaoException e) {
-            log.error("Ошибка очистки временной таблицы!", e);
-            writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
-                         "Не удалось очистить временные таблицы");
-            return;
-        }
+            if (taskFinished(dbName, importEvent.getTaskId())) {
+                return;
+            }
+            tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.IN_PROGRESS);
+            running.set(true);
 
-        int threadsCount = Math.min(4, importEvent.getSourceFiles().size());
-        CountDownLatch latch = new CountDownLatch(importEvent.getSourceFiles().size());
-        ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
-        for (int i = 0; i < importEvent.getSourceFiles().size(); ++i) {
-            int finalI = i;
-            executorService.execute(() -> {
-                                        ImportSourceFileDto fileDto = importEvent.getSourceFiles().get(finalI);
-                                        try {
-                                            executeFile(fileDto,
-                                                        requiredTags,
-                                                        requiredSchemas,
-                                                        requiredWriters,
-                                                        importEvent,
-                                                        dbName,
-                                                        targetTables);
-                                        } catch (Exception e) {
-                                            log.error("Непредвиденная ошибка импорта из файла {}: {}",
-                                                      fileDto.getDocument().getTitle(), e.getMessage(), e);
-                                        } finally {
-                                            latch.countDown();
+            List<KptImportTableDto> targetTables = importEvent.getTables();
+            Collection<SchemaDto> requiredSchemas = targetTables.stream()
+                                                                .map(KptImportTableDto::getSchemaDto)
+                                                                .collect(Collectors.toList());
+            Map<Class<? extends KptElement>, KptElementWriter> requiredWriters = chooseWriters(requiredSchemas);
+            Set<String> requiredTags = getRequiredTags(requiredSchemas);
+
+            try {
+                tmpTablesCreator.createIfNotExists(dbName, requiredSchemas);
+            } catch (Exception e) {
+                String message = "Не удалось создать временные таблицы для импорта!";
+                log.error(message, e);
+                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR, message);
+                return;
+            }
+
+            try {
+                cleanTmpTables(requiredSchemas, dbName);
+            } catch (CrgDaoException e) {
+                log.error("Ошибка очистки временной таблицы!", e);
+                writeTaskLog(dbName, importEvent.getTaskId(), KptImportLogLevel.ERROR,
+                             "Не удалось очистить временные таблицы");
+                return;
+            }
+
+            int threadsCount = Math.min(4, importEvent.getSourceFiles().size());
+            CountDownLatch latch = new CountDownLatch(importEvent.getSourceFiles().size());
+            ExecutorService executorService = Executors.newFixedThreadPool(threadsCount);
+            for (int i = 0; i < importEvent.getSourceFiles().size(); ++i) {
+                int finalI = i;
+                executorService.execute(() -> {
+                                            ImportSourceFileDto fileDto = importEvent.getSourceFiles().get(finalI);
+                                            try {
+                                                executeFile(fileDto,
+                                                            requiredTags,
+                                                            requiredSchemas,
+                                                            requiredWriters,
+                                                            importEvent,
+                                                            dbName,
+                                                            targetTables);
+                                            } catch (Exception e) {
+                                                log.error("Непредвиденная ошибка импорта из файла {}: {}",
+                                                          fileDto.getDocument().getTitle(), e.getMessage(), e);
+                                            } finally {
+                                                latch.countDown();
+                                            }
                                         }
-                                    }
-            );
+                );
+            }
+
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                log.error("Прервано ожидание импорта КПТ", e);
+            }
+
+            if (running.get()) {
+                tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
+            }
+
+            importTimer.stop();
+            log.info("Импорт {} выполнен за {} сек", importEvent.getId(), importTimer.getTotalTimeSeconds());
+
+            datasourceFactory.closeDatasource(dbName, DS_ID);
+        } catch (Exception e) {
+            String msg = "Не удалось обработать событие импорта КПТ из XML id: " + event.getId();
+
+            logError(msg, e);
+
+            throw new DataServiceException(msg);
         }
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            log.error("Прервано ожидание импорта КПТ", e);
-        }
-
-        if (running.get()) {
-            tasksDetachedDao.updateStatus(dbName, importEvent.getTaskId(), TaskStatus.DONE);
-        }
-
-        importTimer.stop();
-        log.info("Импорт {} выполнен за {} сек", importEvent.getId(), importTimer.getTotalTimeSeconds());
-
-        datasourceFactory.closeDatasource(dbName, DS_ID);
     }
 
     private void executeFile(ImportSourceFileDto file, Set<String> requiredTags,
