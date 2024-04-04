@@ -40,7 +40,7 @@ public class TagsUpdatedEventHandler implements IEventHandler {
             settingsBroadcaster.broadcast();
         } catch (Exception e) {
             String msg = "Не удалось обновить теги настроек организаций. По причине: " + e.getMessage();
-            log.error(msg, e.getCause());
+            log.error(msg, e);
 
             throw new AuthServiceException(msg, e.getCause());
         }

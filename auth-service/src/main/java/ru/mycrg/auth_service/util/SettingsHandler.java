@@ -67,15 +67,15 @@ public class SettingsHandler {
             } else if ("favorites_epsg".equals(k)) {
                 List<String> rootEpsg = (List<String>) systemSettings.get(k);
                 List<String> orgEpsg = (List<String>) orgSettings.get(k);
-                if (rootEpsg.isEmpty() || orgEpsg.isEmpty()) {
+                if (rootEpsg == null || rootEpsg.isEmpty() || orgEpsg == null || orgEpsg.isEmpty()) {
                     result.remove(k);
+                } else {
+                    List<String> resultEpsg = orgEpsg.stream()
+                                                     .filter(rootEpsg::contains)
+                                                     .collect(Collectors.toList());
+
+                    result.put(k, resultEpsg);
                 }
-
-                List<String> resultEpsg = orgEpsg.stream()
-                                                 .filter(rootEpsg::contains)
-                                                 .collect(Collectors.toList());
-
-                result.put(k, resultEpsg);
             } else {
                 if (TRUE.equals(v)) {
                     if (orgSettings.containsKey(k)) {
