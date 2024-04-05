@@ -28,7 +28,7 @@ services:
       - /opt/data/postgis:/var/lib/postgresql
       - /opt/data/configs/db/extra.conf:/settings/extra.conf
     environment:
-      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service
+      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
       POSTGRES_USER: ${CRG_USER}
       POSTGRES_PASS: ${DB_PASS}
       RECREATE_DATADIR: ${RECREATE_DATADIR}
@@ -58,7 +58,7 @@ services:
       INITIAL_MEMORY: ${JAVA_XMS_SIZE:-7000}
       MAXIMUM_MEMORY: ${JAVA_XMX_SIZE:-7000}
       STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
-      COMMUNITY_EXTENSIONS: ogr-datastore-plugin
+      COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
     mem_limit: ${GEOSERVER_MEM_LIMIT:-7400}m
 
 
