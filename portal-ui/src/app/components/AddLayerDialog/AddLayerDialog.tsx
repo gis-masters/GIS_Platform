@@ -46,7 +46,7 @@ interface AddLayerDialogProps {
   onAdd: (layer: CrgLayer) => void;
 }
 
-interface FormValue extends CrgLayer {
+interface LayerFormValue extends CrgLayer {
   datasource?: Datasource;
   layerType?: string;
 }
@@ -77,7 +77,7 @@ const minZoomTitle = 'Уровень масштабной детализации
 export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @observable private usedVectorTables: VectorTable[] = [];
   private usedVectorTablesRequest?: Promise<VectorTable[]>;
-  @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
+  @observable private formValue: Partial<LayerFormValue> = getDefaultValues(this.fields);
 
   constructor(props: AddLayerDialogProps) {
     super(props);
@@ -137,7 +137,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   }
 
   @action.bound
-  private handleFormChange(formValue: FormValue) {
+  private handleFormChange(formValue: LayerFormValue) {
     this.formValue = formValue;
   }
 
@@ -319,10 +319,6 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     const { dataset, vectorTable, library } = datasource;
     const dataStoreName = currentUser.workspaceName;
 
-    if (!this.schema) {
-      throw new Error('Отсутствует схема');
-    }
-
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       if (!dataset || !vectorTable) {
         throw new Error('Не указаны обязательные параметры');
@@ -339,7 +335,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         title,
         nativeCRS: vectorTable.crs,
         minZoom,
-        styleName: styleName || this.schema.styleName || this.schema.name,
+        styleName: styleName || this.schema?.styleName || this.schema?.name,
         view
       });
       this.clearForm();
@@ -452,9 +448,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
   private calculateTitle: ValueFormula = (value): string => {
     return (
-      (value as FormValue)?.title ||
-      (value as FormValue)?.datasource?.vectorTable?.title ||
-      (value as FormValue)?.datasource?.file?.title ||
+      (value as LayerFormValue)?.title ||
+      (value as LayerFormValue)?.datasource?.vectorTable?.title ||
+      (value as LayerFormValue)?.datasource?.file?.title ||
       ''
     );
   };

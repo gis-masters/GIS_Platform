@@ -4,11 +4,15 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { IconButton, TextField } from '@mui/material';
-import { ArrowDropDown, ArrowRight, Clear, SearchOutlined } from '@mui/icons-material';
-import { TreeView } from '@mui/x-tree-view';
+import { Clear } from '@mui/icons-material';
+import { SimpleTreeView } from '@mui/x-tree-view';
 
-import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { Toc, TocItem } from '../../stores/Help.store';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
+
+import { HelpTocCollapseIcon } from './CollapseIcon/HelpToc-CollapseIcon';
+import { HelpTocSearchIcon } from './SearchIcon/HelpToc-SearchIcon';
+import { HelpTocExpandIcon } from './ExpandIcon/HelpToc-ExpandIcon';
 import { HelpTocItem } from './Item/HelpToc-Item';
 
 import '!style-loader!css-loader!sass-loader!./HelpToc.scss';
@@ -43,7 +47,7 @@ export class HelpToc extends Component<HelpTocProps> {
           value={this.filterParam}
           onChange={this.handleFilterChange}
           InputProps={{
-            startAdornment: <SearchOutlined className={cnHelpToc('SearchIcon')} />,
+            startAdornment: <HelpTocSearchIcon />,
             endAdornment: (
               <IconButton size='small' onClick={this.handleFilterClear} className={cnHelpToc('SearchClear')}>
                 <Clear />
@@ -62,14 +66,16 @@ export class HelpToc extends Component<HelpTocProps> {
               />
             ))
           : items.map(item => (
-              <TreeView
+              <SimpleTreeView
                 key={item.id}
-                defaultCollapseIcon={<ArrowDropDown className={cnHelpToc('TitleIcon')} />}
-                defaultExpandIcon={<ArrowRight className={cnHelpToc('TitleIcon')} />}
+                slots={{
+                  collapseIcon: HelpTocCollapseIcon,
+                  expandIcon: HelpTocExpandIcon
+                }}
                 disableSelection
               >
                 <HelpTocItem item={item} onSelect={onSelect} />
-              </TreeView>
+              </SimpleTreeView>
             ))}
       </div>
     );

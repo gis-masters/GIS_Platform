@@ -54,10 +54,11 @@ import { Schema } from '../data/schema/schema.models';
 import { Mime } from '../util/Mime';
 import { applyView } from '../data/schema/schema.utils';
 import { cqlConcat } from '../util/cqlConcat';
-import { FilterBySelection } from './map.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { Toast } from '../../components/Toast/Toast';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
+
+import { FilterBySelection, MapPosition } from './map.models';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -71,11 +72,6 @@ interface CrgWmsParams {
 
 interface CrgAdditionalLayerInfo {
   isUserLayer: boolean;
-}
-
-export interface MapPosition {
-  zoom: number;
-  center: Coordinate;
 }
 
 interface LayerAdditionalProps {

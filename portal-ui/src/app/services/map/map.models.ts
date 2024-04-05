@@ -1,3 +1,5 @@
+import { Coordinate } from 'ol/coordinate';
+
 export enum MapSelectionTypes {
   ADD,
   REMOVE,
@@ -31,3 +33,8 @@ export enum FilterBySelection {
 }
 
 export type LabelType = 'label' | 'line';
+
+export interface MapPosition {
+  zoom: number;
+  center: Coordinate;
+}

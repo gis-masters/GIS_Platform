@@ -1,12 +1,5 @@
 import React, { FC } from 'react';
-import {
-  Select as BaseSelect,
-  InputLabel,
-  MenuItem,
-  ListItemText,
-  FormControl,
-  SelectProps as BaseSelectProps
-} from '@mui/material';
+import { Select as BaseSelect, InputLabel, MenuItem, ListItemText, FormControl, BaseSelectProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 

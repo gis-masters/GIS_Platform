@@ -30,7 +30,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
       <TreeItem
         classes={{ label: cnHelpTocItem({ type: item.children ? 'wrapper' : 'link' }) }}
         key={item.id}
-        nodeId={item.id}
+        itemId={item.id}
         label={item.title}
         onClick={this.clickHandler}
       >

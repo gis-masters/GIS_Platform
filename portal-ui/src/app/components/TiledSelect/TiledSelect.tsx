@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { Select, MenuItem, SelectProps as BaseSelectProps } from '@mui/material';
+import { Select, MenuItem, BaseSelectProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./TiledSelect.scss';
