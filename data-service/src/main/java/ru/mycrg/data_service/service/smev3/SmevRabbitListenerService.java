@@ -30,7 +30,7 @@ public class SmevRabbitListenerService {
 
     @RabbitListener(containerFactory = "smevRabbitContainerFactory", queues = "#{adapterReceiveQueue}")
     public void receiveMessage(Message message) {
-        log.info("Received from queue: " + message);
+        log.info("Получено сообщение из очереди: {}", message);
         contextWrapper.needTransaction(() -> smevMessageReceiverService.processReceiveMessage(message));
     }
 }

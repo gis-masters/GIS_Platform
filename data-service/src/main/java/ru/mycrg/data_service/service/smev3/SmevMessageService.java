@@ -77,9 +77,9 @@ public class SmevMessageService {
 
             smevMsgRepository.save(smevMessage);
 
-            log.info("save smev message. id:{}", smevMessage.getId());
+            log.info("Сохранено входящее сообщение. id: {}", smevMessage.getId());
         } catch (Exception e) {
-            throw new SmevRequestException("saveIncoming error :" + e.getMessage());
+            throw new SmevRequestException("Ошибка при сохранении :" + e.getMessage());
         }
     }
 
@@ -108,23 +108,23 @@ public class SmevMessageService {
 
             smevMsgRepository.save(smevMessage);
 
-            log.info("save smev message. id:{}", smevMessage.getId());
+            log.info("Сохранено исходящее сообщение. id: {}", smevMessage.getId());
         } catch (Exception e) {
-            throw new SmevRequestException("saveOutgoing error :" + e.getMessage());
+            throw new SmevRequestException("Ошибка при сохранении :" + e.getMessage());
         }
     }
 
     @Transactional
     public SmevMessageMetaEntity getByClientId(UUID clientId) {
         return smevMsgRepository.findByClientId(clientId)
-                .orElseThrow(() -> new SmevRequestException("record not found"));
+                .orElseThrow(() -> new SmevRequestException("Запись по clientId не найден " + clientId));
     }
 
     @Transactional
     public XmlBuildMeta getMeta(UUID id) {
         log.debug("get meta by {}", id);
         var message = smevMsgRepository.findById(id)
-                .orElseThrow(() -> new SmevRequestException("record not found"));
+                .orElseThrow(() -> new SmevRequestException("Запись по id не найден " + id));
         return new XmlBuildMeta(
                 message.mnemonicEnum(),
                 message.getClientId(),

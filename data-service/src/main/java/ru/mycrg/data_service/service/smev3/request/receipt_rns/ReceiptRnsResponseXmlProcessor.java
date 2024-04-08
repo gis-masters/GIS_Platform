@@ -34,6 +34,8 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
                     .ifPresent(s -> record.put(PATH.getName(), s));
             asString(RNS_CONTENT_TYPE)
                     .ifPresent(s -> record.put(PROPERTY_CONTENT_TYPE_ID, s));
+            asBoolean(true)
+                    .ifPresent(b -> record.put(PROPERTY_IS_RECORD_FULL, b));
 
             ofNullable(type.getChangesConstPermit())
                     .ifPresent(this::changesConstPermitType);
@@ -51,16 +53,16 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
             records = new ArrayList<>();
 
             types.stream()
-                 .map(ResponseConstructionShortInfoType::getVersionInfo)
-                 .forEach(constructionVersionInfoType -> {
-                     record = new HashMap<>();
-                     constructionVersionInfoType(constructionVersionInfoType);
-                     records.add(record);
-                 });
+                    .map(ResponseConstructionShortInfoType::getVersionInfo)
+                    .forEach(constructionVersionInfoType -> {
+                        record = new HashMap<>();
+                        constructionVersionInfoType(constructionVersionInfoType);
+                        records.add(record);
+                    });
 
             return records.stream()
-                          .map(RecordEntity::new)
-                          .collect(Collectors.toList());
+                    .map(RecordEntity::new)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             throw new SmevRequestException("Не удалось сформировать сущности. По причине:" + e.getMessage());
         }
@@ -72,6 +74,9 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
                 .ifPresent(s -> record.put(PATH.getName(), s));
         asString(RNS_CONTENT_TYPE)
                 .ifPresent(s -> record.put(PROPERTY_CONTENT_TYPE_ID, s));
+        asBoolean(false)
+                .ifPresent(b -> record.put(PROPERTY_IS_RECORD_FULL, b));
+
         asString(type.getConstPermitID())
                 .ifPresent(s -> record.put(PROPERTY_CONST_PERMIT_ID, s));
         asString(type.getConstPermitNumber())
@@ -203,11 +208,7 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
                     asString(addressFullType.getNote())
                             .ifPresent(s -> record.put(PROPERTY_RECIPIENT_INFO_NOTE, s));
                     ofNullable(addressFullType.getLocality())
-                            .ifPresent(addressElementType -> {
-                                String locality = String.format("%s %s", addressElementType.getType(),
-                                                                addressElementType.getName());
-                                record.put(PROPERTY_RECIPIENT_INFO_LOCALITY, locality);
-                            });
+                            .ifPresent(l -> record.put(PROPERTY_RECIPIENT_INFO_LOCALITY, locality(l)));
                 });
     }
 
@@ -249,11 +250,7 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
                     asString(addressFullType.getNote())
                             .ifPresent(s -> record.put(PROPERTY_OBJECT_ADDRESS_NOTE, s));
                     ofNullable(addressFullType.getLocality())
-                            .ifPresent(addressElementType -> {
-                                String locality = String.format("%s %s", addressElementType.getType(),
-                                                                addressElementType.getName());
-                                record.put(PROPERTY_OBJECT_ADDRESS_LOCALITY, locality);
-                            });
+                            .ifPresent(l -> record.put(PROPERTY_OBJECT_ADDRESS_LOCALITY, locality(l)));
                 });
         ofNullable(type.getObjectKind())
                 .ifPresent(ref -> {
@@ -772,8 +769,10 @@ public class ReceiptRnsResponseXmlProcessor extends AResponseXmlProcessor {
                             .ifPresent(s -> record.put(PROPERTY_EXPERTISE_PROJECT_ORGAN_IS_RES, s));
                 });
         asFileType(type.getAttachments())
-                .ifPresent(s -> {
-                    record.put(PROPERTY_EXPERTISE_PROJECT_EXPERTISE_ATTACHMENTS, s.getName());
-                });
+                .ifPresent(s -> record.put(PROPERTY_EXPERTISE_PROJECT_EXPERTISE_ATTACHMENTS, s.getName()));
+    }
+
+    private static String locality(@NotNull AddressElementType addressElementType) {
+        return String.format("%s %s", addressElementType.getType(), addressElementType.getName());
     }
 }

@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.smev3.fields;
 public class FieldsEisZs {
 
     public static final String TABLE = "dl_data_eis_zs";
+    public static final String PROPERTY_IS_RECORD_FULL = "is_record_full";
     public static final String PROPERTY_CONTENT_TYPE_ID = "content_type_id";
     public static final String PROPERTY_PREV_CONST_PERMIT_ID = "prev_const_permit_id";
     public static final String PROPERTY_PREV_CONST_PERMIT_NUMBER = "prev_const_permit_number";

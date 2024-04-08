@@ -38,7 +38,7 @@ public class DataEisZsService {
 
     @Transactional
     public void updateExists(String fieldName, IRecord recordXml) {
-        log.debug("try to update 'dl_data_eis_zs' recordXml: " + recordXml);
+        log.debug("Попытка обработать запись 'dl_data_eis_zs': {}", recordXml);
         loadSchema();
 
         findByPermitNumber(fieldName, recordXml.getAsString(fieldName)).ifPresentOrElse(
@@ -50,7 +50,7 @@ public class DataEisZsService {
                                 recordXml.getContent(),
                                 schema
                         );
-                        log.info("recordXml 'dl_data_eis_zs' updated: " + recordXml);
+                        log.info("Обновлена имеющеюся запись 'dl_data_eis_zs': {}", recordXml);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException("Не удалось обновить запись " + e.getMessage());
                     }
@@ -58,7 +58,7 @@ public class DataEisZsService {
                 () -> {
                     try {
                         recordsDao.addRecord(qualifier, recordXml, schema);
-                        log.info("recordXml 'dl_data_eis_zs' added: " + recordXml);
+                        log.info("Добавлена новая запись 'dl_data_eis_zs': {} ", recordXml);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException("Не удалось создать запись " + e.getMessage());
                     }
@@ -68,7 +68,7 @@ public class DataEisZsService {
 
     @Transactional
     public void addOrIgnoreRecords(String fieldName, List<IRecord> recordsXml) {
-        log.debug("try to add 'dl_data_eis_zs' recordsXml count: " + recordsXml.size());
+        log.debug("Попытка добавить {} записей 'dl_data_eis_zs'", recordsXml.size());
         loadSchema();
 
         recordsXml
@@ -77,7 +77,7 @@ public class DataEisZsService {
                 .forEach(iRecord -> {
                     try {
                         recordsDao.addRecord(qualifier, iRecord, schema);
-                        log.info("recordXml 'dl_data_eis_zs' added: " + iRecord);
+                        log.info("Добавлена новая запись 'dl_data_eis_zs': {}", iRecord);
                     } catch (CrgDaoException e) {
                         throw new SmevRequestException(e.getMessage());
                     }

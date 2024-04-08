@@ -17,8 +17,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.PROPERTY_PERMIT_DATE;
-import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.PROPERTY_PERMIT_NUMBER;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.*;
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
@@ -51,7 +50,6 @@ public class ReceiptRnvMarshallerTest extends AMarshallerTest {
         assertEquals(dto.getPermitDateTo(), XmlMapper.mapLocalDate(receiptListConstruction.getPermitDateTo()));
     }
 
-
     @Test
     public void responseExploitation() throws Exception {
         var fileContent = readFile("receipt_rnv_1_0_9/response_exploitation.xml");
@@ -70,13 +68,14 @@ public class ReceiptRnvMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var content = new ReceiptRnvResponseXmlProcessor()
-                .processOne(response.getResponseExploitation())
-                .getContent();
+        var record = new ReceiptRnvResponseXmlProcessor()
+                .processOne(response.getResponseExploitation());
 
         // ExploitationType
         var exploitationType = response.getResponseExploitation();
 
+        var content = record.getContent();
+        assertEquals(content.get(PROPERTY_IS_RECORD_FULL), true);
         assertEquals(content.get(PROPERTY_PERMIT_NUMBER), exploitationType.getPermitNumber());
         assertEquals(content.get(PROPERTY_PERMIT_DATE), XmlMapper.mapLocalDateTime(exploitationType.getPermitDate()));
     }
@@ -99,8 +98,15 @@ public class ReceiptRnvMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
+        var records = new ReceiptRnvResponseXmlProcessor()
+                .processList(response.getResponseListExploitation());
+
         // size
-        assertEquals(8, response.getResponseListExploitation().size());
+        assertEquals(8, records.size());
+
+        // Первое сообщение
+        var content = records.get(0).getContent();
+        assertEquals(content.get(PROPERTY_IS_RECORD_FULL), false);
     }
 
     @Test

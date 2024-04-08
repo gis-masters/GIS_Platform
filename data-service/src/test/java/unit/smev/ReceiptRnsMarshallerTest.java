@@ -68,15 +68,16 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var content = new ReceiptRnsResponseXmlProcessor()
-                .processOne(responseType.getResponseConstruction())
-                .getContent();
+        var record = new ReceiptRnsResponseXmlProcessor()
+                .processOne(responseType.getResponseConstruction());
 
         // ChangesConstPermit
         var changesConstPermit = responseType
                 .getResponseConstruction()
                 .getChangesConstPermit();
 
+        var content = record.getContent();
+        assertEquals(content.get(PROPERTY_IS_RECORD_FULL), true);
         assertEquals(content.get(PROPERTY_PREV_CONST_PERMIT_NUMBER), changesConstPermit.getPrevConstPermitNumber());
         assertEquals(content.get(PROPERTY_PREV_CONST_PERMIT_DATE), XmlMapper.mapLocalDateTime(changesConstPermit.getPrevConstPermitDate()));
         assertEquals(content.get(PROPERTY_REASON_CHANGES_NAME), changesConstPermit.getReasonChanges().get(0).getName());
@@ -184,23 +185,6 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
     }
 
     @Test
-    public void responseReject() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
-
-        var smevMeta = queryResult.getSmevMetadata();
-        assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());
-        assertEquals("18434900-f30b-48ea-90e0-9e2ef3ae40b5", smevMeta.getTransactionCode());
-        assertEquals("809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e", smevMeta.getOriginalMessageID());
-        assertEquals("777002", smevMeta.getSender());
-        assertEquals("U629301", smevMeta.getRecipient());
-
-        var message = queryResult.getMessage();
-        assertEquals("RejectMessage", message.getMessageType());
-        assertEquals("RejectMessage", message.getMessageType());
-    }
-
-    @Test
     public void responseConstructionList() throws Exception {
         var fileContent = readFile("receipt_rns_1_0_9/response_list_construction.xml");
         var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
@@ -216,8 +200,15 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .getMessagePrimaryContent()
                 .getResponse();
 
+        var records = new ReceiptRnsResponseXmlProcessor()
+                .processList(response.getResponseListConstruction());
+
         // size
-        assertEquals(70, response.getResponseListConstruction().size());
+        assertEquals(70, records.size());
+
+        // Первое сообщение
+        var content = records.get(0).getContent();
+        assertEquals(content.get(PROPERTY_IS_RECORD_FULL), false);
     }
 
     @Test
@@ -245,11 +236,11 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
         assertEquals(80, constPermitNumberExist);
 
-        var contentList = new ReceiptRnsResponseXmlProcessor()
+        var records = new ReceiptRnsResponseXmlProcessor()
                 .processList(response.getResponseListConstruction());
 
         // size
-        assertEquals(80, contentList.size());
+        assertEquals(80, records.size());
 
         // ConstPermitID = 76416
         var constPermitID = "76416";
@@ -261,13 +252,14 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .get()
                 .getVersionInfo();
 
-        var content = contentList
+        var content = records
                 .stream()
                 .filter(iRecord -> iRecord.getContent().get(PROPERTY_CONST_PERMIT_ID).equals(constPermitID))
                 .findFirst()
                 .get()
                 .getContent();
 
+        assertEquals(content.get(PROPERTY_IS_RECORD_FULL), false);
         assertNotNull(content.get(PROPERTY_CONST_PERMIT_ID));
         assertEquals(content.get(PROPERTY_CONST_PERMIT_ID), contentXml.getConstPermitID());
 
@@ -318,5 +310,22 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
         assertNotNull(content.get(PROPERTY_OBJECT_BUSINESS_ID));
         assertEquals(content.get(PROPERTY_OBJECT_BUSINESS_ID), objectShortInfo.getObjectBusinessID());
+    }
+
+    @Test
+    public void responseReject() throws Exception {
+        var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
+        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+
+        var smevMeta = queryResult.getSmevMetadata();
+        assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());
+        assertEquals("18434900-f30b-48ea-90e0-9e2ef3ae40b5", smevMeta.getTransactionCode());
+        assertEquals("809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e", smevMeta.getOriginalMessageID());
+        assertEquals("777002", smevMeta.getSender());
+        assertEquals("U629301", smevMeta.getRecipient());
+
+        var message = queryResult.getMessage();
+        assertEquals("RejectMessage", message.getMessageType());
+        assertEquals("RejectMessage", message.getMessageType());
     }
 }

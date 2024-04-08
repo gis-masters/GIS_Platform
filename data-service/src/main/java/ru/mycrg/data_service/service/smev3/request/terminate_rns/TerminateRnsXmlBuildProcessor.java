@@ -45,8 +45,7 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
             return buildRequest(request);
         } catch (Exception e) {
-            throw new SmevRequestException(
-                    "Не удалось сформировать TerminateRnsRequest запрос. По причине:" + e.getMessage());
+            throw new SmevRequestException("Не удалось сформировать TerminateRnsRequest запрос. По причине:" + e.getMessage());
         }
     }
 
@@ -59,32 +58,32 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 TABLE_13,
                 section13Id
         );
-        log.debug("section13Record read. is not null {}", rue.section13Record != null);
+        log.debug("section13Record прочитано - {}", rue.section13Record != null);
 
         rue.relation_Section13Record = asRefRecord(
                 rue.section13Record,
                 PROPERTY_RELATIONS
         ).orElse(null);
-        log.debug("relation_Section13Record read. is not null {}", rue.relation_Section13Record != null);
+        log.debug("relation_Section13Record прочитано - {}", rue.relation_Section13Record != null);
 
         rue.organization2_Section13Record = asRefRecord(
                 rue.section13Record,
                 PROPERTY_ORGANIZATION_2
         ).orElse(null);
-        log.debug("termination_Section13Record read. is not null {}", rue.organization2_Section13Record != null);
+        log.debug("termination_Section13Record прочитано - {}", rue.organization2_Section13Record != null);
 
         rue.developer_CustomerRecord = asRefRecord(
                 rue.relation_Section13Record,
                 PROPERTY_DEVELOPER_DATA_CONNECTION
         ).orElse(null);
-        log.debug("developer_CustomerRecord read. is not null {}", rue.developer_CustomerRecord != null);
+        log.debug("developer_CustomerRecord прочитано - {}", rue.developer_CustomerRecord != null);
 
         // developer_CustomerRecord
         rue.developerOrganizationRecord = asRefRecord(
                 rue.developer_CustomerRecord,
                 FieldsCustomer.PROPERTY_ORGANIZATION
         ).orElse(null);
-        log.debug("developerOrganizationRecord read. is not null {}", rue.developerOrganizationRecord != null);
+        log.debug("developerOrganizationRecord прочитано - {}", rue.developerOrganizationRecord != null);
     }
 
     /**

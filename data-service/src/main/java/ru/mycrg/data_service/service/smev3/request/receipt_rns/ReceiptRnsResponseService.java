@@ -40,7 +40,7 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
     @Override
     @Transactional
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
-        log.debug("receive message from smev " + messageBody);
+        log.debug("Получено сообщение из СМЭВ: {}", messageBody);
 
         try {
             var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
@@ -57,7 +57,7 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
 
             switch (messageType(queryResult)) {
                 case REJECT: {
-                    log.debug("message type is REJECT");
+                    log.debug("Тип сообщения - REJECT");
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
                             .setStatus(queryResult.getMessage().getResponseContent().getRejects().get(0).getCode())
@@ -65,14 +65,14 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
                                     queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
                 }
                 case STATUS: {
-                    log.debug("message type is STATUS");
+                    log.debug("Тип сообщения - STATUS");
                     return new ProcessAdapterMessageResult()
                             .setXmlBuildMeta(XmlBuildMeta)
                             .setStatus(queryResult.getMessage().getResponseContent().getStatus().getCode())
                             .setMessage(queryResult.getMessage().getResponseContent().getStatus().getDescription());
                 }
                 case PRIMARY: {
-                    log.debug("message type is PRIMARY");
+                    log.debug("Тип сообщения - PRIMARY");
                     processResponse(queryResult);
 
                     return new ProcessAdapterMessageResult()
@@ -82,10 +82,10 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
                 }
             }
 
-            throw new SmevRequestException("unknown or null message type");
+            throw new SmevRequestException("Неизвестный тип сообщения");
         } catch (Exception e) {
-            log.error("Process adapter message error: {}", e.getMessage());
-            throw new SmevRequestException("process adapter message error :" + e.getMessage());
+            log.error("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage());
+            throw new SmevRequestException("Ошибка при обработке сообщения из СМЭВ :" + e.getMessage());
         }
     }
 
@@ -105,16 +105,16 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
 
         if (responseType.getResponseConstruction() != null) {
             var iRecord = process.processOne(responseType.getResponseConstruction());
-            log.info("found one record " + iRecord);
+            log.info("Найдена 1 запись {}", iRecord);
 
             dataEisZsService.updateExists(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, iRecord);
         } else if (!CollectionUtils.isEmpty(responseType.getResponseListConstruction())) {
             var iRecords = process.processList(responseType.getResponseListConstruction());
-            log.info("found record count " + iRecords.size());
+            log.info("Найдено {} записей", iRecords.size());
 
             dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, iRecords);
         } else {
-            throw new SmevRequestException("response contains no content");
+            throw new SmevRequestException("Ответ из СМЭВ не содержит записей для обработки");
         }
     }
 }

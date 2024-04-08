@@ -32,17 +32,17 @@ public class SmevMessageSenderService {
     @Transactional
     public void sendMessage(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
         try {
-            log.debug("Try to save and send: " + buildMeta.toString());
+            log.debug("Попытка отправить сообщение в СМЭВ: {}", buildMeta.toString());
             messageService.saveOutgoing(buildMeta, userTo);
             // TODO sendQueue - временное явление
             if (sendQueue) {
-                log.info("message send to queue");
+                log.info("Сообщение отправлено в очередь адаптера");
                 rabbitTemplate.convertAndSend(adapterSendQueue.getName(), buildMeta.getRequestXmlString());
             }
-            log.info("Success save and send");
+            log.info("Успешно отправлено и сохранено");
         } catch (Exception e) {
-            log.error("Fail save and send. {}", e.getMessage());
-            throw new SmevRequestException("Fail save and send. " + e.getMessage());
+            log.error("Ошибка при отправке сообщения в СМЭВ. {}", e.getMessage());
+            throw new SmevRequestException("Ошибка при отправке сообщения в СМЭВ. " + e.getMessage());
         }
     }
 }
