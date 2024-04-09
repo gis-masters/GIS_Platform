@@ -40,10 +40,10 @@ services:
     restart: always
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1" ]
-      interval: 10s
-      timeout: 30s
+      interval: 100s
+      timeout: 100s
       retries: 6
-      start_period: 120s
+      start_period: 300s
     ports:
       - "8080:8080"
     volumes:
