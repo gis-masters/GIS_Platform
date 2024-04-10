@@ -1,16 +1,16 @@
 import { boundClass } from 'autobind-decorator';
 
-import { GisClient } from '../GisClient';
 import { PageOptions } from '../../models';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
+import { CrgLayersGroup } from '../layers/layers.models';
+import { PageableResources } from '../../../../server-types/common-contracts';
+import { Client } from '../../api/Client';
 
 import { CrgProject } from './projects.models';
-import { PageableResources } from '../../../../server-types/common-contracts';
 
 @boundClass
-class ProjectsClient extends GisClient {
+class ProjectsClient extends Client {
   private static _instance: ProjectsClient;
 
   static get instance(): ProjectsClient {
@@ -61,10 +61,6 @@ class ProjectsClient extends GisClient {
 
   async deleteProject(id: number): Promise<void> {
     return http.delete(this.getProjectUrl(id));
-  }
-
-  async getProjectLayers(projectId: number): Promise<CrgLayer[]> {
-    return http.get<CrgLayer[]>(this.getProjectLayersUrl(projectId));
   }
 
   async getProjectGroups(projectId: number): Promise<CrgLayersGroup[]> {

@@ -8,6 +8,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.gis_service.entity.Layer;
+import ru.mycrg.gis_service.entity.Project;
 
 import java.util.List;
 import java.util.Set;
@@ -56,4 +57,8 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     void deleteLayerById(@Param("layerId") Long layerId);
 
     void deleteByTableName(String tableName);
+
+    boolean existsByProjectAndTableNameAndNativeCRS(Project project, String tableName, String nativeName);
+
+    List<Layer> findByTableNameAndNativeCRS(String tableName, String nativeNAme);
 }

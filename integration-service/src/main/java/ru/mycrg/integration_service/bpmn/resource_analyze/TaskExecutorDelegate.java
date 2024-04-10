@@ -1,6 +1,6 @@
 package ru.mycrg.integration_service.bpmn.resource_analyze;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -72,8 +72,8 @@ public class TaskExecutorDelegate implements JavaDelegate {
             log.debug("request url {}", url);
 
             response = crgHttpClient.handleRequest(request,
-                                                   new TypeToken<PageModel<ResourcesModel>>() {
-                                                   }.getType());
+                                                   new TypeReference<>() {
+                                                   });
             if (response.isSuccessful()) {
                 log.debug("Analyze time fetch resources {}", response.getBody());
                 return Optional.of(response.getBody());

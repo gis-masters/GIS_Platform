@@ -6,16 +6,17 @@ import { Close } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
-import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
-import { communicationService } from '../../../services/communication.service';
+import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { IconButton } from '../../IconButton/IconButton';
-import { mapStore } from '../../../stores/Map.store';
 import { TabTitle } from '../../TabTitle/TabTitle';
+import { TabInner } from '../../TabInner/TabInner';
+
+import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';
-import { TabInner } from '../../TabInner/TabInner';
 
 const cnAttributesTab = cn('Attributes', 'Tab');
 const cnAttributesTabClose = cn('Attributes', 'TabClose');
@@ -24,8 +25,8 @@ interface AttributesTabProps extends TabProps {
   layer: CrgVectorLayer;
   grade: 'hard' | 'soft';
   selected?: boolean;
-  onClose: (layer: CrgVectorLayer) => void;
-  onMinimize: (layer: CrgVectorLayer) => void;
+  onClose(layer: CrgVectorLayer): void;
+  onMinimize(layer: CrgVectorLayer): void;
 }
 
 @observer
@@ -36,7 +37,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
   }
 
   render() {
-    const { layer, grade, className, selected, onMinimize, ...props } = this.props;
+    const { layer, grade, className, selected = false, onMinimize, ...props } = this.props;
 
     return (
       <Tab

@@ -38,18 +38,6 @@ SET schema = '{
       "maxLength": 50
     },
     {
-      "name": "size",
-      "title": "Размер в kb",
-      "required": true,
-      "valueType": "INT"
-    },
-    {
-      "name": "inner_path",
-      "title": "Где лежит",
-      "required": true,
-      "valueType": "STRING"
-    },
-    {
       "name": "created_at",
       "title": "Дата создания",
       "required": true,
@@ -142,14 +130,13 @@ SET schema = '{
     {
       "id": "doc_v1",
       "type": "DOCUMENT",
-      "title": "Документ первого типа",
+      "title": "Документ 1",
       "icon": "DOCUMENT",
       "attributes": [
         {
           "name": "title",
           "title": "Название файла",
-          "required": true,
-          "maxLength": 500
+          "required": true
         },
         {
           "name": "native_crs"
@@ -157,19 +144,19 @@ SET schema = '{
       ]
     },
     {
-      "id": "doc_v3",
+      "id": "doc_v2",
       "type": "DOCUMENT",
       "attributes": [
         {
           "name": "title",
-          "title": "Название файла",
+          "title": "Короткое название файла",
           "required": true,
-          "maxLength": 100
+          "maxLength": 5
         }
       ]
     },
     {
-      "id": "doc_v2",
+      "id": "doc_v3",
       "type": "DOCUMENT",
       "title": "Документ ГПЗУ",
       "icon": "GPZU",
@@ -190,17 +177,9 @@ SET schema = '{
       ]
     },
     {
-      "id": "folder_v1",
-      "type": "FOLDER",
-      "attributes": [
-        {
-          "name": "title"
-        }
-      ]
-    },
-    {
       "id": "doc_v4",
       "type": "DOCUMENT",
+      "title": "Документ с файлами",
       "attributes": [
         {
           "name": "title",
@@ -213,6 +192,27 @@ SET schema = '{
         {
           "name": "one_file",
           "title": "Одинокое фото собаки"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title"
+        }
+      ]
+    },
+    {
+      "id": "folder_v2",
+      "type": "FOLDER",
+      "title": "Раздел 314",
+      "attributes": [
+        {
+          "name": "title",
+          "required": true,
+          "maxLength": 20
         }
       ]
     }

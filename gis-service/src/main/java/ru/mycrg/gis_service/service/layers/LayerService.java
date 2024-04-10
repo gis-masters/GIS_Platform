@@ -20,7 +20,6 @@ import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.service.ProjectService;
 import ru.mycrg.gis_service.service.ResourceProtector;
-import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -38,8 +37,6 @@ import static ru.mycrg.gis_service.mappers.LayerMapper.layerMapper;
 public class LayerService {
 
     public final Logger log = LoggerFactory.getLogger(LayerService.class);
-
-    public static final String DATA_SERVICE_API_PREFIX = "/api/data";
 
     private final JsonPatcher jsonPatcher;
     private final ProjectService projectService;
@@ -66,7 +63,7 @@ public class LayerService {
                                           .collect(toMap(ILayerHandler::getType, Function.identity()));
     }
 
-    public List<LayerProjection> findAll(long projectId) {
+    public List<LayerProjection> getAll(long projectId) {
         return projectService
                 .getById(projectId)
                 .getLayers().stream()
@@ -74,7 +71,7 @@ public class LayerService {
                 .collect(Collectors.toList());
     }
 
-    public LayerProjection findByTableName(String tableName) {
+    public LayerProjection getByTableName(String tableName) {
         List<Layer> layers = new ArrayList<>();
         projectService.getAll().stream()
                       .map(Project::getLayers)
@@ -88,10 +85,10 @@ public class LayerService {
         return new LayerProjection(foundLayer, getOrgWorkspaceName());
     }
 
-    public LayerProjection findById(long projectId, long layerId) {
+    public LayerProjection getById(long projectId, long layerId) {
         List<Layer> layers = projectService.getById(projectId).getLayers();
 
-        Layer layer = findLayerById(layers, layerId);
+        Layer layer = getLayerById(layers, layerId);
 
         return new LayerProjection(layer, getOrgWorkspaceName());
     }
@@ -108,7 +105,7 @@ public class LayerService {
         try {
             ILayerHandler layerHandler = layerHandlers.get(layerDto.getType());
             if (layerHandler == null) {
-                throw new IllegalStateException("No handlers exist for layer type: " + layerDto.getType());
+                throw new IllegalStateException("Не существует обработчика для слоя типа: " + layerDto.getType());
             }
 
             Optional<Layer> oLayer = layerHandler.create(project, layerDto);
@@ -127,11 +124,11 @@ public class LayerService {
 
                 return Optional.of(newLayer);
             } else {
-                log.debug("Raster layer was created only on geoserver");
+                log.debug("Layer was created only on geoserver");
 
                 return Optional.empty();
             }
-        } catch (HttpClientException e) {
+        } catch (Exception e) {
             String msg = String.format("Не удалось создать слой: '%s'", layerDto.getTitle());
 
             throw new GisServiceException(msg, e.getCause());
@@ -144,7 +141,7 @@ public class LayerService {
             throw new ForbiddenException("редактирования", "проекта", project.getName());
         }
 
-        Layer layerForUpdate = findLayerById(project.getLayers(), layerId);
+        Layer layerForUpdate = getLayerById(project.getLayers(), layerId);
 
         try {
             LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
@@ -186,7 +183,7 @@ public class LayerService {
         layerRepository.deleteByTableName(tableName);
     }
 
-    public List<RelatedLayersModel> findRelatedLayers(String field, String value) {
+    public List<RelatedLayersModel> getRelatedLayers(String field, String value) {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
@@ -207,7 +204,7 @@ public class LayerService {
         return mapToRelatedLayersModel(relatedLayers);
     }
 
-    public List<RelatedLayersModel> findRelatedToFilesLayers(String fileId) {
+    public List<RelatedLayersModel> getRelatedToFilesLayers(String fileId) {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
@@ -218,7 +215,7 @@ public class LayerService {
         return mapToRelatedLayersModel(relatedLayers);
     }
 
-    public Page<Layer> findLayers(String layerType, List<Project> projects, Pageable pageable) {
+    public Page<Layer> getUniqueLayers(String layerType, List<Project> projects, Pageable pageable) {
         Set<Long> projectIds = projects.stream()
                                        .map(Project::getId)
                                        .collect(Collectors.toSet());
@@ -240,8 +237,7 @@ public class LayerService {
         }
     }
 
-    private Layer findLayerById(List<Layer> layers,
-                                Long layerId) {
+    private Layer getLayerById(List<Layer> layers, Long layerId) {
         return layers.stream()
                      .filter(l -> layerId.equals(l.getId()))
                      .findFirst()
@@ -251,8 +247,7 @@ public class LayerService {
     private List<RelatedLayersModel> mapToRelatedLayersModel(List<Layer> relatedLayers) {
         return relatedLayers.stream()
                             .map(layer -> {
-                                LayerProjection lProjection = new LayerProjection(layer,
-                                                                                  getOrgWorkspaceName());
+                                LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName());
                                 ProjectProjection pProjection = projectService
                                         .getProjectionByIdUnsafe(
                                                 layer.getProject().getId());

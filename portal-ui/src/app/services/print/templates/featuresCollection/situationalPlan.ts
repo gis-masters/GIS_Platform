@@ -29,14 +29,13 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
 
   async render(this: PrintTemplate<WfsFeature[]>, data: WfsFeature[]): Promise<string> {
     const layer = getLayerByFeatureInCurrentProject(data[0]);
-
     if (!layer) {
-      throw new Error('Не найден слой для объекта');
+      throw new Error('Не удалось сформировать ситуационный план. Не найден слой для объекта: ' + data[0].id);
     }
 
     const schema = await getLayerSchema(layer);
     if (!schema) {
-      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+      throw new Error(`Не удалось сформировать ситуационный план. Не удалось получить схему слоя ${layer.title}`);
     }
     const schemaWithAppliedView = applyView(schema, layer.view);
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
@@ -145,9 +144,8 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
 
   getFileName(this: PrintTemplate<WfsFeature[]>, entity: WfsFeature[]) {
     const layer = getLayerByFeatureInCurrentProject(entity[0]);
-
     if (!layer) {
-      throw new Error('Не найден слой для объекта');
+      throw new Error('Не удалось получить имя файла. Не найден слой для объекта');
     }
 
     return `${layer.title} [${this.title}]`;

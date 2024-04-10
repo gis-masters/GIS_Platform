@@ -54,11 +54,11 @@ public class StyleService extends GeoServerBaseService {
     public ResponseModel<Object> associate(String complexLayerName, String styleName) throws HttpClientException {
         RequestBody body = RequestBody.create(
                 JSON_MEDIA_TYPE,
-                "{\n" +
-                        "    \"style\": {\n" +
-                        "        \"name\": \"" + styleName + "\",\n" +
-                        "        \"filename\": \"" + styleName + ".sld\"\n" +
-                        "    }\n" +
+                "{" +
+                        "    \"style\": {" +
+                        "        \"name\": \"" + styleName + "\"," +
+                        "        \"filename\": \"" + styleName + ".sld\"" +
+                        "    }" +
                         "}");
 
         String url = getGeoserverRestUrl()

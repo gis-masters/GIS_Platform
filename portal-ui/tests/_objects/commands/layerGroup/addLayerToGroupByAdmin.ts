@@ -10,7 +10,7 @@ export async function addLayerToGroupAsAdmin(
 ): Promise<void> {
   const project = await getProjectByTitle(projectTitle);
   const groups = await requestAsAdmin(projectsClient.getProjectGroups, project.id);
-  const layers = await requestAsAdmin(projectsClient.getProjectLayers, project.id);
+  const layers = await requestAsAdmin(layersClient.getLayers, project.id);
   const layer = layers.find(layer => layer.title === layerTitle);
   const group = groups.find(group => group.title === groupTitle);
 

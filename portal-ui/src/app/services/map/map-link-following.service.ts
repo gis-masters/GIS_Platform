@@ -17,6 +17,7 @@ import { CrgLayer } from '../gis/layers/layers.models';
 import { projectsService } from '../gis/projects/projects.service';
 import { applyView } from '../data/schema/schema.utils';
 import { getLayerSchema } from '../gis/layers/layers.service';
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/feature.util';
 
 export interface FeatureError {
   id: string;
@@ -189,7 +190,9 @@ async function restoreRecentOpenedFeatures() {
 
       if (currentLayer?.complexName) {
         const schema = await getLayerSchema(currentLayer);
-        const featuresIds = featuresCutIds.map(cutId => `${currentLayer.tableName}.${cutId}`);
+        const featuresIds = featuresCutIds.map(
+          id => `${extractFeatureTypeNameFromComplexName(currentLayer.complexName)}.${id}`
+        );
         let layerFeatures: WfsFeature[] = [];
         if (schema) {
           const schemaWithAppliedView = applyView(schema, currentLayer.view);
@@ -204,7 +207,7 @@ async function restoreRecentOpenedFeatures() {
           ...featuresIds
             .filter(featureId => !layerFeatures.some(({ id }) => featureId === id))
             .map(featureId => ({
-              id: featureId.split('.')[1],
+              id: String(extractFeatureId(featureId)),
               layerTitle: currentLayer.title,
               message: 'Объект отсутствует'
             }))

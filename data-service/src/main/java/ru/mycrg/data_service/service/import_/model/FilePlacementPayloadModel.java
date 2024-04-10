@@ -6,12 +6,21 @@ import java.util.UUID;
 
 public class FilePlacementPayloadModel extends BaseWsModel {
 
-    protected String crs;
-    protected UUID fileId;
-    protected Long projectId;
+    private String crs;
+    private UUID fileId;
+    private Long projectId;
+    private String style = "generic";
 
     public FilePlacementPayloadModel() {
         // Required
+    }
+
+    public String getCrs() {
+        return crs;
+    }
+
+    public void setCrs(String crs) {
+        this.crs = crs;
     }
 
     public UUID getFileId() {
@@ -30,21 +39,21 @@ public class FilePlacementPayloadModel extends BaseWsModel {
         this.projectId = projectId;
     }
 
-    public String getCrs() {
-        return crs;
+    public String getStyle() {
+        return style;
     }
 
-    public void setCrs(String crs) {
-        this.crs = crs;
+    public void setStyle(String style) {
+        this.style = style;
     }
 
     @Override
     public String toString() {
         return "{" +
-                "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
                 "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
+                "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
-                "\"wsUiId\":" + (wsUiId == null ? "null" : "\"" + wsUiId + "\"") +
+                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") +
                 "}";
     }
 }

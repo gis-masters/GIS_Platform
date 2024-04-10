@@ -36,7 +36,7 @@ export async function updateFileTransparentColor(coverages: string, InputTranspa
   }
 }
 
-export async function getFileTransparentColor(coverages: string): Promise<CoverageTransparentColor> {
+export async function getFileTransparentColor(coverages: string): Promise<CoverageTransparentColor | undefined> {
   try {
     return await http.get(getGeoserverFileUrl(currentUser.workspaceName, coverages));
   } catch {

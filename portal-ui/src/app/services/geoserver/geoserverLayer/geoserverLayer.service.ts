@@ -2,11 +2,16 @@ import { CrgLayer } from '../../gis/layers/layers.models';
 import { geoserverLayerClient } from './geoserverLayer.client';
 
 import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
+import { extractWorkspaceFromComplexName } from '../feature.util';
 
-async function getGeoserverLayerInfo({ complexName, tableName }: CrgLayer): Promise<GeoserverLayerInfo> {
-  const workspace = complexName.split(':')[0];
+async function getGeoserverLayerInfo(layer: CrgLayer): Promise<GeoserverLayerInfo> {
+  if (!layer.tableName || !layer.complexName) {
+    throw new Error('Передан некорректный слой: ' + JSON.stringify(layer));
+  }
 
-  const result = await geoserverLayerClient.getGeoserverLayerInfo(workspace, tableName);
+  const workspace = extractWorkspaceFromComplexName(layer.complexName);
+
+  const result = await geoserverLayerClient.getGeoserverLayerInfo(workspace, layer.tableName);
 
   return result.layer;
 }

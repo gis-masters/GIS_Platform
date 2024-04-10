@@ -68,6 +68,8 @@ class MapSelectionService {
 
         return true;
       }
+
+      return false;
     },
     pointerStyle: []
   });
@@ -82,7 +84,7 @@ class MapSelectionService {
     kinetic: new Kinetic(-0.005, 0.05, 100)
   });
 
-  private activeModifierKey: ActiveModifierKey;
+  private activeModifierKey?: ActiveModifierKey;
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -95,9 +97,7 @@ class MapSelectionService {
       mapService.map.addInteraction(this.areaExtentRemove);
       mapService.map.addInteraction(this.areaExtentAdd);
 
-      // ошибка в типах ol
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - ошибка в типах ol
       mapService.map.on('pointerdown', (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
 
@@ -126,16 +126,12 @@ class MapSelectionService {
         }
       });
 
-      // ошибка в типах ol
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - ошибка в типах ol
       mapService.map.on('wheel', () => {
         this.areaExtentReplace.setActive(false);
       });
 
-      // ошибка в типах ol
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - ошибка в типах ol
       mapService.map.on('pointerup', async (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
 
@@ -187,13 +183,17 @@ class MapSelectionService {
     selectionType?: MapSelectionTypes,
     coordinate?: Coordinate
   ): Promise<void> {
+    if (!areaExtent || !selectionType || !coordinate) {
+      return;
+    }
+
     const buffer = this.generateBuffer(areaExtent, coordinate);
     if (buffer) {
       await this.selectFeaturesByCoordinates(selectionType, buffer);
     }
   }
 
-  private generateBuffer(areaExtent: Extent, coordinate: Coordinate): MultiPolygon {
+  private generateBuffer(areaExtent: Extent, coordinate: Coordinate): MultiPolygon | undefined {
     const extent = areaExtent.getExtent();
     areaExtent.setExtent([0, 0, 0, 0]);
 
@@ -244,11 +244,14 @@ class MapSelectionService {
     for (const layer of visibleLayers) {
       const { nativeCRS, complexName } = layer;
 
+      if (!nativeCRS || !complexName) {
+        throw new Error('Невозможно провести выделение, некорректный слой');
+      }
+
       if (!visibleLayersComplexNamesByCrs[nativeCRS]) {
         visibleLayersComplexNamesByCrs[nativeCRS] = [];
       }
-
-      visibleLayersComplexNamesByCrs[nativeCRS].push(complexName);
+      visibleLayersComplexNamesByCrs[nativeCRS]?.push(complexName);
     }
 
     mapService.showSelectionMarker(buffer.getCoordinates());

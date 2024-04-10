@@ -1,7 +1,6 @@
 package ru.mycrg.gis_service.service.resource_analyze.queries;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.gis_service.entity.Layer;
@@ -17,7 +16,6 @@ import ru.mycrg.resource_analyzer_contract.impl.ResourceDefinition;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class RasterLayerQuery implements IResourceQueryService {
@@ -38,7 +36,7 @@ public class RasterLayerQuery implements IResourceQueryService {
     public Page<IResource> getResources(Pageable pageable) {
         List<Project> projects = projectService.getAll();
 
-        return layerService.findLayers(layerType, projects, pageable)
+        return layerService.getUniqueLayers(layerType, projects, pageable)
                            .map(this::mapLayerToResource);
     }
 

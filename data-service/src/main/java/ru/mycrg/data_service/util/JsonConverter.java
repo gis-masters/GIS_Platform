@@ -85,6 +85,7 @@ public class JsonConverter {
                      .writeValueAsString(value);
     }
 
+    // TODO: Это тоже самое что и getJsonString только с "FAIL"
     @NotNull
     public static String asJsonString(Object value) {
         try {

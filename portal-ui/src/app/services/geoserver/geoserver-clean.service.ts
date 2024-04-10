@@ -1,5 +1,5 @@
 import { http } from '../api/http.service';
-import { getGeoserverFeatureTypesUrl, getGeoserverFeatureTypeUrl } from '../api/server-urls.service';
+import { getGeoserverFeatureTypesInfoUrl, getGeoserverFeatureTypeUrl } from '../api/server-urls.service';
 
 import { Toast } from '../../components/Toast/Toast';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -9,9 +9,9 @@ export interface FeatureTypeHref {
   href: string;
 }
 
-export async function getFeatureTypesFromScratchDatastore(): Promise<FeatureTypeHref[]> {
+export async function getFeatureTypesFromScratchDatastore(): Promise<FeatureTypeHref[] | undefined> {
   const { workspaceName, datastoreName } = currentUser;
-  const url = getGeoserverFeatureTypesUrl(workspaceName, datastoreName);
+  const url = getGeoserverFeatureTypesInfoUrl(workspaceName, datastoreName);
 
   try {
     const response = await http.get<{ featureTypes: { featureType: FeatureTypeHref[] } }>(url, {

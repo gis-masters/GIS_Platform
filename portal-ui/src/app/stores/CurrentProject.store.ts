@@ -263,18 +263,13 @@ class CurrentProject implements CrgProjectData {
   }
 
   getLayerByTableNameFromAllVectorLayers(tableName: string): CrgLayer {
-    if (tableName && this.vectorLayers.length) {
-      return this.getLayerByTableNameFromLayers(tableName, this.vectorLayers);
-    }
-
-    throw new Error('В проекте нет векторных слоев');
+    return this.getLayerByTableNameFromLayers(tableName, this.vectorLayers);
   }
 
   private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {
     const layer = layers.find(item => item.tableName === tableName);
-
     if (!layer) {
-      throw new Error('В проекте, среди layers не удалось найти слой по имени таблицы: ' + tableName);
+      throw new Error('Не удалось найти слой по tableName: ' + tableName);
     }
 
     return layer;

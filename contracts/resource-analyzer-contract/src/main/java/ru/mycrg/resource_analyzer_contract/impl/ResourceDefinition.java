@@ -7,8 +7,12 @@ import java.util.Objects;
 
 public class ResourceDefinition implements IResourceDefinition, Serializable {
 
-    private final String type;
-    private final String typeTitle;
+    private String type;
+    private String typeTitle;
+
+    public ResourceDefinition() {
+        // Required
+    }
 
     public ResourceDefinition(String type, String typeTitle) {
         this.type = type;

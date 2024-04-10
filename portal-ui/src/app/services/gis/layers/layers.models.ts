@@ -20,6 +20,17 @@ interface CrgEntity {
   transparency?: number;
 }
 
+interface CrgBaseLayer extends CrgEntity {
+  type: CrgLayerType;
+  nativeCRS: string;
+  tableName: string;
+  minZoom?: number;
+  maxZoom?: number;
+  complexName?: string;
+  parentId?: number;
+  errorText?: string;
+}
+
 export interface CrgLayersGroup extends CrgEntity {
   expanded?: boolean;
   parentId?: number;
@@ -46,6 +57,17 @@ export interface CrgVectorLayer extends CrgBaseLayer {
   photoMode?: string;
 }
 
+export function isVectorLayer(layer?: CrgLayer): layer is CrgVectorLayer {
+  return layer?.type === CrgLayerType.VECTOR;
+}
+
+export interface CrgVectorableLayer extends CrgBaseLayer {
+  type: CrgLayerType.VECTOR | CrgLayerType.DXF | CrgLayerType.MID | CrgLayerType.SHP | CrgLayerType.TAB;
+  dataStoreName?: string;
+  styleName?: string;
+  style?: string;
+}
+
 export interface CrgExternalLayer extends CrgBaseLayer {
   type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER;
   dataSourceUri: string;
@@ -55,17 +77,6 @@ export type CrgLayer = Partial<
   Omit<CrgRasterLayer, 'type'> & Omit<CrgVectorLayer, 'type'> & Omit<CrgExternalLayer, 'type'> & CrgBaseLayer
 > &
   CrgEntity;
-
-interface CrgBaseLayer extends CrgEntity {
-  type: CrgLayerType;
-  nativeCRS: string;
-  tableName: string;
-  minZoom?: number;
-  maxZoom?: number;
-  complexName?: string;
-  parentId?: number;
-  errorText?: string;
-}
 
 export type NewCrgLayer = Partial<CrgLayer>;
 

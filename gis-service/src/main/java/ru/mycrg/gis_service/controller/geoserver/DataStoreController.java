@@ -19,18 +19,18 @@ public class DataStoreController {
         this.dataStoreService = dataStoreService;
     }
 
-    @PostMapping("/{dataStoreId}")
+    @PostMapping("/{dataStoreName}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> createDataStore(@PathVariable String dataStoreId) {
-        dataStoreService.create(dataStoreId);
+    public ResponseEntity<Object> createDataStore(@PathVariable String dataStoreName) {
+        dataStoreService.create(dataStoreName);
 
         return ResponseEntity.status(CREATED).build();
     }
 
-    @DeleteMapping("/{dataStoreId}")
+    @DeleteMapping("/{dataStoreName}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteDataStore(@PathVariable String dataStoreId) {
-        dataStoreService.delete(dataStoreId);
+    public ResponseEntity<Object> deleteDataStore(@PathVariable String dataStoreName) {
+        dataStoreService.delete(dataStoreName);
 
         return ResponseEntity.status(NO_CONTENT).build();
     }

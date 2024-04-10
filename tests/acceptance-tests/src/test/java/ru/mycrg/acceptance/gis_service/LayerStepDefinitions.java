@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -147,7 +148,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(layerCreateDto.getContentType(), jsonPath.get("contentType"));
-        assertEquals(String.format("scratch_database_%s:%s", orgId, layerCreateDto.getTableName()),
+        assertEquals(String.format("scratch_database_%s:%s__%s__%s",
+                                   orgId, projectId, layerCreateDto.getTableName(),
+                                   layerCreateDto.getNativeCRS().split(":")[1]),
                      jsonPath.get("complexName"));
     }
 
@@ -218,11 +221,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerComplexName = response.jsonPath().get("complexName");
     }
 
-    @Given("существует векторный слой, на основе созданной таблицы, размещенный в проекте")
+    @Given("Существует векторный слой, на основе созданной таблицы, размещенный в проекте")
     public void createVectorLayerOnCurrentTable() {
         layerCreateDto = new LayerCreateDto("Тестовый вектор", "vector");
 
-        layerCreateDto.setSchemaId("schema_for_test_table");
+        // layerCreateDto.setSchemaId("schema_for_test_table");
         layerCreateDto.setStyleName("schema_for_test_table");
         layerCreateDto.setDataStoreName("scratch_database_" + orgId);
         layerCreateDto.setDataset(currentDatasetIdentifier);
@@ -445,12 +448,60 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(404, response.getStatusCode());
     }
 
-    @And("В проекте создан векторный слой на основе DXF файла")
-    public void checkIsRasterLayerCreated() {
+    @And("В проекте корректно создан слой на основе DXF файла")
+    public void checkLayerBasedOnDxf() {
         super.getCurrentEntityByFilter("title", "best");
 
-        assertEquals("best", response.jsonPath().getList("title").get(0));
-        assertEquals("dxf", response.jsonPath().getList("type").get(0));
+        JsonPath jsonPath = response.jsonPath();
+
+        assertEquals("best", jsonPath.getList("title").get(0));
+        assertEquals("dxf", jsonPath.getList("type").get(0));
+        assertEquals("dxf_style", jsonPath.getList("styleName").get(0));
+        assertEquals("EPSG:7829", jsonPath.getList("nativeCRS").get(0));
+        assertEquals("dl_default", jsonPath.getList("libraryId").get(0));
+
+        // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
+        String tableName = jsonPath.getList("tableName").get(0).toString();
+        assertTrue(tableName.contains("_some_files_2118749729_as1251"));
+
+        // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "8_tab_store__dl_default_2_"
+        assertTrue(jsonPath.getList("dataset").get(0).toString().contains(orgId + "_dxf_store__dl_default_"));
+
+        // workspace на геосервере - scratch_database_1
+        String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
+        assertEquals("scratch_database_" + orgId, dataStoreName);
+
+        // complexName - {workspace}:{project_d}_{tableName}_{epsgCode} - "scratch_database_8:44_2_some_files_504450693_7829"
+        assertEquals(String.format("%s:%d__%s__7829", dataStoreName, projectId, tableName),
+                     jsonPath.getList("complexName").get(0));
+    }
+
+    @And("В проекте корректно создан слой на основе TAB файла")
+    public void checkLayerBasedOnTab() {
+        super.getCurrentEntityByFilter("title", "someTab");
+
+        JsonPath jsonPath = response.jsonPath();
+
+        assertEquals("someTab", jsonPath.getList("title").get(0));
+        assertEquals("tab", jsonPath.getList("type").get(0));
+        assertEquals("generic", jsonPath.getList("styleName").get(0));
+        assertEquals("EPSG:7829", jsonPath.getList("nativeCRS").get(0));
+        assertEquals("dl_default", jsonPath.getList("libraryId").get(0));
+
+        // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
+        String tableName = jsonPath.getList("tableName").get(0).toString();
+        assertTrue(tableName.contains("_some_files_504450693"));
+
+        // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "8_tab_store__dl_default_2_"
+        assertTrue(jsonPath.getList("dataset").get(0).toString().contains(orgId + "_tab_store__dl_default_"));
+
+        // workspace на геосервере - scratch_database_1
+        String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
+        assertEquals("scratch_database_" + orgId, dataStoreName);
+
+        // complexName - {workspace}:{project_d}_{tableName}_{epsgCode} - "scratch_database_8:44_2_some_files_504450693_7829"
+        assertEquals(String.format("%s:%d__%s__7829", dataStoreName, projectId, tableName),
+                     jsonPath.getList("complexName").get(0));
     }
 
     @Then("Параметр transparent color по умолчанию чёрный")

@@ -57,7 +57,7 @@ public class LayerController {
     @GetMapping("/layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "project_id") long projectId) {
-        List<LayerProjection> layers = layerService.findAll(projectId);
+        List<LayerProjection> layers = layerService.getAll(projectId);
 
         return ResponseEntity.ok(layers);
     }
@@ -66,7 +66,7 @@ public class LayerController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
                                                   @PathVariable(name = "layer_id") long layerId) {
-        LayerProjection layerProjection = layerService.findById(projectId, layerId);
+        LayerProjection layerProjection = layerService.getById(projectId, layerId);
 
         return new Resource<>(layerProjection);
     }

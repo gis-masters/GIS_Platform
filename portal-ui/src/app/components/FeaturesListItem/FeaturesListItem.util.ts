@@ -7,11 +7,10 @@ export interface FeaturesListItemTitle {
   isEmpty: boolean;
 }
 
-export function getFeaturesListItemTitle(feature: WfsFeature, schema: Schema): FeaturesListItemTitle {
-  let title = '';
-  let isEmpty = false;
-  const property = schema.properties.find(prop => prop.asTitle);
-
+export function getFeaturesListItemTitle(feature: WfsFeature, schema: Schema | undefined): FeaturesListItemTitle {
+  let title: string;
+  let isEmpty: boolean;
+  const property = schema?.properties.find(prop => prop.asTitle);
   if (property) {
     const value = getReadablePropertyValue(feature.properties[property.name], property);
     title = value || 'не заполнено';

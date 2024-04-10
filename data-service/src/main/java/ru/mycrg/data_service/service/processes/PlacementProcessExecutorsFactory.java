@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.util.*;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
+import static ru.mycrg.data_service.service.files.FileUtil.defineType;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Component
@@ -37,8 +39,16 @@ public class PlacementProcessExecutorsFactory implements IProcessExecutorsFactor
 
     @Override
     public IExecutor<?> getExecutor(ProcessDto processableModel) {
-        UUID fileId = extractFileIdPayload(processableModel);
-        FileType fileType = defineType(fileId);
+        UUID fileId = extractFileIdOrThrow(processableModel);
+        Optional<File> oFile = fileRepository.findById(fileId);
+        if (oFile.isEmpty()) {
+            String msg = String.format("Не удалось найти файл: '%s'", fileId);
+            log.error(msg);
+
+            throw new BadRequestException(msg);
+        }
+
+        FileType fileType = defineType(oFile.get());
 
         IExecutor<?> executor = (IExecutor<?>) executors.get(fileType);
         if (executor == null) {
@@ -48,7 +58,7 @@ public class PlacementProcessExecutorsFactory implements IProcessExecutorsFactor
         return executor;
     }
 
-    private UUID extractFileIdPayload(ProcessDto processableModel) {
+    private UUID extractFileIdOrThrow(ProcessDto processableModel) {
         try {
             Object fileId = ((LinkedHashMap) processableModel.getPayload()).get(FILE_ID);
 
@@ -57,28 +67,6 @@ public class PlacementProcessExecutorsFactory implements IProcessExecutorsFactor
             String msg = String.format("Задана некорректная модель для импорта: '%s' Не удалось извлечь 'fileId'",
                                        processableModel.getPayload());
             log.error(msg, e.getCause());
-
-            throw new BadRequestException(msg);
-        }
-    }
-
-    private FileType defineType(UUID fileId) {
-        Optional<File> oFile = fileRepository.findById(fileId);
-        if (oFile.isPresent()) {
-            File file = oFile.get();
-            try {
-                String extension = file.getExtension().toUpperCase();
-
-                return FileType.valueOf(extension);
-            } catch (Exception e) {
-                String msg = String.format("Не удалось определить тип файла: '%s'", file);
-                log.error(msg);
-
-                throw new BadRequestException(msg);
-            }
-        } else {
-            String msg = String.format("Не удалось найти файла: '%s'", fileId);
-            log.error(msg);
 
             throw new BadRequestException(msg);
         }

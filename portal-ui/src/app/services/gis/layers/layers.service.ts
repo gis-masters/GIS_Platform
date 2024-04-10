@@ -22,8 +22,8 @@ import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/w
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
 
-export async function deleteLayer(layerId: number, project: CrgProject = currentProject): Promise<void> {
-  await layersClient.deleteLayer(layerId, project.id);
+export async function getLayers(projectId: number): Promise<CrgLayer[]> {
+  return await layersClient.getLayers(projectId);
 }
 
 export async function createLayer(newLayer: NewCrgLayer, projectId: number): Promise<CrgLayer> {
@@ -40,6 +40,10 @@ export async function updateLayer(
   project: CrgProject = currentProject
 ): Promise<void> {
   await layersClient.updateLayer(layerId, patch, project.id);
+}
+
+export async function deleteLayer(layerId: number, project: CrgProject = currentProject): Promise<void> {
+  await layersClient.deleteLayer(layerId, project.id);
 }
 
 export function alertLayerOperationError(

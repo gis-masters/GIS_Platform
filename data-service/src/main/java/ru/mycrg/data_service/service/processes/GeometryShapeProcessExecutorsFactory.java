@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.util.LinkedHashMap;

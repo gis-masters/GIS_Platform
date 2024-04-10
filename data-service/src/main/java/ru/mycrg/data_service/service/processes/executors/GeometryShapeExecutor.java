@@ -10,8 +10,8 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
-import ru.mycrg.data_service.service.processes.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -21,6 +21,7 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ImportGeometryShapeReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -130,8 +131,9 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
         return this.importReport;
     }
 
-    public GeometryFromShapePlacementPayloadModel getPayload() {
-        return payload;
+    @Override
+    public FilePlacementPayloadModel getPayload() {
+        return null;
     }
 
     @Override

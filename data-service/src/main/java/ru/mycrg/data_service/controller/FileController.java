@@ -231,7 +231,7 @@ public class FileController extends BaseController {
             throw new ForbiddenException("Файл недоступен. Ресурс не указан.");
         }
 
-        FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(resourceQualifier);
+        FileResourceQualifier frQualifier = FileResourceQualifierMapper.mapToFileQualifier(resourceQualifier);
 
         ResourceQualifier rQualifier = new ResourceQualifier(frQualifier.getSchema(),
                                                              frQualifier.getTable(),

@@ -2,13 +2,13 @@ package ru.mycrg.geoserver_client.contracts.datastores.base;
 
 public class ParameterizedDataStoreWrapper {
 
-    public final BaseParameterizedDataStore<?> dataStore;
+    private final IParameterizedStore<?> dataStore;
 
-    public ParameterizedDataStoreWrapper(BaseParameterizedDataStore dataStore) {
+    public ParameterizedDataStoreWrapper(IParameterizedStore<?> dataStore) {
         this.dataStore = dataStore;
     }
 
-    public BaseParameterizedDataStore<?> getDataStore() {
+    public IParameterizedStore<?> getDataStore() {
         return dataStore;
     }
 }

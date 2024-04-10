@@ -24,8 +24,9 @@ import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
 import ru.mycrg.data_service.service.import_.GmlImporter;
 import ru.mycrg.data_service.service.import_.dto.GmlPlacementModel;
+import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
-import ru.mycrg.data_service.service.processes.FileType;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
@@ -50,7 +51,7 @@ import java.util.UUID;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.service.processes.FileType.GML;
+import static ru.mycrg.data_service_contract.enums.FileType.GML;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
@@ -104,7 +105,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         UUID fileId = this.payload.getFileId();
         File file = fileRepository.findById(fileId)
                                   .orElseThrow(() -> new BadRequestException("Не найден файл с id: " + fileId));
-        FileResourceQualifier frQualifier = FileResourceQualifierMapper.map(file.getResourceQualifier());
+        FileResourceQualifier frQualifier = FileResourceQualifierMapper.mapToFileQualifier(file.getResourceQualifier());
 
         // Fetch document
         ResourceQualifier tQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, frQualifier.getTable());
@@ -163,6 +164,11 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         this.processModel = processModel;
 
         return this;
+    }
+
+    @Override
+    public FilePlacementPayloadModel getPayload() {
+        return null;
     }
 
     @Override

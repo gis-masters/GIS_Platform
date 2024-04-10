@@ -61,7 +61,7 @@ public class LayerExistenceByWmsAnalyzer implements IResourceAnalyzer {
 
     @Override
     public String getId() {
-        return "LayerExistenceByWmsAnalyzer";
+        return LayerExistenceByWmsAnalyzer.class.getSimpleName();
     }
 
     @Override
@@ -98,15 +98,15 @@ public class LayerExistenceByWmsAnalyzer implements IResourceAnalyzer {
             if (response.isSuccessful() && !responseBody.contains("ServiceException")) {
                 return new ResourceAnalyzerResult(layerId, true);
             } else {
-                log.warn("На геосервере, при запросе по WMS(getMap), не доступен слой: {}, тип : {}, статус ответа: " +
-                                 "{}, тело ответа: {}", layerId, layer.getResourceDefinition().getTypeTitle(),
-                         response.code(), responseBody);
+                log.warn("На геосервере, при запросе по WMS(getMap), не доступен слой: '{}', тип: '{}', " +
+                                 "статус ответа: '{}', тело ответа: {}",
+                         layerId, layer.getResourceDefinition().getTypeTitle(), response.code(), responseBody);
 
                 return new ResourceAnalyzerResult(layerId, false);
             }
         } catch (Exception e) {
-            log.warn("При запросе по WMS(getMap) слоя: {}, тип: {}, возникла ошибка: {}", layerId,
-                     layer.getResourceDefinition().getTypeTitle(), e.getCause());
+            log.warn("При запросе по WMS(getMap) слоя: {}, тип: {}, возникла ошибка: {}",
+                     layerId, layer.getResourceDefinition().getTypeTitle(), e.getMessage(), e.getCause());
 
             return new ResourceAnalyzerResult(layerId, false);
         }

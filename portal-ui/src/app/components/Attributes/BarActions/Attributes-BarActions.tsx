@@ -13,7 +13,7 @@ import { isUpdateAllowed } from '../../../services/data/permissions/permissions.
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
@@ -32,7 +32,7 @@ import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';
 const cnAttributesBarActions = cn('Attributes', 'BarActions');
 
 interface AttributesBarActionsProps {
-  layer: CrgVectorLayer;
+  layer: CrgVectorableLayer;
   cols: XTableColumn<AttributesTableRecord>[];
   pageOptions?: PageOptions;
   featuresTotal: number;
@@ -72,7 +72,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
       <div className={cnAttributesBarActions()}>
         {!!count && (
           <>
-            {this.featuresUpdateAllowed && (
+            {isVectorLayer(layer) && this.featuresUpdateAllowed && (
               <Tooltip title={`Редактировать${objLabel}`}>
                 <IconButton size='small' onClick={this.multipleEdit}>
                   <EditOutlined fontSize='small' />
@@ -87,7 +87,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
               size='small'
             />
 
-            {this.featuresUpdateAllowed && (
+            {isVectorLayer(layer) && this.featuresUpdateAllowed && (
               <Tooltip title={`Удалить${objLabel}`}>
                 <IconButton size='small' onClick={this.openMultipleDeleteDialog}>
                   <DeleteOutlined fontSize='small' />
@@ -96,7 +96,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             )}
           </>
         )}
-        {!!featuresTotal && (
+        {!!featuresTotal && isVectorLayer(layer) && (
           <AttributesBarActionExport
             layer={layer}
             cols={cols}
@@ -145,13 +145,17 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
   @boundMethod
   private async multipleDelete() {
+    const { layer } = this.props;
+    const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[layer.tableName];
+
     this.closeMultipleDeleteDialog();
 
-    const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[this.props.layer.tableName];
-    const { dataset, tableName } = this.props.layer;
+    if (!isVectorLayer(layer)) {
+      throw new Error('Невозможно удалить');
+    }
 
+    const { dataset, tableName } = layer;
     await deleteFeatures(dataset, tableName, features);
-
     mapSelectionService.selectFeatures(features, MapSelectionTypes.REMOVE);
     mapService.refreshAllLayers();
   }

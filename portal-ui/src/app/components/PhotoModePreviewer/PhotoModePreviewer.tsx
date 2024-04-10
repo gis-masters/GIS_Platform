@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { cn } from '@bem-react/classname';
 import { observer, useLocalObservable } from 'mobx-react';
 
-import { extractFeatureId, extractFeatureTableName } from '../../services/geoserver/feature.util';
+import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { getPhotoModeFeatureFiles } from '../../services/data/files/files.util';
@@ -42,7 +42,7 @@ export const PhotoModePreviewer: FC = observer(() => {
       const filesWithFeatures: CarouselImageInfo[] = await Promise.all(
         features.flatMap(feature => {
           return getPhotoModeFeatureFiles(feature).map(async file => {
-            const tableName = extractFeatureTableName(feature.id);
+            const tableName = extractTableNameFromFeatureId(feature.id);
             const layer =
               currentProject.getLayerByTableNameFromAllVectorLayers(tableName) ||
               currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
@@ -65,16 +65,18 @@ export const PhotoModePreviewer: FC = observer(() => {
           });
         })
       );
+
       if (!filesWithFeatures) {
         setError('Ошибка загрузки файлов');
       }
+
       setData(filesWithFeatures);
     })();
   }, [setData, setError, features]);
 
   return (
     sidebars.photoLayerOpen &&
-    !!data.length && (
+    !!data?.length && (
       <Carousel
         images={data}
         onClose={sidebars.closePhotoModePreviewer}

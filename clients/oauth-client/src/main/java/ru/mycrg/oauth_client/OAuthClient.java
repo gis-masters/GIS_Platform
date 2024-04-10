@@ -1,6 +1,6 @@
 package ru.mycrg.oauth_client;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
@@ -114,8 +114,8 @@ public class OAuthClient {
 
             ResponseModel<List<IdNameProjection>> response = httpClient
                     .handleRequest(request,
-                                   new TypeToken<List<IdNameProjection>>() {
-                                   }.getType());
+                                   new TypeReference<>() {
+                                   });
 
             return response.getBody();
         } catch (HttpClientException | IOException e) {

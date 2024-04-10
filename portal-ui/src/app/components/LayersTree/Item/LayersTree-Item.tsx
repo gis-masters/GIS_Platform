@@ -5,12 +5,12 @@ import { cn } from '@bem-react/classname';
 
 import { mapStore } from '../../../stores/Map.store';
 import { MapSelectionTypes } from '../../../services/map/map.models';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { CrgLayer, CrgLayerType } from '../../../services/gis/layers/layers.models';
+import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { Layer } from '../../Layer/Layer';
+import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 
@@ -59,19 +59,13 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
 
       const layer = item.payload as CrgLayer;
 
-      if (layer.type === CrgLayerType.VECTOR) {
-        const features =
-          mapStore.selectedFeatures
-            ?.map(feat => {
-              const [tableName] = feat.id.split('.');
-              if (tableName !== layer.tableName) {
-                return feat;
-              }
-            })
-            .filter(notFalsyFilter) || [];
-
-        mapSelectionService.selectFeatures(features, MapSelectionTypes.REPLACE);
+      if (!isVectorLayer(layer)) {
+        return;
       }
+
+      // при выключении видимости слоя снимаем выделение с его объектов
+      const features = mapStore.selectedFeatures.filter(f => extractTableNameFromFeatureId(f.id) !== layer.tableName);
+      mapSelectionService.selectFeatures(features, MapSelectionTypes.REPLACE);
 
       return;
     }

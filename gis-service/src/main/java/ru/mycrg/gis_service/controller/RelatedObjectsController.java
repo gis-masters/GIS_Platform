@@ -35,7 +35,7 @@ public class RelatedObjectsController {
                                           new ErrorInfo("value", "value parameter is empty"));
         }
 
-        return layerService.findRelatedLayers(field, value);
+        return layerService.getRelatedLayers(field, value);
     }
 
     @GetMapping("/find-related-to-file-layers")
@@ -46,7 +46,7 @@ public class RelatedObjectsController {
                                           new ErrorInfo("fileId", "fileId parameter is empty"));
         }
 
-        return layerService.findRelatedToFilesLayers(fileId);
+        return layerService.getRelatedToFilesLayers(fileId);
     }
 
     @GetMapping("/find-related-by-basemap/{sourceBasemapId}")

@@ -21,9 +21,6 @@ public class GmlPlacementModel extends FilePlacementPayloadModel {
     @Override
     public String toString() {
         return "{" +
-                "\"wsUiId\":" + (wsUiId == null ? "null" : "\"" + wsUiId + "\"") + ", " +
-                "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
-                "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
                 "\"invertedCoordinates\":\"" + invertedCoordinates + "\"" +
                 "}";
     }

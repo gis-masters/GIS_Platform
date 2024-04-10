@@ -12,6 +12,7 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class UsersAndRolesService extends GeoServerBaseService {
 
@@ -36,7 +37,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     }
 
     public List<String> getUserRoles(String userName) throws HttpClientException {
-        Request request = builderWithBearerAuth.url(getGeoserverRestUrl() + "/security/roles/user/" + userName + ".json")
+        Request request = builderWithBearerAuth.url(
+                                                       getGeoserverRestUrl() + "/security/roles/user/" + userName + ".json")
                                                .get().build();
 
         GeoserverRoleResponse body = httpClient.handleRequest(request, GeoserverRoleResponse.class).getBody();
@@ -46,7 +48,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     public ResponseModel<Object> createUser(String login, String password) throws HttpClientException {
         UserGeoserverDtoWrapper user = new UserGeoserverDtoWrapper(new UserGeoserverDto(login, password, true));
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(user));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(user));
 
         String url = String.format("%s/security/usergroup/service/%s/users",
                                    getGeoserverRestUrl(), geoserverInfo.getUserServiceName());
@@ -89,11 +91,11 @@ public class UsersAndRolesService extends GeoServerBaseService {
         return httpClient.handleRequest(request);
     }
 
-    // Вот тут (org/geoserver/rest/security/RolesRestController.java) видно что прилетающее имя пользователя, например:
+    // Вот тут (org/geoserver/rest/security/RolesRestController.java) видно, что прилетающее имя пользователя, например:
     // "admin@mail.ru" обрезается до "admin@mail" а
     // "admin@mail.ru.ru" обрезается до "admin@mail.ru" Где обрезается и зачем не искал.
     // Цель метода продублировать то что за точкой, чтобы на геосервере, после обрезки получить нормальное имя
-    // пользователя - email. Никаких извращений писать не буду предусматриваю только валидный e-mail
+    // пользователя - email. Никаких извращений писать не буду, предусматриваю только валидный e-mail
     public String prepareUserNameForGeoserver(String userName) {
         if (userName == null) {
             return null;

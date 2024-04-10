@@ -9,6 +9,7 @@ import { getXmlFilterFromCql } from './wms.utils';
 import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
 import { createImageFromBlob } from '../styles/styles.utils';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../feature.util';
 
 export async function getMap(url: string): Promise<Blob> {
   const parsedUrl = new URL(url);
@@ -19,7 +20,7 @@ export async function getMap(url: string): Promise<Blob> {
   const layerStyleName: string = parsedUrl.searchParams.get('STYLES') || '';
 
   if (featureIdParam) {
-    const ids = featureIdParam.split(',').map(fid => Number(fid.split('.')[1]));
+    const ids = featureIdParam.split(',').map(fid => Number(extractFeatureId(fid)));
     const idCqlFragment = cqlBuild({ id: { [featureIdsNegative ? '$nin' : '$in']: ids } });
     const newCql = cqlFilter ? `(${idCqlFragment}) AND (${cqlFilter})` : idCqlFragment;
     parsedUrl.searchParams.set('CQL_FILTER', newCql);
@@ -65,8 +66,10 @@ export async function getMapByXml(url: string): Promise<Blob> {
   const [x1, y1, x2, y2] = parsedUrl.searchParams.get('BBOX')?.split(',') || [];
   const width = parsedUrl.searchParams.get('WIDTH');
   const height = parsedUrl.searchParams.get('HEIGHT');
-  const [, tableName] = layerComplexName.split(':');
-  const layer = currentProject.vectorLayers.find(l => l.tableName === tableName);
+  const featureTypeName = extractFeatureTypeNameFromComplexName(layerComplexName);
+  const layer = currentProject.vectorLayers.find(
+    l => extractFeatureTypeNameFromComplexName(l.complexName) === featureTypeName
+  );
 
   if (!layer || !layerComplexName || !x1 || !y1 || !x2 || !y2) {
     throw new Error('Неверные параметры запроса');

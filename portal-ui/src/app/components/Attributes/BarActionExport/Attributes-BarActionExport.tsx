@@ -9,7 +9,7 @@ import { cn } from '@bem-react/classname';
 import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { exportAsXLSX } from '../../../services/util/export';
 import { PageOptions } from '../../../services/models';
@@ -25,7 +25,7 @@ import '!style-loader!css-loader!sass-loader!./Attributes-BarActionExport.scss';
 const cnAttributesBarActionExport = cn('Attributes', 'BarActionExport');
 
 interface AttributesBarActionExportProps {
-  layer: CrgVectorLayer;
+  layer: CrgVectorableLayer;
   cols: XTableColumn<AttributesTableRecord>[];
   pageOptions?: PageOptions;
   featuresTotal: number;
@@ -76,12 +76,20 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
 
   private async prepareFeatures(records: AttributesTableRecord[]): Promise<unknown[][]> {
     const { layer, cols } = this.props;
-    const schema = applyView(await getLayerSchema(layer), layer.view);
+    const schema = await getLayerSchema(layer);
+    if (!schema) {
+      throw new Error(`Не найдена схема слоя: ${layer.tableName}`);
+    }
+
+    const schemaWithView = isVectorLayer(layer) && layer.view ? applyView(schema, layer.view) : schema;
+
     const properties: PropertySchema[] = [
       { name: 'cutId', title: 'ID', propertyType: PropertyType.INT },
       ...cols
         .filter(({ field, hidden }) => field && !hidden)
-        .map(({ field }) => schema.properties.find(({ name }) => name.toLowerCase() === String(field).toLowerCase()))
+        .map(({ field }) =>
+          schemaWithView.properties.find(({ name }) => name.toLowerCase() === String(field).toLowerCase())
+        )
         .filter(notFalsyFilter)
     ];
     const header = properties.map(prop => prop.title || prop.name);

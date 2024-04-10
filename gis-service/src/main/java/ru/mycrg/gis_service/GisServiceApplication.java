@@ -36,12 +36,10 @@ public class GisServiceApplication {
     public void initGeoserverClient() {
         log.info("initGeoserverClient");
 
-        GeoserverInfo geoserverInfo = GeoserverInfo
-                .builder()
-                .host(properties.getGeoserverHost().split(":")[0])
-                .port(Integer.parseInt(properties.getGeoserverHost().split(":")[1]))
-                .userServiceName(properties.getUserServiceName())
-                .build();
+        String[] split = properties.getGeoserverHost().split(":");
+        GeoserverInfo geoserverInfo = new GeoserverInfo(split[0],
+                                                        Integer.parseInt(split[1]),
+                                                        properties.getUserServiceName());
 
         GeoserverClient.initialize(geoserverInfo);
     }

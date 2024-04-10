@@ -208,8 +208,6 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
         log.debug("Exception class: {}", ex.getClass().getSimpleName());
 
-        ex.printStackTrace();
-
         ApiErrorModel errorModel = new ApiErrorModel(INTERNAL_SERVER_ERROR, msg);
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());

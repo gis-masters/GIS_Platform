@@ -1,6 +1,6 @@
 package ru.mycrg.integration_service.service;
 
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -150,8 +150,8 @@ public class ResourceAnalyzerService {
                     .build();
 
             response = crgHttpClient.handleRequest(request,
-                                                   new TypeToken<ArrayList<ResourceAnalyzeModel>>() {
-                                                   }.getType());
+                                                   new TypeReference<>() {
+                                                   });
             if (response.isSuccessful()) {
                 final List<ResourceAnalyzeModel> analyzersModels = response.getBody();
                 analyzersModels.forEach(analyzersModel -> analyzersModel.setUrl(serviceUrl));

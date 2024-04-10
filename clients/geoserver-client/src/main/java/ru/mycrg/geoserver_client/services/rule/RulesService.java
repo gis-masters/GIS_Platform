@@ -15,6 +15,7 @@ import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.geoserver_client.GeoserverClient.XML_MEDIA_TYPE;
 import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;
 import static ru.mycrg.geoserver_client.services.rule.RulesUtil.*;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class RulesService extends GeoServerBaseService {
 
@@ -203,7 +204,7 @@ public class RulesService extends GeoServerBaseService {
     }
 
     private void updateRestRoles(Map<String, String> newRules) throws HttpClientException {
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(newRules));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(newRules));
         Request setRestRoles = builderWithBearerAuth.url(REST_URL)
                                                     .put(body).build();
 
@@ -214,7 +215,7 @@ public class RulesService extends GeoServerBaseService {
     }
 
     private void updateServiceRoles(Map<String, String> newRules) throws HttpClientException {
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(newRules));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(newRules));
 
         Request setServiceRoles = builderWithBearerAuth.url(SERVICES_URL)
                                                        .put(body).build();
@@ -226,7 +227,7 @@ public class RulesService extends GeoServerBaseService {
     }
 
     private void createServiceRoles(Map<String, String> rule) throws HttpClientException {
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(rule));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(rule));
 
         Request request = builderWithBearerAuth.url(SERVICES_URL)
                                                .post(body).build();
@@ -238,7 +239,7 @@ public class RulesService extends GeoServerBaseService {
     }
 
     private void updateLayersRoles(Map<String, String> newRules) throws HttpClientException {
-        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, gson.toJson(newRules));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(newRules));
         Request setRestRoles = builderWithBearerAuth.url(LAYERS_URL)
                                                     .put(body).build();
 

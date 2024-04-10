@@ -1,0 +1,48 @@
+package ru.mycrg.http_client;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import java.text.SimpleDateFormat;
+import java.util.Optional;
+
+public class JsonConverter {
+
+    private static final ObjectMapper mapper =
+            new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
+
+    private JsonConverter() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * Serialize any Java value as a String.
+     */
+    public static String toJson(Object value) {
+        try {
+            return mapper.writer()
+                         .writeValueAsString(value);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Не удалось обработать объект: " + value);
+        }
+    }
+
+    public static <T> Optional<T> fromJson(String stringJson, Class<T> classOfT) {
+        try {
+            return Optional.ofNullable(mapper.readValue(stringJson, classOfT));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static <T> Optional<T> fromJson(String stringJson, TypeReference<T> typeReference) {
+        try {
+            return Optional.ofNullable(mapper.readValue(stringJson, typeReference));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+}

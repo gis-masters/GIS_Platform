@@ -19,6 +19,10 @@ elif [[ currentMigration -eq 3 ]]; then
 
     ./V4__UpdateDb/run.sh
 elif [[ currentMigration -eq 4 ]]; then
+    echo -e "  Last completed migration: 'V4__UpdateDb'";
+
+    ./V5__geoserverJdbc/run.sh
+elif [[ currentMigration -eq 5 ]]; then
     echo -e "  All migration completed";
 else
     echo -e "  No migrations yet"

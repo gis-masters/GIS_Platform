@@ -22,7 +22,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.service.FileService;
+import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;

@@ -24,13 +24,16 @@ function getWsPath(): string {
   return environment.server.wsPath || '';
 }
 
-export function getWsEndpointUrl(): string {
-  const protocol = getProtocol();
-  const host = getHost();
-  const port = getWsPort();
-  const path = getWsPath();
+function getDataUrl(): string {
+  return getBaseUrl() + '/api/data';
+}
 
-  return `${protocol}//${host}:${port}${path}/crg-ws-endpoint`;
+function getDatasetsUrl(): string {
+  return `${getDataUrl()}/datasets`;
+}
+
+function getDatasetUrl(datasetIdentifier: string): string {
+  return `${getDatasetsUrl()}/${datasetIdentifier}`;
 }
 
 function getBaseUrl(): string {
@@ -46,32 +49,45 @@ function getGeoServerUrl(): string {
   return getBaseUrl() + '/geoserver';
 }
 
-export function getWfsUrl(): string {
-  return getGeoServerUrl() + '/wfs';
+function getGeoserverWorkspaceUrl(workspace: string): string {
+  return `${getGeoServerUrl()}/rest/workspaces/${workspace}`;
 }
 
-export function getWmtsUrl(): string {
-  return getGeoServerUrl() + '/gwc/service/wmts';
+function getGeoserverFeatureTypesUrl(workspace: string, datastore: string): string {
+  return `${getGeoserverWorkspaceUrl(workspace)}/datastores/${datastore}/featuretypes`;
+}
+
+export function getWsEndpointUrl(): string {
+  const protocol = getProtocol();
+  const host = getHost();
+  const port = getWsPort();
+  const path = getWsPath();
+
+  return `${protocol}//${host}:${port}${path}/crg-ws-endpoint`;
+}
+
+export function getWfsUrl(): string {
+  return getGeoServerUrl() + '/wfs';
 }
 
 export function getGeoserverImportsUrl(): string {
   return getGeoServerUrl() + '/rest/imports';
 }
 
-export function getGeoserverFeatureTypeInfoUrl(workspace: string, dataset: string, tableName: string): string {
-  return `${getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${dataset}/featuretypes/${tableName}.json`;
-}
-
-export function getGeoserverFileUrl(workspace: string, coverages: string): string {
-  return `${getGeoServerUrl()}/rest/workspaces/${workspace}/coveragestores/store_${coverages}/coverages/${coverages}.json`;
-}
-
-export function getGeoserverFeatureTypesUrl(workspace: string, datastore: string): string {
-  return `${getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes.json`;
+export function getGeoserverFeatureTypeInfoUrl(workspace: string, datastore: string, feature: string): string {
+  return `${getGeoserverFeatureTypeUrl(workspace, datastore, feature)}.json`;
 }
 
 export function getGeoserverFeatureTypeUrl(workspace: string, datastore: string, feature: string): string {
-  return `${getGeoServerUrl()}/rest/workspaces/${workspace}/datastores/${datastore}/featuretypes/${feature}`;
+  return `${getGeoserverFeatureTypesUrl(workspace, datastore)}/${feature}`;
+}
+
+export function getGeoserverFeatureTypesInfoUrl(workspace: string, datastore: string): string {
+  return `${getGeoserverFeatureTypesUrl(workspace, datastore)}.json`;
+}
+
+export function getGeoserverFileUrl(workspace: string, coverages: string): string {
+  return `${getGeoserverWorkspaceUrl(workspace)}/coveragestores/store_${coverages}/coverages/${coverages}.json`;
 }
 
 export function getGeoserverImportUrl(importId: number | string): string {
@@ -104,23 +120,8 @@ export function getEsiaUrl(): string {
   return `${url}/esia?redirect=${redirectFromEsia}`;
 }
 
-function getDataUrl(): string {
-  return getBaseUrl() + '/api/data';
-}
-
 export function getApiImportUrl(projectId: number): string {
   return `${getDataUrl()}/import/${projectId}`;
-}
-
-export function getApiImportGmlUrl(): string {
-  return `${getDataUrl()}/import/file/gml`;
-}
-
-function getDatasetsUrl(): string {
-  return `${getDataUrl()}/datasets`;
-}
-function getDatasetUrl(datasetIdentifier: string): string {
-  return `${getDatasetsUrl()}/${datasetIdentifier}`;
 }
 
 export function getVectorTableMultipleRecordsUrl(

@@ -13,4 +13,4 @@ echo "4" > ${GEOSERVER_DATA_DIR}/migrationVersion
 echo "${TAB}Done V4__UpdateDb"
 echo
 
-#Run Next migration
+./V5__geoserverJdbc/run.sh

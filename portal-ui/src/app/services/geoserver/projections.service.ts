@@ -129,9 +129,8 @@ export function getProjection(projectionStr: string): CrgProjection {
 
 export function getFeatureProjection(feature: WfsFeature<Coordinate | CoordinateEdited>): CrgProjection {
   const layer = getLayerByFeatureInCurrentProject(feature);
-
   if (!layer) {
-    throw new Error('Не найден слой для объекта');
+    throw new Error('Не удалось определить проекцию слоя. Не найден слой для объекта: ' + feature.id);
   }
 
   return getProjection(layer.nativeCRS);
@@ -233,7 +232,7 @@ function transformCoordinate(
   projFrom: CrgProjection,
   projTo: CrgProjection,
   originGroup?: Coord[],
-  transformedOriginGroup?: Coord[]
+  transformedOriginGroup: Coord[] = []
 ): Coord {
   const coord = normalizeCoordinates(coordEdited) as Coordinate;
   const originIndex = originGroup ? originGroup.findIndex(originCoord => isEqual(coord, originCoord)) : -1;
@@ -267,8 +266,8 @@ function transformSuperGroup(
       group,
       projFrom,
       projTo,
-      origin && origin.length >= i - 1 && origin[i],
-      transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]
+      (origin && origin.length >= i - 1 && origin[i]) || undefined,
+      (transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]) || undefined
     )
   );
 }
@@ -285,14 +284,14 @@ function transformMultiSuperGroup(
       superGroup,
       projFrom,
       projTo,
-      origin && origin.length >= i - 1 && origin[i],
-      transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]
+      (origin && origin.length >= i - 1 && origin[i]) || undefined,
+      (transformedOrigin && transformedOrigin.length >= i - 1 && transformedOrigin[i]) || undefined
     )
   );
 }
 
 // Для подложек Яндекса, основанных на проекции 3395, нужно задать extend
 // https://gis.stackexchange.com/questions/187082/openlayers-3-projection-for-yandex-maps
-get('EPSG:3395').setExtent([
+get('EPSG:3395')?.setExtent([
   -20_037_508.342_789_244, -20_037_508.342_789_244, 20_037_508.342_789_244, 20_037_508.342_789_244
 ]);

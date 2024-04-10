@@ -103,7 +103,7 @@ public class Layer implements Identifiable<Long> {
         type = dto.getType();
         styleName = dto.getStyleName();
         dataStoreName = dto.getDataStoreName();
-        nativeCRS = dto.getNativeCRS();
+        nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : "EPSG:28406";
         dataSourceUri = dto.getDataSourceUri();
         libraryId = dto.getLibraryId();
         recordId = dto.getRecordId();
@@ -347,5 +347,36 @@ public class Layer implements Identifiable<Long> {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getTitle(), getTableName(), getType());
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":\"" + id + "\"" + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
+                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
+                "\"enabled\":\"" + enabled + "\"" + ", " +
+                "\"position\":\"" + position + "\"" + ", " +
+                "\"transparency\":\"" + transparency + "\"" + ", " +
+                "\"maxZoom\":\"" + maxZoom + "\"" + ", " +
+                "\"minZoom\":\"" + minZoom + "\"" + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
+                "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
+                "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
+                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
+                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
+                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"createdAt\":" + (createdAt == null ? "null" : createdAt) + ", " +
+                "\"lastModified\":" + (lastModified == null ? "null" : lastModified) + ", " +
+                "\"project\":" + (project == null ? "null" : project) + ", " +
+                "\"parent\":" + (parent == null ? "null" : parent) + ", " +
+                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
+                "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +
+                "\"errorText\":" + (errorText == null ? "null" : "\"" + errorText + "\"") + ", " +
+                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") + ", " +
+                "\"photoMode\":" + (photoMode == null ? "null" : "\"" + photoMode + "\"") +
+                "}";
     }
 }

@@ -57,18 +57,11 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @observable private featuresMatched = 0;
   @observable private featuresTotal = 0;
   @observable private height = this.getHeight();
-
   private fetchingSchemaOperationId?: symbol;
 
   constructor(props: AttributesBarProps) {
     super(props);
     makeObservable(this);
-  }
-
-  private getHeight(): number {
-    const height = localStorage.getItem('atr-size');
-
-    return Number(height) || 400;
   }
 
   async componentDidMount() {
@@ -162,6 +155,12 @@ export class AttributesBar extends Component<AttributesBarProps> {
       { field: 'cutId', title: 'ID', minWidth: 50 },
       ...getXTableColumnsFromSchema(this.schema)
     ] as XTableColumn<AttributesTableRecord>[];
+  }
+
+  private getHeight(): number {
+    const height = localStorage.getItem('atr-size');
+
+    return Number(height) || 400;
   }
 
   @boundMethod

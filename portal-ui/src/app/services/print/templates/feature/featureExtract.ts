@@ -26,12 +26,12 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
     const layer = getLayerByFeatureInCurrentProject(entity);
 
     if (!layer) {
-      throw new Error('Не найден слой для объекта');
+      throw new Error('Не удалось извлечь фичу. Не найден слой для объекта');
     }
 
     const schema = await getLayerSchema(layer);
     if (!schema) {
-      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+      throw new Error(`Не удалось извлечь фичу. Не удалось получить схему слоя ${layer.title}`);
     }
     const schemaWithAppliedView = applyView(schema, layer.view);
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);
@@ -141,17 +141,16 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
 
   async getFileName(this: PrintTemplate<WfsFeature>, entity: WfsFeature) {
     const layer = getLayerByFeatureInCurrentProject(entity);
-
     if (!layer) {
-      throw new Error('Не найден слой для объекта');
+      throw new Error('Не удалось получить имя файла. Не найден слой для объекта');
     }
 
     const schema = await getLayerSchema(layer);
     if (!schema) {
-      throw new Error(`Не удалось получить схему слоя ${layer.title}`);
+      throw new Error(`Не удалось получить имя файла. Не удалось получить схему слоя ${layer.title}`);
     }
-    const schemaWithAppliedView = applyView(schema, layer.view);
 
+    const schemaWithAppliedView = applyView(schema, layer.view);
     const { title } = getFeaturesListItemTitle(entity, schemaWithAppliedView);
 
     return `${title} [${this.title}]`;

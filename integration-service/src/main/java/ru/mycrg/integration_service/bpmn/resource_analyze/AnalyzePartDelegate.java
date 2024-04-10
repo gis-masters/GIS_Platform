@@ -1,7 +1,6 @@
 package ru.mycrg.integration_service.bpmn.resource_analyze;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -22,6 +21,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.http_client.JsonConverter.toJson;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;
 import static ru.mycrg.integration_service.bpmn.enums.ResourceAnalyzeProcessVariables.*;
 
@@ -30,7 +30,6 @@ public class AnalyzePartDelegate implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(AnalyzePartDelegate.class);
 
-    private final Gson gson = new Gson();
     private final MediaType jsonMediaType = MediaType.parse("application/json");
 
     private String accessToken;
@@ -64,7 +63,7 @@ public class AnalyzePartDelegate implements JavaDelegate {
         ResponseModel<List<ResourceAnalyzerResult>> response;
         URL url = null;
         try {
-            final String jsonBody = gson.toJson(resourcesModel.getResources());
+            final String jsonBody = toJson(resourcesModel.getResources());
             final RequestBody requestBody = RequestBody.create(jsonMediaType, jsonBody);
 
             url = buildUrl();
@@ -75,8 +74,8 @@ public class AnalyzePartDelegate implements JavaDelegate {
                     .build();
 
             response = crgHttpClient.handleRequest(request,
-                                                   new TypeToken<List<ResourceAnalyzerResult>>() {
-                                                   }.getType());
+                                                   new TypeReference<>() {
+                                                   });
             if (response.isSuccessful()) {
                 return Optional.of(response.getBody());
             } else {

@@ -8,13 +8,14 @@ import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
 import { communicationService } from '../../communication.service';
-import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
+import { CrgLayersGroup } from '../layers/layers.models';
 import { usersService } from '../../auth/users/users.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
 import { Toast } from '../../../components/Toast/Toast';
+import { getLayers } from '../layers/layers.service';
 
 import { CrgProject } from './projects.models';
 import { projectsClient } from './projects.client';
@@ -125,7 +126,7 @@ class ProjectsService {
     }
 
     await usersService.fetchCurrentUser();
-    const layers = await this.getLayers(project.id);
+    const layers = await getLayers(project.id);
     const layersErrors: Record<string, string[]> = {};
     const layersPermissions = await Promise.all(layers.map(async layer => await isLayerReadAllowed(layer)));
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
@@ -199,10 +200,6 @@ class ProjectsService {
     allProjects.delete(id);
   }
 
-  async getLayers(projectId: number): Promise<CrgLayer[]> {
-    return await projectsClient.getProjectLayers(projectId);
-  }
-
   async getGroups(projectId: number): Promise<CrgLayersGroup[]> {
     return await projectsClient.getProjectGroups(projectId);
   }
@@ -252,8 +249,3 @@ class ProjectsService {
 }
 
 export const projectsService = ProjectsService.instance;
-
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, { projectsService });
-}

@@ -2,12 +2,12 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { mapBlock } from './Map.block';
 import { getMapPosition } from '../../commands/map/getMapPosition';
-import { getLayerVisibility } from '../../commands/getLayerVisibility';
+import { isLayerVisibleOnMap } from '../../commands/isLayerVisibleOnMap';
 import { MapPage } from '../../pages/Map.page';
 import { ScenarioScope } from '../../ScenarioScope';
 
 When('слой {string} не отображается на карте', async (layerName: string) => {
-  await browser.waitUntil(async () => !(await getLayerVisibility(layerName)), {
+  await browser.waitUntil(async () => !(await isLayerVisibleOnMap(layerName)), {
     timeout: 5000,
     interval: 1000,
     timeoutMsg: `Слой ${layerName} отображается на карте, а не должен`
@@ -15,7 +15,7 @@ When('слой {string} не отображается на карте', async (l
 });
 
 When('слой {string} отображается на карте', async (layerName: string) => {
-  await browser.waitUntil(async () => await getLayerVisibility(layerName), {
+  await browser.waitUntil(async () => await isLayerVisibleOnMap(layerName), {
     timeout: 5000,
     interval: 1000,
     timeoutMsg: `Слой ${layerName} не отображается на карте`

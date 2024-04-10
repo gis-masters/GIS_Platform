@@ -36,7 +36,7 @@ import { communicationService } from '../../services/communication.service';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { CrgVectorLayer, CrgVectorableLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
@@ -60,13 +60,13 @@ export interface Properties {
   styleUrls: ['./edit-feature.component.css']
 })
 export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
-  mode: EditFeatureMode;
-  features: WfsFeature<Coordinate | CoordinateEdited>[];
+  mode?: EditFeatureMode;
+  features?: WfsFeature<Coordinate | CoordinateEdited>[];
   private viewFeatures?: WfsFeature[];
-  layer: CrgVectorLayer;
+  layer?: CrgVectorableLayer;
   private properties?: Properties;
-  isNew: boolean;
-  selectTab: number;
+  isNew?: boolean;
+  selectTab?: number;
 
   updatingAllowed = false;
 
@@ -85,7 +85,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   ngOnInit() {
-    fromMobx<EditFeaturesData>(() => sidebars.editFeaturesData, true)
+    fromMobx<EditFeaturesData | undefined>(() => sidebars.editFeaturesData, true)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(async data => {
         if (!data || !data.features) {
@@ -95,7 +95,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm = this.formBuilder.group({});
         this.mode = data.mode;
         this.features = data.features;
-        this.layer = { ...(data.layer || getLayerByFeatureInCurrentProject(this.features[0])) };
+        const firstFeature = this.features[0];
+        if (!firstFeature) {
+          return;
+        }
+        this.layer = { ...(data.layer || getLayerByFeatureInCurrentProject(firstFeature)) };
         this.properties = data.properties;
         this.isNew = data.isNew;
         this.selectTab = Number(data.isNew);
@@ -107,14 +111,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm = this.formBuilder.group({});
 
         const layerSchema = await getLayerSchema(this.layer);
+        if (!layerSchema) {
+          return;
+        }
         const oldSchema = convertNewToOldSchema(layerSchema);
-        this.featureDescription = applyViewOld(
-          changeSchemaNamesCaseByFeature(oldSchema, this.features[0]),
-          this.layer.view
-        );
+        const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
+        this.featureDescription = applyViewOld(changeSchemaNamesCaseByFeature(oldSchema, firstFeature), view);
 
-        const schema = changeSchemaNamesCaseByFeature(oldSchema, this.features[0]);
-        const newSchema = applyView(layerSchema, this.layer.view);
+        const schema = changeSchemaNamesCaseByFeature(oldSchema, firstFeature);
+        const newSchema = applyView(layerSchema, view);
 
         this.features = this.features.map(feature => ({
           ...feature,
@@ -124,12 +129,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureData = [];
 
         this.featureDescription.properties.forEach(({ name, valueType }) => {
-          if (!Object.keys(this.features[0].properties).includes(name) && valueType !== ValueType.GEOMETRY) {
-            this.features[0].properties[name] = null;
+          if (!Object.keys(firstFeature.properties).includes(name) && valueType !== ValueType.GEOMETRY) {
+            firstFeature.properties[name] = null;
           }
         });
 
-        Object.keys(this.features[0].properties)
+        Object.keys(firstFeature.properties)
           .filter(
             key =>
               (key !== 'bbox' && newSchema.properties.some(item => key === item.name)) ||
@@ -151,10 +156,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           })
           .forEach(key => {
             let currentValue = this.getFieldByKey(key)
-              ? convertToComplexField(this.getFieldByKey(key), this.features[0].properties)
-              : this.features[0].properties[key];
+              ? convertToComplexField(this.getFieldByKey(key), firstFeature.properties)
+              : firstFeature.properties[key];
 
-            let property: OldPropertySchema;
+            let property: OldPropertySchema | undefined;
             if (this.featureDescription) {
               property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
             }
@@ -219,12 +224,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 formControl.disable();
               }
 
-              this.editFeatureForm.addControl(key, formControl);
+              this.editFeatureForm?.addControl(key, formControl);
             }
           });
 
         setTimeout(() => {
-          this.validateCustomRules(this.features[0].properties);
+          this.validateCustomRules(firstFeature.properties);
         }, 22);
 
         this.unsubscribeFromMobx$.next();
@@ -233,10 +238,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isGeometryChanged = false;
         this.updatingAllowed = await isUpdateAllowed(this.layer);
 
-        if (this.updatingAllowed && this.mode === EditFeatureMode.single && !this.features[0].geometry) {
-          this.features[0].geometry = getEmptyGeometry(this.featureDescription.geometryType);
+        if (this.updatingAllowed && this.mode === EditFeatureMode.single && !firstFeature.geometry) {
+          firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
-        this.editGeometryStore.initGeometry(this.features[0].geometry, getFeatureProjection(this.features[0]));
+        this.editGeometryStore.initGeometry(firstFeature.geometry, getFeatureProjection(firstFeature));
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -252,7 +257,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   this.changedGeometry = changedGeometry;
 
                   const feature = {
-                    ...this.features[0],
+                    ...firstFeature,
                     geometry: changedGeometry
                   };
 
@@ -271,7 +276,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(isChanged => {
                   this.isGeometryChanged = isChanged;
-                  sidebars.setFeaturesEdited(!this.editFeatureForm.pristine || isChanged);
+                  sidebars.setFeaturesEdited(!this.editFeatureForm?.pristine || isChanged);
                 });
             });
         }
@@ -279,21 +284,23 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm.valueChanges.subscribe((featureProperties: Record<string, unknown>) => {
           this.validateCustomRules(featureProperties);
 
-          sidebars.setFeaturesEdited(!this.editFeatureForm.pristine);
+          sidebars.setFeaturesEdited(!this.editFeatureForm?.pristine);
         });
       });
 
     fromMobx<CrgVectorLayer[]>(() => cloneDeep(currentProject.vectorableLayers))
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(async layers => {
-        const currentLayer = layers.find(item => item.id === this.layer.id);
+        const currentLayer = layers.find(item => item.id === this.layer?.id);
         if (!currentLayer) {
           sidebars.closeEdit();
 
           return;
         }
 
-        if (currentLayer.view !== this.layer?.view) {
+        const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
+
+        if (currentLayer.view !== view) {
           sidebars.closeEdit();
 
           await sleep(0);
@@ -320,7 +327,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    if (this.editFeatureForm.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
+    if (this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
+      return;
+    }
+
+    if (!this.layer) {
       return;
     }
 
@@ -399,6 +410,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       title: 'Удалить объект?',
       approveBtnName: 'Удалить'
     };
+
+    if (!isVectorLayer(this.layer)) {
+      throw new Error('Невозможно удалить объект');
+    }
+
     const { dataset, tableName } = this.layer;
 
     this.dialog
@@ -474,6 +490,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     newProperties: Properties,
     geometry?: WfsGeometry<Coordinate>
   ) {
+    if (!isVectorLayer(this.layer)) {
+      throw new Error('Невозможно обновить объект');
+    }
+
     const { dataset, tableName } = this.layer;
 
     if (features.length === 1) {

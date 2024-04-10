@@ -17,6 +17,8 @@ public class CrgGlobalProperties {
     private static final String DEFAULT_ROLE_NAME = "admin";
     private static final String DEFAULT_SCHEMA_PREFIX = "dataset";
     private static final String SEPARATOR = "_";
+    private static final String DOUBLE_SEPARATOR = SEPARATOR + SEPARATOR;
+    private static final String GEOSERVER_COMPLEX_NAME_SEPARATOR = ":";
 
     private CrgGlobalProperties() {
         throw new IllegalStateException("Utility class");
@@ -30,6 +32,11 @@ public class CrgGlobalProperties {
     @NotNull
     public static String join(String s1, String s2, String s3) {
         return s1 + SEPARATOR + s2 + SEPARATOR + s3;
+    }
+
+    @NotNull
+    public static String buildGeoserverComplexLayerName(String workspace, String layerName) {
+        return workspace + GEOSERVER_COMPLEX_NAME_SEPARATOR + layerName;
     }
 
     @NotNull
@@ -73,8 +80,15 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
-    public static String buildRasterStoreName(String custom) {
-        return join(DEFAULT_STORE_POSTFIX, custom);
+    public static String buildStoreName(Long orgId, String fileType, String base) {
+        String postfix = join(orgId.toString(), fileType, DEFAULT_STORE_POSTFIX);
+
+        return postfix + DOUBLE_SEPARATOR + base;
+    }
+
+    @NotNull
+    public static String buildRasterStoreName(String body) {
+        return join(DEFAULT_STORE_POSTFIX, body);
     }
 
     @NotNull

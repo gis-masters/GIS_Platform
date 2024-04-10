@@ -1,7 +1,5 @@
 package ru.mycrg.gis_service.service.layers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.entity.Layer;
@@ -9,26 +7,24 @@ import ru.mycrg.gis_service.entity.Project;
 
 import java.util.Optional;
 
+import static ru.mycrg.data_service_contract.enums.FileType.TAB;
+
 @Component
 public class TabLayerHandler implements ILayerHandler {
 
-    private final Logger log = LoggerFactory.getLogger(TabLayerHandler.class);
+    private final ILayerHandler baseLayerHandler;
 
-    private final DxfLayerHandler dxfLayerHandler;
-
-    public TabLayerHandler(DxfLayerHandler dxfLayerHandler) {
-        this.dxfLayerHandler = dxfLayerHandler;
+    public TabLayerHandler(BaseLayerHandler baseLayerHandler) {
+        this.baseLayerHandler = baseLayerHandler;
     }
 
     @Override
-    public Optional<Layer> create(Project project, LayerCreateDto dto) {
-        log.debug("TAB create");
-
-        return dxfLayerHandler.create(project, dto);
+    public Optional<Layer> create(Project project, LayerCreateDto layerDto) {
+        return baseLayerHandler.create(project, layerDto);
     }
 
     @Override
     public String getType() {
-        return "tab";
+        return TAB.name().toLowerCase();
     }
 }

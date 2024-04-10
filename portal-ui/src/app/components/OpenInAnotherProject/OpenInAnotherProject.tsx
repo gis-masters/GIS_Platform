@@ -13,6 +13,7 @@ import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog
 import { VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
 
 const cnOpenInAnotherProject = cn('OpenInAnotherProject');
 
@@ -24,7 +25,7 @@ interface OpenInAnotherProjectProps {
 export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
   @observable private dialogOpen = false;
   @observable private connections: VectorTableConnection[] = [];
-  private connectionsFetchingOperationId: symbol;
+  private connectionsFetchingOperationId?: symbol;
 
   constructor(props: OpenInAnotherProjectProps) {
     super(props);
@@ -74,7 +75,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     const { feature } = this.props;
     const operationId = Symbol();
     this.connectionsFetchingOperationId = operationId;
-    const connections = await getVectorTableConnections(feature.id.split('.')[0]);
+    const connections = await getVectorTableConnections(extractTableNameFromFeatureId(feature.id));
     if (this.connectionsFetchingOperationId === operationId) {
       this.setConnections(connections);
     }
@@ -112,6 +113,10 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     const { feature } = this.props;
 
     const layer = getLayerByFeatureInCurrentProject(feature);
+    if (!layer) {
+      throw new Error('Не удалось перейти к объекту, не найден слой: ' + feature.id);
+    }
+
     location.href = getFeaturesUrl(project.id, layer.dataset, layer.tableName, [feature.id]);
   }
 }

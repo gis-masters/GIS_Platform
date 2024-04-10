@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.service.import_.model;
 
-import ru.mycrg.data_service.service.processes.FileType;
+import ru.mycrg.data_service_contract.enums.FileType;
 
 public class GeometryFromShapePlacementPayloadModel {
 

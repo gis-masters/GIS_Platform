@@ -12,6 +12,7 @@ import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { flags } from '../services/feature-flags';
 import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { extractTableNameFromFeatureId } from '../services/geoserver/feature.util';
 
 const actionsInModes = {
   [MapMode.DEFAULT]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT_WITH_MODIFICATORS],
@@ -38,9 +39,9 @@ class MapStore {
   @observable measureMode: MeasureMode | null = null;
   @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement = UnitsOfAreaMeasurement.HECTARE;
 
-  @observable mode: MapMode;
+  @observable mode: MapMode = MapMode.DEFAULT;
 
-  @observable selectionActive: boolean;
+  @observable selectionActive: boolean = false;
   @observable selectedFeatures: WfsFeature[] = [];
 
   @observable labelsVisible = false;
@@ -78,7 +79,7 @@ class MapStore {
     const result: Record<string, WfsFeature[]> = {};
 
     for (const feature of this.selectedFeatures) {
-      const [tableName] = feature.id.split('.');
+      const tableName = extractTableNameFromFeatureId(feature.id);
       if (!result[tableName]) {
         result[tableName] = [];
       }
@@ -108,8 +109,7 @@ class MapStore {
     } = {};
 
     return this.selectedFeatures.filter(feature => {
-      const [tableName] = feature.id.split('.');
-
+      const tableName = extractTableNameFromFeatureId(feature.id);
       if (!filtersByLayers[tableName]) {
         const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName, true));
         const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);

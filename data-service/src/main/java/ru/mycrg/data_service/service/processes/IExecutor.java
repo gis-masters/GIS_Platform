@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.processes;
 
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
@@ -62,8 +63,10 @@ public interface IExecutor<T> {
      */
     IExecutor<T> setPayload(ProcessModel processModel);
 
+    FilePlacementPayloadModel getPayload();
+
     /**
-     * detached процесс - это процесс, который будет завершен позже, например после прихода сообщения из очереди.
+     * Detached процесс - это процесс, который будет завершен позже, например после прихода сообщения из очереди.
      */
     default boolean notDetached() {
         return true;

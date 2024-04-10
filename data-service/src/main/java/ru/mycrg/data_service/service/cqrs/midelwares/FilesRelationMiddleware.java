@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.cqrs.midelwares;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.service.FileService;
+import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.schemas.ISchemable;
 import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;

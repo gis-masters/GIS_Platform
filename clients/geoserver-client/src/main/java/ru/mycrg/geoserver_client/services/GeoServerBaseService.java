@@ -1,6 +1,5 @@
 package ru.mycrg.geoserver_client.services;
 
-import com.google.gson.Gson;
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +11,6 @@ public class GeoServerBaseService {
     public static HttpClient httpClient;
     public static GeoserverInfo geoserverInfo;
 
-    protected final Gson gson = new Gson();
     protected Request.Builder builderWithBearerAuth;
 
     public GeoServerBaseService(String accessToken) {

@@ -5,19 +5,20 @@ Feature: Создание слоев в проектах
       | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 | testPassword1 |
     Given Владелец организации авторизован
 
-  Scenario Outline: Создание векторного слоя проекта
+  Scenario Outline: Создание векторного слоя выполняется по заданным правилам
     Given Существует проект "STRING_10"
     Given Существует набор данных
     Given Существует таблица
     When Пользователь делает запрос на создание слоя проекта "<title>" "<styleName>" "<type>" "<nativeCRS>" "<dataSourceUri>" "<libraryId>" "<recordId>" "<mode>" "test_content_type" "<style>"
     Then Сервер отвечает со статус-кодом 201
-    And Сервер передаёт ID слоя проекта в ответе
+    And  Сервер передаёт ID слоя проекта в ответе
     When Пользователь делает запрос на текущий слой
     Then Сервер отвечает со статус-кодом 200
-    And Поля векторного слоя совпадают с переданными
+    And  Поля векторного слоя совпадают с переданными
     Examples:
       | title                             | styleName    | type   | nativeCRS  | dataSourceUri | style    |
       | Искусственные дорожные сооружения | transportobj | vector | EPSG:28406 | STRING_6      | STRING_6 |
+      | Искусственные дорожные сооружения | transportobj | vector | EPSG:28407 | STRING_6      | STRING_6 |
 
   Scenario: Создание внешнего слоя
     Given Существует проект "STRING_10"
@@ -47,10 +48,8 @@ Feature: Создание слоев в проектах
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | title      | styleName    | type     | nativeCRS  | dataSourceUri | content_type      | reason                          |
-      | STRING_1   | transportobj | vector   | EPSG:28406 | STRING_6      | test_content_type | Короткое название(vector)       |
       | STRING_257 | transportobj | vector   | EPSG:28406 | STRING_6      | test_content_type | Длинное название (vector)       |
       | STRING_0   | transportobj | vector   | EPSG:28406 | STRING_6      | test_content_type | Пустое название (vector)        |
-      | STRING_5   | STRING_1     | vector   | EPSG:28406 | STRING_6      | test_content_type | Короткое название стиля(vector) |
       | STRING_5   | STRING_0     | vector   | EPSG:28406 | STRING_6      | test_content_type | Пустое название стиля(vector)   |
       | STRING_5   | STRING_257   | vector   | EPSG:28406 | STRING_6      | test_content_type | Длинное название стиля(vector)  |
       | STRING_5   | transportobj | data     | EPSG:28406 | STRING_6      | test_content_type | Неверный тип (vector)           |

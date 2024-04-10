@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.dto;
 
+import static ru.mycrg.common_utils.CrgGlobalProperties.join;
+
 public class FileResourceQualifier {
 
     private String schema;
@@ -52,5 +54,14 @@ public class FileResourceQualifier {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    @Override
+    public String toString() {
+        return join(
+                (table == null || table.isBlank()) ? "" : table,
+                recordId == null ? "" : String.valueOf(recordId),
+                (field == null || field.isBlank()) ? "" : field
+        );
     }
 }

@@ -1,4 +1,4 @@
-frame DXF Placement
+frame File placement
 
 actor User
 participant DataService
@@ -7,7 +7,7 @@ participant InregrationService
 participant Geoserver
 participant GisService
 
-User-#red:2>DataService:Place DFX request
+User-#red:2>DataService:Place file request
 
 activate DataService #skyBlue
 DataService-#orange:2>DataService:check File and \ncreate process
@@ -16,26 +16,24 @@ deactivate DataService
 DataService-#orange:2>DataService: from process
 activate DataService #skyBlue
 User <#green:2--DataService: WebSocket Message \n{PENDING}
-DataService-#blue:2>>Queue:PlaceDxfFileEvent
+DataService-#blue:2>>Queue:PlaceFileEvent
 deactivate DataService
 activate Queue #skyBlue
-Queue-#blue:2>>InregrationService:PlaceDxfFileEvent
+Queue-#blue:2>>InregrationService:PlaceFileEvent
 activate InregrationService #skyBlue
 deactivate Queue
-InregrationService-#red:2>Geoserver:Create store based on DXF file\n{geoserverCreateDxfStoreDelegate}
+InregrationService-#red:2>Geoserver:Create store based on file\n{geoserverCreateStoreDelegate}
 activate Geoserver #skyBlue
 InregrationService<#red:2--Geoserver:Store successfully created
-InregrationService -#red:2> Geoserver:Create layer based on new store\n{geoserverCreateDxfLayerDelegate}
-InregrationService <#red:2-- Geoserver:Layer successfully created
 deactivate Geoserver
-InregrationService -#red:2> GisService:Create layer on GisService\n{gisCreateDxfLayerDelegate}
+InregrationService -#red:2> GisService:Create layer via GisService in 'full' mode\n{gisCreateLayerDelegate}
 activate GisService #skyBlue
 InregrationService <#red:2-- GisService:Layer successfully created
 deactivate GisService
-Queue <#blue:2-- InregrationService:DxfPlacedFailedEvent or\nDxfPlacedSucceededEvent
+Queue <#blue:2-- InregrationService:FilePlacedFailedEvent or\nFilePlacedSucceededEvent
 deactivate InregrationService
 activate Queue #skyBlue
-DataService <#blue:2-- Queue:DxfPlacedFailedEvent or\nDxfPlacedSucceededEvent
+DataService <#blue:2-- Queue:FilePlacedFailedEvent or\nFilePlacedSucceededEvent
 activate DataService #skyBlue
 deactivate Queue
 User <#green:2-- DataService:    WebSocket \nMessage {DONE/ERROR}

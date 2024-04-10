@@ -5,11 +5,11 @@ import { NGXLogger } from 'ngx-logger';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { ProcessStatus, ProcessType } from '../../../services/data/processes/processes.models';
+import { ProcessStatus, ProcessType, WsImportModel } from '../../../services/data/processes/processes.models';
 import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
 import { communicationService } from '../../../services/communication.service';
 import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
-import { IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { ExportWsMsg, IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
 import { mapService } from '../../../services/map/map.service';
@@ -20,8 +20,8 @@ import { mapService } from '../../../services/map/map.service';
   styleUrls: ['./report-sidebar.component.css']
 })
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() isActive: boolean;
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef;
+  @Input() isActive: boolean = false;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef;
   layers: CrgVectorLayer[];
 
   commonInfo: Map<string, ValidationShortInfo> = new Map<string, ValidationShortInfo>();
@@ -35,7 +35,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   commonProgress = 0;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
-  layersWithErrors: CrgLayer[];
+  layersWithErrors: CrgLayer[] = [];
 
   constructor(private logger: NGXLogger) {
     this.layers = currentProject.vectorLayers;
@@ -59,7 +59,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
         filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe((wsMessage: IWsMessage<ValidationWsMsg>) => this.handleWsMessage(wsMessage.payload));
+      .subscribe(wsMessage => this.handleWsMessage(wsMessage.payload));
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -109,7 +109,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     return false;
   }
 
-  private async handleWsMessage(validationWsMsg: ValidationWsMsg) {
+  private async handleWsMessage(validationWsMsg: ExportWsMsg | ValidationWsMsg | WsImportModel) {
     switch (validationWsMsg.status) {
       case ProcessStatus.PENDING: {
         this.commonProgress = validationWsMsg.progress;
@@ -118,7 +118,13 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
       }
       case ProcessStatus.TASK_DONE: {
         // есть инфа о названии слоя
-        this.commonInfo.set(validationWsMsg.description, null);
+        this.commonInfo.set(validationWsMsg.description, {
+          featureName: '',
+          status: '',
+          validated: false,
+          totalViolations: 0,
+          lastValidationDateTime: ''
+        });
 
         break;
       }

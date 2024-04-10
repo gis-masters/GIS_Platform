@@ -41,7 +41,7 @@ public class BaseStepsDefinitions {
 
     public static Random random = new Random();
     public static String testServerHost;
-    public static int testServerPort;
+    public static Integer testServerPort;
     public static String rootUserName;
     public static String rootPassword;
 
@@ -85,13 +85,26 @@ public class BaseStepsDefinitions {
 
     public void setup() {
         testServerHost = System.getProperty("env.HOST");
-        rootUserName = System.getProperty("env.ROOT_NAME");
-        rootPassword = System.getProperty("env.ROOT_PASS");
+        if (testServerHost == null) {
+            testServerHost = "http://localhost";
+        }
 
-        assert testServerHost != null && rootPassword != null && rootUserName != null
-                : "You should specify test server HOST as '-Denv.HOST', PORT as '-Denv.PORT', ROOT_NAME as '-Denv" +
-                ".ROOT_NAME', ROOT_PASS as '-Denv.ROOT_PASS'";
-        testServerPort = Integer.parseInt(System.getProperty("env.PORT"));
+        rootPassword = System.getProperty("env.ROOT_PASS");
+        if (rootPassword == null) {
+            rootPassword = "Esterhazy2022";
+        }
+
+        rootUserName = System.getProperty("env.ROOT_NAME");
+        if (rootUserName == null) {
+            rootUserName = "admin@mail.ru";
+        }
+
+        String testServerPortAsString = System.getProperty("env.PORT");
+        if (testServerPortAsString == null) {
+            testServerPort = 8100;
+        } else {
+            testServerPort = Integer.parseInt(System.getProperty("env.PORT"));
+        }
 
         request = getBaseRequest();
     }
@@ -322,6 +335,7 @@ public class BaseStepsDefinitions {
     public void getCurrentEntityByFilter(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        log().all().
                         get("?filter=" + field + " iLike '%" + value + "%'");
     }
 

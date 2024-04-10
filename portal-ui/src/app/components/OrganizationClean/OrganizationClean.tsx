@@ -32,7 +32,7 @@ export class OrganizationClean extends Component {
   private async cleanUp() {
     this.setBusy(true);
 
-    const featureTypeHrefs: FeatureTypeHref[] = await getFeatureTypesFromScratchDatastore();
+    const featureTypeHrefs: FeatureTypeHref[] | undefined = await getFeatureTypesFromScratchDatastore();
     if (featureTypeHrefs) {
       for (const item of featureTypeHrefs) {
         await deleteFeatureTypeFromScratchDatastore(item.name);

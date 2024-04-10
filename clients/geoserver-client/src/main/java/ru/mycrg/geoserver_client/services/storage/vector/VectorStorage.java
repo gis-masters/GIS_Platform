@@ -1,17 +1,17 @@
 package ru.mycrg.geoserver_client.services.storage.vector;
 
-import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.geoserver_client.contracts.datastores.base.BaseParameterizedDataStore;
+import ru.mycrg.geoserver_client.contracts.datastores.base.IParameterizedStore;
 import ru.mycrg.geoserver_client.contracts.datastores.base.ParameterizedDataStoreWrapper;
 import ru.mycrg.geoserver_client.services.GeoServerBaseService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class VectorStorage extends GeoServerBaseService {
 
@@ -30,8 +30,8 @@ public class VectorStorage extends GeoServerBaseService {
      * @param workspaceName The name of the workspace containing the data stores.
      */
     public ResponseModel<Object> create(String workspaceName,
-                                        BaseParameterizedDataStore<?> dataStore) throws HttpClientException {
-        String json = gson.toJson(new ParameterizedDataStoreWrapper(dataStore));
+                                        IParameterizedStore<?> dataStore) throws HttpClientException {
+        String json = toJson(new ParameterizedDataStoreWrapper(dataStore));
 
         log.debug("Request to create dataStore, with params: {}", json);
 
@@ -48,7 +48,7 @@ public class VectorStorage extends GeoServerBaseService {
      *
      * @param workspaceName The name of the workspace containing the data stores.
      */
-    public DataStoreWrapper getAll(final String workspaceName) throws HttpClientException {
+    public DataStoreWrapper getAll(final String workspaceName) {
         Request getStores = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + WORKSPACES + workspaceName + DATA_STORES)
                 .get()
@@ -58,7 +58,7 @@ public class VectorStorage extends GeoServerBaseService {
             return httpClient.handleRequest(getStores, DataStoreResponse.class)
                              .getBody()
                              .getDataStores();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return new DataStoreWrapper();
         }
     }
@@ -69,9 +69,9 @@ public class VectorStorage extends GeoServerBaseService {
      * @param workspaceName The name of the workspace containing the data store.
      * @param dataStoreName The name of the data store to delete.
      */
-    public ResponseModel<Object> delete(final String workspaceName,
-                                        final String dataStoreName) throws HttpClientException {
-        final String url = getGeoserverRestUrl() +
+    public ResponseModel<Object> delete(String workspaceName,
+                                        String dataStoreName) throws HttpClientException {
+        String url = getGeoserverRestUrl() +
                 WORKSPACES + workspaceName +
                 DATA_STORES + dataStoreName + "?recurse=true";
 

@@ -9,6 +9,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 /**
  * A coverage is a raster data set which originates from a coverage store.
@@ -27,7 +28,7 @@ public class Coverages extends GeoServerBaseService {
 
     public ResponseModel<Object> create(String workspaceName, String coverageStore, Coverage coverage)
             throws HttpClientException {
-        String payload = gson.toJson(new CoverageModel(coverage));
+        String payload = toJson(new CoverageModel(coverage));
 
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspaceName)
                                           .append(COVERAGE_STORES).append(coverageStore)

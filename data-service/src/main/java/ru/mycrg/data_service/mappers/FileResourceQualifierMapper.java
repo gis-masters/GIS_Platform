@@ -13,7 +13,7 @@ public class FileResourceQualifierMapper {
         throw new IllegalArgumentException("Utility class");
     }
 
-    public static FileResourceQualifier map(JsonNode resourceQualifier) {
+    public static FileResourceQualifier mapToFileQualifier(JsonNode resourceQualifier) {
         try {
             return mapper.readValue(resourceQualifier.toString(), FileResourceQualifier.class);
         } catch (Exception e) {

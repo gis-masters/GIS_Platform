@@ -2,6 +2,11 @@ package ru.mycrg.gis_service.dto;
 
 import ru.mycrg.gis_service.entity.Layer;
 
+import java.time.LocalDateTime;
+
+import static ru.mycrg.common_utils.CrgGlobalProperties.buildGeoserverComplexLayerName;
+import static ru.mycrg.gis_service.service.geoserver.FeatureUtil.buildGeoserverFeatureName;
+
 public class LayerProjection {
 
     private final Long id;
@@ -46,7 +51,19 @@ public class LayerProjection {
         this.libraryId = layer.getLibraryId();
         this.recordId = layer.getRecordId();
         this.dataStoreName = layer.getDataStoreName();
-        this.complexName = orgWorkspaceName + ":" + tableName;
+
+        String tmpComplexName = buildGeoserverComplexLayerName(orgWorkspaceName, tableName);
+        LocalDateTime layerCreatedDateTime = layer.getCreatedAt();
+        if (layerCreatedDateTime != null) {
+            LocalDateTime dayZ = LocalDateTime.of(2024, 4, 10, 0, 0, 0);
+            if (layerCreatedDateTime.isAfter(dayZ)) {
+                tmpComplexName = buildGeoserverComplexLayerName(
+                        orgWorkspaceName,
+                        buildGeoserverFeatureName(layer.getProject().getId(), tableName, nativeCRS));
+            }
+        }
+        this.complexName = tmpComplexName;
+
         this.contentType = layer.getContentType();
         this.view = layer.getView();
         this.errorText = layer.getErrorText();

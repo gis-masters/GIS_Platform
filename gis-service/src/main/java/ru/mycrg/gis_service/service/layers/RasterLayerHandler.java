@@ -31,6 +31,7 @@ public class RasterLayerHandler implements ILayerHandler {
 
     public static final String FULL_MODE = "full";
     public static final String GEOSERVER_MODE = "geoserver";
+    public static final String GIS_SERVICE_MODE = "gis-service";
 
     public RasterLayerHandler(LayerRepository layerRepository,
                               CrgAuthHandler crgAuthHandler,
@@ -46,24 +47,27 @@ public class RasterLayerHandler implements ILayerHandler {
     }
 
     @Override
-    public Optional<Layer> create(Project project, LayerCreateDto dto) throws HttpClientException {
-        log.debug("Try create raster layer");
+    public Optional<Layer> create(Project project, LayerCreateDto dto) {
+        log.debug("Try create raster layer: {}", dto);
 
-        if (FULL_MODE.equals(dto.getMode()) || GEOSERVER_MODE.equals(dto.getMode())) {
+        if (!GIS_SERVICE_MODE.equals(dto.getMode())) {
             String tableName = dto.getTableName();
             String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
             String storeName = buildRasterStoreName(tableName);
-            String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : "28406";
+            String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : defaultEpsgCode();
             CoverageModel coverage = new CoverageModel(dto.getTableName(),
                                                        dto.getTitle(),
                                                        nativeCRS,
                                                        dto.getNativeCRS());
 
-            createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
-            createRasterLayer(workspaceName, storeName, coverage);
+            try {
+                createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
+                createRasterLayer(workspaceName, storeName, coverage);
+            } catch (Exception e) {
+                log.error("Не удалось создать растровые хранилище/слой на геосервере. По причине: {}", e.getMessage());
 
-            // Ждём принятия решения: нужно ли по-умолчанию ставить белый цвет или нет
-            // setTransparentColorByDefault(accessToken, workspaceName, storeName, coverage.getName());
+                return Optional.empty();
+            }
         }
 
         if (GEOSERVER_MODE.equals(dto.getMode())) {
@@ -93,20 +97,6 @@ public class RasterLayerHandler implements ILayerHandler {
         ResponseModel<Object> response = new CoverageHandler(accessToken).create(workspaceName, store, coverage);
         if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in store")) {
             throw new IllegalStateException("Не удалось создать растровый слой на геосервере");
-        }
-    }
-
-    private void setTransparentColorByDefault(String accessToken,
-                                              String workspaceName,
-                                              String store,
-                                              String coverageName) throws HttpClientException {
-        String totalBlack = "#000000";
-
-        ResponseModel<Object> response = new CoverageHandler(accessToken)
-                .updateTransparentColorParameter(workspaceName, store, coverageName, totalBlack);
-
-        if (!response.isSuccessful()) {
-            log.warn("Не удалось установить параметр transparent color по-умолчанию");
         }
     }
 }

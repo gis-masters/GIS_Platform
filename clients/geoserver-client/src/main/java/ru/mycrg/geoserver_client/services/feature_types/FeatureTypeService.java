@@ -1,6 +1,5 @@
 package ru.mycrg.geoserver_client.services.feature_types;
 
-import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class FeatureTypeService extends GeoServerBaseService implements IFeatureTypes {
 
@@ -24,13 +24,13 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
         super(accessToken);
     }
 
-    public FeatureTypes getFeatures(String workspaceName,
-                                    String dataStoreName) throws HttpClientException {
-        log.debug("try get all features from workspace: {} dataset: {}", workspaceName, dataStoreName);
+    public FeatureTypes getFeatureTypes(String workspace,
+                                        String dataStore) {
+        log.debug("try get all features from workspace: {} dataset: {}", workspace, dataStore);
 
         String url = getGeoserverRestUrl()
-                .append(WORKSPACES).append(workspaceName)
-                .append(DATA_STORES).append(dataStoreName)
+                .append(WORKSPACES).append(workspace)
+                .append(DATA_STORES).append(dataStore)
                 .append(FEATURE_TYPES).toString();
 
         Request request = builderWithBearerAuth.url(url)
@@ -40,70 +40,42 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
             return httpClient.handleRequest(request, FeaturesResponse.class)
                              .getBody()
                              .getFeatureTypes();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return new FeatureTypes();
         }
     }
 
-    public boolean isExist(String workspaceName, String featureName) throws HttpClientException {
-        log.debug("try get feature: {} in: {}", featureName, workspaceName);
+    public boolean isExist(String workspace,
+                           String featureType) {
+        log.debug("try get featureType: [{}] in: [{}]", featureType, workspace);
 
         String url = getGeoserverRestUrl()
-                .append(WORKSPACES).append(workspaceName)
-                .append(FEATURE_TYPES)
-                .append(featureName).append(".json").toString();
+                .append(WORKSPACES).append(workspace)
+                .append(FEATURE_TYPES).append(featureType)
+                .append(".json").toString();
 
         Request request = builderWithBearerAuth.url(url).get().build();
 
-        log.debug("get feature request {} ", request);
+        log.debug("get featureType request {} ", request);
 
         try {
             return httpClient.handleRequest(request).isSuccessful();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
     @Override
-    public ResponseModel<Object> create(String workspaceName,
-                                        String dataStoreName,
-                                        String featureName,
-                                        Integer srs) throws HttpClientException {
-        log.debug("try create feature: {} in: {}", featureName, workspaceName);
-
-        RequestBody body = RequestBody.create(
-                JSON_MEDIA_TYPE,
-                "{\"featureType\": " +
-                        "{" +
-                        "\"name\": \"" + featureName + "\"," +
-                        "\"nativeCRS\": \"EPSG:" + srs.toString() + "\"" +
-                        "}" +
-                        "}");
-
-        String url = getGeoserverRestUrl()
-                .append(WORKSPACES).append(workspaceName)
-                .append(DATA_STORES).append(dataStoreName)
-                .append(FEATURE_TYPES).toString();
-
-        Request request = builderWithBearerAuth.url(url)
-                                               .post(body).build();
-
-        log.debug("create feature: {} on datastore: {}", featureName, dataStoreName);
-
-        return httpClient.handleRequest(request);
-    }
-
-    @Override
-    public ResponseModel<Object> create(String workspaceName,
-                                        String dataStoreName,
+    public ResponseModel<Object> create(String workspace,
+                                        String dataStore,
                                         FeatureTypeModel featureType) throws HttpClientException {
-        String payload = gson.toJson(new FeatureTypeWrapModel(featureType));
+        String payload = toJson(new FeatureTypeWrapModel(featureType));
 
-        log.debug("try create new feature: [{}] in workspace: '{}'", payload, workspaceName);
+        log.debug("try create new featureType: [{}] in workspace: '{}'", payload, workspace);
 
         String url = getGeoserverRestUrl()
-                .append(WORKSPACES).append(workspaceName)
-                .append(DATA_STORES).append(dataStoreName)
+                .append(WORKSPACES).append(workspace)
+                .append(DATA_STORES).append(dataStore)
                 .append(FEATURE_TYPES).toString();
 
         Request request = builderWithBearerAuth.url(url)
@@ -114,15 +86,15 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
     }
 
     @Override
-    public void delete(String workspaceName,
-                       String dataStoreName,
-                       String featureName) throws HttpClientException {
-        log.debug("try delete feature: {} in: {}", featureName, workspaceName);
+    public void delete(String workspace,
+                       String dataStore,
+                       String featureType) throws HttpClientException {
+        log.debug("try delete featureType: {} in: {}", featureType, workspace);
 
         String url = getGeoserverRestUrl()
-                .append(WORKSPACES).append(workspaceName)
-                .append(DATA_STORES).append(dataStoreName)
-                .append(FEATURE_TYPES).append(featureName)
+                .append(WORKSPACES).append(workspace)
+                .append(DATA_STORES).append(dataStore)
+                .append(FEATURE_TYPES).append(featureType)
                 .toString();
 
         Request request = builderWithBearerAuth

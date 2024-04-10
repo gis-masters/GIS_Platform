@@ -6,7 +6,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
@@ -15,6 +14,7 @@ import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 import { PageOptions } from '../../../services/models';
+import { mapStore } from '../../../stores/Map.store';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
 
@@ -78,6 +78,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
       const operationId = Symbol();
       this.selectingAllOperationId = operationId;
       const features = await this.getAllFeatures();
+
       if (this.selectingAllOperationId === operationId) {
         mapSelectionService.selectFeatures(this.selectedFeatures, MapSelectionTypes.REMOVE);
         mapSelectionService.selectFeatures(features, MapSelectionTypes.ADD);

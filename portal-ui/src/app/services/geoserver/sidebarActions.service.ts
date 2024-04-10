@@ -1,20 +1,22 @@
 import { isEqual } from 'lodash';
+import { AxiosError } from 'axios';
 
+import { services } from '../services';
 import { mapService } from '../map/map.service';
 import { Toast } from '../../components/Toast/Toast';
-import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
+import { isVectorFromFile } from '../gis/layers/layers.utils';
 import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/layers/layers.models';
 
-import { getFeatureType } from './featuretypes.service';
-import { isVectorFromFile } from '../gis/layers/layers.utils';
+import { recalculateBboxAndGetFeatureType } from './featuretypes.service';
+import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
 import { getProjection, olProjection, transform } from './projections.service';
 
-export async function focusToLayer(entity: CrgLayer): Promise<void> {
+export async function focusToLayer(layer: CrgLayer): Promise<void> {
   try {
     const { nativeBoundingBox, srs } =
-      entity.type === CrgLayerType.VECTOR || isVectorFromFile(entity.type)
-        ? await getFeatureType(entity as CrgVectorLayer)
-        : await getLayerCoverage(entity);
+      layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
+        ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
+        : await getLayerCoverage(layer);
 
     const { maxx, maxy, minx, miny } = nativeBoundingBox;
     const projection = getProjection(srs);
@@ -35,13 +37,18 @@ export async function focusToLayer(entity: CrgLayer): Promise<void> {
     }
 
     mapService.fitToBbox([x1, y1, x2, y2], [50, 50, 50, 50]);
-  } catch {
-    showGoToBoundingBoxError();
+  } catch (error) {
+    const err = error as AxiosError;
+
+    showGoToBoundingBoxError(err.message);
   }
 }
 
-function showGoToBoundingBoxError() {
+function showGoToBoundingBoxError(reason?: string) {
   const message = 'Не удалось перейти к слою';
+
+  services.logger.error(`${message}. Reason: ${reason}`);
+
   Toast.warn(message);
   Toast.error({ message, suppress: true });
 }

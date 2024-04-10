@@ -15,13 +15,19 @@ public class LayerCreateDto {
              message = "Допустимые значения поля type: vector/raster/external/external_geoserver/dxf/shp/tab/mid")
     private String type;
 
-    @Length(min = 2, max = 255)
+    @Length(min = 1, max = 255)
     private String title;
 
-    @Length(min = 2, max = 255)
+    @Length(min = 1, max = 255)
     private String tableName;
 
-    @Length(min = 2, max = 255)
+    @Length(min = 1, max = 255)
+    private String nativeName;
+
+    @Length(min = 1, max = 255)
+    private String featureTypeName;
+
+    @Length(min = 1, max = 255)
     private String dataset;
 
     @Pattern(regexp = "^(true|false)$", message = "Допустимые значения поля enabled: true или false")
@@ -45,19 +51,19 @@ public class LayerCreateDto {
     @CrgParentGroup
     private Long parentId;
 
-    @Length(min = 2, max = 255)
+    @Length(min = 1, max = 255)
     private String styleName;
 
-    @Length(min = 3, max = 100)
+    @Length(min = 1, max = 100)
     private String dataStoreName;
 
     @Length(min = 8, max = 50, message = "Ожидается строка вида: 'EPSG:28406'")
     private String nativeCRS;
 
-    @Length(min = 6, max = 255)
+    @Length(min = 1, max = 255)
     private String dataSourceUri;
 
-    @Length(min = 3, max = 255)
+    @Length(min = 1, max = 255)
     private String libraryId;
 
     private Long recordId;
@@ -257,12 +263,30 @@ public class LayerCreateDto {
         this.photoMode = photoMode;
     }
 
+    public String getFeatureTypeName() {
+        return featureTypeName;
+    }
+
+    public void setFeatureTypeName(String featureTypeName) {
+        this.featureTypeName = featureTypeName;
+    }
+
+    public String getNativeName() {
+        return nativeName;
+    }
+
+    public void setNativeName(String nativeName) {
+        this.nativeName = nativeName;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +
+                "\"featureTypeName\":" + (featureTypeName == null ? "null" : "\"" + featureTypeName + "\"") + ", " +
                 "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
                 "\"enabled\":" + (enabled == null ? "null" : "\"" + enabled + "\"") + ", " +
                 "\"position\":\"" + position + "\"" + ", " +
@@ -280,8 +304,8 @@ public class LayerCreateDto {
                 "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
                 "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +
                 "\"errorText\":" + (errorText == null ? "null" : "\"" + errorText + "\"") + ", " +
-                "\"photoMode\":" + (photoMode == null ? "null" : "\"" + photoMode + "\"") + ", " +
-                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") +
+                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") + ", " +
+                "\"photoMode\":" + (photoMode == null ? "null" : "\"" + photoMode + "\"") +
                 "}";
     }
 }

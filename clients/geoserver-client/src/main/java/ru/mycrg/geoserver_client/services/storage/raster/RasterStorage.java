@@ -1,6 +1,5 @@
 package ru.mycrg.geoserver_client.services.storage.raster;
 
-import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class RasterStorage extends GeoServerBaseService {
 
@@ -37,7 +37,7 @@ public class RasterStorage extends GeoServerBaseService {
 
         CoverageStoreRequestModel coverageStore = new CoverageStoreRequestModel(name, workspace, true, "GeoTIFF", path);
 
-        String payload = gson.toJson(new CoverageStoreRequestWrapper(coverageStore));
+        String payload = toJson(new CoverageStoreRequestWrapper(coverageStore));
 
         Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + WORKSPACES + workspace + COVERAGE_STORES)
@@ -47,7 +47,8 @@ public class RasterStorage extends GeoServerBaseService {
         return httpClient.handleRequest(request);
     }
 
-    public ResponseModel<CoverageStoreResponseWrapper> getStorage(String workspace, String store) throws HttpClientException {
+    public ResponseModel<CoverageStoreResponseWrapper> getStorage(String workspace, String store)
+            throws HttpClientException {
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)
                                           .toString();
@@ -58,7 +59,7 @@ public class RasterStorage extends GeoServerBaseService {
         return httpClient.handleRequest(request, CoverageStoreResponseWrapper.class);
     }
 
-    public boolean isExist(String workspace, String store) throws HttpClientException {
+    public boolean isExist(String workspace, String store) {
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)
                                           .toString();
@@ -68,7 +69,7 @@ public class RasterStorage extends GeoServerBaseService {
 
         try {
             return httpClient.handleRequest(request).isSuccessful();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return false;
         }
     }

@@ -12,7 +12,7 @@ import { Schema } from '../../services/data/schema/schema.models';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -118,7 +118,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
     const { feature, isSearchList } = this.props;
 
     if (feature) {
-      const tableName = this.extractTableName(feature?.id);
+      const tableName = extractTableNameFromFeatureId(feature.id);
 
       return isSearchList
         ? currentProject.getLayerByTableNameFromAllVectorLayers(tableName)
@@ -170,14 +170,5 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   @action
   private setRawSchema(schema: Schema) {
     this.rawSchema = schema;
-  }
-
-  private extractTableName(id: string) {
-    const [tableName] = id.split('.');
-    if (!tableName) {
-      throw new Error('Incorrect wfs feature id: ' + id);
-    }
-
-    return tableName;
   }
 }

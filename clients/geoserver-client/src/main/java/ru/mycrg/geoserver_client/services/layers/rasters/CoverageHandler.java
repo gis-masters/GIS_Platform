@@ -1,6 +1,5 @@
 package ru.mycrg.geoserver_client.services.layers.rasters;
 
-import com.google.gson.JsonSyntaxException;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 public class CoverageHandler extends GeoServerBaseService {
 
@@ -23,7 +23,7 @@ public class CoverageHandler extends GeoServerBaseService {
         super(accessToken);
     }
 
-    public boolean isExist(String workspace, String store, String layer) throws HttpClientException {
+    public boolean isExist(String workspace, String store, String layer) {
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)
                                           .append(COVERAGES).append(layer)
@@ -34,7 +34,7 @@ public class CoverageHandler extends GeoServerBaseService {
 
         try {
             return httpClient.handleRequest(request).isSuccessful();
-        } catch (JsonSyntaxException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -43,7 +43,7 @@ public class CoverageHandler extends GeoServerBaseService {
             throws HttpClientException {
         log.debug("try create raster layer: '{}' in store: '{}'", coverage.getName(), store);
 
-        String payload = gson.toJson(new CoverageWrapper(coverage));
+        String payload = toJson(new CoverageWrapper(coverage));
 
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)

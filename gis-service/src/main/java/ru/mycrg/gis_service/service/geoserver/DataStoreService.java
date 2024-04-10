@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.geoserver_client.contracts.datastores.base.PostGisConnectionParameters;
 import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
+import ru.mycrg.geoserver_client.contracts.datastores.base.PostGisConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.exceptions.ThirdPartyServiceException;
@@ -32,15 +32,15 @@ public class DataStoreService {
         this.environment = environment;
     }
 
-    public void create(String dataStoreId) {
+    public void create(String storeName) {
         try {
-            log.debug("Try create storage {} on geoserver", dataStoreId);
+            log.debug("Try create storage {} on geoserver", storeName);
 
-            final Long orgId = authenticationFacade.getOrganizationId();
-            final String orgWorkspace = getScratchWorkspaceName(orgId);
+            Long orgId = authenticationFacade.getOrganizationId();
+            String orgWorkspace = getScratchWorkspaceName(orgId);
 
-            final VectorStorage vectorStorage = new VectorStorage(authenticationFacade.getAccessToken());
-            final VectorDataStore dataStore = new VectorDataStore(dataStoreId, prepareConnectionParameters(orgId, dataStoreId));
+            VectorStorage vectorStorage = new VectorStorage(authenticationFacade.getAccessToken());
+            VectorDataStore dataStore = new VectorDataStore(storeName, prepareConnectionParameters(orgId, storeName));
 
             ResponseModel<Object> responseModel = vectorStorage.create(orgWorkspace, dataStore);
             if (!responseModel.isSuccessful()) {
@@ -51,17 +51,17 @@ public class DataStoreService {
         }
     }
 
-    public void delete(String dataStoreId) {
+    public void delete(String storeName) {
         try {
-            log.debug("Try delete storage {} on geoserver", dataStoreId);
+            log.debug("Try delete storage {} on geoserver", storeName);
 
-            final String token = authenticationFacade.getAccessToken();
-            final String orgWorkspace = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
+            String token = authenticationFacade.getAccessToken();
+            String orgWorkspace = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
 
-            ResponseModel<Object> responseModel = new VectorStorage(token).delete(orgWorkspace, dataStoreId);
+            ResponseModel<Object> responseModel = new VectorStorage(token).delete(orgWorkspace, storeName);
             if (!responseModel.isSuccessful()) {
                 if (responseModel.getCode() == NOT_FOUND.value()) {
-                    throw new NotFoundException("На геосервере не найдено хранилище: " + dataStoreId);
+                    throw new NotFoundException("На геосервере не найдено хранилище: " + storeName);
                 } else {
                     throw new ThirdPartyServiceException("Не удалось удалить хранилище на геосервере", responseModel);
                 }

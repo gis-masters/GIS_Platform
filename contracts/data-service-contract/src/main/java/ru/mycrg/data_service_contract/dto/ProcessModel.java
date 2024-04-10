@@ -31,4 +31,12 @@ public class ProcessModel implements Serializable {
     public void setDbName(String dbName) {
         this.dbName = dbName;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + (id == null ? "null" : "\"" + id + "\"") + ", " +
+                "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") +
+                "}";
+    }
 }

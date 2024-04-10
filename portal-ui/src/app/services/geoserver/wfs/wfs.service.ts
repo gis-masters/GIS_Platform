@@ -6,6 +6,11 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
+import {
+  extractFeatureId,
+  extractFeatureTypeNameFromComplexName,
+  extractTableNameFromComplexName
+} from '../feature.util';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { filterFeatures } from '../../util/filterObjects';
@@ -146,6 +151,7 @@ export async function getFeatureCollectionByXmlFilter(xml: string): Promise<WfsF
 
 export async function getFeaturesById(ids: string[], complexName: string, definitionQuery = ''): Promise<WfsFeature[]> {
   const limit = 100;
+  const tableName = extractTableNameFromComplexName(complexName);
 
   if (ids.length > limit) {
     const result: WfsFeature[] = [];
@@ -164,7 +170,7 @@ export async function getFeaturesById(ids: string[], complexName: string, defini
     version: '2.0.0',
     request: 'GetFeature',
     typeNames: complexName,
-    featureID: ids.join(',')
+    featureID: ids.map(id => `${tableName}.${extractFeatureId(id)}`).join(',')
   };
 
   let { features } = await wfsClient.getFeatureCollection(params);
@@ -183,7 +189,7 @@ export async function makeXmlPolygonIntersect(
   srsName: string,
   selectionType: MapSelectionTypes
 ): Promise<string> {
-  const tableName = complexName.split(':')[1];
+  const tableName = extractTableNameFromComplexName(complexName);
   const layer = currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
   if (!baseSchema) {
@@ -230,7 +236,7 @@ export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature
 
   return {
     type: 'Feature',
-    id: `${layer.tableName}.0`, // костыль для EditFeatureComponent, который берёт тип фичи из id (AAAAAAA!!!)
+    id: `${extractFeatureTypeNameFromComplexName(layer.complexName)}.0`,
     geometry: getEmptyGeometry(schema.geometryType),
     geometry_name: getGeometryFieldName(schema),
     properties

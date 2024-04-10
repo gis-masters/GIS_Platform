@@ -14,6 +14,11 @@ import { DataChangeEventDetail, communicationService } from '../../services/comm
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { PageOptions } from '../../services/models';
 import { XTableInvoke } from '../XTable/XTable';
+import {
+  extractFeatureTypeName,
+  extractFeatureTypeNameFromComplexName,
+  extractTableNameFromFeatureId
+} from '../../services/geoserver/feature.util';
 
 import { AttributesBar } from './Bar/Attributes-Bar';
 import { AttributesTabs } from './Tabs/Attributes-Tabs';
@@ -51,9 +56,7 @@ export default class Attributes extends Component<IClassNameProps> {
 
           if (isLayerFilterExist) {
             if (modifiedLayer.id === this.currentLayer?.id) {
-              if (this.tableInvoke?.reset) {
-                this.tableInvoke.reset();
-              }
+              this.tableInvoke?.reset?.();
             } else {
               attributesTableStore.updateFilter(modifiedLayer as CrgVectorLayer);
             }
@@ -114,7 +117,11 @@ export default class Attributes extends Component<IClassNameProps> {
     const layers: CrgVectorLayer[] = [];
 
     for (const feature of mapStore.selectedFeatures) {
-      if (![...this.hardTabs, ...layers].some(({ tableName }) => feature.id.split('.')[0] === tableName)) {
+      if (
+        ![...this.hardTabs, ...layers].some(
+          ({ complexName }) => extractFeatureTypeName(feature.id) === extractFeatureTypeNameFromComplexName(complexName)
+        )
+      ) {
         const layer = getLayerByFeatureInCurrentProject(feature);
         if (layer) {
           layers.push(layer);
@@ -139,7 +146,7 @@ export default class Attributes extends Component<IClassNameProps> {
     }
 
     const selectedFeaturesWithoutLayer = mapStore.selectedFeatures.filter(
-      ({ id }) => id.split('.')[0] !== layer.tableName
+      ({ id }) => extractTableNameFromFeatureId(id) !== layer.tableName
     );
 
     mapSelectionService.selectFeatures(selectedFeaturesWithoutLayer);

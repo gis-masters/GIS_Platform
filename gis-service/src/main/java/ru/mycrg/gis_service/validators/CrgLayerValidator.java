@@ -69,20 +69,10 @@ public class CrgLayerValidator implements Validator {
     }
 
     private void validateAsVector(@NotNull Errors errors, LayerCreateDto dto) {
-        if (dto.getTitle() == null) {
-            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getTableName() == null) {
-            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
+        common(errors, dto);
 
         if (dto.getNativeCRS() == null) {
             errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getStyleName() == null) {
-            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
         }
 
         if (dto.getDataset() == null) {
@@ -91,35 +81,15 @@ public class CrgLayerValidator implements Validator {
     }
 
     private void validateAsDxf(@NotNull Errors errors, LayerCreateDto dto) {
-        if (dto.getTitle() == null) {
-            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getTableName() == null) {
-            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
+        common(errors, dto);
 
         if (dto.getNativeCRS() == null) {
             errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
         }
-
-        if (dto.getStyleName() == null) {
-            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
     }
 
     private void validateAsShp(@NotNull Errors errors, LayerCreateDto dto) {
-        if (dto.getTitle() == null) {
-            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getTableName() == null) {
-            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
-
-        if (dto.getStyleName() == null) {
-            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
-        }
+        common(errors, dto);
     }
 
     private void validateAsRaster(@NotNull Errors errors, LayerCreateDto dto) {
@@ -159,6 +129,20 @@ public class CrgLayerValidator implements Validator {
     private void validateAsExternal(@NotNull Errors errors, LayerCreateDto dto) {
         if (dto.getDataSourceUri() == null) {
             errors.rejectValue("dataSourceUri", REQUIRED, "Для внешнего слоя является обязательным");
+        }
+    }
+
+    private void common(@NotNull Errors errors, LayerCreateDto dto) {
+        if (dto.getTitle() == null) {
+            errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getTableName() == null) {
+            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
+        }
+
+        if (dto.getStyleName() == null) {
+            errors.rejectValue("styleName", REQUIRED, DEFAULT_V_MESSAGE);
         }
     }
 }

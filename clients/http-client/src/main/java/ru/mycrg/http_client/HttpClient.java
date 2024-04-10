@@ -1,6 +1,6 @@
 package ru.mycrg.http_client;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -10,12 +10,11 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.http_client.handlers.IHttpRequestHandler;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 
-public class HttpClient {
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
-    private static final Gson gson = new Gson();
+public class HttpClient {
 
     private final Logger log = LoggerFactory.getLogger(HttpClient.class);
 
@@ -25,7 +24,7 @@ public class HttpClient {
         this.requestHandler = requestHandler;
     }
 
-    public <T> ResponseModel<T> handleRequest(Request request, Class<T> type) throws HttpClientException {
+    public <T> ResponseModel<T> handleRequest(Request request, Class<T> clazz) throws HttpClientException {
         try (Response response = requestHandler.handle(request)) {
             final ResponseBody responseBody = response.body();
             if (responseBody == null) {
@@ -35,10 +34,8 @@ public class HttpClient {
             String body = responseBody.string();
             if (response.isSuccessful()) {
                 ResponseModel<T> model = new ResponseModel<>(response);
-                T bodyM = readBody(type, body);
-                if (bodyM != null) {
-                    model.setBody(bodyM);
-                }
+                fromJson(body, clazz)
+                        .ifPresent(model::setBody);
 
                 return model;
             } else {
@@ -57,7 +54,8 @@ public class HttpClient {
         }
     }
 
-    public <T> ResponseModel<T> handleRequest(Request request, Type type) throws HttpClientException {
+    public <T> ResponseModel<T> handleRequest(Request request, TypeReference<T> typeReference)
+            throws HttpClientException {
         try (Response response = requestHandler.handle(request)) {
             final ResponseBody responseBody = response.body();
             if (responseBody == null) {
@@ -67,7 +65,8 @@ public class HttpClient {
             String body = responseBody.string();
             if (response.isSuccessful()) {
                 ResponseModel<T> model = new ResponseModel<>(response);
-                model.setBody(gson.fromJson(body, type));
+                fromJson(body, typeReference)
+                        .ifPresent(model::setBody);
 
                 return model;
             } else {
@@ -76,7 +75,13 @@ public class HttpClient {
                 return new ResponseModel<>(response);
             }
         } catch (IOException e) {
-            throw new HttpClientException("Host unreachable", e.getCause());
+            String msg = "Host unreachable. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
+        } catch (Exception e) {
+            String msg = "Failed to handle request. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
         }
     }
 
@@ -93,15 +98,5 @@ public class HttpClient {
 
     public IHttpRequestHandler getRequestHandler() {
         return requestHandler;
-    }
-
-    private <T> T readBody(Class<T> type, String body) {
-        try {
-            return gson.fromJson(body, type);
-        } catch (Exception e) {
-            log.error("Response body is not valid! Body is {}", body);
-
-            return null;
-        }
     }
 }

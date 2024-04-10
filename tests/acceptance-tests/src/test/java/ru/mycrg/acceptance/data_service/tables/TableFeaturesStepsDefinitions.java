@@ -33,6 +33,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -305,15 +306,18 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("координаты были трансформированы из координатной системы \"EPSG:7829\" в \"EPSG:28406\"")
     public void checkThatCRSWasTransformed() {
-        String geoserverPath = String.format("geoserver/wfs?service=wfs&version=2.0.0&request=GetFeature" +
-                                                     "&typeNames=scratch_database_%s:%s" +
-                                                     "&featureID=%s" +
-                                                     "&outputFormat=application/json", orgId, anotherTableName, 1);
+        String geoserverPath =
+                String.format("geoserver/wfs?service=wfs" +
+                                      "&version=2.0.0&request=GetFeature" +
+                                      "&typeNames=scratch_database_%s:%s__%s__%s" +
+                                      "&featureID=%s" +
+                                      "&outputFormat=application/json",
+                              orgId, projectId, anotherTableName, "28406", 1);
 
         response = getBaseRequestWithCurrentCookie()
-                .when().
-                        basePath("/")
-                        .get(geoserverPath);
+                .when().basePath("/")
+                       .log().all()
+                       .get(geoserverPath);
 
         jsonPath = response.jsonPath();
         assertNotNull(jsonPath);

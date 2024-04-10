@@ -16,8 +16,8 @@ interface AttributesTabsProps {
   hard: CrgVectorLayer[];
   soft: CrgVectorLayer[];
   currentLayer: CrgVectorLayer | undefined;
-  onTabClose: (layer: CrgVectorLayer) => void;
-  onTabMinimize: (layer: CrgVectorLayer) => void;
+  onTabClose(layer: CrgVectorLayer): void;
+  onTabMinimize(layer: CrgVectorLayer): void;
 }
 
 export const AttributesTabs: FC<AttributesTabsProps> = observer(

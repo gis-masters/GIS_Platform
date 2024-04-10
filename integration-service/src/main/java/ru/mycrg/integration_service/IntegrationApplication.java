@@ -41,13 +41,11 @@ public class IntegrationApplication {
         log.info("initGeoserverClient");
 
         String geoserverHost = properties.getGeoserverHost();
-        GeoserverInfo geoserverInfo = GeoserverInfo
-                .builder()
-                .host(geoserverHost.split(":")[0])
-                .port(Integer.parseInt(geoserverHost.split(":")[1]))
-                .userServiceName(properties.getUserServiceName())
-                .build();
+        GeoserverInfo geoserverInfo = new GeoserverInfo(geoserverHost.split(":")[0],
+                                                        Integer.parseInt(geoserverHost.split(":")[1]),
+                                                        properties.getUserServiceName());
 
+        // TODO: Не ходить из integration-service на прямую на геосервер.
         GeoserverClient.initialize(geoserverInfo, null);
 
         log.info("Integration service ready with:");

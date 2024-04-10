@@ -22,9 +22,10 @@ class LayerIconTypeShp extends Component<LayerIconProps> {
 
   async componentDidMount() {
     const { layer } = this.props;
+
     if (layer) {
       const schema = await getLayerSchema(layer);
-      if (schema.geometryType) {
+      if (schema?.geometryType) {
         this.setGeometryType(schema.geometryType);
       }
     }

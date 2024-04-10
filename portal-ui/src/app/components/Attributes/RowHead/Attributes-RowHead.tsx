@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
+import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 
@@ -40,7 +41,10 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
   }
 
   async componentDidUpdate(prevProps: AttributesRowHeadProps) {
-    if (this.props.rowData.feature.id.split('.')[0] !== prevProps.rowData.feature.id.split('.')[0]) {
+    if (
+      extractTableNameFromFeatureId(this.props.rowData.feature.id) !==
+      extractTableNameFromFeatureId(prevProps.rowData.feature.id)
+    ) {
       await this.fetchPermission();
     }
   }

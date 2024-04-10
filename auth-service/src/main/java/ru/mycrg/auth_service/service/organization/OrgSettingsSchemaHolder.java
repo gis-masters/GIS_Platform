@@ -1,7 +1,7 @@
 package ru.mycrg.auth_service.service.organization;
 
-import com.google.gson.Gson;
 import org.springframework.stereotype.Component;
+import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
@@ -13,12 +13,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 
 @Component
 public class OrgSettingsSchemaHolder {
 
     private final SchemaDto schema;
-    private final Gson mapper = new Gson();
 
     public OrgSettingsSchemaHolder() {
         schema = new SchemaDto();
@@ -120,9 +121,8 @@ public class OrgSettingsSchemaHolder {
     }
 
     public SchemaDto getSchema() {
-        return mapper.fromJson(
-                mapper.toJson(schema),
-                SchemaDto.class);
+        return fromJson(toJson(schema), SchemaDto.class)
+                .orElseThrow(() -> new AuthServiceException("Не удалось конвертировать схему"));
     }
 
     public void updateTags(List<String> tags) {
