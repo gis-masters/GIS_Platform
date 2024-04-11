@@ -123,9 +123,9 @@ export interface OldPropertySchemaDatetime extends OldBasePropertySchema {
 
 export interface OldPropertySchemaChoice extends OldBasePropertySchema {
   valueType: ValueType.CHOICE;
-  isMultiple?: boolean;
   enumerations?: PropertyEnumeration[];
   foreignKeyType?: string;
+  multiple?: string;
 }
 
 export interface OldPropertySchemaBoolean extends OldBasePropertySchema {

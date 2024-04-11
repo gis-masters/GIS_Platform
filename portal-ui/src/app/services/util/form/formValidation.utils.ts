@@ -149,17 +149,13 @@ function choiceValueInOptions(value: unknown, property: PropertySchema): string[
     if (value === undefined || value === null) {
       return [messages.notInOptions];
     }
-
     if (value === '[]') {
       return;
     }
-
     if (Array.isArray(value) && !value.length) {
       return;
     }
-
     const multipleValues = getMultipleChoiceValue(value);
-
     if (!options.some(option => multipleValues.includes(String(option.value)))) {
       return [messages.notInOptions];
     }

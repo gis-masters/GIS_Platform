@@ -13,6 +13,9 @@ import {
 } from '../data/schema/schemaOld.models';
 import { services } from '../services';
 import { FiasValue } from '../data/fias/fias.models';
+import { validateFieldValue } from './form/formValidation.utils';
+import { PropertyOption } from '../data/schema/schema.models';
+import { convertOldToNewProperties } from '../data/schema/schema.utils';
 
 export interface ValidationError {
   attribute: string;
@@ -151,8 +154,11 @@ export class FeaturePropertyValidators {
       return;
     }
 
-    if (!this.isEnumIncludeValue(propertySchema.enumerations, value)) {
-      errors.wrongChoice = 'Значение: ' + value + ' не соответствует справочному';
+    const newPropertySchema = convertOldToNewProperties([propertySchema])[0];
+    const validateResult = validateFieldValue(value, newPropertySchema, value);
+
+    if (validateResult.messages?.length) {
+      errors.wrongChoice = validateResult.messages.join('\n');
     }
   }
 
@@ -279,5 +285,11 @@ export class FeaturePropertyValidators {
     });
 
     return result !== undefined;
+  }
+
+  private static isEnumIncludeMultipleValues(enumeration: PropertyOption[], currentValues: string[]): boolean {
+    return currentValues.every(el => {
+      return enumeration.some(option => option.value === el);
+    });
   }
 }
