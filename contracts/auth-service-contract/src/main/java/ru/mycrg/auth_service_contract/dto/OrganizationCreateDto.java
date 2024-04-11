@@ -15,11 +15,15 @@ public class OrganizationCreateDto {
     @Size(max = 20, message = "No more than 20 characters")
     private String phone;
 
+    private Integer specializationId;
+
     @Valid
     @NotNull
     private UserCreateDto owner;
 
-    public OrganizationCreateDto() {}
+    public OrganizationCreateDto() {
+        // Required
+    }
 
     public OrganizationCreateDto(String name, String phone, UserCreateDto owner) {
         this.name = name;
@@ -49,5 +53,23 @@ public class OrganizationCreateDto {
 
     public void setOwner(UserCreateDto owner) {
         this.owner = owner;
+    }
+
+    public Integer getSpecializationId() {
+        return specializationId;
+    }
+
+    public void setSpecializationId(Integer specializationId) {
+        this.specializationId = specializationId;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"phone\":" + (phone == null ? "null" : "\"" + phone + "\"") + ", " +
+                "\"specializationId\":" + (specializationId == null ? "null" : "\"" + specializationId + "\"") + ", " +
+                "\"owner\":" + (owner == null ? "null" : owner) +
+                "}";
     }
 }

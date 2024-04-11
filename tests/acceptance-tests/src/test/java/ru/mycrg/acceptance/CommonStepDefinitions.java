@@ -28,6 +28,11 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(status, response.getStatusCode());
     }
 
+    @Then("сервер отвечает со статус-кодом {int}")
+    public void assertResponseCode2(int status) {
+        assertEquals(status, response.getStatusCode());
+    }
+
     @And("В ответе есть контент")
     public void isThereContentExist() {
         jsonPath = response.jsonPath();

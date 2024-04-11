@@ -47,7 +47,7 @@ public class OrganizationController {
 
     @PostMapping("/init")
     public ResponseEntity<Object> createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {
-        log.debug("Request create organization: {}", createDto.getName());
+        log.debug("Request create organization: {}", createDto);
 
         Organization newOrganization = organizationService.create(createDto);
 

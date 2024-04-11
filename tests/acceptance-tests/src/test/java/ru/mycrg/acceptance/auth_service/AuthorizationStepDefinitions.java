@@ -40,9 +40,19 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я авторизован как {string}")
     public void orgOwnerAuthorized(String userName) {
-        UserCreateDto user = getUserByName(userName);
+        switch (userName) {
+            case "Администратор системы":
+                authorizeAsSystemAdmin();
+                break;
+            case "Владелец организации":
+                authorizeAsCurrentUser();
+                break;
+            default:
+                UserCreateDto user = getUserByName(userName);
 
-        authorizationBase.loginAs(user.getEmail(), user.getPassword());
+                authorizationBase.loginAs(user.getEmail(), user.getPassword());
+                break;
+        }
     }
 
     @Given("Владелец организации авторизован")

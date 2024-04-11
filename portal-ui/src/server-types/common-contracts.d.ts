@@ -5,6 +5,13 @@ export interface EpsgModel {
   proj4Text: string;
 }
 
+export interface Specialization {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
+}
+
 export interface FtsRequestDto {
   text: string;
   ecqlFilter: string;
