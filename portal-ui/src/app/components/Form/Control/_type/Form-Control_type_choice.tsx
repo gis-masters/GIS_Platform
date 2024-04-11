@@ -53,8 +53,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
     const value = multiple ? getMultipleChoiceValue(fieldValue) : fieldValue;
 
-    const valueCanBeDisplayed =
-      !multiple && fieldValue !== EMPTY && (typeof fieldValue === 'number' || typeof fieldValue === 'string');
+    const valueCanBeDisplayed = !multiple && this.valueCanBeDisplayed(fieldValue);
 
     const renderOptions = multiple ? options.filter(option => option.title !== emptyTitle) : options;
 
@@ -75,7 +74,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               value={value}
               displayEmpty
               multiple={multiple}
-              onChange={this.handleChangeSelect}
+              onChange={this.handleSelectChange}
               error={!!errors?.length}
               inputProps={{
                 id: htmlId
@@ -89,17 +88,19 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               }}
               variant={variant}
             >
-              {!this.isAllowedValues(options, multiple, value) && (
-                <MenuItem className={cnFormChoiceMenuItem()} value={fieldValue as string | number} color='#666'>
-                  <ListItemText>
-                    {multiple && Array.isArray(value) ? (
-                      this.getMultipleTitle(options, value)
-                    ) : (
-                      <em>{valueCanBeDisplayed ? fieldValue : emptyTitle}</em>
-                    )}
-                  </ListItemText>
-                </MenuItem>
-              )}
+              {!this.isAllowedValues(options, !!multiple, value) &&
+                (Array.isArray(value) ? value.filter(item => !this.valueInOptions(item, options)) : [value]).map(
+                  (item, i) => {
+                    return (
+                      <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item} color='#666'>
+                        {multiple && <Checkbox checked={value.includes(item)} />}
+                        <ListItemText>
+                          <em>{this.valueCanBeDisplayed(item) ? item : emptyTitle}</em>
+                        </ListItemText>
+                      </MenuItem>
+                    );
+                  }
+                )}
 
               {renderOptions.map((item, i) => {
                 return (
@@ -138,10 +139,14 @@ class FormControlTypeChoice extends Component<FormControlProps> {
 
   private isAllowedValues(options: PropertyOption[], multiple: boolean, valueForSelect: string | string[]): boolean {
     if (multiple && Array.isArray(valueForSelect)) {
-      return valueForSelect.every(item => options.some(option => String(option.value) === String(item)));
+      return valueForSelect.every(item => this.valueInOptions(item, options));
     }
 
     return options.some(({ value }) => String(value) === String(valueForSelect));
+  }
+
+  private valueInOptions(value: string | number, options: PropertyOption[]): boolean {
+    return options.some(option => String(option.value) === String(value));
   }
 
   private getMultipleTitle(options: PropertyOption[], jsonValues: string | number | (string | number)[]): ReactNode {
@@ -217,7 +222,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleChangeSelect(event: SelectChangeEvent<number | string | string[]>) {
+  private handleSelectChange(event: SelectChangeEvent<number | string | string[]>) {
     const { onChange, onNeedValidate, property } = this.props;
     const { multiple } = property as PropertySchemaChoice;
 
@@ -258,6 +263,10 @@ class FormControlTypeChoice extends Component<FormControlProps> {
         propertyName: property.name
       });
     }
+  }
+
+  private valueCanBeDisplayed(value: string | number): boolean {
+    return value !== EMPTY && (typeof value === 'number' || typeof value === 'string');
   }
 }
 
