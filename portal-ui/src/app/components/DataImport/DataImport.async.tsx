@@ -16,9 +16,11 @@ import { schemaService } from '../../services/data/schema/schema.service';
 import { route } from '../../stores/Route.store';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
+import { Notice } from '../Notice/Notice';
+import { NoticeList } from '../Notice/List/Notice-List';
+import { NoticeListItem } from '../Notice/ListItem/Notice-ListItem';
 
 import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
-import { DataImportNotice } from './Notice/DataImport-Notice';
 import { DataImportNotifications } from './Notifications/DataImport-Notifications';
 import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
 import { DataImportDialog } from './Dialog/DataImport-Dialog';
@@ -93,7 +95,15 @@ export default class DataImport extends Component {
           onClear={this.reset}
         />
 
-        <DataImportNotice />
+        <Notice>
+          Допустимы данные в системах координат
+          <NoticeList>
+            <NoticeListItem>СК-42 в проекции Гаусса-Крюгера;</NoticeListItem>
+            <NoticeListItem>WGS84 геодезическая система координат на эллипсоиде WGS843;</NoticeListItem>
+            <NoticeListItem>WGS84 Web Mercator.</NoticeListItem>
+          </NoticeList>
+          Имена файлов в архиве не должны содержать кириллические символы.
+        </Notice>
 
         <DataImportNotifications />
 
@@ -134,8 +144,8 @@ export default class DataImport extends Component {
 
   private start() {
     void services.ngZone.run(async () => {
-      const { id } = await initScratchImport(currentImport.file);
       if (currentImport.file) {
+        const { id } = await initScratchImport(currentImport.file);
         // if was not reset
         await services.router.navigate([`${this.importUrl}/${id}`]);
         this.startPolling();

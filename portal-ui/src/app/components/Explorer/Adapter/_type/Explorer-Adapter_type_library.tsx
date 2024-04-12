@@ -34,6 +34,7 @@ import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitl
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
 import { LibraryActions } from '../../../LibraryActions/LibraryActions';
+import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
 
 export function assertExplorerItemDataTypeLibrary(
   item: ExplorerItemData
@@ -216,6 +217,7 @@ export class ExplorerAdapterTypeLibrary {
     const enabled =
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItem && currentItem.role && currentItem.role !== Role.VIEWER);
+
     const createHandler = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
@@ -223,7 +225,16 @@ export class ExplorerAdapterTypeLibrary {
     return (
       store.explorerRole === 'dm' && (
         <>
-          {currentItem.table_name === 'dl_data_kpt' && <LibraryKptRequest library={item.payload} />}
+          {(currentItem.table_name === 'dl_data_kpt' ||
+            (item.payload.schema.tags?.includes('КПТ') && item.payload.schema.tags.includes('Библиотека'))) && (
+            <>
+              <LibraryMassKptLoad
+                disabled
+                tooltipTitle='Массовая загрузка кпт из zip-архивов доступна в только в папках. Вы можете создать новую папку и перейти в нее или же выбрать из уже существующих.'
+              />
+              <LibraryKptRequest library={item.payload} />
+            </>
+          )}
           {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />

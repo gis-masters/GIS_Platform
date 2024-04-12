@@ -5,10 +5,10 @@ import { http } from '../../api/http.service';
 import { KptTaskInfo } from './kpt.models';
 
 @boundClass
-class Kpt extends Client {
-  private static _instance: Kpt;
+class KptClient extends Client {
+  private static _instance: KptClient;
 
-  static get instance(): Kpt {
+  static get instance(): KptClient {
     return this._instance || (this._instance = new this());
   }
 
@@ -29,4 +29,4 @@ class Kpt extends Client {
   }
 }
 
-export const kpt = Kpt.instance;
+export const kptClient = KptClient.instance;

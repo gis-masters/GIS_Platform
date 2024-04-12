@@ -35,6 +35,7 @@ import { ExplorerStore } from '../../Explorer.store';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
+import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
 
 function assertExplorerItemDataTypeFolder(
   item: ExplorerItemData
@@ -230,7 +231,18 @@ export class ExplorerAdapterTypeFolder {
 
     return (
       <>
-        {currentItem.libraryTableName === 'dl_data_kpt' && <LibraryKptRequest library={library} />}
+        {(currentItem.libraryTableName === 'dl_data_kpt' ||
+          (library.schema.tags?.includes('КПТ') && library.schema.tags.includes('Библиотека'))) && (
+          <>
+            <LibraryMassKptLoad
+              libraryRecord={item.payload}
+              parent={currentItem}
+              library={library}
+              role={currentItem.role}
+            />
+            <LibraryKptRequest library={library} />
+          </>
+        )}
         {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
         {store.explorerRole === 'dm' && (
           <>

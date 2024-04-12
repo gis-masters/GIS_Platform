@@ -1,3 +1,7 @@
+import { UploadFileInfo } from '../../../components/LibraryMassKptLoad/LibraryMassKptLoad';
+import { PropertySchema } from '../schema/schema.models';
+import { LibraryRecord } from '../library/library.models';
+
 export interface KptTaskInfo {
   id: number;
   folder: boolean;
@@ -6,4 +10,18 @@ export interface KptTaskInfo {
 
 export interface KptRequestInfo {
   clientId: string;
+}
+
+export interface UploadKptData {
+  file: UploadFileInfo;
+  data: LibraryRecord;
+  libraryTableName: string;
+  properties: PropertySchema[];
+}
+
+type Status = 'error' | 'success';
+
+export interface UploadKptReturnType {
+  status: Status;
+  libraryRecord?: LibraryRecord;
 }
