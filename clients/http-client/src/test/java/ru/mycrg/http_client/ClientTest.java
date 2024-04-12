@@ -55,7 +55,7 @@ class ClientTest {
         // Arrange server stub
         stubFor(get(urlEqualTo("/some/thing"))
                         .willReturn(aResponse()
-                                            .withBody("Hello_wiremock!")));
+                                            .withBody("\"Hello_wiremock!\"")));
 
         // Arrange client
         HttpClient httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
