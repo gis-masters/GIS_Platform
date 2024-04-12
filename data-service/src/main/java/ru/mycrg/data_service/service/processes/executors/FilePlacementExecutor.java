@@ -33,6 +33,7 @@ import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.mappers.FileResourceQualifierMapper.mapToFileQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.StringUtil.getHashCode;
 import static ru.mycrg.data_service_contract.enums.FileType.MID;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -92,6 +93,7 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
                                 getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
                                 buildStoreName(authenticationFacade.getOrganizationId(),
                                                fileType.name().toLowerCase(),
+                                               getHashCode(file.getTitle()),
                                                fileQualifier.toString()),
                                 featureTypeName),
                         new GisPublicationData(

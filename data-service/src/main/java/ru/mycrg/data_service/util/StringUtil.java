@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.util;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +14,26 @@ public class StringUtil {
 
     public static final String DEFAULT_QUOTE_MARK = "'";
     public static final String DEFAULT_DELIMITER = ",";
+
+    /**
+     * Для переданной строки генерирует, всегда положительный, hashCode. Основное назначение метода - рандомизация
+     * названий для хранилищ на геосервере.
+     *
+     * @param input Входная строка.
+     */
+    public static int getHashCode(@Nullable String input) {
+        if (input == null) {
+            return 0;
+        }
+
+        // Немного обезопасит от одинаковых хеш кодов для коротких строк, например "Aa" = "BB"
+        int hashCode = (input.hashCode() + String.valueOf(
+                new StringBuilder(input).reverse().toString().hashCode())).hashCode();
+
+        return hashCode > 0
+                ? hashCode
+                : hashCode * -1;
+    }
 
     public static String join(List<Long> ids) {
         return String.join(DEFAULT_DELIMITER, asStrings(ids));

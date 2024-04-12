@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
+import static ru.mycrg.data_service.util.StringUtil.getHashCode;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
 public class FileUtil {
@@ -67,11 +68,7 @@ public class FileUtil {
             fieldName = qualifier.getFieldName();
         }
 
-        // Немного обезопасит от одинаковых хеш кодов для коротких строк, например "Aa" = "BB"
-        int hashCode = (title.hashCode() + String.valueOf(
-                new StringBuilder(title).reverse().toString().hashCode())).hashCode();
-
-        return join(recordId, fieldName, String.valueOf(hashCode > 0 ? hashCode : hashCode * -1));
+        return join(recordId, fieldName, String.valueOf(getHashCode(title)));
     }
 
     public static List<FileDescription> getFilesDescription(Map<String, Object> record, String fieldName) {

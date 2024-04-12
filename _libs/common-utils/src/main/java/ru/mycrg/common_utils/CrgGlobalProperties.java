@@ -80,10 +80,13 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
-    public static String buildStoreName(Long orgId, String fileType, String base) {
+    public static String buildStoreName(Long orgId,
+                                        String fileType,
+                                        int hashFromFileTitle,
+                                        String base) {
         String postfix = join(orgId.toString(), fileType, DEFAULT_STORE_POSTFIX);
 
-        return postfix + DOUBLE_SEPARATOR + base;
+        return postfix + DOUBLE_SEPARATOR + join(String.valueOf(hashFromFileTitle), base);
     }
 
     @NotNull
