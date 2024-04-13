@@ -28,17 +28,17 @@ export function extractFeatureId(featureId: string): number {
   throw new Error(errMsg);
 }
 
-export const extractFeatureTypeName = (id: string): string => {
-  const [featureTypeName] = id.split('.');
+export const extractFeatureTypeName = (featureId: string): string => {
+  const [featureTypeName] = featureId.split('.');
   if (!featureTypeName) {
-    throw new Error('Передан некорректный идентификатор объекта: ' + id);
+    throw new Error('Не удалось извлечь featureTypeName. Передан некорректный идентификатор объекта: ' + featureId);
   }
 
   return featureTypeName;
 };
 
 const extractTableNameFromFeatureTypeName = (featureTypeName: string): string => {
-  return featureTypeName.replace(/__\d+$/, '').replace(/\d+__/, '');
+  return featureTypeName.replace(/__\d+$/, '');
 };
 
 export const extractTableNameFromFeatureId = (id: string): string => {
@@ -56,6 +56,22 @@ export const extractFeatureTypeNameFromComplexName = (complexName: string | unde
 export const extractWorkspaceFromComplexName = (complexName: string | undefined): string => {
   return splitComplexName(complexName)[0];
 };
+
+export function buildComplexName(workspace: string, tableName: string, crs?: string): string {
+  if (!workspace || !tableName) {
+    throw new Error('workspace, body: обязательные параметри для построения complexName');
+  }
+
+  let epsgCode = undefined;
+  if (crs) {
+    const code = crs.split(':')[1];
+    if (code) {
+      epsgCode = code;
+    }
+  }
+
+  return epsgCode ? `${workspace}:${tableName}__${epsgCode}` : `${workspace}:${tableName}`;
+}
 
 function splitComplexName(complexName: string | undefined): [string, string] {
   const errMsg = `Передан некорректный complexName: '${complexName}'`;

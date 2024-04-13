@@ -1,5 +1,6 @@
 import { getFeaturesById } from '../../geoserver/wfs/wfs.service';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { buildComplexName } from '../../geoserver/feature.util';
 import { SearchItemData, SearchRequest } from './search.model';
 import { getGeometryFieldName } from '../schema/schema.utils';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
@@ -65,7 +66,10 @@ async function getSearchResultWithWfsFeatures(searchResult: SearchItemData[]): P
   for (const dataset of Object.keys(wfsFeaturesStorage)) {
     for (const table of Object.keys(wfsFeaturesStorage[dataset])) {
       const ids = wfsFeaturesStorage[dataset][table].ids;
-      wfsFeaturesStorage[dataset][table].features = await getFeaturesById(ids, `${currentUser.workspaceName}:${table}`);
+      wfsFeaturesStorage[dataset][table].features = await getFeaturesById(
+        ids,
+        buildComplexName(currentUser.workspaceName, table)
+      );
     }
   }
 

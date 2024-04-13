@@ -309,10 +309,10 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         String geoserverPath =
                 String.format("geoserver/wfs?service=wfs" +
                                       "&version=2.0.0&request=GetFeature" +
-                                      "&typeNames=scratch_database_%s:%s__%s__%s" +
+                                      "&typeNames=scratch_database_%s:%s__%s" +
                                       "&featureID=%s" +
                                       "&outputFormat=application/json",
-                              orgId, projectId, anotherTableName, "28406", 1);
+                              orgId, anotherTableName, "28406", 1);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().basePath("/")

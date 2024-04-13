@@ -27,6 +27,7 @@ import { placeFile } from '../../services/data/file-placement/file-placement.ser
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { buildComplexName } from '../../services/geoserver/feature.util';
 import { getDefaultValues } from '../Form/Form.utils';
 import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { getFileBaseName } from '../../services/data/files/files.util';
@@ -317,7 +318,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       errorText
     } = this.formValue;
     const { dataset, vectorTable, library } = datasource;
-    const dataStoreName = currentUser.workspaceName;
+    const workspace = currentUser.workspaceName;
 
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       if (!dataset || !vectorTable) {
@@ -331,7 +332,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
         tableName: vectorTable?.identifier,
-        complexName: `${dataStoreName}:${vectorTable?.identifier}`,
+        complexName: buildComplexName(workspace, vectorTable?.identifier, vectorTable.crs),
         title,
         nativeCRS: vectorTable.crs,
         minZoom,
@@ -364,9 +365,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           ...rasterDefaults,
           id: generateNextLayerId(),
           title: title || getFileBaseName(file.title),
-          dataStoreName,
+          dataStoreName: workspace,
           tableName: fileTableName, // name слоя не геосервере
-          complexName: `${dataStoreName}:${fileTableName}`,
+          complexName: buildComplexName(workspace, fileTableName),
           dataSourceUri: 'file://' + path,
           libraryId: record.libraryTableName,
           recordId: record.id

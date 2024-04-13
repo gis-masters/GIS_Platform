@@ -9,15 +9,15 @@ class FeatureUtilTest {
 
     @Test
     void shouldBuildGeoserverFeatureNameAsExpected() {
-        assertEquals("", buildGeoserverFeatureName(null, null, null));
-        assertEquals("", buildGeoserverFeatureName(null, null, "EPSG:2857"));
-        assertEquals("_tableName", buildGeoserverFeatureName(null, "tableName", null));
-        assertEquals("314_tableName", buildGeoserverFeatureName(314L, "tableName", ""));
-        assertEquals("314_tableName", buildGeoserverFeatureName(314L, "tableName", "incorrectEPSG"));
-        assertEquals("314_tableName", buildGeoserverFeatureName(314L, "tableName", "incorrect:EPSG"));
-        assertEquals("314_tableName_3857", buildGeoserverFeatureName(314L, "tableName", "EPSG:3857"));
-        assertEquals("314_tableName_3857", buildGeoserverFeatureName(314L, "tableName_3857", "EPSG:3857"));
-        assertEquals("314_tableName_3857", buildGeoserverFeatureName(314L, "tableName_3857", "EPSG:"));
-        assertEquals("314_tableName_3857_28406", buildGeoserverFeatureName(314L, "tableName_3857", "EPSG:28406"));
+        assertEquals("", buildGeoserverFeatureName(null, null));
+        assertEquals("", buildGeoserverFeatureName(null, "EPSG:2857"));
+        assertEquals("tableName", buildGeoserverFeatureName("tableName", null));
+        assertEquals("tableName", buildGeoserverFeatureName("tableName", ""));
+        assertEquals("tableName", buildGeoserverFeatureName("tableName", "incorrectEPSG"));
+        assertEquals("tableName", buildGeoserverFeatureName("tableName", "incorrect:EPSG"));
+        assertEquals("tableName__3857", buildGeoserverFeatureName("tableName", "EPSG:3857"));
+        assertEquals("tableName_3857__3857", buildGeoserverFeatureName("tableName_3857", "EPSG:3857"));
+        assertEquals("tableName_3857", buildGeoserverFeatureName("tableName_3857", "EPSG:"));
+        assertEquals("tableName_3857__28406", buildGeoserverFeatureName("tableName_3857", "EPSG:28406"));
     }
 }

@@ -68,6 +68,7 @@ class CurrentUser implements OrgInfo {
 
   @computed
   get datastoreName(): string {
+    // TODO: Дичь! Надо бы разобраться...
     return `${this.workspaceName}_store`;
   }
 }

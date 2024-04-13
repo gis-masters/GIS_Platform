@@ -148,9 +148,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(layerCreateDto.getContentType(), jsonPath.get("contentType"));
-        assertEquals(String.format("scratch_database_%s:%s__%s__%s",
-                                   orgId, projectId, layerCreateDto.getTableName(),
-                                   layerCreateDto.getNativeCRS().split(":")[1]),
+        assertEquals(String.format("scratch_database_%s:%s__%s",
+                                   orgId, layerCreateDto.getTableName(), layerCreateDto.getNativeCRS().split(":")[1]),
                      jsonPath.get("complexName"));
     }
 
@@ -471,9 +470,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
         assertEquals("scratch_database_" + orgId, dataStoreName);
 
-        // complexName - {workspace}:{project_d}_{tableName}_{epsgCode} - "scratch_database_8:44_2_some_files_504450693_7829"
-        assertEquals(String.format("%s:%d__%s__7829", dataStoreName, projectId, tableName),
-                     jsonPath.getList("complexName").get(0));
+        // complexName - {workspace}:{tableName}__{epsgCode} - "scratch_database_8:2_some_files_504450693__7829"
+        assertEquals(String.format("%s:%s__7829", dataStoreName, tableName), jsonPath.getList("complexName").get(0));
     }
 
     @And("В проекте корректно создан слой на основе TAB файла")
@@ -500,9 +498,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
         assertEquals("scratch_database_" + orgId, dataStoreName);
 
-        // complexName - {workspace}:{project_d}_{tableName}_{epsgCode} - "scratch_database_8:44_2_some_files_504450693_7829"
-        assertEquals(String.format("%s:%d__%s__7829", dataStoreName, projectId, tableName),
-                     jsonPath.getList("complexName").get(0));
+        // complexName - {workspace}:{tableName}__{epsgCode} - "scratch_database_8:2_some_files_504450693__7829"
+        assertEquals(String.format("%s:%s__7829", dataStoreName, tableName), jsonPath.getList("complexName").get(0));
     }
 
     @Then("Параметр transparent color по умолчанию чёрный")

@@ -69,8 +69,8 @@ public class BaseLayerHandler implements ILayerHandler {
 
         if (!GIS_SERVICE_MODE.equals(mode)) {
             String featureTypeName = dto.getFeatureTypeName() == null
-                    ? buildGeoserverFeatureName(project.getId(), tableName, nativeCRS)
-                    : buildGeoserverFeatureName(project.getId(), dto.getFeatureTypeName(), nativeCRS);
+                    ? buildGeoserverFeatureName(tableName, nativeCRS)
+                    : buildGeoserverFeatureName(dto.getFeatureTypeName(), nativeCRS);
 
             String nativeName = dto.getNativeName() != null
                     ? dto.getNativeName()

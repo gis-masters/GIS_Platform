@@ -57,9 +57,8 @@ public class LayerProjection {
         if (layerCreatedDateTime != null) {
             LocalDateTime dayZ = LocalDateTime.of(2024, 4, 10, 0, 0, 0);
             if (layerCreatedDateTime.isAfter(dayZ)) {
-                tmpComplexName = buildGeoserverComplexLayerName(
-                        orgWorkspaceName,
-                        buildGeoserverFeatureName(layer.getProject().getId(), tableName, nativeCRS));
+                tmpComplexName = buildGeoserverComplexLayerName(orgWorkspaceName,
+                                                                buildGeoserverFeatureName(tableName, nativeCRS));
             }
         }
         this.complexName = tmpComplexName;

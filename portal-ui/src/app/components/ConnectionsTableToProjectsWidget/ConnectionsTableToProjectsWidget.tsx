@@ -5,12 +5,13 @@ import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { createLayer } from '../../services/gis/layers/layers.service';
+import { FileConnection } from '../../services/data/files/files.models';
+import { buildComplexName } from '../../services/geoserver/feature.util';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { vectorLayerDefaults } from '../../services/gis/layers/layers.utils';
-import { FileConnection } from '../../services/data/files/files.models';
-import { createLayer } from '../../services/gis/layers/layers.service';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');
@@ -99,7 +100,7 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
       ...vectorLayerDefaults(),
       dataset: dataset,
       tableName: vectorTable.identifier,
-      complexName: `${currentUser.workspaceName}:${vectorTable.identifier}`,
+      complexName: buildComplexName(currentUser.workspaceName, vectorTable.identifier, vectorTable.crs),
       title: vectorTable.title,
       nativeCRS: vectorTable.crs,
       schemaId: vectorTable.schema.name,

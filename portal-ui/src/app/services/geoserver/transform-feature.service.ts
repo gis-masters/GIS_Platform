@@ -13,7 +13,7 @@ import { usersService } from '../auth/users/users.service';
 import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
 import { CrgLayer } from '../gis/layers/layers.models';
 import { FeatureUtil } from '../util/FeatureUtil';
-import { extractFeatureId } from './feature.util';
+import { buildComplexName, extractFeatureId } from './feature.util';
 import { environment } from '../environment';
 import { services } from '../services';
 import { http } from '../api/http.service';
@@ -42,12 +42,11 @@ export class TransformFeatureService {
   async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
     await usersService.fetchCurrentUser();
 
-    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
-
+    const complexName = buildComplexName(currentUser.workspaceName, tableName);
     const payload = `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                     xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">
-        <Update typeName="${workspace}:${tableName}">
+        <Update typeName="${complexName}">
           <Property>
               <Name>${propName}</Name>
               <Value>${propValue}</Value>

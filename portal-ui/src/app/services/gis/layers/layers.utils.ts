@@ -4,7 +4,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
-import { extractTableNameFromFeatureId } from '../../geoserver/feature.util';
+import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
 
 const defaultProps = {
   enabled: true,
@@ -53,8 +53,8 @@ export function externalLayerDefaults(): Pick<
 export function getLayerByFeatureInCurrentProject(
   feature: WfsFeature<Coordinate | CoordinateEdited>
 ): CrgVectorLayer | undefined {
-  return currentProject.vectorableLayers.find(({ tableName }) => {
-    return tableName === extractTableNameFromFeatureId(feature.id);
+  return currentProject.vectorableLayers.find(({ complexName }) => {
+    return extractFeatureTypeNameFromComplexName(complexName) === extractFeatureTypeName(feature.id);
   });
 }
 

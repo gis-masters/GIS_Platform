@@ -14,17 +14,15 @@ public class FeatureUtil {
     /**
      * Построим название слоя(фичи) для геосервера.
      * <p>
-     * Название строится по шаблону: '{tableName}_{epsgCode}'. Если tableName уже содержит '_{epsgCode}', то
+     * Название строится по шаблону: '{tableName}__{epsgCode}'. Если tableName уже содержит '__{epsgCode}', то
      * дублироваться код не будет.
      *
-     * @param projectId Идентификатор проекта.
      * @param tableName Название таблицы.
      * @param nativeCRS Система координат в формате "EPSG:3857"
      *
-     * @return Название слоя(фичи) сформированное по шаблону: '{projectId}__{tableName}__{epsgCode}'
+     * @return Название слоя(фичи) сформированное по шаблону: '{tableName}__{epsgCode}'
      */
-    public static String buildGeoserverFeatureName(Long projectId,
-                                                   @Nullable String tableName,
+    public static String buildGeoserverFeatureName(@Nullable String tableName,
                                                    @Nullable String nativeCRS) {
         if (tableName == null) {
             return "";
@@ -34,17 +32,16 @@ public class FeatureUtil {
         String maybeCrs = tableName.substring(indexOfLatestSeparator + 1);
         Optional<Integer> oCrs = extractCrsNumber(nativeCRS);
 
-        String base = String.format("%s__%s", projectId != null ? projectId : "", tableName);
         if (oCrs.isEmpty()) {
-            return base;
+            return tableName;
         }
 
         String crs = oCrs.get().toString();
         if (Objects.equals(maybeCrs, crs)) {
-            return base;
+            return tableName;
         }
 
-        return String.format("%s__%s__%s", projectId != null ? projectId : "", tableName, crs);
+        return String.format("%s__%s", tableName, crs);
     }
 
     public static Optional<Integer> extractCrsNumber(@Nullable String epsg) {

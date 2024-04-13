@@ -67,13 +67,13 @@ export async function removeEntityPermission(
 
 export async function addTablePermission(
   payload: RoleAssignmentBody,
-  datasetId: string,
+  datasetIdentifier: string,
   tableIdentifier: string
 ): Promise<void> {
   try {
-    await permissionsClient.addTablePermission(payload, datasetId, tableIdentifier);
+    await permissionsClient.addTablePermission(payload, datasetIdentifier, tableIdentifier);
   } catch (error) {
-    handleSavingError(error, payload, 'добавить', 'таблицы', `${datasetId}:${tableIdentifier}`);
+    handleSavingError(error, payload, 'добавить', 'таблицы', `${datasetIdentifier}:${tableIdentifier}`);
   }
 }
 
