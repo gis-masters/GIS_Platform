@@ -58,7 +58,7 @@ public class TerminateRnsRequestService extends RequestProcessor {
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("build xml request " + dto);
+        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new TerminateRnsXmlBuildProcessor(this).run((TerminateRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);

@@ -18,7 +18,7 @@ public class SmevRequestException extends RuntimeException {
     public SmevRequestException(String message,
                                 XmlBuildMeta buildMeta,
                                 XmlValidationResult validationResult) {
-        super("SMEV request fail : " + message);
+        super("Ошибка запроса в СМЭВ: " + message);
         this.buildMeta = buildMeta;
         this.validationResult = validationResult;
     }

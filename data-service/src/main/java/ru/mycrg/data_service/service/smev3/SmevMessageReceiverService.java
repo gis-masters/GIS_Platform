@@ -64,7 +64,7 @@ public class SmevMessageReceiverService {
                             () -> log.warn("Обработчик сообщения СМЭВ не найден {}", messageEntity.mnemonicEnum())
                     );
         } catch (Exception e) {
-            log.info("Ошибка при обработке сообщения из адаптера: {}", e.getMessage());
+            log.warn("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage());
             receiveFail(e, body);
         }
     }
@@ -101,7 +101,7 @@ public class SmevMessageReceiverService {
             messageService.saveIncoming(processResult, originalMessageRecord);
             log.info("Обработка успешно завершена");
         } catch (Exception e) {
-            throw new SmevRequestException("Ошибка при обработке сообщения :" + e.getMessage());
+            throw new SmevRequestException("Ошибка при обработке сообщения:" + e.getMessage());
         }
     }
 
@@ -110,15 +110,16 @@ public class SmevMessageReceiverService {
      */
     private void receiveFail(Exception ex, @NotNull String body) {
         try {
-            log.info("Попытка отправить сообщение в очередь 'receive fail': {}", body);
+            log.warn("Попытка отправить сообщение в очередь 'receive fail': {}", body);
             var failResponse = new ResponseFailProcess(
                     ex.getMessage(),
+                    ex.toString(),
                     new String(base64Encoder.encode(body.getBytes()))
             );
             rabbitTemplate.convertAndSend(adapterReceiveFailQueue.getName(), JsonConverter.asJsonString(failResponse));
-            log.info("Сообщение успешно отправлено в очередь 'receive fail'");
+            log.warn("Сообщение успешно отправлено в очередь 'receive fail'");
         } catch (Exception e) {
-            log.error("Ошибка при попытке отправить сообщение в очередь receive fail'. {}", e.getMessage());
+            log.error("Ошибка при попытке отправить сообщение в очередь receive fail'. {} {}", e.getMessage(), e.toString());
         }
     }
 }

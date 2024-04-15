@@ -1,20 +1,15 @@
-package unit.smev;
+package unit.smev.receipt_rns;
 
 import org.junit.Test;
-import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
-import ru.mycrg.data_service.receipt_rns_1_0_9.Request;
 import ru.mycrg.data_service.receipt_rns_1_0_9.ResponseConstructionShortInfoType;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
-import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
-import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
-import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestXmlProcessor;
-import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseXmlProcessor;
+import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
+import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsResponseService;
 import ru.mycrg.data_service.util.xml.XmlMapper;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
-
-import java.time.LocalDate;
+import unit.smev.AProcessorTest;
+import unit.smev.DataEisZsServiceMock;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.*;
@@ -22,61 +17,49 @@ import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.*;
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9
  */
-public class ReceiptRnsMarshallerTest extends AMarshallerTest {
+public class ReceiptRnsResponseTest extends AProcessorTest {
     private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.RECEIPT_RNS_1_0_9.getPrefixMapper());
-
-    @Test
-    public void request() throws Exception {
-        var smev3Config = new Smev3Config();
-        smev3Config.setSystemMnemonic("mnemonic");
-
-        var processor = new ReceiptRnsRequestService(smev3Config, null, null, null);
-
-        var dto = new ReceiptRnsRequestDto();
-        dto.setConstPermitDateFrom(LocalDate.of(2022, 1, 1));
-        dto.setConstPermitDateTo(LocalDate.of(2022, 1, 1));
-
-        var meta = new ReceiptRnsRequestXmlProcessor(processor).run(dto);
-
-        // to xml
-        var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
-
-        // to object
-        var requestObject = marshaller.unmarshall(requestXmlStrong, Request.class);
-
-        var receiptListConstruction = requestObject.getReceiptListConstruction();
-
-        assertEquals(dto.getConstPermitDateFrom(), XmlMapper.mapLocalDate(receiptListConstruction.getConstPermitDateFrom()));
-        assertEquals(dto.getConstPermitDateTo(), XmlMapper.mapLocalDate(receiptListConstruction.getConstPermitDateTo()));
-    }
+    private final String xmlPath = "receipt_rns_1_0_9";
 
     @Test
     public void responseConstruction() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_construction.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+        var fileContent = readFile(xmlPath + "/response_construction.xml");
 
-        assertNotNull(queryResult);
+        // стаб сервиса, который должен сохранить запись в БД
+        var dataEisZsServiceMock = new DataEisZsServiceMock();
 
-        // messageType
-        var messageType = SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
-        assertEquals(SmevMessageType.PRIMARY, messageType);
+        //сервис для обработки пакета из СМЭВ
+        var service = new ReceiptRnsResponseService(dataEisZsServiceMock);
 
-        var responseType = queryResult
+        // результат обработки
+        var processResult = service.processMessageFromSmev(fileContent);
+
+        assertNotNull(processResult);
+        assertNotNull(processResult.getMessage());
+        assertEquals(ProcessMessageStatus.SUCCESSFULLY, processResult.getStatus());
+        assertEquals(Mnemonic.RECEIPT_RNS_1_0_9, processResult.getXmlBuildMeta().getMnemonic());
+        assertNotNull(processResult.getXmlBuildMeta().getClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getReferenceClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestXmlString());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestJson());
+
+        // объект, который будет сохранен в БД
+        var content = dataEisZsServiceMock.getContent().get(0);
+
+        // Получаем объект из XML для дальнейшего сравнения
+        var responseType = marshaller
+                .unmarshall(fileContent, QueryResult.class)
                 .getMessage()
                 .getResponseContent()
                 .getContent()
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var record = new ReceiptRnsResponseXmlProcessor()
-                .processOne(responseType.getResponseConstruction());
-
         // ChangesConstPermit
         var changesConstPermit = responseType
                 .getResponseConstruction()
                 .getChangesConstPermit();
 
-        var content = record.getContent();
         assertEquals(content.get(PROPERTY_IS_RECORD_FULL), true);
         assertEquals(content.get(PROPERTY_PREV_CONST_PERMIT_NUMBER), changesConstPermit.getPrevConstPermitNumber());
         assertEquals(content.get(PROPERTY_PREV_CONST_PERMIT_DATE), XmlMapper.mapLocalDateTime(changesConstPermit.getPrevConstPermitDate()));
@@ -118,7 +101,6 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
         assertEquals(content.get(PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_CODE), objectInfo.getObjectPurposeFunctional().getCode());
         assertEquals(content.get(PROPERTY_OBJECT_PURPOSE_CODE), objectInfo.getObjectPurpose().getCode());
         assertEquals(content.get(PROPERTY_OBJECT_KIND_CODE), objectInfo.getObjectKind().getCode());
-
 
         // ObjectInfoType - InfoDocDescriptionType
         var infoDocDescription = objectInfo.getInfoDocDescription();
@@ -179,48 +161,78 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
         assertEquals(content.get(PROPERTY_EXPERTISE_PROJECT_OPF_NAME), expertiseProjectDoc.getOrganDocInfo().getOrganizationOPF().getName());
         assertEquals(content.get(PROPERTY_EXPERTISE_PROJECT_ORGAN_INN), expertiseProjectDoc.getOrganDocInfo().getINN());
         assertEquals(content.get(PROPERTY_EXPERTISE_PROJECT_DOC_TYPE_NAME), expertiseProjectDoc.getProjectDocType().getName());
-
-        assertNotNull(queryResult);
-
     }
 
     @Test
     public void responseConstructionList() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_list_construction.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+        var fileContent = readFile(xmlPath + "/response_list_construction.xml");
 
-        // messageType
-        var messageType = SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
-        assertEquals(SmevMessageType.PRIMARY, messageType);
+        // стаб сервиса, который должен сохранить запись в БД
+        var dataEisZsServiceMock = new DataEisZsServiceMock();
 
-        var response = queryResult
+        //сервис для обработки пакета из СМЭВ
+        var service = new ReceiptRnsResponseService(dataEisZsServiceMock);
+
+        // результат обработки
+        var processResult = service.processMessageFromSmev(fileContent);
+
+        assertNotNull(processResult);
+        assertNotNull(processResult.getMessage());
+        assertEquals(ProcessMessageStatus.SUCCESSFULLY, processResult.getStatus());
+        assertEquals(Mnemonic.RECEIPT_RNS_1_0_9, processResult.getXmlBuildMeta().getMnemonic());
+        assertNotNull(processResult.getXmlBuildMeta().getClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getReferenceClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestXmlString());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestJson());
+
+        // объект, который будет сохранен в БД
+        var records = dataEisZsServiceMock.getContent();
+
+        // Получаем объект из XML для дальнейшего сравнения
+        var response = marshaller
+                .unmarshall(fileContent, QueryResult.class)
                 .getMessage()
                 .getResponseContent()
                 .getContent()
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var records = new ReceiptRnsResponseXmlProcessor()
-                .processList(response.getResponseListConstruction());
-
         // size
         assertEquals(70, records.size());
 
         // Первое сообщение
-        var content = records.get(0).getContent();
+        var content = records.get(0);
         assertEquals(content.get(PROPERTY_IS_RECORD_FULL), false);
     }
 
     @Test
     public void responseConstructionList_2() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_list_construction_2.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+        var fileContent = readFile(xmlPath + "/response_list_construction_2.xml");
 
-        // messageType
-        var messageType = SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
-        assertEquals(SmevMessageType.PRIMARY, messageType);
+        // стаб сервиса, который должен сохранить запись в БД
+        var dataEisZsServiceMock = new DataEisZsServiceMock();
 
-        var response = queryResult
+        //сервис для обработки пакета из СМЭВ
+        var service = new ReceiptRnsResponseService(dataEisZsServiceMock);
+
+        // результат обработки
+        var processResult = service.processMessageFromSmev(fileContent);
+
+        assertNotNull(processResult);
+        assertNotNull(processResult.getMessage());
+        assertEquals(ProcessMessageStatus.SUCCESSFULLY, processResult.getStatus());
+        assertEquals(Mnemonic.RECEIPT_RNS_1_0_9, processResult.getXmlBuildMeta().getMnemonic());
+        assertNotNull(processResult.getXmlBuildMeta().getClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getReferenceClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestXmlString());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestJson());
+
+        // объект, который будет сохранен в БД
+        var records = dataEisZsServiceMock.getContent();
+
+        // Получаем объект из XML для дальнейшего сравнения
+        var response = marshaller
+                .unmarshall(fileContent, QueryResult.class)
                 .getMessage()
                 .getResponseContent()
                 .getContent()
@@ -235,9 +247,6 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
                 .count();
 
         assertEquals(80, constPermitNumberExist);
-
-        var records = new ReceiptRnsResponseXmlProcessor()
-                .processList(response.getResponseListConstruction());
 
         // size
         assertEquals(80, records.size());
@@ -254,10 +263,9 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
         var content = records
                 .stream()
-                .filter(iRecord -> iRecord.getContent().get(PROPERTY_CONST_PERMIT_ID).equals(constPermitID))
+                .filter(iRecord -> iRecord.get(PROPERTY_CONST_PERMIT_ID).equals(constPermitID))
                 .findFirst()
-                .get()
-                .getContent();
+                .get();
 
         assertEquals(content.get(PROPERTY_IS_RECORD_FULL), false);
         assertNotNull(content.get(PROPERTY_CONST_PERMIT_ID));
@@ -314,18 +322,47 @@ public class ReceiptRnsMarshallerTest extends AMarshallerTest {
 
     @Test
     public void responseReject() throws Exception {
-        var fileContent = readFile("receipt_rns_1_0_9/response_reject.xml");
-        var queryResult = marshaller.unmarshall(fileContent, QueryResult.class);
+        var fileContent = readFile(xmlPath + "/response_reject.xml");
 
-        var smevMeta = queryResult.getSmevMetadata();
-        assertEquals("549c1cbd-8e0d-11ee-bd2f-0242ac120005", smevMeta.getMessageId());
-        assertEquals("18434900-f30b-48ea-90e0-9e2ef3ae40b5", smevMeta.getTransactionCode());
-        assertEquals("809abbdc-8e0c-11ee-a85d-b2f0d27b6b0e", smevMeta.getOriginalMessageID());
-        assertEquals("777002", smevMeta.getSender());
-        assertEquals("U629301", smevMeta.getRecipient());
+        // стаб сервиса, который должен сохранить запись в БД
+        var dataEisZsServiceMock = new DataEisZsServiceMock();
 
-        var message = queryResult.getMessage();
-        assertEquals("RejectMessage", message.getMessageType());
-        assertEquals("RejectMessage", message.getMessageType());
+        //сервис для обработки пакета из СМЭВ
+        var service = new ReceiptRnsResponseService(dataEisZsServiceMock);
+
+        // результат обработки
+        var processResult = service.processMessageFromSmev(fileContent);
+
+        assertNotNull(processResult);
+        assertNotNull(processResult.getMessage());
+        assertEquals(ProcessMessageStatus.ERROR_REJECT, processResult.getStatus());
+        assertEquals(Mnemonic.RECEIPT_RNS_1_0_9, processResult.getXmlBuildMeta().getMnemonic());
+        assertNotNull(processResult.getXmlBuildMeta().getClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getReferenceClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestXmlString());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestJson());
+    }
+
+    @Test
+    public void responseStatusMessage() throws Exception {
+        var fileContent = readFile("technical_messages/status_message_1.xml");
+
+        // стаб сервиса, который должен сохранить запись в БД
+        var dataEisZsServiceMock = new DataEisZsServiceMock();
+
+        //сервис для обработки пакета из СМЭВ
+        var service = new ReceiptRnsResponseService(dataEisZsServiceMock);
+
+        // результат обработки
+        var processResult = service.processMessageFromSmev(fileContent);
+
+        assertNotNull(processResult);
+        assertNotNull(processResult.getMessage());
+        assertEquals(ProcessMessageStatus.ERROR_STATUS, processResult.getStatus());
+        assertEquals(Mnemonic.RECEIPT_RNS_1_0_9, processResult.getXmlBuildMeta().getMnemonic());
+        assertNotNull(processResult.getXmlBuildMeta().getClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getReferenceClientId());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestXmlString());
+        assertNotNull(processResult.getXmlBuildMeta().getRequestJson());
     }
 }

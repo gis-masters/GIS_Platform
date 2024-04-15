@@ -48,7 +48,7 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
             return buildRequest(request);
         } catch (Exception e) {
-            throw new SmevRequestException("build request error :" + e.getMessage());
+            throw new SmevRequestException("Ошибка при построении запрос в СМЭВ: " + e.getMessage());
         }
     }
 

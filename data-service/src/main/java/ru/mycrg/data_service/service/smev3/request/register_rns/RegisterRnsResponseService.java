@@ -9,6 +9,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
+import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
@@ -50,18 +51,22 @@ public class RegisterRnsResponseService extends ResponseProcessor {
 
             switch (messageType(queryResult)) {
                 case REJECT: {
-                    return new ProcessAdapterMessageResult()
+                    log.debug("Тип сообщения - REJECT");
+                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
                             .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus(queryResult.getMessage().getResponseContent().getRejects().get(0).getCode())
-                            .setMessage(queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
+                            .setSmevDescription(reject.getCode(), reject.getDescription());
                 }
                 case STATUS: {
-                    return new ProcessAdapterMessageResult()
+                    log.debug("Тип сообщения - STATUS");
+                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
                             .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus(queryResult.getMessage().getResponseContent().getStatus().getCode())
-                            .setMessage(queryResult.getMessage().getResponseContent().getStatus().getDescription());
+                            .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
+                    log.error("Тип сообщения - PRIMARY. Но обработка не сделана -  метод не реализован");
+
                     // todo тут код заглушка
                     var responseType = queryResult
                             .getMessage()
@@ -69,17 +74,15 @@ public class RegisterRnsResponseService extends ResponseProcessor {
                             .getContent()
                             .getMessagePrimaryContent();
 
-                    return new ProcessAdapterMessageResult()
-                            .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus("NotImplemented")
-                            .setMessage("NotImplemented");
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_NOT_IMPLEMENTED)
+                            .setXmlBuildMeta(XmlBuildMeta);
                 }
             }
 
-            return null;
+            throw new SmevRequestException("Неизвестный тип сообщения");
         } catch (Exception e) {
-            log.error("Process adapter message error: {}", e.getMessage());
-            throw new SmevRequestException("process adapter message error :" + e.getMessage());
+            log.error("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage());
+            throw new SmevRequestException("Ошибка при обработке сообщения из СМЭВ :" + e.getMessage());
         }
     }
 

@@ -51,7 +51,7 @@ public class ReceiptRnvRequestService extends RequestProcessor {
 
     @Override
     protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("build xml request " + dto);
+        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new ReceiptRnvXmlBuildProcessor(this).run((ReceiptRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());

@@ -53,7 +53,7 @@ public class SmevMessageService {
             incomingMessage.setResponseTo(originalMessageRecord.getReferenceReestrOutgoing().toString());
             incomingMessage.setBody(processResult.getXmlBuildMeta().getRequestXmlString());
             incomingMessage.setDateIn(LocalDateTime.now());
-            incomingMessage.setStatus(processResult.getStatus());
+            incomingMessage.setStatus(processResult.getStatus().name());
             incomingMessage.setSystem(Systems.GISOGD_RK);
             if (processResult.isFgisEgrnMessage()) {
                 incomingMessage.setUserFrom(Systems.FGIS_EGRN);

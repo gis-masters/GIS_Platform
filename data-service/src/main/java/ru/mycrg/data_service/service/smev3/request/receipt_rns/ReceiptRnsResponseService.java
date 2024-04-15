@@ -12,6 +12,7 @@ import ru.mycrg.data_service.service.smev3.DataEisZsService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
+import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
@@ -58,27 +59,30 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    return new ProcessAdapterMessageResult()
+                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
                             .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus(queryResult.getMessage().getResponseContent().getRejects().get(0).getCode())
-                            .setMessage(
-                                    queryResult.getMessage().getResponseContent().getRejects().get(0).getDescription());
+                            .setSmevDescription(
+                                    reject.getCode(),
+                                    reject.getDescription()
+                            );
                 }
                 case STATUS: {
                     log.debug("Тип сообщения - STATUS");
-                    return new ProcessAdapterMessageResult()
+                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
                             .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus(queryResult.getMessage().getResponseContent().getStatus().getCode())
-                            .setMessage(queryResult.getMessage().getResponseContent().getStatus().getDescription());
+                            .setSmevDescription(
+                                    status.getCode(),
+                                    status.getDescription()
+                            );
                 }
                 case PRIMARY: {
                     log.debug("Тип сообщения - PRIMARY");
                     processResponse(queryResult);
 
-                    return new ProcessAdapterMessageResult()
-                            .setXmlBuildMeta(XmlBuildMeta)
-                            .setStatus("saved")
-                            .setMessage("saved");
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.SUCCESSFULLY)
+                            .setXmlBuildMeta(XmlBuildMeta);
                 }
             }
 

@@ -45,7 +45,7 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
             return buildRequest(request);
         } catch (Exception e) {
-            throw new SmevRequestException("Не удалось сформировать TerminateRnsRequest запрос. По причине:" + e.getMessage());
+            throw new SmevRequestException("Ошибка при построении запрос в СМЭВ: " + e.getMessage());
         }
     }
 
