@@ -54,7 +54,7 @@ class PermissionsClient extends DataClient {
   }
 
   async getAllTablesAndDatasetsPermissions(): Promise<ResourcePermissions[]> {
-    return await http.getPaged<ResourcePermissions>(this.getAllPermissionsUrl());
+    return await http.getPaged<ResourcePermissions>(this.getAllPermissionsUrl(), { params: { size: 100 } });
   }
 
   async addEntityPermission(payload: RoleAssignmentBody, url: string): Promise<void> {
