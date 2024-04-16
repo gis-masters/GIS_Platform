@@ -1,11 +1,8 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 
 import { Schema } from '../../../services/data/schema/schema.models';
 import { SchemaActionsPreview } from '../../SchemaActions/Preview/SchemaActions-Preview';
-import { OpenSchemaAction } from '../../OpenSchemaAction/OpenSchemaAction';
-
-const cnSelectSchemaControlActions = cn('SelectSchemaControl', 'Actions');
+import { SchemaActionsEdit } from '../../SchemaActions/Edit/SchemaActions-Edit';
 
 interface SelectSchemaControlActionsProps {
   rowData: Schema;
@@ -13,7 +10,7 @@ interface SelectSchemaControlActionsProps {
 
 export const SelectSchemaControlActions: FC<SelectSchemaControlActionsProps> = ({ rowData }) => (
   <>
-    <OpenSchemaAction className={cnSelectSchemaControlActions()} schema={rowData} />
+    <SchemaActionsEdit readonly schema={rowData} as='iconButton' />
     <SchemaActionsPreview schema={rowData} as='iconButton' />
   </>
 );

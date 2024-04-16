@@ -37,7 +37,6 @@ export class SchemaActionsPreview extends Component<SchemaActionsPreviewProps> {
 
   render() {
     const { schema, as } = this.props;
-
     const clonedSchema = { ...schema };
     clonedSchema.properties = schema.properties.filter(
       ({ propertyType }) => ![PropertyType.GEOMETRY, PropertyType.LOOKUP].includes(propertyType)
@@ -52,6 +51,7 @@ export class SchemaActionsPreview extends Component<SchemaActionsPreviewProps> {
           onClick={this.openDialog}
           icon={this.dialogOpen ? <Preview /> : <PreviewOutlined />}
         />
+
         <FormDialog
           className={cnSchemaActionsPreviewDialog()}
           open={this.dialogOpen}

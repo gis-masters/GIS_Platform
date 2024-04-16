@@ -7,7 +7,9 @@ class SchemaActionsBlock extends Block {
     container: '.SchemaActions',
     editBtn: '.SchemaActions .SchemaActions-Edit',
     editDialog: '.SchemaActions-EditDialog',
-    editDialogYes: '.SchemaActions-EditDialogYes'
+    editDialogYes: '.SchemaActions-EditDialogYes',
+    editInJSON: '.SchemaActions-EditInJson',
+    editInJSONForm: '.SchemaActions-EditInJsonForm'
   };
 
   async clickEditBtn(): Promise<void> {
@@ -16,10 +18,19 @@ class SchemaActionsBlock extends Block {
     await $editBtn.click();
   }
 
+  async clickEditJSONBtn(): Promise<void> {
+    const $editDialog = await this.$('editDialog');
+    await $editDialog.waitForDisplayed();
+
+    const $editInJSONBtn = await this.$('editInJSON');
+    await $editInJSONBtn.waitForDisplayed();
+    await $editInJSONBtn.click();
+  }
+
   async updateSchema(updatedSchema: string): Promise<void> {
     await browser.pause(500); // анимация появления диалога
 
-    const formBlock = new FormBlock(this.selectors.editDialog);
+    const formBlock = new FormBlock(this.selectors.editInJSONForm);
     await formBlock.replaceStringValue('Схема', updatedSchema);
   }
 

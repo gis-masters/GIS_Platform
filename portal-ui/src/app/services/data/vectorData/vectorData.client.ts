@@ -15,6 +15,7 @@ import {
   NewVectorTable,
   RawVectorTable
 } from './vectorData.models';
+import { OldSchema } from '../schema/schemaOld.models';
 
 @boundClass
 class VectorDataClient extends DataClient {
@@ -30,6 +31,10 @@ class VectorDataClient extends DataClient {
 
   private getVectorTableRecordsUrl(datasetIdentifier: string, tableIdentifier: string): string {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/records`;
+  }
+
+  private getVectorTableRecordsSchemaUrl(datasetIdentifier: string, tableIdentifier: string): string {
+    return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/schema`;
   }
 
   // Для удаления может быть передано множество id через запятую
@@ -133,6 +138,14 @@ class VectorDataClient extends DataClient {
     patch: Partial<VectorTable>
   ): Promise<void> {
     return http.put(this.getVectorTableUrl(datasetIdentifier, vectorTableIdentifier), patch);
+  }
+
+  async updateVectorTableSchema(
+    datasetIdentifier: string,
+    vectorTableIdentifier: string,
+    schema: OldSchema
+  ): Promise<void> {
+    return http.put(this.getVectorTableRecordsSchemaUrl(datasetIdentifier, vectorTableIdentifier), schema);
   }
 
   async deleteVectorTable(datasetIdentifier: string, vectorTableIdentifier: string): Promise<void> {

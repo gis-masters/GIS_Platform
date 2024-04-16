@@ -107,8 +107,8 @@ export interface Relation {
 export type ValueFormula = (obj: unknown, property: PropertySchema, parent?: unknown) => unknown;
 export type PropertyFormula = (obj: unknown, property: PropertySchema) => Partial<PropertySchema>;
 
-interface BasePropertySchema<T = Record<string, unknown>> {
-  name: keyof T & string;
+export interface BasePropertySchema {
+  name: string;
   propertyType: PropertyType;
   title: string;
   description?: ReactNode;

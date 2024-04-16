@@ -8,7 +8,8 @@ import { PageOptions } from '../../models';
 import { vectorDataClient } from './vectorData.client';
 import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
 import { extractFeatureId } from '../../geoserver/feature.util';
-import { convertOldToNewSchema } from '../schema/schema.utils';
+import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
+import { Schema } from '../schema/schema.models';
 
 // dataset
 
@@ -116,6 +117,17 @@ export async function updateVectorTable(vectorTable: VectorTable, patch: Partial
   await vectorDataClient.updateVectorTable(vectorTable.dataset, vectorTable.identifier, patch);
   // api возвращает болт #5349
   communicationService.vectorTableUpdated.emit({ type: 'update', data: { ...vectorTable, ...patch } });
+}
+
+export async function updateVectorTableSchema(vectorTable: VectorTable, schema: Schema): Promise<void> {
+  await vectorDataClient.updateVectorTableSchema(
+    vectorTable.dataset,
+    vectorTable.identifier,
+    convertNewToOldSchema(schema)
+  );
+
+  vectorTable.schema = schema;
+  communicationService.vectorTableUpdated.emit({ type: 'update', data: vectorTable });
 }
 
 export async function deleteVectorTable(vectorTable: VectorTable): Promise<void> {

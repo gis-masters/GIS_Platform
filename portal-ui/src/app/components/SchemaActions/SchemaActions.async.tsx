@@ -29,7 +29,7 @@ export default class SchemaActions extends Component<SchemaActionsProps> {
 
     return (
       <Actions className={cnSchemaActions({ forDialog }, [className])} as={as}>
-        {currentUser.isAdmin && !readonly && <SchemaActionsEdit schema={schema} as={as} />}
+        {currentUser.isAdmin && !readonly && <SchemaActionsEdit editIcon schema={schema} as={as} />}
         <SchemaActionsPreview schema={schema} as={as} />
         {forDialog && <SchemaActionsClose as={as} onClick={onClose} />}
       </Actions>

@@ -10,8 +10,8 @@ import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { Role } from '../../services/data/permissions/permissions.models';
 
 import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
+import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
 import { VectorTableActionsEdit } from './Edit/VectorTableActions-Edit';
-import { OpenSchemaAction } from '../OpenSchemaAction/OpenSchemaAction';
 
 const cnVectorTableActions = cn('VectorTableActions');
 
@@ -44,7 +44,15 @@ export class VectorTableActions extends Component<VectorTableActionsProps> {
 
     return (
       <div className={cnVectorTableActions()}>
-        {this.vectorTable && <OpenSchemaAction readonly schema={this.vectorTable.schema} />}
+        {this.vectorTable && (
+          <SchemaActionsEdit
+            withPreview
+            readonly={!actionAllowed}
+            explorerItem={this.vectorTable}
+            schema={this.vectorTable.schema}
+            as='iconButton'
+          />
+        )}
         {actionAllowed && this.vectorTable && (
           <>
             <VectorTableActionsEdit vectorTable={this.vectorTable} />

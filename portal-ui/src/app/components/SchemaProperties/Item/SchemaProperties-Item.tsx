@@ -1,6 +1,15 @@
-import React, { FC } from 'react';
+import React, { Component, createRef } from 'react';
 import { cn } from '@bem-react/classname';
-import { Icon, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Icon,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip
+} from '@mui/material';
 import {
   EditOffOutlined,
   HelpOutline,
@@ -19,14 +28,21 @@ import {
   SvgIconComponent,
   TextFieldsOutlined,
   CalendarMonthOutlined,
-  LinkOutlined
+  LinkOutlined,
+  EditOutlined,
+  Edit
 } from '@mui/icons-material';
+import { observer } from 'mobx-react';
+import { action, makeObservable, observable } from 'mobx';
 
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { EditPropertySchemaForm } from '../../EditPropertySchemaForm/EditPropertySchemaForm';
 import { SchemaPropertiesItemIcons } from '../ItemIcons/SchemaProperties-ItemIcons';
+import { IconButton } from '../../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!../ItemIcon/SchemaProperties-ItemIcon.scss';
 import '!style-loader!css-loader!sass-loader!../PrimaryText/SchemaProperties-PrimaryText.scss';
+import '!style-loader!css-loader!sass-loader!../ItemAccordion/SchemaProperties-ItemAccordion.scss';
 
 const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
   const icons: Partial<Record<PropertyType, [SvgIconComponent, string]>> = {
@@ -51,48 +67,100 @@ const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
 
 interface SchemaPropertiesItemProps {
   propertySchema: PropertySchema;
+  readonly: boolean;
+  onPropertyChange?(newPropertySchema: PropertySchema): void;
 }
 
 const cnSchemaPropertiesItem = cn('SchemaProperties', 'Item');
+const cnSchemaPropertiesItemAccordion = cn('SchemaProperties', 'ItemAccordion');
 const cnSchemaPropertiesItemIcon = cn('SchemaProperties', 'ItemIcon');
 const cnSchemaPropertiesPrimaryText = cn('SchemaProperties', 'PrimaryText');
 
-export const SchemaPropertiesItem: FC<SchemaPropertiesItemProps> = ({ propertySchema }) => {
-  const { name, title, propertyType, description, hidden, readOnly, required } = propertySchema;
-  const [TypeIcon, typeText] = getTypeIcon(propertyType);
+@observer
+export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
+  @observable selectedId: string | null | undefined = '';
 
-  return (
-    <ListItem className={cnSchemaPropertiesItem()}>
-      <ListItemIcon>
-        <Tooltip title={typeText}>
-          <TypeIcon />
-        </Tooltip>
-      </ListItemIcon>
-      <ListItemText classes={{ primary: cnSchemaPropertiesPrimaryText() }} primary={title} secondary={name} />
-      <SchemaPropertiesItemIcons>
-        {description && (
-          <Tooltip title={description}>
-            <HelpOutline fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
-          </Tooltip>
-        )}
-        {hidden && (
-          <Tooltip title='Cкрытое'>
-            <VisibilityOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
-          </Tooltip>
-        )}
-        {readOnly && (
-          <Tooltip title='Только для чтения'>
-            <EditOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
-          </Tooltip>
-        )}
-        {required && (
-          <Tooltip title='Обязательное'>
-            <Icon className={cnSchemaPropertiesItemIcon()} color='action'>
-              *
-            </Icon>
-          </Tooltip>
-        )}
-      </SchemaPropertiesItemIcons>
-    </ListItem>
-  );
-};
+  private ref = createRef<HTMLButtonElement>();
+
+  constructor(props: SchemaPropertiesItemProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  render() {
+    const { readonly, propertySchema, onPropertyChange } = this.props;
+    const { name, title, propertyType, description, hidden, readOnly, required } = propertySchema;
+    const [TypeIcon, typeText] = getTypeIcon(propertyType);
+
+    return (
+      <>
+        <ListItem className={cnSchemaPropertiesItem()}>
+          <ListItemIcon>
+            <Tooltip title={typeText}>
+              <TypeIcon />
+            </Tooltip>
+          </ListItemIcon>
+          <ListItemText classes={{ primary: cnSchemaPropertiesPrimaryText() }} primary={title} secondary={name} />
+          <SchemaPropertiesItemIcons>
+            <>
+              {description && (
+                <Tooltip title={description}>
+                  <HelpOutline fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                </Tooltip>
+              )}
+              {hidden && (
+                <Tooltip title='Скрытое'>
+                  <VisibilityOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                </Tooltip>
+              )}
+              {readOnly && (
+                <Tooltip title='Только для чтения'>
+                  <EditOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                </Tooltip>
+              )}
+              {required && (
+                <Tooltip title='Обязательное'>
+                  <Icon className={cnSchemaPropertiesItemIcon()} color='action'>
+                    *
+                  </Icon>
+                </Tooltip>
+              )}
+            </>
+
+            {!readonly && (
+              <Tooltip title='Редактировать'>
+                <IconButton size='small' onClick={this.onPropertyChange} name={name} ref={this.ref} color='primary'>
+                  {this.selectedId === name ? (
+                    <Edit fontSize='small' color='primary' />
+                  ) : (
+                    <EditOutlined fontSize='small' color='primary' />
+                  )}
+                </IconButton>
+              </Tooltip>
+            )}
+          </SchemaPropertiesItemIcons>
+        </ListItem>
+
+        <Accordion
+          className={cnSchemaPropertiesItemAccordion()}
+          key={name}
+          expanded={this.selectedId === name}
+          onChange={this.onPropertyChange}
+        >
+          <AccordionSummary />
+          <AccordionDetails>
+            {onPropertyChange && (
+              <EditPropertySchemaForm propertySchema={propertySchema} onPropertyChange={onPropertyChange} />
+            )}
+          </AccordionDetails>
+        </Accordion>
+      </>
+    );
+  }
+
+  @action.bound
+  private onPropertyChange() {
+    const id = this.ref.current?.getAttribute('name');
+    this.selectedId = this.selectedId === id ? '' : id;
+  }
+}

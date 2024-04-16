@@ -1,14 +1,69 @@
-import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
+import React, { Component } from 'react';
+import { action, observable, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
+import { isEqual } from 'lodash';
 
-import { OpenSchemaAction } from '../OpenSchemaAction/OpenSchemaAction';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { getLibrary } from '../../services/data/library/library.service';
 import { Library } from '../../services/data/library/library.models';
+import { currentUser } from '../../stores/CurrentUser.store';
 
-const cnLibraryActions = cn('LibraryActions');
+import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
 
 interface LibraryActionsProps {
   library: Library;
 }
 
-export const LibraryActions: FC<LibraryActionsProps> = ({ library }) =>
-  library && <OpenSchemaAction className={cnLibraryActions()} readonly schema={library.schema} />;
+@observer
+export class LibraryActions extends Component<LibraryActionsProps> {
+  @observable private library?: Library;
+  private operationId?: symbol;
+
+  constructor(props: LibraryActionsProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  async componentDidMount() {
+    await this.init();
+  }
+
+  async componentDidUpdate(prevProps: LibraryActionsProps) {
+    if (!isEqual(this.props.library, prevProps.library)) {
+      await this.init();
+    }
+  }
+
+  render() {
+    const canEdit = currentUser.isAdmin || this.library?.role === Role.OWNER;
+
+    return (
+      this.library && (
+        <SchemaActionsEdit
+          withPreview
+          readonly={!canEdit}
+          explorerItem={this.library}
+          schema={this.library.schema}
+          as='iconButton'
+        />
+      )
+    );
+  }
+
+  private async init() {
+    const operationId = Symbol();
+    this.operationId = operationId;
+    let { library } = this.props;
+
+    library = library.role ? library : await getLibrary(library.table_name);
+
+    if (this.operationId === operationId) {
+      this.setLibrary(library);
+    }
+  }
+
+  @action
+  private setLibrary(library: Library) {
+    this.library = library;
+  }
+}

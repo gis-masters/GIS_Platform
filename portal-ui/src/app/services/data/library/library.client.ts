@@ -8,6 +8,7 @@ import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
 
 import { DocumentVersion, LibraryRecord, LibraryRecordNew, LibraryRecordRaw, LibraryRaw } from './library.models';
+import { OldSchema } from '../schema/schemaOld.models';
 
 @boundClass
 class LibraryClient extends Client {
@@ -23,6 +24,10 @@ class LibraryClient extends Client {
 
   private getDocLibraryUrl(libraryTableName: string): string {
     return `${this.getDocLibrariesUrl()}/${libraryTableName}`;
+  }
+
+  private getDocLibrarySchemaUrl(libraryTableName: string): string {
+    return `${this.getDocLibraryUrl(libraryTableName)}/schema`;
   }
 
   getDocumentLibraryRoleAssignmentUrl(libraryTableName: string): string {
@@ -217,6 +222,10 @@ class LibraryClient extends Client {
     return http.post(this.getDocumentLibraryIntegrationUrl(libraryTableName, recordId), {
       type: 'SED'
     });
+  }
+
+  async updateLibrarySchema(libraryTableName: string, schema: OldSchema): Promise<void> {
+    return http.put(this.getDocLibrarySchemaUrl(libraryTableName), schema);
   }
 }
 

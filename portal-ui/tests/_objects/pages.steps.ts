@@ -183,7 +183,7 @@ Given('я на странице `Схемы данных` в управлени�
   await dataManagementPage.openSchemasRootPage();
 });
 
-Given('я на странице `Схемы данных` в управлении данными, выделена схема {schema}', async (schema: Schema) => {
+Given('я на странице `Шаблоны схем` в управлении данными, выделена схема {schema}', async (schema: Schema) => {
   await dataManagementPage.openSchemaPageWithSelectedSchema(schema.name);
 });
 

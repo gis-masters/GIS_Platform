@@ -1,0 +1,14 @@
+body .SchemaActions-EditInJsonForm {
+  min-height: 551px;
+
+  & .Form-Content {
+    height: 100%;
+    min-height: 521px;
+
+    & textarea.MuiInput-input {
+      overflow: scroll !important;
+
+      height: 496px !important;
+    }
+  }
+}

@@ -23,11 +23,6 @@ SET class_rule =
                 "valueType": "STRING"
             },
             {
-                "name": "type",
-                "title": "Тип",
-                "valueType": "STRING"
-            },
-            {
                 "name": "sender",
                 "title": "Отправитель",
                 "readOnly": true,
@@ -47,11 +42,6 @@ SET class_rule =
                 "readOnly": true,
                 "required": true,
                 "valueType": "DATETIME"
-            },
-            {
-                "name": "tags",
-                "title": "Теги",
-                "valueType": "STRING"
             },
             {
                 "name": "color",
@@ -83,28 +73,24 @@ SET class_rule =
                 "name": "last_modified",
                 "title": "Дата последнего изменения",
                 "hidden": true,
-                "required": true,
                 "valueType": "DATETIME"
             },
             {
                 "name": "created_at",
                 "title": "Дата создания",
                 "hidden": true,
-                "required": true,
                 "valueType": "STRING"
             },
             {
                 "name": "created_by",
                 "title": "Создатель",
-                "readOnly": true,
-                "required": true,
+                "hidden": true,
                 "valueType": "STRING"
             },
             {
                 "name": "updated_by",
                 "title": "Кем изменено",
                 "hidden": true,
-                "required": true,
                 "valueType": "DATETIME"
             },
             {

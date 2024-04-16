@@ -4,6 +4,7 @@ import { addEntityPermission, removeEntityPermission } from '../permissions/perm
 import { RoleAssignmentBody } from '../permissions/permissions.models';
 import { communicationService } from '../../communication.service';
 import { Page } from '../../../../server-types/common-contracts';
+import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { Schema } from '../schema/schema.models';
 
 import {
@@ -15,7 +16,6 @@ import {
   LibraryNew
 } from './library.models';
 import { libraryClient } from './library.client';
-import { convertOldToNewSchema } from '../schema/schema.utils';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {
   const response = await libraryClient.getLibraries(pageOptions);
@@ -186,6 +186,11 @@ export async function setDocumentPermission(item: LibraryRecord, payload: RoleAs
   }
 
   await addEntityPermission(payload, url, '', ExplorerItemEntityTypeTitle.DOCUMENT);
+}
+
+export async function updateLibrarySchema(library: Library, schema: Schema): Promise<void> {
+  await libraryClient.updateLibrarySchema(library.table_name, convertNewToOldSchema(schema));
+  communicationService.libraryUpdated.emit({ type: 'update', data: { ...library, schema } });
 }
 
 export async function getLibraryPermissions(library: Library): Promise<RoleAssignmentBody[]> {

@@ -18,8 +18,9 @@ const allTypesWithAsTitleSchema: Schema = {
   })
 };
 
-When('я открываю окно редактирования схемы данных', async () => {
+When('я открываю окно редактирования схемы данных в JSON', async () => {
   await schemaActionsBlock.clickEditBtn();
+  await schemaActionsBlock.clickEditJSONBtn();
 });
 
 When('в окне редактирования схемы данных добавляю в схему атрибут asTitle в поле field_int', async () => {
@@ -30,6 +31,6 @@ When('в окне редактирования схемы данных нажи�
   await schemaActionsBlock.clickSaveBtn();
 });
 
-Then('в окне редактирования схемы в поле field_int содержится атрибут asTitle', async () => {
+Then('в окне редактирования схемы в JSON в поле field_int содержится атрибут asTitle', async () => {
   await expect(await schemaActionsBlock.getEditingSchema()).toEqual(allTypesWithAsTitleSchema);
 });

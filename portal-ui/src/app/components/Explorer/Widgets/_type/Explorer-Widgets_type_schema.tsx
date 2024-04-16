@@ -94,7 +94,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
           <CardRow alignBlock>
             <CardRowTitle>Свойства:</CardRowTitle>
             <CardValue block>
-              <SchemaProperties schema={this.schemaWithAppliedType} />
+              <SchemaProperties readonly schema={this.schemaWithAppliedType} />
             </CardValue>
           </CardRow>
         </Card>

@@ -20,7 +20,7 @@ export class ExplorerAdapterTypeSchemasRoot {
   }
 
   static getTitle(): string {
-    return 'Схемы данных';
+    return 'Шаблоны схем';
   }
 
   static getDescription(): string {
