@@ -98,13 +98,10 @@ export async function getAllVectorTablesInDataset(dataset: Dataset): Promise<Vec
   }));
 }
 
-export async function getVectorTablesInAllDatasets(pageOptions: PageOptions): Promise<[VectorTable[], number]> {
-  const response = await vectorDataClient.getVectorTablesInAllDatasets(pageOptions);
+export async function getVectorTablesInAllDatasets(pageOptions: Partial<PageOptions>): Promise<VectorTable[]> {
+  const data = await vectorDataClient.getVectorTablesInAllDatasets(pageOptions);
 
-  return [
-    response.content.map(table => ({ ...table, schema: convertOldToNewSchema(table.schema) })),
-    response.page.totalPages
-  ];
+  return data.map(table => ({ ...table, schema: convertOldToNewSchema(table.schema) }));
 }
 
 export async function createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<VectorTable> {

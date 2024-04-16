@@ -10,7 +10,7 @@ import { Mime } from '../util/Mime';
 import { replaceUrl } from './server-urls.service';
 import { stringifyParams } from './http.utils';
 
-const ITEMS_PER_PAGE = 300;
+export const MAX_ITEMS_PER_PAGE = 300;
 
 interface RequestConfig extends AxiosRequestConfig {
   params?: Record<string, string | number | undefined>;
@@ -93,7 +93,7 @@ class Http {
     let page = 0;
 
     config.params = config.params || {};
-    config.params.size = config.params.size || ITEMS_PER_PAGE;
+    config.params.size = config.params.size || MAX_ITEMS_PER_PAGE;
 
     do {
       config.params.page = page;
@@ -126,10 +126,11 @@ class Http {
     // не свезло, будем перебирать все объекты, пока не найдём или пока они не закончатся
     const scanPageParams = {
       ...pageParams,
-      size: ITEMS_PER_PAGE
+      size: MAX_ITEMS_PER_PAGE
     };
 
-    const scanTotalPages = Math.floor(totalElements / ITEMS_PER_PAGE) + (totalElements % ITEMS_PER_PAGE ? 1 : 0);
+    const scanTotalPages =
+      Math.floor(totalElements / MAX_ITEMS_PER_PAGE) + (totalElements % MAX_ITEMS_PER_PAGE ? 1 : 0);
 
     let previousScanPage: T[] = [];
 
@@ -149,10 +150,10 @@ class Http {
       }
 
       // и так, нашли, теперь нужно вернуть содержащую объект страницу
-      const globalFoundIndex = ITEMS_PER_PAGE * i + foundIndex;
+      const globalFoundIndex = MAX_ITEMS_PER_PAGE * i + foundIndex;
       const positionOnPage = globalFoundIndex % Number(pageParams.size);
       const nextPage: T[] = [];
-      if (ITEMS_PER_PAGE - foundIndex < Number(pageParams.size) - positionOnPage && i < scanTotalPages - 1) {
+      if (MAX_ITEMS_PER_PAGE - foundIndex < Number(pageParams.size) - positionOnPage && i < scanTotalPages - 1) {
         scanPageParams.page = String(i + 1);
         const nextScanPageResponse = await this.get<PageableResources<T>>(url, {
           ...config,

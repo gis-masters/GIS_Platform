@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { PageOptions } from '../../models';
 import { DataClient } from '../DataClient';
-import { http } from '../../api/http.service';
+import { MAX_ITEMS_PER_PAGE, http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { PageableResources } from '../../../../server-types/common-contracts';
@@ -116,11 +116,11 @@ class VectorDataClient extends DataClient {
     });
   }
 
-  async getVectorTablesInAllDatasets(pageOptions: PageOptions): Promise<PageableResources<RawVectorTable>> {
+  async getVectorTablesInAllDatasets(pageOptions: Partial<PageOptions>): Promise<RawVectorTable[]> {
     const url = this.getAllVectorTablesUrl();
-    const params = preparePageOptions(pageOptions, true);
+    const params = preparePageOptions({ page: 0, pageSize: MAX_ITEMS_PER_PAGE, ...pageOptions }, true);
 
-    return http.get<PageableResources<RawVectorTable>>(url, { params });
+    return http.getPaged<RawVectorTable>(url, { params });
   }
 
   async createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<RawVectorTable> {

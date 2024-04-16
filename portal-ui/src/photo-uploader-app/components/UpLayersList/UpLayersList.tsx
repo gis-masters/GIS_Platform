@@ -18,8 +18,6 @@ interface UpLayersListStore {
 
 const cnUpLayersList = cn('UpLayersList');
 
-const photoVectorTableTitle = 'photo uploader';
-
 export const UpLayersList: FC = observer(() => {
   const store = useLocalObservable(
     (): UpLayersListStore => ({
@@ -43,7 +41,7 @@ export const UpLayersList: FC = observer(() => {
     void (async () => {
       photoUploaderStore.setBusy(true);
       try {
-        const pageOptions = { page: 0, pageSize: 20, filter: { title: photoVectorTableTitle } };
+        const pageOptions = { filter: { identifier: { $like: 'photo_uploader%' } } };
         const response = await getVectorTablesInAllDatasets(pageOptions);
 
         if (!response) {
@@ -53,7 +51,7 @@ export const UpLayersList: FC = observer(() => {
           return;
         }
 
-        const data = response[0].map(item => ({ data: item }));
+        const data = response.map(item => ({ data: item }));
 
         setDataList(data);
       } catch {
