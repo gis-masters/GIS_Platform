@@ -2,8 +2,10 @@ import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { Pages, route } from './Route.store';
 import { CrgLayer, CrgVectorLayer } from '../services/gis/layers/layers.models';
-import { FilterQuery } from '../services/util/filterObjects';
+import { FilterQuery, modifyFieldFilterValue } from '../services/util/filterObjects';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
 
+const errorMessage = 'Отсутствует имя таблицы';
 const defaultValues: Partial<AttributesTableStore> = {};
 
 class AttributesTableStore {
@@ -31,15 +33,23 @@ class AttributesTableStore {
   }
 
   isLayerFilterExist(layer: CrgLayer): boolean {
+    if (!layer.tableName) {
+      throw new Error(errorMessage);
+    }
+
     return !!this.filter[layer.tableName];
   }
 
   isLayerFiltered(layer: CrgLayer) {
-    return !!this.filter[layer.tableName] && this.isLayerFilterEnabled(layer);
+    return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer);
   }
 
   isLayerFilterEnabled(layerOrTableName: CrgLayer | string): boolean {
     const tableName = typeof layerOrTableName === 'string' ? layerOrTableName : layerOrTableName.tableName;
+
+    if (!tableName) {
+      throw new Error(errorMessage);
+    }
 
     return !this.filterDisabled[tableName];
   }
@@ -75,6 +85,11 @@ class AttributesTableStore {
     } else {
       this.filterDisabled[layer.tableName] = true;
     }
+  }
+
+  @action
+  dropFilterBySelections(layerTableName: string): void {
+    modifyFieldFilterValue(this.filter[layerTableName], FILTER_BY_SELECTION);
   }
 }
 

@@ -7,6 +7,7 @@ import ExtentInteraction from 'ol/interaction/Extent';
 import { hasPhotoModeInFeatures } from '../data/files/files.util';
 import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { getFeatureCollectionByXmlFilter, makeXmlPolygonIntersect } from '../geoserver/wfs/wfs.service';
 import { MapAction, MapMode, MapSelectionTypes } from './map.models';
@@ -232,6 +233,7 @@ class MapSelectionService {
   private async selectFeaturesByCoordinates(selectionType: MapSelectionTypes, buffer: MultiPolygon) {
     await services.provided;
     const visibleLayers = currentProject.visibleVectorLayers.map(({ payload }) => payload);
+
     if (!visibleLayers.length) {
       services.logger.debug('No visible layers');
       this.selectFeatures([]);
@@ -314,6 +316,20 @@ class MapSelectionService {
 
         if (selectionType === MapSelectionTypes.ADD && index === -1) {
           mapStore.setSelectedFeatures([...mapStore.selectedFeatures, feature]);
+        }
+      }
+    }
+
+    // удаляем filterBySelection для тех слоев, у которых больше нет выделенных объектов
+    if (
+      !features.length &&
+      (selectionType === MapSelectionTypes.REPLACE || selectionType === MapSelectionTypes.REMOVE)
+    ) {
+      const layerTableNames = Object.keys(attributesTableStore.filter);
+
+      for (const tableName of layerTableNames) {
+        if (!mapStore.selectedFeaturesByTableName[tableName]?.length) {
+          attributesTableStore.dropFilterBySelections(tableName);
         }
       }
     }
