@@ -48,7 +48,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на события")
     public void getAllAuditEntity() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @When("Пользователь делает запрос на создание события аудита {string} {string} {string} {string} {string} {string}")

@@ -6,6 +6,7 @@ export interface AuthCredentials {
 
 export interface RegData {
   company: string;
+  specializationId: number;
   contactPhone: string;
   email: string;
   firstName: string;

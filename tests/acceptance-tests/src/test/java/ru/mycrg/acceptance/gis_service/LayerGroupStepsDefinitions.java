@@ -186,7 +186,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все группы слоев организации")
     public void getAllLayerGroups() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @Given("Существуют группы слоев проектов")

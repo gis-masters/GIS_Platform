@@ -271,7 +271,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все слои организации")
     public void getAllLayers() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @And("Представление слоя проекта корректно")

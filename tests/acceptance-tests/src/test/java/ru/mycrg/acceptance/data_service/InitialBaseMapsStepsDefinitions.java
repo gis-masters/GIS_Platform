@@ -74,7 +74,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все подложки организации")
     public void getAllBaseMaps() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @Given("Существует подложка источник")
@@ -159,7 +159,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки")
     public void getAllBaseMapsSorted(String sortingType, String sortingDirection) {
-        super.getAllEntitiesSorted(sortingType, sortingDirection);
+        super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
     @And("Количество страниц подложек {string} пропорционально {string}")

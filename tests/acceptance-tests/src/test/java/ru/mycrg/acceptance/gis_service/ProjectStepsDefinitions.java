@@ -325,21 +325,21 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void getAllProjects() {
         authorizationBase.loginAsCurrentUser();
 
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @When("Пользователь делает запрос на получение доступных отсортированных проектов {string} {string}")
     public void getAllowedSortedProjectsAsUser(String sortingType, String sortDirection) {
         authorizationBase.loginAsCurrentUser();
 
-        super.getAllEntitiesSorted(sortingType, sortDirection);
+        super.get1000EntitiesSorted(sortingType, sortDirection);
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все проекты")
     public void getAllProjectsSorted(String sortingType, String sortingDirection) {
         authorizationBase.loginAsOwner();
 
-        super.getAllEntitiesSorted(sortingType, sortingDirection);
+        super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
     @When("Администратор делает запрос на текущий проект")

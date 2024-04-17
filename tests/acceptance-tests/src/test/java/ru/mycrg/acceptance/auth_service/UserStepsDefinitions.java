@@ -219,7 +219,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
     public void getAllUsersSorted(String sortingType, String sortingDirection) {
-        super.getAllEntitiesSorted(sortingType, sortingDirection);
+        super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
     @When("Администратор делает запрос на созданного пользователя")
@@ -229,7 +229,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Отправляется запрос на выборку всех пользователей")
     public void getAllUsers() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @When("Пользователь делает запрос на выборку всех пользователей")

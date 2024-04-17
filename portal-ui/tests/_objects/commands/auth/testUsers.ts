@@ -29,6 +29,7 @@ const testUsers: Record<
   'Администратор системы': {
     company: 'Order of the Phoenix',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Albus',
     middleName: 'Percival',
     lastName: 'Dumbledore',
@@ -41,6 +42,7 @@ const testUsers: Record<
   'Администратор организации': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Hermione',
     middleName: 'Jean',
     lastName: 'Granger',
@@ -53,6 +55,7 @@ const testUsers: Record<
   Гарри: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Harry',
     middleName: 'James',
     lastName: 'Potter',
@@ -65,6 +68,7 @@ const testUsers: Record<
   Драко: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Draco',
     middleName: 'Lucius',
     lastName: 'Malfoy',
@@ -77,6 +81,7 @@ const testUsers: Record<
   Рональд: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Ronald',
     middleName: 'Bilius',
     lastName: 'Weasley',
@@ -89,6 +94,7 @@ const testUsers: Record<
   Джинни: {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Ginny',
     middleName: 'Molly',
     lastName: 'Weasley',
@@ -101,6 +107,7 @@ const testUsers: Record<
   'Деактивированный пользователь': {
     company: 'Hogwarts',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Fred',
     middleName: 'Gideon',
     lastName: 'Weasley',
@@ -113,6 +120,7 @@ const testUsers: Record<
   'Администратор другой организации': {
     company: 'Другая организация',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Tom',
     middleName: 'Marvolo',
     lastName: 'Riddle',
@@ -125,6 +133,7 @@ const testUsers: Record<
   Питер: {
     company: 'Другая организация',
     contactPhone: '7777777777',
+    specializationId: 1,
     firstName: 'Peter',
     middleName: 'Wormtail',
     lastName: 'Pettigrew',

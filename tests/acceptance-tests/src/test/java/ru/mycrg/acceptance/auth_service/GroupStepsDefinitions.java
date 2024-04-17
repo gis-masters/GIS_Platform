@@ -96,12 +96,12 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос на все группы")
     public void getAllUsersGroups() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все пользовательские группы")
     public void getAllUsersGroupsSorted(String sortingFactor, String sortingDirection) {
-        super.getAllEntitiesSorted(sortingFactor, sortingDirection);
+        super.get1000EntitiesSorted(sortingFactor, sortingDirection);
     }
 
     @When("Администратор делает постраничный запрос на группы")

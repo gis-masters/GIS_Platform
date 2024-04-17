@@ -228,7 +228,7 @@ public class BaseMapStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} на все подложки проекта")
     public void getAllProjectBaseMapsSorted(String sortingType, String sortingDirection) {
-        super.getAllEntitiesSorted(sortingType, sortingDirection);
+        super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
     private BaseMapCreateDto mapToProjectBaseMapDto(String baseMapId, String title, String position) {

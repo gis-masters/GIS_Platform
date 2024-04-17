@@ -1,20 +1,16 @@
 package ru.mycrg.auth_service.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.common_contracts.generated.Specialization;
 
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-
 @RestController
 public class SpecializationsController {
 
     @GetMapping("/specializations")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<Specialization>> getSpecializations() {
         List<Specialization> specializations = List.of(
                 new Specialization(1,

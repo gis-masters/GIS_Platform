@@ -78,6 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET,
                              "/actuator/health",
                              "/password-reset",
+                             "/specializations",
                              "/esia/**").permitAll()
                 .anyRequest().authenticated(); // Any other request must be authenticated
     }

@@ -46,7 +46,7 @@ zuul:
 
     crg-auth-service-specializations:
       path: /specializations/**
-      url: http://auth-service:9000/specializations/
+      url: http://auth-service:9000/specializations
 
     crg-auth-service-esia:
       path: /esia/**

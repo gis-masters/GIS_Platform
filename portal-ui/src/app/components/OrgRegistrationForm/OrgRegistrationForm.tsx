@@ -1,96 +1,32 @@
 import React, { Component } from 'react';
-import { observable, makeObservable } from 'mobx';
+import { observable, makeObservable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { isError } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
 
+import { Specialization } from '../../../server-types/common-contracts';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
+import { getSpecializations } from '../../services/auth/specializations/specializations.service';
+import { generateRandomId } from '../../services/util/randomId';
+import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { authService } from '../../services/auth/auth/auth.service';
+import { services } from '../../services/services';
 import { Form } from '../Form/Form';
 import { Toast } from '../Toast/Toast';
 import { Button } from '../Button/Button';
-import { services } from '../../services/services';
+import { Loading } from '../Loading/Loading';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
-import { generateRandomId } from '../../services/util/randomId';
-import { authService } from '../../services/auth/auth/auth.service';
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { SpecializationDescription } from '../SpecializationDescription/SpecializationDescription';
 
 import '!style-loader!css-loader!sass-loader!./OrgRegistrationForm.scss';
 
 const cnOrgRegistrationForm = cn('OrgRegistrationForm');
 
-const schema: SimpleSchema = {
-  properties: [
-    {
-      name: 'company',
-      title: 'Наименование',
-      minLength: 5,
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'contactPhone',
-      title: 'Контактный телефон',
-      required: true,
-      display: 'phone',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'specialization',
-      title: 'Специализация',
-      required: true,
-      propertyType: PropertyType.CHOICE,
-      options: [
-        {
-          title: 'НТО',
-          value: 'НТО,Фотослой'
-        },
-        {
-          title: 'ГИСОГД',
-          value: 'ГИСОГД,Фотослой,КПТ'
-        }
-      ]
-    },
-    {
-      name: 'lastName',
-      title: 'Фамилия',
-      maxLength: 100,
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'firstName',
-      title: 'Имя',
-      maxLength: 50,
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'email',
-      title: 'E-mail',
-      required: true,
-      display: 'email',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'password',
-      title: 'Пароль',
-      required: true,
-      display: 'password',
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'password_',
-      title: 'Подтверждение пароля',
-      required: true,
-      display: 'password',
-      propertyType: PropertyType.STRING
-    }
-  ]
-};
-
 interface OrgRegistration {
   company: string;
   contactPhone: string;
-  specialization: string;
+  specializationId: number | null;
   lastName: string;
   firstName: string;
   email: string;
@@ -101,7 +37,7 @@ interface OrgRegistration {
 const defaultData: OrgRegistration = {
   company: '',
   contactPhone: '',
-  specialization: null,
+  specializationId: null,
   lastName: '',
   firstName: '',
   email: '',
@@ -112,10 +48,25 @@ const defaultData: OrgRegistration = {
 @observer
 export class OrgRegistrationForm extends Component {
   @observable private loading = false;
+  @observable private specializations: Specialization[] = [];
 
   constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
+  }
+
+  async componentDidMount(): Promise<void> {
+    this.setLoading(true);
+
+    try {
+      this.specializations = await getSpecializations();
+    } catch (error) {
+      Toast.error({
+        message: isError(error) ? error?.message : 'Ошибка'
+      });
+    } finally {
+      this.setLoading(false);
+    }
   }
 
   render() {
@@ -124,9 +75,10 @@ export class OrgRegistrationForm extends Component {
     return (
       <>
         <div className={cnOrgRegistrationForm('Title')}>Данные об организации</div>
+
         <Form
           className={cnOrgRegistrationForm()}
-          schema={schema}
+          schema={this.schema}
           id={htmlId}
           value={defaultData}
           auto
@@ -140,8 +92,110 @@ export class OrgRegistrationForm extends Component {
             </ActionsLeft>
           }
         />
+
+        {this.loading && <Loading global />}
       </>
     );
+  }
+
+  @computed
+  private get schema(): SimpleSchema {
+    return {
+      properties: [
+        {
+          name: 'company',
+          title: 'Наименование',
+          minLength: 5,
+          required: true,
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'specializationId',
+          title: 'Специализация',
+          required: true,
+          propertyType: PropertyType.CHOICE,
+          options: this.getOptionsBySpecializations()
+        },
+        {
+          name: 'specDescription',
+          title: 'Описание специализации ',
+          hidden: true,
+          propertyType: PropertyType.CUSTOM,
+          description: 'Something about this specialization',
+          tags: ['KPT', 'Library'],
+          ControlComponent: SpecializationDescription,
+          dynamicPropertyFormula: (obj: unknown) => {
+            if (!isRecordStringUnknown(obj)) {
+              throw new Error('Некорректное значение');
+            }
+
+            if (obj.specialization && this.specializations?.length) {
+              const specialization = this.specializations.find(({ id }) => obj.specialization === id);
+
+              if (!specialization) {
+                throw new Error('Отсутствуют данные о специализации');
+              }
+
+              const { description, tags } = specialization;
+
+              return { hidden: false, description, tags };
+            }
+
+            return { ...obj };
+          }
+        },
+        {
+          name: 'contactPhone',
+          title: 'Контактный телефон',
+          required: true,
+          display: 'phone',
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'lastName',
+          title: 'Фамилия',
+          maxLength: 100,
+          required: true,
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'firstName',
+          title: 'Имя',
+          maxLength: 50,
+          required: true,
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'email',
+          title: 'E-mail',
+          required: true,
+          display: 'email',
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'password',
+          title: 'Пароль',
+          required: true,
+          display: 'password',
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'password_',
+          title: 'Подтверждение пароля',
+          required: true,
+          display: 'password',
+          propertyType: PropertyType.STRING
+        }
+      ]
+    };
+  }
+
+  private getOptionsBySpecializations(): PropertyOption[] {
+    if (!this.specializations?.length) {
+      return [];
+    }
+
+    return this.specializations.map(({ title, id }) => ({ title, value: id }));
   }
 
   @boundMethod
@@ -161,5 +215,10 @@ export class OrgRegistrationForm extends Component {
     services.ngZone.run(() => {
       void services.router.navigateByUrl('/');
     });
+  }
+
+  @action
+  private setLoading(loading: boolean): void {
+    this.loading = loading;
   }
 }

@@ -130,6 +130,10 @@ public class BaseStepsDefinitions {
     }
 
     public RequestSpecification getBaseRequestWithCurrentCookie() {
+        if (cookie == null) {
+            return getBaseRequest();
+        }
+
         return getBaseRequest().cookie(cookie);
     }
 
@@ -329,6 +333,12 @@ public class BaseStepsDefinitions {
     public void getAllEntities() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        get();
+    }
+
+    public void get1000Entities() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
                         get("/?size=1000");
     }
 
@@ -352,14 +362,14 @@ public class BaseStepsDefinitions {
                         get(String.format("?%s=%s", field, value));
     }
 
-    public void getAllEntitiesSorted(String field, String direction) {
+    public void get1000EntitiesSorted(String field, String direction) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/?sort=%s,%s&%s", field, direction, "size=1000"));
     }
 
     public void getAllAndFillEntityCount() {
-        getAllEntities();
+        get1000Entities();
         entityCount = getEntitiesCount();
     }
 

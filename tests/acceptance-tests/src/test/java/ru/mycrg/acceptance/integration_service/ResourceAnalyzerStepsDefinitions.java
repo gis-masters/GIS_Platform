@@ -30,7 +30,7 @@ public class ResourceAnalyzerStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на выборку всех анализаторов ресурсов")
     public void getAllAnalyzers() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @When("Пользователь отправляет запрос, запуская процесс анализа ресурсов")

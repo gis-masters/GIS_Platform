@@ -43,7 +43,7 @@ public class ReestrStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все реестры")
     public void fetchAllKnownReestrs() {
-        super.getAllEntities();
+        super.get1000Entities();
     }
 
     @Then("Сервер отвечает постраничным списком существующих реестров")
