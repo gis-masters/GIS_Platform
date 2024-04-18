@@ -105,7 +105,7 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;
       if (axiosError?.response?.status === 403) {
-        this.setStatus('forbidden', 'Ошибка доступа');
+        this.setStatus('forbidden', 'Доступ ограничен');
       } else {
         this.setStatus(
           'error',
