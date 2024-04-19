@@ -12,13 +12,11 @@ export async function getFeatureType(layer: CrgLayer): Promise<FeatureType> {
 }
 
 export async function recalculateBboxAndGetFeatureType(layer: CrgLayer): Promise<FeatureType> {
-  const featureType = getFeatureType(layer);
-
   let result: { featureType: FeatureType };
   try {
     const url = buildFeatureTypeUrl(layer);
 
-    await http.put(url, { featureType: featureType }, { params: { recalculate: 'nativebbox' } });
+    await http.put(url, { featureType: {} }, { params: { recalculate: 'nativebbox,latlonbbox' } });
     result = await http.get<{ featureType: FeatureType }>(url, {});
   } catch {}
 

@@ -9,26 +9,24 @@ import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/layers/layers.mod
 
 import { recalculateBboxAndGetFeatureType } from './featuretypes.service';
 import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
-import { getProjection, olProjection, transform } from './projections.service';
+import { geoserverProjection, olProjection, transform } from './projections.service';
 
 export async function focusToLayer(layer: CrgLayer): Promise<void> {
   try {
-    const { nativeBoundingBox, srs } =
+    const { latLonBoundingBox } =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
         ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
         : await getLayerCoverage(layer);
 
-    const { maxx, maxy, minx, miny } = nativeBoundingBox;
-    const projection = getProjection(srs);
-
+    const { maxx, maxy, minx, miny } = latLonBoundingBox;
     if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0])) {
       showGoToBoundingBoxError();
 
       return;
     }
 
-    const [x1, y1] = transform(projection, olProjection, [minx, miny]);
-    const [x2, y2] = transform(projection, olProjection, [maxx, maxy]);
+    const [x1, y1] = transform(geoserverProjection, olProjection, [minx, miny]);
+    const [x2, y2] = transform(geoserverProjection, olProjection, [maxx, maxy]);
 
     if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
       showGoToBoundingBoxError();

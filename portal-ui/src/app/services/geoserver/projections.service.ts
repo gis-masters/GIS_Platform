@@ -73,7 +73,11 @@ export const projections: CrgProjection[] = [
   },
   {
     id: 'EPSG:3857',
-    title: 'WGS 84 / Pseudo-Mercator'
+    title: 'WGS 84 / Pseudo-Mercator (метры)'
+  },
+  {
+    id: 'EPSG:4326',
+    title: 'WGS 84 / Pseudo-Mercator (градусы)'
   },
   {
     id: 'EPSG:314314',
@@ -100,7 +104,6 @@ export function replaceHiddenProjectionId(projectionId: string): string {
 
 function getLocalProjectionById(projectionId: string): CrgProjection {
   const projection = projections.find(({ id }) => id === projectionId);
-
   if (!projection) {
     throw new Error('Не найдена проекция ' + projectionId);
   }
@@ -137,6 +140,7 @@ export function getFeatureProjection(feature: WfsFeature<Coordinate | Coordinate
 }
 
 export const olProjection: CrgProjection = getLocalProjectionById('EPSG:3857');
+export const geoserverProjection: CrgProjection = getLocalProjectionById('EPSG:4326');
 export const defaultProjection: CrgProjection = getLocalProjectionById('EPSG:7829');
 
 export function transform(projFrom: CrgProjection, projTo: CrgProjection, coordinate: Coordinate): Coordinate {
