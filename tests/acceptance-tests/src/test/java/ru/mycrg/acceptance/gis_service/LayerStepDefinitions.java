@@ -461,10 +461,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
         String tableName = jsonPath.getList("tableName").get(0).toString();
-        assertTrue(tableName.contains("_some_files_2118749729_as1251"));
+        assertTrue(tableName.contains("dl_default_" + currentDocumentId));
 
         // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "8_tab_store__dl_default_2_"
-        assertTrue(jsonPath.getList("dataset").get(0).toString().contains(orgId + "_dxf_store__326469256_dl_default_"));
+        assertTrue(jsonPath.getList("dataset").get(0).toString()
+                           .contains(orgId + "_dxf_store__326469256_dl_default_" + currentDocumentId));
 
         // workspace на геосервере - scratch_database_1
         String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
@@ -488,11 +489,12 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
         String tableName = jsonPath.getList("tableName").get(0).toString();
-        assertTrue(tableName.contains("_some_files_504450693"));
+        assertTrue(tableName.contains("dl_default_" + currentDocumentId));
 
         // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "8_tab_store__dl_default_2_"
         assertTrue(
-                jsonPath.getList("dataset").get(0).toString().contains(orgId + "_tab_store__1031891140_dl_default_"));
+                jsonPath.getList("dataset").get(0).toString()
+                        .contains(orgId + "_tab_store__1031891140_dl_default_" + currentDocumentId));
 
         // workspace на геосервере - scratch_database_1
         String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();

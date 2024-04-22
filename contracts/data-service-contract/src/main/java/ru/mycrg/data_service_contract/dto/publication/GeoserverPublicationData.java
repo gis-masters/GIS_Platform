@@ -7,6 +7,7 @@ public class GeoserverPublicationData implements Serializable {
     private String workspaceName;
     private String storeName;
     private String featureTypeName;
+    private String nativeName;
 
     public GeoserverPublicationData() {
         // Qualifier
@@ -15,13 +16,15 @@ public class GeoserverPublicationData implements Serializable {
     /**
      * @param workspaceName   Название рабочей области "scratch_workspace_{orgId}"
      * @param storeName       Название хранилища
-     * @param featureTypeName Должен соответствовать названию таблицы для векторного слоя, названию файла для слоя на
+     * @param featureTypeName Желаемое название слоя на геосервере.
+     * @param nativeName      Должен соответствовать названию таблицы для векторного слоя, названию файла для слоя на
      *                        основе файла, "entities" для DXF слоя.
      */
-    public GeoserverPublicationData(String workspaceName, String storeName, String featureTypeName) {
+    public GeoserverPublicationData(String workspaceName, String storeName, String featureTypeName, String nativeName) {
         this.workspaceName = workspaceName;
         this.storeName = storeName;
         this.featureTypeName = featureTypeName;
+        this.nativeName = nativeName;
     }
 
     public String getWorkspaceName() {
@@ -48,12 +51,21 @@ public class GeoserverPublicationData implements Serializable {
         this.featureTypeName = featureTypeName;
     }
 
+    public String getNativeName() {
+        return nativeName;
+    }
+
+    public void setNativeName(String nativeName) {
+        this.nativeName = nativeName;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"workspaceName\":" + (workspaceName == null ? "null" : "\"" + workspaceName + "\"") + ", " +
                 "\"storeName\":" + (storeName == null ? "null" : "\"" + storeName + "\"") + ", " +
-                "\"featureName\":" + (featureTypeName == null ? "null" : "\"" + featureTypeName + "\"") +
+                "\"featureTypeName\":" + (featureTypeName == null ? "null" : "\"" + featureTypeName + "\"") + ", " +
+                "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") +
                 "}";
     }
 }

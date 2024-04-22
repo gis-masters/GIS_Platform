@@ -90,6 +90,15 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
+    public static String buildFeatureTypeName(String libraryId,
+                                              Long recordId,
+                                              UUID fileId) {
+        String postfix = join(libraryId, String.valueOf(recordId));
+
+        return postfix + DOUBLE_SEPARATOR + fileId.toString();
+    }
+
+    @NotNull
     public static String buildRasterStoreName(String body) {
         return join(DEFAULT_STORE_POSTFIX, body);
     }

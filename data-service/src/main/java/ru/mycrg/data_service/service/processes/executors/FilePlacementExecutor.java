@@ -79,7 +79,10 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
 
         FileResourceQualifier fileQualifier = mapToFileQualifier(file.getResourceQualifier());
         String filename = StringUtils.getFilename(file.getPath());
-        String featureTypeName = StringUtils.stripFilenameExtension(filename);
+        String nativeName = StringUtils.stripFilenameExtension(filename);
+        String featureTypeName = buildFeatureTypeName(fileQualifier.getTable(),
+                                                      fileQualifier.getRecordId(),
+                                                      file.getId());
 
         messageBus.produce(
                 new FilePublicationEvent(
@@ -95,7 +98,8 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
                                                fileType.name().toLowerCase(),
                                                getHashCode(file.getTitle()),
                                                fileQualifier.toString()),
-                                featureTypeName),
+                                featureTypeName,
+                                nativeName),
                         new GisPublicationData(
                                 payload.getProjectId(),
                                 fileQualifier.getTable(),

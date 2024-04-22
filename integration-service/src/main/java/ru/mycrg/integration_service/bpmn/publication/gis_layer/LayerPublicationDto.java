@@ -2,13 +2,14 @@ package ru.mycrg.integration_service.bpmn.publication.gis_layer;
 
 import java.io.Serializable;
 
-public class DxfLayer implements Serializable {
+public class LayerPublicationDto implements Serializable {
 
     private String type;
     private String mode;
     private Long projectId;
     private String title;
     private String tableName;
+    private String nativeName;
     private String nativeCRS;
     private String libraryId;
     private Long recordId;
@@ -17,8 +18,9 @@ public class DxfLayer implements Serializable {
     private String dataStoreName;
     private String dataset;
 
-    public DxfLayer(String type, String mode, Long projectId, String tableName, String title, String nativeCRS,
-                    String libraryId, Long recordId, String styleName, String dataStoreName, String dataset) {
+    public LayerPublicationDto(String type, String mode, Long projectId, String tableName, String nativeName,
+                               String title, String nativeCRS, String libraryId, Long recordId, String styleName,
+                               String workspaceName, String dataset) {
         this.type = type;
         this.mode = mode;
         this.enabled = true;
@@ -26,13 +28,14 @@ public class DxfLayer implements Serializable {
         this.projectId = projectId;
 
         this.tableName = tableName;
+        this.nativeName = nativeName;
         this.title = title;
         this.nativeCRS = nativeCRS;
         this.libraryId = libraryId;
         this.recordId = recordId;
 
         this.styleName = styleName;
-        this.dataStoreName = dataStoreName;
+        this.dataStoreName = workspaceName;
         this.dataset = dataset;
     }
 
@@ -132,6 +135,14 @@ public class DxfLayer implements Serializable {
         this.dataset = dataset;
     }
 
+    public String getNativeName() {
+        return nativeName;
+    }
+
+    public void setNativeName(String nativeName) {
+        this.nativeName = nativeName;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -140,6 +151,7 @@ public class DxfLayer implements Serializable {
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
                 "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +

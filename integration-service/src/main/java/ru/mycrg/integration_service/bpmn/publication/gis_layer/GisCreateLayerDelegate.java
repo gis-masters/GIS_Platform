@@ -39,7 +39,7 @@ public class GisCreateLayerDelegate implements JavaDelegate {
 
         try {
             FilePublicationEvent event = (FilePublicationEvent) execution.getVariable(EVENT_VAR_NAME);
-            DxfLayer dto = prepareLayerDto(event);
+            LayerPublicationDto dto = prepareLayerDto(event);
 
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + event.getBaseWsProcess().getToken())
@@ -71,21 +71,22 @@ public class GisCreateLayerDelegate implements JavaDelegate {
     }
 
     @NotNull
-    private static DxfLayer prepareLayerDto(FilePublicationEvent event) {
+    private LayerPublicationDto prepareLayerDto(FilePublicationEvent event) {
         GeoserverPublicationData geoserverPublicationData = event.getGeoserverPublicationData();
         GisPublicationData gisPublicationData = event.getGisPublicationData();
 
-        return new DxfLayer(event.getType().name().toLowerCase(),
-                            "full",
-                            gisPublicationData.getProjectId(),
-                            geoserverPublicationData.getFeatureTypeName(),
-                            gisPublicationData.getLayerTitle(),
-                            gisPublicationData.getCrs(),
-                            gisPublicationData.getLibraryId(),
-                            gisPublicationData.getRecordId(),
-                            gisPublicationData.getStyleName(),
-                            geoserverPublicationData.getWorkspaceName(),
-                            geoserverPublicationData.getStoreName());
+        return new LayerPublicationDto(event.getType().name().toLowerCase(),
+                                       "full",
+                                       gisPublicationData.getProjectId(),
+                                       geoserverPublicationData.getFeatureTypeName(),
+                                       geoserverPublicationData.getNativeName(),
+                                       gisPublicationData.getLayerTitle(),
+                                       gisPublicationData.getCrs(),
+                                       gisPublicationData.getLibraryId(),
+                                       gisPublicationData.getRecordId(),
+                                       gisPublicationData.getStyleName(),
+                                       geoserverPublicationData.getWorkspaceName(),
+                                       geoserverPublicationData.getStoreName());
     }
 
     @NotNull
