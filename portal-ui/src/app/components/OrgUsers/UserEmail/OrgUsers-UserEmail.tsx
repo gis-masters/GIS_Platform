@@ -4,7 +4,6 @@ import { cn } from '@bem-react/classname';
 import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
-
 import { CrgUserExtended } from '../OrgUsers';
 
 const cnOrgUsersUserEmail = cn('OrgUsers', 'UserEmail');

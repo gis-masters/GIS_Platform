@@ -1,14 +1,13 @@
 import React, { FC, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
-import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
 import { FreeMode, Navigation, Pagination, Thumbs, Zoom } from 'swiper/modules';
+import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 
 import { isPdfFile } from '../../../services/data/files/files.util';
-
-import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 import { CarouselImageInfo } from '../Carousel';
 import { CarouselDocument } from '../Document/Carousel-Document';
 import { CarouselMainImage } from '../MainImage/Carousel-MainImage';
+import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 
 import '!style-loader!css-loader!sass-loader!./Carousel-MainSwiper.scss';
 

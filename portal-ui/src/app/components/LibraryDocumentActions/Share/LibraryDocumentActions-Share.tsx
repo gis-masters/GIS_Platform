@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import {} from 'mobx';
 import { observer } from 'mobx-react';
 import { ShareOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
-import { Toast } from '../../Toast/Toast';
-
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsShare = cn('LibraryDocumentActions', 'Share');
 

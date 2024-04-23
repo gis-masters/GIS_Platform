@@ -1,10 +1,10 @@
-import { TextField, TextFieldProps } from '@mui/material';
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
+import { TextField, TextFieldProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { FormControlProps } from '../../Form/Control/Form-Control';
 import { PropertySchemaString } from '../../../services/data/schema/schema.models';
+import { FormControlProps } from '../../Form/Control/Form-Control';
 
 export const cnStringControlInner = cn('StringControl', 'Inner');
 

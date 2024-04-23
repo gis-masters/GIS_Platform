@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { currentProject } from '../../stores/CurrentProject.store';
-import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { loadAllLayersStyles } from '../../services/map/map-print.service';
 import { SortParams } from '../../services/util/sortObjects';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
+import { Button } from '../Button/Button';
+import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn } from '../XTable/XTable.models';
-import { Button } from '../Button/Button';
-
-import { SelectLegendImg } from './Img/SelectLegend-Img';
 import { SelectLegendCount } from './Count/SelectLegend-Count';
+import { SelectLegendImg } from './Img/SelectLegend-Img';
 
 import '!style-loader!css-loader!sass-loader!./SelectLegend.scss';
 

@@ -1,13 +1,12 @@
-import { cn } from '@bem-react/classname';
 import React, { FC } from 'react';
-import { Swiper, SwiperSlide, SwiperClass } from 'swiper/react';
+import { cn } from '@bem-react/classname';
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
 
 import { isPdfFile } from '../../../services/data/files/files.util';
-
-import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 import { CarouselPdfIcon } from '../PdfIcon/Carousel-PdfIcon';
 import { CarouselThumbsImage } from '../ThumbsImage/Carousel-ThumbsImage';
+import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 
 import '!style-loader!css-loader!sass-loader!./Carousel-ThumbsSwiper.scss';
 

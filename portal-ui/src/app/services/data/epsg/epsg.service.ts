@@ -1,6 +1,5 @@
-import { epsgTitle, epsgUnit } from '../../util/epsg';
 import { PageOptions } from '../../models';
-
+import { epsgTitle, epsgUnit } from '../../util/epsg';
 import { epsgClient } from './epsg.client';
 import { EpsgModelModified } from './epsg.models';
 

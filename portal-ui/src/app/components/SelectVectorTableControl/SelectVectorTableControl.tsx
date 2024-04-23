@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { isFeaturesUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
-import { FormControlProps } from '../Form/Control/Form-Control';
-import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
+import { Explorer } from '../Explorer/Explorer';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { FormControlProps } from '../Form/Control/Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./SelectVectorTableControl.scss';
 

@@ -4,9 +4,9 @@ import { boundMethod } from 'autobind-decorator';
 
 import { SearchItemDataSource } from '../../services/data/search/search.model';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchField } from '../SearchField/SearchField';
-import { sidebars } from '../../stores/Sidebars.store';
 
 @observer
 export class SearchInProject extends Component {

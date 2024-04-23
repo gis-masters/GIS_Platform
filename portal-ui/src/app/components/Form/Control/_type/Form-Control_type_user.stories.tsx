@@ -2,9 +2,9 @@
 import React from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { Form } from '../../Form';
 import { MinimizedCrgUser } from '../../../../services/auth/users/users.models';
 import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
+import { Form } from '../../Form';
 
 export default {
   title: 'Form/Field/user',

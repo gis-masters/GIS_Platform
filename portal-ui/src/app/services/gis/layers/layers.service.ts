@@ -4,23 +4,22 @@ import { FilterAltOutlined } from '@mui/icons-material';
 import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { AxiosError } from 'axios';
 
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { services } from '../../services';
-import { CrgProject } from '../projects/projects.models';
 import { Toast } from '../../../components/Toast/Toast';
-
-import { layersClient } from './layers.client';
-import { isVectorFromFile } from './layers.utils';
+import { currentProject } from '../../../stores/CurrentProject.store';
 import { ContentType, PropertyOption, Schema } from '../../data/schema/schema.models';
+import { schemaService } from '../../data/schema/schema.service';
 import {
   convertGeoserverPropertiesToSchemaProperties,
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
-import { schemaService } from '../../data/schema/schema.service';
+import { getVectorTable } from '../../data/vectorData/vectorData.service';
 import { getFeatureType } from '../../geoserver/featuretypes.service';
 import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
+import { services } from '../../services';
+import { CrgProject } from '../projects/projects.models';
+import { layersClient } from './layers.client';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
-import { getVectorTable } from '../../data/vectorData/vectorData.service';
+import { isVectorFromFile } from './layers.utils';
 
 export async function getLayers(projectId: number): Promise<CrgLayer[]> {
   return await layersClient.getLayers(projectId);

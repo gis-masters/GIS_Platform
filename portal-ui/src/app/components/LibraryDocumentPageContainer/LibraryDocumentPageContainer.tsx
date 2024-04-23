@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
-import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { getLibraryRecord } from '../../services/data/library/library.service';
-import { LibraryRecord } from '../../services/data/library/library.models';
 import { communicationService } from '../../services/communication.service';
-import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
-import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { LibraryRecord } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
 import { services } from '../../services/services';
-import { TextBadge } from '../TextBadge/TextBadge';
 import { route } from '../../stores/Route.store';
-import { Loading } from '../Loading/Loading';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
+import { LibraryDocument } from '../LibraryDocument/LibraryDocument';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
 import { Link } from '../Link/Link';
+import { Loading } from '../Loading/Loading';
+import { TextBadge } from '../TextBadge/TextBadge';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocumentPageContainer.scss';
 

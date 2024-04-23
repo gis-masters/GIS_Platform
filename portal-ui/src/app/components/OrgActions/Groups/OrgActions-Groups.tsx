@@ -1,21 +1,20 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tooltip, IconButton, Dialog, DialogContent, DialogActions } from '@mui/material';
-import { isEqual } from 'lodash';
-import { cn } from '@bem-react/classname';
+import { Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/material';
 import { People, PeopleOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { isEqual } from 'lodash';
 
-import { CrgUser } from '../../../services/auth/users/users.models';
-import { groupsService } from '../../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { groupsService } from '../../../services/auth/groups/groups.service';
+import { CrgUser } from '../../../services/auth/users/users.models';
 import { allGroups } from '../../../stores/AllGroups.store';
+import { Button } from '../../Button/Button';
+import { Loading } from '../../Loading/Loading';
 import { XTable } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { Loading } from '../../Loading/Loading';
-import { Button } from '../../Button/Button';
-
 import { OrgActionsUserGroupCheck } from '../UserGroupCheck/OrgActions-UserGroupCheck';
 
 import '!style-loader!css-loader!sass-loader!../GroupsTable/OrgActions-GroupsTable.scss';

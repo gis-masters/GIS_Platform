@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { projectsService } from './gis/projects/projects.service';
 import { allProjects } from '../stores/AllProjects.store';
+import { projectsService } from './gis/projects/projects.service';
 import { services } from './services';
 
 @Injectable({

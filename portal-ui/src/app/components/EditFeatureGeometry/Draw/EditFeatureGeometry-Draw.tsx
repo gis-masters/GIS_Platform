@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Coordinate } from 'ol/coordinate';
-import { DrawEvent } from 'ol/interaction/Draw';
 import { Tooltip } from '@mui/material';
 import { Brush, BrushOutlined, SvgIconComponent } from '@mui/icons-material';
-import { Feature } from 'ol';
-import { SimpleGeometry } from 'ol/geom';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
+import { SimpleGeometry } from 'ol/geom';
+import { DrawEvent } from 'ol/interaction/Draw';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { transform, olProjection } from '../../../services/geoserver/projections.service';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { communicationService } from '../../../services/communication.service';
-import { mapService } from '../../../services/map/map.service';
 import { Emitter } from '../../../services/common/Emitter';
+import { communicationService } from '../../../services/communication.service';
+import { olProjection, transform } from '../../../services/geoserver/projections.service';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { mapService } from '../../../services/map/map.service';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');

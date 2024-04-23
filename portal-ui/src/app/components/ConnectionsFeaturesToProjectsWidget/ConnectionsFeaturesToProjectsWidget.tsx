@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Skeleton } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Skeleton } from '@mui/material';
 
-import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { SearchItemDataTypeFeature } from '../../services/data/search/search.model';
-import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { FileConnection } from '../../services/data/files/files.models';
-import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { SearchItemDataTypeFeature } from '../../services/data/search/search.model';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { Button } from '../Button/Button';
+import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
+import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!./ConnectionsFeaturesToProjectsWidget.scss';
 

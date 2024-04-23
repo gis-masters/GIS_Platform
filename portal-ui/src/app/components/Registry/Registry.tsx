@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { NavigationEnd } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
+import { PageOptions, SortOrder } from '../../services/models';
+import { services } from '../../services/services';
+import { FilterQuery } from '../../services/util/filterObjects';
+import { SortParams } from '../../services/util/sortObjects';
+import { route } from '../../stores/Route.store';
 import { XTable, XTableProps } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
-import { FilterQuery } from '../../services/util/filterObjects';
-import { PageOptions, SortOrder } from '../../services/models';
-import { SortParams } from '../../services/util/sortObjects';
-import { services } from '../../services/services';
-import { route } from '../../stores/Route.store';
 
 export interface RegistryProps<T> {
   id: string;

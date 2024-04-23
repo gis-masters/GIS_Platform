@@ -2,12 +2,11 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Favicon } from '../Favicon/Favicon';
-
-import { WorkspaceHeaderMenu } from './Menu/WorkspaceHeader-Menu';
-import { WorkspaceHeaderOrganization } from './Organization/WorkspaceHeader-Organization';
 import { WorkspaceHeaderBreadcrumbs } from './Breadcrumbs/WorkspaceHeader-Breadcrumbs';
 import { WorkspaceHeaderButtons } from './Buttons/WorkspaceHeader-Buttons';
 import { WorkspaceHeaderLoader } from './Loader/WorkspaceHeader-Loader';
+import { WorkspaceHeaderMenu } from './Menu/WorkspaceHeader-Menu';
+import { WorkspaceHeaderOrganization } from './Organization/WorkspaceHeader-Organization';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader.scss';
 

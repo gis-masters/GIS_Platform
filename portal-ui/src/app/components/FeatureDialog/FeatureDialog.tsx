@@ -2,13 +2,13 @@ import React, { FC } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
+import { Schema } from '../../services/data/schema/schema.models';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeatureActions } from '../FeatureActions/FeatureActions';
-import { Schema } from '../../services/data/schema/schema.models';
-import { FeatureView } from '../FeatureView/FeatureView';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { FeatureView } from '../FeatureView/FeatureView';
 import { TextBadge } from '../TextBadge/TextBadge';
 
 import '!style-loader!css-loader!sass-loader!./FeatureDialog.scss';

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Popover } from '@mui/material';
-import { pluralize } from 'numeralize-ru';
 import { withBemMod } from '@bem-react/core';
+import { pluralize } from 'numeralize-ru';
 
-import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
-import { PseudoLink } from '../../../PseudoLink/PseudoLink';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
-
+import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer

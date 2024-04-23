@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { List, ListItem, ListItemText } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 

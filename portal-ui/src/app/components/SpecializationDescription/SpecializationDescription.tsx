@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { Chip, Stack } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
-import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { Card } from '../Card/Card';
 import { CardRow } from '../Card/Row/Card-Row';
 import { CardRowTitle } from '../Card/RowTitle/Card-RowTitle';

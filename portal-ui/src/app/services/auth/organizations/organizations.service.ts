@@ -1,13 +1,12 @@
-import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
+import { Toast } from '../../../components/Toast/Toast';
 import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { PropertySchema, PropertyType, SimpleSchema } from '../../data/schema/schema.models';
-import { Toast } from '../../../components/Toast/Toast';
-
-import { organizationsClient } from './organizations.client';
-import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { schemaService } from '../../data/schema/schema.service';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { organizationsClient } from './organizations.client';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;

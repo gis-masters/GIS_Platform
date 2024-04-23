@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { Role } from '../../services/data/permissions/permissions.models';
-
-import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
+import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
 import { VectorTableActionsEdit } from './Edit/VectorTableActions-Edit';
 
 const cnVectorTableActions = cn('VectorTableActions');

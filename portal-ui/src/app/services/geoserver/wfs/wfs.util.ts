@@ -1,9 +1,11 @@
 import { isEqual } from 'lodash';
 import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
 import { Extent } from 'ol/extent';
 import { SimpleGeometry } from 'ol/geom';
-import { Coordinate } from 'ol/coordinate';
 
+import { PageOptions, SortOrder } from '../../models';
+import { wfsFeatureToFeature } from '../../util/open-layers.util';
 import {
   CoordinateEdited,
   GeometryType,
@@ -12,8 +14,6 @@ import {
   WfsMultiPolygonGeometry,
   WfsPointGeometry
 } from './wfs.models';
-import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import { PageOptions, SortOrder } from '../../models';
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdited> {
   if (type === GeometryType.POINT) {

@@ -1,7 +1,7 @@
 import React, { BaseHTMLAttributes, forwardRef } from 'react';
+import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Paper } from '@mui/material';
 
 import { ChildrenProps } from '../../../services/models';
 

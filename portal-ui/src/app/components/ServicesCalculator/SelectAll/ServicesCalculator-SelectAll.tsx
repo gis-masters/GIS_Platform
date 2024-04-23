@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { Checkbox } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { generateRandomId } from '../../../services/util/randomId';
 

@@ -2,14 +2,13 @@ import React, { Component, SyntheticEvent } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 
-import { getFiasAddressItems, getFiasOktmoItems } from '../../services/data/fias/fias.service';
 import { FiasValue } from '../../services/data/fias/fias.models';
-
+import { getFiasAddressItems, getFiasOktmoItems } from '../../services/data/fias/fias.service';
 import { FiasCode } from './Code/Fias-Code';
 
 const cnFias = cn('Fias');

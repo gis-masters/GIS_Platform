@@ -5,11 +5,11 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { LibraryNew, librarySchema } from '../../services/data/library/library.models';
-import { LibraryAddOutlined } from '../Icons/LibraryAddOutlined';
+import { createLibrary } from '../../services/data/library/library.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 import { LibraryAdd } from '../Icons/LibraryAdd';
-import { createLibrary } from '../../services/data/library/library.service';
+import { LibraryAddOutlined } from '../Icons/LibraryAddOutlined';
 
 const cnCreateLibrary = cn('CreateLibrary');
 

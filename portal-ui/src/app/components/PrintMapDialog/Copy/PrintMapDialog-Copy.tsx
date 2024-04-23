@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 import { getMapImage, ImageMime, prepareMapCopying } from '../../../services/map/map-print.service';
+import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 import { Toast } from '../../Toast/Toast';
-
 import { PrintMapDialogCopyButton } from '../CopyButton/PrintMapDialog-CopyButton';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Copy.scss';

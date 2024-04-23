@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { LineString, Polygon } from 'ol/geom';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { LineString, Polygon } from 'ol/geom';
 
-import { mapStore } from '../../stores/Map.store';
-import { printSettings } from '../../stores/PrintSettings.store';
 import { MeasureItem } from '../../services/map/map-measure.service';
 import {
   formatArea,
@@ -15,6 +13,8 @@ import {
   UnitsOfAreaMeasurement,
   UnitsOfLengthMeasurement
 } from '../../services/util/open-layers.util';
+import { mapStore } from '../../stores/Map.store';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!./MapMeasureTooltip.scss';

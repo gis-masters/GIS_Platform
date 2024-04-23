@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
-import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { Button } from '../../../app/components/Button/Button';
+import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 
 import '!style-loader!css-loader!sass-loader!./UpChoiceLayer.scss';

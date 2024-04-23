@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, MenuItem } from '@mui/material';
 import { InsertDriveFile, NoteAddOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
-import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
-import { ExplorerItemData, ExplorerItemType, emptyItem } from '../../Explorer/Explorer.models';
-import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
+import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
+import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { sleep } from '../../../services/util/sleep';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { sleep } from '../../../services/util/sleep';
+import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 
 const cnLibraryDocumentActionsCreateChild = cn('LibraryDocumentActions', 'CreateChild');
 const cnLibraryDocumentActionsCreateChildEditDialog = cn('LibraryDocumentActions', 'CreateChildEditDialog');

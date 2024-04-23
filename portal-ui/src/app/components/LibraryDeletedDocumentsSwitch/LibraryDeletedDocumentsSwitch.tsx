@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
 import { Library } from '../../services/data/library/library.models';
-import { DeletedDocuments } from '../Icons/DeletedDocuments';
+import { getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
 import { IconButton } from '../IconButton/IconButton';
+import { DeletedDocuments } from '../Icons/DeletedDocuments';
 
 const cnLibraryDeletedDocumentsSwitch = cn('LibraryDeletedDocumentsSwitch');
 

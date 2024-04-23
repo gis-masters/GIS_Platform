@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
 
-import { Button } from '../Button/Button';
 import {
   deleteFeatureTypeFromScratchDatastore,
   FeatureTypeHref,
   getFeatureTypesFromScratchDatastore
 } from '../../services/geoserver/geoserver-clean.service';
-import { Toast } from '../Toast/Toast';
 import { sleep } from '../../services/util/sleep';
+import { Button } from '../Button/Button';
+import { Toast } from '../Toast/Toast';
 
 @observer
 export class OrganizationClean extends Component {

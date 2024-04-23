@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
-import { ZoomOutWarning } from '../../Icons/ZoomOutWarning';
 import { ZoomInWarning } from '../../Icons/ZoomInWarning';
+import { ZoomOutWarning } from '../../Icons/ZoomOutWarning';
 
 import '!style-loader!css-loader!sass-loader!./Layer-ZoomWarning.scss';
 

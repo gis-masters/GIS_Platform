@@ -3,13 +3,12 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { allGroups } from '../../stores/AllGroups.store';
-import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { groupsService } from '../../services/auth/groups/groups.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
+import { allGroups } from '../../stores/AllGroups.store';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
-
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 import { OrgGroupsGroupActions } from './GroupActions/OrgGroups-GroupActions';
 import { OrgGroupsPermissionsCount } from './PermissionsCount/OrgGroups-PermissionsCount';

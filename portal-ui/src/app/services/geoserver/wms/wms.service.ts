@@ -1,15 +1,14 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
-import { getStyleSld } from '../styles/styles.service';
+import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 import { cqlBuild } from '../../util/cqlBuild';
 import { Mime } from '../../util/Mime';
-
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../feature.util';
+import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
+import { getStyleSld } from '../styles/styles.service';
+import { createImageFromBlob } from '../styles/styles.utils';
 import { wmsClient } from './wms.client';
 import { getXmlFilterFromCql } from './wms.utils';
-import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
-import { createImageFromBlob } from '../styles/styles.utils';
-import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
-import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../feature.util';
 
 export async function getMap(url: string): Promise<Blob> {
   const parsedUrl = new URL(url);

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Tooltip } from '@mui/material';
-import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
-import { ForwardToInbox } from '@mui/icons-material';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Tooltip } from '@mui/material';
+import { ForwardToInbox } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { Library } from '../../services/data/library/library.models';
 import { requestKpt } from '../../services/data/kpt/kpt.service';
+import { Library } from '../../services/data/library/library.models';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 

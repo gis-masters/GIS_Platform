@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { DownloadOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import FileSaver from 'file-saver';
+import { Coordinate } from 'ol/coordinate';
 import { v4 as uuid } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
-import FileSaver from 'file-saver';
 
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import {
   CoordinateEdited,
   GeometryType,
@@ -19,6 +18,7 @@ import {
   WfsMultiPolygonGeometry,
   WfsPointGeometry
 } from '../../services/geoserver/wfs/wfs.models';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 
 const cnXmlDownload = cn('XmlDownload');
 

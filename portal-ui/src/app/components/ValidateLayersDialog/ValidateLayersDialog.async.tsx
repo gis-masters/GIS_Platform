@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { sidebars } from '../../stores/Sidebars.store';
-import { currentProject } from '../../stores/CurrentProject.store';
 import { communicationService } from '../../services/communication.service';
 import { initValidation } from '../../services/data/validation/validation.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { LayersList } from '../LayersList/LayersList';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { Button } from '../Button/Button';
+import { LayersList } from '../LayersList/LayersList';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./ValidateLayersDialog.scss';

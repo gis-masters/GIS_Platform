@@ -1,13 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 
-import { GeoUtil } from '../../services/util/GeoUtil';
 import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
-import { PropertiesComparatorService } from '../../services/properties-comparator.service';
 import { LayerAttribute } from '../../services/geoserver/import/import.models';
 import { ImportDataHolderService } from '../../services/geoserver/import/import-data-holder.service';
 import { MatchingPair } from '../../services/geoserver/import/taskImport';
-import { ImportTargetType, NOT_IMPORT, AS_IS } from '../../services/models';
+import { AS_IS, ImportTargetType, NOT_IMPORT } from '../../services/models';
+import { PropertiesComparatorService } from '../../services/properties-comparator.service';
+import { GeoUtil } from '../../services/util/GeoUtil';
 
 @Component({
   selector: 'crg-mapping-pair',

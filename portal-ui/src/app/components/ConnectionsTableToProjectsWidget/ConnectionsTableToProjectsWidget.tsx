@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { createLayer } from '../../services/gis/layers/layers.service';
 import { FileConnection } from '../../services/data/files/files.models';
-import { buildComplexName } from '../../services/geoserver/feature.util';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { vectorLayerDefaults } from '../../services/gis/layers/layers.utils';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
+import { buildComplexName } from '../../services/geoserver/feature.util';
+import { createLayer } from '../../services/gis/layers/layers.service';
+import { vectorLayerDefaults } from '../../services/gis/layers/layers.utils';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsTableToProjectsWidget = cn('ConnectionsTableToProjectsWidget');

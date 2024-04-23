@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
 import { LoginForm } from '../LoginForm/LoginForm';
-import { createRoot, Root } from 'react-dom/client';
 
 const LoginFormWithRegistry = withRegistry(registry)(LoginForm);
 

@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
-import { removeFieldFilter } from '../../../services/util/filterObjects';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
-import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
+import { removeFieldFilter } from '../../../services/util/filterObjects';
 import { mapStore } from '../../../stores/Map.store';
+import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
 

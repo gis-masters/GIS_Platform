@@ -2,18 +2,17 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { Favicon } from '../../../app/components/Favicon/Favicon';
 import { Loading } from '../../../app/components/Loading/Loading';
-
+import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { UpActions } from '../UpActions/UpActions';
 import { UpAuth } from '../UpAuth/UpAuth';
 import { UpHeader } from '../UpHeader/UpHeader';
-import { UpMain } from '../UpMain/UpMain';
-import { UpActions } from '../UpActions/UpActions';
 import { UpLayersList } from '../UpLayersList/UpLayersList';
-import { UpPhotoList } from '../UpPhotoList/UpPhotoList';
 import { UpLoader } from '../UpLoader/UpLoader';
 import { UpLoadResult } from '../UpLoadResult/UpLoadResult';
+import { UpMain } from '../UpMain/UpMain';
+import { UpPhotoList } from '../UpPhotoList/UpPhotoList';
 
 import '!style-loader!css-loader!sass-loader!./PhotoUploader.scss';
 

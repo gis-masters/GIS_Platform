@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
 import { User } from '../../../app/components/User/User';
 import { currentUser } from '../../../app/stores/CurrentUser.store';

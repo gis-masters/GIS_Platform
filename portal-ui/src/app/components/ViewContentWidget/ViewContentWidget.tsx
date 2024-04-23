@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Paper } from '@mui/material';
-import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
+import { RegistryConsumer } from '@bem-react/di';
 
 import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';

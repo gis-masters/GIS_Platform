@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, MenuItem } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { usersService } from '../../../services/auth/users/users.service';
 import { ContentType, Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
-import { usersService } from '../../../services/auth/users/users.service';
-import { createTask } from '../../../services/data/task/task.service';
 import { Task } from '../../../services/data/task/task.models';
+import { createTask } from '../../../services/data/task/task.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 const cnTasksJournalCreate = cn('TasksJournal', 'Create');

@@ -5,9 +5,8 @@ import { cn } from '@bem-react/classname';
 
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { Link } from '../../Link/Link';
-
-import { ProjectCardName } from '../Name/ProjectCard-Name';
 import { ProjectCardFooter } from '../Footer/ProjectCard-Footer';
+import { ProjectCardName } from '../Name/ProjectCard-Name';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Card.scss';
 

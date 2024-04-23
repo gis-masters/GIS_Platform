@@ -1,23 +1,23 @@
 import { action } from 'mobx';
 
-import { route } from '../../stores/Route.store';
-import { mapStore } from '../../stores/Map.store';
+import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
+import { route } from '../../stores/Route.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
-import { mapSelectionService } from './map-selection.service';
+import { http } from '../api/http.service';
+import { getWfsUrl } from '../api/server-urls.service';
+import { applyView } from '../data/schema/schema.utils';
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/feature.util';
 import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../geoserver/wfs/wfs.service';
-import { getWfsUrl } from '../api/server-urls.service';
-import { mapService } from './map.service';
-import { services } from '../services';
-import { http } from '../api/http.service';
-import { Mime } from '../util/Mime';
-import { Toast } from '../../components/Toast/Toast';
 import { CrgLayer } from '../gis/layers/layers.models';
-import { projectsService } from '../gis/projects/projects.service';
-import { applyView } from '../data/schema/schema.utils';
 import { getLayerSchema } from '../gis/layers/layers.service';
-import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/feature.util';
+import { projectsService } from '../gis/projects/projects.service';
+import { services } from '../services';
+import { Mime } from '../util/Mime';
+import { mapService } from './map.service';
+import { mapSelectionService } from './map-selection.service';
 
 export interface FeatureError {
   id: string;

@@ -4,9 +4,8 @@ import { cn } from '@bem-react/classname';
 import { DroppableProvidedProps } from 'react-beautiful-dnd';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
-
-import { LayersTreeItemContainer } from '../ItemContainer/LayersTree-ItemContainer';
 import { LayersTreeItem } from '../Item/LayersTree-Item';
+import { LayersTreeItemContainer } from '../ItemContainer/LayersTree-ItemContainer';
 
 const cnLayersTreeInner = cn('LayersTree', 'Inner');
 

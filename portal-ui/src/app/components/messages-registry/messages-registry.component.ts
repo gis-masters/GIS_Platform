@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
-import { route } from '../../stores/Route.store';
 import { registry } from '../../services/di-registry';
+import { route } from '../../stores/Route.store';
 import { MessagesRegistry } from '../MessagesRegistry/MessagesRegistry';
 
 const MessagesRegistryWithRegistry = withRegistry(registry)(MessagesRegistry);

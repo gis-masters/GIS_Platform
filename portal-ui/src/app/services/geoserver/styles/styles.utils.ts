@@ -1,12 +1,11 @@
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
-import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
-import { GeometryType } from '../wfs/wfs.models';
 import { Mime } from '../../util/Mime';
-
-import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
+import { GeometryType } from '../wfs/wfs.models';
+import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
 import { CustomSld } from './CustomSld/CustomSld';
+import { CustomStyleDescription, FillGraphicType, LineRule, PointRule, PolygonRule } from './styles.models';
 
 const stroke = 'SvgParameter[name="stroke"]';
 const strokeWidth = 'SvgParameter[name="stroke-width"]';

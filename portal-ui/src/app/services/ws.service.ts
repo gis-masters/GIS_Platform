@@ -1,12 +1,12 @@
+import { CompatClient, Stomp } from '@stomp/stompjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { publishReplay, refCount } from 'rxjs/operators';
-import { Stomp, CompatClient } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-import { ProcessType, WsImportModel } from './data/processes/processes.models';
-import { generateRandomId } from './util/randomId';
-import { BugObject } from './data/validation/validation.models';
 import { getWsEndpointUrl } from './api/server-urls.service';
+import { ProcessType, WsImportModel } from './data/processes/processes.models';
+import { BugObject } from './data/validation/validation.models';
+import { generateRandomId } from './util/randomId';
 
 export interface IWsMessage<T = ExportWsMsg | ValidationWsMsg | WsImportModel> {
   type: ProcessType;

@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
 import { UploadedFile } from '../../services/photoUploader.models';
-import { UpPreviewerItem } from './Item/UpPreviewer-Item';
 import { UpPreviewerAdditionalCounter } from './AdditionalCounter/UpPreviewer-AdditionalCounter';
+import { UpPreviewerItem } from './Item/UpPreviewer-Item';
 
 import '!style-loader!css-loader!sass-loader!./UpPreviewer.scss';
 import '!style-loader!css-loader!sass-loader!./List/UpPreviewer-List.scss';

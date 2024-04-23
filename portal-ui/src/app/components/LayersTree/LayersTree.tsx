@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { DragDropContext, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { DragDropContext, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd';
 
-import { route, Pages } from '../../stores/Route.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
-import { projectsService } from '../../services/gis/projects/projects.service';
 import { TreeItem } from '../../services/gis/projects/projects.models';
-
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { Pages, route } from '../../stores/Route.store';
 import { LayersTreeInner } from './Inner/LayersTree-Inner';
 
 const cnLayersTree = cn('LayersTree');

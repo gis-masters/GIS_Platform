@@ -2,10 +2,10 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 import nl2br from 'react-nl2br';
 
-import { FormViewErrors } from '../ViewErrors/ViewErrors-ViewErrors';
-import { FormViewValue } from '../ViewValue/Form-ViewValue';
 import { FormControlProps } from '../Control/Form-Control';
 import { FormSetLabel } from '../SetLabel/Form-SetLabel';
+import { FormViewErrors } from '../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewValue } from '../ViewValue/Form-ViewValue';
 
 import '!style-loader!css-loader!sass-loader!./Form-View.scss';
 

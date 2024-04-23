@@ -1,8 +1,7 @@
 import { communicationService } from '../../communication.service';
 import { PageOptions } from '../../models';
-
-import { Basemap } from './basemaps.models';
 import { basemapsClient } from './basemaps.client';
+import { Basemap } from './basemaps.models';
 
 export async function getBasemap(id: number): Promise<Basemap> {
   return await basemapsClient.getBasemap(id);

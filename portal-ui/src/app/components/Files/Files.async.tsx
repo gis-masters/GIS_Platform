@@ -1,44 +1,43 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, computed, observable, makeObservable } from 'mobx';
 import { AddCircleOutline } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
-import { v4 as uuid } from 'uuid';
 import { pluralize } from 'numeralize-ru';
+import { v4 as uuid } from 'uuid';
 
 import { FileInfo } from '../../services/data/files/files.models';
+import { createFile } from '../../services/data/files/files.service';
 import {
+  getCompoundMidTypeFiles,
+  getCompoundShapeTypeFiles,
+  getCompoundTabTypeFiles,
   getFileBaseName,
   isFilePartOfCompoundMidTypeFile,
   isFilePartOfCompoundShapeTypeFile,
   isFilePartOfCompoundTabTypeFile,
-  isPreviewAllowed,
-  getCompoundMidTypeFiles,
-  getCompoundShapeTypeFiles,
-  getCompoundTabTypeFiles,
+  isFilePartOfCompoundTypeFiles,
   isFilePartOfOptionalCompoundShapeTypeFile,
   isFilePartOfOptionalCompoundTabTypeFile,
-  isFilePartOfCompoundTypeFiles
+  isPreviewAllowed
 } from '../../services/data/files/files.util';
-import { PropertySchemaFile } from '../../services/data/schema/schema.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
-import { createFile } from '../../services/data/files/files.service';
-import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
-import { currentUser } from '../../stores/CurrentUser.store';
+import { PropertySchemaFile } from '../../services/data/schema/schema.models';
 import { environment } from '../../services/environment';
-import { LookupList } from '../Lookup/List/Lookup-List';
-import { LookupAdd } from '../Lookup/Add/Lookup-Add';
-import { FileInput } from '../FileInput/FileInput';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { sleep } from '../../services/util/sleep';
-import { Lookup } from '../Lookup/Lookup';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Carousel, CarouselImageInfo } from '../Carousel/Carousel';
-
+import { FileInput } from '../FileInput/FileInput';
+import { LookupAdd } from '../Lookup/Add/Lookup-Add';
+import { LookupList } from '../Lookup/List/Lookup-List';
+import { Lookup } from '../Lookup/Lookup';
+import { LookupStatusType } from '../Lookup/Status/Lookup-Status';
+import { Toast } from '../Toast/Toast';
 import { FilesCompoundItem } from './CompoundItem/Files-CompoundItem';
 import { FilesItem } from './Item/Files-Item';
-import { Toast } from '../Toast/Toast';
 
 const cnFiles = cn('Files');
 

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
-import { action, computed, observable, makeObservable } from 'mobx';
 import {
   Dialog,
   DialogActions,
@@ -14,23 +12,25 @@ import {
   Select,
   SelectChangeEvent
 } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { Form } from '../Form/Form';
-import { Button } from '../Button/Button';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
-import { PageOptions } from '../../services/models';
-import { LayersList } from '../LayersList/LayersList';
-import { sidebars } from '../../stores/Sidebars.store';
 import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
-import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { ActionsRight } from '../ActionsRight/ActionsRight';
-import { exportVectorTableAsGML } from '../../services/data/export/export.service';
 import { ExportResourceModel } from '../../services/data/export/export.models';
+import { exportVectorTableAsGML } from '../../services/data/export/export.service';
 import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { PageOptions } from '../../services/models';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
+import { Button } from '../Button/Button';
+import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
+import { Form } from '../Form/Form';
+import { LayersList } from '../LayersList/LayersList';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
 

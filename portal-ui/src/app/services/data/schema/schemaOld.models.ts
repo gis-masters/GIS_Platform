@@ -1,7 +1,7 @@
 import { ComponentType, ReactNode } from 'react';
 
-import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FormControlProps } from '../../../components/Form/Control/Form-Control';
+import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { Relation } from './schema.models';
 
 // Править в соответствии с

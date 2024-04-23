@@ -1,10 +1,9 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../../stores/Map.store';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-
+import { mapStore } from '../../../stores/Map.store';
 import { AttributesCounterItem } from '../CounterItem/Attributes-CounterItem';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Counter.scss';

@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
 
+import { FormProps } from '../components/Form/Form';
 import { UtilityDialogInfo, utilityDialogsStore } from '../stores/UtilityDialogs.store';
-import { UtilityDialogCloseEventDetail, communicationService } from './communication.service';
+import { communicationService, UtilityDialogCloseEventDetail } from './communication.service';
 import { SimpleSchema } from './data/schema/schema.models';
 import { sleep } from './util/sleep';
-import { FormProps } from '../components/Form/Form';
 
 // диалог с сообщением, аналог alert
 export async function achtung({

@@ -1,9 +1,9 @@
-import { HOC, compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
-import { ActionsItemBase, ActionsItemProps } from './Actions-Item.base';
 import { asButton } from './_as/Actions-Item_as_button';
 import { asIconButton } from './_as/Actions-Item_as_iconButton';
 import { asMenu } from './_as/Actions-Item_as_menu';
+import { ActionsItemBase, ActionsItemProps } from './Actions-Item.base';
 
 export const ActionsItem = compose(
   asButton as HOC<ActionsItemProps>,

@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
-import { currentUser } from '../../stores/CurrentUser.store';
 import { Schema } from '../../services/data/schema/schema.models';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Actions } from '../Actions/Actions.composed';
-
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { SchemaActionsClose } from './Close/SchemaActions-Close';
 import { SchemaActionsEdit } from './Edit/SchemaActions-Edit';
 import { SchemaActionsPreview } from './Preview/SchemaActions-Preview';
-import { SchemaActionsClose } from './Close/SchemaActions-Close';
 
 export const cnSchemaActions = cn('SchemaActions');
 

@@ -3,17 +3,16 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getLibrary } from '../../../../services/data/library/library.service';
-import { Library } from '../../../../services/data/library/library.models';
-import { Role } from '../../../../services/data/permissions/permissions.models';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { getId } from '../../Adapter/Explorer-Adapter';
 import { libraryClient } from '../../../../services/data/library/library.client';
+import { Library } from '../../../../services/data/library/library.models';
+import { getLibrary } from '../../../../services/data/library/library.service';
+import { Role } from '../../../../services/data/permissions/permissions.models';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { assertExplorerItemDataTypeLibrary } from '../../Adapter/_type/Explorer-Adapter_type_library';
+import { getId } from '../../Adapter/Explorer-Adapter';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {

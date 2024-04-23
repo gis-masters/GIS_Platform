@@ -1,21 +1,21 @@
-import { isEmpty } from 'validate.js';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { isEmpty } from 'validate.js';
 
 import { Toast } from '../../components/Toast/Toast';
-import {
-  OldPropertySchema,
-  PropertyEnumeration,
-  ValueType,
-  OldPropertySchemaChoice,
-  OldPropertySchemaStringText,
-  OldPropertySchemaInt,
-  OldPropertySchemaDouble
-} from '../data/schema/schemaOld.models';
-import { services } from '../services';
 import { FiasValue } from '../data/fias/fias.models';
-import { validateFieldValue } from './form/formValidation.utils';
 import { PropertyOption } from '../data/schema/schema.models';
 import { convertOldToNewProperties } from '../data/schema/schema.utils';
+import {
+  OldPropertySchema,
+  OldPropertySchemaChoice,
+  OldPropertySchemaDouble,
+  OldPropertySchemaInt,
+  OldPropertySchemaStringText,
+  PropertyEnumeration,
+  ValueType
+} from '../data/schema/schemaOld.models';
+import { services } from '../services';
+import { validateFieldValue } from './form/formValidation.utils';
 
 export interface ValidationError {
   attribute: string;

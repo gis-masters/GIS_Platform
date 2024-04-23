@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
+import { Schema } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { datasetRootUrlItems } from '../DataManagement/DataManagement.utils';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { Schema } from '../../services/data/schema/schema.models';
 
 import '!style-loader!css-loader!sass-loader!./FeatureView.scss';
 

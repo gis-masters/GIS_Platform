@@ -1,16 +1,16 @@
 import React, { FC, Fragment } from 'react';
 
-import { PointSymbolizer } from '../../PointSymbolizer/PointSymbolizer';
-import { SvgParameter } from '../../SvgParameter/SvgParameter';
-import { Rule } from '../../Rule/Rule';
+import { ElseFilter } from '../../ElseFilter/ElseFilter';
+import { Fill } from '../../Fill/Fill';
 import { Graphic } from '../../Graphic/Graphic';
 import { Mark } from '../../Mark/Mark';
-import { WellKnownName } from '../../WellKnownName/WellKnownName';
-import { Fill } from '../../Fill/Fill';
+import { PointSymbolizer } from '../../PointSymbolizer/PointSymbolizer';
+import { Rule } from '../../Rule/Rule';
 import { Size } from '../../Size/Size';
-import { CustomRuleProps } from '../CustomRule';
-import { ElseFilter } from '../../ElseFilter/ElseFilter';
 import { Stroke } from '../../Stroke/Stroke';
+import { SvgParameter } from '../../SvgParameter/SvgParameter';
+import { WellKnownName } from '../../WellKnownName/WellKnownName';
+import { CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'point') {

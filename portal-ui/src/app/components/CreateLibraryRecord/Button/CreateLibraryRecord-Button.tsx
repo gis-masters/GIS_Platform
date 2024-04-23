@@ -4,7 +4,6 @@ import { cn } from '@bem-react/classname';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { ContentType } from '../../../services/data/schema/schema.models';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
-
 import { CreateLibraryRecordItem } from '../Item/CreateLibraryRecord-Item.composed';
 
 const cnCreateLibraryRecordButton = cn('CreateLibraryRecord', 'Button');

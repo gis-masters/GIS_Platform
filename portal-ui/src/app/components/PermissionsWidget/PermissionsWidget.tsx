@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton } from '@mui/material';
 import { Edit, EditOutlined, Group, Person } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { allUsers } from '../../stores/AllUsers.store';
-import { allGroups } from '../../stores/AllGroups.store';
+import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { groupsService } from '../../services/auth/groups/groups.service';
+import { CrgUser } from '../../services/auth/users/users.models';
+import { usersService } from '../../services/auth/users/users.service';
+import { communicationService } from '../../services/communication.service';
 import {
   PrincipalType,
   Role,
@@ -15,16 +18,13 @@ import {
   roles,
   rolesTitles
 } from '../../services/data/permissions/permissions.models';
-import { getProjectPermissions, getAllPermissions } from '../../services/data/permissions/permissions.service';
-import { communicationService } from '../../services/communication.service';
-import { groupsService } from '../../services/auth/groups/groups.service';
-import { CrgGroup } from '../../services/auth/groups/groups.models';
-import { usersService } from '../../services/auth/users/users.service';
-import { CrgUser } from '../../services/auth/users/users.models';
+import { getAllPermissions, getProjectPermissions } from '../../services/data/permissions/permissions.service';
+import { allGroups } from '../../stores/AllGroups.store';
+import { allUsers } from '../../stores/AllUsers.store';
+import { Button } from '../Button/Button';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
-import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsWidget.scss';

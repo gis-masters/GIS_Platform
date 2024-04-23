@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ArchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { TaskJournalHistoryDialog } from '../../TaskJournalHistoryDialog/TaskJournalHistoryDialog';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { Task } from '../../../services/data/task/task.models';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { TaskJournalHistoryDialog } from '../../TaskJournalHistoryDialog/TaskJournalHistoryDialog';
 
 const cnTasksJournalActionsHistory = cn('TasksJournalActions', 'History');
 

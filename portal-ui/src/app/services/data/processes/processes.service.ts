@@ -1,7 +1,6 @@
 import { sleep } from '../../util/sleep';
-
-import { Process, ProcessableModel, ProcessResponse, ProcessStatus } from './processes.models';
 import { processesClient } from './processes.client';
+import { Process, ProcessableModel, ProcessResponse, ProcessStatus } from './processes.models';
 
 export async function getProcess(id: number): Promise<Process> {
   return await processesClient.getProcess(id);

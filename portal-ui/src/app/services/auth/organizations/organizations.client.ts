@@ -1,8 +1,8 @@
 import { boundClass } from 'autobind-decorator';
 
+import { OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { OrgSettings } from '../../../stores/OrganizationSettings.store';
 
 @boundClass
 class OrganizationsClient extends Client {

@@ -2,12 +2,12 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
-import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
 import { downloadExportResult } from '../../services/data/export/export.service';
+import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
 import { eventService, IEvent } from '../../services/event.service';
-import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 import { saveAsBlob } from '../../services/util/FileSaver';
 import { Mime } from '../../services/util/Mime';
+import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
 
 @Component({
   selector: 'crg-progress-item',

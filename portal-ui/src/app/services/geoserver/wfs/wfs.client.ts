@@ -1,11 +1,10 @@
 import { boundClass } from 'autobind-decorator';
 
-import { getWfsUrl } from '../../api/server-urls.service';
 import { http } from '../../api/http.service';
+import { getWfsUrl } from '../../api/server-urls.service';
 import { Mime } from '../../util/Mime';
-
-import { WfsFeatureCollection } from './wfs.models';
 import { GeoserverClient } from '../GeoserverClient';
+import { WfsFeatureCollection } from './wfs.models';
 
 @boundClass
 class WfsClient extends GeoserverClient {

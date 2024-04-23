@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Delete, DeleteOutline } from '@mui/icons-material';
 import {
   Dialog,
   DialogActions,
@@ -11,14 +10,15 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { pluralize } from 'numeralize-ru';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
+import { pluralize } from 'numeralize-ru';
 
-import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
-import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { Basemap } from '../../../services/data/basemaps/basemaps.models';
+import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
+import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { Button } from '../../Button/Button';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');

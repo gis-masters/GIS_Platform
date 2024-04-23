@@ -2,13 +2,13 @@ import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
 import { FileInfo } from '../../data/files/files.models';
-import { knownRegex } from '../../regexp.service';
-import { PropertyType, PropertySchema, ValueFormula } from '../../data/schema/schema.models';
+import { PropertySchema, PropertyType, ValueFormula } from '../../data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../data/schema/schema.utils';
+import { knownRegex } from '../../regexp.service';
 import { notFalsyFilter } from '../NotFalsyFilter';
+import { isRecordStringUnknown } from '../typeGuards/isRecordStringUnknown';
 import { getMultipleChoiceValue } from './choiceMultiple.util';
 import { getUrlSubFormSchema, parseUrlValue } from './fieldUrl';
-import { isRecordStringUnknown } from '../typeGuards/isRecordStringUnknown';
 
 const messages = {
   required: 'Обязательное поле ',

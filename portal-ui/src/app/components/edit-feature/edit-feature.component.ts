@@ -1,17 +1,17 @@
-import moment from 'moment';
-import { Subject } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
 import { cloneDeep, isNumber } from 'lodash';
+import moment from 'moment';
+import { Coordinate } from 'ol/coordinate';
+import { Subject } from 'rxjs';
+import { filter, first, takeUntil } from 'rxjs/operators';
 
-import { mapStore } from '../../stores/Map.store';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
-import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { communicationService } from '../../services/communication.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { schemaService } from '../../services/data/schema/schema.service';
 import {
   applyView,
   applyViewOld,
@@ -21,34 +21,34 @@ import {
   convertOldToNewSchema,
   getFieldRelations
 } from '../../services/data/schema/schema.utils';
-import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
-import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
-import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
-import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
-import { mapSelectionService } from '../../services/map/map-selection.service';
-import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
-import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/util/form/formValidation.utils';
+import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
+import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { getFeatureProjection } from '../../services/geoserver/projections.service';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { CrgVectorLayer, CrgVectorableLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
-import { schemaService } from '../../services/data/schema/schema.service';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { CrgVectorableLayer, CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
-import { formatDate } from '../../services/util/date.util';
-import { BaseEdit } from '../edit-bug-object/base-edit';
-import { fromMobx } from '../../services/util/fromMobx';
+import { mapSelectionService } from '../../services/map/map-selection.service';
 import { services } from '../../services/services';
+import { formatDate } from '../../services/util/date.util';
+import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
+import { fromMobx } from '../../services/util/fromMobx';
 import { sleep } from '../../services/util/sleep';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { mapStore } from '../../stores/Map.store';
+import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
+import { BaseEdit } from '../edit-bug-object/base-edit';
+import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { Toast } from '../Toast/Toast';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
 
 export interface Properties {
   [key: string]: unknown;

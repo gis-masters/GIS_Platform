@@ -1,4 +1,4 @@
-import { observable, computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 

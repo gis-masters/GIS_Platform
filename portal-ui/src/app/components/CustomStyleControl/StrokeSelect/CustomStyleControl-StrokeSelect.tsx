@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
-import { LineRule, customStyleStrokes } from '../../../services/geoserver/styles/styles.models';
+import { customStyleStrokes, LineRule } from '../../../services/geoserver/styles/styles.models';
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
-
-import { CustomStyleControlStrokeTile } from '../StrokeTile/CustomStyleControl-StrokeTile';
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
+import { CustomStyleControlStrokeTile } from '../StrokeTile/CustomStyleControl-StrokeTile';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 
 const cnCustomStyleControlStrokeSelect = cn('CustomStyleControl', 'StrokeSelect');

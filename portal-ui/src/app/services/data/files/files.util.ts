@@ -1,15 +1,13 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
-
 import { LibraryRecord } from '../library/library.models';
-
 import {
   allCompoundFilesTypes,
   allShapeFilesTypes,
   allTabFilesTypes,
-  FileInfo,
   CompoundFileTypes,
+  FileInfo,
   midMifRequiredFilesTypes,
   optionalShapeFilesTypes,
   optionalTabFilesTypes,

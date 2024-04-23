@@ -1,24 +1,24 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MatSort } from '@angular/material/sort';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import { of, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import { merge } from 'rxjs/internal/observable/merge';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { startWith } from 'rxjs/internal/operators/startWith';
+import { MatSort } from '@angular/material/sort';
 import { NGXLogger } from 'ngx-logger';
+import { of, Subject } from 'rxjs';
+import { merge } from 'rxjs/internal/observable/merge';
+import { startWith } from 'rxjs/internal/operators/startWith';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../../services/communication.service';
+import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
+import { ProcessStatus } from '../../../services/data/processes/processes.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
+import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
+import { getValidationResults } from '../../../services/data/validation/validation.service';
 import { getProjection } from '../../../services/geoserver/projections.service';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
-import { mapService } from '../../../services/map/map.service';
-import { getValidationResults } from '../../../services/data/validation/validation.service';
-import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
-import { ProcessStatus } from '../../../services/data/processes/processes.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
+import { mapService } from '../../../services/map/map.service';
 
 @Component({
   selector: 'crg-bugs-table',

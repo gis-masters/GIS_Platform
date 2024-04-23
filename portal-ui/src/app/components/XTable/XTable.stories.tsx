@@ -2,14 +2,13 @@ import React, { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
 import { PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
-import { sortObjects, SortParams } from '../../services/util/sortObjects';
-import { filterObjects, prepareLike } from '../../services/util/filterObjects';
 import { PageOptions, SortOrder } from '../../services/models';
+import { filterObjects, prepareLike } from '../../services/util/filterObjects';
 import { sleep } from '../../services/util/sleep';
-
+import { sortObjects, SortParams } from '../../services/util/sortObjects';
+import { smallData, testDataForTables } from './testDataForTables';
 import { XTable, XTableProps } from './XTable';
 import { XTableColumn } from './XTable.models';
-import { smallData, testDataForTables } from './testDataForTables';
 
 import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
 

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
+import { IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
+import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Close } from '@mui/icons-material';
-import { IReactionDisposer, reaction } from 'mobx';
 
-import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
-import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
 import { communicationService } from '../../services/communication.service';
-import { SearchInfo } from '../SearchField/SearchField';
+import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
-import { mapStore } from '../../stores/Map.store';
+import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
+import { SearchInfo } from '../SearchField/SearchField';
+import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListSidebarFeatures.scss';
 

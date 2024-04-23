@@ -3,21 +3,20 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
 import { Role } from '../../../../services/data/permissions/permissions.models';
+import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { assertExplorerItemDataTypeTable } from '../../Adapter/_type/Explorer-Adapter_type_table';
+import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { getId } from '../../Adapter/Explorer-Adapter';
-import { assertExplorerItemDataTypeTable } from '../../Adapter/_type/Explorer-Adapter_type_table';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {

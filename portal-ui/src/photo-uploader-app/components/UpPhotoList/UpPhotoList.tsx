@@ -1,13 +1,13 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
-import { Add } from '@mui/icons-material';
 import { Fab, List } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { UploadedFileStatus } from '../../services/photoUploader.models';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
-import { UpAddFiles } from '../UpAddFiles/UpAddFiles';
 import { UpActionsRemoveItemButton } from '../UpActions/RemoveItemButton/UpActions-RemoveItemButton';
+import { UpAddFiles } from '../UpAddFiles/UpAddFiles';
 import { UpLoadItem } from '../UpLoadItem/UpLoadItem';
 
 import '!style-loader!css-loader!sass-loader!./UpPhotoList.scss';

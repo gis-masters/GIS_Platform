@@ -2,40 +2,39 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { AxiosError } from 'axios';
 
+import { Emitter } from '../../../services/common/Emitter';
 import { DataChangeEventDetail } from '../../../services/communication.service';
 import { PageOptions, SortOrder } from '../../../services/models';
-import { Emitter } from '../../../services/common/Emitter';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
-
-import { ExplorerStore } from '../Explorer.store';
 import { Adapter, ExplorerItemData, ExplorerItemDataAllTypes, ExplorerItemType, SortItem } from '../Explorer.models';
-import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
+import { ExplorerService } from '../Explorer.service';
+import { ExplorerStore } from '../Explorer.store';
+import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
+import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';
+import { ExplorerAdapterTypeDatasetRoot } from './_type/Explorer-Adapter_type_datasetRoot';
 import { ExplorerAdapterTypeDocument } from './_type/Explorer-Adapter_type_document';
+import { ExplorerAdapterTypeDocumentVersion } from './_type/Explorer-Adapter_type_documentVersion';
+import { ExplorerAdapterTypeDocumentVersionsRoot } from './_type/Explorer-Adapter_type_documentVersionsRoot';
+import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
 import { ExplorerAdapterTypeFolder } from './_type/Explorer-Adapter_type_folder';
 import { ExplorerAdapterTypeLibrary } from './_type/Explorer-Adapter_type_library';
 import { ExplorerAdapterTypeLibraryRoot } from './_type/Explorer-Adapter_type_libraryRoot';
-import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
-import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
+import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
+import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistry';
 import { ExplorerAdapterTypeNone } from './_type/Explorer-Adapter_type_none';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
-import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
-import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
+import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
 import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
 import { ExplorerAdapterTypeSchemasRoot } from './_type/Explorer-Adapter_type_schemasRoot';
-import { ExplorerAdapterTypeFile } from './_type/Explorer-Adapter_type_file';
-import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adapter_type_messagesRegistriesRoot';
-import { ExplorerAdapterTypeDocumentVersionsRoot } from './_type/Explorer-Adapter_type_documentVersionsRoot';
-import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistry';
-import { ExplorerAdapterTypeDocumentVersion } from './_type/Explorer-Adapter_type_documentVersion';
-import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
-import { ExplorerAdapterTypeTaskHistoryRoot } from './_type/Explorer-Adapter_type_taskHistoryRoot';
-import { ExplorerAdapterTypeTaskHistory } from './_type/Explorer-Adapter_type_taskHistory';
-import { ExplorerAdapterTypeSearchResultRoot } from './_type/Explorer-Adapter_type_searchResultRoot';
 import { ExplorerAdapterTypeSearchItem } from './_type/Explorer-Adapter_type_searchItem';
-import { ExplorerService } from '../Explorer.service';
+import { ExplorerAdapterTypeSearchResultRoot } from './_type/Explorer-Adapter_type_searchResultRoot';
+import { ExplorerAdapterTypeTable } from './_type/Explorer-Adapter_type_table';
+import { ExplorerAdapterTypeTaskHistory } from './_type/Explorer-Adapter_type_taskHistory';
+import { ExplorerAdapterTypeTaskHistoryRoot } from './_type/Explorer-Adapter_type_taskHistoryRoot';
+import { ExplorerAdapterTypeTasksRoot } from './_type/Explorer-Adapter_type_taskRoot';
 
 const adapters: Record<keyof ExplorerItemDataAllTypes, Adapter> = {
   [ExplorerItemType.NONE]: ExplorerAdapterTypeNone,

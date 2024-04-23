@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { LinearProgress } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { mapStore } from '../../../stores/Map.store';
 import { Pages, route } from '../../../stores/Route.store';

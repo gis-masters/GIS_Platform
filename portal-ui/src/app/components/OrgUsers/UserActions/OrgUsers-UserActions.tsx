@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgUserExtended } from '../OrgUsers';
 import { OrgActions } from '../../OrgActions/OrgActions';
+import { CrgUserExtended } from '../OrgUsers';
 
 const cnOrgUsersUserActions = cn('OrgUsers', 'UserActions');
 

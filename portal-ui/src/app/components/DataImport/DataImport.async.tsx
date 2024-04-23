@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { observable, computed, action, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { services } from '../../services/services';
+import { schemaService } from '../../services/data/schema/schema.service';
 import {
+  checkImportStatus,
   fetchCurrentImport,
   initScratchImport,
-  checkImportStatus,
   updateProgress
 } from '../../services/geoserver/import/import.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { schemaService } from '../../services/data/schema/schema.service';
-import { route } from '../../stores/Route.store';
+import { services } from '../../services/services';
 import { currentImport } from '../../stores/CurrentImport.store';
+import { route } from '../../stores/Route.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
-import { Notice } from '../Notice/Notice';
 import { NoticeList } from '../Notice/List/Notice-List';
 import { NoticeListItem } from '../Notice/ListItem/Notice-ListItem';
-
-import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
-import { DataImportNotifications } from './Notifications/DataImport-Notifications';
-import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
+import { Notice } from '../Notice/Notice';
 import { DataImportDialog } from './Dialog/DataImport-Dialog';
+import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
+import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
+import { DataImportNotifications } from './Notifications/DataImport-Notifications';
 
 import '!style-loader!css-loader!sass-loader!./DataImport.scss';
 

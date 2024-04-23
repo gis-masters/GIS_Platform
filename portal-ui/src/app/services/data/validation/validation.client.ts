@@ -6,8 +6,7 @@ import { Mime } from '../../util/Mime';
 import { ValidationWsMsg } from '../../ws.service';
 import { ExportResourceModel } from '../export/export.models';
 import { Process } from '../processes/processes.models';
-
-import { ValidationShortInfo, ValidationResultsResponse, ValidationPayload } from './validation.models';
+import { ValidationPayload, ValidationResultsResponse, ValidationShortInfo } from './validation.models';
 
 const headers = { 'Content-Type': Mime.JSON };
 

@@ -1,8 +1,8 @@
 import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { KeyboardArrowDown } from '@mui/icons-material';
 import { Menu } from '@mui/material';
+import { KeyboardArrowDown } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { Button, ButtonProps } from '../Button/Button';

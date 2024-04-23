@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { getExportValidationReport } from '../../services/data/validation/validation.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { sidebars } from '../../stores/Sidebars.store';
-import { LayersList } from '../LayersList/LayersList';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
+import { LayersList } from '../LayersList/LayersList';
 
 const cnExportValidationReportDialog = cn('ExportValidationReportDialog');
 

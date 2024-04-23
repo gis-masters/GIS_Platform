@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { TextField } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { Search } from '@mui/icons-material';
 import { action, makeObservable, observable, reaction } from 'mobx';
+import { observer } from 'mobx-react';
+import { TextField } from '@mui/material';
+import { Search } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { SearchResultDialog } from '../../SearchResultDialog/SearchResultDialog';
 import { FtsType } from '../../../../server-types/common-contracts';
-import { IconButton } from '../../IconButton/IconButton';
 import { Form } from '../../Form/Form';
-
-import { ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
+import { IconButton } from '../../IconButton/IconButton';
+import { SearchResultDialog } from '../../SearchResultDialog/SearchResultDialog';
 import { hasSearch } from '../Adapter/Explorer-Adapter';
+import { ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
 import { ExplorerService } from '../Explorer.service';
 import { ExplorerStore } from '../Explorer.store';
 

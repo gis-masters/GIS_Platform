@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import {
-  LineRule,
-  PolygonRule,
   customStyleFillColors,
-  customStyleStrokeColors
+  customStyleStrokeColors,
+  LineRule,
+  PolygonRule
 } from '../../../../services/geoserver/styles/styles.models';
 import { Shape } from '../../../Icons/Shape';
-
-import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
-import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
-import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
+import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
+import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
+import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
 @observer
 export class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlFormProps> {

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Adjust } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { PointRule, customStyleStrokeColors } from '../../../../services/geoserver/styles/styles.models';
-
-import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
+import { customStyleStrokeColors, PointRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 import { CustomStyleControlMarkSelect } from '../../MarkSelect/CustomStyleControl-MarkSelect';
+import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
 @observer
 export class CustomStyleControlFormTypePoint extends Component<CustomStyleControlFormProps> {

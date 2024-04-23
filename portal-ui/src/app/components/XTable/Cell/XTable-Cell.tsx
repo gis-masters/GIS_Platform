@@ -4,11 +4,11 @@ import { TableCell, TableCellProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
-import { TextBadge } from '../../TextBadge/TextBadge';
 import { Highlight } from '../../Highlight/Highlight';
+import { TextBadge } from '../../TextBadge/TextBadge';
 import { TextOverflow } from '../../TextOverflow/TextOverflow';
-import { XTableColumn } from '../XTable.models';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Cell.scss';
 

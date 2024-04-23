@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { withBemMod } from '@bem-react/core';
-import { Dialog, DialogContent, DialogActions } from '@mui/material';
+import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { withBemMod } from '@bem-react/core';
 
-import { Button } from '../../../Button/Button';
-import { Loading } from '../../../Loading/Loading';
-import { PseudoLink } from '../../../PseudoLink/PseudoLink';
-import { HtmlContent } from '../../../HtmlContent/HtmlContent';
 import { OldPropertySchemaUrl, ValueType } from '../../../../services/data/schema/schemaOld.models';
 import { services } from '../../../../services/services';
+import { Button } from '../../../Button/Button';
+import { HtmlContent } from '../../../HtmlContent/HtmlContent';
 import { Link } from '../../../Link/Link';
-
-import { EditFeaturesControlProps, cnEditFeatureFieldControl } from '../EditFeatureField-Control';
+import { Loading } from '../../../Loading/Loading';
+import { PseudoLink } from '../../../PseudoLink/PseudoLink';
+import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url.scss';
 

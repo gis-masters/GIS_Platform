@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
 import { SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { PolygonRule, customStyleHatches, transparent } from '../../../services/geoserver/styles/styles.models';
-
+import { customStyleHatches, PolygonRule, transparent } from '../../../services/geoserver/styles/styles.models';
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
-
 import { CustomStyleControlHatchingTile } from '../HatchingTile/CustomStyleControl-HatchingTile';
-import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
+import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 
 const cnCustomStyleControlHatchingSelect = cn('CustomStyleControl', 'HatchingSelect');
 

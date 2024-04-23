@@ -4,17 +4,17 @@ import { MultiPolygon } from 'ol/geom';
 import { DragPan, Extent } from 'ol/interaction';
 import ExtentInteraction from 'ol/interaction/Extent';
 
-import { hasPhotoModeInFeatures } from '../data/files/files.util';
-import { mapStore } from '../../stores/Map.store';
-import { sidebars } from '../../stores/Sidebars.store';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { getFeatureCollectionByXmlFilter, makeXmlPolygonIntersect } from '../geoserver/wfs/wfs.service';
-import { MapAction, MapMode, MapSelectionTypes } from './map.models';
-import { setSelectedFeaturesToUrl } from './map-url.service';
+import { mapStore } from '../../stores/Map.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import { hasPhotoModeInFeatures } from '../data/files/files.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
-import { mapService } from './map.service';
+import { getFeatureCollectionByXmlFilter, makeXmlPolygonIntersect } from '../geoserver/wfs/wfs.service';
 import { services } from '../services';
+import { MapAction, MapMode, MapSelectionTypes } from './map.models';
+import { mapService } from './map.service';
+import { setSelectedFeaturesToUrl } from './map-url.service';
 
 type NamesChunks = { [srsName: string]: string[] };
 

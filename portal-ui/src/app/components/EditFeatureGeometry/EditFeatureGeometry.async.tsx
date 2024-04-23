@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { SimpleGeometry } from 'ol/geom';
-import { boundMethod } from 'autobind-decorator';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { SimpleGeometry } from 'ol/geom';
 
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { Emitter } from '../../services/common/Emitter';
 import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
-import { Emitter } from '../../services/common/Emitter';
+import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
-
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
+import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
 import { EditFeatureGeometryProjSel } from './ProjSel/EditFeatureGeometry-ProjSel';
-import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';

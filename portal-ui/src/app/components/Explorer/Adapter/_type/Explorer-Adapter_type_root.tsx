@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
-import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
-
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
 function getChildren(): ExplorerItemData[] {

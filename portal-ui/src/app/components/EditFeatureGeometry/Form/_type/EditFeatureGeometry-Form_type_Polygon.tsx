@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
-
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
 
 const EditFeatureGeometryFormTypePolygon: FC<EditFeatureGeometryFormProps> = ({ store, className }) => {
   const geometry = store.geometry as WfsPolygonGeometry;

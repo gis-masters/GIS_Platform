@@ -1,17 +1,14 @@
 import React, { ReactNode } from 'react';
 import { FolderOutlined, InsertDriveFile } from '@mui/icons-material';
 
-import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
-import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
-import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { extractFeatureId } from '../../../../services/geoserver/feature.util';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { formatDate } from '../../../../services/util/date.util';
-import { FeatureIcon } from '../../../FeatureIcon/FeatureIcon';
 import { SortOrder } from '../../../../services/models';
-
+import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { FeatureIcon } from '../../../FeatureIcon/FeatureIcon';
+import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/LibrarySearchItemActions';
+import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
+import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
 import {
   Adapter,
   ExplorerItemData,
@@ -19,6 +16,8 @@ import {
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 export function assertExplorerItemDataTypeSearchItem(
   item: ExplorerItemData

@@ -1,11 +1,10 @@
 import React, { FC, ReactNode } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
-
-import { FormRequired } from '../Required/Form-Required';
 import { FormDescription } from '../Description/Form-Description';
+import { FormRequired } from '../Required/Form-Required';
 
 import '!style-loader!css-loader!sass-loader!./Form-Label.scss';
 

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { withBemMod } from '@bem-react/core';
 import { action, makeObservable } from 'mobx';
+import { withBemMod } from '@bem-react/core';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
-
-import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group';
-import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
-import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
+import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group';
+import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
 
 class EditFeatureGeometryFormTypeMultiPoint extends Component<EditFeatureGeometryFormProps> {
   constructor(props: EditFeatureGeometryFormProps) {

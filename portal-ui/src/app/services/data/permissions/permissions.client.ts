@@ -1,8 +1,7 @@
 import { boundClass } from 'autobind-decorator';
 
-import { DataClient } from '../DataClient';
 import { http } from '../../api/http.service';
-
+import { DataClient } from '../DataClient';
 import { ResourcePermissions, RoleAssignmentBody } from './permissions.models';
 
 @boundClass

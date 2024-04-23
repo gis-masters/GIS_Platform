@@ -2,8 +2,8 @@ import React, { FC, Fragment } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { StyleRuleExtended } from '../../stores/PrintSettings.store';
 import { StyleRule } from '../../services/geoserver/styles/styles.models';
+import { StyleRuleExtended } from '../../stores/PrintSettings.store';
 
 import '!style-loader!css-loader!sass-loader!./Legend.scss';
 

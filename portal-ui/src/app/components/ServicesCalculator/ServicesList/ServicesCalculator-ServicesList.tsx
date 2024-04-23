@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ServicesInfo } from '../ServicesCalculator';
 import { ServicesCalculatorScrollContainer } from '../ScrollContainer/ServicesCalculator-ScrollContainer';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-ServicesList.scss';
 

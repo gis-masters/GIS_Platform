@@ -1,6 +1,6 @@
 import React, { BaseHTMLAttributes, FC, forwardRef, RefObject } from 'react';
+import { CircularProgress, IconButton as BaseIconButton, IconButtonProps as BaseIconButtonProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IconButtonProps as BaseIconButtonProps, IconButton as BaseIconButton, CircularProgress } from '@mui/material';
 
 import { Link, LinkProps } from '../Link/Link';
 

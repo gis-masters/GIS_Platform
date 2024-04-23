@@ -1,17 +1,13 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogActions, Tabs, Tab } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
+import { Dialog, DialogActions, DialogContent, Tab, Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { allPermissions } from '../../stores/AllPermissions.store';
-import { RoleAssignmentBody, PrincipalType, projectRoles } from '../../services/data/permissions/permissions.models';
-import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 import { communicationService } from '../../services/communication.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
+import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
+import { PrincipalType, projectRoles, RoleAssignmentBody } from '../../services/data/permissions/permissions.models';
 import {
   addDatasetPermission,
   addProjectPermission,
@@ -20,15 +16,18 @@ import {
   removeProjectPermission,
   removeTablePermission
 } from '../../services/data/permissions/permissions.service';
-import { TextBadge } from '../TextBadge/TextBadge';
-import { Loading } from '../Loading/Loading';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { allPermissions } from '../../stores/AllPermissions.store';
 import { Button } from '../Button/Button';
+import { Loading } from '../Loading/Loading';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { XTable } from '../XTable/XTable';
-
-import { PermissionsXTablePropsSet, PermissionsListItemType, baseXTablePropsSet } from './PermissionsListDialog.models';
-import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
 import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
 import { PermissionsListDialogAdd } from './Add/PermissionsListDialog-Add';
+import { baseXTablePropsSet, PermissionsListItemType, PermissionsXTablePropsSet } from './PermissionsListDialog.models';
+import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
 
 import '!style-loader!css-loader!sass-loader!./Table/PermissionsListDialog-Table.scss';
 import '!style-loader!css-loader!sass-loader!./Paper/PermissionsListDialog-Paper.scss';

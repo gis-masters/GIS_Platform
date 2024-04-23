@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { SvgIconComponent } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import '!style-loader!css-loader!sass-loader!./HelpToc-TitleIcon.scss';

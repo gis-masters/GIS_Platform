@@ -1,26 +1,26 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { Toast } from '../../components/Toast/Toast';
+import { Process, ProcessStatus } from '../../services/data/processes/processes.models';
+import { getProcess } from '../../services/data/processes/processes.service';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { OldSchema } from '../../services/data/schema/schemaOld.models';
 import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/import.models';
+import { doWorkImport, getAllImportLayers } from '../../services/geoserver/import/import.service';
 import {
   ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
-import { doWorkImport, getAllImportLayers } from '../../services/geoserver/import/import.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/import.models';
-import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { schemaService } from '../../services/data/schema/schema.service';
-import { OldSchema } from '../../services/data/schema/schemaOld.models';
-import { getProcess } from '../../services/data/processes/processes.service';
-import { Process, ProcessStatus } from '../../services/data/processes/processes.models';
 
 @Component({
   selector: 'crg-mapping-page',

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
 import { DriveFileMove, DriveFileMoveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
-import { getLibrary, moveLibraryRecord } from '../../../services/data/library/library.service';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
+import { getLibrary, moveLibraryRecord } from '../../../services/data/library/library.service';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 
 const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 

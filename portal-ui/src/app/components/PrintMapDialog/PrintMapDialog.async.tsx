@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { Dialog, DialogActions } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { printSettings } from '../../stores/PrintSettings.store';
 import { exportMap, printMap } from '../../services/map/map-print.service';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
-
 import { PrintMapDialogContent } from './Content/PrintMapDialog-Content';
-import { PrintMapDialogPreview } from './Preview/PrintMapDialog-Preview';
 import { PrintMapDialogForm } from './Form/PrintMapDialog-Form';
+import { PrintMapDialogPreview } from './Preview/PrintMapDialog-Preview';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog.scss';
 import '!style-loader!css-loader!sass-loader!./JpegButton/PrintMapDialog-JpegButton.scss';

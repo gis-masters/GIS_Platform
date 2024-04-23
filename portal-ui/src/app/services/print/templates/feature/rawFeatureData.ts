@@ -3,7 +3,6 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-
 import { PrintTemplate } from '../PrintTemplate';
 
 export const rawFeatureData: PrintTemplate<WfsFeature> = new PrintTemplate({

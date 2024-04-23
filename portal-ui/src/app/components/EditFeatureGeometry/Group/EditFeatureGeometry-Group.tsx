@@ -1,23 +1,22 @@
-import React, { Component, ComponentType, PropsWithChildren, createRef } from 'react';
+import React, { Component, ComponentType, createRef, PropsWithChildren } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { observable, computed, action, makeObservable } from 'mobx';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { CoordinateEdited } from '../../../services/geoserver/wfs/wfs.models';
-
-import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
-import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
-import { EditFeatureGeometryGroupInner } from '../GroupInner/EditFeatureGeometry-GroupInner';
-import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeometry-GroupFooter';
-import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
+import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
+import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
+import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeometry-GroupFooter';
+import { EditFeatureGeometryGroupInner } from '../GroupInner/EditFeatureGeometry-GroupInner';
+import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
 

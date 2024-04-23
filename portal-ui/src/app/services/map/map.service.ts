@@ -1,40 +1,40 @@
-import { cloneDeep, debounce } from 'lodash';
 import { reaction } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
+import { cloneDeep, debounce } from 'lodash';
 import { Map, View } from 'ol';
-import Feature from 'ol/Feature';
-import ImageWrapper from 'ol/Image';
-import BaseLayer from 'ol/layer/Base';
+import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
-import { ServerType } from 'ol/source/wms';
+import BaseEvent from 'ol/events/Event';
+import { Extent, getTopLeft, getWidth } from 'ol/extent';
+import Feature from 'ol/Feature';
+import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
+import ImageWrapper from 'ol/Image';
 import { Draw, Modify } from 'ol/interaction';
-import { get as getProjection } from 'ol/proj';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
-import { defaults as defaultControls } from 'ol/control';
-import { Extent, getTopLeft, getWidth } from 'ol/extent';
-import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import BaseLayer from 'ol/layer/Base';
+import ImageLayer from 'ol/layer/Image';
+import { get as getProjection } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
+import ImageSource from 'ol/source/Image';
+import TileSource from 'ol/source/Tile';
+import { ServerType } from 'ol/source/wms';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
-import TileSource from 'ol/source/Tile';
-import ImageSource from 'ol/source/Image';
-import ImageLayer from 'ol/layer/Image';
-import BaseEvent from 'ol/events/Event';
-import { boundMethod } from 'autobind-decorator';
 
-import { route } from '../../stores/Route.store';
+import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
+import { Toast } from '../../components/Toast/Toast';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { mapStore } from '../../stores/Map.store';
-import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
-import { communicationService } from '../communication.service';
-import { wfsFeatureToFeature } from '../util/open-layers.util';
-import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { ScaleLine } from '../ol/ScaleLine';
+import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
+import { communicationService } from '../communication.service';
+import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
+import { Schema } from '../data/schema/schema.models';
+import { applyView } from '../data/schema/schema.utils';
 import {
   CrgProjection,
   getFeatureProjection,
@@ -42,22 +42,21 @@ import {
   transformExtent,
   transformGeometry
 } from '../geoserver/projections.service';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';
 import { getMap } from '../geoserver/wms/wms.service';
-import { cqlBuild } from '../util/cqlBuild';
-import { sleep } from '../util/sleep';
-import { services } from '../services';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjects';
-import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
-import { Schema } from '../data/schema/schema.models';
-import { Mime } from '../util/Mime';
-import { applyView } from '../data/schema/schema.utils';
-import { cqlConcat } from '../util/cqlConcat';
+import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
-import { Toast } from '../../components/Toast/Toast';
+import { ScaleLine } from '../ol/ScaleLine';
+import { services } from '../services';
+import { cqlBuild } from '../util/cqlBuild';
+import { cqlConcat } from '../util/cqlConcat';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjects';
+import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
-
+import { wfsFeatureToFeature } from '../util/open-layers.util';
+import { sleep } from '../util/sleep';
 import { FilterBySelection, MapPosition } from './map.models';
 
 // WMS request parameters. At least a LAYERS param is required.

@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import {
-  generateNextLayerId,
-  externalLayerDefaults,
-  rasterLayerDefaults,
-  vectorLayerDefaults
-} from '../../services/gis/layers/layers.utils';
-import { getLibraryRecord } from '../../services/data/library/library.service';
+import { placeFile } from '../../services/data/file-placement/file-placement.service';
+import { FileInfo } from '../../services/data/files/files.models';
+import { getFile } from '../../services/data/files/files.service';
+import { getFileBaseName } from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
 import {
   ContentType,
   PropertySchema,
@@ -23,20 +19,24 @@ import {
   ValueFormula
 } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { CrgLayerType, CrgLayer } from '../../services/gis/layers/layers.models';
-import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { buildComplexName } from '../../services/geoserver/feature.util';
-import { getDefaultValues } from '../Form/Form.utils';
-import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
-import { getFileBaseName } from '../../services/data/files/files.util';
-import { getFile } from '../../services/data/files/files.service';
-import { FileInfo } from '../../services/data/files/files.models';
+import { CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import {
+  externalLayerDefaults,
+  generateNextLayerId,
+  rasterLayerDefaults,
+  vectorLayerDefaults
+} from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
+import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { getDefaultValues } from '../Form/Form.utils';
+import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectFileInLibraryRecordControl } from '../SelectFileInLibraryRecordControl/SelectFileInLibraryRecordControl';
 import { SelectVectorTableControl } from '../SelectVectorTableControl/SelectVectorTableControl';
-import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 
 const cnAddLayerDialog = cn('AddLayerDialog');

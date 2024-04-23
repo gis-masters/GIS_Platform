@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { CreateOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { updateTask } from '../../../services/data/task/task.service';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { Task } from '../../../services/data/task/task.models';
-import { FormDialog } from '../../FormDialog/FormDialog';
-import { getPatch } from '../../../services/util/patch';
+import { updateTask } from '../../../services/data/task/task.service';
 import { services } from '../../../services/services';
+import { getPatch } from '../../../services/util/patch';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { FormDialog } from '../../FormDialog/FormDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnTasksJournalActionsEdit = cn('TasksJournalActions', 'Edit');

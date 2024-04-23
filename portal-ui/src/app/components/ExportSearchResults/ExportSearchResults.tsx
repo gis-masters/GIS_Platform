@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { FileUploadOutlined } from '@mui/icons-material';
+import { boundMethod } from 'autobind-decorator';
 
 import { SearchItemData, SearchItemDataTypeFeature } from '../../services/data/search/search.model';
-import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { getSearchResults } from '../../services/data/search/search.service';
 import { getSearchRequest } from '../../services/data/search/search.util';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { exportAsXLSX } from '../../services/util/export';
+import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { IconButton } from '../IconButton/IconButton';
 
 interface ExportSearchResultsProps {

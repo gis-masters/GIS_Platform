@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Paper } from '@mui/material';
 import { CloseOutlined, EditOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 
 import { LabelType } from '../../services/map/map.models';

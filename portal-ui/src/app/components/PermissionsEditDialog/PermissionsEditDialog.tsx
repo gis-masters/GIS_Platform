@@ -1,29 +1,28 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { allUsers } from '../../stores/AllUsers.store';
-import { allGroups } from '../../stores/AllGroups.store';
-import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions/permissions.utils';
+import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { groupsService } from '../../services/auth/groups/groups.service';
+import { CrgUser } from '../../services/auth/users/users.models';
+import { usersService } from '../../services/auth/users/users.service';
+import { communicationService } from '../../services/communication.service';
 import { PrincipalType, Role, RoleAssignmentBody } from '../../services/data/permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions/permissions.service';
-import { groupsService } from '../../services/auth/groups/groups.service';
-import { CrgGroup } from '../../services/auth/groups/groups.models';
-import { communicationService } from '../../services/communication.service';
-import { usersService } from '../../services/auth/users/users.service';
-import { CrgUser } from '../../services/auth/users/users.models';
+import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions/permissions.utils';
+import { allGroups } from '../../stores/AllGroups.store';
+import { allUsers } from '../../stores/AllUsers.store';
+import { Button } from '../Button/Button';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { Loading } from '../Loading/Loading';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
-import { Loading } from '../Loading/Loading';
-import { Button } from '../Button/Button';
-
-import { PermissionsEditDialogRoleSelect } from './RoleSelect/PermissionsEditDialog-RoleSelect';
 import { PermissionsEditDialogAddPrincipal } from './AddPrincipal/PermissionsEditDialog-AddPrincipal';
 import { PermissionsEditDialogRemovePrincipal } from './RemovePrincipal/PermissionsEditDialog-RemovePrincipal';
+import { PermissionsEditDialogRoleSelect } from './RoleSelect/PermissionsEditDialog-RoleSelect';
 
 import '!style-loader!css-loader!sass-loader!./Paper/PermissionsEditDialog-Paper.scss';
 import '!style-loader!css-loader!sass-loader!./Table/PermissionsEditDialog-Table.scss';

@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
 import { Button } from '../../../app/components/Button/Button';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { UpConnectionsToProjects } from '../UpConnectionsToProjects/UpConnectionsToProjects';
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 import { UpLoadResultContent } from './Content/UpLoadResult-Content';
-import { UpConnectionsToProjects } from '../UpConnectionsToProjects/UpConnectionsToProjects';
 
 import '!style-loader!css-loader!sass-loader!./UpLoadResult.scss';
 import '!style-loader!css-loader!sass-loader!./Button/UpLoadResult-Button.scss';

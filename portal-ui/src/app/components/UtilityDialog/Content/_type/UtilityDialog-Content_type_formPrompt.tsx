@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { DialogContent, DialogContentText } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
 import { withBemMod } from '@bem-react/core';
+import { RegistryConsumer } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../../services/communication.service';
 import { CommonDiRegistry } from '../../../../services/di-registry';
-
-import { UtilityDialogContentProps, cnUtilityDialogContent } from '../UtilityDialog-Content.base';
 import { getDefaultValues } from '../../../Form/Form.utils';
+import { cnUtilityDialogContent, UtilityDialogContentProps } from '../UtilityDialog-Content.base';
 
 class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentProps> {
   render() {

@@ -3,9 +3,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
-import { TextOverflow } from '../../TextOverflow/TextOverflow';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
-
+import { TextOverflow } from '../../TextOverflow/TextOverflow';
 import { DocumentInfo } from '../Documents';
 
 import '!style-loader!css-loader!sass-loader!./Documents-Name.scss';

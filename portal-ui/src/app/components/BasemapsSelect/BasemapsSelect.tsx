@@ -1,20 +1,19 @@
 import React, { Component, createRef } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { ButtonBase, Menu, Paper, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { Menu, Paper, Tooltip, ButtonBase } from '@mui/material';
 
-import { sleep } from '../../services/util/sleep';
-import { basemapsStore } from '../../stores/Basemaps.store';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { currentProject } from '../../stores/CurrentProject.store';
 import { Basemap } from '../../services/data/basemaps/basemaps.models';
 import { Role } from '../../services/data/permissions/permissions.models';
-
+import { sleep } from '../../services/util/sleep';
+import { basemapsStore } from '../../stores/Basemaps.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { BasemapsSelectAddButton } from './AddButton/BasemapsSelect-AddButton';
 import { BasemapsSelectItem } from './Item/BasemapsSelect-Item';
 import { BasemapsSelectThumbnail } from './Thumbnail/BasemapsSelect-Thumbnail';
 import { BasemapsSelectTooltipAnchor } from './TooltipAnchor/BasemapsSelect-TooltipAnchor';
-import { BasemapsSelectAddButton } from './AddButton/BasemapsSelect-AddButton';
 
 import '!style-loader!css-loader!sass-loader!./BasemapsSelect.scss';
 import '!style-loader!css-loader!sass-loader!./MenuList/BasemapsSelect-MenuList.scss';

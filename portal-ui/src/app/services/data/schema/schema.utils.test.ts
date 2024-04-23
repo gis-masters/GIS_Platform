@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Attribute } from '@fiz/geoserver-types/Attribute';
+
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { OldPropertySchema, OldSchema, ValueType } from './schemaOld.models';
 import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
 import {
   applyContentType,
@@ -14,6 +14,7 @@ import {
   convertOldToNewSchema,
   mergeContentTypes
 } from './schema.utils';
+import { OldPropertySchema, OldSchema, ValueType } from './schemaOld.models';
 
 const baseGeoserverAttribute = {
   name: 'baseName',

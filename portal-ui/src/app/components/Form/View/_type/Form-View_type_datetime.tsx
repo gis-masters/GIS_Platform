@@ -4,12 +4,11 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
-
-import { cnFormView } from '../Form-View';
-import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormControlProps } from '../../Control/Form-Control';
+import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeDatetime extends Component<FormControlProps> {

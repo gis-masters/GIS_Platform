@@ -1,11 +1,11 @@
 import React from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { ChooseXTableDialog } from './ChooseXTableDialog';
 import { PropertyType } from '../../services/data/schema/schema.models';
-import { TestData } from '../XTable/XTable.stories';
-import { XTableColumn } from '../XTable/XTable.models';
 import { testDataForTables } from '../XTable/testDataForTables';
+import { XTableColumn } from '../XTable/XTable.models';
+import { TestData } from '../XTable/XTable.stories';
+import { ChooseXTableDialog } from './ChooseXTableDialog';
 
 export default {
   title: 'ChooseXTableDialog',

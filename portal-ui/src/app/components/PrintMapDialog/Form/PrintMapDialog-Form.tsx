@@ -1,23 +1,22 @@
 import React, { Component, FormEvent } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { getPatch } from '../../../services/util/patch';
 import {
   orientations,
   pageFormats,
-  printSettings,
   PrintSettings,
+  printSettings,
   resolutions,
   scales
 } from '../../../stores/PrintSettings.store';
-import { getPatch } from '../../../services/util/patch';
-import { SelectLegend } from '../../SelectLegend/SelectLegend';
-import { PropertyType, PropertySchema } from '../../../services/data/schema/schema.models';
 import { FormContent } from '../../Form/Content/Form-Content';
 import { Form } from '../../Form/Form';
-
+import { SelectLegend } from '../../SelectLegend/SelectLegend';
 import { PrintMapDialogExtra } from '../Extra/PrintMapDialog-Extra';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Form.scss';

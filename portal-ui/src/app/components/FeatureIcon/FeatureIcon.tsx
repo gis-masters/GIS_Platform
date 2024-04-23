@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { Adjust, PolylineOutlined, SvgIconComponent, WarningAmberOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
-import { Shape } from '../Icons/Shape';
 import { services } from '../../services/services';
+import { Shape } from '../Icons/Shape';
 
 import '!style-loader!css-loader!sass-loader!./FeatureIcon.scss';
 

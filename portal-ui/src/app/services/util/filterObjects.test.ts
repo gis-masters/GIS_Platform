@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { prepareLike, filterObjects } from './filterObjects';
+import { filterObjects, prepareLike } from './filterObjects';
 
 describe('утилита фильтрации объектов', () => {
   test('функция prepareLike заменяет нестандартные операторы $like и $ilike на $regex', () => {

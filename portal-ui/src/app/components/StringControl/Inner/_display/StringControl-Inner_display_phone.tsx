@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withBemMod } from '@bem-react/core';
-import InputMask from 'react-input-mask';
-
-import { StringControlInnerProps, cnStringControlInner } from '../StringControl-Inner.base';
-import { boundMethod } from 'autobind-decorator';
 import {
   FilledTextFieldProps,
   OutlinedTextFieldProps,
@@ -12,6 +7,11 @@ import {
   TextField,
   TextFieldVariants
 } from '@mui/material';
+import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import InputMask from 'react-input-mask';
+
+import { cnStringControlInner, StringControlInnerProps } from '../StringControl-Inner.base';
 
 @observer
 class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> {

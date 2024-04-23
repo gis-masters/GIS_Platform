@@ -1,14 +1,14 @@
-import React, { Component, ReactNode, RefObject, createRef } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { KeyboardArrowDown } from '@mui/icons-material';
+import React, { Component, createRef, ReactNode, RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { boundMethod } from 'autobind-decorator';
+import { observer } from 'mobx-react';
 import { Popover } from '@mui/material';
+import { KeyboardArrowDown } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { IconButton } from '../IconButton/IconButton';
-import { Highlight } from '../Highlight/Highlight';
 import { sleep } from '../../services/util/sleep';
+import { Highlight } from '../Highlight/Highlight';
+import { IconButton } from '../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!./SearchResultHighlightItem.scss';
 

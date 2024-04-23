@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { getLibraryRecord } from '../../services/data/library/library.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
-
+import { Actions } from '../Actions/Actions.composed';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { LibraryDocumentActionsClose } from '../LibraryDocumentActions/Close/LibraryDocumentActions-Close';
 import { LibraryDocumentActionsOpen } from '../LibraryDocumentActions/Open/LibraryDocumentActions-Open';
 import { LibraryDeletedDocumentActionsRestore } from './Restore/LibraryDeletedDocumentActions-Restore';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
-import { Actions } from '../Actions/Actions.composed';
-import { LibraryDocumentActionsClose } from '../LibraryDocumentActions/Close/LibraryDocumentActions-Close';
 
 export const cnLibraryDocumentVersionsActions = cn('LibraryDocumentVersionsActions');
 

@@ -1,12 +1,12 @@
-import { getFeaturesById } from '../../geoserver/wfs/wfs.service';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { buildComplexName } from '../../geoserver/feature.util';
-import { SearchItemData, SearchRequest } from './search.model';
-import { getGeometryFieldName } from '../schema/schema.utils';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { schemaService } from '../schema/schema.service';
-import { searchClient } from './search.client';
+import { getFeaturesById } from '../../geoserver/wfs/wfs.service';
 import { PageOptions } from '../../models';
+import { schemaService } from '../schema/schema.service';
+import { getGeometryFieldName } from '../schema/schema.utils';
+import { searchClient } from './search.client';
+import { SearchItemData, SearchRequest } from './search.model';
 
 export async function getSearchResults(
   searchRequest: SearchRequest,

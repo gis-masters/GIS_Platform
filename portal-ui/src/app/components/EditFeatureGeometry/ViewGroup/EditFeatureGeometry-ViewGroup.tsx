@@ -1,10 +1,9 @@
-import React, { Component, FC, createRef, RefObject } from 'react';
+import React, { Component, createRef, FC, RefObject } from 'react';
+import { Paper, PaperProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
-import { Paper, PaperProps, Table, TableContainer, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroup.scss';

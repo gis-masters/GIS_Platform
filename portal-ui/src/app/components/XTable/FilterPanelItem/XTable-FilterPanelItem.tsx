@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Chip } from '@mui/material';
 import { Clear } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-
+import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
 import { XTableColumn } from '../XTable.models';
 

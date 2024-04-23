@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react';
-import { cn } from '@bem-react/classname';
+import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import {
   Accordion,
   AccordionDetails,
@@ -11,34 +12,33 @@ import {
   Tooltip
 } from '@mui/material';
 import {
-  EditOffOutlined,
-  HelpOutline,
-  VisibilityOffOutlined,
-  Check,
-  FormatListBulletedOutlined,
   ArticleOutlined,
-  ContactMailOutlined,
   AttachFileOutlined,
+  CalendarMonthOutlined,
+  Check,
+  ContactMailOutlined,
+  Edit,
+  EditOffOutlined,
+  EditOutlined,
+  FingerprintOutlined,
+  FormatListBulletedOutlined,
+  HelpOutline,
+  LinkOutlined,
   LooksOneOutlined,
-  PinOutlined,
-  SquareFootOutlined,
   PersonOutline,
   PersonSearchOutlined,
-  FingerprintOutlined,
+  PinOutlined,
+  SquareFootOutlined,
   SvgIconComponent,
   TextFieldsOutlined,
-  CalendarMonthOutlined,
-  LinkOutlined,
-  EditOutlined,
-  Edit
+  VisibilityOffOutlined
 } from '@mui/icons-material';
-import { observer } from 'mobx-react';
-import { action, makeObservable, observable } from 'mobx';
+import { cn } from '@bem-react/classname';
 
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { EditPropertySchemaForm } from '../../EditPropertySchemaForm/EditPropertySchemaForm';
-import { SchemaPropertiesItemIcons } from '../ItemIcons/SchemaProperties-ItemIcons';
 import { IconButton } from '../../IconButton/IconButton';
+import { SchemaPropertiesItemIcons } from '../ItemIcons/SchemaProperties-ItemIcons';
 
 import '!style-loader!css-loader!sass-loader!../ItemIcon/SchemaProperties-ItemIcon.scss';
 import '!style-loader!css-loader!sass-loader!../PrimaryText/SchemaProperties-PrimaryText.scss';

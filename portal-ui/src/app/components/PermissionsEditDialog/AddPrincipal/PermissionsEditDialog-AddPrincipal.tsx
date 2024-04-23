@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Checkbox,
@@ -13,11 +13,11 @@ import {
   Tooltip
 } from '@mui/material';
 import { GroupAdd, GroupAddOutlined, PersonAdd, PersonAddOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { allUsers } from '../../../stores/AllUsers.store';
-import { allGroups } from '../../../stores/AllGroups.store';
+import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { CrgUser } from '../../../services/auth/users/users.models';
 import {
   PrincipalType,
   Role,
@@ -25,13 +25,12 @@ import {
   roles,
   rolesTitles
 } from '../../../services/data/permissions/permissions.models';
+import { allGroups } from '../../../stores/AllGroups.store';
+import { allUsers } from '../../../stores/AllUsers.store';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
-import { CrgGroup } from '../../../services/auth/groups/groups.models';
-import { CrgUser } from '../../../services/auth/users/users.models';
+import { Button } from '../../Button/Button';
 import { XTable } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { Button } from '../../Button/Button';
-
 import { PermissionsEditDialogCheckPrincipal } from '../CheckPrincipal/PermissionsEditDialog-CheckPrincipal';
 
 import '!style-loader!css-loader!sass-loader!../AddPrincipalTable/PermissionsEditDialog-AddPrincipalTable.scss';

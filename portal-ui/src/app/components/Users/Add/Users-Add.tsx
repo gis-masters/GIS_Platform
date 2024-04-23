@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AddCircle, AddCircleOutline } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { Button } from '../../Button/Button';
+import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
+import { usersService } from '../../../services/auth/users/users.service';
 import { PageOptions } from '../../../services/models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { Button } from '../../Button/Button';
+import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
-import { usersService } from '../../../services/auth/users/users.service';
-import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
-import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
-import { currentUser } from '../../../stores/CurrentUser.store';
 
 const cnUsersAdd = cn('Users', 'Add');
 const cnUsersAddDialog = cn('Users', 'AddDialog');

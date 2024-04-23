@@ -2,10 +2,9 @@ import React, { FC, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { CrgProject } from '../../services/gis/projects/projects.models';
-
 import { ProjectCardCard } from './Card/ProjectCard-Card';
-import { ProjectCardInner } from './Inner/ProjectCard-Inner';
 import { ProjectCardDelete } from './Delete/ProjectCard-Delete';
+import { ProjectCardInner } from './Inner/ProjectCard-Inner';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard.scss';
 

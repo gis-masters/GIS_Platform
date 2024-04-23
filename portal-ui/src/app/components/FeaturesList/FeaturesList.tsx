@@ -1,17 +1,17 @@
 import React, { Component, createRef, ReactNode, RefObject } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { mapService } from '../../services/map/map.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
+import { mapStore } from '../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
-import { mapService } from '../../services/map/map.service';
-import { mapStore } from '../../stores/Map.store';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesList.scss';
 

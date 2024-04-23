@@ -2,14 +2,13 @@ import React, { ReactNode } from 'react';
 import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
 import { FileInfo } from '../../../../services/data/files/files.models';
+import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
 import { CommonDiRegistry } from '../../../../services/di-registry';
-import { formatDate } from '../../../../services/util/date.util';
 import { PageOptions } from '../../../../services/models';
+import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import { FileTiff } from '../../../Icons/FileTiff';
-
 import {
   Adapter,
   ExplorerItemData,
@@ -17,9 +16,9 @@ import {
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 function assertExplorerItemDataTypeDocument(
   item: ExplorerItemData

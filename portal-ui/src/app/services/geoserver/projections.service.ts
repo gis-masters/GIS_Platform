@@ -1,24 +1,24 @@
 import { chunk, cloneDeep, isEqual } from 'lodash';
-import { register } from 'ol/proj/proj4';
 import { Coordinate } from 'ol/coordinate';
+import { Extent } from 'ol/extent';
 import { get } from 'ol/proj';
+import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 
-import {
-  WfsFeature,
-  CoordinateEdited,
-  WfsGeometry,
-  WfsPointGeometry,
-  WfsMultiLineStringGeometry,
-  WfsMultiPolygonGeometry,
-  GeometryType,
-  WfsMultiPointGeometry,
-  WfsPolygonGeometry,
-  WfsLineStringGeometry
-} from './wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
+import {
+  CoordinateEdited,
+  GeometryType,
+  WfsFeature,
+  WfsGeometry,
+  WfsLineStringGeometry,
+  WfsMultiLineStringGeometry,
+  WfsMultiPointGeometry,
+  WfsMultiPolygonGeometry,
+  WfsPointGeometry,
+  WfsPolygonGeometry
+} from './wfs/wfs.models';
 import { isCoordinateValid, normalizeCoordinates } from './wfs/wfs.util';
-import { Extent } from 'ol/extent';
 
 export interface Projection {
   authName: string;

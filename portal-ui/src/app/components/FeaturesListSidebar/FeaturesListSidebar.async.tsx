@@ -1,19 +1,19 @@
 import React, { Component, SyntheticEvent } from 'react';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { Close } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { IconButton, Tab, Tabs } from '@mui/material';
-import { IReactionDisposer, action, makeObservable, observable, reaction } from 'mobx';
+import { Close } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
 import { communicationService } from '../../services/communication.service';
-import { SearchInfo } from '../SearchField/SearchField';
-import { sidebars } from '../../stores/Sidebars.store';
 import { mapStore } from '../../stores/Map.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
+import { Loading } from '../Loading/Loading';
+import { SearchInfo } from '../SearchField/SearchField';
 import { TabInner } from '../TabInner/TabInner';
 import { TabTitle } from '../TabTitle/TabTitle';
-import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListSidebar.scss';
 

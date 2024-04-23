@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
 import { deleteTask } from '../../../services/geoserver/import/import.service';
+import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
 import { Button } from '../../Button/Button';
 
 const cnDataImportTasksList = cn('DataImportTasksList');

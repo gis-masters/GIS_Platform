@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
 
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { getFileExtension, isTifFile, normalizeExtension } from '../../../../services/data/files/files.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import { FileIcon } from '../../../FileIcon/FileIcon';
 import { FileTiff } from '../../../Icons/FileTiff';
-
 import {
   Adapter,
   ExplorerItemData,

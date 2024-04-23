@@ -3,14 +3,14 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../../stores/Map.store';
-import { MapSelectionTypes } from '../../../services/map/map.models';
-import { TreeItem } from '../../../services/gis/projects/projects.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { projectsService } from '../../../services/gis/projects/projects.service';
-import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
-import { Layer } from '../../Layer/Layer';
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
+import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import { TreeItem } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { MapSelectionTypes } from '../../../services/map/map.models';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { mapStore } from '../../../stores/Map.store';
+import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
 

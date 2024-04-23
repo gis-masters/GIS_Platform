@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../stores/Map.store';
+import { LabelType, MapMode } from '../../services/map/map.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
 import { konfirmieren } from '../../services/utility-dialogs.service';
-import { LabelType, MapMode } from '../../services/map/map.models';
-import { LabelsOutlined } from '../Icons/LabelsOutlined';
+import { mapStore } from '../../stores/Map.store';
 import { IconButton } from '../IconButton/IconButton';
+import { LabelsOutlined } from '../Icons/LabelsOutlined';
 
 import '!style-loader!css-loader!sass-loader!./MapLabels.scss';
 

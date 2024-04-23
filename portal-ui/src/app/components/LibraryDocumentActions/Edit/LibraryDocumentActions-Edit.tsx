@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { getPatch } from '../../../services/util/patch';
-import { FormDialog } from '../../FormDialog/FormDialog';
-import { TextBadge } from '../../TextBadge/TextBadge';
-
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { FormDialog } from '../../FormDialog/FormDialog';
+import { TextBadge } from '../../TextBadge/TextBadge';
 
 const cnLibraryDocumentActionsEdit = cn('LibraryDocumentActions', 'Edit');
 const cnLibraryDocumentActionsEditDialog = cn('LibraryDocumentActions', 'EditDialog');

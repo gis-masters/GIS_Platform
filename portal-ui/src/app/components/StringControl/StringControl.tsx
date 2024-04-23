@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { FormControlProps } from '../Form/Control/Form-Control';
 import { PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
-
+import { FormControlProps } from '../Form/Control/Form-Control';
 import { StringControlInner } from './Inner/StringControl-Inner.composed';
 
 import '!style-loader!css-loader!sass-loader!./StringControl.scss';

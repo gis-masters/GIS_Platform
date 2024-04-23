@@ -1,9 +1,9 @@
-import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { getPathFilter } from '../../../components/DataManagement/DataManagement.utils';
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { ExplorerSearchValue } from '../../../components/Explorer/Explorer.models';
-import { Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { SearchRequest } from '../../../services/data/search/search.model';
+import { Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { cqlBuild } from '../../../services/util/cqlBuild';
 
 export async function getSearchRequest(search: ExplorerSearchValue): Promise<SearchRequest> {

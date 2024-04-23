@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Slider } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
-
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Transparency.scss';

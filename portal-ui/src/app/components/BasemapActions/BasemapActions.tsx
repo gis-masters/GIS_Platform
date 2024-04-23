@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { currentUser } from '../../stores/CurrentUser.store';
 import { Basemap } from '../../services/data/basemaps/basemaps.models';
-
+import { currentUser } from '../../stores/CurrentUser.store';
 import { BasemapActionsDelete } from './Delete/BasemapActions-Delete';
 import { BasemapActionsEdit } from './Edit/BasemapActions-Edit';
 

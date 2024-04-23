@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
 
-import { LayerAdd } from '../../Icons/LayerAdd';
-import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
+import { LayerAdd } from '../../Icons/LayerAdd';
+import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 
 const cnLibraryDocumentActionsFilesPlacement = cn('LibraryDocumentActions', 'FilesPlacement');
 

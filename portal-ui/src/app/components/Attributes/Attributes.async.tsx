@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../stores/Map.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { attributesTableStore } from '../../stores/AttributesTable.store';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { mapSelectionService } from '../../services/map/map-selection.service';
-import { DataChangeEventDetail, communicationService } from '../../services/communication.service';
-import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { PageOptions } from '../../services/models';
-import { XTableInvoke } from '../XTable/XTable';
+import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
 import {
   extractFeatureTypeName,
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromFeatureId
 } from '../../services/geoserver/feature.util';
-
+import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { mapSelectionService } from '../../services/map/map-selection.service';
+import { PageOptions } from '../../services/models';
+import { attributesTableStore } from '../../stores/AttributesTable.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
+import { XTableInvoke } from '../XTable/XTable';
 import { AttributesBar } from './Bar/Attributes-Bar';
-import { AttributesTabs } from './Tabs/Attributes-Tabs';
 import { AttributesFooter } from './Footer/Attributes-Footer';
 import { AttributesPagination } from './Pagination/Attributes-Pagination';
+import { AttributesTabs } from './Tabs/Attributes-Tabs';
 
 import '!style-loader!css-loader!sass-loader!./Attributes.scss';
 

@@ -1,7 +1,7 @@
+import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
 import { LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
 import { getArea, getLength } from 'ol/sphere';
-import { Coordinate } from 'ol/coordinate';
-import { Feature } from 'ol';
 
 import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
 

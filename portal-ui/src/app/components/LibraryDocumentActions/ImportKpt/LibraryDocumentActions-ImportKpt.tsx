@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { DownloadForOfflineOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { SelectVectorTableControl } from '../../SelectVectorTableControl/SelectVectorTableControl';
-import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { importKpt } from '../../../services/data/kpt/kpt.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { FieldValidator } from '../../../services/util/form/formValidation.utils';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { CrgLayer } from '../../../services/gis/layers/layers.models';
+import { FieldValidator } from '../../../services/util/form/formValidation.utils';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Datasource } from '../../AddLayerDialog/AddLayerDialog';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { importKpt } from '../../../services/data/kpt/kpt.service';
+import { SelectVectorTableControl } from '../../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsImportKpt = cn('LibraryDocumentActions', 'ImportKpt');

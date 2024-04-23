@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
-import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
-import { SearchResultKadListItem } from '../ResultKadListItem/Search-ResultKadListItem';
 import { KadObject } from '../../../services/kad-search.models';
+import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
+import { SearchResultKadListItem } from '../ResultKadListItem/Search-ResultKadListItem';
+import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
 
 import '!style-loader!css-loader!sass-loader!./Search-ResultList.scss';
 import '!style-loader!css-loader!sass-loader!../Empty/Search-Empty.scss';

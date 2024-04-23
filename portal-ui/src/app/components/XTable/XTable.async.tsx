@@ -1,33 +1,32 @@
 import React, { Component, createRef, ReactNode, RefObject } from 'react';
-import { action, computed, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { Table, TableBody, TableCellProps, TableContainer, TableRow, Pagination, PaperProps } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { IClassNameProps } from '@bem-react/core';
-import { cloneDeep, debounce } from 'lodash';
+import { Pagination, PaperProps, Table, TableBody, TableCellProps, TableContainer, TableRow } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { cloneDeep, debounce } from 'lodash';
 
-import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
-import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { PageOptions, SortOrder } from '../../services/models';
+import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
+import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
-
-import { XTableRow } from './Row/XTable-Row';
-import { XTableHead } from './Head/XTable-Head';
 import { XTableCell } from './Cell/XTable-Cell';
-import { XTableEmpty } from './Empty/XTable-Empty';
-import { XTableTitle } from './Title/XTable-Title';
-import { defaultRowIdGetter } from './XTable.utils';
-import { XTableFooter } from './Footer/XTable-Footer';
-import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
-import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
-import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
-import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 import { XTableContainer, XTableContainerProps } from './Container/XTable-Container';
+import { XTableEmpty } from './Empty/XTable-Empty';
+import { XTableFilterPanel } from './FilterPanel/XTable-FilterPanel';
+import { XTableFooter } from './Footer/XTable-Footer';
+import { XTableHead } from './Head/XTable-Head';
+import { XTableHeadCell } from './HeadCell/XTable-HeadCell';
+import { XTableRow } from './Row/XTable-Row';
+import { XTableTitle } from './Title/XTable-Title';
+import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
+import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
 import { XTableColumn, XTableColumnType, XTableExtraColumnType } from './XTable.models';
+import { defaultRowIdGetter } from './XTable.utils';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
 

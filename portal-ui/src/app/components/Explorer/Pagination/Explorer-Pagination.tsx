@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Pagination } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { ExplorerStore } from '../Explorer.store';
 

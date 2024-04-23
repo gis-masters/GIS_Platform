@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { SvgIconProps } from '@mui/material';
 import { InsertDriveFile, InsertDriveFileOutlined } from '@mui/icons-material';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { normalizeExtension } from '../../services/data/files/files.util';
 

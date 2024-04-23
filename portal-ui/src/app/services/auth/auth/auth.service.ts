@@ -1,8 +1,7 @@
 import { AxiosError } from 'axios';
 
-import { environment } from '../../environment';
 import { http } from '../../api/http.service';
-
+import { environment } from '../../environment';
 import { authClient } from './auth.client';
 import { AuthCredentials, AuthenticationResult, RegData } from './auth.models';
 

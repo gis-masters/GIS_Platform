@@ -1,9 +1,9 @@
 import { pointOnFeature } from '@turf/turf';
 
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { mapLabelsService } from '../../map/map-labels.service';
-import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { getProjection, olProjection, transform } from '../../geoserver/projections.service';
+import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
+import { mapLabelsService } from '../../map/map-labels.service';
 
 export function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): void {
   for (const [i, wfsFeature] of wfsFeatures.entries()) {

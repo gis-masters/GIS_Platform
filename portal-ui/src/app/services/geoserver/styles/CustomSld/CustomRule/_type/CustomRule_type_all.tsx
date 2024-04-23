@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 
 import { Rule } from '../../Rule/Rule';
+import { CustomRuleProps } from '../CustomRule';
 import { CustomRuleTypeLine } from './CustomRule_type_line';
 import { CustomRuleTypePoint } from './CustomRule_type_point';
 import { CustomRuleTypePolygon } from './CustomRule_type_polygon';
-import { CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypeAll: FC<CustomRuleProps> = ({ rule, type }) => {
   if (type !== 'all') {

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { StickyNote2Outlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { MessagesRegistriesMessages } from '../../../services/data/messagesRegistries/messagesRegistries.models';
-import { MessagesRegistryDialog } from '../../MessagesRegistryDialog/MessagesRegistryDialog';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
+import { MessagesRegistryDialog } from '../../MessagesRegistryDialog/MessagesRegistryDialog';
 
 const cnMessagesRegistryOpenAction = cn('MessagesRegistry', 'OpenAction');
 

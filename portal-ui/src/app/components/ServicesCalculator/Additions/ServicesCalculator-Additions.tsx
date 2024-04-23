@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ServicesAdditions } from '../ServicesCalculator';
-import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
 import { ServicesCalculatorServiceDescription } from '../ServiceDescription/ServicesCalculator-ServiceDescription';
+import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
+import { ServicesAdditions } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Additions.scss';
 

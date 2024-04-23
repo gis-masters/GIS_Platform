@@ -1,11 +1,10 @@
 import React, { FC, useCallback } from 'react';
-import { cn } from '@bem-react/classname';
-import { DialogContent, Tooltip } from '@mui/material';
-import { SwiperClass } from 'swiper/react';
 import { useLocalObservable } from 'mobx-react';
+import { DialogContent, Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { SwiperClass } from 'swiper/react';
 
 import { isPdfFile } from '../../../services/data/files/files.util';
-
 import { Loading } from '../../Loading/Loading';
 import { CarouselImageInfo } from '../Carousel';
 import { CarouselMainSwiper } from '../MainSwiper/Carousel-MainSwiper';

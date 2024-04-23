@@ -1,33 +1,32 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { HomeOutlined } from '@mui/icons-material';
-import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
+import { FileConnection } from '../../services/data/files/files.models';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import {
   getDataset,
   getVectorTable,
   getVectorTableConnections
 } from '../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getFeatures } from '../../services/geoserver/wfs/wfs.service';
+import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { PageOptions } from '../../services/models';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { datasetRootUrlItems } from '../DataManagement/DataManagement.utils';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { FileConnection } from '../../services/data/files/files.models';
-import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
-import { getFeatures } from '../../services/geoserver/wfs/wfs.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { currentUser } from '../../stores/CurrentUser.store';
 import { GlobalSearch } from '../GlobalSearch/GlobalSearch';
-import { XTableColumn } from '../XTable/XTable.models';
-import { PageOptions } from '../../services/models';
-import { Registry } from '../Registry/Registry';
 import { Loading } from '../Loading/Loading';
-
+import { Registry } from '../Registry/Registry';
+import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
+import { XTableColumn } from '../XTable/XTable.models';
+import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { VectorTableRegistryOpenAction } from './OpenAction/VectorTableRegistry-OpenAction';
 
 import '!style-loader!css-loader!sass-loader!./VectorTableRegistry.scss';

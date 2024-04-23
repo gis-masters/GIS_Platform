@@ -2,7 +2,6 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-
 import { FileConnection, FileInfo } from './files.models';
 
 @boundClass

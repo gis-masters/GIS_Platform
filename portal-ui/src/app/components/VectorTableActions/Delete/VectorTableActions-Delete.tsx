@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Delete, DeleteOutline } from '@mui/icons-material';
 import {
   Dialog,
   DialogActions,
@@ -11,12 +10,13 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { deleteVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { deleteVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { Button } from '../../Button/Button';
 
 const cnVectorTableActionsDelete = cn('VectorTableActions', 'Delete');

@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
-import { AxiosError } from 'axios';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { pluralize } from 'numeralize-ru';
+import { ContentCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, observable, makeObservable } from 'mobx';
-import { ContentCopyOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
+import { pluralize } from 'numeralize-ru';
 
-import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
-import { getProjection, transformGeometry } from '../../services/geoserver/projections.service';
-import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { createFeature } from '../../services/data/vectorData/vectorData.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { communicationService } from '../../services/communication.service';
-import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
+import { createFeature } from '../../services/data/vectorData/vectorData.service';
+import { getProjection, transformGeometry } from '../../services/geoserver/projections.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { mapService } from '../../services/map/map.service';
+import { mapSelectionService } from '../../services/map/map-selection.service';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
-import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Loading } from '../Loading/Loading';
+import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { SelectSuitableVectorLayerDialog } from '../SelectSuitableVectorLayerDialog/SelectSuitableVectorLayerDialog';
 import { Toast } from '../Toast/Toast';
 
 const cnCopyFeaturesButton = cn('CopyFeaturesButton');

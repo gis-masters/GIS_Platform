@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { PlayArrow, Stop } from '@mui/icons-material';
 import { Fab, List } from '@mui/material';
+import { PlayArrow, Stop } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { uploadPhotos } from '../../services/photoUploader.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';

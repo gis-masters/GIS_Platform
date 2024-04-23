@@ -3,7 +3,6 @@ import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
-
 import { LoginFormOrgSelectListItem } from '../OrgSelectListItem/LoginForm-OrgSelectListItem';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm-OrgSelectList.scss';

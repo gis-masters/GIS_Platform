@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import { withBemMod } from '@bem-react/core';
 import Paper from '@mui/material/Paper';
+import { withBemMod } from '@bem-react/core';
 
 import {
-  EditFeatureGeometryGroupProps,
+  cnEditFeatureGeometryGroup,
   ContainerProps,
-  cnEditFeatureGeometryGroup
+  EditFeatureGeometryGroupProps
 } from '../EditFeatureGeometry-Group';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group_multiple.scss';

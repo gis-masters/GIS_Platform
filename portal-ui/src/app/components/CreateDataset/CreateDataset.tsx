@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
-import { PlaylistAdd } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
-import { action, observable, makeObservable } from 'mobx';
+import { PlaylistAdd } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { createDataset } from '../../services/data/vectorData/vectorData.service';
 import { Dataset, datasetSchema, NewDataset } from '../../services/data/vectorData/vectorData.models';
-
+import { createDataset } from '../../services/data/vectorData/vectorData.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 const cnCreateDataset = cn('CreateDataset');

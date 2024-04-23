@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Divider, ListItemText, MenuItem, Select } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { withBemMod } from '@bem-react/core';
-import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
+import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { isEqual } from 'lodash';
 
 import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
-
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_choice.scss';

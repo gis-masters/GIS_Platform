@@ -2,12 +2,11 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
-
+import { XTableExtraColumnType } from '../../XTable.models';
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
-import { XTableExtraColumnType } from '../../XTable.models';
 
 export const withTypeId = withBemMod<
   XTableFilterPanelItemContentProps<unknown>,

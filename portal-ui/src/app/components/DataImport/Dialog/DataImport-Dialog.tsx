@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Button } from '../../Button/Button';
-import { Loading } from '../../Loading/Loading';
-import { DataImportTasksList } from '../../DataImportTasksList/DataImportTasksList';
-import { services } from '../../../services/services';
 import { deleteTask } from '../../../services/geoserver/import/import.service';
+import { services } from '../../../services/services';
 import { currentImport } from '../../../stores/CurrentImport.store';
+import { Button } from '../../Button/Button';
+import { DataImportTasksList } from '../../DataImportTasksList/DataImportTasksList';
+import { Loading } from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./DataImport-Dialog.scss';
 

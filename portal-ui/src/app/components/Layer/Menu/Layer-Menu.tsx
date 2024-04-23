@@ -1,24 +1,38 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, Menu, MenuItem } from '@mui/material';
 import {
   AddCircleOutline,
   CropFree,
-  FileOpenOutlined,
   Delete,
   DeleteOutline,
   Edit,
+  FileOpenOutlined,
   ListAlt,
-  UnarchiveOutlined,
-  TuneOutlined
+  TuneOutlined,
+  UnarchiveOutlined
 } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
-import { cn } from '@bem-react/classname';
 
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
-import { currentProject } from '../../../stores/CurrentProject.store';
+import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
+import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
+import { LibraryRecord } from '../../../services/data/library/library.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
+import {
+  isLayersManagementAllowed,
+  isShapeImportAllowed,
+  isTableExportAllowed,
+  isUpdateAllowed
+} from '../../../services/data/permissions/permissions.service';
+import { Schema } from '../../../services/data/schema/schema.models';
+import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
+import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
+import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -26,37 +40,23 @@ import {
   CrgRasterLayer,
   CrgVectorLayer
 } from '../../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
-import { getLibraryRecord } from '../../../services/data/library/library.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
-import { DataChangeEventDetail, communicationService } from '../../../services/communication.service';
-import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { services } from '../../../services/services';
-import {
-  isTableExportAllowed,
-  isLayersManagementAllowed,
-  isUpdateAllowed,
-  isShapeImportAllowed
-} from '../../../services/data/permissions/permissions.service';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { Button } from '../../Button/Button';
+import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
+import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
-import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { LayerTransparency } from '../Transparency/Layer-Transparency';
-import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
-import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
-import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
-import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
-import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
-import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { Toast } from '../../Toast/Toast';
+import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
+import { LayerTransparency } from '../Transparency/Layer-Transparency';
 
 export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 

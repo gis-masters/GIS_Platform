@@ -1,20 +1,19 @@
 import React, { ReactNode } from 'react';
 
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { Basemap } from '../../../../services/data/basemaps/basemaps.models';
 import {
   getBasemap,
   getBasemaps,
   getBasemapsWithParticularOne
 } from '../../../../services/data/basemaps/basemaps.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
-
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeBasemapsRoot {

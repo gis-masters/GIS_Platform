@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { SystemManagementHeader } from './Header/SystemManagement-Header';
 import { SystemManagementContent } from './Content/SystemManagement-Content';
+import { SystemManagementHeader } from './Header/SystemManagement-Header';
 
 import '!style-loader!css-loader!sass-loader!./SystemManagement.scss';
 

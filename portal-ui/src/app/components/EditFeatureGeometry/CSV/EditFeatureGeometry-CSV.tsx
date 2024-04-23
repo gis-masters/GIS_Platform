@@ -1,18 +1,17 @@
-import React, { Component, ChangeEvent, createRef } from 'react';
+import React, { ChangeEvent, Component, createRef } from 'react';
 import { action, makeObservable } from 'mobx';
-import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { isEqual, clone } from 'lodash';
+import { clone, isEqual } from 'lodash';
 import { parse } from 'papaparse';
 
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { communicationService } from '../../../services/communication.service';
-
-import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
+import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');
 

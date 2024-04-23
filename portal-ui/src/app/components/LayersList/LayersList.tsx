@@ -1,15 +1,14 @@
 import React, { Component, ReactElement } from 'react';
-import { Checkbox } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
-import { XTable } from '../XTable/XTable';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
-
-import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
+import { XTable } from '../XTable/XTable';
 import { LayersListEmpty } from './Empty/LayersList-Empty';
+import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
 
 import '!style-loader!css-loader!sass-loader!./LayersList.scss';
 import '!style-loader!css-loader!sass-loader!./Header/LayersList-Header.scss';

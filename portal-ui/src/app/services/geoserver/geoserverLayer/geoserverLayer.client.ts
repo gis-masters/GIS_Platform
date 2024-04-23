@@ -3,7 +3,6 @@ import { boundClass } from 'autobind-decorator';
 import { http } from '../../api/http.service';
 import { replaceUrl } from '../../api/server-urls.service';
 import { GeoserverClient } from '../GeoserverClient';
-
 import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
 
 @boundClass

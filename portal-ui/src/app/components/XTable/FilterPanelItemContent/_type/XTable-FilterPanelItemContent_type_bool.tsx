@@ -3,7 +3,6 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filterObjects';
-
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps

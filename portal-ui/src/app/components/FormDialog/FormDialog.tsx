@@ -1,21 +1,21 @@
 import React, { Component, ReactNode } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { RegistryConsumer } from '@bem-react/di';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
+import { RegistryConsumer } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 
-import { generateRandomId } from '../../services/util/randomId';
-import { CommonDiRegistry } from '../../services/di-registry';
 import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
-import { getDefaultValues } from '../Form/Form.utils';
-import { ActionsRight } from '../ActionsRight/ActionsRight';
+import { CommonDiRegistry } from '../../services/di-registry';
+import { generateRandomId } from '../../services/util/randomId';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button, ButtonProps } from '../Button/Button';
-import { FormRole } from '../Form/Form.async';
 import { FormProps } from '../Form/Form';
+import { FormRole } from '../Form/Form.async';
+import { getDefaultValues } from '../Form/Form.utils';
 
 import '!style-loader!css-loader!sass-loader!./FormDialog.scss';
 

@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { Button } from '../../../Button/Button';
-
-import { cnActionsItem, ActionsItemProps } from '../Actions-Item.base';
 import { MenuButton } from '../../../MenuButton/MenuButton';
+import { ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
 
 const ActionsItemAsButton: FC<ActionsItemProps> = ({
   title,

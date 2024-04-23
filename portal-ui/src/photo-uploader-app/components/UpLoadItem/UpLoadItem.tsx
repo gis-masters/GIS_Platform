@@ -1,11 +1,10 @@
 import React, { FC, ReactNode } from 'react';
-import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { observer } from 'mobx-react';
-
+import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { getCoordinatesByFeature } from '../../services/photoUploader.service';
 import { UploadedFile } from '../../services/photoUploader.models';
+import { getCoordinatesByFeature } from '../../services/photoUploader.service';
 
 import '!style-loader!css-loader!sass-loader!./Title/UpLoadItem-Title.scss';
 import '!style-loader!css-loader!sass-loader!./Image/UpLoadItem-Image.scss';

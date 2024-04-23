@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import {
   PrincipalType,

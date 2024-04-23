@@ -2,40 +2,39 @@ import React, { ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { Emitter } from '../../../../services/common/Emitter';
-import { formatDate } from '../../../../services/util/date.util';
-import { CommonDiRegistry } from '../../../../services/di-registry';
-import { Role } from '../../../../services/data/permissions/permissions.models';
-import { PageOptions, SortOrder } from '../../../../services/models';
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
 import {
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne,
   getLibrarySchemaByRecord
 } from '../../../../services/data/library/library.service';
-import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
+import { Role } from '../../../../services/data/permissions/permissions.models';
+import { CommonDiRegistry } from '../../../../services/di-registry';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
-
+import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
+import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
+import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
+import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import {
   Adapter,
   ExplorerItemData,
   ExplorerItemDataAllTypes,
   ExplorerItemType,
-  SortItem,
-  itemTypeError
+  itemTypeError,
+  SortItem
 } from '../../Explorer.models';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
 import { ExplorerStore } from '../../Explorer.store';
-import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
-import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
-import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
-import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 function assertExplorerItemDataTypeFolder(
   item: ExplorerItemData

@@ -1,6 +1,6 @@
 import { UploadFileInfo } from '../../../components/LibraryMassKptLoad/LibraryMassKptLoad';
-import { PropertySchema } from '../schema/schema.models';
 import { LibraryRecord } from '../library/library.models';
+import { PropertySchema } from '../schema/schema.models';
 
 export interface KptTaskInfo {
   id: number;

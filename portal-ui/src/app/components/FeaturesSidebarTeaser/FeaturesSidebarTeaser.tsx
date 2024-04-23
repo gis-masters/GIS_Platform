@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge } from '@mui/material';
-import { cn } from '@bem-react/classname';
 import { EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../stores/Map.store';
-import { ViewLocation } from '../Icons/ViewLocation';
-import { IconButton } from '../IconButton/IconButton';
-import { sidebars } from '../../stores/Sidebars.store';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { mapStore } from '../../stores/Map.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import { IconButton } from '../IconButton/IconButton';
+import { ViewLocation } from '../Icons/ViewLocation';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesSidebarTeaser.scss';
 

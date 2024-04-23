@@ -1,14 +1,14 @@
 import React, { Component, ReactNode } from 'react';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
+import { Breakpoint } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Breakpoint } from '@mui/material';
-import { computed } from 'mobx';
 
-import { allProjects } from '../../stores/AllProjects.store';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { allProjects } from '../../stores/AllProjects.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnSelectProjectDialogProps = cn('SelectProjectDialog');

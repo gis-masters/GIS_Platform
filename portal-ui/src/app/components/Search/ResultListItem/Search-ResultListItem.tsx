@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { MyLocation } from '@mui/icons-material';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
-import { SimpleGeometry } from 'ol/geom';
-import { Icon, Style } from 'ol/style';
-import { fromLonLat } from 'ol/proj';
-import { Extent } from 'ol/extent';
-import Point from 'ol/geom/Point';
-import { Feature } from 'ol';
-import { boundMethod } from 'autobind-decorator';
+import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
+import { Feature } from 'ol';
+import { Extent } from 'ol/extent';
+import { SimpleGeometry } from 'ol/geom';
+import Point from 'ol/geom/Point';
+import { fromLonLat } from 'ol/proj';
+import { Icon, Style } from 'ol/style';
 
-import { YaGeoObject } from '../../../services/yandex-geocode.service';
 import { mapService } from '../../../services/map/map.service';
+import { YaGeoObject } from '../../../services/yandex-geocode.service';
 
 const cnSearch = cn('Search');
 

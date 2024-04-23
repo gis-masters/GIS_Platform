@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
+import { Schema } from '../../services/data/schema/schema.models';
 import { Task } from '../../services/data/task/task.models';
-
+import { Actions } from '../Actions/Actions.composed';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { TasksJournalActionsEdit } from './Edit/TasksJournalActions-Edit';
 import { TasksJournalActionsHistory } from './History/TasksJournalActions-History';
 import { TasksJournalActionsStatus } from './Status/TasksJournalActions-Status';
-import { TasksJournalActionsEdit } from './Edit/TasksJournalActions-Edit';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
-import { Schema } from '../../services/data/schema/schema.models';
-import { Actions } from '../Actions/Actions.composed';
 
 export const cnLibraryTaskActions = cn('LibraryTaskActions');
 

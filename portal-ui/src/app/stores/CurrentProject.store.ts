@@ -2,10 +2,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { getPatch } from '../services/util/patch';
 import { Role } from '../services/data/permissions/permissions.models';
-import { isVectorFromFile } from '../services/gis/layers/layers.utils';
-import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -14,6 +11,9 @@ import {
   CrgVectorLayer,
   NewCrgLayer
 } from '../services/gis/layers/layers.models';
+import { isVectorFromFile } from '../services/gis/layers/layers.utils';
+import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
+import { getPatch } from '../services/util/patch';
 
 interface CrgProjectData extends CrgProject {
   layers: (CrgLayer | NewCrgLayer)[];

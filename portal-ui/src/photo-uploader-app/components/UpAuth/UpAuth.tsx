@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { UpLogo } from './UpLogo/UpLogo';
 import { LoginForm } from '../../../app/components/LoginForm/LoginForm';
+import { UpLogo } from './UpLogo/UpLogo';
 
 import '!style-loader!css-loader!sass-loader!./UpAuth.scss';
 

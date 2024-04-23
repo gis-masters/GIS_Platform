@@ -3,10 +3,9 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaCustom, PropertyType } from '../../../../services/data/schema/schema.models';
-
-import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeCustom extends Component<FormControlProps> {

@@ -1,6 +1,7 @@
-import { isEqual } from 'lodash';
 import { action } from 'mobx';
+import { isEqual } from 'lodash';
 
+import { FiasValue } from '../../services/data/fias/fias.models';
 import {
   PropertyFormula,
   PropertySchema,
@@ -10,7 +11,6 @@ import {
   ValueFormula
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
-import { FiasValue } from '../../services/data/fias/fias.models';
 
 const fromComplex: Partial<
   Record<PropertyType, <T>(propertySchema: PropertySchema, formValue: Partial<T>, fieldValue: unknown) => Partial<T>>

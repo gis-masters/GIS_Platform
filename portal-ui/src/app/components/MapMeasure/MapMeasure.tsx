@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, SquareFoot } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../stores/Map.store';
 import { MapMode } from '../../services/map/map.models';
 import { mapMeasureService, MeasureMode } from '../../services/map/map-measure.service';
+import { mapStore } from '../../stores/Map.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
 

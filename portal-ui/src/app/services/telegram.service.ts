@@ -1,6 +1,6 @@
 import { currentUser } from '../stores/CurrentUser.store';
-import { escapeHtml } from './util/escapeHtml';
 import { environment } from './environment';
+import { escapeHtml } from './util/escapeHtml';
 
 export async function sendTelegramError(error: string): Promise<void> {
   const protocol = window.location.protocol.slice(0, -1);

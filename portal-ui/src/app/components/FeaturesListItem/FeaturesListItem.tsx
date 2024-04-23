@@ -1,23 +1,23 @@
 import React, { Component, CSSProperties, ReactNode } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { IconButton, Tooltip } from '@mui/material';
+import { ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { ArrowForward } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
-import { observable, action, makeObservable, computed } from 'mobx';
 
+import { Schema } from '../../services/data/schema/schema.models';
+import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
+import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { FeatureError } from '../../services/map/map-link-following.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { Schema } from '../../services/data/schema/schema.models';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
-import { FeatureError } from '../../services/map/map-link-following.service';
-import { projectsService } from '../../services/gis/projects/projects.service';
 import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
-import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
 

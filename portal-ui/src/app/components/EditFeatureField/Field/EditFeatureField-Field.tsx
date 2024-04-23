@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ValueType, EditedField } from '../../../services/data/schema/schemaOld.models';
+import { EditedField, ValueType } from '../../../services/data/schema/schemaOld.models';
 import { EditFeatureFieldControl } from '../Control/EditFeatureField-Control.composed';
 import { EditFeatureInfo } from '../EditFeatureField';
 

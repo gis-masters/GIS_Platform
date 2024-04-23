@@ -5,12 +5,11 @@ import nl2br from 'react-nl2br';
 
 import { PropertySchemaString, PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
-
-import { cnFormView } from '../Form-View';
-import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormControlProps } from '../../Control/Form-Control';
-import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { cnFormView } from '../Form-View';
 
 import '!style-loader!css-loader!sass-loader!./Form-View_type_string.scss';
 

@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
 import { FileIcon } from '../../FileIcon/FileIcon';
+import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
 
 const cnFilesIcon = cn('Files', 'Icon');
 

@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useEffect } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer, useLocalObservable } from 'mobx-react';
-
-import { getVectorTableConnections } from '../../../app/services/data/vectorData/vectorData.service';
-import { FileConnection } from '../../../app/services/data/files/files.models';
-import { photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { cn } from '@bem-react/classname';
 import { ConnectionsTableToProjectsWidget } from 'src/app/components/ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
+
+import { FileConnection } from '../../../app/services/data/files/files.models';
+import { getVectorTableConnections } from '../../../app/services/data/vectorData/vectorData.service';
+import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
 interface UpConnectionsToProjectsState {
   vectorTableConnections: FileConnection[] | null;

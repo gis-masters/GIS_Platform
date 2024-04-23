@@ -1,6 +1,5 @@
 import { wsService } from '../../ws.service';
 import { Process } from '../processes/processes.models';
-
 import { exportClient } from './export.client';
 import { ExportRequest, ExportResourceModel } from './export.models';
 

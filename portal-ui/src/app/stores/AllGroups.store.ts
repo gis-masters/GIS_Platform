@@ -1,4 +1,4 @@
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { CrgGroup } from '../services/auth/groups/groups.models';
 

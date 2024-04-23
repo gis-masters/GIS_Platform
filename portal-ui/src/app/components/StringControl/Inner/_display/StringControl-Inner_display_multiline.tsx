@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { StringControlInnerBase, StringControlInnerProps, cnStringControlInner } from '../StringControl-Inner.base';
+import { cnStringControlInner, StringControlInnerBase, StringControlInnerProps } from '../StringControl-Inner.base';
 
 const StringControlInnerDisplayMultiline: FC<StringControlInnerProps> = props => (
   <StringControlInnerBase

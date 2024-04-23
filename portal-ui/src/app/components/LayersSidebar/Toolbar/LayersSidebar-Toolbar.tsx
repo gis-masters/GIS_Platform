@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
-import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
-import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
-import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { LayersSettings } from '../../Icons/LayersSettings';
 import { IconButton } from '../../IconButton/IconButton';
 import { LayerAdd } from '../../Icons/LayerAdd';
-
+import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
+import { LayersSettings } from '../../Icons/LayersSettings';
+import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
+import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 

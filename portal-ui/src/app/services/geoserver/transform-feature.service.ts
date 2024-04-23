@@ -1,23 +1,23 @@
 import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
-import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
-import { wfsGeometryToGeometry } from '../util/open-layers.util';
-import { OldSchema } from '../data/schema/schemaOld.models';
-import { getFeatureProjection } from './projections.service';
 import { currentUser } from '../../stores/CurrentUser.store';
-import { createFeature } from '../data/vectorData/vectorData.service';
-import { usersService } from '../auth/users/users.service';
-import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
-import { CrgLayer } from '../gis/layers/layers.models';
-import { FeatureUtil } from '../util/FeatureUtil';
-import { buildComplexName, extractFeatureId } from './feature.util';
-import { environment } from '../environment';
-import { services } from '../services';
 import { http } from '../api/http.service';
+import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
+import { usersService } from '../auth/users/users.service';
+import { OldSchema } from '../data/schema/schemaOld.models';
+import { createFeature } from '../data/vectorData/vectorData.service';
+import { environment } from '../environment';
+import { CrgLayer } from '../gis/layers/layers.models';
+import { services } from '../services';
+import { FeatureUtil } from '../util/FeatureUtil';
 import { Mime } from '../util/Mime';
+import { wfsGeometryToGeometry } from '../util/open-layers.util';
+import { buildComplexName, extractFeatureId } from './feature.util';
+import { getFeatureProjection } from './projections.service';
+import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
 
 export enum TransactionType {
   INSERT = 'insert',

@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { IconButton, Tooltip } from '@mui/material';
-import { Coordinate } from 'ol/coordinate';
-import { compose } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { compose } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { Coordinate } from 'ol/coordinate';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { ContourAdd } from '../../Icons/ContourAdd';
-
-import { EditFeatureGeometryToolbarRight } from '../ToolbarRight/EditFeatureGeometry-ToolbarRight';
-import { EditFeatureGeometryToolbarLeft } from '../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
-import { EditFeatureGeometryGroup as GroupBase } from '../Group/EditFeatureGeometry-Group';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
-import { withMultiple } from '../Group/_multiple/EditFeatureGeometry-Group_multiple';
-import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolbar';
 import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
+import { withMultiple } from '../Group/_multiple/EditFeatureGeometry-Group_multiple';
+import { EditFeatureGeometryGroup as GroupBase } from '../Group/EditFeatureGeometry-Group';
+import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolbar';
+import { EditFeatureGeometryToolbarLeft } from '../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
+import { EditFeatureGeometryToolbarRight } from '../ToolbarRight/EditFeatureGeometry-ToolbarRight';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.scss';
 

@@ -1,32 +1,31 @@
 import { chunk } from 'lodash';
+import { and, intersects } from 'ol/format/filter';
 import { MultiPolygon } from 'ol/geom';
-import { intersects, and } from 'ol/format/filter';
 
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { getLayerSchema } from '../../gis/layers/layers.service';
+import { MapSelectionTypes } from '../../map/map.models';
+import { PageOptions } from '../../models';
+import { WFS } from '../../ol/WFS';
+import { cql2ol } from '../../util/cql2ol';
+import { cqlBuild } from '../../util/cqlBuild';
+import { cqlConcat } from '../../util/cqlConcat';
+import { cqlParse } from '../../util/cqlParse';
+import { filterFeatures } from '../../util/filterObjects';
+import { Mime } from '../../util/Mime';
 import {
   extractFeatureId,
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromComplexName
 } from '../feature.util';
-import { getLayerSchema } from '../../gis/layers/layers.service';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
-import { filterFeatures } from '../../util/filterObjects';
-import { MapSelectionTypes } from '../../map/map.models';
 import { olProjection } from '../projections.service';
-import { cqlConcat } from '../../util/cqlConcat';
-import { cqlBuild } from '../../util/cqlBuild';
-import { cqlParse } from '../../util/cqlParse';
-import { PageOptions } from '../../models';
-import { cql2ol } from '../../util/cql2ol';
-import { Mime } from '../../util/Mime';
-import { WFS } from '../../ol/WFS';
-
+import { wfsClient } from './wfs.client';
 import { CoordinateEdited, WfsFeature, WfsFeatureCollection } from './wfs.models';
 import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
-import { wfsClient } from './wfs.client';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
   if (!layer.complexName) {

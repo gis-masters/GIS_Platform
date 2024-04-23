@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { observable, makeObservable, action, computed } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { isError } from 'lodash';
 import { boundMethod } from 'autobind-decorator';
+import { isError } from 'lodash';
 
 import { Specialization } from '../../../server-types/common-contracts';
-import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
-import { getSpecializations } from '../../services/auth/specializations/specializations.service';
-import { generateRandomId } from '../../services/util/randomId';
-import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { authService } from '../../services/auth/auth/auth.service';
+import { getSpecializations } from '../../services/auth/specializations/specializations.service';
+import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { services } from '../../services/services';
-import { Form } from '../Form/Form';
-import { Toast } from '../Toast/Toast';
-import { Button } from '../Button/Button';
-import { Loading } from '../Loading/Loading';
+import { generateRandomId } from '../../services/util/randomId';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
+import { Button } from '../Button/Button';
+import { Form } from '../Form/Form';
+import { Loading } from '../Loading/Loading';
 import { SpecializationDescription } from '../SpecializationDescription/SpecializationDescription';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./OrgRegistrationForm.scss';
 

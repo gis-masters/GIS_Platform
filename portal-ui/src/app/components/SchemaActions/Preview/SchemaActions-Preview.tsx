@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Preview, PreviewOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
 import { generateObjectBySchema } from '../../../services/util/generateObjectBySchema';
-
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
 
 import '!style-loader!css-loader!sass-loader!../PreviewDialogSubmitButton/SchemaActions-PreviewDialogSubmitButton.scss';

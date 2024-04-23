@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { EpsgModel } from '../../../server-types/common-contracts';
 import {
   EpsgModelModified,
   isArrayOfEpsgModelModified,
   isEpsgModelModified
 } from '../../services/data/epsg/epsg.models';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
-import { isStringArray } from '../../services/util/typeGuards/isStringArray';
-import { SelectEPSGControlChip } from './Chip/SelectEPSGControl-Chip';
 import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
-import { EpsgModel } from '../../../server-types/common-contracts';
-import { FormControlProps } from '../Form/Control/Form-Control';
 import { PageOptions } from '../../services/models';
+import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { Button } from '../Button/Button';
+import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { FormControlProps } from '../Form/Control/Form-Control';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
+import { SelectEPSGControlChip } from './Chip/SelectEPSGControl-Chip';
 
 import '!style-loader!css-loader!sass-loader!./SelectEPSGControl.scss';
 

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { InputAdornment, Slider, TextField } from '@mui/material';
+import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaNumber } from '../../../../services/data/schema/schema.models';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_number.scss';
 

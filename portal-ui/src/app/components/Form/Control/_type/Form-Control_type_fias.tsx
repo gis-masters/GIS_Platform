@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaFias, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FiasValue } from '../../../../services/data/fias/fias.models';
+import { PropertySchemaFias, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Fias } from '../../../Fias/Fias';
-
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
 class FormControlTypeFias extends Component<FormControlProps> {

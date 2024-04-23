@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { CircularProgress, List, ListItemButton, ListItemText } from '@mui/material';
-import { ErrorOutlined, DoneOutlined } from '@mui/icons-material';
+import { DoneOutlined, ErrorOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { FilesPlacementReportStore } from '../FilesPlacementDialog/FilesPlacementDialog.store';
 

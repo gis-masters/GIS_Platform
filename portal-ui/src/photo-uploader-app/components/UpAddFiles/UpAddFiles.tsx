@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
-import { pluralize } from 'numeralize-ru';
 import { cn } from '@bem-react/classname';
+import { pluralize } from 'numeralize-ru';
 
 import { FileInput, FileInputProps } from '../../../app/components/FileInput/FileInput';
 import { Toast } from '../../../app/components/Toast/Toast';
 import { UploadedFile } from '../../services/photoUploader.models';
-import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { getFilesInfoByFileList } from '../../services/photoUploader.service';
+import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
 const addHandler = async (checkedFiles: FileList | null) => {
   const files: File[] = [...checkedFiles].filter(item => item.type !== '' && item.type.startsWith('image/'));

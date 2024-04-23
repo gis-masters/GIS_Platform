@@ -1,10 +1,10 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageOptions } from '../../models';
-import { preparePageOptions } from '../../api/http.utils';
-import { http } from '../../api/http.service';
-import { Client } from '../../api/Client';
 import { EpsgModel, PageableResources } from '../../../../server-types/common-contracts';
+import { Client } from '../../api/Client';
+import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { PageOptions } from '../../models';
 
 @boundClass
 class EpsgClient extends Client {

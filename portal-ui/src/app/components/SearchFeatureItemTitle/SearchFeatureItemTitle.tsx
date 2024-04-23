@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { observable, action, makeObservable, computed } from 'mobx';
-
-import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
-import { schemaService } from '../../services/data/schema/schema.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { Schema } from '../../services/data/schema/schema.models';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
 
 interface FeatureTitleProps {
   feature: WfsFeature;

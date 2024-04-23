@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC, RefObject } from 'react';
+import { Paper, PaperProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Paper, PaperProps } from '@mui/material';
 
 import { ChildrenProps } from '../../../services/models';
 

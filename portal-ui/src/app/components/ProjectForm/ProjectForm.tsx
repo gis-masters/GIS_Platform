@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { TextField } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { Loading } from '../Loading/Loading';
 import { Button, ButtonProps } from '../Button/Button';
+import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./ProjectForm.scss';
 

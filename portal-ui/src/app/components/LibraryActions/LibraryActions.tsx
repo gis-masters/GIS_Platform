@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
 
-import { Role } from '../../services/data/permissions/permissions.models';
-import { getLibrary } from '../../services/data/library/library.service';
 import { Library } from '../../services/data/library/library.models';
+import { getLibrary } from '../../services/data/library/library.service';
+import { Role } from '../../services/data/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
-
 import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
 
 interface LibraryActionsProps {

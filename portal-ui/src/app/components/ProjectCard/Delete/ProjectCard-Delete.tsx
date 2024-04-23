@@ -3,13 +3,13 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { projectsService } from '../../../services/gis/projects/projects.service';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { currentUser } from '../../../stores/CurrentUser.store';
 import { Role } from '../../../services/data/permissions/permissions.models';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Delete.scss';

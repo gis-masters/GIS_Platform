@@ -1,15 +1,15 @@
 import { Coordinate } from 'ol/coordinate';
 
+import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { Pages, route } from '../../stores/Route.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
-import { buildFeaturesUrlFragment, FeaturesUrlFragment } from './map.util';
 import { extractFeatureId } from '../geoserver/feature.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
-import { notFalsyFilter } from '../util/NotFalsyFilter';
+import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { services } from '../services';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
+import { buildFeaturesUrlFragment, FeaturesUrlFragment } from './map.util';
 
 export async function setMapPositionToUrl(zoom: number, center: Coordinate): Promise<void> {
   await sleep(100);

@@ -1,15 +1,15 @@
-import { CrgProject } from './gis/projects/projects.models';
-import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
-import { ExplorerSearchValue } from '../components/Explorer/Explorer.models';
-import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
-import { Library, LibraryRecord } from './data/library/library.models';
-import { Basemap } from './data/basemaps/basemaps.models';
-import { WfsFeature } from './geoserver/wfs/wfs.models';
-import { FileInfo } from './data/files/files.models';
-import { Schema } from './data/schema/schema.models';
-import { Emitter } from './common/Emitter';
-import { Task } from './data/task/task.models';
 import { ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
+import { ExplorerSearchValue } from '../components/Explorer/Explorer.models';
+import { Emitter } from './common/Emitter';
+import { Basemap } from './data/basemaps/basemaps.models';
+import { FileInfo } from './data/files/files.models';
+import { Library, LibraryRecord } from './data/library/library.models';
+import { Schema } from './data/schema/schema.models';
+import { Task } from './data/task/task.models';
+import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
+import { WfsFeature } from './geoserver/wfs/wfs.models';
+import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
+import { CrgProject } from './gis/projects/projects.models';
 
 export interface DataChangeEventDetail<T> {
   type: 'create' | 'update' | 'delete';

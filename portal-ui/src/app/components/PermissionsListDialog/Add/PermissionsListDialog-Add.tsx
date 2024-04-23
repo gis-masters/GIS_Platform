@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { Tooltip, IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
 import { PrincipalType } from '../../../services/data/permissions/permissions.models';
 import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
-
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 
 const cnPermissionsListDialogAdd = cn('PermissionsListDialog', 'Add');

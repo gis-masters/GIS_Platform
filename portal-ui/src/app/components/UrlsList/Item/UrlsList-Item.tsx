@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { getUrlSubFormSchema } from '../../../services/util/form/fieldUrl';
 import { PropertySchemaUrl } from '../../../services/data/schema/schema.models';
-import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
-import { HtmlContent } from '../../HtmlContent/HtmlContent';
-import { PseudoLink } from '../../PseudoLink/PseudoLink';
-import { IconButton } from '../../IconButton/IconButton';
-import { FormDialog } from '../../FormDialog/FormDialog';
-import { Loading } from '../../Loading/Loading';
+import { getUrlSubFormSchema } from '../../../services/util/form/fieldUrl';
 import { Button } from '../../Button/Button';
+import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
+import { FormDialog } from '../../FormDialog/FormDialog';
+import { HtmlContent } from '../../HtmlContent/HtmlContent';
+import { IconButton } from '../../IconButton/IconButton';
 import { Link } from '../../Link/Link';
+import { Loading } from '../../Loading/Loading';
+import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!../Placeholder/UrlsList-Placeholder.scss';
 import '!style-loader!css-loader!sass-loader!../Button/UrlsList-Button.scss';

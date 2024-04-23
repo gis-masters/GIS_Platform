@@ -3,7 +3,6 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
-
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 const XTableCellContentTypeDateTime: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => (

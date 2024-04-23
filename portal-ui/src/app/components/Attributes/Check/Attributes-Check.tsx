@@ -4,10 +4,10 @@ import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../../stores/Map.store';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { mapStore } from '../../../stores/Map.store';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Check.scss';
 

@@ -5,7 +5,6 @@ import { PropertySchema, PropertyType, SimpleSchema } from '../../../services/da
 import { generateRandomId } from '../../../services/util/randomId';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
-
 import { ChangePasswordFormTitle } from '../Title/ChangePasswordForm-Title';
 
 const cnChangePasswordFormForm = cn('ChangePasswordForm', 'Form');

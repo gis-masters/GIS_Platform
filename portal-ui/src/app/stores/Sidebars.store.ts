@@ -1,13 +1,13 @@
-import { observable, action, reaction, makeObservable } from 'mobx';
+import { action, makeObservable, observable, reaction } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from './Map.store';
-import { route, Pages } from './Route.store';
+import { Properties } from '../components/edit-feature/edit-feature.component';
+import { SearchInfo } from '../components/SearchField/SearchField';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
 import { FeatureError } from '../services/map/map-link-following.service';
-import { Properties } from '../components/edit-feature/edit-feature.component';
-import { SearchInfo } from '../components/SearchField/SearchField';
+import { mapStore } from './Map.store';
+import { Pages, route } from './Route.store';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',

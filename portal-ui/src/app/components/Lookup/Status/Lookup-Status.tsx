@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { CircularProgress, Tooltip } from '@mui/material';
 import { CheckOutlined, LockOutlined, ReportGmailerrorredOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./Lookup-Status.scss';
 

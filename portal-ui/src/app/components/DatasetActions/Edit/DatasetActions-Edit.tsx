@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
 import { IconButton, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { datasetSchema, Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { Dataset, datasetSchema } from '../../../services/data/vectorData/vectorData.models';
 import { updateDataset } from '../../../services/data/vectorData/vectorData.service';
-import { FormDialog } from '../../FormDialog/FormDialog';
-import { getPatch } from '../../../services/util/patch';
 import { services } from '../../../services/services';
+import { getPatch } from '../../../services/util/patch';
+import { FormDialog } from '../../FormDialog/FormDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsEdit = cn('DatasetActions', 'Edit');

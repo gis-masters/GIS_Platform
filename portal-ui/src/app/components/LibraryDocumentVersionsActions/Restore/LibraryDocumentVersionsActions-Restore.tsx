@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import { observable, makeObservable, action } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Restore, RestoreOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
+import { Restore, RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryRecord, LibraryRecordRaw } from '../../../services/data/library/library.models';
+import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { getPatch } from '../../../services/util/patch';
-import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
-
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentVersionsActionsRestore = cn('LibraryDocumentVersionsActions', 'Restore');
 const cnLibraryDocumentVersionsActionsRestoreDialog = cn('LibraryDocumentVersionsActionsRestore', 'Dialog');

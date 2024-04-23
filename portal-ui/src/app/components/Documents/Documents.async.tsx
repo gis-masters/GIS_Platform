@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaDocument } from '../../services/data/schema/schema.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { PropertySchemaDocument } from '../../services/data/schema/schema.models';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
-
-import { DocumentsItem } from './Item/Documents-Item';
 import { DocumentsAdd } from './Add/Documents-Add';
+import { DocumentsItem } from './Item/Documents-Item';
 
 const cnDocuments = cn('Documents');
 

@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { getDataset } from '../../services/data/vectorData/vectorData.service';
-import { Dataset } from '../../services/data/vectorData/vectorData.models';
 import { Role } from '../../services/data/permissions/permissions.models';
-
-import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';
+import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { getDataset } from '../../services/data/vectorData/vectorData.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { DatasetActionsAddToProject } from './AddToProject/DatasetActions-AddToProject';
+import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';
 import { DatasetActionsEdit } from './Edit/DatasetActions-Edit';
 
 const cnDatasetActions = cn('DatasetActions');

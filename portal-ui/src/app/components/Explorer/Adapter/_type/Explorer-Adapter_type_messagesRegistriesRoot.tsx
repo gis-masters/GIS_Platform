@@ -1,17 +1,16 @@
 import React, { ReactNode } from 'react';
 import { EmailOutlined } from '@mui/icons-material';
 
-import { staticImplements } from '../../../../services/util/staticImplements';
-
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import {
   getMessagesRegistries,
   getMessagesRegistriesWithParticularOne,
   getMessagesRegistry
 } from '../../../../services/data/messagesRegistries/messagesRegistries.service';
 import { PageOptions } from '../../../../services/models';
-import { ExplorerStore } from '../../Explorer.store';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeMessagesRegistriesRoot {

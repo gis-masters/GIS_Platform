@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import {
   Edit,
   EditNoteOutlined,
@@ -9,24 +10,23 @@ import {
   Schema as SchemaIcon,
   SchemaOutlined
 } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
-import { updateVectorTableSchema } from '../../../services/data/vectorData/vectorData.service';
-import { Schema, schemaForSchema } from '../../../services/data/schema/schema.models';
-import { updateLibrarySchema } from '../../../services/data/library/library.service';
-import { DataEntityType, VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { schemaService } from '../../../services/data/schema/schema.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
-import { SchemaActionsPreview } from '../Preview/SchemaActions-Preview';
 import { Library } from '../../../services/data/library/library.models';
+import { updateLibrarySchema } from '../../../services/data/library/library.service';
+import { Schema, schemaForSchema } from '../../../services/data/schema/schema.models';
+import { schemaService } from '../../../services/data/schema/schema.service';
+import { DataEntityType, VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { updateVectorTableSchema } from '../../../services/data/vectorData/vectorData.service';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { SchemaCard } from '../../SchemaCard/SchemaCard';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
+import { SchemaCard } from '../../SchemaCard/SchemaCard';
+import { SchemaActionsPreview } from '../Preview/SchemaActions-Preview';
 
 import '!style-loader!css-loader!sass-loader!../EditInJsonForm/SchemaActions-EditInJsonForm.scss';
 import '!style-loader!css-loader!sass-loader!../Error/SchemaActions-Error.scss';

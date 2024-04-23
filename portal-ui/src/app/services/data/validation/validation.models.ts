@@ -1,6 +1,6 @@
 import { ValidationError } from '../../util/FeaturePropertyValidators';
-import { ProcessStatus } from '../processes/processes.models';
 import { ExportResourceModel } from '../export/export.models';
+import { ProcessStatus } from '../processes/processes.models';
 
 export interface ValidationResultsResponse {
   validated: boolean;

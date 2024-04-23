@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
-import { AxiosError } from 'axios';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
+import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
+import { AxiosError } from 'axios';
 
+import { http } from '../../../services/api/http.service';
 import { EditedField } from '../../../services/data/schema/schemaOld.models';
 import { environment } from '../../../services/environment';
-import { http } from '../../../services/api/http.service';
 import { services } from '../../../services/services';
-import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
+import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
 import { Link } from '../../Link/Link';
-
+import { Toast } from '../../Toast/Toast';
 import { DocumentListItemData } from '../DocumentsList';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsList-Item.scss';

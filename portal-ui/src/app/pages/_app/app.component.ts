@@ -1,11 +1,11 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy, OnChanges } from '@angular/core';
-import { ToastContainer, toast } from 'react-toastify';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
+import { toast, ToastContainer } from 'react-toastify';
 
-import { registry } from '../../services/di-registry';
 import { Toast } from '../../components/Toast/Toast';
+import { registry } from '../../services/di-registry';
 
 const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
 

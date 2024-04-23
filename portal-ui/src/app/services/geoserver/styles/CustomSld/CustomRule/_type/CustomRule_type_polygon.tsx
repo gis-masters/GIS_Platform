@@ -1,20 +1,20 @@
 import React, { FC, Fragment } from 'react';
 
-import { PolygonSymbolizer } from '../../PolygonSymbolizer/PolygonSymbolizer';
-import { WellKnownName } from '../../WellKnownName/WellKnownName';
-import { SvgParameter } from '../../SvgParameter/SvgParameter';
-import { GraphicFill } from '../../GraphicFill/GraphicFill';
-import { Graphic } from '../../Graphic/Graphic';
-import { Stroke } from '../../Stroke/Stroke';
 import { Fill } from '../../Fill/Fill';
-import { Rule } from '../../Rule/Rule';
-import { Mark } from '../../Mark/Mark';
-import { Size } from '../../Size/Size';
-import { CustomRuleProps } from '../CustomRule';
 import { Filter } from '../../Filter/Filter';
-import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
 import { Function } from '../../Function/Function';
+import { Graphic } from '../../Graphic/Graphic';
+import { GraphicFill } from '../../GraphicFill/GraphicFill';
 import { Literal } from '../../Literal/Literal';
+import { Mark } from '../../Mark/Mark';
+import { PolygonSymbolizer } from '../../PolygonSymbolizer/PolygonSymbolizer';
+import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
+import { Rule } from '../../Rule/Rule';
+import { Size } from '../../Size/Size';
+import { Stroke } from '../../Stroke/Stroke';
+import { SvgParameter } from '../../SvgParameter/SvgParameter';
+import { WellKnownName } from '../../WellKnownName/WellKnownName';
+import { CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'polygon') {

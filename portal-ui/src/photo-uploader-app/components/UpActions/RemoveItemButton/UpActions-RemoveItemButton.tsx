@@ -1,10 +1,10 @@
 import React, { FC, useCallback } from 'react';
-import { DeleteOutline } from '@mui/icons-material';
 import { observer } from 'mobx-react';
+import { DeleteOutline } from '@mui/icons-material';
 
+import { IconButton } from '../../../../app/components/IconButton/IconButton';
 import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
-import { IconButton } from '../../../../app/components/IconButton/IconButton';
 
 interface UpActionsRemoveItemButtonProps {
   title: string;

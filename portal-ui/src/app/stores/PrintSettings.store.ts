@@ -1,4 +1,4 @@
-import { observable, computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { cloneDeep } from 'lodash';
 
 import { StyleRule } from '../services/geoserver/styles/styles.models';

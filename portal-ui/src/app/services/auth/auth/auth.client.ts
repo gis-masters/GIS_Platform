@@ -1,8 +1,8 @@
 import { boundClass } from 'autobind-decorator';
 
-import { Mime } from '../../util/Mime';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
+import { Mime } from '../../util/Mime';
 import { AuthCredentials, OrganizationsListItemInfo, RegData } from './auth.models';
 
 @boundClass

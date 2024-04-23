@@ -2,9 +2,9 @@ import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
-import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
 
 const defaultProps = {
   enabled: true,

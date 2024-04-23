@@ -1,19 +1,19 @@
 import React, { Component, ReactNode } from 'react';
-import { isEqual } from 'lodash';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { action, computed, observable, makeObservable } from 'mobx';
 import { Breakpoint, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
+import { isEqual } from 'lodash';
 
-import { XTableColumn } from '../XTable/XTable.models';
 import { PageOptions } from '../../services/models';
-import { Button, ButtonProps } from '../Button/Button';
-import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { SortParams } from '../../services/util/sortObjects';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
+import { Button, ButtonProps } from '../Button/Button';
+import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
+import { XTableColumn } from '../XTable/XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./Content/ChooseXTableDialog-Content.scss';
 import '!style-loader!css-loader!sass-loader!./Table/ChooseXTableDialog-Table.scss';

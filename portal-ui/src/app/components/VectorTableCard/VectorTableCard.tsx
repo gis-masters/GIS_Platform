@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -7,9 +7,9 @@ import { isEqual } from 'lodash';
 
 import { VectorTable, vectorTableSchema } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
+import { formatDate } from '../../services/util/date.util';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { formatDate } from '../../services/util/date.util';
 
 import '!style-loader!css-loader!sass-loader!./VectorTableCard.scss';
 

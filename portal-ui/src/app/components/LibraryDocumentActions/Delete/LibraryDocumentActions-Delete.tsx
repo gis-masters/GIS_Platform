@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Accordion,
@@ -13,21 +13,20 @@ import {
   List
 } from '@mui/material';
 import { Delete, DeleteOutline, ExpandMore } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { FileConnection } from '../../../services/data/files/files.models';
 import { getFileConnections } from '../../../services/data/files/files.service';
 import { getLibraryRecordFiles } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/library/library.service';
-import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { Button } from '../../Button/Button';
-
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Schema } from '../../../services/data/schema/schema.models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Button } from '../../Button/Button';
+import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 
 const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Delete');
 const cnLibraryDocumentActionsDeleteDialog = cn('LibraryDocumentActions', 'DeleteDialog');

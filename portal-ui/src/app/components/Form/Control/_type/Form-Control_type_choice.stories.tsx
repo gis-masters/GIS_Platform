@@ -1,12 +1,12 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
 import { Button } from '@mui/material';
 import { Send } from '@mui/icons-material';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
 import { sleep } from '../../../../services/util/sleep';
-import { Form } from '../../Form';
 import { Toast } from '../../../Toast/Toast';
+import { Form } from '../../Form';
 
 export default {
   title: 'Form/Field/choice',

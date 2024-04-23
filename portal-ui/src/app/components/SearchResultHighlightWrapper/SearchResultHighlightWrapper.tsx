@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
-import { SearchResultHighlight } from '../SearchResultHighlight/SearchResultHighlight';
 import { SearchItemData } from '../../services/data/search/search.model';
+import { SearchResultHighlight } from '../SearchResultHighlight/SearchResultHighlight';
 
 interface SearchResultHighlightWrapperProps {
   item: SearchItemData;

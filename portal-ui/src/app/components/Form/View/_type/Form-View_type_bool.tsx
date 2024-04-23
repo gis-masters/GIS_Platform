@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withBemMod } from '@bem-react/core';
 import { Check, Close } from '@mui/icons-material';
+import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-
-import { cnFormView } from '../Form-View';
-import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormControlProps } from '../../Control/Form-Control';
+import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { cnFormView } from '../Form-View';
 
 import '!style-loader!css-loader!sass-loader!./Form-View_type_bool.scss';
 

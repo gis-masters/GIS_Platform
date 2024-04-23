@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { TableCell, TableRow } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 const cnXTableEmpty = cn('XTable', 'Empty');
 

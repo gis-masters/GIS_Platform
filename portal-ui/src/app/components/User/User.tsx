@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Menu, MenuItem, ListItemIcon, Tooltip } from '@mui/material';
-import { IClassNameProps } from '@bem-react/core';
+import { ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import { AccountCircle, ExitToApp } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { authService } from '../../services/auth/auth/auth.service';
-import { Button } from '../Button/Button';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./User.scss';
 

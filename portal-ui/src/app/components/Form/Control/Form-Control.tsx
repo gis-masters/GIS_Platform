@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
-import { PropertyType, PropertySchema } from '../../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { ChildrenProps } from '../../../services/models';
 import { FormRole } from '../Form.async';
 

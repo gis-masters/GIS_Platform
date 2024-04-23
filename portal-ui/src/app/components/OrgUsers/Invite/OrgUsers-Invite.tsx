@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ContactMail, ContactMailOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { OrgUsersInviteDialog } from '../../OrgUsersInviteDialog/OrgUsersInviteDialog';
 import { Button } from '../../Button/Button';
+import { OrgUsersInviteDialog } from '../../OrgUsersInviteDialog/OrgUsersInviteDialog';
 
 const cnOrgUsersInvite = cn('OrgUsers', 'Invite');
 

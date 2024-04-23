@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
 import { Stack } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { TagsListItem } from './Item/TagsList-Item';
 

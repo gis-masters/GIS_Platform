@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
-import DoneIcon from '@mui/icons-material/Done';
 import { CircularProgress } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
+import { cn } from '@bem-react/classname';
 
 import { CopyUrlButton } from '../../../../app/components/CopyUrlButton/CopyUrlButton';
 import { UploadedFileStatus } from '../../../services/photoUploader.models';

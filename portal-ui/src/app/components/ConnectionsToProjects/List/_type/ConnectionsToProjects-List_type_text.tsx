@@ -3,7 +3,6 @@ import { withBemMod } from '@bem-react/core';
 
 import { FileConnection } from '../../../../services/data/files/files.models';
 import { Link } from '../../../Link/Link';
-
 import { cnConnectionsToProjectsList } from '../ConnectionsToProjects-List.base';
 
 interface ConnectionsToProjectsListProps {

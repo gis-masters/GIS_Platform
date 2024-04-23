@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CarouselTitle } from '../Title/Carousel-Title';
 import { CarouselSubTitle } from '../SubTitle/Carousel-SubTitle';
+import { CarouselTitle } from '../Title/Carousel-Title';
 
 import '!style-loader!css-loader!sass-loader!./Carousel-Header.scss';
 

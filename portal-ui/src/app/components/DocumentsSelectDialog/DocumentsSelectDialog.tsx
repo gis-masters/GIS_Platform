@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { TableViewOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
+import { TableViewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { RegistryConsumer } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { CommonDiRegistry } from '../../services/di-registry';
-import { getLibrary } from '../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { DocumentInfo } from '../Documents/Documents';
-import { ExplorerView } from '../Icons/ExplorerView';
+import { getLibrary } from '../../services/data/library/library.service';
+import { CommonDiRegistry } from '../../services/di-registry';
 import { Button } from '../Button/Button';
+import { DocumentInfo } from '../Documents/Documents';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { ExplorerView } from '../Icons/ExplorerView';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsSelectDialog.scss';

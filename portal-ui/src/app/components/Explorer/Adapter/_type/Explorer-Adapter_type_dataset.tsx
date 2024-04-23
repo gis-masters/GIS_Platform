@@ -1,35 +1,34 @@
 import React, { ReactNode } from 'react';
 import { Storage } from '@mui/icons-material';
 
-import {
-  getVectorTables,
-  getVectorTablesWithParticularOne,
-  getVectorTable,
-  getDataset
-} from '../../../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import { Emitter } from '../../../../services/common/Emitter';
-import { PageOptions, SortOrder } from '../../../../services/models';
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
-import { formatDate } from '../../../../services/util/date.util';
 import { Role } from '../../../../services/data/permissions/permissions.models';
-
+import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
+import {
+  getDataset,
+  getVectorTable,
+  getVectorTables,
+  getVectorTablesWithParticularOne
+} from '../../../../services/data/vectorData/vectorData.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { CreateVectorTable } from '../../../CreateVectorTable/CreateVectorTable';
+import { DatasetActions } from '../../../DatasetActions/DatasetActions';
 import {
   Adapter,
   ExplorerItemData,
   ExplorerItemDataAllTypes,
   ExplorerItemType,
-  SortItem,
-  itemTypeError
+  itemTypeError,
+  SortItem
 } from '../../Explorer.models';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { DatasetActions } from '../../../DatasetActions/DatasetActions';
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 export function assertExplorerItemDataTypeDataset(
   item: ExplorerItemData

@@ -1,16 +1,16 @@
-import { HOC, compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-Filter_type_bool';
 import { withTypeChoice } from './_type/XTable-Filter_type_choice';
 import { withTypeDateTime } from './_type/XTable-Filter_type_dateTime';
+import { withTypeDocument } from './_type/XTable-Filter_type_document';
 import { withTypeFloat } from './_type/XTable-Filter_type_float';
 import { withTypeId } from './_type/XTable-Filter_type_id';
 import { withTypeInteger } from './_type/XTable-Filter_type_integer';
 import { withTypeString } from './_type/XTable-Filter_type_string';
-import { XTableFilterBase, XTableFilterProps } from './XTable-Filter.base';
-import { withTypeDocument } from './_type/XTable-Filter_type_document';
-import { withTypeUserId } from './_type/XTable-Filter_type_userId';
 import { withTypeUser } from './_type/XTable-Filter_type_user';
+import { withTypeUserId } from './_type/XTable-Filter_type_userId';
+import { XTableFilterBase, XTableFilterProps } from './XTable-Filter.base';
 
 export const XTableFilter = compose(
   withTypeBool as HOC<XTableFilterProps>,

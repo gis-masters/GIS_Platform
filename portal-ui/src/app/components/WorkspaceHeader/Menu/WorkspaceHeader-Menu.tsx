@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Menu, MenuItem, ListItemIcon } from '@mui/material';
-import { Map, ViewModule, Business, CloudDownload, Storage } from '@mui/icons-material';
+import { ListItemIcon, Menu, MenuItem } from '@mui/material';
+import { Business, CloudDownload, Map, Storage, ViewModule } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Pages, route } from '../../../stores/Route.store';
 import { Link } from '../../Link/Link';
-
 import { WorkspaceHeaderBurger } from '../Burger/WorkspaceHeader-Burger';
 
 const cnWorkspaceHeaderMenu = cn('WorkspaceHeader', 'Menu');

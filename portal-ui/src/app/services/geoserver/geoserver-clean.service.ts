@@ -1,8 +1,7 @@
-import { http } from '../api/http.service';
-import { getGeoserverFeatureTypesInfoUrl, getGeoserverFeatureTypeUrl } from '../api/server-urls.service';
-
 import { Toast } from '../../components/Toast/Toast';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { http } from '../api/http.service';
+import { getGeoserverFeatureTypesInfoUrl, getGeoserverFeatureTypeUrl } from '../api/server-urls.service';
 
 export interface FeatureTypeHref {
   name: string;

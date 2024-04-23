@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 
-import { Link } from '../Link/Link';
 import { ImportResult } from '../../services/data/processes/processes.models';
 import { ImportGmlResultDialog } from '../ImportGmlResultDialog/ImportGmlResultDialog';
+import { Link } from '../Link/Link';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!./ImportGmlResultsLink.scss';

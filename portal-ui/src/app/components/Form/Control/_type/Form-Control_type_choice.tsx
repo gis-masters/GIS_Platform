@@ -1,6 +1,5 @@
 import React, { Component, ReactNode } from 'react';
 import { observer } from 'mobx-react';
-import Checkbox from '@mui/material/Checkbox';
 import {
   Box,
   Chip,
@@ -12,16 +11,16 @@ import {
   ToggleButton,
   ToggleButtonGroup
 } from '@mui/material';
-import { withBemMod } from '@bem-react/core';
+import Checkbox from '@mui/material/Checkbox';
 import { cn } from '@bem-react/classname';
+import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { isStringArray } from '../../../../services/util/typeGuards/isStringArray';
+import { PropertyOption, PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
 import { getMultipleChoiceValue } from '../../../../services/util/form/choiceMultiple.util';
-import { PropertyType, PropertySchemaChoice, PropertyOption } from '../../../../services/data/schema/schema.models';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { isStringArray } from '../../../../services/util/typeGuards/isStringArray';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_choice.scss';
 import '!style-loader!css-loader!sass-loader!../../ChoiceMenuItem/Form-ChoiceMenuItem.scss';

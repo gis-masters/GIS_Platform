@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import {
   Accordion,
   AccordionDetails,
@@ -19,6 +18,7 @@ import {
   Typography
 } from '@mui/material';
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { ImportResult } from '../../services/data/processes/processes.models';
 import { Button } from '../Button/Button';

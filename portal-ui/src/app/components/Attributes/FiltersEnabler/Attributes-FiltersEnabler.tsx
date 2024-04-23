@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Switch, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-FiltersEnabler.scss';
 

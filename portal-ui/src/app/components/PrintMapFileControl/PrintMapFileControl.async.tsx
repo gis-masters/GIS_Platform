@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { printSettings } from '../../stores/PrintSettings.store';
-import { PropertySchemaFile } from '../../services/data/schema/schema.models';
-import { createFile } from '../../services/data/files/files.service';
 import { FileInfo } from '../../services/data/files/files.models';
-import { FormControlProps } from '../Form/Control/Form-Control';
-import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
+import { createFile } from '../../services/data/files/files.service';
+import { PropertySchemaFile } from '../../services/data/schema/schema.models';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { Files } from '../Files/Files';
+import { FormControlProps } from '../Form/Control/Form-Control';
+import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
 
 const cnPrintMapFileControl = cn('PrintMapFileControl');
 

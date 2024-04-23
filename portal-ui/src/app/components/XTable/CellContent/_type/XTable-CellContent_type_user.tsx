@@ -4,7 +4,6 @@ import { withBemMod } from '@bem-react/core';
 import { MinimizedCrgUser } from '../../../../services/auth/users/users.models';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
-
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 const XTableCellContentTypeUser: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => {

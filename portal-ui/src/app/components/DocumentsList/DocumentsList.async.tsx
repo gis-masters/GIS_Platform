@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
+import { AddBoxOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AddBoxOutlined } from '@mui/icons-material';
 
-import { Loading } from '../Loading/Loading';
-import { services } from '../../services/services';
-import { EditedField } from '../../services/data/schema/schemaOld.models';
-import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { createLibraryRecord } from '../../services/data/library/library.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
-
+import { createLibraryRecord } from '../../services/data/library/library.service';
+import { EditedField } from '../../services/data/schema/schemaOld.models';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { services } from '../../services/services';
+import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
+import { Loading } from '../Loading/Loading';
 import { DocumentsListItem } from './Item/DocumentsList-Item';
 
 import '!style-loader!css-loader!sass-loader!./DocumentsList.scss';

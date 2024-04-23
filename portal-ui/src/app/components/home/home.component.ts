@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Platform, environment } from '../../services/environment';
+import { environment, Platform } from '../../services/environment';
 
 @Component({
   selector: 'crg-home',

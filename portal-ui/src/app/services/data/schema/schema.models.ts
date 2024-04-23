@@ -1,8 +1,8 @@
 import { ComponentType, ReactNode } from 'react';
 import { isObject } from 'lodash';
 
-import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FormControlProps } from '../../../components/Form/Control/Form-Control';
+import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
 import { FieldValidator } from '../../util/form/formValidation.utils';
 
 export enum PropertyType {

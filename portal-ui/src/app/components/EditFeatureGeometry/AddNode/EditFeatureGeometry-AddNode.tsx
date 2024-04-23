@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
+import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
-import { Tooltip, IconButton } from '@mui/material';
 
 interface EditFeatureGeometryAddNodeProps {
   onClick: () => void;

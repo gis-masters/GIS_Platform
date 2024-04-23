@@ -1,4 +1,4 @@
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { Dataset, VectorTable } from '../services/data/vectorData/vectorData.models';
 

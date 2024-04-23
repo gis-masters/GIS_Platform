@@ -1,7 +1,7 @@
 import {
-  PlacementModelForFilesWithCrs,
   GmlPlacementModel,
-  ImportFeaturesFromShapeFileModel
+  ImportFeaturesFromShapeFileModel,
+  PlacementModelForFilesWithCrs
 } from '../file-placement/file-placement.models';
 
 export interface Process {

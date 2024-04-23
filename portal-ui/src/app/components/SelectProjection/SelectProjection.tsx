@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
-import { IClassNameProps } from '@bem-react/core';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
+import { viewedProjections } from '../../services/geoserver/projections.service';
+import { cnFormControl } from '../Form/Control/Form-Control';
 import { FormField } from '../Form/Field/Form-Field';
 import { FormLabel } from '../Form/Label/Form-Label';
-import { cnFormControl } from '../Form/Control/Form-Control';
-import { viewedProjections } from '../../services/geoserver/projections.service';
 
 const cnSelectProjection = cn('SelectProjection');
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 

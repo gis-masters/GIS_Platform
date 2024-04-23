@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { PropertyType, PropertySchemaFloat } from '../../../../services/data/schema/schema.models';
-
+import { PropertySchemaFloat, PropertyType } from '../../../../services/data/schema/schema.models';
 import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormControlTypeNumber } from './Form-Control_type_number';
 

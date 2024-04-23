@@ -1,24 +1,23 @@
 import { reaction } from 'mobx';
-import { DebouncedFunc, debounce } from 'lodash';
 import { AxiosError } from 'axios';
+import { debounce, DebouncedFunc } from 'lodash';
 
-import { route } from '../../../stores/Route.store';
-import { mapStore } from '../../../stores/Map.store';
+import { Toast } from '../../../components/Toast/Toast';
 import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
-import { communicationService } from '../../communication.service';
-import { CrgLayersGroup } from '../layers/layers.models';
+import { mapStore } from '../../../stores/Map.store';
+import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
+import { communicationService } from '../../communication.service';
+import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
-import { Toast } from '../../../components/Toast/Toast';
+import { CrgLayersGroup } from '../layers/layers.models';
 import { getLayers } from '../layers/layers.service';
-
-import { CrgProject } from './projects.models';
 import { projectsClient } from './projects.client';
+import { CrgProject } from './projects.models';
 
 class ProjectsService {
   private static _instance: ProjectsService;

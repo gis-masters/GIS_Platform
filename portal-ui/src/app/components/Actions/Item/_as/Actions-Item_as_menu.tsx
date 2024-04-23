@@ -3,10 +3,9 @@ import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
-import { MenuNestedItem } from '../../../MenuNestedItem/MenuNestedItem';
 import { Link } from '../../../Link/Link';
-
-import { cnActionsItem, ActionsItemProps } from '../Actions-Item.base';
+import { MenuNestedItem } from '../../../MenuNestedItem/MenuNestedItem';
+import { ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
 
 export const ActionsMenuOpenContext = createContext<boolean>(false);
 

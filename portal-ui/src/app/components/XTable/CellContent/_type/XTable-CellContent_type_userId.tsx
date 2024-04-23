@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { CrgUser, MinimizedCrgUser } from '../../../../services/auth/users/users.models';
-import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { usersService } from '../../../../services/auth/users/users.service';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
-
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer

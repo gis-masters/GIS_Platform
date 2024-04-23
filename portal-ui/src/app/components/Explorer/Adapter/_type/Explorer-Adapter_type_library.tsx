@@ -1,40 +1,39 @@
 import React, { ReactNode } from 'react';
 import { LocalLibrary } from '@mui/icons-material';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
+import { Emitter } from '../../../../services/common/Emitter';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { ContentTypeTypes, LibraryRecord } from '../../../../services/data/library/library.models';
 import {
   getLibrary,
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
 } from '../../../../services/data/library/library.service';
-import { ContentTypeTypes, LibraryRecord } from '../../../../services/data/library/library.models';
-import { Emitter } from '../../../../services/common/Emitter';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
+import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
-import { formatDate } from '../../../../services/util/date.util';
-import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
+import { LibraryActions } from '../../../LibraryActions/LibraryActions';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
 import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest';
-
-import { ExplorerStore } from '../../Explorer.store';
+import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
+import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import {
   Adapter,
   ExplorerItemData,
   ExplorerItemDataAllTypes,
   ExplorerItemType,
-  SortItem,
-  itemTypeError
+  itemTypeError,
+  SortItem
 } from '../../Explorer.models';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerService } from '../../Explorer.service';
-import { LibraryActions } from '../../../LibraryActions/LibraryActions';
-import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
+import { ExplorerStore } from '../../Explorer.store';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 export function assertExplorerItemDataTypeLibrary(
   item: ExplorerItemData

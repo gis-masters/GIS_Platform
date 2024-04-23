@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AssignmentOutlined, FolderOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { getLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { getLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
-import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
-import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
-import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
-
-import { DocumentsName } from '../Name/Documents-Name';
+import { LookupItem } from '../../Lookup/Item/Lookup-Item';
+import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { DocumentInfo } from '../Documents';
+import { DocumentsName } from '../Name/Documents-Name';
 
 const cnDocumentsItem = cn('Documents', 'Item');
 

@@ -1,7 +1,7 @@
 import { OldPropertySchema, ValueType } from '../data/schema/schemaOld.models';
-import { CrgComparison } from '../properties-comparator.service';
 import { LayerAttribute } from '../geoserver/import/import.models';
 import { AS_IS, NOT_IMPORT } from '../models';
+import { CrgComparison } from '../properties-comparator.service';
 
 /**
  * Первый и самый простой компаратор.

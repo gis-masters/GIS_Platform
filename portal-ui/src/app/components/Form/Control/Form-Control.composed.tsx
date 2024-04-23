@@ -5,17 +5,16 @@ import { withTypeBool } from './_type/Form-Control_type_bool';
 import { withTypeChoice } from './_type/Form-Control_type_choice';
 import { withTypeCustom } from './_type/Form-Control_type_custom';
 import { withTypeDatetime } from './_type/Form-Control_type_dateTime';
+import { withTypeDocument } from './_type/Form-Control_type_document';
+import { withTypeFias } from './_type/Form-Control_type_fias';
+import { withTypeFile } from './_type/Form-Control_type_file';
+import { withTypeFloat } from './_type/Form-Control_type_float';
 import { withTypeInt } from './_type/Form-Control_type_int';
 import { withTypeSet } from './_type/Form-Control_type_set';
 import { withTypeString } from './_type/Form-Control_type_string';
-import { withTypeFloat } from './_type/Form-Control_type_float';
-import { withTypeFias } from './_type/Form-Control_type_fias';
-import { withTypeFile } from './_type/Form-Control_type_file';
-import { withTypeDocument } from './_type/Form-Control_type_document';
-import { withTypeUserId } from './_type/Form-Control_type_userId';
-import { withTypeUser } from './_type/Form-Control_type_user';
 import { withTypeUrl } from './_type/Form-Control_type_url';
-
+import { withTypeUser } from './_type/Form-Control_type_user';
+import { withTypeUserId } from './_type/Form-Control_type_userId';
 import { FormControl as Presenter } from './Form-Control';
 
 export const FormControl = compose(

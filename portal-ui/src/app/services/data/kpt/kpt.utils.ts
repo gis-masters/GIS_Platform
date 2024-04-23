@@ -1,8 +1,8 @@
-import { ContentType, Schema } from '../../../services/data/schema/schema.models';
-import { Role } from '../../../services/data/permissions/permissions.models';
-import { currentUser } from '../../../stores/CurrentUser.store';
 import { ContentTypeTypes, LibraryRecord } from '../../../services/data/library/library.models';
+import { Role } from '../../../services/data/permissions/permissions.models';
+import { ContentType, Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { currentUser } from '../../../stores/CurrentUser.store';
 
 function getContentType(libraryRecord: LibraryRecord): ContentType {
   return {

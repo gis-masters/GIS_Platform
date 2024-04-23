@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
-import { RegistryConsumer } from '@bem-react/di';
 import { cn } from '@bem-react/classname';
+import { RegistryConsumer } from '@bem-react/di';
 
-import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { CommonDiRegistry } from '../../services/di-registry';
+import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { TextBadge } from '../TextBadge/TextBadge';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocumentDialog.scss';

@@ -3,17 +3,16 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tab, TabProps } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../../stores/Map.store';
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
+import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
-import { TabTitle } from '../../TabTitle/TabTitle';
 import { TabInner } from '../../TabInner/TabInner';
-
+import { TabTitle } from '../../TabTitle/TabTitle';
 import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';

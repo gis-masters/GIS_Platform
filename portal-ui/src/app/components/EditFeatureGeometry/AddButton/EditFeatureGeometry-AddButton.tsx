@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { AddCircleOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { ChildrenProps } from '../../../services/models';
 import { Button } from '../../Button/Button';

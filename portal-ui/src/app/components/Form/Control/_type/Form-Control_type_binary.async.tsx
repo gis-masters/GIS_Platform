@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
+import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaBinary } from '../../../../services/data/schema/schema.models';
 import { FileInput } from '../../../FileInput/FileInput';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 @observer
 export default class FormControlTypeBinary extends Component<FormControlProps> {

@@ -1,11 +1,11 @@
-import { HOC, compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
-import { StringControlInnerBase, StringControlInnerProps } from './StringControl-Inner.base';
-import { withDisplayPassword } from './_display/StringControl-Inner_display_password';
-import { withDisplayPhone } from './_display/StringControl-Inner_display_phone';
+import { withDisplayCode } from './_display/StringControl-Inner_display_code';
 import { withDisplayEmail } from './_display/StringControl-Inner_display_email';
 import { withDisplayMultiline } from './_display/StringControl-Inner_display_multiline';
-import { withDisplayCode } from './_display/StringControl-Inner_display_code';
+import { withDisplayPassword } from './_display/StringControl-Inner_display_password';
+import { withDisplayPhone } from './_display/StringControl-Inner_display_phone';
+import { StringControlInnerBase, StringControlInnerProps } from './StringControl-Inner.base';
 
 export const StringControlInner = compose(
   withDisplayPassword as HOC<StringControlInnerProps>,

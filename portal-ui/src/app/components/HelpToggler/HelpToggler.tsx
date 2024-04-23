@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
-import { observable, computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Dialog, DialogContent, DialogContentText, DialogActions, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from '@mui/material';
 import { LiveHelp, LiveHelpOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 

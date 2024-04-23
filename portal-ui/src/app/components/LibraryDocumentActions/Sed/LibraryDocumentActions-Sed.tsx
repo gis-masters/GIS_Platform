@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { SendAndArchive, SendAndArchiveOutlined } from '@mui/icons-material';
-import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
-import { sendToSed } from '../../../services/data/library/library.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
-import { Button } from '../../Button/Button';
-import { Toast } from '../../Toast/Toast';
-
+import { sendToSed } from '../../../services/data/library/library.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsSed = cn('LibraryDocumentActions', 'Sed');
 

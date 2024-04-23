@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
 import { Button } from '../../../../app/components/Button/Button';
+import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 import { UpAddFiles } from '../../UpAddFiles/UpAddFiles';
 

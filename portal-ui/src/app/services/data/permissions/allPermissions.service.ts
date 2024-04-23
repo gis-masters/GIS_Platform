@@ -1,11 +1,10 @@
-import { DebouncedFunc, debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 
 import { allPermissions } from '../../../stores/AllPermissions.store';
 import { communicationService } from '../../communication.service';
 import { projectsService } from '../../gis/projects/projects.service';
-
-import { RoleAssignmentBody } from './permissions.models';
 import { permissionsClient } from './permissions.client';
+import { RoleAssignmentBody } from './permissions.models';
 
 export interface PermissionsListItem<T = unknown> {
   entity: T;

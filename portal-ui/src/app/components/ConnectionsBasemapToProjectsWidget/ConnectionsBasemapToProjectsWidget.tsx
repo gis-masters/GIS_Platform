@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { Basemap } from '../../services/data/basemaps/basemaps.models';
+import { FileConnection } from '../../services/data/files/files.models';
 import {
   connectBasemapToProject,
   getBasemapConnections
 } from '../../services/gis/project-basemaps/project-basemaps.service';
-import { FileConnection } from '../../services/data/files/files.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
-import { Basemap } from '../../services/data/basemaps/basemaps.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');

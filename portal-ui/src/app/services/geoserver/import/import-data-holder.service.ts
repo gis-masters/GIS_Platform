@@ -1,12 +1,12 @@
 import { EventEmitter, Injectable } from '@angular/core';
 
-import { ImportLayerItem, LayerAttribute } from './import.models';
-import { MatchingPair, TaskImport } from './taskImport';
 import { schemaService } from '../../data/schema/schema.service';
-import { OldSchema, OldPropertySchema, ValueType } from '../../data/schema/schemaOld.models';
+import { OldPropertySchema, OldSchema, ValueType } from '../../data/schema/schemaOld.models';
 import { AS_IS, IMPORT_LAYER_AS_IS, ImportTargetType, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../models';
 import { PropertiesComparatorService } from '../../properties-comparator.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
+import { ImportLayerItem, LayerAttribute } from './import.models';
+import { MatchingPair, TaskImport } from './taskImport';
 
 export interface InputDataMetrics {
   all: number;

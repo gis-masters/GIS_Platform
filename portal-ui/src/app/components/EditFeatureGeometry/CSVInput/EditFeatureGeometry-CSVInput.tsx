@@ -1,4 +1,4 @@
-import React, { FC, ChangeEvent, RefObject } from 'react';
+import React, { ChangeEvent, FC, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CSVInput.scss';

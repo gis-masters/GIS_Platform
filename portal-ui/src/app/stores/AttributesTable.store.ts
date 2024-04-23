@@ -1,9 +1,9 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { Pages, route } from './Route.store';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
 import { CrgLayer, CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { FilterQuery, modifyFieldFilterValue } from '../services/util/filterObjects';
-import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { Pages, route } from './Route.store';
 
 const errorMessage = 'Отсутствует имя таблицы';
 const defaultValues: Partial<AttributesTableStore> = {};

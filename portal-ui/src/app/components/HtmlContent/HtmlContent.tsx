@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import '!style-loader!css-loader!sass-loader!./HtmlContent.scss';
 

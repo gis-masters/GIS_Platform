@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { services } from '../../../../services/services';
 import { ValueType } from '../../../../services/data/schema/schemaOld.models';
+import { services } from '../../../../services/services';
 import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
-
 import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
 
 @observer

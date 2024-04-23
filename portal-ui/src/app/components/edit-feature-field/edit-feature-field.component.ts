@@ -1,13 +1,13 @@
-import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
 import { EditedField, ValueType } from '../../services/data/schema/schemaOld.models';
-import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
+import { registry } from '../../services/di-registry';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { registry } from '../../services/di-registry';
-import { createRoot, Root } from 'react-dom/client';
+import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 
 const EditFeatureFieldWithRegistry = withRegistry(registry)(EditFeatureField);
 

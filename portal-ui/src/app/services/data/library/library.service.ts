@@ -1,21 +1,20 @@
-import { PageOptions } from '../../models';
-import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
-import { addEntityPermission, removeEntityPermission } from '../permissions/permissions.service';
-import { RoleAssignmentBody } from '../permissions/permissions.models';
-import { communicationService } from '../../communication.service';
 import { Page } from '../../../../server-types/common-contracts';
-import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
+import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
+import { communicationService } from '../../communication.service';
+import { PageOptions } from '../../models';
+import { RoleAssignmentBody } from '../permissions/permissions.models';
+import { addEntityPermission, removeEntityPermission } from '../permissions/permissions.service';
 import { Schema } from '../schema/schema.models';
-
+import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
+import { libraryClient } from './library.client';
 import {
-  Library,
   DocumentVersion,
+  Library,
+  LibraryNew,
   LibraryRecord,
   LibraryRecordNew,
-  LibraryRecordRaw,
-  LibraryNew
+  LibraryRecordRaw
 } from './library.models';
-import { libraryClient } from './library.client';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {
   const response = await libraryClient.getLibraries(pageOptions);

@@ -1,10 +1,10 @@
+import { createElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
-import { createElement } from 'react';
 
-import { ServicesCalculator } from '../ServicesCalculator/ServicesCalculator';
 import { registry } from '../../services/di-registry';
+import { ServicesCalculator } from '../ServicesCalculator/ServicesCalculator';
 
 const ServicesCalculatorWithRegistry = withRegistry(registry)(ServicesCalculator);
 

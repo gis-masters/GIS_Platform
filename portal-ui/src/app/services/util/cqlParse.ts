@@ -1,15 +1,15 @@
-import Or from 'ol/format/filter/Or';
 import And from 'ol/format/filter/And';
-import Not from 'ol/format/filter/Not';
-import IsNull from 'ol/format/filter/IsNull';
-import IsLike from 'ol/format/filter/IsLike';
-import Filter from 'ol/format/filter/Filter';
 import EqualTo from 'ol/format/filter/EqualTo';
-import LessThan from 'ol/format/filter/LessThan';
-import NotEqualTo from 'ol/format/filter/NotEqualTo';
+import Filter from 'ol/format/filter/Filter';
 import GreaterThan from 'ol/format/filter/GreaterThan';
-import LessThanOrEqualTo from 'ol/format/filter/LessThanOrEqualTo';
 import GreaterThanOrEqualTo from 'ol/format/filter/GreaterThanOrEqualTo';
+import IsLike from 'ol/format/filter/IsLike';
+import IsNull from 'ol/format/filter/IsNull';
+import LessThan from 'ol/format/filter/LessThan';
+import LessThanOrEqualTo from 'ol/format/filter/LessThanOrEqualTo';
+import Not from 'ol/format/filter/Not';
+import NotEqualTo from 'ol/format/filter/NotEqualTo';
+import Or from 'ol/format/filter/Or';
 
 import { cql2ol } from './cql2ol';
 import { FilterQuery } from './filterObjects';

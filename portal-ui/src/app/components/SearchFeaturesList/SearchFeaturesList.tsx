@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { SearchResultHighlightWrapper } from '../SearchResultHighlightWrapper/SearchResultHighlightWrapper';
-import { getSearchResults } from '../../services/data/search/search.service';
 import { FoundWfsFeature } from '../../services/data/search/search.model';
+import { getSearchResults } from '../../services/data/search/search.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { FeaturesList } from '../FeaturesList/FeaturesList';
-import { SearchInfo } from '../SearchField/SearchField';
 import { services } from '../../services/services';
+import { FeaturesList } from '../FeaturesList/FeaturesList';
 import { Loading } from '../Loading/Loading';
+import { SearchInfo } from '../SearchField/SearchField';
+import { SearchResultHighlightWrapper } from '../SearchResultHighlightWrapper/SearchResultHighlightWrapper';
 
 import '!style-loader!css-loader!sass-loader!./SearchFeaturesList.scss';
 

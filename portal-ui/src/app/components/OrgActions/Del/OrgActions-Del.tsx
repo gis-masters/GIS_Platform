@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { Tooltip, IconButton, Dialog, DialogContent, DialogActions, DialogContentText } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from '@mui/material';
 import { Delete, DeleteOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { groupsService } from '../../../services/auth/groups/groups.service';
-import { usersService } from '../../../services/auth/users/users.service';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { groupsService } from '../../../services/auth/groups/groups.service';
 import { CrgUser } from '../../../services/auth/users/users.models';
-import { Loading } from '../../Loading/Loading';
+import { usersService } from '../../../services/auth/users/users.service';
 import { Button } from '../../Button/Button';
+import { Loading } from '../../Loading/Loading';
 
 const cnOrgActionsDel = cn('OrgActions', 'Del');
 

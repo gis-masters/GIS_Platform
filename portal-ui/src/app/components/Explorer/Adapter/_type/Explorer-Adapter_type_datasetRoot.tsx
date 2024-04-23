@@ -1,21 +1,20 @@
 import React, { ReactNode } from 'react';
 
+import { Emitter } from '../../../../services/common/Emitter';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import {
   getDataset,
   getDatasets,
   getDatasetsWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
-import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { Emitter } from '../../../../services/common/Emitter';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateDataset } from '../../../CreateDataset/CreateDataset';
 import { Database } from '../../../Icons/Database';
-
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeDatasetRoot {

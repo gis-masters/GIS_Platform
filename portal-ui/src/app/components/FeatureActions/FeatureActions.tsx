@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
-import { FeatureActionsClose } from './Close/FeatureActions-Close';
 import { Actions } from '../Actions/Actions.composed';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
+import { FeatureActionsClose } from './Close/FeatureActions-Close';
 
 export const cnLibraryDocumentVersionsActions = cn('LibraryDocumentVersionsActions');
 

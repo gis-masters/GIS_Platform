@@ -1,18 +1,21 @@
 import { AxiosError } from 'axios';
 
-import { currentUser } from '../../../stores/CurrentUser.store';
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
-import { CrgProject } from '../../gis/projects/projects.models';
-import { getLibraryRecord } from '../library/library.service';
-import { LibraryRecord } from '../library/library.models';
-import { getVectorTable } from '../vectorData/vectorData.service';
-import { VectorTable } from '../vectorData/vectorData.models';
-import { Schema } from '../schema/schema.models';
-import { services } from '../../services';
-import { Toast } from '../../../components/Toast/Toast';
 import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
-
+import { Toast } from '../../../components/Toast/Toast';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
+import { getLayerSchema } from '../../gis/layers/layers.service';
+import { isVectorFromFile } from '../../gis/layers/layers.utils';
+import { CrgProject } from '../../gis/projects/projects.models';
+import { services } from '../../services';
+import { getLibraryRecordFiles } from '../files/files.util';
+import { LibraryRecord } from '../library/library.models';
+import { getLibraryRecord } from '../library/library.service';
+import { Schema } from '../schema/schema.models';
+import { VectorTable } from '../vectorData/vectorData.models';
+import { getVectorTable } from '../vectorData/vectorData.service';
+import { permissionsClient } from './permissions.client';
 import {
   ProjectPermissionPoint,
   projectRolesPermissionPoints,
@@ -22,10 +25,6 @@ import {
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';
-import { permissionsClient } from './permissions.client';
-import { getLibraryRecordFiles } from '../files/files.util';
-import { isVectorFromFile } from '../../gis/layers/layers.utils';
-import { getLayerSchema } from '../../gis/layers/layers.service';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);

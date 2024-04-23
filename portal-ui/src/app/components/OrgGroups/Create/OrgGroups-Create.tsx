@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { GroupAdd, GroupAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
+import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 
 import '!style-loader!css-loader!sass-loader!./OrgGroups-Create.scss';
 

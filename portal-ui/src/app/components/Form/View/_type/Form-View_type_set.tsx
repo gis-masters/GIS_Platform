@@ -3,12 +3,11 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { CommonDiRegistry } from '../../../../services/di-registry';
 import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
-
-import { cnFormView } from '../Form-View';
+import { CommonDiRegistry } from '../../../../services/di-registry';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
+import { cnFormView } from '../Form-View';
 
 import '!style-loader!css-loader!sass-loader!./Form-View_type_set.scss';
 

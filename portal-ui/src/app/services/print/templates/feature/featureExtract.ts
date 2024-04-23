@@ -1,15 +1,15 @@
-import { Coordinate } from 'ol/coordinate';
 import moment from 'moment';
+import { Coordinate } from 'ol/coordinate';
 
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
-import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
-import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
-import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { projections } from '../../../geoserver/projections.service';
+import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { formPrompt } from '../../../utility-dialogs.service';
 import { PrintTemplate } from '../PrintTemplate';
 

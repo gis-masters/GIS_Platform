@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { MenuItem, TextField } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import '!style-loader!css-loader!sass-loader!./XTable-PageSize.scss';

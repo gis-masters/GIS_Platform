@@ -3,15 +3,14 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { getTaskSchema } from '../../../../services/data/task/task.service';
 import { Schema } from '../../../../services/data/schema/schema.models';
-
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemType } from '../../Explorer.models';
+import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { getTaskSchema } from '../../../../services/data/task/task.service';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeTaskHistory } from '../../Adapter/_type/Explorer-Adapter_type_taskHistory';
+import { ExplorerItemType } from '../../Explorer.models';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {

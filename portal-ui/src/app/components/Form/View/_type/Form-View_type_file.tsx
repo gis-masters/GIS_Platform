@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
+import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
-
-import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeFile extends Component<FormControlProps> {

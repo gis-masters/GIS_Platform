@@ -1,8 +1,7 @@
 import { CrgLayer } from '../../gis/layers/layers.models';
-import { geoserverLayerClient } from './geoserverLayer.client';
-
-import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
 import { extractWorkspaceFromComplexName } from '../feature.util';
+import { geoserverLayerClient } from './geoserverLayer.client';
+import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
 
 async function getGeoserverLayerInfo(layer: CrgLayer): Promise<GeoserverLayerInfo> {
   if (!layer.tableName || !layer.complexName) {

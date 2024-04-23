@@ -1,26 +1,25 @@
 import React, { Component, createRef } from 'react';
-import { computed, IReactionDisposer, reaction, when, makeObservable } from 'mobx';
+import { computed, IReactionDisposer, makeObservable, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { List } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { sleep } from '../../../services/util/sleep';
-
 import {
+  additionalInfo,
+  customOpenAction,
+  customOpenActionIcon,
   getIcon,
   getId,
   getMeta,
   getTitle,
-  isFolder,
-  customOpenActionIcon,
-  customOpenAction,
-  additionalInfo
+  isFolder
 } from '../Adapter/Explorer-Adapter';
-import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 import { ExplorerEmpty } from '../Empty/Explorer-Empty';
 import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
+import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-List.scss';
 

@@ -2,9 +2,9 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { PseudoLink } from '../../../app/components/PseudoLink/PseudoLink';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpChoosePhotoActions } from './Actions/UpChoosePhotos-Actions';
-import { PseudoLink } from '../../../app/components/PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!./UpChoosePhotos.scss';
 import '!style-loader!css-loader!sass-loader!./Description/UpChoosePhotos-Description.scss';

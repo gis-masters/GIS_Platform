@@ -1,13 +1,13 @@
 import React, { FC, useEffect } from 'react';
-import { cn } from '@bem-react/classname';
-import { List } from '@mui/material';
 import { observer, useLocalObservable } from 'mobx-react';
+import { List } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { getVectorTablesInAllDatasets } from '../../../app/services/data/vectorData/vectorData.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
-import { UpLayersListItem, UpLayersListItemData } from './Item/UpLayersList-Item';
 import { UpError } from '../UpError/UpError';
 import { UpSearch } from '../UpSearch/UpSearch';
+import { UpLayersListItem, UpLayersListItemData } from './Item/UpLayersList-Item';
 
 import '!style-loader!css-loader!sass-loader!./UpLayersList.scss';
 

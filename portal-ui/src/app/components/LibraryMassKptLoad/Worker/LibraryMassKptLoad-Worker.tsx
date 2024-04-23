@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
 import { FileInput } from '../../FileInput/FileInput';
 import { LibraryMassKptLoadNotice } from '../Notice/LibraryMassKptLoad-Notice';

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { SortOrderButton } from '../../SortOrderButton/SortOrderButton';
 import { SortOrder } from '../../../services/models';
-
+import { SortOrderButton } from '../../SortOrderButton/SortOrderButton';
 import { ExplorerStore } from '../Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Sort.scss';

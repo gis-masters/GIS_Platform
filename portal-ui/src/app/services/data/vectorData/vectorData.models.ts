@@ -1,9 +1,9 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
 import { viewedProjections } from '../../geoserver/projections.service';
-import { CrgProject } from '../../gis/projects/projects.models';
-import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
+import { CrgProject } from '../../gis/projects/projects.models';
 import { Role } from '../permissions/permissions.models';
+import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { OldSchema } from '../schema/schemaOld.models';
 
 export enum DataEntityType {

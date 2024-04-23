@@ -1,8 +1,8 @@
 import { boundClass } from 'autobind-decorator';
 
-import { http } from '../../api/http.service';
-import { Client } from '../../api/Client';
 import { Specialization } from '../../../../server-types/common-contracts';
+import { Client } from '../../api/Client';
+import { http } from '../../api/http.service';
 
 @boundClass
 class SpecializationsClient extends Client {

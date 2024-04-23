@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { TableRow, TableRowProps } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 const cnXTableRow = cn('XTable', 'Row');

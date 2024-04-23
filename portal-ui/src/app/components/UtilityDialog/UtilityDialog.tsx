@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogProps, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { UtilityDialogInfo } from '../../stores/UtilityDialogs.store';
 import { communicationService } from '../../services/communication.service';
+import { UtilityDialogInfo } from '../../stores/UtilityDialogs.store';
 import { Button, ButtonProps } from '../Button/Button';
-
 import { UtilityDialogContent } from './Content/UtilityDialog-Content.composed';
 
 const cnUtilityDialog = cn('UtilityDialog');

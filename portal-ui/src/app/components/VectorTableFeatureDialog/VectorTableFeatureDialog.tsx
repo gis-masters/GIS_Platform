@@ -4,13 +4,12 @@ import { cn } from '@bem-react/classname';
 
 import { SearchSourceForFeature } from '../../services/data/search/search.model';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { VectorTableFeature } from '../VectorTableFeature/VectorTableFeature';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeatureActions } from '../FeatureActions/FeatureActions';
-import { TextBadge } from '../TextBadge/TextBadge';
-
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { TextBadge } from '../TextBadge/TextBadge';
+import { VectorTableFeature } from '../VectorTableFeature/VectorTableFeature';
 
 import '!style-loader!css-loader!sass-loader!./VectorTableFeatureDialog.scss';
 

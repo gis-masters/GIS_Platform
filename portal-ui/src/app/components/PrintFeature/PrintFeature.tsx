@@ -3,15 +3,15 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { Schema } from '../../services/data/schema/schema.models';
+import { applyView } from '../../services/data/schema/schema.utils';
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { featurePrintTemplates } from '../../services/print/print.service';
 import { featureExtract } from '../../services/print/templates/feature/featureExtract';
 import { PrintTemplate } from '../../services/print/templates/PrintTemplate';
-import { featurePrintTemplates } from '../../services/print/print.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { applyView } from '../../services/data/schema/schema.utils';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
-import { Schema } from '../../services/data/schema/schema.models';
 import { PrintAction } from '../PrintAction/PrintAction';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
 
 const cnPrintFeature = cn('PrintFeature');
 

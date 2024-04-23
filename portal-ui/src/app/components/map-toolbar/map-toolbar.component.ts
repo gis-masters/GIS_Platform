@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef, Input } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
 import { MapToolbar } from '../MapToolbar/MapToolbar';

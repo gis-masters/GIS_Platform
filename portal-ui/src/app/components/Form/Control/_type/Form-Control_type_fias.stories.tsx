@@ -1,13 +1,12 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
 import { Send } from '@mui/icons-material';
+import { StoryFn } from '@storybook/react';
 
-import { PropertySchema, PropertyType, SimpleSchema } from '../../../../services/data/schema/schema.models';
 import { FiasValue } from '../../../../services/data/fias/fias.models';
+import { PropertySchema, PropertyType, SimpleSchema } from '../../../../services/data/schema/schema.models';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
 import { Toast } from '../../../Toast/Toast';
-
 import { Form } from '../../Form';
 
 export default {

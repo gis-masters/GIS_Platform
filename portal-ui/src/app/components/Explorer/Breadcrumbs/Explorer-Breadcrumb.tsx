@@ -2,11 +2,10 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { BreadcrumbsItemsType } from '../../Breadcrumbs/Item/Breadcrumbs-Item.base';
 import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
-
-import { ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
+import { BreadcrumbsItemsType } from '../../Breadcrumbs/Item/Breadcrumbs-Item.base';
 import { getTitle } from '../Adapter/Explorer-Adapter';
+import { ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Breadcrumb.scss';

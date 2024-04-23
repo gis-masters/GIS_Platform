@@ -5,12 +5,11 @@ import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '
 import { cn } from '@bem-react/classname';
 
 import { LibraryRecord } from '../../../services/data/library/library.models';
-import { cqlBuild } from '../../../services/util/cqlBuild';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { Link } from '../../Link/Link';
-
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { cqlBuild } from '../../../services/util/cqlBuild';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Link } from '../../Link/Link';
 
 const cnLibraryDocumentActionsRelations = cn('LibraryDocumentActions', 'Relations');
 

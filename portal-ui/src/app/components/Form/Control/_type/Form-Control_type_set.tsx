@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
 import { withBemMod } from '@bem-react/core';
+import { RegistryConsumer } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 
-import { CommonDiRegistry } from '../../../../services/di-registry';
 import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
-
+import { CommonDiRegistry } from '../../../../services/di-registry';
+import { FormErrors } from '../../Errors/Form-Errors';
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';
-import { FormErrors } from '../../Errors/Form-Errors';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_set.scss';
 

@@ -3,17 +3,16 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
-import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { Role } from '../../../../services/data/permissions/permissions.models';
+import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
+import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { getId } from '../../Adapter/Explorer-Adapter';
 import { assertExplorerItemDataTypeDataset } from '../../Adapter/_type/Explorer-Adapter_type_dataset';
+import { getId } from '../../Adapter/Explorer-Adapter';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {

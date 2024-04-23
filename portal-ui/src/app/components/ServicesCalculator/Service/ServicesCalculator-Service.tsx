@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { Card, CardContent, Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Card, CardContent, Checkbox } from '@mui/material';
 
-import { ServicesInfo } from '../ServicesCalculator';
-import { ServicesCalculatorDelete } from '../Delete/ServicesCalculator-Delete';
 import { ServicesCalculatorAdditions } from '../Additions/ServicesCalculator-Additions';
-import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
+import { ServicesCalculatorDelete } from '../Delete/ServicesCalculator-Delete';
 import { ServicesCalculatorServiceDescription } from '../ServiceDescription/ServicesCalculator-ServiceDescription';
+import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Service.scss';
 

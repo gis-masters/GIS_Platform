@@ -1,11 +1,11 @@
-import { Component, Input, ElementRef, OnDestroy, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
-
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
-import { registry } from '../../services/di-registry';
-import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
+
+import { registry } from '../../services/di-registry';
+import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 
 const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeometry);
 

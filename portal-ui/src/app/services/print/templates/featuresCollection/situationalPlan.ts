@@ -1,17 +1,17 @@
-import moment from 'moment';
 import { observable } from 'mobx';
+import moment from 'moment';
 
-import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
-import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
-import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
-import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
-import { formPrompt } from '../../../utility-dialogs.service';
-import { PrintTemplate } from '../PrintTemplate';
+import { FormProps } from '../../../../components/Form/Form';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
-import { FormProps } from '../../../../components/Form/Form';
+import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
+import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
+import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
+import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
+import { formPrompt } from '../../../utility-dialogs.service';
+import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
+import { PrintTemplate } from '../PrintTemplate';
 
 interface SituationalPlanFormData {
   title: string;

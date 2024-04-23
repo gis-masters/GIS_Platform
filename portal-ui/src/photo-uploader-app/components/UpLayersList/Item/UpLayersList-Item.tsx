@@ -1,10 +1,10 @@
 import React, { FC, PropsWithChildren, useCallback } from 'react';
+import { observer } from 'mobx-react';
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
 
-import { VectorTable } from '../../../../app/services/data/vectorData/vectorData.models';
 import { GeometryIcon } from '../../../../app/components/GeometryIcon/GeometryIcon';
+import { VectorTable } from '../../../../app/services/data/vectorData/vectorData.models';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
 import '!style-loader!css-loader!sass-loader!./UpLayersList-Item.scss';

@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { registerDocument } from '../../../services/data/library/library.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { services } from '../../../services/services';
-import { communicationService } from '../../../services/communication.service';
-import { Toast } from '../../Toast/Toast';
-import { Button } from '../../Button/Button';
 import { ServerError } from '../../../services/api/http.service';
-
+import { communicationService } from '../../../services/communication.service';
+import { LibraryRecord } from '../../../services/data/library/library.models';
+import { registerDocument } from '../../../services/data/library/library.service';
+import { services } from '../../../services/services';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsRegister = cn('LibraryDocumentActions', 'Register');
 

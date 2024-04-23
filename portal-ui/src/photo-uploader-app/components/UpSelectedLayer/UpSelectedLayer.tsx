@@ -1,13 +1,13 @@
 import React, { FC, useCallback } from 'react';
+import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { Clear } from '@mui/icons-material';
-import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { CopyUrlButton } from 'src/app/components/CopyUrlButton/CopyUrlButton';
 
 import { IconButton } from '../../../app/components/IconButton/IconButton';
-import { UpLayersListItem } from '../UpLayersList/Item/UpLayersList-Item';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
-import { CopyUrlButton } from 'src/app/components/CopyUrlButton/CopyUrlButton';
+import { UpLayersListItem } from '../UpLayersList/Item/UpLayersList-Item';
 
 import '!style-loader!css-loader!sass-loader!./UpSelectedLayer.scss';
 import '!style-loader!css-loader!sass-loader!./DataType/UpSelectedLayer-DataType.scss';

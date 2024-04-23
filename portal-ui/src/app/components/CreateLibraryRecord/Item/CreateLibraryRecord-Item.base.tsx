@@ -9,19 +9,18 @@ import {
   NoteAddOutlined,
   SvgIconComponent
 } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 
-import { getDefaultValues } from '../../Form/Form.utils';
-import { applyContentType } from '../../../services/data/schema/schema.utils';
-import { ContentType, Schema } from '../../../services/data/schema/schema.models';
-import { cleanCalculatedValues } from '../../../services/util/form/formValidation.utils';
-import { createLibraryRecord } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { createLibraryRecord } from '../../../services/data/library/library.service';
+import { ContentType, Schema } from '../../../services/data/schema/schema.models';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
+import { cleanCalculatedValues } from '../../../services/util/form/formValidation.utils';
+import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { DocHome } from '../../Icons/DocHome';
-
 import { CreateLibraryRecordItemSingleButtonProps } from '../ItemSingleButton/CreateLibraryRecord-ItemSingleButton';
 
 export const cnCreateLibraryRecordItem = cn('CreateLibraryRecord', 'Item');

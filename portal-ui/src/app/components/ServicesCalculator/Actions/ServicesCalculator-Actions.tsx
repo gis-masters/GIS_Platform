@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { Card, CardActions } from '@mui/material';
-import { observer } from 'mobx-react';
 import { action, makeObservable } from 'mobx';
-
-import { ServicesInfo } from '../ServicesCalculator';
-import { ServicesCalculatorInvoice } from '../Invoice/ServicesCalculator-Invoice';
-import { ServicesCalculatorResultPrice } from '../ResultPrice/ServicesCalculator-ResultPrice';
+import { observer } from 'mobx-react';
+import { Card, CardActions } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { Button } from '../../Button/Button';
+import { ServicesCalculatorInvoice } from '../Invoice/ServicesCalculator-Invoice';
+import { ServicesCalculatorResultPrice } from '../ResultPrice/ServicesCalculator-ResultPrice';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Actions.scss';
 

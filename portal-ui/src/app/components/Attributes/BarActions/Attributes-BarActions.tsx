@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { pluralize } from 'numeralize-ru';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
+import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
+import { pluralize } from 'numeralize-ru';
 
-import { mapStore } from '../../../stores/Map.store';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
-import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
+import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
+import { mapStore } from '../../../stores/Map.store';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
+import { Button } from '../../Button/Button';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
+import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { IconButton } from '../../IconButton/IconButton';
-import { Button } from '../../Button/Button';
-
 import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
 import { AttributesTableRecord } from '../Table/Attributes-Table';
 

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { withBemMod } from '@bem-react/core';
-import { observer } from 'mobx-react';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
 import { ReportProblemOutlined, SvgIconComponent } from '@mui/icons-material';
+import { withBemMod } from '@bem-react/core';
 
+import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { TypeShpLine } from '../../Icons/TypeShpLine';
 import { TypeShpPoint } from '../../Icons/TypeShpPoint';
-import { LayerIconProps, cnLayerIcon } from '../LayerIcon.base';
 import { TypeShpPolygon } from '../../Icons/TypeShpPolygon';
-import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { GeometryType, SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { cnLayerIcon, LayerIconProps } from '../LayerIcon.base';
 
 @observer
 class LayerIconTypeShp extends Component<LayerIconProps> {

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { Draggable } from 'react-beautiful-dnd';
-import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { Draggable } from 'react-beautiful-dnd';
 
 import { ChildrenProps } from '../../../services/models';
 

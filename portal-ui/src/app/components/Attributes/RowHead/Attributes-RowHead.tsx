@@ -3,17 +3,16 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { sidebars } from '../../../stores/Sidebars.store';
-import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { FilterQuery } from '../../../services/util/filterObjects';
-
+import { sidebars } from '../../../stores/Sidebars.store';
 import { AttributesCheck } from '../Check/Attributes-Check';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
 import { AttributesEditMark } from '../EditMark/Attributes-EditMark';
 import { AttributesRowActions } from '../RowActions/Attributes-RowActions';
+import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-RowHead.scss';
 

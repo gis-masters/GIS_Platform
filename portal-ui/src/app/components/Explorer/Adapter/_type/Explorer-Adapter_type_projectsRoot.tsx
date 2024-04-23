@@ -1,16 +1,15 @@
 import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { projectsService } from '../../../../services/gis/projects/projects.service';
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
-import { PageOptions, SortOrder } from '../../../../services/models';
 import { Emitter } from '../../../../services/common/Emitter';
-
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { CrgProject } from '../../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerStore } from '../../Explorer.store';
 import { ExplorerService } from '../../Explorer.service';
+import { ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {

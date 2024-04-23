@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { http } from '../../services/api/http.service';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
+import { http } from '../../services/api/http.service';
 import { LoginForm } from '../LoginForm/LoginForm';
 
 const cnLoginFormDialog = cn('LoginFormDialog');

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
-import { boundMethod } from 'autobind-decorator';
 import { SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import {
   Dataset,
@@ -13,7 +13,6 @@ import {
 } from '../../services/data/vectorData/vectorData.models';
 import { createVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { FormDialog } from '../FormDialog/FormDialog';
-
 import { CreateVectorTableButton } from './Button/CreateVectorTable-Button';
 
 const cnCreateVectorTableDialog = cn('CreateVectorTableDialog');

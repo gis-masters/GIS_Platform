@@ -252,7 +252,28 @@
     "unicorn/number-literal-case": "off",
     "unicorn/new-for-builtins": "off",
     "unicorn/prefer-top-level-await": "off",
-    "unicorn/prefer-module": "off"
+    "unicorn/prefer-module": "off",
+
+    // https://github.com/lydell/eslint-plugin-simple-import-sort
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          // Node.js builtins prefixed with `node:`.
+          ["^node:"],
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything not matched in another group.
+          ["^"],
+          // Packages.
+          ["^react$", "^react-dom", "^mobx", "^@mui/material$", "^@mui/", "^@?\\w", "^\\u0000.*\\.css"],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ["^\\."],
+          // Side effect imports.
+          ["^\\u0000"]
+        ]
+      }
+    ]
   },
   "overrides": [
     {

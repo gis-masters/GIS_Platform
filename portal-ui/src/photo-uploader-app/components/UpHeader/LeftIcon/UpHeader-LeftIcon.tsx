@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { Done, KeyboardBackspace } from '@mui/icons-material';
 import { CircularProgress, IconButton } from '@mui/material';
+import { Done, KeyboardBackspace } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { PhotoUploaderScreens, photoUploaderStore } from '../../../stores/PhotoUploader.store';
 

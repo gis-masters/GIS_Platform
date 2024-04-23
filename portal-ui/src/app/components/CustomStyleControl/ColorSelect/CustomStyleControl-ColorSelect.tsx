@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
-
 import { CustomStyleControlColorTile } from '../ColorTile/CustomStyleControl-ColorTile';
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';

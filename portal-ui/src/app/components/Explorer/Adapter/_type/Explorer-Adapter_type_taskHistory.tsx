@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ArticleOutlined } from '@mui/icons-material';
 
+import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
   Adapter,
@@ -9,7 +10,6 @@ import {
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
-import { formatDate } from '../../../../services/util/date.util';
 
 export function assertExplorerItemDataTypeTaskHistory(
   item: ExplorerItemData

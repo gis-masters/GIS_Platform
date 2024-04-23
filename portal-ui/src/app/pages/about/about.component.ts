@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
-import { registry } from '../../services/di-registry';
 import { Help } from '../../components/Help/Help';
+import { registry } from '../../services/di-registry';
 
 const HelpWithRegistry = withRegistry(registry)(Help);
 

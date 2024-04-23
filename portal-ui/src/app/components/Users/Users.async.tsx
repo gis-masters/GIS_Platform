@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { MinimizedCrgUser } from '../../services/auth/users/users.models';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { LookupList } from '../Lookup/List/Lookup-List';
 import { Lookup } from '../Lookup/Lookup';
 import { Toast } from '../Toast/Toast';
-
 import { UsersAdd } from './Add/Users-Add';
 import { UsersItem } from './Item/Users-Item';
 

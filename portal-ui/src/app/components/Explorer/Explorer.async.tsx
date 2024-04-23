@@ -1,32 +1,19 @@
 import React, { Component, createRef, CSSProperties, RefObject } from 'react';
 import { IReactionDisposer, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
+import { NavigationStart } from '@angular/router';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { chunk, cloneDeep, isEqual } from 'lodash';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { NavigationStart } from '@angular/router';
-import { IClassNameProps } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
-import { chunk, cloneDeep, isEqual } from 'lodash';
-import { boundMethod } from 'autobind-decorator';
 
 import { Emitter } from '../../services/common/Emitter';
+import { SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
-import { SortOrder } from '../../services/models';
 import { Loading } from '../Loading/Loading';
-
-import { ExplorerStore } from './Explorer.store';
-import { ExplorerService } from './Explorer.service';
-import {
-  CustomFilters,
-  emptyItem,
-  ExplorerItemData,
-  ExplorerItemType,
-  ExplorerRole,
-  KeyAction,
-  keyActions,
-  loadingItem
-} from './Explorer.models';
 import {
   customOpenAction,
   customOpenActionIcon,
@@ -39,10 +26,22 @@ import {
   isFolder
 } from './Adapter/Explorer-Adapter';
 import { ExplorerBreadcrumb } from './Breadcrumbs/Explorer-Breadcrumb';
+import {
+  CustomFilters,
+  emptyItem,
+  ExplorerItemData,
+  ExplorerItemType,
+  ExplorerRole,
+  KeyAction,
+  keyActions,
+  loadingItem
+} from './Explorer.models';
+import { ExplorerService } from './Explorer.service';
+import { ExplorerStore } from './Explorer.store';
+import { ExplorerInfo } from './Info/Explorer-Info';
+import { ExplorerList } from './List/Explorer-List';
 import { ExplorerPagination } from './Pagination/Explorer-Pagination';
 import { ExplorerToolbar } from './Toolbar/Explorer-Toolbar';
-import { ExplorerList } from './List/Explorer-List';
-import { ExplorerInfo } from './Info/Explorer-Info';
 
 import '!style-loader!css-loader!sass-loader!./Explorer.scss';
 

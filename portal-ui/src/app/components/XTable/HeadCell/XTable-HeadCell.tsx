@@ -9,13 +9,12 @@ import { PropertyType } from '../../../services/data/schema/schema.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
 import { SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
-
-import { XTableColumn } from '../XTable.models';
+import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
 import { XTableFilter } from '../Filter/XTable-Filter.composed';
+import { XTableHeadCellBorder } from '../HeadCellBorder/XTable-HeadCellBorder';
 import { XTableHeadCellLabel } from '../HeadCellLabel/XTable-HeadCellLabel';
 import { XTableHeadCellTitle } from '../HeadCellTitle/XTable-HeadCellTitle';
-import { XTableHeadCellBorder } from '../HeadCellBorder/XTable-HeadCellBorder';
-import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCell.scss';
 

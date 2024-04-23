@@ -1,10 +1,9 @@
 import React, { ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
-
 import {
   Adapter,
   ExplorerItemData,

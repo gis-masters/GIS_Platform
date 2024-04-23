@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
-import { printSettings } from '../../../stores/PrintSettings.store';
 import { ChildrenProps } from '../../../services/models';
+import { printSettings } from '../../../stores/PrintSettings.store';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog-PreviewImageContainer.scss';
 

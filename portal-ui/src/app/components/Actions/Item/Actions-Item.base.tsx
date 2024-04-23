@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { IconButtonProps } from '../../IconButton/IconButton';
 

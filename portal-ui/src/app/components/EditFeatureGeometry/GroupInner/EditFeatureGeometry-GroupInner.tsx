@@ -1,4 +1,4 @@
-import React, { FC, RefObject, CSSProperties } from 'react';
+import React, { CSSProperties, FC, RefObject } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ChildrenProps } from '../../../services/models';

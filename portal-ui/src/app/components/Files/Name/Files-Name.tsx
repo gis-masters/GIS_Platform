@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
-import { saveAs } from 'file-saver';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { saveAs } from 'file-saver';
 
-import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
 import { filesClient } from '../../../services/data/files/files.client';
 import { compoundFileFullType, FileInfo } from '../../../services/data/files/files.models';
-import { LookupStatusType } from '../../Lookup/Status/Lookup-Status';
-import { LookupName } from '../../Lookup/Name/Lookup-Name';
+import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
 import { Link } from '../../Link/Link';
-
+import { LookupName } from '../../Lookup/Name/Lookup-Name';
+import { LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { FilesBaseName } from '../BaseName/Files-BaseName';
 import { FilesExt } from '../Ext/Files-Ext';
 

@@ -3,12 +3,11 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { mapStore } from '../../stores/Map.store';
-import { ToolbarDivider } from '../ToolbarDivider/ToolbarDivider';
-import { MapSelection } from '../MapSelection/MapSelection';
-import { MapMeasure } from '../MapMeasure/MapMeasure';
 import { MapLabels } from '../MapLabels/MapLabels';
+import { MapMeasure } from '../MapMeasure/MapMeasure';
+import { MapSelection } from '../MapSelection/MapSelection';
 import { Search } from '../Search/Search';
-
+import { ToolbarDivider } from '../ToolbarDivider/ToolbarDivider';
 import { MapToolbarBar } from './Bar/MapToolbar-Bar';
 
 import '!style-loader!css-loader!sass-loader!./MapToolbar.scss';

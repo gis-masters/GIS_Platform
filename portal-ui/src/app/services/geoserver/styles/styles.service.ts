@@ -1,16 +1,18 @@
 import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { applyView } from '../../data/schema/schema.utils';
-import { notFalsyFilter } from '../../util/NotFalsyFilter';
-import { getLegendGraphic } from '../wms/wms.service';
+import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { getLayerSchema } from '../../gis/layers/layers.service';
 import { mapService } from '../../map/map.service';
-import { GeometryType } from '../wfs/wfs.models';
-import { cqlBuild } from '../../util/cqlBuild';
 import { services } from '../../services';
+import { cqlBuild } from '../../util/cqlBuild';
+import { cqlConcat } from '../../util/cqlConcat';
 import { Mime } from '../../util/Mime';
-
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { GeometryType } from '../wfs/wfs.models';
+import { getLegendGraphic } from '../wms/wms.service';
+import { stylesClient } from './styles.client';
 import {
   CUSTOM_STYLE_NAME,
   FilteredStylesLayerRequest,
@@ -19,9 +21,6 @@ import {
   StyleFilterOperator,
   StyleRule
 } from './styles.models';
-import { stylesClient } from './styles.client';
-import { cqlConcat } from '../../util/cqlConcat';
-import { getLayerSchema } from '../../gis/layers/layers.service';
 import { getSupGeometryType } from './styles.utils';
 
 const parsedStyles: Record<string, Promise<StyleRule[]>> = {};

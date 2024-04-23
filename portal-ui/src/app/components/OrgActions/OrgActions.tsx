@@ -1,14 +1,13 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { PrincipalType } from '../../services/data/permissions/permissions.models';
 import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { CrgUser } from '../../services/auth/users/users.models';
-
-import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
-import { OrgActionsGroups } from './Groups/OrgActions-Groups';
-import { OrgActionsEdit } from './Edit/OrgActions-Edit';
+import { PrincipalType } from '../../services/data/permissions/permissions.models';
 import { OrgActionsDel } from './Del/OrgActions-Del';
+import { OrgActionsEdit } from './Edit/OrgActions-Edit';
+import { OrgActionsGroups } from './Groups/OrgActions-Groups';
+import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
 
 import '!style-loader!css-loader!sass-loader!./OrgActions.scss';
 

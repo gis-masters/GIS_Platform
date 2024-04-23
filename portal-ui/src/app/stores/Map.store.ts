@@ -1,18 +1,18 @@
-import { action, computed, observable, reaction, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable, reaction } from 'mobx';
 import { cloneDeep } from 'lodash';
 import { Feature } from 'ol';
 import sift from 'sift';
 
-import { route, Pages } from './Route.store';
-import { attributesTableStore } from './AttributesTable.store';
-import { getFieldFilterValue, modifyFieldFilterValue, prepareLike } from '../services/util/filterObjects';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { flags } from '../services/feature-flags';
+import { extractTableNameFromFeatureId } from '../services/geoserver/feature.util';
+import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { FilterBySelection, LabelType, MapAction, MapMode } from '../services/map/map.models';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
+import { getFieldFilterValue, modifyFieldFilterValue, prepareLike } from '../services/util/filterObjects';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
-import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { flags } from '../services/feature-flags';
-import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
-import { extractTableNameFromFeatureId } from '../services/geoserver/feature.util';
+import { attributesTableStore } from './AttributesTable.store';
+import { Pages, route } from './Route.store';
 
 const actionsInModes = {
   [MapMode.DEFAULT]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT_WITH_MODIFICATORS],

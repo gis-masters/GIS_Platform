@@ -1,8 +1,8 @@
 import React from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { Carousel } from './Carousel';
 import { TextBadge } from '../TextBadge/TextBadge';
+import { Carousel } from './Carousel';
 
 export default {
   title: 'Carousel',

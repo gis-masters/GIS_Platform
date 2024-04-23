@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, makeObservable } from 'mobx';
 
-import { ServicesInfo } from '../ServicesCalculator';
 import { ServicesCalculatorButton } from '../Button/ServicesCalculator-Button';
 import { ServicesCalculatorCounterValue } from '../CounterValue/ServicesCalculator-CounterValue';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Counter.scss';
 

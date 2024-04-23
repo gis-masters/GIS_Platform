@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { FeaturesList, FeaturesListItemInfo } from '../FeaturesList/FeaturesList';
-import { sidebars } from '../../stores/Sidebars.store';
 import { mapStore } from '../../stores/Map.store';
+import { sidebars } from '../../stores/Sidebars.store';
+import { FeaturesList, FeaturesListItemInfo } from '../FeaturesList/FeaturesList';
 
 @observer
 export class SelectedFeaturesList extends Component<Record<string, unknown>> {

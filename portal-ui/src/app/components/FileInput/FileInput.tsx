@@ -1,11 +1,11 @@
 import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, ReactNode, RefObject } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline, Close } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
-import { cn } from '@bem-react/classname';
 
 import { Button, ButtonProps } from '../Button/Button';
 

@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
-import { Role } from '../../services/data/permissions/permissions.models';
 import { FileInfo } from '../../services/data/files/files.models';
 import { uploadKpt } from '../../services/data/kpt/kpt.service';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { Schema } from '../../services/data/schema/schema.models';
 import { applyCustomContentType, havePermissionsForEdit } from '../../services/data/kpt/kpt.utils';
-import { IconButton } from '../IconButton/IconButton';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { LibraryMassKptLoadWorker } from './Worker/LibraryMassKptLoad-Worker';
-import { LibraryMassKptLoadUploader } from './Uploader/LibraryMassKptLoad-Uploader';
+import { IconButton } from '../IconButton/IconButton';
 import { KptImportMass } from '../Icons/KptImportMass';
+import { LibraryMassKptLoadUploader } from './Uploader/LibraryMassKptLoad-Uploader';
+import { LibraryMassKptLoadWorker } from './Worker/LibraryMassKptLoad-Worker';
 
 export interface UploadFileInfo {
   file: File;

@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, TextField, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, TextField, Tooltip } from '@mui/material';
 import { ListAlt } from '@mui/icons-material';
-import { isEqual, clone } from 'lodash';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { clone, isEqual } from 'lodash';
 
-import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { communicationService } from '../../../services/communication.service';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import {
   CoordinateEdited,
   GeometryType,
@@ -18,8 +16,10 @@ import {
   WfsMultiPolygonGeometry,
   WfsPointGeometry
 } from '../../../services/geoserver/wfs/wfs.models';
-import { IconButton } from '../../IconButton/IconButton';
+import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { Button } from '../../Button/Button';
+import { IconButton } from '../../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
 import '!style-loader!css-loader!sass-loader!../Text/EditFeatureGeometry-Text.scss';

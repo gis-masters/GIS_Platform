@@ -2,11 +2,10 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
-
-import { LoginFormOrgSelectHead } from '../OrgSelectHead/LoginForm-OrgSelectHead';
-import { LoginFormOrgSelectTitle } from '../OrgSelectTitle/LoginForm-OrgSelectTitle';
 import { LoginFormOrgSelectClose } from '../OrgSelectClose/LoginForm-OrgSelectClose';
+import { LoginFormOrgSelectHead } from '../OrgSelectHead/LoginForm-OrgSelectHead';
 import { LoginFormOrgSelectList } from '../OrgSelectList/LoginForm-OrgSelectList';
+import { LoginFormOrgSelectTitle } from '../OrgSelectTitle/LoginForm-OrgSelectTitle';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm-OrgSelect.scss';
 

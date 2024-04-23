@@ -1,10 +1,10 @@
-import { observable, computed, action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
 import {
-  ImportTaskFull,
-  ImportTaskShort,
   ImportTask,
+  ImportTaskFull,
   ImportTaskProgress,
+  ImportTaskShort,
   ScratchImport,
   TaskStatusCode
 } from '../services/geoserver/import/import.models';

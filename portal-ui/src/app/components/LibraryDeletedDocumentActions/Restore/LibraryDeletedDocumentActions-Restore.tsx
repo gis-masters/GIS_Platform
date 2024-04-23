@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { observable, makeObservable, action } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { RestorePageOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { getLibrary, getLibraryRecord, recoverLibraryRecord } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { ExplorerItemData, ExplorerItemType, emptyItem } from '../../Explorer/Explorer.models';
-import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { getLibrary, getLibraryRecord, recoverLibraryRecord } from '../../../services/data/library/library.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDeletedDocumentActionsRestore = cn('LibraryDeletedDocumentActions', 'Restore');

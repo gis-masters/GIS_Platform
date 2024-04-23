@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { makeObservable, computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { ArchiveOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { ArchiveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { Task } from '../../services/data/task/task.models';
 import { Schema } from '../../services/data/schema/schema.models';
-import { Explorer } from '../Explorer/Explorer';
+import { Task } from '../../services/data/task/task.models';
 import { Button } from '../Button/Button';
+import { Explorer } from '../Explorer/Explorer';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./TaskJournalHistoryDialog.scss';
 

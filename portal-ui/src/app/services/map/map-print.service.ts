@@ -3,17 +3,17 @@ import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
 import { getPointResolution } from 'ol/proj';
 
-import { mapStore } from '../../stores/Map.store';
+import { Legend } from '../../components/Legend/Legend';
+import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
 import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
 import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
-import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { saveAsBlob } from '../util/FileSaver';
-import { mapService } from './map.service';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
-import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
-import { Legend } from '../../components/Legend/Legend';
+import { mapService } from './map.service';
 
 const BASE_SCALE_LINE_DPI = 150;
 

@@ -5,9 +5,9 @@ import { Tooltip } from '@mui/material';
 import { TableView } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { getLibraryFolderExplorerUrl, getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
-import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Library } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { getLibraryFolderExplorerUrl, getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
 import { IconButton } from '../IconButton/IconButton';
 import { ExplorerView } from '../Icons/ExplorerView';
 

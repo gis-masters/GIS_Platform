@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import {
   Check,
   Description,
@@ -11,6 +10,7 @@ import {
   Map,
   MapOutlined
 } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 const cnFilesPlacementDialogStepIcon = cn('FilesPlacementDialog', 'StepIcon');
 

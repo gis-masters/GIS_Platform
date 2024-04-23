@@ -1,8 +1,9 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { sidebars } from '../../stores/Sidebars.store';
+
 import { eventService, IEvent } from '../../services/event.service';
+import { sidebars } from '../../stores/Sidebars.store';
 
 @Component({
   selector: 'crg-info-sidebar',

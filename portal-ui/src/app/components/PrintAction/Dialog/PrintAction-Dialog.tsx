@@ -5,7 +5,6 @@ import { cn } from '@bem-react/classname';
 
 import { PrintTemplate } from '../../../services/print/templates/PrintTemplate';
 import { Button } from '../../Button/Button';
-
 import { PrintActionTemplate } from '../Template/PrintAction-Template';
 
 const cnPrintActionDialog = cn('PrintAction', 'Dialog');

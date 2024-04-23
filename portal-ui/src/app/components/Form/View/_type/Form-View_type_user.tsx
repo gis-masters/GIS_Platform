@@ -2,14 +2,13 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
+import { CrgUser } from '../../../../services/auth/users/users.models';
 import { PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
-
-import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
-import { CrgUser } from '../../../../services/auth/users/users.models';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeUser extends Component<FormControlProps> {

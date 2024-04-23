@@ -3,22 +3,21 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { allUsers } from '../../stores/AllUsers.store';
-import { allGroups } from '../../stores/AllGroups.store';
-import { PropertyType } from '../../services/data/schema/schema.models';
-import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgGroup } from '../../services/auth/groups/groups.models';
-import { usersService } from '../../services/auth/users/users.service';
+import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgUser } from '../../services/auth/users/users.models';
+import { usersService } from '../../services/auth/users/users.service';
+import { PropertyType } from '../../services/data/schema/schema.models';
+import { allGroups } from '../../stores/AllGroups.store';
+import { allUsers } from '../../stores/AllUsers.store';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
-
-import { OrgUsersInvite } from './Invite/OrgUsers-Invite';
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
 import { OrgUsersEnabled } from './Enabled/OrgUsers-Enabled';
-import { OrgUsersUserEmail } from './UserEmail/OrgUsers-UserEmail';
-import { OrgUsersUserActions } from './UserActions/OrgUsers-UserActions';
+import { OrgUsersInvite } from './Invite/OrgUsers-Invite';
 import { OrgUsersPermissionsCount } from './PermissionsCount/OrgUsers-PermissionsCount';
+import { OrgUsersUserActions } from './UserActions/OrgUsers-UserActions';
+import { OrgUsersUserEmail } from './UserEmail/OrgUsers-UserEmail';
 
 import '!style-loader!css-loader!sass-loader!./OrgUsers.scss';
 

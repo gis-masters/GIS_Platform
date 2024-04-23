@@ -1,10 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { FilterQuery } from '../../../services/util/filterObjects';
-
 import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanelItemContent.scss';

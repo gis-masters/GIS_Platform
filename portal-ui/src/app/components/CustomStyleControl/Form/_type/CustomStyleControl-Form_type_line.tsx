@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { PolylineOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { LineRule, customStyleStrokeColors } from '../../../../services/geoserver/styles/styles.models';
-
-import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
-import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
+import { customStyleStrokeColors, LineRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
+import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
+import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
 @observer
 export class CustomStyleControlFormTypeLine extends Component<CustomStyleControlFormProps> {

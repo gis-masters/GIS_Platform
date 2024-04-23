@@ -3,21 +3,20 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
 import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { CrgProject } from '../../../../services/gis/projects/projects.models';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
-
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { getId } from '../../Adapter/Explorer-Adapter';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeProject } from '../../Adapter/_type/Explorer-Adapter_type_project';
+import { getId } from '../../Adapter/Explorer-Adapter';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {

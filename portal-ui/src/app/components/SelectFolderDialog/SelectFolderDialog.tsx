@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { observable, makeObservable, action } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { DriveFileMoveOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { RegistryConsumer } from '@bem-react/di';
+import { DriveFileMoveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { RegistryConsumer } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 
-import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { CommonDiRegistry } from '../../services/di-registry';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./SelectFolderDialog.scss';
 

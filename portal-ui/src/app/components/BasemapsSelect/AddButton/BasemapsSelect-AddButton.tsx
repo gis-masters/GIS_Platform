@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { currentProject } from '../../../stores/CurrentProject.store';
+import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import {
   connectBasemapToProject,
   fetchBasemaps
 } from '../../../services/gis/project-basemaps/project-basemaps.service';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
-import { Basemap } from '../../../services/data/basemaps/basemaps.models';
-import { Explorer } from '../../Explorer/Explorer';
+import { currentProject } from '../../../stores/CurrentProject.store';
 import { Button } from '../../Button/Button';
-
+import { Explorer } from '../../Explorer/Explorer';
+import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { BasemapsSelectAddIcon } from '../AddIcon/BasemapsSelect-AddIcon';
 
 import '!style-loader!css-loader!sass-loader!./BasemapsSelect-AddButton.scss';

@@ -1,13 +1,13 @@
-import moment from 'moment';
 import * as ExifReader from 'exifreader';
+import moment from 'moment';
 
-import { currentUser } from '../../app/stores/CurrentUser.store';
 import { createFile } from '../../app/services/data/files/files.service';
+import { createFeature } from '../../app/services/data/vectorData/vectorData.service';
 import { getProjection, transformGeometry } from '../../app/services/geoserver/projections.service';
 import { GeometryType, NewWfsFeature } from '../../app/services/geoserver/wfs/wfs.models';
-import { createFeature } from '../../app/services/data/vectorData/vectorData.service';
-import { UploadedFile, UploadedFileStatus } from './photoUploader.models';
+import { currentUser } from '../../app/stores/CurrentUser.store';
 import { PhotoUploaderScreens, photoUploaderStore } from '../stores/PhotoUploader.store';
+import { UploadedFile, UploadedFileStatus } from './photoUploader.models';
 
 export interface UploadResultType {
   handled: number;

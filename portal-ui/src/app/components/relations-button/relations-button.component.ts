@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
-import { RelationsButton } from '../RelationsButton/RelationsButton';
 import { Relation } from '../../services/data/schema/schema.models';
 import { registry } from '../../services/di-registry';
+import { RelationsButton } from '../RelationsButton/RelationsButton';
 
 const RelationsButtonWithRegistry = withRegistry(registry)(RelationsButton);
 

@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { pluralize } from 'numeralize-ru';
-import { action, observable, makeObservable } from 'mobx';
-import { AxiosError } from 'axios';
 import {
   Dialog,
   DialogActions,
@@ -13,21 +10,24 @@ import {
   IconButton,
   Tooltip
 } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
+import { pluralize } from 'numeralize-ru';
 
-import { alertLayerOperationError, createLayer } from '../../../services/gis/layers/layers.service';
-import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { NewCrgLayer } from '../../../services/gis/layers/layers.models';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
-import { ActionsRight } from '../../ActionsRight/ActionsRight';
-import { projectsService } from '../../../services/gis/projects/projects.service';
+import { alertLayerOperationError, createLayer } from '../../../services/gis/layers/layers.service';
 import { vectorLayerDefaults } from '../../../services/gis/layers/layers.utils';
-import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
-import { LayerAdd } from '../../Icons/LayerAdd';
-import { Loading } from '../../Loading/Loading';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
+import { LayerAdd } from '../../Icons/LayerAdd';
+import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
+import { Loading } from '../../Loading/Loading';
+import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsAddToProject = cn('DatasetActions', 'AddToProject');

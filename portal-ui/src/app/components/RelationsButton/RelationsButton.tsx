@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
+import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, MenuItem, Tooltip } from '@mui/material';
 import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '@mui/icons-material';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
+import { IClassNameProps } from '@bem-react/core';
 
-import { cqlBuild } from '../../services/util/cqlBuild';
 import { Relation } from '../../services/data/schema/schema.models';
-import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
+import { cqlBuild } from '../../services/util/cqlBuild';
 import { Link } from '../Link/Link';
+import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 
 const cnRelationsButton = cn('RelationsButton');
 

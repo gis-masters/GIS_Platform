@@ -1,25 +1,23 @@
 import React, { FC, ReactNode, useCallback } from 'react';
-import { pdfjs } from 'react-pdf';
-import { cn } from '@bem-react/classname';
-import { SwiperClass } from 'swiper/react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Breakpoint, Dialog, DialogActions } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { pdfjs } from 'react-pdf';
+import { SwiperClass } from 'swiper/react';
+
+import { filesClient } from '../../services/data/files/files.client';
+import { FileInfo } from '../../services/data/files/files.models';
+import { isPdfFile } from '../../services/data/files/files.util';
+import { Button } from '../Button/Button';
+import { CarouselHeader } from './Header/Carousel-Header';
+import { CarouselWrapper } from './Wrapper/Carousel-Wrapper';
+import { CarouselZoom } from './Zoom/Carousel-Zoom';
 
 import '!style-loader!css-loader!swiper/css';
 import '!style-loader!css-loader!swiper/css/pagination';
 import '!style-loader!css-loader!swiper/css/navigation';
 import '!style-loader!css-loader!swiper/css/thumbs';
 import '!style-loader!css-loader!swiper/css/zoom';
-
-import { filesClient } from '../../services/data/files/files.client';
-import { isPdfFile } from '../../services/data/files/files.util';
-import { FileInfo } from '../../services/data/files/files.models';
-
-import { Button } from '../Button/Button';
-import { CarouselHeader } from './Header/Carousel-Header';
-import { CarouselZoom } from './Zoom/Carousel-Zoom';
-import { CarouselWrapper } from './Wrapper/Carousel-Wrapper';
-
 import '!style-loader!css-loader!sass-loader!./Carousel.scss';
 
 interface CarouselProps {

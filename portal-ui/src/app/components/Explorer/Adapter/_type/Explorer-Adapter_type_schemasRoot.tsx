@@ -1,16 +1,15 @@
 import React, { ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { schemaService } from '../../../../services/data/schema/schema.service';
-import { filterObjects } from '../../../../services/util/filterObjects';
-import { PageOptions, SortOrder } from '../../../../services/models';
-import { sortObjects } from '../../../../services/util/sortObjects';
-import { CreateSchema } from '../../../CreateSchema/CreateSchema';
-import { Schema } from '../../../../services/data/schema/schema.models';
 import { Emitter } from '../../../../services/common/Emitter';
-
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { Schema } from '../../../../services/data/schema/schema.models';
+import { schemaService } from '../../../../services/data/schema/schema.service';
+import { PageOptions, SortOrder } from '../../../../services/models';
+import { filterObjects } from '../../../../services/util/filterObjects';
+import { sortObjects } from '../../../../services/util/sortObjects';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { CreateSchema } from '../../../CreateSchema/CreateSchema';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 
 @staticImplements<Adapter>()

@@ -1,15 +1,14 @@
 import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { communicationService } from '../../communication.service';
+import { extractFeatureId } from '../../geoserver/feature.util';
+import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
-
+import { Schema } from '../schema/schema.models';
+import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { vectorDataClient } from './vectorData.client';
 import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
-import { extractFeatureId } from '../../geoserver/feature.util';
-import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
-import { Schema } from '../schema/schema.models';
 
 // dataset
 

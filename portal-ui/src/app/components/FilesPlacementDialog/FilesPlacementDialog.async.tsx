@@ -1,38 +1,37 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import {
-  Stepper,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  SelectChangeEvent,
   Step,
   StepLabel,
-  Dialog,
-  DialogContent,
-  SelectChangeEvent,
-  DialogActions,
-  DialogTitle
+  Stepper
 } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { sleep } from '../../services/util/sleep';
-import { Button } from '../Button/Button';
-import { Select } from '../Select/Select';
-import { XTableColumn } from '../XTable/XTable.models';
-import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
-import { allProjects } from '../../stores/AllProjects.store';
-import { Role } from '../../services/data/permissions/permissions.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { communicationService } from '../../services/communication.service';
 import { placeFiles } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
-import { projectsService } from '../../services/gis/projects/projects.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { Role } from '../../services/data/permissions/permissions.models';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { viewedProjections } from '../../services/geoserver/projections.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { sleep } from '../../services/util/sleep';
+import { allProjects } from '../../stores/AllProjects.store';
+import { Button } from '../Button/Button';
+import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
-import { communicationService } from '../../services/communication.service';
-
+import { Select } from '../Select/Select';
+import { XTableColumn } from '../XTable/XTable.models';
 import { FilesPlacementReportStore as FilesPlacementStore } from './FilesPlacementDialog.store';
 import { FilesPlacementDialogStepIcon } from './StepIcon/FilesPlacementDialog-StepIcon';
 

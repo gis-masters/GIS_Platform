@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { LayerAdd } from '../../Icons/LayerAdd';
-import { IconButton } from '../../IconButton/IconButton';
-import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { FileInfo } from '../../../services/data/files/files.models';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { IconButton } from '../../IconButton/IconButton';
+import { LayerAdd } from '../../Icons/LayerAdd';
+import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { ProjectPlacementDialog } from '../../ProjectPlacementDialog/ProjectPlacementDialog';
 
 const cnFilesPlacement = cn('Files', 'Placement');

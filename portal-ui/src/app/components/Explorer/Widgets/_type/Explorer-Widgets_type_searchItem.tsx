@@ -4,17 +4,16 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
 import { communicationService } from '../../../../services/communication.service';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
-import { schemaService } from '../../../../services/data/schema/schema.service';
 import { Schema } from '../../../../services/data/schema/schema.models';
-
+import { schemaService } from '../../../../services/data/schema/schema.service';
+import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
+import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';
 import { ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';
 
 @observer
 class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {

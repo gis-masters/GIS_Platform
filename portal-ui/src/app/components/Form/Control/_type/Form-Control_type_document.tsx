@@ -5,9 +5,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
 import { DocumentInfo, Documents } from '../../../Documents/Documents';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeDocument extends Component<FormControlProps> {

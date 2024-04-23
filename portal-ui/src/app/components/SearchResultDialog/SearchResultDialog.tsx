@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { makeObservable, computed } from 'mobx';
+import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
-import { ExplorerItemData, ExplorerItemType, ExplorerSearchValue, emptyItem } from '../Explorer/Explorer.models';
-import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
+import { Explorer } from '../Explorer/Explorer';
+import { emptyItem, ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./SearchResultDialog.scss';
 

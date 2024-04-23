@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FC, useCallback } from 'react';
-import { cn } from '@bem-react/classname';
-import { Input } from '@mui/material';
 import { observer } from 'mobx-react';
+import { Input } from '@mui/material';
 import { Search } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 

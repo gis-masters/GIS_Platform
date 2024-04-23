@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
-import { Coordinate } from 'ol/coordinate';
 import { cn } from '@bem-react/classname';
+import { Coordinate } from 'ol/coordinate';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-
 import { EditFeatureGeometryViewGroup } from '../ViewGroup/EditFeatureGeometry-ViewGroup';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewSuperGroup.scss';

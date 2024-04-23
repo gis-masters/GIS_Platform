@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
-import { FormDialog } from '../FormDialog/FormDialog';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
-
-import { ServicesCalculatorList } from './List/ServicesCalculator-List';
-import { ServicesCalculatorTitle } from './Title/ServicesCalculator-Title';
+import { FormDialog } from '../FormDialog/FormDialog';
 import { ServicesCalculatorActions } from './Actions/ServicesCalculator-Actions';
+import { ServicesCalculatorList } from './List/ServicesCalculator-List';
 import { ServicesCalculatorServicesList } from './ServicesList/ServicesCalculator-ServicesList';
+import { ServicesCalculatorTitle } from './Title/ServicesCalculator-Title';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator.scss';
 

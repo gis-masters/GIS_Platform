@@ -1,9 +1,8 @@
 import React from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
-
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { SchemaActionsEdit } from './SchemaActions-Edit';
 
 export default {

@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { allProjects } from '../../../stores/AllProjects.store';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { allProjects } from '../../../stores/AllProjects.store';
 
 import '!style-loader!css-loader!sass-loader!./Projects-SortBy.scss';
 

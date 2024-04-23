@@ -3,15 +3,14 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
-import { getEsiaUrl } from '../../../services/api/server-urls.service';
-import { environment } from '../../../services/environment';
 import { http } from '../../../services/api/http.service';
-import { ActionsRight } from '../../ActionsRight/ActionsRight';
+import { getEsiaUrl } from '../../../services/api/server-urls.service';
+import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
+import { environment } from '../../../services/environment';
 import { ActionsLeft } from '../../ActionsLeft/ActionsLeft';
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
-
 import { AuthUserData } from '../LoginForm.async';
 
 const cnLoginFormForm = cn('LoginForm', 'Form');

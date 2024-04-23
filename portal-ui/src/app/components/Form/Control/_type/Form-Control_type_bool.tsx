@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { withBemMod } from '@bem-react/core';
 import { Checkbox } from '@mui/material';
+import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../../services/util/randomId';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./Form-Control_type_bool.scss';
 

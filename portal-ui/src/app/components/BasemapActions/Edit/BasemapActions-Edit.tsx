@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { communicationService } from '../../../services/communication.service';
 import { Basemap, basemapEditSchema } from '../../../services/data/basemaps/basemaps.models';
 import { updateBasemap } from '../../../services/data/basemaps/basemaps.service';
-import { communicationService } from '../../../services/communication.service';
+import { getPatch } from '../../../services/util/patch';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { getPatch } from '../../../services/util/patch';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
 const cnBasemapActionsEdit = cn('BasemapActions', 'Edit');

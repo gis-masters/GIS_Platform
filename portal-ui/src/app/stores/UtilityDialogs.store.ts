@@ -1,8 +1,8 @@
-import { action, makeObservable, observable } from 'mobx';
 import { Component, ReactNode } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 
-import { SimpleSchema } from '../services/data/schema/schema.models';
 import { FormProps } from '../components/Form/Form';
+import { SimpleSchema } from '../services/data/schema/schema.models';
 
 export interface UtilityDialogInfo {
   id: string;

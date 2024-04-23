@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, computed } from 'mobx';
-import { Restore, RestoreOutlined } from '@mui/icons-material';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { cn } from '@bem-react/classname';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Restore, RestoreOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { LibraryRecord } from '../../services/data/library/library.models';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { Explorer } from '../Explorer/Explorer';
 import { Button } from '../Button/Button';
+import { Explorer } from '../Explorer/Explorer';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./DocumentVersionsWidget.scss';
 

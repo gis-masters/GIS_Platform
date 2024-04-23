@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
+import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { projectsService } from '../../../services/gis/projects/projects.service';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { SimpleSchema } from '../../../services/data/schema/schema.models';
-import { IconButton } from '../../IconButton/IconButton';
-import { FormDialog } from '../../FormDialog/FormDialog';
+import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { getPatch } from '../../../services/util/patch';
+import { FormDialog } from '../../FormDialog/FormDialog';
+import { IconButton } from '../../IconButton/IconButton';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
 const cnProjectActionsEdit = cn('ProjectActionsEdit', 'Edit');

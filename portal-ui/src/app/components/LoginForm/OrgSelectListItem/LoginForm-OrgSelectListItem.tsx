@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListItemButton, ListItemText } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { OrganizationsListItemInfo } from '../../../services/auth/auth/auth.models';
 

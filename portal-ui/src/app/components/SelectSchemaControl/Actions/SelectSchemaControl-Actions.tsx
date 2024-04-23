@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 
 import { Schema } from '../../../services/data/schema/schema.models';
-import { SchemaActionsPreview } from '../../SchemaActions/Preview/SchemaActions-Preview';
 import { SchemaActionsEdit } from '../../SchemaActions/Edit/SchemaActions-Edit';
+import { SchemaActionsPreview } from '../../SchemaActions/Preview/SchemaActions-Preview';
 
 interface SelectSchemaControlActionsProps {
   rowData: Schema;

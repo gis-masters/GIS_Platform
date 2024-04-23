@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { usersService } from './auth/users/users.service';
 import { currentUser } from '../stores/CurrentUser.store';
+import { usersService } from './auth/users/users.service';
 
 @Injectable({
   providedIn: 'root'

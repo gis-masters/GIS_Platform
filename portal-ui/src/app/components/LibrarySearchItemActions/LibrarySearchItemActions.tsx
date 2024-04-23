@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { getLibraryRecord } from '../../services/data/library/library.service';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { getLibraryRecord } from '../../services/data/library/library.service';
+import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { SearchItemData } from '../../services/data/search/search.model';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
-
-import { LibrarySearchItemActionsOpen } from './Open/LibrarySearchItemActions-Open';
-import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { Actions } from '../Actions/Actions.composed';
+import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
+import { LibrarySearchItemActionsOpen } from './Open/LibrarySearchItemActions-Open';
 
 export const cnLibrarySearchItemActions = cn('LibrarySearchItemActions');
 

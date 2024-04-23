@@ -1,36 +1,35 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { HomeOutlined, PlaylistAdd } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filterObjects';
-import { getTaskSchema, getTasks } from '../../services/data/task/task.service';
-import { registryDefaultFilter } from '../DataManagement/DataManagement.utils';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 import { communicationService } from '../../services/communication.service';
-import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
-import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
-import { calculateValues } from '../../services/util/form/formValidation.utils';
-import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
 import { Schema } from '../../services/data/schema/schema.models';
-import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { PageOptions, ValueOf } from '../../services/models';
-import { SortParams } from '../../services/util/sortObjects';
+import { applyContentType, mergeContentTypes } from '../../services/data/schema/schema.utils';
 import { Task } from '../../services/data/task/task.models';
-import { convertToComplexField } from '../Form/Form.utils';
+import { getTasks, getTaskSchema } from '../../services/data/task/task.service';
+import { PageOptions, ValueOf } from '../../services/models';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filterObjects';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
+import { SortParams } from '../../services/util/sortObjects';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Breadcrumbs } from '../Breadcrumbs/Breadcrumbs';
-import { Registry } from '../Registry/Registry';
-import { XTableProps } from '../XTable/XTable';
+import { registryDefaultFilter } from '../DataManagement/DataManagement.utils';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { convertToComplexField } from '../Form/Form.utils';
 import { Loading } from '../Loading/Loading';
-
-import { TasksJournalCreateButton } from './CreateButton/TasksJournal-CreateButton';
+import { Registry } from '../Registry/Registry';
+import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
 import { TasksJournalActions } from '../TasksJournalActions/TasksJournalActions';
 import { TaskStatusIcon } from '../TaskStatusIcon/TaskStatusIcon';
+import { XTableProps } from '../XTable/XTable';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
+import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
+import { TasksJournalCreateButton } from './CreateButton/TasksJournal-CreateButton';
 
 import '!style-loader!css-loader!sass-loader!./TasksJournal.scss';
 

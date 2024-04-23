@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { withBemMod } from '@bem-react/core';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { withBemMod } from '@bem-react/core';
 
-import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
-import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { usersService } from '../../../../services/auth/users/users.service';
 import { CrgUser } from '../../../../services/auth/users/users.models';
-
+import { usersService } from '../../../../services/auth/users/users.service';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
+import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentBase,

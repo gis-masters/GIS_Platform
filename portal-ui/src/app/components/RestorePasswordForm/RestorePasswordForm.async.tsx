@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Dialog, DialogActions, DialogContent } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
-import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
-import { Dialog, DialogActions, DialogContent } from '@mui/material';
 
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { authService } from '../../services/auth/auth/auth.service';
-import { generateRandomId } from '../../services/util/randomId';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { environment } from '../../services/environment';
 import { services } from '../../services/services';
+import { generateRandomId } from '../../services/util/randomId';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 

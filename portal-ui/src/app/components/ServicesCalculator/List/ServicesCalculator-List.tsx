@@ -1,16 +1,15 @@
 import React, { Component, ReactElement } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, computed, observable, makeObservable } from 'mobx';
-import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
 
+import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { XTable } from '../../XTable/XTable';
-
-import { ServicesInfo } from '../ServicesCalculator';
-import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { ServicesCalculatorCheckbox } from '../Checkbox/ServicesCalculator-Checkbox';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-List.scss';
 

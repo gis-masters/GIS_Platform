@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, OnChanges, ViewChild, ElementRef } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
-import { DataImport } from '../DataImport/DataImport';
 import { registry } from '../../services/di-registry';
+import { DataImport } from '../DataImport/DataImport';
 
 const DataImportWithRegistry = withRegistry(registry)(DataImport);
 

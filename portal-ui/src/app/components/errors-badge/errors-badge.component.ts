@@ -1,5 +1,5 @@
-import { ValidationErrors } from '@angular/forms';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'crg-errors-badge',

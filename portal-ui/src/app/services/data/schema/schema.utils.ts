@@ -1,18 +1,15 @@
+import { Attribute } from '@fiz/geoserver-types/Attribute';
 import { cloneDeep } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
-import { Attribute } from '@fiz/geoserver-types/Attribute';
 
-import {
-  OldContentType,
-  OldPropertySchema,
-  OldPropertySchemaChoice,
-  OldPropertySchemaDatetime,
-  OldPropertySchemaDouble,
-  OldPropertySchemaSet,
-  OldPropertySchemaUrl,
-  OldSchema,
-  ValueType
-} from './schemaOld.models';
+import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
+import { DocumentInfo } from '../../../components/Documents/Documents';
+import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { services } from '../../services';
+import { formatDate } from '../../util/date.util';
+import { FilterQuery } from '../../util/filterObjects';
+import { FileInfo } from '../files/files.models';
+import { LibraryRecord } from '../library/library.models';
 import {
   ContentType,
   PropertySchema,
@@ -30,14 +27,17 @@ import {
   SimpleSchema,
   ValueFormula
 } from './schema.models';
-import { LibraryRecord } from '../library/library.models';
-import { DocumentInfo } from '../../../components/Documents/Documents';
-import { formatDate } from '../../util/date.util';
-import { FileInfo } from '../files/files.models';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
-import { FilterQuery } from '../../util/filterObjects';
-import { services } from '../../services';
+import {
+  OldContentType,
+  OldPropertySchema,
+  OldPropertySchemaChoice,
+  OldPropertySchemaDatetime,
+  OldPropertySchemaDouble,
+  OldPropertySchemaSet,
+  OldPropertySchemaUrl,
+  OldSchema,
+  ValueType
+} from './schemaOld.models';
 
 export function applyViewOld(schema: OldSchema, viewId?: string): OldSchema {
   const view = schema.views?.find(cType => cType.id === viewId);

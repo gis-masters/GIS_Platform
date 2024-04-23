@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Chip, Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./TagsList-Item.scss';
 

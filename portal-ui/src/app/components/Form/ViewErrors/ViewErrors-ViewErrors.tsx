@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
-import { ErrorOutline } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
+import { ErrorOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import '!style-loader!css-loader!sass-loader!./ViewErrors-ViewErrors.scss';
 

@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { buildCustomSld, getSupGeometryType, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
 import {
   CustomStyleDescription,
   LineRule,
@@ -12,13 +11,13 @@ import {
   PolygonRule,
   transparent
 } from '../../services/geoserver/styles/styles.models';
+import { buildCustomSld, getSupGeometryType, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
+import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { FormControlProps } from '../Form/Control/Form-Control';
-
-import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 import { CustomStyleControlForm } from './Form/CustomStyleControl-Form.composed';
+import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 
 import '!style-loader!css-loader!sass-loader!./CustomStyleControl.scss';
 

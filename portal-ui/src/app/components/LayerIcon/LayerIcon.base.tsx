@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { SvgIconProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 

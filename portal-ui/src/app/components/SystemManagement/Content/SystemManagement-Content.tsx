@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Container } from '@mui/material';
-import { action, makeObservable, observable } from 'mobx';
 import { cn } from '@bem-react/classname';
 
 import { organizationsService } from '../../../services/auth/organizations/organizations.service';
-import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
-import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
-import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { Button } from '../../Button/Button';
+import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
+import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
+import { XTableColumn } from '../../XTable/XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./SystemManagement-Content.scss';
 

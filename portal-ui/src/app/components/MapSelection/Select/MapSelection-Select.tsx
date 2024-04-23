@@ -4,11 +4,11 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../../stores/Map.store';
 import { MapMode } from '../../../services/map/map.models';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { RectangleSelectionAdd } from '../../Icons/RectangleSelectionAdd';
+import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
+import { RectangleSelectionAdd } from '../../Icons/RectangleSelectionAdd';
 
 const cnMapSelectionSelect = cn('MapSelection', 'Select');
 

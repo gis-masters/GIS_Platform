@@ -4,7 +4,6 @@ import { Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-
 import { AttributesTab } from '../Tab/Attributes-Tab';
 import { AttributesZeroTab } from '../ZeroTab/Attributes-ZeroTab';
 

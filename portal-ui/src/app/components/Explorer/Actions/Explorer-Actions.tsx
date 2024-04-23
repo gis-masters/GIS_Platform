@@ -2,8 +2,8 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ExplorerStore } from '../Explorer.store';
 import { getActions } from '../Adapter/Explorer-Adapter';
+import { ExplorerStore } from '../Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Actions.scss';
 

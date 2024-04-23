@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
 import { Map, MapOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
+import { isTifFile } from '../../../services/data/files/files.util';
+import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import {
   CoverageTransparentColorEntry,
   getFileTransparentColor,
   updateFileTransparentColor
 } from '../../../services/geoserver/geoserver-file-edit.service';
+import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
-import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
-import { isTifFile } from '../../../services/data/files/files.util';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
-import { Button } from '../../Button/Button';
+import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
 
 import '!style-loader!css-loader!sass-loader!../Connections/Files-Connections.scss';
 import '!style-loader!css-loader!sass-loader!../EditLayer/Files-EditLayer.scss';

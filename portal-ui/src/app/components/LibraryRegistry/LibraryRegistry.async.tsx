@@ -1,18 +1,18 @@
 import React, { Component, ReactElement } from 'react';
-import { action, computed, observable, when, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable, when } from 'mobx';
 import { observer } from 'mobx-react';
-import { Subject } from 'rxjs';
-import { cloneDeep } from 'lodash';
 import { Checkbox } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
+import { cloneDeep } from 'lodash';
+import { Subject } from 'rxjs';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { communicationService } from '../../services/communication.service';
-import { calculateValues } from '../../services/util/form/formValidation.utils';
+import { Library, LibraryRecord } from '../../services/data/library/library.models';
+import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/library/library.service';
+import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { PageOptions } from '../../services/models';
 import {
   addFilterPart,
   FilterQuery,
@@ -20,31 +20,30 @@ import {
   modifyFieldFilterValue,
   removeFieldFilter
 } from '../../services/util/filterObjects';
-import { PageOptions } from '../../services/models';
+import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { SortParams } from '../../services/util/sortObjects';
-import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
-import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
-import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
-import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/library/library.service';
-import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
-import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
-import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
-import { EmptyListView } from '../EmptyListView/EmptyListView';
-import { DeletedDocuments } from '../Icons/DeletedDocuments';
-import { convertToComplexField } from '../Form/Form.utils';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Counter, CounterItem } from '../Counter/Counter';
+import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
 import { DocumentInfo } from '../Documents/Documents';
-import { Registry } from '../Registry/Registry';
-import { XTableProps } from '../XTable/XTable';
-import { Loading } from '../Loading/Loading';
-
-import { getBreadcrumbsPathFromFilter } from './LibraryRegistry.util';
-import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
-import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
-import { LibraryRegistryPathFilterPanelItem } from './PathFilterPanelItem/LibraryRegistry-PathFilterPanelItem';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
+import { convertToComplexField } from '../Form/Form.utils';
+import { DeletedDocuments } from '../Icons/DeletedDocuments';
+import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { LibraryDeletedDocumentsSwitch } from '../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
+import { LibraryDocumentActions } from '../LibraryDocumentActions/LibraryDocumentActions';
+import { LibraryViewSwitch } from '../LibraryViewSwitch/LibraryViewSwitch';
+import { Loading } from '../Loading/Loading';
+import { Registry } from '../Registry/Registry';
+import { RegistrySettings } from '../RegistrySettings/RegistrySettings';
+import { XTableFilterPanelItemContentProps } from '../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
+import { XTableProps } from '../XTable/XTable';
+import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
+import { getXTableColumnsFromSchema } from '../XTable/XTable.utils';
+import { LibraryRegistryBreadcrumbs } from './Breadcrumbs/LibraryRegistry-Breadcrumbs';
+import { LibraryRegistryExport } from './Export/LibraryRegistry-Export';
+import { getBreadcrumbsPathFromFilter } from './LibraryRegistry.util';
+import { LibraryRegistryPathFilterPanelItem } from './PathFilterPanelItem/LibraryRegistry-PathFilterPanelItem';
 
 import '!style-loader!css-loader!sass-loader!./LibraryRegistry.scss';
 

@@ -1,12 +1,11 @@
-import { DebouncedFunc, debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 
+import { Toast } from '../../../components/Toast/Toast';
 import { allDataEntitiesStore } from '../../../stores/AllDataEntities.store';
 import { communicationService } from '../../communication.service';
-import { Toast } from '../../../components/Toast/Toast';
-
-import { getAllVectorTablesInDataset } from './vectorData.service';
 import { vectorDataClient } from './vectorData.client';
 import { VectorTable } from './vectorData.models';
+import { getAllVectorTablesInDataset } from './vectorData.service';
 
 class AllDataEntitiesService {
   private static _instance: AllDataEntitiesService;

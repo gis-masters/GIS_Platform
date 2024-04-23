@@ -1,10 +1,9 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { currentUser } from '../../app/stores/CurrentUser.store';
-
+import { UpLayersListItemData } from '../components/UpLayersList/Item/UpLayersList-Item';
 import { UploadedFile, UploadedFileStatus } from '../services/photoUploader.models';
 import { UploadResultType } from '../services/photoUploader.service';
-import { UpLayersListItemData } from '../components/UpLayersList/Item/UpLayersList-Item';
 
 export enum PhotoUploaderScreens {
   AUTH,

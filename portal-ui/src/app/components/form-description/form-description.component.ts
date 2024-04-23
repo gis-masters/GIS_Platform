@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
 
+import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
+import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
 import { registry } from '../../services/di-registry';
 import { FormDescription } from '../Form/Description/Form-Description';
-import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
-import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
 
 const FormDescriptionWithRegistry = withRegistry(registry)(FormDescription);
 

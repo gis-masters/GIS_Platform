@@ -8,14 +8,13 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual, throttle } from 'lodash';
 
-import { sleep } from '../../services/util/sleep';
 import { ChildrenProps } from '../../services/models';
+import { sleep } from '../../services/util/sleep';
 import { IconButton } from '../IconButton/IconButton';
-
-import { BreadcrumbsShowMore } from './ShowMore/Breadcrumbs-ShowMore';
-import { BreadcrumbsItemsType } from './Item/Breadcrumbs-Item.base';
 import { BreadcrumbsDivider } from './Divider/Breadcrumbs-Divider';
+import { BreadcrumbsItemsType } from './Item/Breadcrumbs-Item.base';
 import { BreadcrumbsItem } from './Item/Breadcrumbs-Item.composed';
+import { BreadcrumbsShowMore } from './ShowMore/Breadcrumbs-ShowMore';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs.scss';
 import '!style-loader!css-loader!sass-loader!./ShowMoreMenu/Breadcrumbs-ShowMoreMenu.scss';

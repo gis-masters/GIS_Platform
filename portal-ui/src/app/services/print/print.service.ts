@@ -1,11 +1,10 @@
 import { LibraryRecord } from '../data/library/library.models';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
-
-import { PrintTemplate } from './templates/PrintTemplate';
 import { rawDocumentData } from './templates/document/rawDocumentData';
 import { featureExtract } from './templates/feature/featureExtract';
 import { rawFeatureData } from './templates/feature/rawFeatureData';
 import { situationalPlan } from './templates/featuresCollection/situationalPlan';
+import { PrintTemplate } from './templates/PrintTemplate';
 
 export const documentPrintTemplates: PrintTemplate<LibraryRecord>[] = [rawDocumentData];
 export const featurePrintTemplates: PrintTemplate<WfsFeature>[] = [rawFeatureData, featureExtract];

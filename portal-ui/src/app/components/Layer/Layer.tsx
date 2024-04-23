@@ -1,30 +1,29 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
-import { CrgLayersGroup, CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-
+import { LayerBurger } from './Burger/Layer-Burger';
+import { LayerCard } from './Card/Layer-Card';
+import { LayerDrag } from './Drag/Layer-Drag';
+import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
+import { LayerErrors } from './Errors/Layer-Errors';
 import { LayerEye } from './Eye/Layer-Eye';
 import { LayerGap } from './Gap/Layer-Gap';
 import { LayerIcon } from './Icon/Layer-Icon';
-import { LayerDrag } from './Drag/Layer-Drag';
-import { LayerCard } from './Card/Layer-Card';
+import { LayerInnards } from './Innards/Layer-Innards';
+import { LayerLegend } from './Legend/Layer-Legend';
 import { LayerMenu } from './Menu/Layer-Menu';
 import { LayerOpen } from './Open/Layer-Open';
 import { LayerTitle } from './Title/Layer-Title';
-import { LayerErrors } from './Errors/Layer-Errors';
-import { LayerBurger } from './Burger/Layer-Burger';
-import { LayerLegend } from './Legend/Layer-Legend';
-import { LayerInnards } from './Innards/Layer-Innards';
-import { LayerEmptiness } from './Emptiness/Layer-Emptiness';
-import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
-import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
+import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
 
 import '!style-loader!css-loader!sass-loader!./Layer.scss';
 

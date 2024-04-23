@@ -1,20 +1,20 @@
 import React, { Component, ReactNode } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
-import { pluralize } from 'numeralize-ru';
-import { WarningAmberOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
+import { WarningAmberOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { pluralize } from 'numeralize-ru';
 
-import { getProjection } from '../../services/geoserver/projections.service';
-import { XTableColumn } from '../XTable/XTable.models';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { isLinear, isPolygonal, isPoint } from '../../services/geoserver/wfs/wfs.util';
+import { getProjection } from '../../services/geoserver/projections.service';
+import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
+import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { XTableColumn } from '../XTable/XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./SelectSuitableVectorLayerDialog.scss';
 

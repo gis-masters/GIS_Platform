@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ServicesInfo } from '../ServicesCalculator';
-import { ServicesCalculatorPrice } from '../Price/ServicesCalculator-Price';
 import { ServicesCalculatorCounter } from '../Counter/ServicesCalculator-Counter';
+import { ServicesCalculatorPrice } from '../Price/ServicesCalculator-Price';
+import { ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Service-Details.scss';
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
-import { LoopOutlined, Loop } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
+import { Loop, LoopOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { ValidateLayersDialog } from '../ValidateLayersDialog/ValidateLayersDialog';

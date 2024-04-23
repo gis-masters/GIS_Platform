@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
 import { computed } from 'mobx';
+import { Observable } from 'rxjs';
 
 /**
  * Создаёт rxjs observable из MobX computed.

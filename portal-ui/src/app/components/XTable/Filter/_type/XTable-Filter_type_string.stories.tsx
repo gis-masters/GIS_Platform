@@ -2,10 +2,9 @@ import { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
 import { SortParams } from '../../../../services/util/sortObjects';
-
+import { Template } from '../XTable-Filter-story-template';
 import { XTable, XTableProps } from './../../XTable';
 import { XTableColumn } from './../../XTable.models';
-import { Template } from '../XTable-Filter-story-template';
 
 export default {
   title: 'XTable/Cols',

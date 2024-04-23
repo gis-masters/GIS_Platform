@@ -2,9 +2,9 @@ import React, { FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { SelectProjection } from '../../SelectProjection/SelectProjection';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { getProjection, replaceHiddenProjectionId } from '../../../services/geoserver/projections.service';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { SelectProjection } from '../../SelectProjection/SelectProjection';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ProjSel.scss';
 

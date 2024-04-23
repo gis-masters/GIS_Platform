@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Person } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
-import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
-import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
+import { LookupItem } from '../../Lookup/Item/Lookup-Item';
+import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
 
 const cnUsersItem = cn('Users', 'Item');
 

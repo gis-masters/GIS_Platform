@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
+import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { Tooltip } from '@mui/material';
 
 import { IconButton } from '../../IconButton/IconButton';
 

@@ -1,12 +1,12 @@
 import React, { Component, createRef, RefObject } from 'react';
-import { parseInt } from 'lodash';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { action, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
+import { parseInt } from 'lodash';
 
-import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { ChildrenProps } from '../../services/models';
+import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import '!style-loader!css-loader!sass-loader!./TextOverflow.scss';
 

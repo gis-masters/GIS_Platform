@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Badge, IconButton, Tooltip } from '@mui/material';
+import { Notifications, NotificationsOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { Tooltip, IconButton, Badge } from '@mui/material';
-import { Notifications, NotificationsOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 
 import { eventService } from '../../services/event.service';
 import { sidebars } from '../../stores/Sidebars.store';

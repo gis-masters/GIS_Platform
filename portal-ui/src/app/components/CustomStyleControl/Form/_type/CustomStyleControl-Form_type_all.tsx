@@ -4,11 +4,10 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { CustomStyleDescription } from '../../../../services/geoserver/styles/styles.models';
-
-import { CustomStyleControlFormProps, cnCustomStyleControlForm } from '../CustomStyleControl-Form.base';
-import { CustomStyleControlFormTypePolygon } from './CustomStyleControl-Form_type_polygon';
-import { CustomStyleControlFormTypePoint } from './CustomStyleControl-Form_type_point';
+import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 import { CustomStyleControlFormTypeLine } from './CustomStyleControl-Form_type_line';
+import { CustomStyleControlFormTypePoint } from './CustomStyleControl-Form_type_point';
+import { CustomStyleControlFormTypePolygon } from './CustomStyleControl-Form_type_polygon';
 
 import '!style-loader!css-loader!sass-loader!./CustomStyleControl-Form_type_all.scss';
 

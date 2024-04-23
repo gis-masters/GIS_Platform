@@ -1,11 +1,11 @@
-import { Component, ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { createRoot, Root } from 'react-dom/client';
-import { boundMethod } from 'autobind-decorator';
-import { withRegistry } from '@bem-react/di';
 import { createElement } from 'react';
+import { createRoot, Root } from 'react-dom/client';
+import { Component, ElementRef, EventEmitter, OnChanges, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { withRegistry } from '@bem-react/di';
+import { boundMethod } from 'autobind-decorator';
 
-import { registry } from '../../services/di-registry';
 import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { registry } from '../../services/di-registry';
 import { PickupDatasets } from '../PickupDatasets/PickupDatasets';
 
 const PickupDatasetsWithRegistry = withRegistry(registry)(PickupDatasets);

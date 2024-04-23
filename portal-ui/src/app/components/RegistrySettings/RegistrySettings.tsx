@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { Settings, SettingsOutlined } from '@mui/icons-material';

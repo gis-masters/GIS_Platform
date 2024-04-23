@@ -1,10 +1,10 @@
+import { createElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
-import { createElement } from 'react';
 
-import { ChangePasswordForm } from '../ChangePasswordForm/ChangePasswordForm';
 import { registry } from '../../services/di-registry';
+import { ChangePasswordForm } from '../ChangePasswordForm/ChangePasswordForm';
 
 const ChangePasswordFormWithRegistry = withRegistry(registry)(ChangePasswordForm);
 

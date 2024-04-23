@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
-import { LibraryAdd, LibraryAddOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { LibraryAdd, LibraryAddOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Button } from '../Button/Button';
 import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { Button } from '../Button/Button';
 import { CreateDatasetDialog } from '../CreateDatasetDialog/CreateDatasetDialog';
-
 import { PickupDatasetsList } from './List/PickupDatasets-List';
 import { PickupDatasetSelected } from './Selected/PickupDatasets-Selected';
 

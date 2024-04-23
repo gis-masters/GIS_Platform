@@ -1,8 +1,8 @@
-import { Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IReactionDisposer, reaction } from 'mobx';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { Platform, environment } from '../../services/environment';
+import { environment, Platform } from '../../services/environment';
 import { route } from '../../stores/Route.store';
 
 @Component({

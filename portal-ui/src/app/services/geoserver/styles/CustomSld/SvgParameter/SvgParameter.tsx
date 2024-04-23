@@ -1,4 +1,4 @@
-import { FC, createElement } from 'react';
+import { createElement, FC } from 'react';
 
 interface SvgParameterProps {
   name: string;

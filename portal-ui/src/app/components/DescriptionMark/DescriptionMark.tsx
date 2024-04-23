@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { ChildrenProps } from '../../services/models';

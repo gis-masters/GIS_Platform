@@ -1,20 +1,19 @@
 import { ReactNode } from 'react';
 
-import { DocumentVersionExtended, Library, LibraryRecord } from '../../services/data/library/library.models';
-import { MessagesRegistry } from '../../services/data/messagesRegistries/messagesRegistries.models';
-import { SearchItemData, SearchItemDataSource } from '../../services/data/search/search.model';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { FtsType } from '../../../server-types/common-contracts';
+import { Emitter } from '../../services/common/Emitter';
 import { DataChangeEventDetail } from '../../services/communication.service';
-import { Task, TaskHistory } from '../../services/data/task/task.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { PageOptions, SortOrder, ValueOf } from '../../services/models';
 import { Basemap } from '../../services/data/basemaps/basemaps.models';
 import { FileInfo } from '../../services/data/files/files.models';
+import { DocumentVersionExtended, Library, LibraryRecord } from '../../services/data/library/library.models';
+import { MessagesRegistry } from '../../services/data/messagesRegistries/messagesRegistries.models';
 import { Schema } from '../../services/data/schema/schema.models';
-import { FtsType } from '../../../server-types/common-contracts';
+import { SearchItemData, SearchItemDataSource } from '../../services/data/search/search.model';
+import { Task, TaskHistory } from '../../services/data/task/task.models';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { PageOptions, SortOrder, ValueOf } from '../../services/models';
 import { FilterQuery } from '../../services/util/filterObjects';
-import { Emitter } from '../../services/common/Emitter';
-
 import { ExplorerService } from './Explorer.service';
 import { ExplorerStore } from './Explorer.store';
 

@@ -1,7 +1,7 @@
-import { cn } from '@bem-react/classname';
 import React, { FC } from 'react';
-import { Document, Page } from 'react-pdf';
 import { observer, useLocalObservable } from 'mobx-react';
+import { cn } from '@bem-react/classname';
+import { Document, Page } from 'react-pdf';
 
 import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 

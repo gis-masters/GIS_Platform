@@ -2,12 +2,11 @@
 import { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { SortParams } from '../../../../services/util/sortObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-
+import { SortParams } from '../../../../services/util/sortObjects';
+import { Template } from '../../Filter/XTable-Filter-story-template';
 import { XTable, XTableProps } from './../../XTable';
 import { XTableColumn } from './../../XTable.models';
-import { Template } from '../../Filter/XTable-Filter-story-template';
 
 export default {
   title: 'XTable/CellContent',

@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-
-import { cn } from '@bem-react/classname';
 import { Tooltip } from '@mui/material';
 import { ZoomIn, ZoomOut } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { IconButton } from '../../IconButton/IconButton';
 

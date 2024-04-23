@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { TextField } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { FilterAltOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
 import { IconButton } from '../../IconButton/IconButton';
+import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
 import { ExplorerService } from '../Explorer.service';
 import { ExplorerStore } from '../Explorer.store';
 

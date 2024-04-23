@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
-import { AxiosError } from 'axios';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 
-import { sidebars } from '../../stores/Sidebars.store';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { projectsService } from '../../services/gis/projects/projects.service';
+import { NewCrgLayer } from '../../services/gis/layers/layers.models';
 import {
   alertLayerOperationError,
   createLayer,
   deleteLayer,
   updateLayer
 } from '../../services/gis/layers/layers.service';
-import { NewCrgLayer } from '../../services/gis/layers/layers.models';
 import { generateNextLayerId } from '../../services/gis/layers/layers.utils';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { LayersTree } from '../LayersTree/LayersTree';
 import { Loading } from '../Loading/Loading';
-
-import { LayersSidebarOpen } from './Open/LayersSidebar-Open';
-import { LayersSidebarInner } from './Inner/LayersSidebar-Inner';
-import { LayersSidebarToolbar } from './Toolbar/LayersSidebar-Toolbar';
 import { LayersSidebarContent } from './Content/LayersSidebar-Content';
+import { LayersSidebarInner } from './Inner/LayersSidebar-Inner';
+import { LayersSidebarOpen } from './Open/LayersSidebar-Open';
+import { LayersSidebarToolbar } from './Toolbar/LayersSidebar-Toolbar';
 
 import '!style-loader!css-loader!sass-loader!./LayersSidebar.scss';
 

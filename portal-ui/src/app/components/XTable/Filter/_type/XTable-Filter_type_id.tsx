@@ -6,9 +6,8 @@ import { withBemMod } from '@bem-react/core';
 
 import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
-
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 import { XTableExtraColumnType } from '../../XTable.models';
+import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_id.scss';
 

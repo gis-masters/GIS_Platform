@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, PropertyType, isPropertySchemaArray } from '../../services/data/schema/schema.models';
+import { isPropertySchemaArray, PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
-import { Button } from '../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./SelectPropertiesControl.scss';
 

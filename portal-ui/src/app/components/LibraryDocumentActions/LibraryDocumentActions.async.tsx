@@ -1,38 +1,37 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
-import { LibraryRecord } from '../../services/data/library/library.models';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { applyContentType } from '../../services/data/schema/schema.utils';
-import { Role } from '../../services/data/permissions/permissions.models';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
-
+import { LibraryRecord } from '../../services/data/library/library.models';
+import { getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { applyContentType } from '../../services/data/schema/schema.utils';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
-import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
-import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
-import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
-import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
-import { LibraryDocumentActionsMove } from './Move/LibraryDocumentActions-Move';
-import { LibraryDocumentActionsPrint } from './Print/LibraryDocumentActions-Print';
-import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Share';
 import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Close';
+import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
-import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
-import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
-import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
+import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
 import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 import { LibraryDocumentActionsImportKpt } from './ImportKpt/LibraryDocumentActions-ImportKpt';
+import { LibraryDocumentActionsMove } from './Move/LibraryDocumentActions-Move';
+import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
+import { LibraryDocumentActionsPrint } from './Print/LibraryDocumentActions-Print';
+import { LibraryDocumentActionsRegister } from './Register/LibraryDocumentActions-Register';
+import { LibraryDocumentActionsRelations } from './Relations/LibraryDocumentActions-Relations';
+import { LibraryDocumentActionsSave } from './Save/LibraryDocumentActions-Save';
+import { LibraryDocumentActionsSed } from './Sed/LibraryDocumentActions-Sed';
+import { LibraryDocumentActionsShare } from './Share/LibraryDocumentActions-Share';
 
 export const cnLibraryDocumentActions = cn('LibraryDocumentActions');
 

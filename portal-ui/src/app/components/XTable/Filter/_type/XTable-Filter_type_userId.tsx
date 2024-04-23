@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Divider, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { withBemMod } from '@bem-react/core';
-import { isEqual } from 'lodash';
 import { cn } from '@bem-react/classname';
+import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
+import { isEqual } from 'lodash';
 
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
-import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { usersService } from '../../../../services/auth/users/users.service';
+import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
+import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 import { allUsers } from '../../../../stores/AllUsers.store';
-
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_userId.scss';

@@ -1,26 +1,25 @@
 import React, { Component, createRef } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { AxiosError } from 'axios';
+import { AddBoxOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AddBoxOutlined } from '@mui/icons-material';
+import { AxiosError } from 'axios';
 
+import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { projectsService } from '../../services/gis/projects/projects.service';
+import { sleep } from '../../services/util/sleep';
 import { allProjects } from '../../stores/AllProjects.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
-import { projectsService } from '../../services/gis/projects/projects.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { sleep } from '../../services/util/sleep';
-import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
+import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { Toast } from '../Toast/Toast';
-
-import { ProjectsList } from './List/Projects-List';
-import { ProjectsSortBy } from './SortBy/Projects-SortBy';
 import { ProjectsFilter } from './Filter/Projects-Filter';
-import { ProjectsLoader } from './Loader/Projects-Loader';
 import { ProjectsHeader } from './Header/Projects-Header';
+import { ProjectsList } from './List/Projects-List';
+import { ProjectsLoader } from './Loader/Projects-Loader';
+import { ProjectsSortBy } from './SortBy/Projects-SortBy';
 import { ProjectsSortOrder } from './SortOrder/Projects-SortOrder';
 
 import '!style-loader!css-loader!sass-loader!./Projects.scss';

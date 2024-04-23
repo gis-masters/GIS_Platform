@@ -1,11 +1,11 @@
 import React, { Component, ComponentType, CSSProperties } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { BreadcrumbsItemData } from '../Breadcrumbs';
+import { BreadcrumbsItemSubtitle } from '../ItemSubtitle/Breadcrumbs-ItemSubtitle';
 import { BreadcrumbsItemTitle } from '../ItemTitle/Breadcrumbs-ItemTitle';
 import { BreadcrumbsNestingGap } from '../NestingGap/Breadcrumbs-NestingGap';
-import { BreadcrumbsItemSubtitle } from '../ItemSubtitle/Breadcrumbs-ItemSubtitle';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Item.scss';
 

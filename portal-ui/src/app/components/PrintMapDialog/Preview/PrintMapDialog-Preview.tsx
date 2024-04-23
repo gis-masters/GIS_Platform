@@ -1,22 +1,21 @@
 import React, { Component, createRef } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable } from 'mobx';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Paper } from '@mui/material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { printSettings } from '../../../stores/PrintSettings.store';
-import { BORDER_WIDTH_MM, getMapImage } from '../../../services/map/map-print.service';
 import { mapService } from '../../../services/map/map.service';
+import { BORDER_WIDTH_MM, getMapImage } from '../../../services/map/map-print.service';
+import { printSettings } from '../../../stores/PrintSettings.store';
 import { Loading } from '../../Loading/Loading';
-
-import { PrintMapDialogPreviewImageContainer } from '../PreviewImageContainer/PrintMapDialog-PreviewImageContainer';
-import { PrintMapDialogPreviewImage } from '../PreviewImage/PrintMapDialog-PreviewImage';
-import { PrintMapDialogWindRose } from '../WindRose/PrintMapDialog-WindRose';
-import { PrintMapDialogLegend } from '../Legend/PrintMapDialog-Legend';
-import { PrintMapDialogScale } from '../Scale/PrintMapDialog-Scale';
-import { PrintMapDialogDate } from '../Date/PrintMapDialog-Date';
 import { PrintMapDialogCopy } from '../Copy/PrintMapDialog-Copy';
+import { PrintMapDialogDate } from '../Date/PrintMapDialog-Date';
+import { PrintMapDialogLegend } from '../Legend/PrintMapDialog-Legend';
+import { PrintMapDialogPreviewImage } from '../PreviewImage/PrintMapDialog-PreviewImage';
+import { PrintMapDialogPreviewImageContainer } from '../PreviewImageContainer/PrintMapDialog-PreviewImageContainer';
+import { PrintMapDialogScale } from '../Scale/PrintMapDialog-Scale';
+import { PrintMapDialogWindRose } from '../WindRose/PrintMapDialog-WindRose';
 
 import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Preview.scss';
 

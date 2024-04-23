@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
+import { computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Chip, Tooltip } from '@mui/material';
 import { Clear } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { computed, makeObservable, observable } from 'mobx';
 
-import { XTableColumn } from '../XTable.models';
-import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
-
-import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';
 import { PropertyType } from '../../../services/data/schema/schema.models';
+import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';
+import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
+import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanel.scss';
 

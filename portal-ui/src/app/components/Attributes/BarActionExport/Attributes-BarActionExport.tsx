@@ -3,21 +3,20 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { FileUploadOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
-import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
-import { exportAsXLSX } from '../../../services/util/export';
+import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { PageOptions } from '../../../services/models';
 import { services } from '../../../services/services';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { exportAsXLSX } from '../../../services/util/export';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
-
+import { XTableColumn } from '../../XTable/XTable.models';
 import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActionExport.scss';

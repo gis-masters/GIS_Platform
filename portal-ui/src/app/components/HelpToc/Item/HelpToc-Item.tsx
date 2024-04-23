@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TreeItem } from '@mui/x-tree-view';
-import { action, makeObservable } from 'mobx';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { TocItem } from '../../../stores/Help.store';
 

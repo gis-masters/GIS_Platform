@@ -1,21 +1,20 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageOptions } from '../../models';
-import { DataClient } from '../DataClient';
-import { MAX_ITEMS_PER_PAGE, http } from '../../api/http.service';
+import { PageableResources } from '../../../../server-types/common-contracts';
+import { http, MAX_ITEMS_PER_PAGE } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { PageableResources } from '../../../../server-types/common-contracts';
-
+import { PageOptions } from '../../models';
+import { DataClient } from '../DataClient';
+import { OldSchema } from '../schema/schemaOld.models';
 import {
   Dataset,
   NewDataset,
-  VectorTable,
-  VectorTableConnection,
   NewVectorTable,
-  RawVectorTable
+  RawVectorTable,
+  VectorTable,
+  VectorTableConnection
 } from './vectorData.models';
-import { OldSchema } from '../schema/schemaOld.models';
 
 @boundClass
 class VectorDataClient extends DataClient {

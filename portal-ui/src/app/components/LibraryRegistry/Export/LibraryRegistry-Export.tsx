@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, MenuItem, Tooltip } from '@mui/material';
 import { ArchiveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
+import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
 import { PropertySchema } from '../../../services/data/schema/schema.models';
-import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
+import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { PageOptions } from '../../../services/models';
+import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { sleep } from '../../../services/util/sleep';
+import { FileIcon } from '../../FileIcon/FileIcon';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { FileIcon } from '../../FileIcon/FileIcon';
 
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 

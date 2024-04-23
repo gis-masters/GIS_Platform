@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
+import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
 import {
-  Role,
   PrincipalType,
-  roles,
   projectRoles,
+  Role,
+  roles,
   rolesTitles
 } from '../../../services/data/permissions/permissions.models';
-import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
 import { filterOutPrincipal } from '../../../services/data/permissions/permissions.utils';
-
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';

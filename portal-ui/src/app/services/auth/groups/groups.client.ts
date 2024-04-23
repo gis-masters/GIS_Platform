@@ -1,8 +1,7 @@
 import { boundClass } from 'autobind-decorator';
 
-import { http } from '../../api/http.service';
 import { Client } from '../../api/Client';
-
+import { http } from '../../api/http.service';
 import { CrgGroup, GroupData } from './groups.models';
 
 @boundClass

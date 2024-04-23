@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { TextField } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { Search } from '@mui/icons-material';
 import { action, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { TextField } from '@mui/material';
+import { Search } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { FtsType } from '../../../server-types/common-contracts';
 import { SearchItemDataSource } from '../../services/data/search/search.model';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
-import { FtsType } from '../../../server-types/common-contracts';
 import { IconButton } from '../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!./SearchField.scss';

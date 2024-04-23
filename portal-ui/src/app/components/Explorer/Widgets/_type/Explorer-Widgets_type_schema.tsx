@@ -1,25 +1,25 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
-import { withBemMod } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
+import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select/Select';
+import { withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
-import { isLinear, isPoint, isPolygonal } from '../../../../services/geoserver/wfs/wfs.util';
-import { applyContentType, applyView } from '../../../../services/data/schema/schema.utils';
-import { SchemaProperties } from '../../../SchemaProperties/SchemaProperties';
 import { Card } from '../../../../components/Card/Card';
 import { CardRow } from '../../../../components/Card/Row/Card-Row';
 import { CardRowTitle } from '../../../../components/Card/RowTitle/Card-RowTitle';
 import { CardValue } from '../../../../components/Card/Value/Card-Value';
-import { ContentType, PropertyOption, Schema } from '../../../../services/data/schema/schema.models';
 import { Select } from '../../../../components/Select/Select';
+import { ContentType, PropertyOption, Schema } from '../../../../services/data/schema/schema.models';
+import { applyContentType, applyView } from '../../../../services/data/schema/schema.utils';
+import { isLinear, isPoint, isPolygonal } from '../../../../services/geoserver/wfs/wfs.util';
 import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
-import { ExplorerItemType } from '../../Explorer.models';
-import { ExplorerWidgetsProps, cnExplorerWidgets } from '../Explorer-Widgets.base';
-import { assertExplorerItemDataTypeSchema } from '../../Adapter/_type/Explorer-Adapter_type_schema';
+import { SchemaProperties } from '../../../SchemaProperties/SchemaProperties';
 import { TagsList } from '../../../TagsList/TagsList';
+import { assertExplorerItemDataTypeSchema } from '../../Adapter/_type/Explorer-Adapter_type_schema';
+import { ExplorerItemType } from '../../Explorer.models';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 const EMPTY = '~~~empty_value~~~';
 

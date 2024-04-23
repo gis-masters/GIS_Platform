@@ -6,8 +6,7 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../../services/communication.service';
-
-import { UtilityDialogContentProps, cnUtilityDialogContent } from '../UtilityDialog-Content.base';
+import { cnUtilityDialogContent, UtilityDialogContentProps } from '../UtilityDialog-Content.base';
 
 @observer
 class UtilityDialogContentTypePrompto extends Component<UtilityDialogContentProps> {

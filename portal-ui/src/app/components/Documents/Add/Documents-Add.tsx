@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AddCircle, AddCircleOutline } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { Button } from '../../Button/Button';
 import { DocumentsSelectDialog } from '../../DocumentsSelectDialog/DocumentsSelectDialog';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
-import { Button } from '../../Button/Button';
-
 import { DocumentInfo } from '../Documents';
 
 const cnDocumentsAdd = cn('Documents', 'Add');

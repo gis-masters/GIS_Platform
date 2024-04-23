@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { cn } from '@bem-react/classname';
-import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
+import { communicationService } from '../../services/communication.service';
 import {
   PropertyOption,
   PropertySchema,
@@ -10,21 +11,19 @@ import {
   Schema,
   SimpleSchema
 } from '../../services/data/schema/schema.models';
-import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
-import { CrgLayer, CrgLayerType, crgLayerSchema } from '../../services/gis/layers/layers.models';
-import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
-import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
-import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
-import { communicationService } from '../../services/communication.service';
-import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { applyView } from '../../services/data/schema/schema.utils';
+import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
+import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
+import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
+import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
-import { FormDialog } from '../FormDialog/FormDialog';
-import { TextBadge } from '../TextBadge/TextBadge';
-import { Loading } from '../Loading/Loading';
 import { FormProps } from '../Form/Form';
-
+import { FormDialog } from '../FormDialog/FormDialog';
+import { Loading } from '../Loading/Loading';
+import { TextBadge } from '../TextBadge/TextBadge';
 import { EditLayerDialogStyleIcon } from './StyleIcon/EditLayerDialog-StyleIcon';
 
 const cnEditLayerDialog = cn('EditLayerDialog');

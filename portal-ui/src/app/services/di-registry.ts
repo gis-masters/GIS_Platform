@@ -1,13 +1,13 @@
 import { Registry } from '@bem-react/di';
 
-import { Form } from '../components/Form/Form';
 import { Explorer } from '../components/Explorer/Explorer';
-import { FormDialog } from '../components/FormDialog/FormDialog';
-import { FormView } from '../components/Form/View/Form-View.composed';
 import { FormControl } from '../components/Form/Control/Form-Control.composed';
+import { Form } from '../components/Form/Form';
+import { FormView } from '../components/Form/View/Form-View.composed';
+import { FormDialog } from '../components/FormDialog/FormDialog';
 import { LibraryDocument } from '../components/LibraryDocument/LibraryDocument';
-import { LibraryRegistry } from '../components/LibraryRegistry/LibraryRegistry';
 import { LibraryDocumentActions } from '../components/LibraryDocumentActions/LibraryDocumentActions';
+import { LibraryRegistry } from '../components/LibraryRegistry/LibraryRegistry';
 
 export const registry = new Registry({ id: 'common' });
 

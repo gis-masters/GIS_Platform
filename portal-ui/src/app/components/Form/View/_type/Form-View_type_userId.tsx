@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { action, makeObservable, observable } from 'mobx';
 
 import { CrgUser, MinimizedCrgUser } from '../../../../services/auth/users/users.models';
-import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { usersService } from '../../../../services/auth/users/users.service';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
-
-import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormControlProps } from '../../Control/Form-Control';
+import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { cnFormView } from '../Form-View';
 

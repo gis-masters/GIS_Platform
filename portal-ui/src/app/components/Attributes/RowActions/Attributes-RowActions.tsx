@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
+import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { sleep } from '../../../services/util/sleep';
-import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
+import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Actions } from '../../Actions/Actions.composed';
-import { ViewLocation } from '../../Icons/ViewLocation';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Button } from '../../Button/Button';
+import { ViewLocation } from '../../Icons/ViewLocation';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-RowActions.scss';
 

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { ButtonBase, Tooltip } from '@mui/material';
 import { action, makeObservable, observable } from 'mobx';
-import { boundMethod } from 'autobind-decorator';
 import { observer } from 'mobx-react';
+import { ButtonBase, Tooltip } from '@mui/material';
+import { IClassNameProps, withBemMod } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 
 import { Link } from '../../../Link/Link';
-
 import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
 
 import '!style-loader!css-loader!sass-loader!./Breadcrumbs-Item_type_link.scss';

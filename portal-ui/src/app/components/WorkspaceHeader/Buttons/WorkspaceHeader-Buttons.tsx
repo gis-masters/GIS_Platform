@@ -5,15 +5,15 @@ import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
-import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
-import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
-import { SearchInProject } from '../../SearchInProject/SearchInProject';
-import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
-import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
-import { HelpToggler } from '../../HelpToggler/HelpToggler';
-import { route, Pages } from '../../../stores/Route.store';
+import { Pages, route } from '../../../stores/Route.store';
 import { sidebars } from '../../../stores/Sidebars.store';
+import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
+import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
+import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { HelpToggler } from '../../HelpToggler/HelpToggler';
+import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
+import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
+import { SearchInProject } from '../../SearchInProject/SearchInProject';
 import { User } from '../../User/User';
 
 import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';

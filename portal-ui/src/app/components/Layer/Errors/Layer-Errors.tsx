@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import * as DOMPurify from 'dompurify';
 import { cn } from '@bem-react/classname';
+import * as DOMPurify from 'dompurify';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Errors.scss';
 

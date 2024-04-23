@@ -3,7 +3,6 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
-
 import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
 
 const XTableCellContentTypeChoice: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => (

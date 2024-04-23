@@ -1,21 +1,20 @@
 import React from 'react';
-import { observable, makeObservable } from 'mobx';
+import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsPointGeometry, CoordinateEdited, GeometryType } from '../../../../services/geoserver/wfs/wfs.models';
-
-import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
-import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
+import { CoordinateEdited, GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
+import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
+import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 import {
-  EditFeatureGeometryFormProps,
+  cnEditFeatureGeometryForm,
   EditFeatureGeometryForm,
-  cnEditFeatureGeometryForm
+  EditFeatureGeometryFormProps
 } from '../EditFeatureGeometry-Form';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Point.scss';

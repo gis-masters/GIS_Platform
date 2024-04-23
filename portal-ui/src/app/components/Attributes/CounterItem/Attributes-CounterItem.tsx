@@ -1,8 +1,9 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-CounterItem.scss';
 import { ChildrenProps } from '../../../services/models';
+
+import '!style-loader!css-loader!sass-loader!./Attributes-CounterItem.scss';
 
 const cnAttributesCounterItem = cn('Attributes', 'CounterItem');
 

@@ -1,11 +1,11 @@
 import React, { FC } from 'react';
-import Dropzone from 'react-dropzone';
 import { IconButton } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import Dropzone from 'react-dropzone';
 
-import { Loading } from '../../Loading/Loading';
 import { Button } from '../../Button/Button';
+import { Loading } from '../../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./DataImport-Dropzone.scss';
 

@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { SelectChangeEvent } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { PointRule, customStyleMarks } from '../../../services/geoserver/styles/styles.models';
+import { customStyleMarks, PointRule } from '../../../services/geoserver/styles/styles.models';
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
-
+import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlMarkTile } from '../MarkTile/CustomStyleControl-MarkTile';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
-import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 
 const cnCustomStyleControlMarkSelect = cn('CustomStyleControl', 'MarkSelect');
 

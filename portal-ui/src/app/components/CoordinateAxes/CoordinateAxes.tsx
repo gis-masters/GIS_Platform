@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { action, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
 import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { CoordinateAxesXY } from '../Icons/CoordinateAxesXY';
 import { CoordinateAxesYX } from '../Icons/CoordinateAxesYX';

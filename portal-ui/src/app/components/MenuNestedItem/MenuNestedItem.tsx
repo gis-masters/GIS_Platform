@@ -1,10 +1,10 @@
 import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { ChevronRight } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import '!style-loader!css-loader!sass-loader!./MenuNestedItem.scss';
 

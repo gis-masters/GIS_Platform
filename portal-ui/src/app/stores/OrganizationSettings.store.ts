@@ -1,8 +1,8 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
-import { currentUser } from './CurrentUser.store';
-import { Schema } from '../services/data/schema/schema.models';
 import { EpsgModelModified } from '../services/data/epsg/epsg.models';
+import { Schema } from '../services/data/schema/schema.models';
+import { currentUser } from './CurrentUser.store';
 
 export interface Settings {
   createLibraryItem: boolean;

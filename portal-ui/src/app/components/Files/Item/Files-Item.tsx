@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
+import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
+import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
+import { getFileConnections } from '../../../services/data/files/files.service';
 import {
   getFileBaseName,
   getFileExtension,
@@ -13,24 +16,20 @@ import {
   isPreviewAllowed,
   isTifFile
 } from '../../../services/data/files/files.util';
-import { getFileConnections } from '../../../services/data/files/files.service';
-import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
-import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
-import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { LibraryRecord } from '../../../services/data/library/library.models';
-import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { Button } from '../../Button/Button';
+import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
-import { Button } from '../../Button/Button';
-
-import { FilesName } from '../Name/Files-Name';
-import { FilesIcon } from '../Icon/Files-Icon';
-import { FilesPreview } from '../Preview/Files-Preview';
+import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
+import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { FilesConnections } from '../Connections/Files-Connections';
-import { FilesPlacement } from '../Placement/Files-Placement';
 import { FilesDownloadCompoundFile } from '../DownloadCompoundFile/Files-DownloadCompoundFile';
+import { FilesIcon } from '../Icon/Files-Icon';
+import { FilesName } from '../Name/Files-Name';
+import { FilesPlacement } from '../Placement/Files-Placement';
+import { FilesPreview } from '../Preview/Files-Preview';
 
 const cnFilesItem = cn('Files', 'Item');
 

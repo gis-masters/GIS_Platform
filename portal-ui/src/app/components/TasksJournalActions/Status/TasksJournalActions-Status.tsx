@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FactCheckOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { updateTaskStatus } from '../../../services/data/task/task.service';
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { Task, TaskStatus } from '../../../services/data/task/task.models';
+import { updateTaskStatus } from '../../../services/data/task/task.service';
+import { services } from '../../../services/services';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
 const cnTasksJournalActionsStatus = cn('TasksJournalActions', 'Status');

@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
-import { cn } from '@bem-react/classname';
 import { Container } from '@mui/material';
+import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
-import { action, IReactionDisposer, observable, reaction, makeObservable, computed } from 'mobx';
 
+import { organizationsClient } from '../../services/auth/organizations/organizations.client';
+import { organizationsService } from '../../services/auth/organizations/organizations.service';
+import { EpsgModelModified, isArrayOfEpsgModelModified } from '../../services/data/epsg/epsg.models';
 import {
   PropertySchema,
   PropertySchemaChoice,
   PropertyType,
   SimpleSchema
 } from '../../services/data/schema/schema.models';
-import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
-import { EpsgModelModified, isArrayOfEpsgModelModified } from '../../services/data/epsg/epsg.models';
-import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import { organizationsClient } from '../../services/auth/organizations/organizations.client';
-import { isStringArray } from '../../services/util/typeGuards/isStringArray';
-import { SelectEPSGControl } from '../SelectEPSGControl/SelectEPSGControl';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
+import { isStringArray } from '../../services/util/typeGuards/isStringArray';
+import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
-import { Toast } from '../Toast/Toast';
 import { Form } from '../Form/Form';
+import { SelectEPSGControl } from '../SelectEPSGControl/SelectEPSGControl';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./OrganizationSettings.scss';
 

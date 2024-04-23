@@ -1,9 +1,9 @@
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { default as OlFeature } from 'ol/Feature';
-import { Geometry } from 'ol/geom';
 import * as DOMPurify from 'dompurify';
 import moment from 'moment';
+import { default as OlFeature } from 'ol/Feature';
+import { Geometry } from 'ol/geom';
 
 import { AppModule } from './app/app.module';
 import { environment, EnvironmentData } from './app/services/environment';

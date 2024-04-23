@@ -4,9 +4,8 @@ import { observer } from 'mobx-react';
 import { CreateNewFolderOutlined, NoteAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { ContentType } from '../../services/data/schema/schema.models';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
-
+import { ContentType } from '../../services/data/schema/schema.models';
 import { CreateLibraryRecordButton } from './Button/CreateLibraryRecord-Button';
 import { CreateLibraryRecordItem } from './Item/CreateLibraryRecord-Item.composed';
 

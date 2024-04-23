@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryError } from '../Error/EditFeatureGeometry-Error';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form.scss';

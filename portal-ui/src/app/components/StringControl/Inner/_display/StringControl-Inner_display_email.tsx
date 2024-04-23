@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { StringControlInnerBase, StringControlInnerProps, cnStringControlInner } from '../StringControl-Inner.base';
+import { cnStringControlInner, StringControlInnerBase, StringControlInnerProps } from '../StringControl-Inner.base';
 
 @observer
 class StringControlInnerDisplayEmail extends Component<StringControlInnerProps> {

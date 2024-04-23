@@ -1,17 +1,17 @@
 import React, { Component, FC, ReactNode } from 'react';
-import { cn } from '@bem-react/classname';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { toast, Id, ToastOptions } from 'react-toastify';
-import nl2br from 'react-nl2br';
 import { IconButton } from '@mui/material';
-import { CheckCircle, Error, Info, Warning, Close } from '@mui/icons-material';
+import { CheckCircle, Close, Error, Info, Warning } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material/SvgIcon/';
-
-import { sendTelegramError } from '../../services/telegram.service';
-import { environment } from '../../services/environment';
-
+import { cn } from '@bem-react/classname';
+import nl2br from 'react-nl2br';
+import { Id, toast, ToastOptions } from 'react-toastify';
 import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
+
+import { environment } from '../../services/environment';
+import { sendTelegramError } from '../../services/telegram.service';
+
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
 
 const cnToast = cn('Toast');

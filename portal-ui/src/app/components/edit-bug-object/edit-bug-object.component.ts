@@ -3,20 +3,20 @@ import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { debounceTime } from 'rxjs/operators';
 
-import { BaseEdit } from './base-edit';
+import { communicationService } from '../../services/communication.service';
+import { schemaService } from '../../services/data/schema/schema.service';
+import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
+import { ValueType } from '../../services/data/schema/schemaOld.models';
+import { initValidation } from '../../services/data/validation/validation.service';
+import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
-import { mapService } from '../../services/map/map.service';
-import { communicationService } from '../../services/communication.service';
-import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
-import { initValidation } from '../../services/data/validation/validation.service';
-import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
-import { schemaService } from '../../services/data/schema/schema.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { ValueType } from '../../services/data/schema/schemaOld.models';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { mapService } from '../../services/map/map.service';
+import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { Toast } from '../Toast/Toast';
+import { BaseEdit } from './base-edit';
 
 export interface ObjectDto {
   id: string;

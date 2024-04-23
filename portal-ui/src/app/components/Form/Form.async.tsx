@@ -1,12 +1,13 @@
 import React, { Component, ReactNode } from 'react';
-import { action, IReactionDisposer, observable, reaction, makeObservable, computed } from 'mobx';
+import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { AxiosError } from 'axios';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 import { cloneDeep } from 'lodash';
 
 import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
+import { services } from '../../services/services';
 import {
   calculateValues,
   cleanCalculatedValues,
@@ -15,13 +16,11 @@ import {
   validateFieldValue,
   validateFormValue
 } from '../../services/util/form/formValidation.utils';
-import { services } from '../../services/services';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-
-import { computeDynamicProperties, getDefaultValues, isEqualExceptCalculated } from './Form.utils';
-import { FormContent } from './Content/Form-Content';
 import { FormActions } from './Actions/Form-Actions';
+import { FormContent } from './Content/Form-Content';
 import { FormErrors } from './Errors/Form-Errors';
+import { computeDynamicProperties, getDefaultValues, isEqualExceptCalculated } from './Form.utils';
 
 import '!style-loader!css-loader!sass-loader!./Form.scss';
 

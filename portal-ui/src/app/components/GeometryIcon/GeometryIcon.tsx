@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
-import { Adjust, PolylineOutlined, ReportProblemOutlined, SvgIconComponent } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material';
-import { IClassNameProps } from '@bem-react/core';
+import { Adjust, PolylineOutlined, ReportProblemOutlined, SvgIconComponent } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { Shape } from '../Icons/Shape';

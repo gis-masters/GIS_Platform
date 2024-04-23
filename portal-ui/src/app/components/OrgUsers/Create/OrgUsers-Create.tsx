@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PersonAdd, PersonAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 import { Button } from '../../Button/Button';
+import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 
 const cnOrgUsersCreate = cn('OrgUsers', 'Create');
 

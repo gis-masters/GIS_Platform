@@ -4,16 +4,15 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import {
-  WfsMultiPolygonGeometry,
   CoordinateEdited,
   GeometryType,
+  WfsMultiPolygonGeometry,
   WfsPolygonGeometry
 } from '../../../../services/geoserver/wfs/wfs.models';
-
-import { EditFeatureGeometryFormProps, cnEditFeatureGeometryForm } from '../EditFeatureGeometry-Form';
-import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
 import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
+import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
+import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeometryFormProps> {

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { route } from '../../stores/Route.store';
 import { authService } from '../../services/auth/auth/auth.service';
-
-import { ChangePasswordFormSuccess } from './Success/ChangePasswordForm-Success';
+import { route } from '../../stores/Route.store';
 import { ChangePasswordData, ChangePasswordFormForm } from './Form/ChangePasswordForm-Form';
+import { ChangePasswordFormSuccess } from './Success/ChangePasswordForm-Success';
 import { ChangePasswordFormTokenExpired } from './TokenExpired/ChangePasswordForm-TokenExpired';
 
 import '!style-loader!css-loader!sass-loader!./ChangePasswordForm.scss';

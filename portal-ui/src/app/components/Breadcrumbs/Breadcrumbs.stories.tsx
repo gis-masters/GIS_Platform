@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Input, Slider } from '@mui/material';
 import { AllInclusive, HomeOutlined, SvgIconComponent, WidthFull, WidthNormal, WidthWide } from '@mui/icons-material';
-import { StoryFn } from '@storybook/react';
 import { cn } from '@bem-react/classname';
+import { StoryFn } from '@storybook/react';
 
 import { Breadcrumbs, BreadcrumbsItemData } from './Breadcrumbs';
 

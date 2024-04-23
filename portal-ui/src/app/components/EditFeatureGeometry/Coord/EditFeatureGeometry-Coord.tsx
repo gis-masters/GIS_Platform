@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { SimpleGeometry } from 'ol/geom';
-import { Feature } from 'ol';
 import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { Feature } from 'ol';
+import { SimpleGeometry } from 'ol/geom';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
-import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { mapService } from '../../../services/map/map.service';
-
+import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
+import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';

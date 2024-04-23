@@ -1,5 +1,5 @@
-import { TableCellProps } from '@mui/material';
 import { ComponentType, ReactNode } from 'react';
+import { TableCellProps } from '@mui/material';
 
 import {
   PropertySchemaChoice,
@@ -10,9 +10,8 @@ import {
   Relation
 } from '../../services/data/schema/schema.models';
 import { FilterQuery } from '../../services/util/filterObjects';
-
-import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
+import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 
 export enum XTableExtraColumnType {

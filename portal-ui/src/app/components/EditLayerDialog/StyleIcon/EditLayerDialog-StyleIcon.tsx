@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { cn } from '@bem-react/classname';
 import { SettingsSuggestOutlined, StyleOutlined } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 
 import { CUSTOM_STYLE_NAME } from '../../../services/geoserver/styles/styles.models';
 import { loadLayerStyleRules } from '../../../services/geoserver/styles/styles.service';

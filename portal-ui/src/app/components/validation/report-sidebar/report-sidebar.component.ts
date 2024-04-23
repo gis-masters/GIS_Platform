@@ -1,18 +1,18 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-import { NGXLogger } from 'ngx-logger';
 
-import { sidebars } from '../../../stores/Sidebars.store';
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { ProcessStatus, ProcessType, WsImportModel } from '../../../services/data/processes/processes.models';
-import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
 import { communicationService } from '../../../services/communication.service';
+import { ProcessStatus, ProcessType, WsImportModel } from '../../../services/data/processes/processes.models';
 import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
-import { ExportWsMsg, IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
 import { mapService } from '../../../services/map/map.service';
+import { ExportWsMsg, IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { sidebars } from '../../../stores/Sidebars.store';
+import { ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
 
 @Component({
   selector: 'crg-report-sidebar',

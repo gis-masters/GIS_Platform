@@ -3,7 +3,6 @@ import { cn } from '@bem-react/classname';
 
 import { PrincipalType } from '../../../services/data/permissions/permissions.models';
 import { PermissionsCount } from '../../PermissionsCount/PermissionsCount';
-
 import { CrgUserExtended } from '../OrgUsers';
 
 const cnOrgUsersPermissionsCount = cn('OrgUsers', 'PermissionsCount');

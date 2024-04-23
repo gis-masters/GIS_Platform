@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ExplorerItemType } from '../Explorer/Explorer.models';
 import { Explorer } from '../Explorer/Explorer';
+import { ExplorerItemType } from '../Explorer/Explorer.models';
 
 import '!style-loader!css-loader!sass-loader!./DataManagement.scss';
 

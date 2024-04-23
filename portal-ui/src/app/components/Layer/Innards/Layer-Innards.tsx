@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ChildrenProps } from '../../../services/models';
-
-import { LayerInnardsInner } from '../InnardsInner/Layer-InnardsInner';
 import { LayerGap } from '../Gap/Layer-Gap';
+import { LayerInnardsInner } from '../InnardsInner/Layer-InnardsInner';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Innards.scss';
 

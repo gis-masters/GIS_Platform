@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { TextField } from '@mui/material';
 import moment from 'moment';
 
-import { PropertyType, PropertySchemaDatetime } from '../../../../services/data/schema/schema.models';
-
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FormErrors } from '../../Errors/Form-Errors';
+import { cnFormControl, FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {

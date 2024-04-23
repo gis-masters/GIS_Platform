@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable, IReactionDisposer, reaction } from 'mobx';
+import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { LinearProgress } from '@mui/material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { filterLegendForCurrentMapView, getLayerStyleRules } from '../../../services/geoserver/styles/styles.service';
+import { Emitter } from '../../../services/common/Emitter';
 import { StyleRule } from '../../../services/geoserver/styles/styles.models';
+import { filterLegendForCurrentMapView, getLayerStyleRules } from '../../../services/geoserver/styles/styles.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
-import { Emitter } from '../../../services/common/Emitter';
+import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { Legend } from '../../Legend/Legend';
-
 import { LayerLegendFilterToggler } from '../LegendFilterToggler/Layer-LegendFilterToggler';
 
 import '!style-loader!css-loader!sass-loader!./Layer-Legend.scss';

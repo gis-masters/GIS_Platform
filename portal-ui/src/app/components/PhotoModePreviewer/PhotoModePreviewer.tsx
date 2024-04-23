@@ -1,16 +1,15 @@
 import React, { FC, useEffect } from 'react';
-import { cn } from '@bem-react/classname';
 import { observer, useLocalObservable } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 
-import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { getPhotoModeFeatureFiles } from '../../services/data/files/files.util';
+import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
+import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { sidebars } from '../../stores/Sidebars.store';
-import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
-
-import { TextBadge } from '../TextBadge/TextBadge';
 import { Carousel, CarouselImageInfo } from '../Carousel/Carousel';
+import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
+import { TextBadge } from '../TextBadge/TextBadge';
 
 const cnPhotoModePreviewer = cn('PhotoModePreviewer');
 

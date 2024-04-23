@@ -1,11 +1,11 @@
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
-import { allProjects } from './AllProjects.store';
-import { allDataEntitiesStore } from './AllDataEntities.store';
-import { ResourcePermissions, RoleAssignmentBody } from '../services/data/permissions/permissions.models';
 import { PermissionsListItem } from '../services/data/permissions/allPermissions.service';
-import { CrgProject } from '../services/gis/projects/projects.models';
+import { ResourcePermissions, RoleAssignmentBody } from '../services/data/permissions/permissions.models';
 import { DataEntityType, Dataset, VectorTable } from '../services/data/vectorData/vectorData.models';
+import { CrgProject } from '../services/gis/projects/projects.models';
+import { allDataEntitiesStore } from './AllDataEntities.store';
+import { allProjects } from './AllProjects.store';
 
 class AllPermissions {
   @observable fetching = false;

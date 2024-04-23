@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Badge, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { MapOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { Badge, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
 import { FileConnection } from '../../services/data/files/files.models';
+import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
+import { Button } from '../Button/Button';
+import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
-import { Button } from '../Button/Button';
 
 const cnFeatureConnections = cn('FeatureConnections', 'Connections');
 const cnFeatureConnectionsDialog = cn('FeatureConnections', 'ConnectionsDialog');

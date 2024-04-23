@@ -3,7 +3,6 @@ import { cn } from '@bem-react/classname';
 
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
-
 import { ChangePasswordFormTitle } from '../Title/ChangePasswordForm-Title';
 
 import '!style-loader!css-loader!sass-loader!./ChangePasswordForm-Success.scss';

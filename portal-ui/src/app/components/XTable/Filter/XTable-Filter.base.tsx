@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { PropertyOption } from '../../../services/data/schema/schema.models';
-import { XTableColumnType } from '../XTable.models';
 import { FilterQuery } from '../../../services/util/filterObjects';
+import { XTableColumnType } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter.scss';
 

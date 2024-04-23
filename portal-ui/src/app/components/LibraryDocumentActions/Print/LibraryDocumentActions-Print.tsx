@@ -2,12 +2,11 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { documentPrintTemplates } from '../../../services/print/print.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { PrintAction } from '../../PrintAction/PrintAction';
-
+import { documentPrintTemplates } from '../../../services/print/print.service';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { PrintAction } from '../../PrintAction/PrintAction';
 
 const cnLibraryDocumentActionsPrint = cn('LibraryDocumentActions', 'Print');
 

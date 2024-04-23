@@ -3,13 +3,11 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaFloat, PropertyType } from '../../../../services/data/schema/schema.models';
-
-import { cnFormView } from '../Form-View';
-import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormControlProps } from '../../Control/Form-Control';
+import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
-
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeFloat extends Component<FormControlProps> {

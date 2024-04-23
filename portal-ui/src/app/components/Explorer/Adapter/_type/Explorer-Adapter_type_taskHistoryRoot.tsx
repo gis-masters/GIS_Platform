@@ -1,6 +1,9 @@
 import React, { ReactNode } from 'react';
 import { ArticleOutlined } from '@mui/icons-material';
 
+import { getTaskHistory } from '../../../../services/data/task/task.service';
+import { PageOptions } from '../../../../services/models';
+import { staticImplements } from '../../../../services/util/staticImplements';
 import {
   Adapter,
   ExplorerItemData,
@@ -8,9 +11,6 @@ import {
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { getTaskHistory } from '../../../../services/data/task/task.service';
-import { PageOptions } from '../../../../services/models';
 
 function assertExplorerItemDataTypeTaskHistoryRoot(
   item: ExplorerItemData

@@ -4,7 +4,6 @@ import { cn } from '@bem-react/classname';
 import { ChildrenProps } from '../../../services/models';
 import { FilterButton } from '../../FilterButton/FilterButton';
 import { ToolbarDivider } from '../../ToolbarDivider/ToolbarDivider';
-
 import { XTablePageSize } from '../PageSize/XTable-PageSize';
 
 import '!style-loader!css-loader!sass-loader!./XTable-TitleBarActions.scss';

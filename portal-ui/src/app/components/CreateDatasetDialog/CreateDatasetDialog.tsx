@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { SaveOutlined } from '@mui/icons-material';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
-import { Toast } from '../Toast/Toast';
+import { Dataset, datasetSchema } from '../../services/data/vectorData/vectorData.models';
 import { createDataset } from '../../services/data/vectorData/vectorData.service';
 import { FormDialog } from '../FormDialog/FormDialog';
-import { Dataset, datasetSchema } from '../../services/data/vectorData/vectorData.models';
+import { Toast } from '../Toast/Toast';
 
 const cnCreateDatasetDialog = cn('CreateDatasetDialog');
 

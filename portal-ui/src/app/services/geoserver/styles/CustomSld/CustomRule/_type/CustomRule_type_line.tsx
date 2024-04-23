@@ -1,14 +1,14 @@
 import React, { FC, Fragment } from 'react';
 
-import { LineSymbolizer } from '../../LineSymbolizer/LineSymbolizer';
-import { SvgParameter } from '../../SvgParameter/SvgParameter';
-import { Stroke } from '../../Stroke/Stroke';
-import { Rule } from '../../Rule/Rule';
-import { CustomRuleProps } from '../CustomRule';
 import { Filter } from '../../Filter/Filter';
-import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
 import { Function } from '../../Function/Function';
+import { LineSymbolizer } from '../../LineSymbolizer/LineSymbolizer';
 import { Literal } from '../../Literal/Literal';
+import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
+import { Rule } from '../../Rule/Rule';
+import { Stroke } from '../../Stroke/Stroke';
+import { SvgParameter } from '../../SvgParameter/SvgParameter';
+import { CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypeLine: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'line') {

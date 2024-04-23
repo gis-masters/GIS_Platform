@@ -3,7 +3,6 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
-
 import { XTableColumn, XTableColumnType } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';

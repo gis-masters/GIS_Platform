@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { action, observable, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
 import { importFeaturesFromShapeFile } from '../../services/data/file-placement/file-placement.service';
+import { isZipFile } from '../../services/data/files/files.util';
 import { ImportShapeProcess } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
-import { isZipFile } from '../../services/data/files/files.util';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';
-import { Form, FormField, FormLabel } from '../Form/Form';
-import { cnFormControl } from '../Form/Control/Form-Control';
-import { FileInput } from '../FileInput/FileInput';
 import { Button } from '../Button/Button';
+import { FileInput } from '../FileInput/FileInput';
+import { cnFormControl } from '../Form/Control/Form-Control';
+import { Form, FormField, FormLabel } from '../Form/Form';
 import { Toast } from '../Toast/Toast';
 
 interface ImportShapeDialogProps {

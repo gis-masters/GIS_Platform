@@ -1,12 +1,12 @@
 import React, { ReactNode } from 'react';
-import { ViewListOutlined } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
+import { ViewListOutlined } from '@mui/icons-material';
 
-import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
-import { staticImplements } from '../../../../services/util/staticImplements';
-import { formatDate } from '../../../../services/util/date.util';
 import { services } from '../../../../services/services';
-
+import { formatDate } from '../../../../services/util/date.util';
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
+import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import {
   Adapter,
   ExplorerItemData,
@@ -14,9 +14,8 @@ import {
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
-import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
+import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 
 export function assertExplorerItemDataTypeTable(
   item: ExplorerItemData

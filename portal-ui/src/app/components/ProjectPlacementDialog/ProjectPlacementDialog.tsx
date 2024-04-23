@@ -1,31 +1,31 @@
 import React, { Component } from 'react';
-import { AxiosError } from 'axios';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Breakpoint } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { action, observable, makeObservable } from 'mobx';
-import { Breakpoint } from '@mui/material';
+import { AxiosError } from 'axios';
 
-import { Link } from '../Link/Link';
-import { Toast } from '../Toast/Toast';
-import { services } from '../../services/services';
-import { sidebars } from '../../stores/Sidebars.store';
-import { FileInfo } from '../../services/data/files/files.models';
-import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
-import { SelectProjection } from '../SelectProjection/SelectProjection';
-import { CrgProject } from '../../services/gis/projects/projects.models';
 import { communicationService } from '../../services/communication.service';
-import { LibraryRecord } from '../../services/data/library/library.models';
-import { defaultProjection } from '../../services/geoserver/projections.service';
-import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
-import { isFileWithProjection, isTifFile } from '../../services/data/files/files.util';
 import {
   placeFile,
   placeFileWithProjection,
   placeGml
 } from '../../services/data/file-placement/file-placement.service';
-import { awaitProcess } from '../../services/data/processes/processes.service';
+import { FileInfo } from '../../services/data/files/files.models';
+import { isFileWithProjection, isTifFile } from '../../services/data/files/files.util';
+import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
+import { awaitProcess } from '../../services/data/processes/processes.service';
+import { defaultProjection } from '../../services/geoserver/projections.service';
+import { CrgProject } from '../../services/gis/projects/projects.models';
+import { services } from '../../services/services';
+import { sidebars } from '../../stores/Sidebars.store';
+import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
+import { Link } from '../Link/Link';
+import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
+import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
 

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { Checkbox, Radio } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 const cnChooseXTableCheck = cn('ChooseXTable', 'Check');
 

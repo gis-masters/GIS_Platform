@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { isTifFile } from '../../services/data/files/files.util';
 import { FileInfo } from '../../services/data/files/files.models';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { isTifFile } from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
-import { FormControlProps } from '../Form/Control/Form-Control';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
-import { Explorer } from '../Explorer/Explorer';
+import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
+import { Explorer } from '../Explorer/Explorer';
+import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { FormControlProps } from '../Form/Control/Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./SelectFileInLibraryRecordControl.scss';
 

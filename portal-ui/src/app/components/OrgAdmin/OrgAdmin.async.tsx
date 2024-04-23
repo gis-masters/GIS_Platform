@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tabs, Tab } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { allUsers } from '../../stores/AllUsers.store';
+import { allPermissionsService } from '../../services/data/permissions/allPermissions.service';
+import { allDataEntitiesService } from '../../services/data/vectorData/allVectorDataEntities.service';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
-import { allDataEntitiesService } from '../../services/data/vectorData/allVectorDataEntities.service';
-import { allPermissionsService } from '../../services/data/permissions/allPermissions.service';
-import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
+import { allUsers } from '../../stores/AllUsers.store';
+import { Loading } from '../Loading/Loading';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
+import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
-import { Loading } from '../Loading/Loading';
 
 import '!style-loader!css-loader!sass-loader!./OrgAdmin.scss';
 

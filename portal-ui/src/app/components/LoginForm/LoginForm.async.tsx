@@ -1,22 +1,21 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
+import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { route, Pages } from '../../stores/Route.store';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { authService } from '../../services/auth/auth/auth.service';
 import { OrganizationsListItemInfo } from '../../services/auth/auth/auth.models';
-import { communicationService } from '../../services/communication.service';
+import { authService } from '../../services/auth/auth/auth.service';
 import { usersService } from '../../services/auth/users/users.service';
+import { communicationService } from '../../services/communication.service';
 import { services } from '../../services/services';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { Pages, route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
-
-import { LoginFormOrgSelect } from './OrgSelect/LoginForm-OrgSelect';
 import { LoginFormForm } from './Form/LoginForm-Form';
+import { LoginFormOrgSelect } from './OrgSelect/LoginForm-OrgSelect';
 
 import '!style-loader!css-loader!sass-loader!./LoginForm.scss';
 import '!style-loader!css-loader!sass-loader!../HomePageForm/HomePageForm.scss';

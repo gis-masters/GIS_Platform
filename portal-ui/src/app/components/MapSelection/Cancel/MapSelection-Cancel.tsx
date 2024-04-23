@@ -5,10 +5,10 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapStore } from '../../../stores/Map.store';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { RectangleSelectionCancel } from '../../Icons/RectangleSelectionCancel';
+import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
+import { RectangleSelectionCancel } from '../../Icons/RectangleSelectionCancel';
 
 const cnMapSelectionCancel = cn('MapSelection', 'Cancel');
 

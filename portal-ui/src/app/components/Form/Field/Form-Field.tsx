@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
 

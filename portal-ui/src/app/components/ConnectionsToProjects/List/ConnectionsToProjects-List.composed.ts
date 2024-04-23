@@ -1,8 +1,8 @@
-import { HOC, compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
-import { ConnectionsToProjectsListProps, ConnectionsToProjectsListBase } from './ConnectionsToProjects-List.base';
 import { withTypeList } from './_type/ConnectionsToProjects-List_type_list';
 import { withTypeText } from './_type/ConnectionsToProjects-List_type_text';
+import { ConnectionsToProjectsListBase, ConnectionsToProjectsListProps } from './ConnectionsToProjects-List.base';
 
 export const ConnectionsToProjectsList = compose(
   withTypeList as HOC<ConnectionsToProjectsListProps>,

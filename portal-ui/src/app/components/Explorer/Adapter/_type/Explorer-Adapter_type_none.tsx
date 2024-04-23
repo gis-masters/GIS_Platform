@@ -1,5 +1,4 @@
 import { staticImplements } from '../../../../services/util/staticImplements';
-
 import { Adapter, ExplorerItemData } from '../../Explorer.models';
 
 @staticImplements<Adapter>()

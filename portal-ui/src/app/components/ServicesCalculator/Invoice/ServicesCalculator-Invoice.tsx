@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 import { cn } from '@bem-react/classname';
-import { action, observable, makeObservable } from 'mobx';
+import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
-
 import { InvoiceInfo, ServicesInfo } from '../ServicesCalculator';
 
 import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Invoice.scss';

@@ -4,11 +4,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
 import { DocumentInfo, Documents } from '../../../Documents/Documents';
-
-import { cnFormView } from '../Form-View';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
+import { cnFormView } from '../Form-View';
 
 @observer
 class FormViewTypeDocument extends Component<FormControlProps> {

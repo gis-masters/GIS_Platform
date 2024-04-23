@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { action, observable, makeObservable } from 'mobx';
-import { GetApp, GetAppOutlined } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
+import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { ExportGmlDialog } from '../ExportGmlDialog/ExportGmlDialog';
 

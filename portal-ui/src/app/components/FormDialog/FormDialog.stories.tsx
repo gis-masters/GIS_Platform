@@ -1,13 +1,11 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
 import { SaveOutlined } from '@mui/icons-material';
+import { StoryFn } from '@storybook/react';
 
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
-
 import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { sleep } from '../../services/util/sleep';
 import { Toast } from '../Toast/Toast';
-
 import { FormDialog } from './FormDialog';
 
 export default {

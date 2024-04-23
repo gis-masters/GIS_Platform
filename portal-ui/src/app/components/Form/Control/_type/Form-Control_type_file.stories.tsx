@@ -1,8 +1,8 @@
 import React from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FileInfo } from '../../../../services/data/files/files.models';
+import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
 
 export default {

@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react';
 
-import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
-
+import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
 import {
   XTableFilterPanelItemContentBase,
   XTableFilterPanelItemContentProps

@@ -1,10 +1,9 @@
 import { boundClass } from 'autobind-decorator';
 
 import { PageableResources } from '../../../../server-types/common-contracts';
+import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { PageOptions } from '../../models';
-import { Client } from '../../api/Client';
-
 import { SearchRawItemData, SearchRequest } from './search.model';
 
 @boundClass

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
 import { TextField } from '@mui/material';
+import { cn } from '@bem-react/classname';
 
 import { allProjects } from '../../../stores/AllProjects.store';
 

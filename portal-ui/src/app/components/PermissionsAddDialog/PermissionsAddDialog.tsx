@@ -1,33 +1,32 @@
 import React, { Component, ReactElement } from 'react';
-import { observable, action, computed, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Checkbox, Dialog, DialogActions, DialogContent, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { Dialog, DialogContent, DialogActions, Checkbox, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
 
-import { allProjects } from '../../stores/AllProjects.store';
-import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
+import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 import {
+  PrincipalType,
+  projectRoles,
   Role,
   roles,
-  rolesTitles,
-  PrincipalType,
-  projectRoles
+  rolesTitles
 } from '../../services/data/permissions/permissions.models';
-import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
 import { CrgProject } from '../../services/gis/projects/projects.models';
+import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
+import { allProjects } from '../../stores/AllProjects.store';
+import { ActionsRight } from '../ActionsRight/ActionsRight';
+import { Button } from '../Button/Button';
 import {
   baseXTablePropsSet,
   PermissionsListItemType,
   PermissionsXTablePropsSet
 } from '../PermissionsListDialog/PermissionsListDialog.models';
-import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
-import { Button } from '../Button/Button';
-
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';
 
 import '!style-loader!css-loader!sass-loader!./Paper/PermissionsAddDialog-Paper.scss';

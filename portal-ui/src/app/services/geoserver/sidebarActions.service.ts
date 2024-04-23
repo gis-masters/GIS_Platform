@@ -1,12 +1,11 @@
-import { isEqual } from 'lodash';
 import { AxiosError } from 'axios';
+import { isEqual } from 'lodash';
 
-import { services } from '../services';
-import { mapService } from '../map/map.service';
 import { Toast } from '../../components/Toast/Toast';
+import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { isVectorFromFile } from '../gis/layers/layers.utils';
-import { CrgVectorLayer, CrgLayerType, CrgLayer } from '../gis/layers/layers.models';
-
+import { mapService } from '../map/map.service';
+import { services } from '../services';
 import { recalculateBboxAndGetFeatureType } from './featuretypes.service';
 import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
 import { geoserverProjection, olProjection, transform } from './projections.service';

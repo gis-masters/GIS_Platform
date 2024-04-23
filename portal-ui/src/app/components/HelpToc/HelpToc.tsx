@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { action, computed, observable, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
 import { IconButton, TextField } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import { SimpleTreeView } from '@mui/x-tree-view';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 
-import { Toc, TocItem } from '../../stores/Help.store';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-
+import { Toc, TocItem } from '../../stores/Help.store';
 import { HelpTocCollapseIcon } from './CollapseIcon/HelpToc-CollapseIcon';
-import { HelpTocSearchIcon } from './SearchIcon/HelpToc-SearchIcon';
 import { HelpTocExpandIcon } from './ExpandIcon/HelpToc-ExpandIcon';
 import { HelpTocItem } from './Item/HelpToc-Item';
+import { HelpTocSearchIcon } from './SearchIcon/HelpToc-SearchIcon';
 
 import '!style-loader!css-loader!sass-loader!./HelpToc.scss';
 

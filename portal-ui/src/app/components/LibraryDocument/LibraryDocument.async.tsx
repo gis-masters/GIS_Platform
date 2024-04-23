@@ -1,28 +1,28 @@
 import React, { Component } from 'react';
-import { observable, action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
-import { IClassNameProps } from '@bem-react/core';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
-import { currentUser } from '../../stores/CurrentUser.store';
+import { libraryClient } from '../../services/data/library/library.client';
+import { LibraryRecord } from '../../services/data/library/library.models';
+import { getLibrary, getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
+import { Role } from '../../services/data/permissions/permissions.models';
+import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { applyContentType } from '../../services/data/schema/schema.utils';
 import { services } from '../../services/services';
 import { formatDate } from '../../services/util/date.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { Role } from '../../services/data/permissions/permissions.models';
-import { applyContentType } from '../../services/data/schema/schema.utils';
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { LibraryRecord } from '../../services/data/library/library.models';
-import { libraryClient } from '../../services/data/library/library.client';
-import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
-import { getLibrary, getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
-import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
-import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
+import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
 import { Toast } from '../Toast/Toast';
+import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 
 import '!style-loader!css-loader!sass-loader!./LibraryDocument.scss';
 

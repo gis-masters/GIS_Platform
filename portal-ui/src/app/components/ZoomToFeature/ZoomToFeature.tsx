@@ -1,13 +1,13 @@
 import React, { Component, createRef } from 'react';
-import { IClassNameProps } from '@bem-react/core';
-import { cn } from '@bem-react/classname';
 import { IconButton, Tooltip } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 
 const cnZoomToFeature = cn('ZoomToFeature');

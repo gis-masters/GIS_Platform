@@ -3,22 +3,21 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { isObject } from 'lodash';
 
-import { currentUser } from '../../../../stores/CurrentUser.store';
-import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
-import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
-import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { libraryClient } from '../../../../services/data/library/library.client';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
+import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { Schema } from '../../../../services/data/schema/schema.models';
+import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { currentUser } from '../../../../stores/CurrentUser.store';
 import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
-
-import { ExplorerItemEntityTypeTitle, ExplorerItemType, itemTypeError } from '../../Explorer.models';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
-import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
+import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { getId } from '../../Adapter/Explorer-Adapter';
+import { ExplorerItemEntityTypeTitle, ExplorerItemType, itemTypeError } from '../../Explorer.models';
+import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
+import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsProps> {

@@ -1,10 +1,10 @@
 import React, { ChangeEvent, Component } from 'react';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { Input, SelectChangeEvent, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
-import { observer } from 'mobx-react';
-import { action, computed, makeObservable, observable } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import { Input, SelectChangeEvent, Tooltip } from '@mui/material';
 import { cloneDeep } from 'lodash';
 
 import {
@@ -15,17 +15,16 @@ import {
   Schema,
   SimpleSchema
 } from '../../services/data/schema/schema.models';
-import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { applyContentType, applyView } from '../../services/data/schema/schema.utils';
-import { SchemaProperties } from '../SchemaProperties/SchemaProperties';
+import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
+import { Card } from '../Card/Card';
 import { CardDescription } from '../Card/Description/Card-Description';
+import { CardRow } from '../Card/Row/Card-Row';
 import { CardRowTitle } from '../Card/RowTitle/Card-RowTitle';
 import { CardValue } from '../Card/Value/Card-Value';
-import { CardRow } from '../Card/Row/Card-Row';
-import { Select } from '../Select/Select';
-import { Card } from '../Card/Card';
-
 import { GeometryIcon } from '../GeometryIcon/GeometryIcon';
+import { SchemaProperties } from '../SchemaProperties/SchemaProperties';
+import { Select } from '../Select/Select';
 
 const EMPTY = '~~~empty_value~~~';
 

@@ -1,14 +1,13 @@
 import React, { ReactNode } from 'react';
 
-import { DataChangeEventDetail, communicationService } from '../../../../services/communication.service';
-import { ExportSearchResults } from '../../../ExportSearchResults/ExportSearchResults';
-import { getSearchResults } from '../../../../services/data/search/search.service';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
-import { getSearchRequest } from '../../../../services/data/search/search.util';
-import { staticImplements } from '../../../../services/util/staticImplements';
 import { Emitter } from '../../../../services/common/Emitter';
+import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { LibraryRecord } from '../../../../services/data/library/library.models';
+import { getSearchResults } from '../../../../services/data/search/search.service';
+import { getSearchRequest } from '../../../../services/data/search/search.util';
 import { PageOptions } from '../../../../services/models';
-
+import { staticImplements } from '../../../../services/util/staticImplements';
+import { ExportSearchResults } from '../../../ExportSearchResults/ExportSearchResults';
 import {
   Adapter,
   ExplorerItemData,
