@@ -17,7 +17,9 @@ import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Statu
 import { DocumentInfo } from '../Documents';
 import { DocumentsName } from '../Name/Documents-Name';
 
-const cnDocumentsItem = cn('Documents', 'Item');
+import '!style-loader!css-loader!sass-loader!../Icon/Documents-Icon.scss';
+
+const cnDocuments = cn('Documents');
 
 interface DocumentsItemProps {
   item: DocumentInfo;
@@ -49,18 +51,24 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
 
     return (
       <>
-        <LookupItem className={cnDocumentsItem({ numerous })}>
+        <LookupItem className={cnDocuments('Item', { numerous })}>
           <LookupIcon>
-            <Icon color='action' />
+            <Icon
+              color='action'
+              className={cnDocuments('Icon', { status: this.document?.is_deleted ? 'deleted' : undefined })}
+            />
           </LookupIcon>
           <DocumentsName
             item={item}
-            disabled={this.status !== 'normal'}
+            deleted={this.document?.is_deleted}
+            disabled={this.status !== 'normal' && this.status !== 'deleted'}
             numerous={numerous}
             onClick={this.openDialog}
           />
           {editable && (numerous || multiple) && <LookupNameGap />}
-          {this.status !== 'normal' && <LookupStatus status={this.status} statusText={this.statusText} />}
+          {(this.status !== 'normal' || this.document?.is_deleted) && (
+            <LookupStatus status={this.status} statusText={this.statusText} />
+          )}
           {editable && (
             <LookupActions>
               <LookupDelete<DocumentInfo> item={item} onDelete={onDelete} />
@@ -111,6 +119,10 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
           `Ошибка получения документа. ${axiosError?.response?.data?.message || axiosError?.message}`
         );
       }
+    }
+
+    if (this.document?.is_deleted) {
+      this.setStatus('deleted', 'Перемещен в корзину');
     }
   }
 }

@@ -16,43 +16,46 @@ const cnLibraryDocumentDialog = cn('LibraryDocumentDialog');
 interface LibraryDocumentDialogProps {
   document: LibraryRecord;
   open: boolean;
-  deletedDocument?: boolean;
   onClose(): void;
 }
 
-export const LibraryDocumentDialog: FC<LibraryDocumentDialogProps> = ({ document, open, deletedDocument, onClose }) => (
-  <Dialog open={open} onClose={onClose} fullWidth maxWidth='xl' PaperProps={{ className: cnLibraryDocumentDialog() }}>
-    <DialogTitle>
-      <div className={cnLibraryDocumentDialog('TypeIcon')}>
-        {document.is_folder ? <FolderOutlined color='primary' /> : <InsertDriveFileOutlined color='primary' />}
-      </div>
-      {deletedDocument ? (
-        <span className={cnLibraryDocumentDialog('TitleDeleted')}>Документ удален</span>
-      ) : (
-        `Просмотр ${document.is_folder ? 'папки' : 'документа'}`
-      )}
-      {document.id && <TextBadge id={document.id} />}
-    </DialogTitle>
+export const LibraryDocumentDialog: FC<LibraryDocumentDialogProps> = ({ document, open, onClose }) => {
+  const { is_deleted: isDeleted } = document;
 
-    <DialogContent>
-      <RegistryConsumer id='common'>
-        {({ LibraryDocument }: CommonDiRegistry) => (
-          <LibraryDocument document={document} className={cnLibraryDocumentDialog('Document')} />
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='xl' PaperProps={{ className: cnLibraryDocumentDialog() }}>
+      <DialogTitle>
+        <div className={cnLibraryDocumentDialog('TypeIcon')}>
+          {document.is_folder ? <FolderOutlined color='primary' /> : <InsertDriveFileOutlined color='primary' />}
+        </div>
+        {isDeleted ? (
+          <span className={cnLibraryDocumentDialog('TitleDeleted')}>Документ удален</span>
+        ) : (
+          `Просмотр ${document.is_folder ? 'папки' : 'документа'}`
         )}
-      </RegistryConsumer>
-    </DialogContent>
+        {document.id && <TextBadge id={document.id} />}
+      </DialogTitle>
 
-    <DialogActions>
-      {deletedDocument && (
-        <LibraryDeletedDocumentActions forDialog onDialogClose={onClose} hideOpen document={document} as='button' />
-      )}
-      {!deletedDocument && (
+      <DialogContent>
         <RegistryConsumer id='common'>
-          {({ LibraryDocumentActions }: CommonDiRegistry) => (
-            <LibraryDocumentActions document={document} as='iconButton' forDialog onDialogClose={onClose} />
+          {({ LibraryDocument }: CommonDiRegistry) => (
+            <LibraryDocument document={document} className={cnLibraryDocumentDialog('Document')} />
           )}
         </RegistryConsumer>
-      )}
-    </DialogActions>
-  </Dialog>
-);
+      </DialogContent>
+
+      <DialogActions>
+        {isDeleted && (
+          <LibraryDeletedDocumentActions forDialog onDialogClose={onClose} hideOpen document={document} as='button' />
+        )}
+        {!isDeleted && (
+          <RegistryConsumer id='common'>
+            {({ LibraryDocumentActions }: CommonDiRegistry) => (
+              <LibraryDocumentActions document={document} as='iconButton' forDialog onDialogClose={onClose} />
+            )}
+          </RegistryConsumer>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+};

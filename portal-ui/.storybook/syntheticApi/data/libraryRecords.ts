@@ -575,6 +575,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
     {
       id: 12351,
       title: 'Ж2',
+      is_deleted: true,
       note: null,
       doc_value: null,
       doc_num: null,

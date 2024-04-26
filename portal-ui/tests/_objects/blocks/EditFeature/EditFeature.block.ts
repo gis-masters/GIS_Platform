@@ -1,11 +1,11 @@
+import { isEqual } from 'lodash';
 import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
 
-import { Block } from '../../Block';
-import { hasClass } from '../../utils/hasClass';
 import { sleep } from '../../../../src/app/services/util/sleep';
+import { Block } from '../../Block';
 import { extractValues } from '../../commands/extractText';
+import { hasClass } from '../../utils/hasClass';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
-import { isEqual } from 'lodash';
 
 class EditFeatureBlock extends Block {
   selectors = {

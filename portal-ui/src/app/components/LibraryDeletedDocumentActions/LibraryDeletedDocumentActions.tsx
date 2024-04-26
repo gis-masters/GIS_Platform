@@ -42,7 +42,7 @@ export class LibraryDeletedDocumentActions extends Component<LibraryDeletedDocum
 
     return (
       <Actions className={cnLibraryDocumentVersionsActions(null, [className])} as={as}>
-        {!hideOpen && <LibraryDocumentActionsOpen deletedDocument document={document} as={as} />}
+        {!hideOpen && <LibraryDocumentActionsOpen document={document} as={as} />}
         {this.canEdit && <LibraryDeletedDocumentActionsRestore document={document} as={as} />}
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}
       </Actions>

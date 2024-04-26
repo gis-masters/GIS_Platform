@@ -14,7 +14,6 @@ const cnLibraryDocumentActionsOpen = cn('LibraryDocumentActions', 'Open');
 interface LibraryDocumentActionsOpenProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
-  deletedDocument?: boolean;
 }
 
 @observer
@@ -27,7 +26,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
   }
 
   render() {
-    const { as, document, deletedDocument } = this.props;
+    const { as, document } = this.props;
 
     return (
       <>
@@ -40,12 +39,7 @@ export class LibraryDocumentActionsOpen extends Component<LibraryDocumentActions
           onClick={this.openDialog}
         />
 
-        <LibraryDocumentDialog
-          deletedDocument={deletedDocument}
-          document={document}
-          open={this.dialogOpen}
-          onClose={this.closeDialog}
-        />
+        <LibraryDocumentDialog document={document} open={this.dialogOpen} onClose={this.closeDialog} />
       </>
     );
   }
