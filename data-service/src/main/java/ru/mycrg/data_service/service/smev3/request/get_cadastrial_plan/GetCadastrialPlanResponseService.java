@@ -62,8 +62,8 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
                             .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
-                    log.error("Тип сообщения - PRIMARY. Но обработка не сделана -  метод не реализован");
-                    return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_NOT_IMPLEMENTED)
+                    log.debug("Тип сообщения - PRIMARY");
+                    return new ProcessAdapterMessageResult(ProcessMessageStatus.SUCCESSFULLY)
                             .setXmlBuildMeta(metaInfo);
                 }
             }

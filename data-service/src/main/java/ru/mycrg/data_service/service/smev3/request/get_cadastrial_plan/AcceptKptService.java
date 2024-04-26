@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
@@ -18,6 +21,7 @@ import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -33,6 +37,11 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -79,6 +88,9 @@ public class AcceptKptService {
     private final SimpleIntentHandler simpleIntentHandler;
     private final Smev3Config smev3Config;
 
+    private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    private final DocumentBuilder builder = factory.newDocumentBuilder();
+
     public AcceptKptService(RecordsDao recordsDao,
                             DocumentLibraryRepository libraryRepository,
                             TaskLogService taskLogService,
@@ -88,7 +100,7 @@ public class AcceptKptService {
                             FileRepository fileRepository,
                             Smev3Config smev3Config,
                             FileService fileService,
-                            TasksDetachedDao tasksDetachedDao) {
+                            TasksDetachedDao tasksDetachedDao) throws ParserConfigurationException {
         this.recordsDao = recordsDao;
         this.libraryRepository = libraryRepository;
         this.taskLogService = taskLogService;
@@ -148,9 +160,13 @@ public class AcceptKptService {
                     docRecord.getAsString(CAD_KVARTAL_ATTRIBUTE));
             taskLogService.create(new TaskLogDto("Получение ответа", taskId), acceptLog);
 
+            Document document = builder
+                    .parse(new InputSource(new StringReader(processResult.getXmlBuildMeta().getRequestXmlString())));
+            NodeList idList = document.getElementsByTagName("Id");
+            String attachId = idList.item(0).getTextContent();
             uploadFileToDocument(docRecord,
                                  processResult.getXmlBuildMeta().getClientId().toString(),
-                                 libraryRecordQualifier, schema);
+                                 libraryRecordQualifier, schema, attachId);
 
             Map<String, Object> attachmentLog = new HashMap<>();
             attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " +
@@ -168,12 +184,22 @@ public class AcceptKptService {
         }
     }
 
-    private void uploadFileToDocument(IRecord docRecord, String clientId, ResourceQualifier qualifier, SchemaDto schema)
+    private void uploadFileToDocument(IRecord docRecord,
+                                      String clientId,
+                                      ResourceQualifier qualifier,
+                                      SchemaDto schema,
+                                      String attachId)
             throws CrgDaoException, JsonProcessingException {
         Long docId = docRecord.getId();
         log.debug("Найден документ с id: {}", docId);
-
-        byte[] fileBytes = minioService.getFile(clientId + "/" + DEFAULT_FILENAME, smev3Config.getS3bucketIncoming());
+        byte[] fileBytes;
+        try {
+            fileBytes = minioService.getFile(clientId + "/" + DEFAULT_FILENAME, smev3Config.getS3bucketIncoming());
+        } catch (BadRequestException e) {
+            log.debug("AttachId: {}", attachId);
+            fileBytes = minioService.getFile(attachId + "/" + clientId + "/" + DEFAULT_FILENAME,
+                                             smev3Config.getS3bucketIncoming());
+        }
         MultipartFile multipartFile = new CustomMultipartFile(fileBytes,
                                                               clientId + DEFAULT_FILE_FORMAT,
                                                               DEFAULT_FILENAME,
