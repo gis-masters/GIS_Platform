@@ -598,7 +598,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -621,18 +621,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Вид расположения трубопровода", 
             "required": true,
             "valueType": "CHOICE",
@@ -664,7 +664,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км", 
             "required": true,
             "valueType": "DOUBLE",
@@ -672,7 +672,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -711,19 +711,19 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -731,12 +731,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -847,7 +847,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -874,18 +874,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Вид расположения трубопровода", 
             "required": true,
             "valueType": "CHOICE",
@@ -917,7 +917,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км", 
             "required": true,
             "valueType": "DOUBLE",
@@ -925,14 +925,14 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "PLINE_CNT",
+            "name": "pline_cnt",
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -940,7 +940,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "D_PLINE",
+            "name": "d_pline",
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -955,26 +955,26 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -982,12 +982,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -1098,7 +1098,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -1121,18 +1121,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -1205,14 +1205,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1267,12 +1267,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -1280,12 +1280,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -1413,7 +1413,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -1520,12 +1520,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
@@ -1536,7 +1536,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -1545,18 +1545,18 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
-            "name": "VOLTAGE",
+            "name": "voltage",
             "title": "Напряжение, кВ", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "CURRENT",
+            "name": "current",
             "title": "Тип тока", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1571,7 +1571,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1590,7 +1590,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "required": true,
             "valueType": "CHOICE",
@@ -1646,21 +1646,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "POWER",
+            "name": "power",
             "title": "Мощность трансформаторов, МВ · A", 
             "required": true,
             "valueType": "DOUBLE",
@@ -1668,7 +1668,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "AMOUNT",
+            "name": "amount",
             "title": "Количество трансформаторов",
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
@@ -1677,26 +1677,26 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -1704,18 +1704,18 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
           {
             "name": "status",
-      "title": "Статус объекта", 
+            "title": "Статус объекта", 
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [
@@ -1803,7 +1803,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -1838,18 +1838,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -1858,12 +1858,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
-            "name": "USING_TYPE",
+            "name": "using_type",
             "title": "Вид разрешенного использования", 
             "required": true,
             "valueType": "CHOICE",
@@ -1879,7 +1879,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RST_TYPE",
+            "name": "rst_type",
             "title": "Тип железнодорожной станции", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1906,7 +1906,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RST_CLASS",
+            "name": "rst_class",
             "title": "Класс железнодорожной станции/вокзала", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1937,7 +1937,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RFO_TYPE",
+            "name": "rfo_type",
             "title": "Тип иных объектов железнодорожного транспорта", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1964,7 +1964,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость железнодорожного вокзала, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -1972,7 +1972,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SUBURBAN_TR",
+            "name": "suburban_tr",
             "title": "Наличие движения пригородных поездов", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -1987,7 +1987,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -2010,12 +2010,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -2070,12 +2070,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -2083,12 +2083,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -2224,7 +2224,7 @@ SET class_rule  =
             "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -2243,7 +2243,7 @@ SET class_rule  =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
@@ -2281,14 +2281,14 @@ SET class_rule  =
             ]
           },
           {
-            "name": "POPULATION",
+            "name": "population",
             "title": "Численность населения, тыс. чел.", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
@@ -2325,7 +2325,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -2364,18 +2364,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -2384,12 +2384,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
-            "name": "ORO_NUMBER",
+            "name": "ORO_number",
             "title": "Учетный номер объекта размещения отходов", 
             "valueType": "STRING"
           },
@@ -2538,7 +2538,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -2546,7 +2546,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта", 
             "required": true,
             "valueType": "CHOICE",
@@ -2574,7 +2574,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -2597,7 +2597,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -2652,12 +2652,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -2665,12 +2665,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -2822,7 +2822,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -2861,18 +2861,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -2881,12 +2881,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
-            "name": "WATER_STYPE",
+            "name": "water_stype",
             "title": "Тип водозабора по характеристикам источника", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -2901,7 +2901,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -2920,21 +2920,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/сут", 
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -2963,7 +2963,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер зоны санитарной охраны водопроводных сооружений, м", 
             "required": true,
             "valueType": "DOUBLE",
@@ -2971,12 +2971,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -2984,12 +2984,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -3109,7 +3109,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -3144,18 +3144,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта", 
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -3164,12 +3164,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание", 
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3177,7 +3177,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам", 
             "valueType": "CHOICE",
             "enumerations": [
@@ -3232,12 +3232,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта", 
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3245,12 +3245,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных", 
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание", 
             "valueType": "STRING"
           },
@@ -3362,7 +3362,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -3401,18 +3401,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -3421,12 +3421,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "AVIA_TYPE",
+            "name": "avia_type",
             "title": "Тип объекта по виду обслуживаемой авиации",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3449,7 +3449,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Пропускная способность аэропорта, пасс./час",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3457,14 +3457,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "LAND_TYPE",
+            "name": "land_type",
             "title": "Тип посадочной площадки",
             "required": true,
             "valueType": "CHOICE",
@@ -3484,7 +3484,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RWY_CLASS",
+            "name": "rwy_class",
             "title": "Класс взлетно-посадочной полосы",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3515,12 +3515,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3575,12 +3575,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3588,12 +3588,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -3711,7 +3711,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -3742,18 +3742,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -3762,12 +3762,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GAS_ST_TYPE",
+            "name": "gas_st_type",
             "title": "Тип автозаправочных станций",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3798,7 +3798,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUEL_COUNT",
+            "name": "fuel_count",
             "title": "Количество топливораздаточных колонок автозаправочных станций",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3806,7 +3806,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "POST_COUNT",
+            "name": "post_count",
             "title": "Количество постов станций технического обслуживания",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3814,7 +3814,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PRKNG_TYPE",
+            "name": "prkng_type",
             "title": "Тип стоянок автомобилей",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3837,7 +3837,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_LVL",
+            "name": "prkng_lvl",
             "title": "Тип размещения стоянок относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3856,7 +3856,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_TIME",
+            "name": "prkng_time",
             "title": "Тип стоянок автомобилей по длительности хранения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -3871,7 +3871,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_FLS",
+            "name": "prkng_fls",
             "title": "Этажность стоянок",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3879,7 +3879,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
@@ -3888,12 +3888,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -3901,12 +3901,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -4074,7 +4074,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -4105,18 +4105,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер объекта культурного наследия на карте",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -4125,17 +4125,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "REG_NUMBER",
+            "name": "reg_number",
             "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
             "valueType": "STRING"
           },
           {
-            "name": "HIST_CAT",
+            "name": "hist_cat",
             "title": "Категория историко-культурного значения",
             "required": true,
             "valueType": "CHOICE",
@@ -4163,7 +4163,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HER_TYPE",
+            "name": "her_type",
             "title": "Вид памятника",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4190,7 +4190,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "ANS_TYPE",
+            "name": "ans_type",
             "title": "Вид ансамбля",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4257,7 +4257,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HIST_OUT",
+            "name": "hist_out",
             "title": "Объекты выдающейся культурной ценности",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4272,7 +4272,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "OCH_USE",
+            "name": "och_use",
             "title": "Использование объекта культурного наследия",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4351,12 +4351,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -4433,7 +4433,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -4452,18 +4452,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -4472,12 +4472,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "RES_STYPE",
+            "name": "res_stype",
             "title": "Вид объекта санаторно-курортного назначения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4516,7 +4516,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4524,7 +4524,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4532,14 +4532,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4547,12 +4547,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4560,12 +4560,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -4677,7 +4677,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -4696,18 +4696,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -4716,12 +4716,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "SERV_STYPE",
+            "name": "serv_stype",
             "title": "Подтип объекта, связанного с производственной деятельностью",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4780,31 +4780,31 @@ SET class_rule =
             ]
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "LOT_SIZE",
+            "name": "lot_size",
             "title": "Общая площадь территории участка - га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий - кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4812,7 +4812,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -4840,7 +4840,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4863,7 +4863,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4890,7 +4890,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -4945,12 +4945,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -4958,12 +4958,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -5075,7 +5075,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -5110,18 +5110,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -5130,12 +5130,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -5154,28 +5154,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/сут",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SNOW_TYPE",
+            "name": "snow_type",
             "title": "Тип снегоплавильного, снегоприемного пункта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -5190,7 +5190,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -5213,19 +5213,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -5233,12 +5233,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -5358,7 +5358,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -5385,18 +5385,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -5405,7 +5405,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -5498,7 +5498,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -5506,21 +5506,21 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EXB_AREA",
+            "name": "EXB_area",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -5528,12 +5528,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -5541,12 +5541,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -5621,11 +5621,11 @@ SET class_rule =
 custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010201'') {
-        if (!obj.cu_type) {
-          errors.push({attribute: ''cu_type'', error: ''Значение обязательно к заполнению''});
+        if (!obj.lot_size) {
+          errors.push({attribute: ''lot_size'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.cu_type) {
-          errors.push({attribute: ''cu_type'', error: ''Значение заполняется только для объекта "Объект культурно-просветительного назначения"''});
+      } else if (obj.lot_size) {
+          errors.push({attribute: ''lot_size'', error: ''Значение заполняется только для объекта "Объект культурно-просветительного назначения"''});
       }
 
       if (obj.classid == ''602010202'') {
@@ -5698,7 +5698,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -5741,12 +5741,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "MIN_MTYPE",
+            "name": "min_mtype",
             "title": "Вид металлических полезных ископаемых",
             "valueType": "CHOICE",
             "enumerations": [
@@ -5777,7 +5777,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "MIN_NTYPE",
+            "name": "min_ntype",
             "title": "Вид неметаллических полезных ископаемых",
             "valueType": "CHOICE",
             "enumerations": [
@@ -5820,7 +5820,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "MINERALS",
+            "name": "minerals",
             "title": "Вид полезных ископаемых",
             "required": true,
             "valueType": "STRING"
@@ -5842,17 +5842,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "N_GRF",
+            "name": "n_grf",
             "title": "Номер паспорта государственного кадастра месторождений и проявлений полезных ископаемых",
             "valueType": "STRING"
           },
           {
-            "name": "MAS",
+            "name": "mas",
             "title": "Индекс массива государственного кадастра месторождений и проявлений полезных ископаемых",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -5940,7 +5940,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -5963,18 +5963,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -5983,12 +5983,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -6007,12 +6007,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6020,12 +6020,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -6137,7 +6137,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -6160,18 +6160,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -6180,12 +6180,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6193,12 +6193,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6206,12 +6206,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -6323,7 +6323,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -6342,18 +6342,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -6362,19 +6362,19 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -6382,12 +6382,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6395,12 +6395,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -6512,7 +6512,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -6551,52 +6551,52 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Общая длина водотока, км",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь водоема, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WPZ_SIZE",
+            "name": "wpz_size",
             "title": "Размер водоохраной зоны объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "RS_SIZE",
+            "name": "rs_size",
             "title": "Размер прибрежной полосы объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FSH_SIZE",
+            "name": "fsh_size",
             "title": "Размер береговой полосы общего пользования объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6604,7 +6604,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -6666,7 +6666,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -6701,18 +6701,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -6721,12 +6721,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "CEP_CLASS",
+            "name": "cep_class",
             "title": "Класс сооружений инженерной защиты",
             "valueType": "CHOICE",
             "enumerations": [
@@ -6749,12 +6749,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6762,12 +6762,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -6879,7 +6879,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -6906,18 +6906,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Вид расположения трубопровода",
             "required": true,
             "valueType": "CHOICE",
@@ -6949,7 +6949,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км",
             "required": true,
             "valueType": "DOUBLE",
@@ -6957,14 +6957,14 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "PLINE_CNT",
+            "name": "pline_cnt",
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6972,7 +6972,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "D_PLINE",
+            "name": "d_pline",
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -6980,19 +6980,19 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер санитарно-защитной полосы водоводов, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7000,12 +7000,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -7125,7 +7125,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -7152,18 +7152,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -7172,7 +7172,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -7265,7 +7265,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7273,21 +7273,21 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EXB_AREA",
+            "name": "EXB_area",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7295,12 +7295,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7308,12 +7308,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -7388,11 +7388,11 @@ SET class_rule =
 custom_rule = 'var errors = [];
 
       if (obj.classid == ''602010201'') {
-        if (!obj.cu_type) {
-          errors.push({attribute: ''cu_type'', error: ''Значение обязательно к заполнению''});
+        if (!obj.lot_size) {
+          errors.push({attribute: ''lot_size'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.cu_type) {
-          errors.push({attribute: ''cu_type'', error: ''Значение заполняется только для объекта "Объект культурно-просветительного назначения"''});
+      } else if (obj.lot_size) {
+          errors.push({attribute: ''lot_size'', error: ''Значение заполняется только для объекта "Объект культурно-просветительного назначения"''});
       }
 
       if (obj.classid == ''602010202'') {
@@ -7465,7 +7465,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -7524,18 +7524,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -7544,17 +7544,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
@@ -7598,7 +7598,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7606,7 +7606,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -7634,7 +7634,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -7657,7 +7657,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -7684,7 +7684,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -7739,12 +7739,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -7752,12 +7752,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -7882,7 +7882,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -7925,18 +7925,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -7945,7 +7945,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -8077,14 +8077,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "TRD_AREA",
+            "name": "TRD_area",
             "title": "Торговая площадь, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -8098,7 +8098,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Количество посадочных мест объекта общественного питания, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8106,7 +8106,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих (операционных) мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8114,12 +8114,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8127,12 +8127,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -8308,7 +8308,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -8331,18 +8331,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -8351,7 +8351,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -8467,28 +8467,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "SP_AREA",
+            "name": "SP_area",
             "title": "Площадь пола спортивных и тренажерных залов, кв. м ",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "POOL_AREA",
+            "name": "POOL_area",
             "title": "Площадь зеркала воды плавательных бассейнов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SPS_AREA",
+            "name": "SPS_area",
             "title": "Площадь плоскостных спортивных сооружений, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8496,7 +8496,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8504,12 +8504,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8517,12 +8517,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -8642,7 +8642,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -8673,7 +8673,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "EME_SOURCE",
+            "name": "EME_source",
             "title": "Источник природной чрезвычайной ситуации",
             "required": true,
             "valueType": "CHOICE",
@@ -8868,12 +8868,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "OTHER",
+            "name": "other",
             "title": "Иной параметр и его единицы измерения",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -8910,7 +8910,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -8953,18 +8953,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "LOCATION",
+            "name": "location",
             "title": "Местоположение",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -8976,12 +8976,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -8989,12 +8989,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -9106,7 +9106,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -9185,19 +9185,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -9206,12 +9206,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -9230,28 +9230,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа,%",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/час",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -9274,26 +9274,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -9301,12 +9301,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -9418,7 +9418,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -9497,19 +9497,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -9518,12 +9518,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -9542,28 +9542,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа,%",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/час",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -9586,26 +9586,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -9613,12 +9613,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -9730,7 +9730,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -9753,18 +9753,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -9773,12 +9773,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -9786,12 +9786,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -9799,12 +9799,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -9916,7 +9916,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -9947,18 +9947,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -9967,12 +9967,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FUEL_TYPE",
+            "name": "fuel_type",
             "title": "Основной вид топлива",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10027,7 +10027,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10046,35 +10046,35 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ELECT_POWER",
+            "name": "elect_power",
             "title": "Электрическая мощность, МВт",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HT_POWER",
+            "name": "ht_power",
             "title": "Тепловая мощность, Гкал/ч",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10097,26 +10097,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -10124,12 +10124,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -10249,7 +10249,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -10268,18 +10268,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -10288,19 +10288,19 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -10308,12 +10308,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -10321,12 +10321,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -10438,7 +10438,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -10469,18 +10469,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -10489,12 +10489,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FUEL_TYPE",
+            "name": "fuel_type",
             "title": "Основной вид топлива",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10549,7 +10549,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10568,35 +10568,35 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ELECT_POWER",
+            "name": "elect_power",
             "title": "Электрическая мощность, МВт",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HT_POWER",
+            "name": "ht_power",
             "title": "Тепловая мощность, Гкал/ч",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -10619,26 +10619,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -10646,12 +10646,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -10771,7 +10771,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -10802,18 +10802,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "USING_TYPE",
+            "name": "using_type",
             "title": "Вид разрешенного использования",
             "required": true,
             "valueType": "CHOICE",
@@ -11023,7 +11023,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
@@ -11033,12 +11033,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -11046,12 +11046,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -11217,7 +11217,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -11276,18 +11276,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -11296,26 +11296,26 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Емкость, абонентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -11344,7 +11344,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -11399,12 +11399,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -11412,12 +11412,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -11537,7 +11537,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -11556,18 +11556,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -11576,7 +11576,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -11677,12 +11677,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -11690,12 +11690,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -11807,7 +11807,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -11846,19 +11846,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -11867,12 +11867,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "NAME_UNIT",
+            "name": "name_UNIT",
             "title": "Наименование территориально обособленного структурного подразделения в составе организации",
             "valueType": "STRING"
           },
@@ -12072,7 +12072,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12080,14 +12080,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12095,12 +12095,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12108,12 +12108,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -12263,7 +12263,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -12314,18 +12314,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -12344,7 +12344,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -12399,12 +12399,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12412,12 +12412,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -12529,7 +12529,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -12588,18 +12588,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -12608,26 +12608,26 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Емкость, абонентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12656,7 +12656,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -12711,12 +12711,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12724,12 +12724,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -12849,7 +12849,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -12868,18 +12868,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -12888,12 +12888,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "RES_STYPE",
+            "name": "res_stype",
             "title": "Вид объекта санаторно-курортного назначения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -12932,7 +12932,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12940,7 +12940,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12948,14 +12948,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12963,12 +12963,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -12976,12 +12976,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -13093,7 +13093,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -13112,18 +13112,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -13132,12 +13132,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "SERV_STYPE",
+            "name": "serv_stype",
             "title": "Подтип объекта, связанного с производственной деятельностью",
             "valueType": "CHOICE",
             "enumerations": [
@@ -13196,31 +13196,31 @@ SET class_rule =
             ]
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "LOT_SIZE",
+            "name": "lot_size",
             "title": "Общая площадь территории участка - га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий - кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -13228,7 +13228,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -13256,7 +13256,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -13279,7 +13279,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -13306,7 +13306,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -13361,12 +13361,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -13374,12 +13374,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -13491,7 +13491,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -13510,13 +13510,13 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -13525,7 +13525,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "SETTL_LVL",
+            "name": "settl_lvl",
             "title": "Административное значение населенного пункта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -13839,7 +13839,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "POPULATION",
+            "name": "population",
             "title": "Численность населения, тыс. чел.",
             "required": true,
             "valueType": "DOUBLE",
@@ -13847,7 +13847,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -13900,7 +13900,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -13939,18 +13939,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -13959,7 +13959,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -14048,12 +14048,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -14061,12 +14061,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -14202,7 +14202,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -14241,18 +14241,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -14261,7 +14261,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -14350,12 +14350,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -14363,12 +14363,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -14504,7 +14504,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -14543,18 +14543,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -14563,7 +14563,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -14652,12 +14652,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -14665,12 +14665,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -14806,7 +14806,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -14845,18 +14845,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -14865,12 +14865,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "ORO_NUMBER",
+            "name": "ORO_number",
             "title": "Учетный номер объекта размещения отходов",
             "valueType": "STRING"
           },
@@ -15019,7 +15019,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -15027,7 +15027,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта",
             "required": true,
             "valueType": "CHOICE",
@@ -15055,7 +15055,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15078,7 +15078,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15133,12 +15133,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -15146,12 +15146,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -15303,7 +15303,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -15342,18 +15342,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -15362,12 +15362,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "WATER_STYPE",
+            "name": "water_stype",
             "title": "Тип водозабора по характеристикам источника",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15382,7 +15382,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15401,21 +15401,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/сут",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -15444,7 +15444,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер зоны санитарной охраны водопроводных сооружений, м",
             "required": true,
             "valueType": "DOUBLE",
@@ -15452,12 +15452,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -15465,12 +15465,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -15590,7 +15590,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -15609,18 +15609,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -15629,18 +15629,18 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "LAWSOURCE",
+            "name": "lawsource",
             "title": "Реквизиты нормативного акта, устанавливающего тип объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -15648,7 +15648,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15675,7 +15675,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -15698,14 +15698,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -15713,12 +15713,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -15726,12 +15726,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -15843,7 +15843,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -16002,14 +16002,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -16017,12 +16017,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -16107,7 +16107,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -16146,19 +16146,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -16167,12 +16167,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "NAME_UNIT",
+            "name": "name_UNIT",
             "title": "Наименование территориально обособленного структурного подразделения в составе организации",
             "valueType": "STRING"
           },
@@ -16372,7 +16372,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -16380,14 +16380,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -16395,24 +16395,24 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "DOUBLE",
             "totalDigits": 38
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -16562,7 +16562,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -16669,18 +16669,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -16689,12 +16689,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FUEL_TYPE",
+            "name": "fuel_type",
             "title": "Основной вид топлива",
             "valueType": "CHOICE",
             "enumerations": [
@@ -16749,7 +16749,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "POWER_TYPE",
+            "name": "power_type",
             "title": "Тип теплосиловой установки",
             "valueType": "CHOICE",
             "enumerations": [
@@ -16772,21 +16772,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ELECT_POWER",
+            "name": "elect_power",
             "title": "Электрическая мощность, МВт",
             "required": true,
             "valueType": "DOUBLE",
@@ -16794,7 +16794,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HEAT_POWER",
+            "name": "heat_power",
             "title": "Тепловая мощность, Гкал/ч",
             "required": true,
             "valueType": "DOUBLE",
@@ -16802,7 +16802,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -16825,14 +16825,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -16887,12 +16887,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -16900,12 +16900,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -17017,7 +17017,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -17052,18 +17052,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -17072,12 +17072,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -17085,7 +17085,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17140,12 +17140,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -17153,12 +17153,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -17270,7 +17270,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -17309,18 +17309,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -17329,12 +17329,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "AVIA_TYPE",
+            "name": "avia_type",
             "title": "Тип объекта по виду обслуживаемой авиации",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17357,7 +17357,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Пропускная способность аэропорта, пасс./час",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -17365,14 +17365,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "LAND_TYPE",
+            "name": "land_type",
             "title": "Тип посадочной площадки",
             "required": true,
             "valueType": "CHOICE",
@@ -17392,7 +17392,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RWY_CLASS",
+            "name": "rwy_class",
             "title": "Класс взлетно-посадочной полосы",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17423,12 +17423,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17483,12 +17483,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -17496,12 +17496,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -17619,7 +17619,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -17726,18 +17726,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -17746,12 +17746,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FUEL_TYPE",
+            "name": "fuel_type",
             "title": "Основной вид топлива",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17806,7 +17806,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "POWER_TYPE",
+            "name": "power_type",
             "title": "Тип теплосиловой установки",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17829,21 +17829,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ELECT_POWER",
+            "name": "elect_power",
             "title": "Электрическая мощность, МВт",
             "required": true,
             "valueType": "DOUBLE",
@@ -17851,7 +17851,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HEAT_POWER",
+            "name": "heat_power",
             "title": "Тепловая мощность, Гкал/ч",
             "required": true,
             "valueType": "DOUBLE",
@@ -17859,7 +17859,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17882,14 +17882,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -17944,12 +17944,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -17957,12 +17957,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -18074,7 +18074,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -18105,18 +18105,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -18125,12 +18125,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GAS_ST_TYPE",
+            "name": "gas_st_type",
             "title": "Тип автозаправочных станций",
             "valueType": "CHOICE",
             "enumerations": [
@@ -18161,7 +18161,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUEL_COUNT",
+            "name": "fuel_count",
             "title": "Количество топливораздаточных колонок автозаправочных станций",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18169,7 +18169,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "POST_COUNT",
+            "name": "post_count",
             "title": "Количество постов станций технического обслуживания",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18177,7 +18177,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PRKNG_TYPE",
+            "name": "prkng_type",
             "title": "Тип стоянок автомобилей",
             "valueType": "CHOICE",
             "enumerations": [
@@ -18200,7 +18200,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_LVL",
+            "name": "prkng_lvl",
             "title": "Тип размещения стоянок относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -18219,7 +18219,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_TIME",
+            "name": "prkng_time",
             "title": "Тип стоянок автомобилей по длительности хранения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -18234,7 +18234,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "PRKNG_FLS",
+            "name": "prkng_fls",
             "title": "Этажность стоянок",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18242,7 +18242,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
@@ -18251,12 +18251,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18264,12 +18264,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -18437,7 +18437,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -18476,18 +18476,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -18496,7 +18496,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -18524,28 +18524,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -18600,12 +18600,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18613,12 +18613,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -18730,7 +18730,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -18773,19 +18773,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Вид расположения трубопровода",
             "required": true,
             "valueType": "CHOICE",
@@ -18817,7 +18817,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км",
             "required": true,
             "valueType": "DOUBLE",
@@ -18825,14 +18825,14 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "PLINE_CNT",
+            "name": "pline_cnt",
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18840,7 +18840,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "D_PLINE",
+            "name": "d_pline",
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18882,26 +18882,26 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -18909,12 +18909,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -19026,7 +19026,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -19069,18 +19069,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -19173,12 +19173,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19186,12 +19186,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -19336,7 +19336,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -19375,18 +19375,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -19395,7 +19395,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -19423,28 +19423,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -19499,12 +19499,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19512,12 +19512,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -19629,7 +19629,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -19676,18 +19676,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -19696,7 +19696,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -19899,7 +19899,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY_S",
+            "name": "capacity_S",
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19907,7 +19907,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY24",
+            "name": "capacity24",
             "title": "Мощность круглосуточного стационара, количество коек",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19915,7 +19915,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Мощность дневного стационара, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19931,14 +19931,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19946,12 +19946,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -19959,12 +19959,12 @@ SET class_rule =
             "minInclusive": 10
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -20042,7 +20042,7 @@ custom_rule = 'var errors = [];
         if (!obj.MD_STYPE) {
           errors.push({attribute: ''MD_STYPE'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.cu_type) {
+      } else if (obj.lot_size) {
           errors.push({attribute: ''MD_STYPE'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
       }
 
@@ -20154,7 +20154,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -20173,18 +20173,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -20193,7 +20193,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -20294,12 +20294,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20307,12 +20307,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -20424,7 +20424,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -20471,18 +20471,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -20491,7 +20491,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -20694,7 +20694,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY_S",
+            "name": "capacity_S",
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20702,7 +20702,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY24",
+            "name": "capacity24",
             "title": "Мощность круглосуточного стационара, количество коек",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20710,7 +20710,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Мощность дневного стационара, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20726,14 +20726,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20741,12 +20741,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -20754,12 +20754,12 @@ SET class_rule =
             "minInclusive": 10
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -20837,7 +20837,7 @@ custom_rule = 'var errors = [];
         if (!obj.MD_STYPE) {
           errors.push({attribute: ''MD_STYPE'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.cu_type) {
+      } else if (obj.lot_size) {
           errors.push({attribute: ''MD_STYPE'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
       }
 
@@ -20949,7 +20949,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -20972,12 +20972,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
@@ -21092,7 +21092,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Пропускная способность, ед./сут.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21100,7 +21100,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SUBURBAN_TR",
+            "name": "suburban_tr",
             "title": "Наличие движения пригородных поездов",
             "valueType": "CHOICE",
             "enumerations": [
@@ -21115,12 +21115,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -21180,12 +21180,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21193,12 +21193,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -21310,7 +21310,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -21341,18 +21341,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Тип трубопровода",
             "required": true,
             "valueType": "CHOICE",
@@ -21384,7 +21384,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км",
             "required": true,
             "valueType": "DOUBLE",
@@ -21392,14 +21392,14 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "PLINE_CNT",
+            "name": "pline_cnt",
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21407,7 +21407,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "D_PLINE",
+            "name": "d_pline",
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21437,26 +21437,26 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21464,12 +21464,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -21586,7 +21586,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -21617,18 +21617,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -21637,7 +21637,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -21714,7 +21714,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -21742,7 +21742,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -21750,7 +21750,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -21758,12 +21758,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -21901,7 +21901,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -21932,18 +21932,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -21952,7 +21952,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -22029,7 +22029,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -22057,7 +22057,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -22065,7 +22065,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -22073,12 +22073,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -22222,7 +22222,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -22257,28 +22257,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Основная специализация, перечень видов экономической деятельности, при осуществлении которых действует особый правовой режим осуществления предпринимательской деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь территории зоны (кластера), га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -22293,7 +22293,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -22301,12 +22301,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -22407,7 +22407,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -22458,18 +22458,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -22478,7 +22478,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -22555,33 +22555,33 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Проектная мощность",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SH_CAPACITY",
+            "name": "SH_capacity",
             "title": "Пропускная способность",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -22636,12 +22636,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -22649,12 +22649,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -22814,7 +22814,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -22893,18 +22893,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "VOLTAGE",
+            "name": "voltage",
             "title": "Напряжение, кВ",
             "required": true,
             "valueType": "CHOICE",
@@ -22976,7 +22976,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CURRENT",
+            "name": "current",
             "title": "Тип тока",
             "valueType": "CHOICE",
             "enumerations": [
@@ -23015,7 +23015,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -23070,7 +23070,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, метры",
             "required": true,
             "valueType": "DOUBLE",
@@ -23078,7 +23078,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -23104,26 +23104,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -23131,12 +23131,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -23248,7 +23248,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -23299,18 +23299,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -23319,7 +23319,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -23396,33 +23396,33 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Проектная мощность",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SH_CAPACITY",
+            "name": "SH_capacity",
             "title": "Пропускная способность",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -23477,12 +23477,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -23490,12 +23490,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -23655,7 +23655,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -23674,7 +23674,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
@@ -23696,12 +23696,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -23738,7 +23738,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -23769,18 +23769,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -23789,7 +23789,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -23898,14 +23898,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SP_AREA",
+            "name": "SP_area",
             "title": "Площадь территории, кв. м ",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Среднесуточная посещаемость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -23913,7 +23913,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEASON",
+            "name": "season",
             "title": "Продолжительность работы",
             "required": true,
             "valueType": "CHOICE",
@@ -23937,7 +23937,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -23945,12 +23945,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -23958,7 +23958,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -24102,7 +24102,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -24137,18 +24137,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -24157,12 +24157,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -24181,28 +24181,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, тыс. куб. м/сут",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SNOW_TYPE",
+            "name": "snow_type",
             "title": "Тип снегоплавильного, снегоприемного пункта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -24217,7 +24217,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -24240,19 +24240,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -24260,12 +24260,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -24385,7 +24385,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -24773,7 +24773,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -24808,7 +24808,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "POPULATION",
+            "name": "population",
             "title": "Численность населения, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -24816,7 +24816,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -24824,12 +24824,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "OTHER",
+            "name": "other",
             "title": "Иной параметр и его единицы измерения",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -25019,7 +25019,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -25050,7 +25050,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "TM_SOURCE",
+            "name": "TM_source",
             "title": "Источник техногенной чрезвычайной ситуации",
             "required": true,
             "valueType": "CHOICE",
@@ -25173,12 +25173,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "OTHER",
+            "name": "other",
             "title": "Иной параметр и его единицы измерения",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -25215,7 +25215,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -25234,17 +25234,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -25297,7 +25297,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -25340,18 +25340,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -25360,12 +25360,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "STOP_TYPE",
+            "name": "stop_type",
             "title": "Тип остановочного пункта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25392,7 +25392,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25411,7 +25411,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25466,12 +25466,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -25479,12 +25479,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -25604,7 +25604,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
             "valueType": "STRING"
@@ -25622,7 +25622,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -25659,7 +25659,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -25702,18 +25702,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -25722,12 +25722,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "STOP_TYPE",
+            "name": "stop_type",
             "title": "Тип остановочного пункта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25754,7 +25754,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25773,7 +25773,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -25828,12 +25828,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -25841,12 +25841,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -25966,7 +25966,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -25985,18 +25985,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -26005,18 +26005,18 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "LAWSOURCE",
+            "name": "lawsource",
             "title": "Реквизиты нормативного акта, устанавливающего тип объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26024,7 +26024,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -26051,7 +26051,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -26074,14 +26074,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -26089,12 +26089,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26102,12 +26102,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -26219,7 +26219,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -26238,35 +26238,35 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26274,12 +26274,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -26389,7 +26389,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -26420,18 +26420,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -26440,7 +26440,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -26601,7 +26601,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость стационарных учреждений (отделений), мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26617,7 +26617,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26625,14 +26625,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26640,12 +26640,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -26653,12 +26653,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -26826,7 +26826,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -26901,18 +26901,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование предприятия",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -26921,17 +26921,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
@@ -27087,14 +27087,14 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Мощность объекта, тыс. голов",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27102,7 +27102,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -27130,7 +27130,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -27153,7 +27153,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -27180,7 +27180,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -27235,12 +27235,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27248,12 +27248,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -27365,7 +27365,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -27396,18 +27396,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -27416,7 +27416,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -27577,7 +27577,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость стационарных учреждений (отделений), мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27593,7 +27593,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27601,14 +27601,14 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27616,12 +27616,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -27629,12 +27629,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -27802,7 +27802,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -27877,18 +27877,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование предприятия",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -27897,17 +27897,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
@@ -28063,14 +28063,14 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Мощность объекта, тыс. голов",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -28078,7 +28078,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -28106,7 +28106,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28129,7 +28129,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28156,7 +28156,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28211,12 +28211,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -28224,12 +28224,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -28341,7 +28341,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -28364,18 +28364,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -28384,12 +28384,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28416,7 +28416,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -28424,12 +28424,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -28437,12 +28437,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -28554,7 +28554,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -28577,18 +28577,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер объекта культурного наследия на карте",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -28597,17 +28597,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "REG_NUMBER",
+            "name": "reg_number",
             "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
             "valueType": "STRING"
           },
           {
-            "name": "SPECIFIC",
+            "name": "specific",
             "title": "Вид, видовая принадлежность объекта культурного наследия",
             "required": true,
             "valueType": "CHOICE",
@@ -28627,7 +28627,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HIST_CAT",
+            "name": "hist_cat",
             "title": "Категория историко-культурного значения",
             "required": true,
             "valueType": "CHOICE",
@@ -28655,7 +28655,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HIST_OUT",
+            "name": "hist_out",
             "title": "Объекты выдающейся культурной ценности",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28670,12 +28670,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -28736,7 +28736,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -28779,12 +28779,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "MIN_MTYPE",
+            "name": "min_mtype",
             "title": "Вид металлических полезных ископаемых",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28815,7 +28815,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "MIN_NTYPE",
+            "name": "min_ntype",
             "title": "Вид неметаллических полезных ископаемых",
             "valueType": "CHOICE",
             "enumerations": [
@@ -28858,7 +28858,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "MINERALS",
+            "name": "minerals",
             "title": "Вид полезных ископаемых",
             "required": true,
             "valueType": "STRING"
@@ -28880,17 +28880,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "N_GRF",
+            "name": "n_grf",
             "title": "Номер паспорта государственного кадастра месторождений и проявлений полезных ископаемых",
             "valueType": "STRING"
           },
           {
-            "name": "MAS",
+            "name": "mas",
             "title": "Индекс массива государственного кадастра месторождений и проявлений полезных ископаемых",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -28978,7 +28978,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29001,18 +29001,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -29021,12 +29021,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29045,12 +29045,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29058,12 +29058,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -29175,7 +29175,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29210,22 +29210,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -29278,7 +29278,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29321,22 +29321,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -29389,7 +29389,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29408,17 +29408,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -29471,7 +29471,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29498,22 +29498,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -29566,7 +29566,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -29601,18 +29601,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -29621,12 +29621,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "HOT_STYPE",
+            "name": "zone_desc",
             "title": "Подтип гостиниц, аналогичных коллективных средств размещения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29657,7 +29657,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "SAF_STYPE",
+            "name": "saf_stype",
             "title": "Подтип специализированного коллективного средства размещения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29700,7 +29700,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CHI_STYPE",
+            "name": "chi_stype",
             "title": "Подтип детского оздоровительного лагеря",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29731,7 +29731,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AL_STYPE",
+            "name": "al_stype",
             "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29770,7 +29770,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29778,7 +29778,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29786,7 +29786,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "ONE_TIME",
+            "name": "one_time",
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29794,7 +29794,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BOAT_COUNT",
+            "name": "boat_count",
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29802,7 +29802,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEAT_COUNT",
+            "name": "seat_count",
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29810,7 +29810,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEASON",
+            "name": "season",
             "title": "Продолжительность работы",
             "valueType": "CHOICE",
             "enumerations": [
@@ -29833,7 +29833,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29841,12 +29841,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -29854,12 +29854,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -30045,7 +30045,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -30099,22 +30099,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -30167,7 +30167,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -30186,20 +30186,20 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -30207,12 +30207,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -30306,7 +30306,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -30337,47 +30337,47 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь территории зоны, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Оценка количества рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -30385,12 +30385,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -30398,12 +30398,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -30507,7 +30507,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -30546,18 +30546,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -30566,7 +30566,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -30633,7 +30633,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "W_SOURCE",
+            "name": "W_source",
             "title": "Источники наружного противопожарного водоснабжения и подъезды к ним",
             "valueType": "CHOICE",
             "enumerations": [
@@ -30733,12 +30733,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -30746,12 +30746,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -30919,7 +30919,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -31026,12 +31026,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
@@ -31042,7 +31042,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -31051,18 +31051,18 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "VOLTAGE",
+            "name": "voltage",
             "title": "Напряжение, кВ",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "CURRENT",
+            "name": "current",
             "title": "Тип тока",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31077,7 +31077,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31096,7 +31096,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "required": true,
             "valueType": "CHOICE",
@@ -31152,21 +31152,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "POWER",
+            "name": "power",
             "title": "Мощность трансформаторов, МВ · A",
             "required": true,
             "valueType": "DOUBLE",
@@ -31174,7 +31174,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "AMOUNT",
+            "name": "amount",
             "title": "Количество трансформаторов",
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
@@ -31183,26 +31183,26 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -31210,12 +31210,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -31308,7 +31308,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -31343,18 +31343,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -31363,12 +31363,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "USING_TYPE",
+            "name": "using_type",
             "title": "Вид разрешенного использования",
             "required": true,
             "valueType": "CHOICE",
@@ -31384,7 +31384,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RST_TYPE",
+            "name": "rst_type",
             "title": "Тип железнодорожной станции",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31411,7 +31411,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RST_CLASS",
+            "name": "rst_class",
             "title": "Класс железнодорожной станции/вокзала",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31442,7 +31442,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "RFO_TYPE",
+            "name": "rfo_type",
             "title": "Тип иных объектов железнодорожного транспорта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31469,7 +31469,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость железнодорожного вокзала, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -31477,7 +31477,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SUBURBAN_TR",
+            "name": "suburban_tr",
             "title": "Наличие движения пригородных поездов",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31492,7 +31492,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "FREIGHT",
+            "name": "freight",
             "title": "Грузоперевозки, тонн",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -31515,12 +31515,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31575,12 +31575,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -31588,12 +31588,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -31729,7 +31729,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -31772,13 +31772,13 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -31787,14 +31787,14 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "POPULATION",
+            "name": "population",
             "title": "Численность населения, тыс. чел.",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -31847,7 +31847,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -31910,18 +31910,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -31930,12 +31930,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -31954,21 +31954,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, т/сут",
             "required": true,
             "valueType": "DOUBLE",
@@ -31984,7 +31984,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -32007,26 +32007,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -32034,12 +32034,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -32151,7 +32151,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -32190,18 +32190,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -32210,7 +32210,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -32277,7 +32277,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "W_SOURCE",
+            "name": "W_source",
             "title": "Источники наружного противопожарного водоснабжения и подъезды к ним",
             "valueType": "CHOICE",
             "enumerations": [
@@ -32377,12 +32377,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -32390,12 +32390,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -32563,7 +32563,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -32622,18 +32622,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -32642,17 +32642,17 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "MAIN_ACTIV",
+            "name": "main_activ",
             "title": "Подтип предприятия - основная специализация, вид деятельности",
             "valueType": "STRING"
           },
           {
-            "name": "ADD_ACTIV",
+            "name": "add_activ",
             "title": "Дополнительные виды деятельности",
             "valueType": "STRING"
           },
@@ -32696,7 +32696,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -32704,7 +32704,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -32732,7 +32732,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -32755,7 +32755,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "BENT_TYPE",
+            "name": "bent_type",
             "title": "Тип хозяйствующего субъекта",
             "valueType": "CHOICE",
             "enumerations": [
@@ -32782,7 +32782,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "DANGER_OBJ",
+            "name": "danger_obj",
             "title": "Критерии отнесения объекта к особо опасным и технически сложным объектам",
             "valueType": "CHOICE",
             "enumerations": [
@@ -32837,12 +32837,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -32850,12 +32850,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -32980,7 +32980,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -33023,18 +33023,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -33043,7 +33043,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -33175,14 +33175,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "BLD_AREA",
+            "name": "bld_area",
             "title": "Общая площадь здания, комплекса зданий, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "TRD_AREA",
+            "name": "TRD_area",
             "title": "Торговая площадь, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -33196,7 +33196,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Количество посадочных мест объекта общественного питания, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33204,7 +33204,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих (операционных) мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33212,12 +33212,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33225,12 +33225,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -33406,7 +33406,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -33429,18 +33429,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -33449,7 +33449,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -33565,28 +33565,28 @@ SET class_rule =
             ]
           },
           {
-            "name": "SP_AREA",
+            "name": "SP_area",
             "title": "Площадь пола спортивных и тренажерных залов, кв. м ",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "POOL_AREA",
+            "name": "POOL_area",
             "title": "Площадь зеркала воды плавательных бассейнов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SPS_AREA",
+            "name": "SPS_area",
             "title": "Площадь плоскостных спортивных сооружений, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33594,7 +33594,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33602,12 +33602,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33615,12 +33615,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -33740,7 +33740,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -33775,18 +33775,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -33795,12 +33795,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "HOT_STYPE",
+            "name": "zone_desc",
             "title": "Подтип гостиниц, аналогичных коллективных средств размещения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -33831,7 +33831,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "SAF_STYPE",
+            "name": "saf_stype",
             "title": "Подтип специализированного коллективного средства размещения",
             "valueType": "CHOICE",
             "enumerations": [
@@ -33874,7 +33874,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CHI_STYPE",
+            "name": "chi_stype",
             "title": "Подтип детского оздоровительного лагеря",
             "valueType": "CHOICE",
             "enumerations": [
@@ -33905,7 +33905,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AL_STYPE",
+            "name": "al_stype",
             "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
             "valueType": "CHOICE",
             "enumerations": [
@@ -33944,7 +33944,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33952,7 +33952,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "PERSON_PD",
+            "name": "person_pd",
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33960,7 +33960,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "ONE_TIME",
+            "name": "one_time",
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33968,7 +33968,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "BOAT_COUNT",
+            "name": "boat_count",
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33976,7 +33976,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEAT_COUNT",
+            "name": "seat_count",
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -33984,7 +33984,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEASON",
+            "name": "season",
             "title": "Продолжительность работы",
             "valueType": "CHOICE",
             "enumerations": [
@@ -34007,7 +34007,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34015,12 +34015,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34028,12 +34028,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -34219,7 +34219,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -34250,18 +34250,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование организации",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -34270,7 +34270,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -34379,14 +34379,14 @@ SET class_rule =
             ]
           },
           {
-            "name": "SP_AREA",
+            "name": "SP_area",
             "title": "Площадь территории, кв. м ",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "CAPACITY",
+            "name": "capacity",
             "title": "Среднесуточная посещаемость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34394,7 +34394,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SEASON",
+            "name": "season",
             "title": "Продолжительность работы",
             "required": true,
             "valueType": "CHOICE",
@@ -34418,7 +34418,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "WRK_COUNT",
+            "name": "wrk_count",
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34426,12 +34426,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34439,7 +34439,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -34583,7 +34583,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -34602,17 +34602,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -34665,7 +34665,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -34688,18 +34688,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -34708,7 +34708,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -34718,19 +34718,19 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -34767,7 +34767,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -34786,18 +34786,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -34806,12 +34806,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FSES_STYPE",
+            "name": "fses_stype",
             "title": "Подтип объекта ФСИН России",
             "valueType": "CHOICE",
             "enumerations": [
@@ -34858,12 +34858,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -34871,12 +34871,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -34988,7 +34988,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35027,17 +35027,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -35070,19 +35070,19 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35146,7 +35146,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35165,18 +35165,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -35186,19 +35186,19 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35251,7 +35251,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35314,18 +35314,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -35334,12 +35334,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "GROUND_POS",
+            "name": "ground_pos",
             "title": "Расположение объекта относительно уровня земли",
             "valueType": "CHOICE",
             "enumerations": [
@@ -35358,21 +35358,21 @@ SET class_rule =
             ]
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FACT_USE",
+            "name": "fact_use",
             "title": "Фактическое использование объекта, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "OUTPUT",
+            "name": "output",
             "title": "Производительность, т/сут",
             "required": true,
             "valueType": "DOUBLE",
@@ -35388,7 +35388,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "HZRD_CAT",
+            "name": "hzrd_cat",
             "title": "Категория объекта, оказывающего негативное воздействие на окружающую среду",
             "valueType": "CHOICE",
             "enumerations": [
@@ -35411,26 +35411,26 @@ SET class_rule =
             ]
           },
           {
-            "name": "SZZ_SIZE",
+            "name": "szz_size",
             "title": "Размер санитарно-защитной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "ZONE_SIZE",
+            "name": "zone_size",
             "title": "Размер охранной зоны, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -35438,12 +35438,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35555,7 +35555,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35590,22 +35590,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35658,7 +35658,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35701,7 +35701,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "required": true,
             "valueType": "CHOICE",
@@ -35749,23 +35749,23 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание расчетной или установленной зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35818,7 +35818,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35849,22 +35849,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -35917,7 +35917,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -35936,20 +35936,20 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "POPULATION",
+            "name": "population",
             "title": "Численность населения, тыс. чел.",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -35986,7 +35986,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36013,22 +36013,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36081,7 +36081,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36172,7 +36172,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36191,12 +36191,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "LOCATION",
+            "name": "location",
             "title": "Местоположение",
             "valueType": "STRING"
           },
@@ -36207,7 +36207,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "MINERALS",
+            "name": "minerals",
             "title": "Полезные ископаемые",
             "valueType": "STRING"
           },
@@ -36228,7 +36228,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, кв. км.",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -36241,7 +36241,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36278,7 +36278,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36305,22 +36305,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36373,7 +36373,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36404,12 +36404,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
@@ -36449,12 +36449,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36518,7 +36518,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36541,18 +36541,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -36561,7 +36561,7 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -36571,19 +36571,19 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36620,7 +36620,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36651,18 +36651,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
@@ -36732,12 +36732,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -36745,12 +36745,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36879,7 +36879,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -36902,22 +36902,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -36970,7 +36970,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37000,22 +37000,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -37068,7 +37068,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37107,52 +37107,52 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Общая длина водотока, км",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь водоема, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WPZ_SIZE",
+            "name": "wpz_size",
             "title": "Размер водоохраной зоны объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "RS_SIZE",
+            "name": "rs_size",
             "title": "Размер прибрежной полосы объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FSH_SIZE",
+            "name": "fsh_size",
             "title": "Размер береговой полосы общего пользования объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -37160,7 +37160,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -37221,7 +37221,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37286,17 +37286,17 @@ SET class_rule =
             ]
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -37368,7 +37368,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37399,23 +37399,23 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь территории, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -37423,7 +37423,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -37431,12 +37431,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -37537,7 +37537,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37560,22 +37560,22 @@ SET class_rule =
             ]
           },
           {
-            "name": "ZONE_DESC",
+            "name": "zone_desc",
             "title": "Описание зоны",
             "valueType": "STRING"
           },
           {
-            "name": "OBJECTNAME",
+            "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
             "valueType": "STRING"
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -37628,7 +37628,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37651,12 +37651,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
@@ -37679,7 +37679,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "COMPL_NAME",
+            "name": "compl_name",
             "title": "Наименование комплексного объекта",
             "valueType": "STRING"
           },
@@ -37689,12 +37689,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -37702,12 +37702,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -37819,7 +37819,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_terr_mo_np"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37874,7 +37874,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -37928,7 +37928,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -37967,52 +37967,52 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "valueType": "STRING"
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Общая длина водотока, км",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Общая площадь водоема, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "WPZ_SIZE",
+            "name": "wpz_size",
             "title": "Размер водоохраной зоны объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "RS_SIZE",
+            "name": "rs_size",
             "title": "Размер прибрежной полосы объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FSH_SIZE",
+            "name": "fsh_size",
             "title": "Размер береговой полосы общего пользования объекта, м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38020,7 +38020,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
@@ -38082,7 +38082,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -38125,18 +38125,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "PLINE_TYPE",
+            "name": "pline_type",
             "title": "Вид расположения трубопровода",
             "required": true,
             "valueType": "CHOICE",
@@ -38168,7 +38168,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "LENGTH",
+            "name": "length",
             "title": "Протяженность сооружения, км",
             "required": true,
             "valueType": "DOUBLE",
@@ -38176,14 +38176,14 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "WEAR_PRCNT",
+            "name": "wear_prcnt",
             "title": "Процент износа, %",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "PLINE_CNT",
+            "name": "pline_cnt",
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38191,7 +38191,7 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "D_PLINE",
+            "name": "d_pline",
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38199,12 +38199,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38212,12 +38212,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -38329,7 +38329,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -38364,18 +38364,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -38384,12 +38384,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "CEP_CLASS",
+            "name": "cep_class",
             "title": "Класс сооружений инженерной защиты",
             "valueType": "CHOICE",
             "enumerations": [
@@ -38412,12 +38412,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38425,12 +38425,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -38542,7 +38542,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -38573,7 +38573,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "EME_SOURCE",
+            "name": "EME_source",
             "title": "Источник природной чрезвычайной ситуации",
             "required": true,
             "valueType": "CHOICE",
@@ -38768,12 +38768,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "OTHER",
+            "name": "other",
             "title": "Иной параметр и его единицы измерения",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -38810,7 +38810,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -38853,18 +38853,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "LOCATION",
+            "name": "location",
             "title": "Местоположение",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -38876,12 +38876,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -38889,12 +38889,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -39006,7 +39006,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -39037,7 +39037,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "TM_SOURCE",
+            "name": "TM_source",
             "title": "Источник техногенной чрезвычайной ситуации",
             "required": true,
             "valueType": "CHOICE",
@@ -39160,12 +39160,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "OTHER",
+            "name": "other",
             "title": "Иной параметр и его единицы измерения",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -39202,7 +39202,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -39221,35 +39221,35 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта",
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -39257,12 +39257,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -39372,7 +39372,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -39391,18 +39391,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -39411,12 +39411,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "FSES_STYPE",
+            "name": "fses_stype",
             "title": "Подтип объекта ФСИН России",
             "valueType": "CHOICE",
             "enumerations": [
@@ -39463,12 +39463,12 @@ SET class_rule =
             ]
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -39476,12 +39476,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -39593,7 +39593,7 @@ SET class_rule =
             "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
-            "name": "GLOBALID",
+            "name": "globalid",
             "title": "Идентификатор объекта",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
@@ -39616,18 +39616,18 @@ SET class_rule =
             ]
           },
           {
-            "name": "NUMBER",
+            "name": "number",
             "title": "Номер согласно Положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
-            "name": "NAME",
+            "name": "name",
             "title": "Наименование объекта",
             "required": true,
             "valueType": "STRING"
           },
           {
-            "name": "OKTMO",
+            "name": "oktmo",
             "title": "Код ОКТМО",
             "pattern": "[0-9]{8}|[0-9]{11}",
             "required": true,
@@ -39636,12 +39636,12 @@ SET class_rule =
             "valueType": "STRING"
           },
           {
-            "name": "ADDRESS",
+            "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
           },
           {
-            "name": "HZRD_CLASS",
+            "name": "hzrd_class",
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "valueType": "CHOICE",
             "enumerations": [
@@ -39668,7 +39668,7 @@ SET class_rule =
             ]
           },
           {
-            "name": "AREA",
+            "name": "area",
             "title": "Площадь объекта, га",
             "required": true,
             "valueType": "DOUBLE",
@@ -39676,12 +39676,12 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "FUNCTION",
+            "name": "function",
             "title": "Назначение объекта",
             "valueType": "STRING"
           },
           {
-            "name": "EVENT_TIME",
+            "name": "event_time",
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
@@ -39689,12 +39689,12 @@ SET class_rule =
             "minInclusive": 1
           },
           {
-            "name": "SOURCE",
+            "name": "source",
             "title": "Источник данных",
             "valueType": "STRING"
           },
           {
-            "name": "NOTE",
+            "name": "note",
             "title": "Примечание",
             "valueType": "STRING"
           },
@@ -39795,30 +39795,30 @@ SET class_rule =
           "tableName": "mp",
           "originName": "mp",
           "tags": ["system", "Приказ 10"],
-        "properties": [
+          "properties": [
             {
               "name": "reason",
               "title": "Вид кадастровых работ",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "cadastralblock",
               "title": "Номер кадастрового квартала",
-                  "required": true,
+              "required": true,
               "maxLength": 20,
               "valueType": "STRING"
             },
             {
               "name": "prevcadastralnumbers",
               "title": "Кадастровые номера земельных участков, из которых образован данный участок",
-                  "required": true,
+              "required": true,
               "valueType": "STRING"
             },
             {
               "name": "area",
               "title": "Площадь земельного участка, м.кв.",
-                  "required": true,
+              "required": true,
               "valueType": "DOUBLE",
               "totalDigits": 38,
               "fractionDigits": 8
@@ -39826,13 +39826,13 @@ SET class_rule =
             {
               "name": "address",
               "title": "Адрес (местоположение) участка",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "Category",
               "title": "Категория земель",
-                  "required": true,
+              "required": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -39873,31 +39873,31 @@ SET class_rule =
             {
               "name": "bydoc",
               "title": "Вид разрешенного использования участка по документу",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "objectsrealty",
               "title": "Сведения об объектах недвижимости, расположенных на образуемом земельном участке",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "conclusion",
               "title": "Заключение кадастрового инженера",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "note",
               "title": "Примечания",
-                  "required": true,
+              "required": true,
               "valueType": "TEXT"
             },
             {
               "name": "shape",
               "title": "геометрия",
-                    "valueType": "GEOMETRY",
+              "valueType": "GEOMETRY",
               "allowedValues": [
                 "Polygon"
               ]

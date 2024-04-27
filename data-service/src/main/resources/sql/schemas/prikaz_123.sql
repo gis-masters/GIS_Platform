@@ -26084,7 +26084,7 @@ SET class_rule =
       "title": "Цифры",
       "hidden": true,
       "valueType": "STRING",
-      "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+      "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
     }
   ],
   "description": "Класс объектов Функциональные зоны",
