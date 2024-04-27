@@ -20,7 +20,13 @@ export async function getLibraries(pageOptions: PageOptions): Promise<[Library[]
   const response = await libraryClient.getLibraries(pageOptions);
 
   return [
-    response.content?.map(library => ({ ...library, schema: convertOldToNewSchema(library.schema) })) || [],
+    response.content?.map(library => {
+      if (!library.schema) {
+        throw new Error(`У библиотеки "${library.title}" нет схемы!`);
+      }
+
+      return { ...library, schema: convertOldToNewSchema(library.schema) };
+    }) || [],
     response.page.totalPages
   ];
 }

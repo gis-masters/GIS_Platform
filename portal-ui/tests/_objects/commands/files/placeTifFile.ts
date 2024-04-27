@@ -1,10 +1,10 @@
-import { CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
-import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
-import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
-import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
-import { getFileBaseName } from '../../../../src/app/services/data/files/files.util';
 import { filesClient } from '../../../../src/app/services/data/files/files.client';
 import { FileInfo } from '../../../../src/app/services/data/files/files.models';
+import { getFileBaseName } from '../../../../src/app/services/data/files/files.util';
+import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
+import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
+import { CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function placeTifFile(

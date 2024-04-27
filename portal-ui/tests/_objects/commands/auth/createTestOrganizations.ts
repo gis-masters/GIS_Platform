@@ -1,9 +1,9 @@
 import { addValueToPool, getValueFromPool } from '@wdio/shared-store-service';
 
-import { createTestUsers, createTestUsersInOtherOrganization } from './createTestUsers';
 import { createOrganization } from './createOrganization';
-import { TestUser, getTestUser } from './testUsers';
+import { createTestUsers, createTestUsersInOtherOrganization } from './createTestUsers';
 import { getUserToken } from './getUserToken';
+import { getTestUser, TestUser } from './testUsers';
 
 export async function createTestOrganizations(): Promise<void> {
   let workerFreed = false;

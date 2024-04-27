@@ -29,7 +29,7 @@ Then('в списке слоев панели слоёв отображаютс�
 Then('в списке слоев панели слоёв не отображается пункт {string}', async (expectedName: string) => {
   const layerCardExisting = await layerCardBlock.isLayerCardExist(expectedName);
 
-  await expect(layerCardExisting).toEqual(false);
+  await expect(layerCardExisting).toBeFalsy();
 });
 
 Then('список слоёв пуст', async () => {

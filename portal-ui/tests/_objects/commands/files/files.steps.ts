@@ -1,14 +1,13 @@
-import { Given } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Given } from '@wdio/cucumber-framework';
 
-import { uploadTestFile } from './uploadTestFile';
+import { CompoundMainFiles } from '../../../../src/app/services/data/files/files.models';
+import { getFileExtension } from '../../../../src/app/services/data/files/files.util';
 import { ScenarioScope } from '../../ScenarioScope';
-
+import { updateLibraryRecord } from '../docLibrary/updateLibraryRecord';
 import { placeDxfFile } from './placeDxfFile';
 import { placeTifFile } from './placeTifFile';
-import { updateLibraryRecord } from '../docLibrary/updateLibraryRecord';
-import { getFileExtension } from '../../../../src/app/services/data/files/files.util';
-import { CompoundMainFiles } from '../../../../src/app/services/data/files/files.models';
+import { uploadTestFile } from './uploadTestFile';
 
 Given('загружен тестовый файл {string}', async function (this: ScenarioScope, fileName: string) {
   this.latestUploadedFile = await uploadTestFile(fileName);

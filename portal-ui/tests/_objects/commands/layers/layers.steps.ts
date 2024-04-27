@@ -1,15 +1,15 @@
-import { Given, Then } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Given, Then } from '@wdio/cucumber-framework';
 
 import { CrgLayer, CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
-import { createLayer } from './createLayer';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
+import { createLayer } from './createLayer';
+import { getLayer } from './getLayer';
 import { getLayerSchema } from './getLayerSchema';
 import { updateLayer } from './updateLayer';
-import { getLayer } from './getLayer';
 
 const errorSchemaOrId = 'У слоя не указана схема или идентификатор';
 
@@ -107,7 +107,7 @@ Given('существует слой с параметрами:', async function
   const vectorTable = await getVectorTableByTitle(dataset.identifier, tableTitle);
 
   const layer = {
-    type: 'vector' as CrgLayerType,
+    type: CrgLayerType.VECTOR,
     dataset: dataset.identifier,
     tableName: vectorTable.identifier,
     title: layerTitle,

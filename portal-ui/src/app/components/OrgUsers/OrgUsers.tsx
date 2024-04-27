@@ -114,7 +114,7 @@ export class OrgUsers extends Component {
   }
 
   async componentDidMount() {
-    await Promise.all([await usersService.initUsersListStore(), await groupsService.initAllGroupsStore()]);
+    await Promise.all([usersService.initUsersListStore(), groupsService.initAllGroupsStore()]);
   }
 
   render() {

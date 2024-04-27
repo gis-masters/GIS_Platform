@@ -136,7 +136,7 @@ export async function isLayerReadAllowed(layer: CrgLayer): Promise<boolean> {
   if (layer.dataset && layer.tableName && layer.type === CrgLayerType.VECTOR) {
     return await isFeaturesReadAllowed(layer.dataset, layer.tableName);
   } else if (layer.type && (layer.type === CrgLayerType.RASTER || isVectorFromFile(layer.type))) {
-    return await isRasterReadAllowed(layer);
+    return await isLayerFromFileReadAllowed(layer);
   }
 
   return false;
@@ -169,7 +169,7 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
 
     return await isFeaturesUpdateAllowed(layer.dataset, layer.tableName, await getLayerSchema(layer));
   } else if (layer.type === CrgLayerType.RASTER) {
-    return await isRasterReadAllowed(layer);
+    return await isLayerFromFileReadAllowed(layer);
   } else if (layer.type && isVectorFromFile(layer.type)) {
     const schema = await getLayerSchema(layer);
     if (!schema) {
@@ -180,7 +180,7 @@ export async function isUpdateAllowed(layer: CrgLayer): Promise<boolean> {
       return false;
     }
 
-    return await isRasterReadAllowed(layer);
+    return await isLayerFromFileReadAllowed(layer);
   }
 
   return false;
@@ -203,25 +203,28 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
   }
 }
 
-export async function isRasterReadAllowed(layer: CrgLayer): Promise<boolean> {
+export async function isLayerFromFileReadAllowed(layer: CrgLayer): Promise<boolean> {
   try {
     if (!layer.libraryId || !layer.recordId || !layer.tableName) {
       return false;
     }
 
-    const raster = await getLibraryRecord(layer.libraryId, layer.recordId);
-    if (raster.is_deleted) {
+    const record = await getLibraryRecord(layer.libraryId, layer.recordId);
+    if (record.is_deleted) {
       return false;
     }
 
-    const files = getLibraryRecordFiles(raster);
-    const datasource = files?.filter(file => layer.tableName?.includes(file.id));
+    // проверка наличия файла в документе (пока только растры и dxf)
+    if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.DXF) {
+      const files = getLibraryRecordFiles(record);
+      const datasource = files?.find(file => layer.tableName?.includes(file.id));
 
-    if (layer.tableName.slice(0, 7) === 'dl_data' && !datasource?.length) {
-      return false;
+      if (!datasource) {
+        return false;
+      }
     }
 
-    return Boolean(raster.role);
+    return Boolean(record.role);
   } catch {
     return false;
   }

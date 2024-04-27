@@ -1,6 +1,7 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 import { LibraryRecord } from '../library/library.models';
 import {
   allCompoundFilesTypes,
@@ -180,15 +181,15 @@ export function isZipFile(file: File): boolean {
   return zipFileTypes.has(file.type);
 }
 
-function isFileInfo(object: Partial<FileInfo>): boolean {
-  // используем утиную типизацию, чтобы не делать асинхронный запрос схемы
-  return (
-    Boolean(object.id) &&
-    typeof object.id === 'string' &&
-    Boolean(object.size) &&
-    typeof object.size === 'number' &&
-    Boolean(object.title) &&
-    typeof object.title === 'string'
+function isFileInfo(obj: unknown): obj is FileInfo {
+  return Boolean(
+    isRecordStringUnknown(obj) &&
+      obj.id &&
+      typeof obj.id === 'string' &&
+      obj.size &&
+      typeof obj.size === 'number' &&
+      obj.title &&
+      typeof obj.title === 'string'
   );
 }
 

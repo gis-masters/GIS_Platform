@@ -864,8 +864,8 @@ class MapService {
     }
 
     const size = getWidth(projectionExtent) / basemap.size;
-    const resolutions = [];
-    const matrixIds = [];
+    const resolutions: number[] = [];
+    const matrixIds: string[] = [];
     for (let i = 0; i < basemap.resolution; ++i) {
       // generate resolutions and matrixIds arrays for this WMTS
       resolutions[i] = size / Math.pow(2, i);
@@ -924,8 +924,3 @@ class MapService {
 }
 
 export const mapService = MapService.instance;
-
-// for autotests
-if (typeof window !== 'undefined') {
-  Object.assign(window, { mapService });
-}

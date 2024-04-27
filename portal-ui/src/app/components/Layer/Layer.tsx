@@ -39,7 +39,7 @@ export interface LayerProps extends IClassNameProps {
   errors?: string[];
   editMode: boolean;
   highlighted: boolean;
-  onEyeClick: () => void;
+  onEyeClick(): void;
 }
 
 @observer

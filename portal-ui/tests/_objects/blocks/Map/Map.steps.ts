@@ -1,26 +1,10 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { mapBlock } from './Map.block';
 import { getMapPosition } from '../../commands/map/getMapPosition';
-import { isLayerVisibleOnMap } from '../../commands/isLayerVisibleOnMap';
-import { MapPage } from '../../pages/Map.page';
 import { ScenarioScope } from '../../ScenarioScope';
+import { MapPage } from '../../pages/Map.page';
 
-When('слой {string} не отображается на карте', async (layerName: string) => {
-  await browser.waitUntil(async () => !(await isLayerVisibleOnMap(layerName)), {
-    timeout: 5000,
-    interval: 1000,
-    timeoutMsg: `Слой ${layerName} отображается на карте, а не должен`
-  });
-});
-
-When('слой {string} отображается на карте', async (layerName: string) => {
-  await browser.waitUntil(async () => await isLayerVisibleOnMap(layerName), {
-    timeout: 5000,
-    interval: 1000,
-    timeoutMsg: `Слой ${layerName} не отображается на карте`
-  });
-});
+import { mapBlock } from './Map.block';
 
 When('я протыкаю карту в центре', async function () {
   await mapBlock.clickOnMap();
