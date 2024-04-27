@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import { EpsgModelModified, isArrayOfEpsgModelModified } from '../../services/data/epsg/epsg.models';
+import { Epsg, isArrayOfEpsg } from '../../services/data/epsg/epsg.models';
 import {
   PropertySchema,
   PropertySchemaChoice,
@@ -40,7 +40,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   );
   @observable private busy = false;
   @observable private _schema?: SimpleSchema;
-  @observable private favoritesEpsg: EpsgModelModified[] = [];
+  @observable private favoritesEpsg: Epsg[] = [];
 
   private reactionDisposerOrganizationSettings?: IReactionDisposer;
   private reactionDisposerSystemSettings?: IReactionDisposer;
@@ -136,7 +136,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
   @boundMethod
   private fieldChangeHandler(value: unknown, propertyName: string, prevValue: unknown, formValue: Settings) {
-    if (formValue.favorites_epsg && isArrayOfEpsgModelModified(formValue.favorites_epsg)) {
+    if (formValue.favorites_epsg && isArrayOfEpsg(formValue.favorites_epsg)) {
       this.setFavoritesEpsg(formValue.favorites_epsg);
       this.updateOptions();
     }
@@ -145,8 +145,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   private updateOptions() {
     const options = this.favoritesEpsg.length
       ? this.favoritesEpsg.map(item => {
-          return { title: item.title, value: item.title };
-        })
+        return { title: item.title, value: item.title };
+      })
       : [];
 
     this._schema?.properties.forEach(property => {
@@ -224,7 +224,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setFavoritesEpsg(favoritesEpsg: EpsgModelModified[]): void {
+  private setFavoritesEpsg(favoritesEpsg: Epsg[]): void {
     this.favoritesEpsg = favoritesEpsg;
   }
 }

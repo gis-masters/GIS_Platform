@@ -9,12 +9,14 @@ import { mapStore } from '../../../stores/Map.store';
 import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
+import { isArrayOfEpsg } from '../../data/epsg/epsg.models';
+import { getEpsgByCrs, registerEpsgArrayInProj4 } from '../../data/epsg/epsg.service';
 import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
-import { CrgLayersGroup } from '../layers/layers.models';
+import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 import { getLayers } from '../layers/layers.service';
 import { projectsClient } from './projects.client';
 import { CrgProject } from './projects.models';
@@ -131,6 +133,8 @@ class ProjectsService {
     const allowedLayers = layers.filter((layer, i) => layersPermissions[i]);
     const groups = await this.getGroups(project.id);
 
+    await this.registerLayersProjection(allowedLayers);
+
     currentProject.setProject(project, allowedLayers, groups, layersErrors, layers);
 
     if (project.id !== id) {
@@ -163,6 +167,24 @@ class ProjectsService {
         currentProject.setLayerError(layer.complexName, result.errors);
         services.logger.error(result.errors);
       }
+    }
+  }
+
+  async registerLayersProjection(allowedLayers: CrgLayer[]) {
+    const epsgArray = await Promise.all(
+      allowedLayers.map(async layer => {
+        if (layer.nativeCRS) {
+          return await getEpsgByCrs(layer.nativeCRS);
+        }
+      })
+    );
+
+    const uniqueEpsg = epsgArray
+      .filter((value, index, self) => index === self.findIndex(item => item?.authSrid === value?.authSrid))
+      .filter(Boolean);
+
+    if (uniqueEpsg.length && isArrayOfEpsg(uniqueEpsg)) {
+      registerEpsgArrayInProj4(uniqueEpsg);
     }
   }
 

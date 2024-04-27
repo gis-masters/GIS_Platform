@@ -70,9 +70,9 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
   }
 
   @boundMethod
-  private zoomTo() {
+  private async zoomTo() {
     const { feature } = this.props;
-    mapService.positionToFeature(feature);
+    await mapService.positionToFeature(feature);
   }
 
   @boundMethod

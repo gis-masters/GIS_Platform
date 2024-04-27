@@ -2,19 +2,28 @@ import { isObject } from 'lodash';
 
 import { EpsgModel } from '../../../../server-types/common-contracts';
 
-export interface EpsgModelModified extends EpsgModel {
+export const DEFAULT_OL_PROJECTION = {
+  authName: 'EPSG',
+  code: 3857
+};
+
+export const defaultOlCrs = `${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.code}`;
+
+export interface Epsg extends EpsgModel {
   title: string;
   auth_srid: number;
+  hidden?: boolean;
+  proj4Str?: string;
   defaultProj?: string;
 }
 
-export function isArrayOfEpsgModelModified(values: unknown): values is EpsgModelModified[] {
+export function isArrayOfEpsg(values: unknown): values is Epsg[] {
   if (!Array.isArray(values)) {
     return false;
   }
 
   for (const value of values) {
-    if (!isEpsgModelModified(value)) {
+    if (!isEpsg(value)) {
       return false;
     }
   }
@@ -22,7 +31,7 @@ export function isArrayOfEpsgModelModified(values: unknown): values is EpsgModel
   return true;
 }
 
-export function isEpsgModelModified(obj: unknown): obj is EpsgModelModified {
+export function isEpsg(obj: unknown): obj is Epsg {
   return (
     isObject(obj) &&
     'authName' in obj &&

@@ -1,7 +1,7 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { createVectorTableBlock } from './CreateVectorTable.block';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
+import { createVectorTableBlock } from './CreateVectorTable.block';
 
 When('я создаю новую векторную таблицу с названием {string}', async (tableName: string) => {
   await createVectorTableBlock.createTable(tableName);

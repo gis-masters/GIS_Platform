@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  SelectChangeEvent,
   Step,
   StepLabel,
   Stepper
@@ -16,13 +15,14 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
+import { Epsg } from '../../services/data/epsg/epsg.models';
+import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import { placeFiles } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { Role } from '../../services/data/permissions/permissions.models';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { viewedProjections } from '../../services/geoserver/projections.service';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { sleep } from '../../services/util/sleep';
@@ -30,7 +30,7 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { Button } from '../Button/Button';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
-import { Select } from '../Select/Select';
+import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
 import { XTableColumn } from '../XTable/XTable.models';
 import { FilesPlacementReportStore as FilesPlacementStore } from './FilesPlacementDialog.store';
 import { FilesPlacementDialogStepIcon } from './StepIcon/FilesPlacementDialog-StepIcon';
@@ -118,7 +118,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
 
   render() {
     const { open } = this.props;
-    const { activeStep, nextStepDisabled, crs, project, commonProgress } = this.store;
+    const { activeStep, nextStepDisabled, project, commonProgress } = this.store;
 
     return (
       <Dialog
@@ -133,6 +133,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
           <Stepper activeStep={activeStep} alternativeLabel className={cnFilesPlacementDialog('Stepper')}>
             {this.steps.map(stepItem => (
               <Step key={stepItem.title}>
+                {/* TODO: странная ошибка типов */}
                 <StepLabel StepIconComponent={FilesPlacementDialogStepIcon}>{stepItem.title}</StepLabel>
               </Step>
             ))}
@@ -144,13 +145,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
                 <div className={cnFilesPlacementDialog('CrsText')}>
                   Система координат будет применена при размещении для всех выбранных на следующем шаге файлов.
                 </div>
-                <Select
-                  className={cnFilesPlacementDialog('CrsSelector')}
-                  label='Система координат'
-                  options={viewedProjections.map(proj => ({ value: proj.id, title: proj.title }))}
-                  onChange={this.handleCrsChange}
-                  value={crs}
-                />
+                <SelectEpsg onSelect={this.setSelectedEpsg} fullWidth />
               </>
             )}
 
@@ -263,8 +258,8 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
   }
 
   @boundMethod
-  private handleCrsChange(e: SelectChangeEvent) {
-    this.store.setCrs(e.target.value);
+  private setSelectedEpsg(epsg: Epsg) {
+    this.store.setCrs(getCrsFromEpsg(epsg));
   }
 
   @boundMethod

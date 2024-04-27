@@ -157,10 +157,12 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   @boundMethod
   private async handleRowDoubleClick({ feature }: AttributesTableRecord) {
-    mapService.positionToFeature(feature);
+    await mapService.positionToFeature(feature);
+
     if (!mapStore.limitReached) {
       mapSelectionService.selectFeatures([feature], MapSelectionTypes.ADD);
     }
+
     sidebars.closeEdit();
     await sleep(0);
     sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });

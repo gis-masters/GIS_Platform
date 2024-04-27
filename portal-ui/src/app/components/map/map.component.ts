@@ -97,7 +97,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
 
-        mapService.highlightFeatures(mapStore.highlightedFeatures);
+        await mapService.highlightFeatures(mapStore.highlightedFeatures);
       },
       { fireImmediately: true }
     );

@@ -7,6 +7,8 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { http } from '../api/http.service';
 import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
 import { usersService } from '../auth/users/users.service';
+import { getFeatureEpsg } from '../data/epsg/epsg.service';
+import { getCrsFromEpsg } from '../data/epsg/epsg.util';
 import { OldSchema } from '../data/schema/schemaOld.models';
 import { createFeature } from '../data/vectorData/vectorData.service';
 import { environment } from '../environment';
@@ -16,7 +18,6 @@ import { FeatureUtil } from '../util/FeatureUtil';
 import { Mime } from '../util/Mime';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { buildComplexName, extractFeatureId } from './feature.util';
-import { getFeatureProjection } from './projections.service';
 import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
 
 export enum TransactionType {
@@ -29,6 +30,7 @@ interface Properties {
   [key: string]: unknown;
 }
 
+// TODO: пофиксить ошибки типизации
 export class TransformFeatureService {
   private static _instance: TransformFeatureService;
 
@@ -119,6 +121,8 @@ export class TransformFeatureService {
 
       return newFeature;
     });
+    const epsg = await getFeatureEpsg(features[0]);
+    const crs = epsg ? getCrsFromEpsg(epsg) : undefined;
 
     const options: WriteTransactionOptions = {
       featureNS: 'castyl_for_remove',
@@ -126,7 +130,7 @@ export class TransformFeatureService {
       featurePrefix: workspace,
       nativeElements: [],
       gmlOptions: {
-        srsName: getFeatureProjection(features[0]).id
+        srsName: crs
       }
     };
 

@@ -48,8 +48,8 @@ export class FeaturesList extends Component<FeaturesListProps> {
     }
   }
 
-  componentWillUnmount() {
-    this.highlightItem(null);
+  async componentWillUnmount() {
+    await this.highlightItem(null);
     if (this.ref.current) {
       this.resizeObserver.unobserve(this.ref.current);
     }
@@ -86,12 +86,12 @@ export class FeaturesList extends Component<FeaturesListProps> {
   }
 
   @action.bound
-  private highlightItem(feature: WfsFeature | null) {
+  private async highlightItem(feature: WfsFeature | null) {
     if (feature) {
       clearTimeout(this.highlightAllFeaturesTimeout);
-      mapService.highlightFeatures([feature]);
+      await mapService.highlightFeatures([feature]);
     } else {
-      mapService.highlightFeatures(mapStore.highlightedFeatures);
+      await mapService.highlightFeatures(mapStore.highlightedFeatures);
     }
     this.highlightedFeatureId = feature?.id;
   }

@@ -1,4 +1,5 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { defaultOlCrs } from '../../data/epsg/epsg.models';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 import { cqlBuild } from '../../util/cqlBuild';
@@ -167,7 +168,7 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
     url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
     url.searchParams.set('TRANSPARENT', 'true');
     url.searchParams.set('LAYERS', layer.complexName);
-    url.searchParams.set('CRS', 'EPSG:3857');
+    url.searchParams.set('CRS', defaultOlCrs);
     url.searchParams.set('STYLES', '');
     url.searchParams.set('WIDTH', '300');
     url.searchParams.set('HEIGHT', '300');

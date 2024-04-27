@@ -18,6 +18,8 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
+import { Epsg } from '../../../services/data/epsg/epsg.models';
+import { getCrsFromEpsg } from '../../../services/data/epsg/epsg.util';
 import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
@@ -54,6 +56,7 @@ import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
+import { SelectEpsgDialog } from '../../SelectEpsgDialog/SelectEpsgDialog';
 import { Toast } from '../../Toast/Toast';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
@@ -81,6 +84,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private layerExportAllowed = false;
   @observable private layersDeleteAllowed = false;
   @observable private geometryType?: GeometryType;
+  @observable private selectEpsgDialogOpen = false;
   @observable private importXmlDialogOpen = false;
   @observable private importShapeDialogOpen = false;
   @observable private importShapeAllowed = false;
@@ -193,7 +197,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {!editMode && this.isVectorLayer && this.layerExportAllowed && (
-            <MenuItem onClick={this.export}>
+            <MenuItem onClick={this.openSelectEpsgDialog}>
               <ListItemIcon>
                 <UnarchiveOutlined />
               </ListItemIcon>
@@ -276,6 +280,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
               <Button onClick={this.closeDialog}>Закрыть</Button>
             </DialogActions>
           </Dialog>
+        )}
+
+        {!editMode && this.isVectorLayer && (
+          <SelectEpsgDialog
+            open={this.selectEpsgDialogOpen}
+            onSelect={this.export}
+            defaultCrs={(entity as CrgVectorLayer).nativeCRS}
+            onClose={this.closeSelectEpsgDialog}
+          />
         )}
 
         {this.rasterDocument && (
@@ -406,11 +419,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @boundMethod
-  private async export() {
+  private async export(epsg: Epsg) {
     const { entity, onClose } = this.props;
     const { dataset, tableName } = entity as CrgVectorLayer;
 
-    await exportVectorTableAsShape([{ dataset, table: tableName }]);
+    await exportVectorTableAsShape([{ dataset, table: tableName }], getCrsFromEpsg(epsg));
     sidebars.openInfo();
 
     onClose();
@@ -420,8 +433,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
     if (this.isVectorLayer || this.isVectorFromFileLayer) {
       const schema = await getLayerSchema(this.props.entity as CrgVectorLayer);
 
-      this.setSchema(schema);
-      this.setGeometryType(schema.geometryType);
+      if (schema) {
+        this.setSchema(schema);
+        this.setGeometryType(schema.geometryType);
+      }
     }
   }
 
@@ -466,6 +481,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
       Toast.warn(`Ошибка получения набора данных. ${err.message}`);
       services.logger.warn(`Ошибка получения набора данных. ${err.message}`);
     }
+  }
+
+  @action.bound
+  private openSelectEpsgDialog() {
+    this.selectEpsgDialogOpen = true;
+  }
+
+  @action.bound
+  private closeSelectEpsgDialog() {
+    this.selectEpsgDialogOpen = false;
+
+    this.props.onClose();
   }
 
   @action.bound

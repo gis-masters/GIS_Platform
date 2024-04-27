@@ -5,15 +5,15 @@ import { Clear } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { EpsgModelModified } from '../../../services/data/epsg/epsg.models';
+import { Epsg } from '../../../services/data/epsg/epsg.models';
 
 import '!style-loader!css-loader!sass-loader!./SelectEPSGControl-Chip.scss';
 
 const cnSelectEPSGControl = cn('SelectEPSGControl', 'Chip');
 
 interface SelectEPSGControlChipProps {
-  epsg: EpsgModelModified;
-  onDelete(epsg: EpsgModelModified): void;
+  epsg: Epsg;
+  onDelete(epsg: Epsg): void;
 }
 
 @observer

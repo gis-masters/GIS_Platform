@@ -33,15 +33,11 @@ import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
+import { defaultOlCrs, Epsg } from '../data/epsg/epsg.models';
+import { getFeatureEpsg, getOlEpsg } from '../data/epsg/epsg.service';
+import { transformExtent, transformGeometry } from '../data/epsg/epsg.util';
 import { Schema } from '../data/schema/schema.models';
 import { applyView } from '../data/schema/schema.utils';
-import {
-  CrgProjection,
-  getFeatureProjection,
-  olProjection,
-  transformExtent,
-  transformGeometry
-} from '../geoserver/projections.service';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';
@@ -270,7 +266,6 @@ class MapService {
         }
       }
     });
-
     this.view.on('change:resolution', this.debouncedZoomEvent);
     this.debouncedZoomEvent();
     this.mapCreate.emit();
@@ -480,27 +475,33 @@ class MapService {
   /**
    * Подсвечивает объект. (очищает черновой слой)
    */
-  highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: CrgProjection) {
+  async highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], epsg?: Epsg) {
     if (!this.draftSource) {
       throw new Error('Draft source is not created');
     }
 
-    const featuresInOlProjection: WfsFeature[] = [...features]
-      .filter(({ geometry }) => geometry)
-      .map((feature: WfsFeature<Coordinate | CoordinateEdited>): WfsFeature => {
-        const geometry =
-          feature.geometry &&
-          transformGeometry(feature.geometry, projection || getFeatureProjection(feature), olProjection);
+    const featuresInOlProjection: WfsFeature[] = await Promise.all(
+      [...features]
+        .filter(({ geometry }) => geometry)
+        .map(async (feature: WfsFeature<Coordinate | CoordinateEdited>): Promise<WfsFeature> => {
+          const currentEpsg = epsg || (await getFeatureEpsg(feature));
+          const olEpsg = await getOlEpsg();
 
-        if (!geometry) {
-          throw new Error('Geometry is not defined');
-        }
+          if (!currentEpsg || !olEpsg) {
+            throw new Error('Не найдена проекция выбранного объекта');
+          }
+          const geometry = feature.geometry && transformGeometry(feature.geometry, currentEpsg, olEpsg);
 
-        return {
-          ...feature,
-          geometry
-        };
-      });
+          if (!geometry) {
+            throw new Error('Геометрия не определена');
+          }
+
+          return {
+            ...feature,
+            geometry
+          };
+        })
+    );
 
     this.clearDraft();
 
@@ -677,23 +678,31 @@ class MapService {
     }
   }
 
-  positionToFeature(feature: WfsFeature, projection: CrgProjection = getFeatureProjection(feature)) {
+  async positionToFeature(feature: WfsFeature, epsg?: Epsg) {
+    if (!epsg) {
+      epsg = await getFeatureEpsg(feature);
+    }
     const extent = getFeatureExtent(feature);
-    if (extent) {
-      const transformedExtent = transformExtent(extent, projection, olProjection);
+    const olEpsg = await getOlEpsg();
+    if (extent && olEpsg && epsg) {
+      const transformedExtent = transformExtent(extent, epsg, olEpsg);
       this.positionToExtent(transformedExtent, feature.geometry?.type === GeometryType.POINT);
     }
   }
 
-  positionToFeatures(features: WfsFeature[], projection?: CrgProjection) {
-    const extents = features
-      .map(feature => {
-        const extent = getFeatureExtent(feature);
-        if (extent) {
-          return transformExtent(extent, projection || getFeatureProjection(feature), olProjection);
-        }
-      })
-      .filter(notFalsyFilter);
+  async positionToFeatures(features: WfsFeature[], epsg?: Epsg) {
+    const olEpsg = await getOlEpsg();
+    const extents = await Promise.all(
+      features
+        .map(async feature => {
+          const extent = getFeatureExtent(feature);
+          const proj = epsg || (await getFeatureEpsg(feature));
+          if (extent && proj && olEpsg) {
+            return transformExtent(extent, proj, olEpsg);
+          }
+        })
+        .filter(notFalsyFilter)
+    );
     const isSinglePoint = features.length === 1 && features[0].geometry?.type === GeometryType.POINT;
 
     if (extents.length) {
@@ -790,7 +799,7 @@ class MapService {
         return new XYZ({
           crossOrigin: 'Anonymous',
           url: basemap.url || undefined,
-          projection: basemap.projection || 'EPSG:3857'
+          projection: basemap.projection || defaultOlCrs
         });
       }
     }

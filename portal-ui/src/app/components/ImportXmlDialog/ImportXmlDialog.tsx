@@ -88,7 +88,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
       const wfsFeatures = await getFeaturesById([objectId.toString()], complexName);
       if (wfsFeatures.length > 0) {
         mapSelectionService.selectFeatures(wfsFeatures);
-        mapService.positionToFeatures(wfsFeatures);
+        await mapService.positionToFeatures(wfsFeatures);
       }
       Toast.success('Объекты из файла импортированы успешно');
     } catch (error) {

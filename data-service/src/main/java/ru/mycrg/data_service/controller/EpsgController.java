@@ -33,7 +33,7 @@ public class EpsgController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getAll(@RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
                                          Pageable pageable) {
-        Page<EpsgModel> knownEpsg = authenticationFacade.isOrganizationAdmin()
+        Page<EpsgModel> knownEpsg = !authenticationFacade.isRoot()
                 ? epsgService.getAll(ecqlFilter, pageable)
                 : new PageImpl<>(new ArrayList<>(), pageable, 0);
 

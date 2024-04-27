@@ -9,8 +9,9 @@ import { AxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
 import { communicationService } from '../../services/communication.service';
+import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
+import { transformGeometry } from '../../services/data/epsg/epsg.util';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
-import { getProjection, transformGeometry } from '../../services/geoserver/projections.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
@@ -109,14 +110,13 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     try {
       const { layer, features } = this.props;
       const createdFeatures: WfsFeature[] = [];
+      const selectedEpsg = await getEpsgByCrs(selectedLayer.nativeCRS);
+      const currentEpsg = await getEpsgByCrs(layer.nativeCRS);
 
       if (layer.type && (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type))) {
         for (const feature of features) {
           if (layer.nativeCRS && layer.nativeCRS !== selectedLayer.nativeCRS && feature.geometry) {
-            const selectedProjection = getProjection(selectedLayer.nativeCRS);
-            const currentProjection = getProjection(layer.nativeCRS);
-
-            feature.geometry = transformGeometry(feature.geometry, currentProjection, selectedProjection);
+            feature.geometry = transformGeometry(feature.geometry, currentEpsg, selectedEpsg);
           }
 
           const createdFeature = await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature, true);
@@ -125,7 +125,9 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
           this.setCreatedFeaturesCounter(this.createdFeaturesCounter + 1);
         }
       } else {
-        throw new AxiosError('Ошибка копирования объектов: неподдерживаемый тип слоя ' + layer.type);
+        Toast.error('Ошибка копирования объектов: неподдерживаемый тип слоя ' + layer.type);
+
+        return;
       }
 
       const featuresWithId: WfsFeature[] = createdFeatures.map(feat => {
@@ -165,9 +167,9 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   }
 
   @boundMethod
-  private positionToCopiedFeatures() {
+  private async positionToCopiedFeatures() {
     mapSelectionService.selectFeatures(this.wfsFeatures);
-    mapService.positionToFeatures(this.wfsFeatures);
+    await mapService.positionToFeatures(this.wfsFeatures);
     sidebars.openSelectedFeaturesSidebar();
   }
 }

@@ -3,12 +3,15 @@ import { Process } from '../processes/processes.models';
 import { exportClient } from './export.client';
 import { ExportRequest, ExportResourceModel } from './export.models';
 
-export async function exportVectorTableAsShape(resources: ExportResourceModel[]): Promise<Process> {
+export async function exportVectorTableAsShape(
+  resources: ExportResourceModel[],
+  epsg = 'EPSG:28406'
+): Promise<Process> {
   const payload: ExportRequest = {
     wsUiId: wsService.getId(),
     format: 'ESRI Shapefile',
     resources,
-    epsg: 'EPSG:28406'
+    epsg
   };
 
   return exportClient.export(payload);

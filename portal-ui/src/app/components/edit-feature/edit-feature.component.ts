@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
+import { getFeatureEpsg } from '../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
@@ -24,7 +25,6 @@ import {
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/feature.util';
-import { getFeatureProjection } from '../../services/geoserver/projections.service';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
@@ -104,7 +104,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isNew = data.isNew;
         this.selectTab = Number(data.isNew);
         if (!this.isNew) {
-          mapService.highlightFeatures(this.features);
+          await mapService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
         }
 
@@ -241,7 +241,14 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         if (this.updatingAllowed && this.mode === EditFeatureMode.single && !firstFeature.geometry) {
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
-        this.editGeometryStore.initGeometry(firstFeature.geometry, getFeatureProjection(firstFeature));
+
+        const epsg = await getFeatureEpsg(firstFeature);
+
+        if (firstFeature.geometry && epsg) {
+          this.editGeometryStore.initGeometry(firstFeature.geometry, epsg);
+        } else {
+          Toast.error('Не удалось получить проекцию или геометрию объекта');
+        }
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -253,7 +260,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               fromMobx(() => this.editGeometryStore.resultGeometry)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
-                .subscribe(changedGeometry => {
+                .subscribe(async changedGeometry => {
                   this.changedGeometry = changedGeometry;
 
                   const feature = {
@@ -261,7 +268,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                     geometry: changedGeometry
                   };
 
-                  mapService.highlightFeatures([feature]);
+                  await mapService.highlightFeatures([feature]);
                 });
 
               fromMobx(() => this.editGeometryStore.isValid)
@@ -316,8 +323,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
   }
 
-  ngOnDestroy() {
-    mapService.highlightFeatures(mapStore.highlightedFeatures);
+  async ngOnDestroy() {
+    await mapService.highlightFeatures(mapStore.highlightedFeatures);
   }
 
   async editFeature(): Promise<void> {
@@ -435,6 +442,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         mapService.refreshAllLayers();
         communicationService.featuresUpdated.emit();
         sidebars.setFeaturesEdited(false);
+
+        // TODO: (рефакторинг) этот if всегда false
         if (this.viewFeatures) {
           mapSelectionService.selectFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
           sidebars.openSelectedFeaturesSidebar();

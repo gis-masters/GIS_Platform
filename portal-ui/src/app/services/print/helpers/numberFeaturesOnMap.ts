@@ -1,19 +1,26 @@
 import { pointOnFeature } from '@turf/turf';
 
-import { getProjection, olProjection, transform } from '../../geoserver/projections.service';
+import { getEpsgByCrs, getOlEpsg } from '../../data/epsg/epsg.service';
+import { transform } from '../../data/epsg/epsg.util';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { mapLabelsService } from '../../map/map-labels.service';
 
-export function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): void {
+export async function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): Promise<void> {
   for (const [i, wfsFeature] of wfsFeatures.entries()) {
     const { geometry } = wfsFeature;
     const layer = getLayerByFeatureInCurrentProject(wfsFeature);
-    if (geometry && layer) {
-      const point = pointOnFeature({ ...wfsFeature, geometry });
-      const coordinate = transform(getProjection(layer.nativeCRS), olProjection, point.geometry.coordinates);
 
-      mapLabelsService.addPrintLabel(coordinate, i + 1);
+    if (layer) {
+      const epsg = await getEpsgByCrs(layer.nativeCRS);
+      const olEpsg = await getOlEpsg();
+
+      if (geometry && epsg && olEpsg) {
+        const point = pointOnFeature({ ...wfsFeature, geometry });
+        const coordinate = transform(epsg, olEpsg, point.geometry.coordinates);
+
+        mapLabelsService.addPrintLabel(coordinate, i + 1);
+      }
     }
   }
 

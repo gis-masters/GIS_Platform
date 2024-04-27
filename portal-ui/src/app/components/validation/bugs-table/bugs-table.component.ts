@@ -10,12 +10,12 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../../services/communication.service';
+import { getEpsgByCrs } from '../../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { ProcessStatus } from '../../../services/data/processes/processes.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
 import { getValidationResults } from '../../../services/data/validation/validation.service';
-import { getProjection } from '../../../services/geoserver/projections.service';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
@@ -32,6 +32,8 @@ import { mapService } from '../../../services/map/map.service';
     ])
   ]
 })
+
+// TODO: поправить ошибки типизации
 export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() isActive: boolean;
   @Input() index: number;
@@ -134,11 +136,17 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   async showObject(event: Event, objectId: string): Promise<void> {
     event.stopPropagation();
-    const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
+    if (!this.crgLayer.complexName) {
+      this.logger.warn('Невозможно отобразить объект: complexName = undefined');
 
-    const projection = getProjection(this.crgLayer.nativeCRS);
-    mapService.highlightFeatures([wfsFeature], projection);
-    mapService.positionToFeature(wfsFeature, projection);
+      return;
+    }
+
+    const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
+    const epsg = await getEpsgByCrs(this.crgLayer.nativeCRS);
+
+    await mapService.highlightFeatures([wfsFeature], epsg);
+    await mapService.positionToFeature(wfsFeature, epsg);
   }
 
   editObject(event: Event, objectId: string): void {

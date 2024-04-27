@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
+import { defaultOlCrs } from '../../services/data/epsg/epsg.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { getFile } from '../../services/data/files/files.service';
@@ -359,7 +360,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         const { path } = await getFile(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
-        await placeFile(file, { crs: 'EPSG:3857', mode: 'geoserver' }, currentProject, record);
+        await placeFile(file, { crs: defaultOlCrs, mode: 'geoserver' }, currentProject, record);
 
         this.props.onAdd({
           ...rasterDefaults,

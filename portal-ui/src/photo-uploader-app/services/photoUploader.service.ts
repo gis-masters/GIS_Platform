@@ -1,9 +1,11 @@
 import * as ExifReader from 'exifreader';
 import moment from 'moment';
 
+import { defaultOlCrs } from '../../app/services/data/epsg/epsg.models';
+import { getEpsgByCrs } from '../../app/services/data/epsg/epsg.service';
+import { transformGeometry } from '../../app/services/data/epsg/epsg.util';
 import { createFile } from '../../app/services/data/files/files.service';
 import { createFeature } from '../../app/services/data/vectorData/vectorData.service';
-import { getProjection, transformGeometry } from '../../app/services/geoserver/projections.service';
 import { GeometryType, NewWfsFeature } from '../../app/services/geoserver/wfs/wfs.models';
 import { currentUser } from '../../app/stores/CurrentUser.store';
 import { PhotoUploaderScreens, photoUploaderStore } from '../stores/PhotoUploader.store';
@@ -35,12 +37,14 @@ async function createPhotoFeature({ datasetId, vectorTableId, feature }: PhotoFe
   if (
     feature.geometry &&
     photoUploaderStore.checkedLayer?.data.crs &&
-    photoUploaderStore.checkedLayer?.data.crs !== 'EPSG:3857'
+    photoUploaderStore.checkedLayer?.data.crs !== defaultOlCrs
   ) {
-    const currentProjection = getProjection('EPSG:3857');
-    const newProjection = getProjection(photoUploaderStore.checkedLayer?.data.crs);
+    const currentEpsg = await getEpsgByCrs(defaultOlCrs);
+    const newEpsg = await getEpsgByCrs(photoUploaderStore.checkedLayer?.data.crs);
 
-    feature.geometry = transformGeometry(feature.geometry, currentProjection, newProjection);
+    if (newEpsg && currentEpsg) {
+      feature.geometry = transformGeometry(feature.geometry, currentEpsg, newEpsg);
+    }
   }
 
   await createFeature(datasetId, vectorTableId, feature);

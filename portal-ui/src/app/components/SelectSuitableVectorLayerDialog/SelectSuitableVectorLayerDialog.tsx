@@ -4,10 +4,11 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { WarningAmberOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
+import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { getProjection } from '../../services/geoserver/projections.service';
 import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
@@ -108,8 +109,8 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     this.layersAvailableForCopy = layersAvailableForCopy;
   }
 
-  @action.bound
-  private onChange(selected: CrgVectorLayer[]): void {
+  @boundMethod
+  private async onChange(selected: CrgVectorLayer[]): Promise<void> {
     if (!selected.length || this.props.currentLayer.nativeCRS === selected[0].nativeCRS) {
       this.setWarningContent(null);
 
@@ -117,7 +118,9 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     }
 
     const objectStringEnd = pluralize(selected.length, 'а', 'ов', 'ов');
-    const changedCrsName = getProjection(selected[0].nativeCRS)?.title || selected[0].nativeCRS;
+    const epsg = await getEpsgByCrs(selected[0].nativeCRS);
+
+    const changedCrsName = epsg?.title || selected[0].nativeCRS;
 
     this.setWarningContent(
       `Внимание, будет выполнена трансформация координат объект${objectStringEnd} к проекции выбранного слоя (${changedCrsName})`

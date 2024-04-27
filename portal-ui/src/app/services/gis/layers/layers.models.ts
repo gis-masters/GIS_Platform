@@ -100,6 +100,13 @@ export const crgLayerSchema: SimpleSchema = {
       maxValue: 40,
       description: 'Слой будет скрыт при уровне масштаба больше указанного',
       propertyType: PropertyType.INT
+    },
+    {
+      name: 'crs',
+      title: 'Координатная система',
+      hidden: true,
+      propertyType: PropertyType.CHOICE,
+      options: []
     }
   ]
 };

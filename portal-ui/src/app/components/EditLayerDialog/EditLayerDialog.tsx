@@ -4,6 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../services/communication.service';
+import { Epsg } from '../../services/data/epsg/epsg.models';
+import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
+import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import {
   PropertyOption,
   PropertySchema,
@@ -19,6 +22,8 @@ import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
+import { services } from '../../services/services';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
 import { FormProps } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';
@@ -41,11 +46,16 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   @observable private simpleStylesOptions: PropertyOption[] = [];
   @observable private currentFormValue?: Partial<CrgLayer>;
   @observable private busy: boolean = false;
+  @observable private defaultProjection?: Epsg;
   private formInvoke: FormProps<Partial<CrgLayer>>['invoke'] = {};
 
   constructor(props: EditLayerDialogProps) {
     super(props);
     makeObservable(this);
+  }
+
+  async componentDidMount(): Promise<void> {
+    await this.init();
   }
 
   async componentDidUpdate(prevProps: EditLayerDialogProps) {
@@ -79,6 +89,27 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         }
       />
     );
+  }
+
+  private async init() {
+    const { nativeCRS, title } = this.props.layer;
+
+    if (!nativeCRS) {
+      services.logger.error('Отсутствует nativeCRS у слоя ' + title);
+
+      return;
+    }
+
+    const epsg = await getEpsgByCrs(nativeCRS);
+
+    if (epsg) {
+      this.setDefaultProjection(epsg);
+    }
+  }
+
+  @action.bound
+  private setDefaultProjection(defaultProjection: Epsg) {
+    this.defaultProjection = defaultProjection;
   }
 
   @action.bound
@@ -142,7 +173,23 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   @computed
   private get layerSchema(): SimpleSchema {
     const { layer, schema } = this.props;
-    const properties: PropertySchema[] = [...crgLayerSchema.properties];
+    let properties: PropertySchema[] = [...crgLayerSchema.properties];
+    const defaultProjection = this.defaultProjection;
+
+    if (defaultProjection) {
+      properties = properties.map(property => {
+        if (property.name === 'crs' && property.propertyType === PropertyType.CHOICE) {
+          property.defaultValue = getCrsFromEpsg(defaultProjection);
+
+          property.options = [
+            { title: defaultProjection.title, value: getCrsFromEpsg(defaultProjection) },
+            ...organizationSettings.orgFavoritesEPSG.map(epsg => ({ title: epsg.title, value: getCrsFromEpsg(epsg) }))
+          ];
+        }
+
+        return property;
+      });
+    }
 
     if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
       properties.push({

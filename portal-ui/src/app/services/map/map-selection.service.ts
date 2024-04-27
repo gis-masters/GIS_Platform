@@ -172,7 +172,6 @@ class MapSelectionService {
     mapService.mapClick.on(async e => {
       if (mapStore.allowedActions.includes(MapAction.PROKOL)) {
         await this.selectFeaturesByCoordinates(MapSelectionTypes.REPLACE, mapService.getBufferByCoordinates(e.detail));
-
         sidebars.clearFeaturesWithError();
         sidebars.openSelectedFeaturesSidebar();
       }
@@ -255,8 +254,8 @@ class MapSelectionService {
       }
       visibleLayersComplexNamesByCrs[nativeCRS]?.push(complexName);
     }
-
     mapService.showSelectionMarker(buffer.getCoordinates());
+
     const collections = await Promise.all(
       Object.entries(visibleLayersComplexNamesByCrs).flatMap(([srsName, complexNames]) => {
         return complexNames.map(async complexName => {
@@ -334,8 +333,7 @@ class MapSelectionService {
       }
     }
 
-    mapService.highlightFeatures(mapStore.highlightedFeatures);
-
+    void mapService.highlightFeatures(mapStore.highlightedFeatures);
     void setSelectedFeaturesToUrl();
 
     setTimeout(() => {

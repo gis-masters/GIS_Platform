@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -6,15 +7,18 @@ import { boundMethod } from 'autobind-decorator';
 import { SimpleGeometry } from 'ol/geom';
 
 import { Emitter } from '../../services/common/Emitter';
-import { olProjection, transformGeometry } from '../../services/geoserver/projections.service';
+import { Epsg } from '../../services/data/epsg/epsg.models';
+import { getOlEpsg } from '../../services/data/epsg/epsg.service';
+import { transformGeometry } from '../../services/data/epsg/epsg.util';
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
+import { Toast } from '../Toast/Toast';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
-import { EditFeatureGeometryProjSel } from './ProjSel/EditFeatureGeometry-ProjSel';
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
@@ -28,8 +32,22 @@ export interface EditFeatureGeometryProps {
 
 @observer
 export default class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
-  componentDidMount() {
+  @observable private olEpsg?: Epsg;
+
+  constructor(props: EditFeatureGeometryProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  async componentDidMount() {
+    // TODO: хз что за ошибка тут с типами
     mapService.modificationDone.on(this.modifyHandler, this);
+
+    const olEpsg = await getOlEpsg();
+
+    if (olEpsg) {
+      this.setOlEpsg(olEpsg);
+    }
   }
 
   componentWillUnmount() {
@@ -53,40 +71,53 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     return (
       <div className={cnEditFeatureGeometry()}>
         <EditFeatureGeometryHeader>
-          <EditFeatureGeometryProjSel store={store} />
+          <SelectEpsg onSelect={this.setSelectedCrs} defaultEpsg={store.currentEpsg} formView fullWidth />
         </EditFeatureGeometryHeader>
-        <div className={cnEditFeatureGeometry('Field')}>
-          Тип геометрии:
-          <Tooltip title={this.getFeatureIconGeometryType(geometryType)}>
-            <span>
-              <FeatureIcon geometryType={geometryType} className={cnEditFeatureGeometry('Svg')} />
-            </span>
-          </Tooltip>
-        </div>
-        {!readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
-        {readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
+        {geometryType && (
+          <div className={cnEditFeatureGeometry('Field')}>
+            Тип геометрии:
+            <Tooltip title={this.getFeatureIconGeometryType(geometryType)}>
+              <span>
+                <FeatureIcon geometryType={geometryType} className={cnEditFeatureGeometry('Svg')} />
+              </span>
+            </Tooltip>
+          </div>
+        )}
+        {geometryType && !readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
+        {geometryType && readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
       </div>
     );
   }
 
   @boundMethod
   private modifyHandler(e: CustomEvent<SimpleGeometry | undefined>) {
-    const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
+    const { nativeEpsg, geometry, geometryType, setGeometry } = this.props.store;
+    if (!this.olEpsg) {
+      Toast.warn('Отсутствует проекция необходимая для изменения геометрии объекта');
+
+      return;
+    }
+
     const coordinates = e.detail
       ? transformGeometry(
-          {
-            type: geometryType,
-            coordinates: e.detail.getCoordinates()
-          },
-          olProjection,
-          nativeProjection
-        ).coordinates
-      : geometry.coordinates;
+        {
+          type: geometryType,
+          coordinates: e.detail.getCoordinates() || []
+        },
+        this.olEpsg,
+        nativeEpsg
+      )?.coordinates
+      : geometry?.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
   }
 
-  private getFeatureIconGeometryType(geometryType: GeometryType): string {
+  @boundMethod
+  private setSelectedCrs(epsg: Epsg) {
+    this.props.store.setEpsg(epsg);
+  }
+
+  private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {
     if (!geometryType) {
       return;
     }
@@ -107,5 +138,10 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         return 'точка';
       }
     }
+  }
+
+  @action.bound
+  private setOlEpsg(olEpsg: Epsg) {
+    this.olEpsg = olEpsg;
   }
 }

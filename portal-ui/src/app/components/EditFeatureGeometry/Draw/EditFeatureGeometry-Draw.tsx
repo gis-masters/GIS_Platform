@@ -12,11 +12,14 @@ import { DrawEvent } from 'ol/interaction/Draw';
 
 import { Emitter } from '../../../services/common/Emitter';
 import { communicationService } from '../../../services/communication.service';
-import { olProjection, transform } from '../../../services/geoserver/projections.service';
+import { Epsg } from '../../../services/data/epsg/epsg.models';
+import { getOlEpsg } from '../../../services/data/epsg/epsg.service';
+import { transform } from '../../../services/data/epsg/epsg.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { IconButton } from '../../IconButton/IconButton';
+import { Toast } from '../../Toast/Toast';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
 
@@ -32,13 +35,14 @@ interface EditFeatureGeometryDrawProps {
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
+  @observable private olEpsg?: Epsg;
 
   constructor(props: EditFeatureGeometryDrawProps) {
     super(props);
     makeObservable(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     communicationService.drawOff.on(() => {
       this.activate();
       this.clickHandler();
@@ -50,6 +54,12 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     }
 
     mapService.modificationDisabled.on(this.deactivate);
+
+    const olEpsg = await getOlEpsg();
+
+    if (olEpsg) {
+      this.setOlEpsg(olEpsg);
+    }
   }
 
   componentWillUnmount() {
@@ -86,20 +96,29 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw(e: DrawEvent) {
     const { point, store, onDraw } = this.props;
 
+    if (!this.olEpsg) {
+      Toast.warn('Отсутствует проекция необходимая для рисования на карте');
+
+      return;
+    }
+
     if (point) {
       const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as Coordinate;
-      point.splice(0, point.length, ...transform(olProjection, store.currentProjection, drawed));
+      point.splice(0, point.length, ...transform(this.olEpsg, store.currentEpsg, drawed));
       onDraw(point);
     } else {
-      let drawed = (e.feature as Feature<SimpleGeometry>).getGeometry().getCoordinates() as
+      let drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as
         | Coordinate[]
         | Coordinate[][];
+
       if (Array.isArray(drawed[0][0])) {
         drawed = drawed[0] as Coordinate[];
       }
+
       const newPart = (drawed as Coordinate[]).map((coord: Coordinate) =>
-        transform(olProjection, store.currentProjection, coord)
+        transform(this.olEpsg, store.currentEpsg, coord)
       );
+
       onDraw(newPart);
     }
   }
@@ -126,5 +145,10 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @action.bound
   private deactivate() {
     this.active = false;
+  }
+
+  @action.bound
+  private setOlEpsg(olEpsg: Epsg) {
+    this.olEpsg = olEpsg;
   }
 }

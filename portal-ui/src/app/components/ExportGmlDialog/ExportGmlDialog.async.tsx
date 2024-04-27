@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   InputLabel,
   MenuItem,
   Select,
@@ -15,22 +14,21 @@ import {
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
+import { Epsg } from '../../services/data/epsg/epsg.models';
+import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import { ExportResourceModel } from '../../services/data/export/export.models';
 import { exportVectorTableAsGML } from '../../services/data/export/export.service';
-import { CrgProjection, Projection, viewedProjections } from '../../services/geoserver/projections.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { PageOptions } from '../../services/models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
-import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { Form } from '../Form/Form';
 import { LayersList } from '../LayersList/LayersList';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
+import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
 
@@ -65,41 +63,20 @@ export interface ExportGmlDialogProps {
   onClose: () => void;
 }
 
-interface ProjectionModified extends Projection {
-  auth_srid: number;
-}
-
 @observer
 export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
-  @observable private projectionDialogOpen = false;
   @observable private selectedLayers: CrgVectorLayer[] = [];
   @observable private selectedSchema = '';
-  @observable private selectedCrs = 'EPSG:28406';
   @observable private invertedCoordinates = false;
-  @observable private projections: CrgProjection[] = [];
-
-  private readonly addMoreId = 'addMore';
-
-  private cols: XTableColumn<ProjectionModified>[] = [
-    {
-      field: 'authName',
-      title: 'Тип SRID'
-    },
-    {
-      field: 'auth_srid',
-      title: 'Код SRID',
-      type: XTableExtraColumnType.ID,
-      filterable: true,
-      sortable: true
-    }
-  ];
+  @observable private epsg?: Epsg;
 
   constructor(props: ExportGmlDialogProps) {
     super(props);
     makeObservable(this);
+  }
 
-    this.setProjections(viewedProjections);
-    this.addProjection({ id: this.addMoreId, title: 'Выбрать другую' });
+  componentDidMount(): void {
+    this.setSelectedEpsg(organizationSettings.orgDefaultEPSG);
   }
 
   render() {
@@ -138,22 +115,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
             <ActionsLeft>
               <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
 
-              <FormControl className={cnExportGmlDialog('EpsgSelector')} size='small'>
-                <InputLabel id='epsgSelectLabel'>Система координат</InputLabel>
-                <Select
-                  size='small'
-                  labelId='epsgSelectLabel'
-                  value={this.selectedCrs}
-                  variant='standard'
-                  onChange={this.handleChange}
-                >
-                  {this.projections.map((projection, key) => (
-                    <MenuItem value={projection.id} key={key}>
-                      {projection.title}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <SelectEpsg onSelect={this.setSelectedEpsg} />
             </ActionsLeft>
 
             <ActionsRight>
@@ -164,18 +126,6 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
             </ActionsRight>
           </DialogActions>
         </Dialog>
-
-        <ChooseXTableDialog<ProjectionModified>
-          data={[]}
-          getData={this.getProjections}
-          title={'Выбор системы координат'}
-          open={this.projectionDialogOpen}
-          cols={this.cols}
-          getRowId={this.getRowId}
-          onClose={this.closeProjectionDialog}
-          onSelect={this.selectProjectionFromDialog}
-          single
-        />
       </>
     );
   }
@@ -196,7 +146,9 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
       };
     });
 
-    await exportVectorTableAsGML(this.selectedSchema, resources, this.selectedCrs, this.invertedCoordinates);
+    if (this.epsg) {
+      await exportVectorTableAsGML(this.selectedSchema, resources, getCrsFromEpsg(this.epsg), this.invertedCoordinates);
+    }
 
     this.closeDialog();
     sidebars.openInfo();
@@ -213,41 +165,8 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private setProjectionDialogOpen(projectionDialogOpen: boolean) {
-    this.projectionDialogOpen = projectionDialogOpen;
-  }
-
-  @action.bound
-  private closeProjectionDialog() {
-    this.setProjectionDialogOpen(false);
-  }
-
-  @action.bound
   private handleSchemaChange(e: SelectChangeEvent) {
     this.selectedSchema = e.target.value;
-  }
-
-  @action.bound
-  private selectProjectionFromDialog(proj: Projection[]) {
-    const id = [proj[0].authName, proj[0].authSrid].join(':');
-
-    this.unshiftProjection({
-      id,
-      title: id
-    });
-
-    this.selectedCrs = this.projections[0].id;
-
-    this.setProjectionDialogOpen(false);
-  }
-
-  @action.bound
-  private handleChange(e: SelectChangeEvent) {
-    if (e.target.value === this.addMoreId) {
-      this.setProjectionDialogOpen(true);
-    } else {
-      this.selectedCrs = e.target.value;
-    }
   }
 
   @action.bound
@@ -259,33 +178,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private addProjection(projection: CrgProjection) {
-    const isExist = this.projections.find(proj => proj.id === projection.id);
-    if (!isExist) {
-      this.projections.push(projection);
-    }
-  }
-
-  @action.bound
-  private unshiftProjection(projection: CrgProjection) {
-    const isExist = this.projections.find(proj => proj.id === projection.id);
-    if (!isExist) {
-      this.projections.unshift(projection);
-    }
-  }
-
-  @action.bound
-  private setProjections(projections: CrgProjection[]) {
-    this.projections = projections;
-  }
-
-  private async getProjections(pageOptions: PageOptions): Promise<[ProjectionModified[], number]> {
-    const [projections, totalPages] = await getKnownEpsg(pageOptions);
-
-    return [projections, totalPages];
-  }
-
-  private getRowId(rowData: Projection) {
-    return rowData.authName + String(rowData.authSrid);
+  private setSelectedEpsg(epsg: Epsg) {
+    this.epsg = epsg;
   }
 }

@@ -245,8 +245,9 @@ function selectFeatures(features: WfsFeature[], hasErrors?: boolean) {
         mode: EditFeatureMode.single
       });
     }
-    setTimeout(() => {
-      mapService.positionToFeatures(features);
+
+    setTimeout(async () => {
+      await mapService.positionToFeatures(features);
     }, 200);
   }
 }

@@ -29,15 +29,15 @@ export interface ObjectDto {
   styleUrls: ['./edit-bug-object.component.css']
 })
 export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
-  @Input() data: ObjectDto[];
+  @Input() data: ObjectDto[] = [];
   // eslint-disable-next-line unicorn/prefer-event-target
   @Output() closeMe = new EventEmitter<boolean>();
 
-  wfsFeature: WfsFeature;
+  wfsFeature?: WfsFeature;
 
   isFeatureTypeLoaded = false;
 
-  private object: ObjectDto;
+  private object?: ObjectDto;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -74,7 +74,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   async editFeature(): Promise<void> {
     const { crgLayer } = this.data[0];
-    if (this.wfsFeature && this.wfsFeature.properties) {
+    if (this.wfsFeature && this.wfsFeature.properties && this.featureDescription) {
       const response = await transformFeature.updateFeatures(
         crgLayer.tableName,
         [this.wfsFeature],
@@ -104,20 +104,31 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
 
   private async handleObject(objectDto: ObjectDto) {
     try {
+      if (!objectDto.crgLayer?.complexName) {
+        Toast.error('Ошибка получения информации о слое');
+        this.isFeatureTypeLoaded = true;
+
+        return;
+      }
+
       const [wfsFeature] = await getFeaturesById([objectDto.id], objectDto.crgLayer.complexName);
 
       this.isFeatureTypeLoaded = true;
 
       this.wfsFeature = wfsFeature;
-      this.featureDescription = convertNewToOldSchema(await getLayerSchema(objectDto.crgLayer));
+      const layerSchema = await getLayerSchema(objectDto.crgLayer);
+
+      if (layerSchema) {
+        this.featureDescription = convertNewToOldSchema(layerSchema);
+      }
 
       if (this.featureDescription) {
         this.prepareEditForm(this.wfsFeature.properties);
       } else {
-        this.logger.warn('Layer has not the schema?: ', objectDto.crgLayer.title);
+        this.logger.warn('Не найдена схемы слоя: ', objectDto.crgLayer.title);
       }
 
-      mapService.highlightFeatures([wfsFeature]);
+      await mapService.highlightFeatures([wfsFeature]);
     } catch {
       this.isFeatureTypeLoaded = true;
     }
@@ -135,7 +146,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
       }
 
       const currentValue = featureProperties[key]; // Текущее значение свойства на геосервере
-      const propertySchema = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+      const propertySchema = schemaService.getPropertySchemaByName(key, this.featureDescription?.properties || []);
       if (propertySchema) {
         const formControl = new UntypedFormControl(
           { value: currentValue, disabled: propertySchema.name === 'GLOBALID' },
@@ -146,7 +157,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         );
 
         // Наполняем форму
-        this.editFeatureForm.addControl(key, formControl);
+        this.editFeatureForm?.addControl(key, formControl);
         this.editFeatureData.push({
           name: key,
           property: propertySchema,
@@ -154,7 +165,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
           isFgistpProperty: true
         });
       } else {
-        this.editFeatureForm.addControl(key, new UntypedFormControl(currentValue));
+        this.editFeatureForm?.addControl(key, new UntypedFormControl(currentValue));
         this.editFeatureData.push({
           name: key,
           property: {

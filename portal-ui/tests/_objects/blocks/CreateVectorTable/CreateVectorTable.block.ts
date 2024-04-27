@@ -16,7 +16,7 @@ class CreateVectorTableBlock extends Block {
     await createVectorTableDialogBlock.setStringFieldValue('Наименование*', tableName);
     await createVectorTableDialogBlock.setChoiceFieldValue(
       'Координатная система*',
-      'Pulkovo 1942 / Gauss-Kruger zone 6'
+      'WGS 84 / Pseudo-Mercator, EPSG:3857, метры'
     );
     await createVectorTableDialogBlock.openSchemaSelection();
     await selectSchemaControlDialogBlock.waitForSelectSchemaTableDisplay();

@@ -7,6 +7,8 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
+import { Epsg } from '../../services/data/epsg/epsg.models';
+import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import {
   placeFile,
   placeFileWithProjection,
@@ -17,14 +19,14 @@ import { isFileWithProjection, isTifFile } from '../../services/data/files/files
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
-import { defaultProjection } from '../../services/geoserver/projections.service';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { services } from '../../services/services';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { Link } from '../Link/Link';
+import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
-import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
@@ -44,11 +46,19 @@ interface ProjectPlacementDialogProps {
 export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProps> {
   @observable private addFormBusy = false;
   @observable private invertedCoordinates = false;
-  @observable private selectedCrs = defaultProjection.id;
+  @observable private epsg?: Epsg;
 
   constructor(props: ProjectPlacementDialogProps) {
     super(props);
     makeObservable(this);
+  }
+
+  componentDidMount() {
+    const epsg = organizationSettings.orgDefaultEPSG;
+
+    if (epsg) {
+      this.setSelectedEpsg(epsg);
+    }
   }
 
   render() {
@@ -67,11 +77,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         additionalAction={
           !isTifFile(fileInfo) &&
           (isFileWithProjection(fileInfo) ? (
-            <SelectProjection
-              className={cnProjectPlacementDialog('SelectProjection')}
-              value={this.selectedCrs}
-              onChange={this.onProjectionSelected}
-            />
+            <SelectEpsg onSelect={this.setSelectedEpsg} fullWidth />
           ) : (
             <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
           ))
@@ -93,8 +99,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   @action.bound
-  private onProjectionSelected(crs: string) {
-    this.selectedCrs = crs;
+  private setSelectedEpsg(epsg: Epsg) {
+    this.epsg = epsg;
   }
 
   @action.bound
@@ -139,9 +145,16 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       this.props.onClose();
       this.setFormBusy(false);
     } else {
+      if (!this.epsg) {
+        Toast.error('Отсутствует проекция необходимая для размещения файла в проекте');
+        this.setFormBusy(false);
+
+        return;
+      }
+
       try {
         const process = await (isFileWithProjection(this.props.fileInfo)
-          ? placeFileWithProjection(fileInfo, project.id, this.selectedCrs)
+          ? placeFileWithProjection(fileInfo, project.id, getCrsFromEpsg(this.epsg))
           : placeGml(fileInfo, project.id, this.invertedCoordinates));
 
         void this.waitForProcess(process);

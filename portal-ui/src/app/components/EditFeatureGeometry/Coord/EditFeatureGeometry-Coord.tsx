@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, makeObservable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
@@ -7,12 +7,16 @@ import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
 
-import { olProjection, transformGeometry } from '../../../services/geoserver/projections.service';
+import { Epsg } from '../../../services/data/epsg/epsg.models';
+import { getOlEpsg } from '../../../services/data/epsg/epsg.service';
+import { transformGeometry } from '../../../services/data/epsg/epsg.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { mapService } from '../../../services/map/map.service';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { Toast } from '../../Toast/Toast';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';
@@ -35,11 +39,21 @@ interface EditFeatureGeometryCoordProps {
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  private focusedPointMarker: Feature<SimpleGeometry>;
+  @observable private olEpsg?: Epsg;
+
+  private focusedPointMarker?: Feature<SimpleGeometry>;
 
   constructor(props: EditFeatureGeometryCoordProps) {
     super(props);
     makeObservable(this);
+  }
+
+  async componentDidMount(): Promise<void> {
+    const epsg = await getOlEpsg();
+
+    if (epsg) {
+      this.setOlEpsg(epsg);
+    }
   }
 
   render() {
@@ -48,7 +62,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     // у росреестра своё понимание X и Y
     return (
       <div className={cnEditFeatureGeometry('Coord', { withControls, active })}>
-        {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{index + 1}</div> : null}
+        {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(index || 0) + 1}</div> : null}
 
         <TextField
           className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
@@ -73,7 +87,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         />
 
         {withControls ? (
-          <EditFeatureGeometryCoordDel onClick={this.deleteHandler} disabled={!canBeDeleted || disabled} />
+          <EditFeatureGeometryCoordDel onClick={this.deleteHandler} disabled={!canBeDeleted || !!disabled} />
         ) : null}
       </div>
     );
@@ -83,7 +97,9 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private changeXHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[0] = e.target.value;
-    onChange(val, index);
+    if (index) {
+      onChange(val, index);
+    }
     this.drawFocusedPointMarker();
   }
 
@@ -91,14 +107,16 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private changeYHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[1] = e.target.value;
-    onChange(val, index);
+    if (index) {
+      onChange(val, index);
+    }
     this.drawFocusedPointMarker();
   }
 
   @boundMethod
   private deleteHandler() {
     const { onDelete, index } = this.props;
-    if (onDelete) {
+    if (onDelete && index) {
       onDelete(index);
     }
   }
@@ -125,28 +143,41 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       coordinates: val
     };
 
-    if (isGeometryValid(markerGeometry)) {
-      const feature: WfsFeature = {
-        type: 'Feature',
-        geometry: transformGeometry(markerGeometry, store.currentProjection, olProjection),
-        id: '',
-        geometry_name: '',
-        properties: {}
-      };
+    const epsg = organizationSettings.orgDefaultEPSG;
 
-      this.focusedPointMarker = wfsFeatureToFeature(feature);
+    if (isGeometryValid(markerGeometry) && epsg) {
+      if (this.olEpsg) {
+        const feature: WfsFeature = {
+          type: 'Feature',
+          geometry: transformGeometry(markerGeometry, store.currentEpsg, this.olEpsg),
+          id: '',
+          geometry_name: '',
+          properties: {}
+        };
+
+        this.focusedPointMarker = wfsFeatureToFeature(feature);
+      } else {
+        Toast.error('Отсутствует проекция необходимая для изменения координат объекта');
+      }
 
       if (this.focusedPointMarker) {
-        mapService.draftSource.addFeature(this.focusedPointMarker);
+        mapService.draftSource?.addFeature(this.focusedPointMarker);
       }
     } else {
       this.clearFocusedPointMarker();
     }
   }
 
+  @action.bound
+  private setOlEpsg(olEpsg: Epsg) {
+    this.olEpsg = olEpsg;
+  }
+
   private clearFocusedPointMarker() {
     try {
-      mapService.draftSource.removeFeature(this.focusedPointMarker);
+      if (this.focusedPointMarker) {
+        mapService.draftSource?.removeFeature(this.focusedPointMarker);
+      }
     } catch {
       // мы ожидаем exception в случае, если указанной фичи нет в слое либо если переменная не содержит фичи
       // в обоих этих случаях нам ничего не нужно предпринимать

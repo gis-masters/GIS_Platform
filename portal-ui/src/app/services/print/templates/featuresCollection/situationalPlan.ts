@@ -40,7 +40,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
     const schemaWithAppliedView = applyView(schema, layer.view);
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
-    numberFeaturesOnMap(data);
+    await numberFeaturesOnMap(data);
 
     // карта
 
@@ -81,10 +81,15 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
         ]
       },
       formProps: {
-        onFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: SituationalPlanFormData) {
+        async onFieldChange(
+          value: unknown,
+          propertyName: string,
+          prevValue: unknown,
+          formValue: SituationalPlanFormData
+        ) {
           if (propertyName === 'displayNumbers' && value !== prevValue) {
             if (value) {
-              numberFeaturesOnMap(data);
+              await numberFeaturesOnMap(data);
             } else {
               hideNumberFeaturesOnMap();
             }

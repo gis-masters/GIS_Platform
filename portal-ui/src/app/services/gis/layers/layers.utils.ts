@@ -2,6 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { defaultOlCrs } from '../../data/epsg/epsg.models';
 import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
@@ -32,7 +33,7 @@ export function rasterLayerDefaults(): Pick<
 > {
   return {
     ...defaultProps,
-    nativeCRS: 'EPSG:3857',
+    nativeCRS: defaultOlCrs,
     mode: 'gis-service',
     enabled: true,
     type: CrgLayerType.RASTER
@@ -45,7 +46,7 @@ export function externalLayerDefaults(): Pick<
 > {
   return {
     ...defaultProps,
-    nativeCRS: 'EPSG:3857',
+    nativeCRS: defaultOlCrs,
     type: CrgLayerType.EXTERNAL
   };
 }

@@ -5,13 +5,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { EpsgModel } from '../../../server-types/common-contracts';
-import {
-  EpsgModelModified,
-  isArrayOfEpsgModelModified,
-  isEpsgModelModified
-} from '../../services/data/epsg/epsg.models';
-import { getKnownEpsg } from '../../services/data/epsg/epsg.service';
-import { PageOptions } from '../../services/models';
+import { Epsg, isArrayOfEpsg, isEpsg } from '../../services/data/epsg/epsg.models';
+import { getEpsg } from '../../services/data/epsg/epsg.service';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
@@ -26,9 +21,9 @@ const cnSelectEPSGControl = cn('SelectEPSGControl');
 @observer
 export class SelectEPSGControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
-  @observable private selectedEPSG: EpsgModelModified[] = [];
+  @observable private selectedEPSG: Epsg[] = [];
 
-  private cols: XTableColumn<EpsgModelModified>[] = [
+  private cols: XTableColumn<Epsg>[] = [
     {
       field: 'title',
       title: 'Система координат',
@@ -82,9 +77,9 @@ export class SelectEPSGControl extends Component<FormControlProps> {
           Выбрать систему координат
         </Button>
 
-        <ChooseXTableDialog<EpsgModelModified>
+        <ChooseXTableDialog<Epsg>
           data={[]}
-          getData={this.getProjections}
+          getData={getEpsg}
           selectedItems={this.selectedEPSG}
           title={'Выбор системы координат'}
           open={this.dialogOpen}
@@ -108,7 +103,7 @@ export class SelectEPSGControl extends Component<FormControlProps> {
           try {
             const parsedItem = JSON.parse(item) as unknown;
 
-            if (!isEpsgModelModified(parsedItem)) {
+            if (!isEpsg(parsedItem)) {
               throw new Error('Ошибка при получении предпочитаемых систем координат');
             }
 
@@ -118,7 +113,7 @@ export class SelectEPSGControl extends Component<FormControlProps> {
           }
         });
 
-        if (selectedEPSG && isArrayOfEpsgModelModified(selectedEPSG)) {
+        if (selectedEPSG && isArrayOfEpsg(selectedEPSG)) {
           this.setSelectedEPSG(selectedEPSG);
           this.select(selectedEPSG);
         }
@@ -127,7 +122,7 @@ export class SelectEPSGControl extends Component<FormControlProps> {
   }
 
   @action.bound
-  private select(items: EpsgModelModified[]) {
+  private select(items: Epsg[]) {
     this.setSelectedEPSG(items);
 
     const { onChange, property } = this.props;
@@ -156,19 +151,13 @@ export class SelectEPSGControl extends Component<FormControlProps> {
     this.dialogOpen = false;
   }
 
-  private async getProjections(pageOptions: PageOptions): Promise<[EpsgModelModified[], number]> {
-    const [projections, totalPages] = await getKnownEpsg(pageOptions);
-
-    return [projections, totalPages];
-  }
-
   @action.bound
-  private setSelectedEPSG(selectedEPSG: EpsgModelModified[]) {
+  private setSelectedEPSG(selectedEPSG: Epsg[]) {
     this.selectedEPSG = selectedEPSG;
   }
 
   @action.bound
-  private handleDelete(epsg: EpsgModelModified) {
+  private handleDelete(epsg: Epsg) {
     if (this.selectedEPSG.length) {
       this.setSelectedEPSG(this.selectedEPSG.filter(item => item.proj4Text !== epsg.proj4Text));
 

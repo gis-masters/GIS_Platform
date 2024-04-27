@@ -1,7 +1,8 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { EpsgModelModified } from '../services/data/epsg/epsg.models';
+import { Epsg, isEpsg } from '../services/data/epsg/epsg.models';
 import { Schema } from '../services/data/schema/schema.models';
+import { isStringArray } from '../services/util/typeGuards/isStringArray';
 import { currentUser } from './CurrentUser.store';
 
 export interface Settings {
@@ -14,7 +15,7 @@ export interface Settings {
   reestrs: boolean;
   sedDialog: boolean;
   taskManagement: boolean;
-  favorites_epsg: EpsgModelModified[] | string[];
+  favorites_epsg: Epsg[] | string[];
   default_epsg: string;
   tags: string | string[];
 }
@@ -114,7 +115,37 @@ export class OrganizationSettings {
 
   @computed
   get SEDDialog(): boolean {
-    return this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog;
+    return Boolean(this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog);
+  }
+
+  @computed
+  get orgDefaultEPSG(): Epsg | undefined {
+    const defaultEpsg = organizationSettings.orgSettings?.organization?.default_epsg;
+
+    return this.orgFavoritesEPSG?.find(({ title }) => title === defaultEpsg);
+  }
+
+  @computed
+  get orgFavoritesEPSG(): Epsg[] {
+    const epsg = this.orgSettings?.organization?.favorites_epsg;
+
+    if (isStringArray(epsg)) {
+      return epsg.map(item => {
+        try {
+          const parsedItem = JSON.parse(item) as unknown;
+
+          if (!isEpsg(parsedItem)) {
+            throw new Error('Ошибка при получении предпочитаемых систем координат');
+          }
+
+          return parsedItem;
+        } catch {
+          throw new Error('Ошибка при получении предпочитаемых систем координат');
+        }
+      });
+    }
+
+    return [];
   }
 
   private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {

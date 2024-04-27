@@ -33,14 +33,18 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   }
 
   @boundMethod
-  private clickHandler() {
+  private async clickHandler() {
     const { feature, onClick } = this.props;
 
     const layer = getLayerByFeatureInCurrentProject(feature);
-    projectsService.enableLayersByTableNames([layer.tableName]);
 
-    mapService.positionToFeature(feature);
-    this.btnRef.current.blur();
+    if (layer?.tableName) {
+      projectsService.enableLayersByTableNames([layer.tableName]);
+    }
+
+    await mapService.positionToFeature(feature);
+    this.btnRef.current?.blur();
+
     if (onClick) {
       onClick(feature);
     }
