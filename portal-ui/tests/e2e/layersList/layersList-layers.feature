@@ -181,4 +181,4 @@ Feature: Список слоёв: слои
     Examples:
       | файл        | слой    | тип | проекция   |
       | testDXF.dxf | testDXF | dxf | EPSG:7829  |
-    # | raster.tif  | raster  | tif | EPSG:28406 | # @FIXME включить после починки #1847
+      | raster.tif  | raster  | tif | EPSG:28406 |

@@ -169,11 +169,11 @@ public class FileStorageService {
             throw new StorageException(kptArchivesPath + " не имеет файлов");
         }
         List<String> exisingFileNames = Arrays.stream(existKptArchives)
-                .map(File::getName).collect(Collectors.toList());
+                                              .map(File::getName).collect(Collectors.toList());
 
         return fileNames.stream()
-                .filter(fileName -> !exisingFileNames.contains(fileName))
-                .collect(Collectors.toList());
+                        .filter(fileName -> !exisingFileNames.contains(fileName))
+                        .collect(Collectors.toList());
     }
 
     /**
@@ -189,7 +189,7 @@ public class FileStorageService {
         try {
             log.info("Try move file from: [{}] to [{}]", sourcePath, targetPath);
 
-            if (Files.exists(targetPath)) {
+            if (Files.exists(targetPath) && !sourcePath.equals(targetPath)) {
                 Files.deleteIfExists(sourcePath);
             } else {
                 Files.createDirectories(targetPath);
