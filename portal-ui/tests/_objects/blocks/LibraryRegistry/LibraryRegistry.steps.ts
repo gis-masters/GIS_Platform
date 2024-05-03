@@ -2,9 +2,9 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { isEqual } from 'lodash';
 
 import { ScenarioScope } from '../../ScenarioScope';
+import { xTableFilterTypeBoolBlock } from '../XTable/Filter/_type/XTable-Filter_type_bool.block';
 import { xTableBlock } from '../XTable/XTable.block';
 import { libraryRegistryBlock } from './LibraryRegistry.block';
-import { xTableFilterTypeBoolBlock } from '../XTable/Filter/_type/XTable-Filter_type_bool.block';
 
 When(
   'в окне выбора документа я выбираю документ с значением {string} в колонке {string}',

@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./Button/UpChoiceLayer-Button.scss'
 const cnUpChoiceLayer = cn('UpChoiceLayer');
 
 const clickHandler = () => {
-  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.LAYERSLIST);
+  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.LAYERS_LIST);
 };
 
 export const UpChoiceLayer: FC = observer(() => (

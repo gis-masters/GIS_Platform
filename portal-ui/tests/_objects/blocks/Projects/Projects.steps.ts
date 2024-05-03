@@ -1,10 +1,10 @@
-import { Given, Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { projectsBlock, sortDirections } from './Projects.block';
+import { SourceType } from '../../../../src/app/services/data/basemaps/basemaps.models';
 import { addBasemapToProject } from '../../commands/projects/addBasemapToProject';
 import { ScenarioScope } from '../../ScenarioScope';
-import { SourceType } from '../../../../src/app/services/data/basemaps/basemaps.models';
+import { projectsBlock, sortDirections } from './Projects.block';
 
 When(/^я нажимаю кнопку `Создать проект`$/, async () => {
   await projectsBlock.clickAddButton();

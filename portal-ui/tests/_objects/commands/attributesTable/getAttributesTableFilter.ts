@@ -1,6 +1,6 @@
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
-import { attributesTableStore } from '../../../../src/app/stores/AttributesTable.store';
 import { FilterQuery } from '../../../../src/app/services/util/filterObjects';
+import { attributesTableStore } from '../../../../src/app/stores/AttributesTable.store';
 
 export let currentProject: CrgProject;
 

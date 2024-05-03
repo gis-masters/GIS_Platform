@@ -1,7 +1,6 @@
 import { Then } from '@wdio/cucumber-framework';
 
 import { sleep } from '../../../../../src/app/services/util/sleep';
-
 import { mapMapBlock } from './Map-Map.block';
 
 Then('на карте отобража{}тся только {string}', async (_: string, variant: string) => {

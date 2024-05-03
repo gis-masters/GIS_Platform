@@ -73,6 +73,8 @@ export class CustomCache<T = unknown> {
         delete this.store[key];
       }
     });
+
+    this.lastStaleCheck = now;
   }
 
   private isItemStale(item: StoreItem<T>, now: number): boolean {

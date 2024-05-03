@@ -14,7 +14,7 @@ interface UpPreviewerAdditionalCounterProps {
 }
 
 const clickHadler = () => {
-  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.PHOTOLIST);
+  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.PHOTO_LIST);
 };
 
 export const UpPreviewerAdditionalCounter: FC<UpPreviewerAdditionalCounterProps> = observer(({ count }) => (

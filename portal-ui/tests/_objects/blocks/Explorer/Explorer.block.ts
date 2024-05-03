@@ -1,5 +1,4 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
-
 import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
 

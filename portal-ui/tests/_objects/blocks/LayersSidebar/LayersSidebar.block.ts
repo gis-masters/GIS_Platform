@@ -1,10 +1,11 @@
-import { Block } from '../../Block';
-import { editFeatureBlock } from '../EditFeature/EditFeature.block';
-import { muiMenuBlock, MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
-import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
-import { changeLayerParent } from '../../commands/layers/changeLayerParent';
-import { layerCardBlock } from '../Layer/Card/Layer-Card.block';
 import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
+import { Block } from '../../Block';
+import { changeLayerParent } from '../../commands/layers/changeLayerParent';
+import { editFeatureBlock } from '../EditFeature/EditFeature.block';
+import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
+import { layerCardBlock } from '../Layer/Card/Layer-Card.block';
+import { MuiMenuBlock, muiMenuBlock } from '../MuiMenu/MuiMenu.block';
 
 class LayersSidebarBlock extends Block {
   selectors = {

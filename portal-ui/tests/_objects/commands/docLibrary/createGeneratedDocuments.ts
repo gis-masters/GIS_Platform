@@ -1,9 +1,9 @@
+import { Library, LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { applyContentType } from '../../../../src/app/services/data/schema/schema.utils';
-import { Library, LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { generateObjectBySchema, supportedTypesForGeneration } from '../../utils/generateObjectBySchema';
-import { createLibraryRecordAs } from './createLibraryRecordAs';
 import { TestUser } from '../auth/testUsers';
+import { createLibraryRecordAs } from './createLibraryRecordAs';
 
 export async function createGeneratedDocuments(
   docsNumber: number,

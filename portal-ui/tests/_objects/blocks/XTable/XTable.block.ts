@@ -1,13 +1,12 @@
 import { Key } from 'webdriverio';
 
+import { SortOrder } from '../../../../src/app/services/models';
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
-import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
-import { SortOrder } from '../../../../src/app/services/models';
 import { hasClass } from '../../utils/hasClass';
-
-import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_string.block';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { XTableFilterTypeDocumentBlock } from './Filter/_type/XTable-Filter_type_document.block';
+import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_string.block';
 
 export class XTableBlock extends Block {
   selectors = {

@@ -1,6 +1,6 @@
 import { Block } from '../../Block';
-import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
+import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
 export class FormBlock extends Block {
   selectors = {

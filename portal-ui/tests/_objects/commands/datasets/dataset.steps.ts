@@ -1,13 +1,13 @@
 import { faker } from '@faker-js/faker';
 import { Given } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../auth/testUsers';
+import { PrincipalType, Role } from '../../../../src/app/services/data/permissions/permissions.models';
 import { ScenarioScope } from '../../ScenarioScope';
+import { getUserByEmail } from '../auth/getUserByEmail';
+import { TestUser } from '../auth/testUsers';
+import { addDatasetPermissions } from './addDatasetPermissions';
 import { createDatasetAs } from './createDatasetAs';
 import { deleteAllDatasetsAsAdmin } from './deleteAllDatasetsAsAdmin';
-import { getUserByEmail } from '../auth/getUserByEmail';
-import { addDatasetPermissions } from './addDatasetPermissions';
-import { PrincipalType, Role } from '../../../../src/app/services/data/permissions/permissions.models';
 import { getDatasetByTitle } from './getDatasetByTitle';
 
 Given(

@@ -1,5 +1,5 @@
-import { Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { ScenarioScope } from '../../ScenarioScope';
 import { tasksJournalBlock } from './TasksJournal.block';

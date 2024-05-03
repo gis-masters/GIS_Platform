@@ -15,8 +15,12 @@ import '!style-loader!css-loader!sass-loader!./User.scss';
 
 const cnUser = cn('User');
 
+interface UserProps extends IClassNameProps {
+  logoutUrl?: string;
+}
+
 @observer
-export class User extends Component<IClassNameProps> {
+export class User extends Component<UserProps> {
   @observable private anchorEl: HTMLElement | null = null;
 
   constructor(props: Record<string, never>) {
@@ -67,6 +71,6 @@ export class User extends Component<IClassNameProps> {
 
   @boundMethod
   private logout() {
-    void authService.logout();
+    void authService.logout(this.props.logoutUrl);
   }
 }

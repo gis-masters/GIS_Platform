@@ -1,16 +1,15 @@
+import { DataTable } from '@cucumber/cucumber';
+import { Given, Then, When } from '@wdio/cucumber-framework';
 import { isEqual } from 'lodash';
 import { WaitUntilOptions } from 'webdriverio';
-import { Given, Then, When } from '@wdio/cucumber-framework';
-import { DataTable } from '@cucumber/cucumber';
 
+import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { sortObjects } from '../../../../src/app/services/util/sortObjects';
+import { getAttributesTableFilter } from '../../commands/attributesTable/getAttributesTableFilter';
+import { getVectorTableByTitle } from '../../commands/tables/getVectorTableByTitle';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../utils/getSortDirection';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
-import { sortObjects } from '../../../../src/app/services/util/sortObjects';
-import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { getAttributesTableFilter } from '../../commands/attributesTable/getAttributesTableFilter';
-import { getVectorTableByTitle } from '../../commands/tables/getVectorTableByTitle';
-
 import { attributesBlock } from './Attributes.block';
 
 const waitUntilOptions: WaitUntilOptions = {

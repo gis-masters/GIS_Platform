@@ -1,7 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { mapToolbarBlock } from './MapToolbar.block';
 import { mapBlock } from '../Map/Map.block';
+import { mapToolbarBlock } from './MapToolbar.block';
 
 Then('в панели инструментов на карте нет кнопки `Снять выделение с объектов`', async () => {
   await expect(await mapToolbarBlock.isCancelSelectionBtnExist()).toEqual(false);

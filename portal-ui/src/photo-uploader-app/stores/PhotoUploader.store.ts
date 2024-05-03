@@ -1,15 +1,17 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import { http } from '../../app/services/api/http.service';
 import { currentUser } from '../../app/stores/CurrentUser.store';
 import { UpLayersListItemData } from '../components/UpLayersList/Item/UpLayersList-Item';
 import { UploadedFile, UploadedFileStatus } from '../services/photoUploader.models';
 import { UploadResultType } from '../services/photoUploader.service';
 
 export enum PhotoUploaderScreens {
+  BUSY,
   AUTH,
   MAIN,
-  LAYERSLIST,
-  PHOTOLIST,
+  LAYERS_LIST,
+  PHOTO_LIST,
   LOADER,
   UPLOAD_RESULT
 }
@@ -40,7 +42,15 @@ class PhotoUploaderStore {
 
   @computed
   get currentScreen(): PhotoUploaderScreens {
-    return currentUser.name ? this._currentScreen : PhotoUploaderScreens.AUTH;
+    if (http.waitingForAuth) {
+      return PhotoUploaderScreens.AUTH;
+    }
+
+    if (!currentUser.name) {
+      return PhotoUploaderScreens.BUSY;
+    }
+
+    return this._currentScreen;
   }
 
   @computed
@@ -62,11 +72,11 @@ class PhotoUploaderStore {
   get currentHeaderTitle(): string {
     let headerTitle: string;
     switch (this._currentScreen) {
-      case PhotoUploaderScreens.LAYERSLIST: {
+      case PhotoUploaderScreens.LAYERS_LIST: {
         headerTitle = 'Выбор слоя';
         break;
       }
-      case PhotoUploaderScreens.PHOTOLIST: {
+      case PhotoUploaderScreens.PHOTO_LIST: {
         headerTitle = 'Фотографии';
         break;
       }

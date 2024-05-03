@@ -1,9 +1,9 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { ExplorerBlock } from './Explorer.block';
-import { ScenarioScope } from '../../ScenarioScope';
-import { dataManagementPage } from '../../pages/DataManagement.page';
 import { getDocumentsLibraryByTitle } from '../../commands/docLibrary/getDocLibraryByTitle';
+import { dataManagementPage } from '../../pages/DataManagement.page';
+import { ScenarioScope } from '../../ScenarioScope';
+import { ExplorerBlock } from './Explorer.block';
 
 When('в диалоговом окне выбора источника данных я выбираю набор данных', async function (this: ScenarioScope) {
   const { latestDataset } = this;

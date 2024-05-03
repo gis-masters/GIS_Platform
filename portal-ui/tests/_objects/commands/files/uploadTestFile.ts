@@ -1,10 +1,10 @@
-import fs from 'fs/promises';
 import path from 'node:path';
-import { File, Blob } from 'web-file-polyfill';
+import fs from 'fs/promises';
+import { Blob, File } from 'web-file-polyfill';
 
-import { requestAsAdmin } from '../requestAs';
 import { filesClient } from '../../../../src/app/services/data/files/files.client';
 import { FileInfo } from '../../../../src/app/services/data/files/files.models';
+import { requestAsAdmin } from '../requestAs';
 
 export async function uploadTestFile(fileName: string): Promise<FileInfo> {
   const fileBuffer = await fs.readFile(path.join(__dirname, '..', '..', '..', '_files', fileName));

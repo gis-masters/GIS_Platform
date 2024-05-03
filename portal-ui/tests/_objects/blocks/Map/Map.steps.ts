@@ -1,9 +1,8 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { getMapPosition } from '../../commands/map/getMapPosition';
-import { ScenarioScope } from '../../ScenarioScope';
 import { MapPage } from '../../pages/Map.page';
-
+import { ScenarioScope } from '../../ScenarioScope';
 import { mapBlock } from './Map.block';
 
 When('я протыкаю карту в центре', async function () {

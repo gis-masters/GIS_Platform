@@ -1,4 +1,5 @@
 import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
 import { Block } from '../../../Block';
 
 class MapMapBlock extends Block {

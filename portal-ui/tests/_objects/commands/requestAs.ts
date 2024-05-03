@@ -3,8 +3,8 @@
 import { AxiosError } from 'axios';
 
 import { http } from '../../../src/app/services/api/http.service';
-import { getTestUser, TestUser } from './auth/testUsers';
 import { fetchUserToken } from './auth/fetchUserToken';
+import { getTestUser, TestUser } from './auth/testUsers';
 import { logLevel } from './logLevel';
 
 const colors = {

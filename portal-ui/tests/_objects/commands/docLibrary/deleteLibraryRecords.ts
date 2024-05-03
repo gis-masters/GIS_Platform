@@ -1,6 +1,6 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
-import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
 import { requestAsAdmin } from '../requestAs';
+import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
 
 export async function deleteAllLibraryRecordInLibrary(libraryTitle: string): Promise<void> {
   const library = await getDocumentsLibraryByTitle(libraryTitle);

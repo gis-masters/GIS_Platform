@@ -146,7 +146,7 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
       ? (Number(tags.exif?.GPSLongitude.description) * 20_037_508.34) / 180
       : null;
 
-  const lantitude =
+  const latitude =
     !!tags?.exif?.GPSLatitude?.description && !Number.isNaN(Number(tags?.exif?.GPSLatitude.description))
       ? ((Math.log(Math.tan(((90 + Number(tags?.exif?.GPSLatitude.description)) * Math.PI) / 360)) / (Math.PI / 180)) *
           20_037_508.34) /
@@ -155,10 +155,10 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
 
   return {
     geometry:
-      longitude && lantitude
+      longitude && latitude
         ? {
             type: GeometryType.POINT,
-            coordinates: longitude && lantitude ? [longitude, lantitude] : []
+            coordinates: longitude && latitude ? [longitude, latitude] : []
           }
         : undefined,
 

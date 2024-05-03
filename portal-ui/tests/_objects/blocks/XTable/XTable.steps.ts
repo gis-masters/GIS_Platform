@@ -1,10 +1,10 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { xTableBlock } from './XTable.block';
 import { xTableFilterTypeBoolBlock } from './Filter/_type/XTable-Filter_type_bool.block';
 import { xTableFilterTypeChoiceBlock } from './Filter/_type/XTable-Filter_type_choice.block';
 import { xTableFilterTypeDateTimeBlock } from './Filter/_type/XTable-Filter_type_dateTime.block';
 import { xTableFilterTypeFloatBlock } from './Filter/_type/XTable-Filter_type_float.block';
+import { xTableBlock } from './XTable.block';
 
 Then('в первой колонке таблицы xTable содержатся только элементы:', async ({ rawTable }: { rawTable: string[][] }) => {
   const values = rawTable.flat();

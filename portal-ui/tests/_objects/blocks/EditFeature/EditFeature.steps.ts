@@ -1,5 +1,5 @@
-import { Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { editFeatureBlock } from './EditFeature.block';
 
@@ -58,8 +58,8 @@ Then('вкладка просмотра геометрии в режиме чт�
 
   const geometryAsString = await editFeatureBlock.getGeometryInViewMode();
   const geometry = geometryAsString
-    .replace(/\n/g, ' ')
-    .replace(/\t/g, ' ')
+    .replaceAll('\n', ' ')
+    .replaceAll('\t', ' ')
     .split(' ')
     .filter(item => item.length > 2);
 

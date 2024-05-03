@@ -1,6 +1,6 @@
+import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 import { LibraryRecord } from '../../../../src/app/services/data/library/library.models';
 import { requestAsAdmin } from '../requestAs';
-import { libraryClient } from '../../../../src/app/services/data/library/library.client';
 
 export async function moveLibraryRecord(
   libraryTableName: string,

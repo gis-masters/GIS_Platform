@@ -1,8 +1,8 @@
 import { When } from '@wdio/cucumber-framework';
 
 import { libraryDocumentActionsBlock } from '../LibraryDocumentActions/LibraryDocumentActions.block';
-import { libraryDocumentActionsEditDialogBlock } from './EditDialog/LibraryDocumentActions-EditDialog.block';
 import { libraryDocumentActionsCreateChildEditDialogBlock } from './CreateChildEditDialog/LibraryDocumentActions-CreateChildEditDialog.block';
+import { libraryDocumentActionsEditDialogBlock } from './EditDialog/LibraryDocumentActions-EditDialog.block';
 
 When(
   'в библиотеке документов в окне редактирования созданного документа я нажимаю кнопку `Удалить набор файлов` в поле {string}',

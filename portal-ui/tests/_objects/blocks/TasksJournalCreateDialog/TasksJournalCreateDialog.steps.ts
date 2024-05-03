@@ -1,8 +1,8 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { tasksJournalCreateDialogBlock } from './TasksJournalCreateDialog.block';
-import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { TestUser } from '../../commands/auth/testUsers';
+import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
+import { tasksJournalCreateDialogBlock } from './TasksJournalCreateDialog.block';
 
 When(
   'в диалоговом окне создания задачи в форме у обязательного поля {string} с типом user_id я указываю исполнителя {user}',

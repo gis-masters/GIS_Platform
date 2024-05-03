@@ -1,10 +1,9 @@
+import { SortOrder } from '../../../../src/app/services/models';
 import { Block } from '../../Block';
-import { projectFormBlock } from '../ProjectsForm/ProjectsForm.block';
 import { loadingBlock } from '../Loading/Loading.block';
 import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
+import { projectFormBlock } from '../ProjectsForm/ProjectsForm.block';
 import { sortOrderButtonBlock } from '../SortOrderButtonBlock/SortOrderButtonBlock';
-
-import { SortOrder } from '../../../../src/app/services/models';
 
 export const sortDirections: Record<string, SortOrder> = {
   'По возрастанию': SortOrder.ASC,

@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./Counter/UpChoosePhotos-Counter.sc
 const cnUpChoosePhotos = cn('UpChoosePhotos');
 
 const clickHandler = () => {
-  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.PHOTOLIST);
+  photoUploaderStore.setCurrentScreen(PhotoUploaderScreens.PHOTO_LIST);
 };
 
 export const UpChoosePhoto: FC = observer(() => {

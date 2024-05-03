@@ -1,6 +1,6 @@
+import { SortOrder } from '../../../../src/app/services/models';
 import { Block } from '../../Block';
 import { hasClass } from '../../utils/hasClass';
-import { SortOrder } from '../../../../src/app/services/models';
 
 class SortOrderButtonBlock extends Block {
   selectors = {

@@ -21,8 +21,8 @@ export const UpHeaderLeftIcon: FC = observer(() => (
       <CircularProgress className={cnUpHeader('Loading')} size={20} color='inherit' />
     )}
 
-    {(photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERSLIST ||
-      photoUploaderStore.currentScreen === PhotoUploaderScreens.PHOTOLIST ||
+    {(photoUploaderStore.currentScreen === PhotoUploaderScreens.LAYERS_LIST ||
+      photoUploaderStore.currentScreen === PhotoUploaderScreens.PHOTO_LIST ||
       photoUploaderStore.currentScreen === PhotoUploaderScreens.LOADER) &&
       !photoUploaderStore.returnButtonBusy && (
         <IconButton className={cnUpHeader('LeftIcon')} onClick={clickHandler}>

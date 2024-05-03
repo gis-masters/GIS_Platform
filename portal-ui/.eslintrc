@@ -36,8 +36,6 @@
     "ClipboardItem": true,
     "navigator": true,
     "_environmentRaw": true,
-    "ExplorerItemPayloads": true,
-    "ExplorerItemType": true,
     "global": true
   },
   "parserOptions": {
@@ -260,12 +258,10 @@
       {
         "groups": [
           // Node.js builtins prefixed with `node:`.
-          ["^node:"],
           // Absolute imports and other imports such as Vue-style `@/foo`.
           // Anything not matched in another group.
-          ["^"],
           // Packages.
-          ["^react$", "^react-dom", "^mobx", "^@mui/material$", "^@mui/", "^@?\\w", "^\\u0000.*\\.css"],
+          ["^node:", "^", "^react$", "^react-dom", "^mobx", "^@mui/material$", "^@mui/", "^@?\\w", "^\\u0000.*\\.css"],
           // Relative imports.
           // Anything that starts with a dot.
           ["^\\."],

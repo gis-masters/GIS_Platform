@@ -1,8 +1,8 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { documentVersionsWidgetBlock } from './DocumentVersionsWidget.block';
-import { ExplorerBlock } from '../Explorer/Explorer.block';
 import { ScenarioScope } from '../../ScenarioScope';
+import { ExplorerBlock } from '../Explorer/Explorer.block';
+import { documentVersionsWidgetBlock } from './DocumentVersionsWidget.block';
 
 Then(
   'в библиотеке документов у созданного документа доступна кнопка `Версии документа`',

@@ -32,7 +32,7 @@ class AuthService {
   token?: string;
 
   private constructor() {
-    this.token = localStorage.getItem(TOKEN_KEY);
+    this.token = localStorage.getItem(TOKEN_KEY) || undefined;
   }
 
   async authenticate(credentials: AuthCredentials): Promise<AuthenticationResult> {
@@ -64,10 +64,10 @@ class AuthService {
     }
   }
 
-  async logout() {
+  async logout(url = '/') {
     await authClient.logout();
     localStorage.removeItem(TOKEN_KEY);
-    location.href = '/';
+    location.href = url;
   }
 
   // TODO: Создание новой орг в модуле аутентификации???

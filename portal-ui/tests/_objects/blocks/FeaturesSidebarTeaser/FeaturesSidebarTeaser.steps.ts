@@ -1,4 +1,4 @@
-import { When, Then } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { featuresSidebarTeaserBlock } from './FeaturesSidebarTeaser.block';
 

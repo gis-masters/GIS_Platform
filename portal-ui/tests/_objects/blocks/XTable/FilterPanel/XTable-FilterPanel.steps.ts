@@ -1,4 +1,4 @@
-import { Given, When, Then } from '@wdio/cucumber-framework';
+import { Given, Then, When } from '@wdio/cucumber-framework';
 
 import { xTableBlock } from '../XTable.block';
 import { xTableFilterPanelBlock } from './XTable-FilterPanel.block';

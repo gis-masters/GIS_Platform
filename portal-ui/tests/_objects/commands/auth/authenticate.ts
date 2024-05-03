@@ -1,13 +1,13 @@
-import { sleep } from '../../../../src/app/services/util/sleep';
-import { currentUser } from '../../../../src/app/stores/CurrentUser.store';
+import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { authService } from '../../../../src/app/services/auth/auth/auth.service';
 import { usersService } from '../../../../src/app/services/auth/users/users.service';
-import { AuthenticationResult, RegData } from '../../../../src/app/services/auth/auth/auth.models';
-import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.page';
-import { TestUser, getTestUser } from './testUsers';
-import { homePage } from '../../pages/Home.page';
+import { sleep } from '../../../../src/app/services/util/sleep';
+import { currentUser } from '../../../../src/app/stores/CurrentUser.store';
 import { Page } from '../../Page';
+import { homePage } from '../../pages/Home.page';
+import { testDataPreparationPage } from '../../pages/TestDataPreparationPage.page';
 import { createTestOrganizations } from './createTestOrganizations';
+import { getTestUser, TestUser } from './testUsers';
 
 declare const window: {
   currentUser: typeof currentUser;

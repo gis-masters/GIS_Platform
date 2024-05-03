@@ -1,4 +1,5 @@
 import { Then } from '@wdio/cucumber-framework';
+
 import { photModePreviewerBlock } from './PhotoModePreviewer.block';
 
 Then('появляется окно предпросмотра фотослоя', async function () {

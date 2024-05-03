@@ -1,7 +1,7 @@
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
-import { XTableBlock } from '../XTable/XTable.block';
 import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
+import { XTableBlock } from '../XTable/XTable.block';
 
 class AttributesBlock extends Block {
   selectors = {

@@ -1,6 +1,7 @@
 import { When } from '@wdio/cucumber-framework';
-import { orgUsersBlock } from './OrgUsers.block';
+
 import { orgAdminBlock } from '../OrgAdmin/OrgAdmin.block';
+import { orgUsersBlock } from './OrgUsers.block';
 
 When('в вкладке `Пользователи` я нажимаю кнопку `Создать пользователя`', async function () {
   await orgUsersBlock.clickCreateUserButton();

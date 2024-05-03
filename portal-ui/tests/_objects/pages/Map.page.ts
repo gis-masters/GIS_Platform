@@ -1,6 +1,6 @@
-import { Page } from '../Page';
-import { getFeaturesUrl } from '../../../src/app/services/map/map.util';
 import { MapPosition } from '../../../src/app/services/map/map.models';
+import { getFeaturesUrl } from '../../../src/app/services/map/map.util';
+import { Page } from '../Page';
 
 export class MapPage extends Page {
   selectors = {

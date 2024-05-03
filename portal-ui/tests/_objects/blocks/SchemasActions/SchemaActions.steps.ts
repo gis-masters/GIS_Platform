@@ -1,8 +1,8 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { schemaActionsBlock } from './SchemaActions.block';
-import { getTestSchema } from '../../commands/schemas/testSchemas';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { getTestSchema } from '../../commands/schemas/testSchemas';
+import { schemaActionsBlock } from './SchemaActions.block';
 
 const allTypesWithAsTitleSchema: Schema = {
   ...getTestSchema('Все типы данных'),

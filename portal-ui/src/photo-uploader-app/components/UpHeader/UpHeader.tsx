@@ -17,6 +17,6 @@ export const UpHeader: FC = observer(() => (
   <header className={cnUpHeader()}>
     {photoUploaderStore.needReturnButton && <UpHeaderLeftIcon />}
     <div className={cnUpHeader('Title')}>{photoUploaderStore.currentHeaderTitle}</div>
-    {currentUser.name && <User className={cnUpHeader('User')} />}
+    {currentUser.name && <User className={cnUpHeader('User')} logoutUrl='/photo' />}
   </header>
 ));

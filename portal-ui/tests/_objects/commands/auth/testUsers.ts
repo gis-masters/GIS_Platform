@@ -1,6 +1,6 @@
+import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { Role, rolesTitles } from '../../../../src/app/services/data/permissions/permissions.models';
 import { inverseObject } from '../../../../src/app/services/util/inverseObject';
-import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
 
 export function getRoleByTitle(title: string): Role {
   const role = inverseObject(rolesTitles)[title];

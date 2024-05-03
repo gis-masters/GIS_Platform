@@ -1,6 +1,6 @@
+import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
-import { sleep } from '../../../../src/app/services/util/sleep';
 
 export class MuiSelectBlock extends Block {
   selectors = {

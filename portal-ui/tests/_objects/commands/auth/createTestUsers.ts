@@ -1,8 +1,8 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
-import { getUserByEmail } from './getUserByEmail';
-import { getAllTestUsers, getTestUser } from './testUsers';
 import { createUserAs } from './createUserAs';
 import { editUser } from './editUser';
+import { getUserByEmail } from './getUserByEmail';
+import { getAllTestUsers, getTestUser } from './testUsers';
 
 export async function createTestUsers(): Promise<void> {
   for (const {

@@ -1,5 +1,5 @@
-import { Then, When } from '@wdio/cucumber-framework';
 import { DataTable } from '@cucumber/cucumber';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { getTestUser } from '../../../commands/auth/testUsers';
 import { usersAddDialogBlock } from './Users-AddDialog.block';

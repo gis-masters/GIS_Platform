@@ -1,4 +1,4 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -14,30 +14,30 @@ const cnAttributesResize = cn('Attributes', 'Resize');
 const cnAttributesResizing = cn('Attributes', 'Resizing');
 
 export class AttributesResize extends Component<AttributesResizeProps> {
-  private started: boolean;
-  private initialY: number | undefined;
-  private finishY: number;
+  private started: boolean = false;
+  private initialY?: number;
+  private finishY?: number;
 
   render() {
     return <div className={cnAttributesResize()} onPointerDown={this.onResizeStart} />;
   }
 
   @boundMethod
-  private onResizeStart(e: MouseEvent) {
+  private onResizeStart(e: React.MouseEvent) {
     this.started = true;
     this.initialY = e.pageY;
     this.finishY = this.props.initialHeight;
 
     document.body.classList.add(cnAttributesResizing());
 
-    document.addEventListener('mousemove', this.onResizeMove);
+    document.addEventListener('mousemove', this.documentMoveHandler);
     document.addEventListener('mouseup', this.onResizeEnd);
     document.addEventListener('mouseleave', this.onResizeLeave);
   }
 
   @boundMethod
-  private onResizeMove(e: PointerEvent) {
-    if (!this.started) {
+  private documentMoveHandler(e: MouseEvent) {
+    if (!this.started || !this.initialY || !this.finishY) {
       return;
     }
     const value = e.pageY - this.initialY;
@@ -56,7 +56,7 @@ export class AttributesResize extends Component<AttributesResizeProps> {
 
     document.body.classList.remove(cnAttributesResizing());
 
-    document.removeEventListener('mousemove', this.onResizeMove);
+    document.removeEventListener('mousemove', this.documentMoveHandler);
     document.removeEventListener('mouseup', this.onResizeEnd);
     document.removeEventListener('mouseleave', this.onResizeLeave);
   }
@@ -67,7 +67,7 @@ export class AttributesResize extends Component<AttributesResizeProps> {
 
   @boundMethod
   private onResizeLeave() {
-    document.removeEventListener('mousemove', this.onResizeMove);
+    document.removeEventListener('mousemove', this.documentMoveHandler);
     document.removeEventListener('mouseup', this.onResizeEnd);
     document.removeEventListener('mouseleave', this.onResizeLeave);
   }

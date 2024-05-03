@@ -1,7 +1,7 @@
-import { When, Then } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
-import { editLayerPropertiesDialogBlock } from './EditLayerDialog.block';
 import { attributesBlock } from '../Attributes/Attributes.block';
+import { editLayerPropertiesDialogBlock } from './EditLayerDialog.block';
 
 Then('в диалоговом окне `Свойства слоя` у поля `Представление` выбрано {string}', async (viewTitle: string) => {
   await editLayerPropertiesDialogBlock.viewFieldFirstValue(viewTitle);

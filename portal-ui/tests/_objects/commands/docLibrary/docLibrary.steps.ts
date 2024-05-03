@@ -5,24 +5,24 @@ import {
   Role,
   RoleAssignmentBody
 } from '../../../../src/app/services/data/permissions/permissions.models';
-import { setDocLibraryPermissionAsAdmin } from './addDocLibraryPermission';
+import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
+import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
+import { ScenarioScope } from '../../ScenarioScope';
 import { authenticateAs, authenticateAsAdmin } from '../auth/authenticate';
+import { getUserByEmail } from '../auth/getUserByEmail';
 import { TestUser } from '../auth/testUsers';
+import { setDocLibraryPermissionAsAdmin } from './addDocLibraryPermission';
+import { addRecordPermissions } from './addRecordPermissions';
+import { createFolder } from './createFolder';
 import { createGeneratedDocuments } from './createGeneratedDocuments';
+import { createLibrary } from './createLibrary';
+import { createLibraryRecordAsAdmin } from './createLibraryRecordAs';
+import { deleteLibraryRecord } from './deleteLibraryRecord';
+import { deleteAllLibraryRecordInLibrary } from './deleteLibraryRecords';
 import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
 import { getLibraryRecords } from './getLibraryRecordsAs';
-import { getUserByEmail } from '../auth/getUserByEmail';
-import { ScenarioScope } from '../../ScenarioScope';
-import { createFolder } from './createFolder';
-import { addRecordPermissions } from './addRecordPermissions';
 import { moveLibraryRecord } from './moveLibraryRecord';
-import { createLibrary } from './createLibrary';
-import { deleteAllLibraryRecordInLibrary } from './deleteLibraryRecords';
-import { createLibraryRecordAsAdmin } from './createLibraryRecordAs';
 import { updateLibraryRecord } from './updateLibraryRecord';
-import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
-import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
-import { deleteLibraryRecord } from './deleteLibraryRecord';
 
 Given(
   'в библиотеке документов {string} существует минимум {int} документов, доступных пользователю {user}',

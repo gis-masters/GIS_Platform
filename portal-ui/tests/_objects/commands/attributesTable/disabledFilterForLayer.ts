@@ -1,6 +1,6 @@
+import { CrgVectorLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
 import { attributesTableStore } from '../../../../src/app/stores/AttributesTable.store';
-import { CrgVectorLayer } from '../../../../src/app/services/gis/layers/layers.models';
 
 export let currentProject: CrgProject;
 

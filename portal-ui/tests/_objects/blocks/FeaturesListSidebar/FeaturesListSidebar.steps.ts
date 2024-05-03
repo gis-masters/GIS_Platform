@@ -1,6 +1,7 @@
-import { Then, When } from '@wdio/cucumber-framework';
-import { featuresListSidebarBlock } from './FeaturesListSidebar.block';
 import { DataTable } from '@cucumber/cucumber';
+import { Then, When } from '@wdio/cucumber-framework';
+
+import { featuresListSidebarBlock } from './FeaturesListSidebar.block';
 
 When('я закрываю панель выделенных объектов нажимая на крестик', async function () {
   await featuresListSidebarBlock.close();

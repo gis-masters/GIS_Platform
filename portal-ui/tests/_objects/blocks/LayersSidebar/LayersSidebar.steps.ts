@@ -1,7 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { layersSidebarBlock } from './LayersSidebar.block';
 import { attributesBlock } from '../Attributes/Attributes.block';
+import { layersSidebarBlock } from './LayersSidebar.block';
 
 When('в списке слоёв на карте я нажимаю кнопку `Настроить слои проекта`', async () => {
   await layersSidebarBlock.clickEditButton();

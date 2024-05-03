@@ -1,19 +1,19 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
+import { formContentBlock } from './Content/Form-Content.block';
+import { formControlTypeChoiceBlock } from './Control/Form-Control_type_choice.block';
+import { formControlTypeDocumentBlock } from './Control/Form-Control_type_document.block';
+import { formControlTypeFileBlock } from './Control/Form-Control_type_file.block';
+import { formControlTypeStringBlock } from './Control/Form-Control_type_string.block';
 import { formControlTypeUrlBlock } from './Control/Form-Control_type_url.block';
 import { formControlTypeUserBlock } from './Control/Form-Control_type_user.block';
-import { formControlTypeFileBlock } from './Control/Form-Control_type_file.block';
-import { formControlTypeChoiceBlock } from './Control/Form-Control_type_choice.block';
-import { formControlTypeStringBlock } from './Control/Form-Control_type_string.block';
-import { formControlTypeDocumentBlock } from './Control/Form-Control_type_document.block';
-import { formViewTypeDocumentBlock } from './View/Form-View_type_document.block';
+import { FormBlock } from './Form.block';
 import { formViewTypeChoiceBlock } from './View/Form-View_type_choice.block';
+import { formViewTypeDocumentBlock } from './View/Form-View_type_document.block';
+import { formViewTypeFileBlock } from './View/Form-View_type_file.block';
 import { formViewTypeStringBlock } from './View/Form-View_type_string.block';
 import { formViewTypeUserBlock } from './View/Form-View_type_user.block';
-import { formViewTypeFileBlock } from './View/Form-View_type_file.block';
-import { formContentBlock } from './Content/Form-Content.block';
-import { FormBlock } from './Form.block';
 
 Then('блок FormContent вариант {string} выглядит как положено', async (variant: string) => {
   await formContentBlock.assertSelfie(variant);

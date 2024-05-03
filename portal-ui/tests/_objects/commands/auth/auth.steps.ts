@@ -1,10 +1,10 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { authenticateAs } from './authenticate';
-import { TestUser, getTestUser } from './testUsers';
+import { editUser } from './editUser';
 import { getUserByEmail } from './getUserByEmail';
 import { inviteUser } from './inviteUser';
-import { editUser } from './editUser';
+import { getTestUser, TestUser } from './testUsers';
 
 Given('я авторизован как {user}', async (user: TestUser) => {
   await authenticateAs(user);
