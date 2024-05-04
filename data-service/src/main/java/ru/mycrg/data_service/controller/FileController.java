@@ -160,7 +160,9 @@ public class FileController extends BaseController {
 
         String fileBaseTitle = FilenameUtils.getBaseName(file.getTitle());
         response.setContentType("application/zip");
-        response.setHeader("Content-Disposition", String.format("attachment;filename=%s.zip", fileBaseTitle));
+        response.setHeader("Content-Disposition", ContentDisposition.builder("attachment")
+                                                                    .filename(fileBaseTitle + ".zip", UTF_8)
+                                                                    .build().toString());
 
         try (ServletOutputStream sos = response.getOutputStream();
              ZipOutputStream zos = new ZipOutputStream(sos)) {
