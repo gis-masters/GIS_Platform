@@ -19,7 +19,7 @@ public class DeleteBaseMapRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "DeleteBaseMapRequest";
+        return DeleteBaseMapRequest.class.getSimpleName();
     }
 
     @Override

@@ -13,19 +13,29 @@ public class DetailedLogger {
 
     public static void logError(String msg, Throwable cause) {
         if (cause.getMessage() != null) {
-            logCause(msg, cause.getMessage(), cause);
+            logCause(msg, cause, false);
         } else if (cause.getCause() != null) {
-            logCause(msg, cause.getMessage(), cause.getCause());
+            logCause(msg, cause.getCause(), false);
         } else {
-            logCause(msg, null, cause);
+            logCause(msg, cause, false);
         }
     }
 
-    private static void logCause(String msg, String reason, Throwable cause) {
-        if (reason == null) {
-            log.error(msg, cause);
+    public static void logErrorQuietly(String msg, Throwable cause) {
+        if (cause.getMessage() != null) {
+            logCause(msg, cause, true);
+        } else if (cause.getCause() != null) {
+            logCause(msg, cause.getCause(), true);
         } else {
-            log.error("{}. Reason: {}", msg, reason, cause);
+            logCause(msg, cause, true);
+        }
+    }
+
+    private static void logCause(String msg, Throwable cause, boolean quietly) {
+        if (quietly) {
+            log.trace(msg, cause);
+        } else {
+            log.error(msg, cause);
         }
     }
 }

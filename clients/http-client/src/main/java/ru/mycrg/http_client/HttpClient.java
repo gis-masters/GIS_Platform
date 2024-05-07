@@ -24,6 +24,35 @@ public class HttpClient {
         this.requestHandler = requestHandler;
     }
 
+    public ResponseModel<String> handleRequestAsString(Request request) throws HttpClientException {
+        try (Response response = requestHandler.handle(request)) {
+            final ResponseBody responseBody = response.body();
+            if (responseBody == null) {
+                throw new HttpClientException("Incorrect body");
+            }
+
+            String body = responseBody.string();
+            if (response.isSuccessful()) {
+                ResponseModel<String> model = new ResponseModel<>(response);
+                model.setBody(body);
+
+                return model;
+            } else {
+                log.error("Request failed: {} / RequestBody: '{}'", response, body);
+
+                return new ResponseModel<>(response, body);
+            }
+        } catch (IOException e) {
+            String msg = "Host unreachable. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
+        } catch (Exception e) {
+            String msg = "Failed to handle request. Reason: " + e.getMessage();
+
+            throw new HttpClientException(msg, e);
+        }
+    }
+
     public <T> ResponseModel<T> handleRequest(Request request, Class<T> clazz) throws HttpClientException {
         try (Response response = requestHandler.handle(request)) {
             final ResponseBody responseBody = response.body();

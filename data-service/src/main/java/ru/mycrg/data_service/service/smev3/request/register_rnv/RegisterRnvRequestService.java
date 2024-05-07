@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
@@ -39,12 +39,12 @@ public class RegisterRnvRequestService extends RequestProcessor {
 
     public RegisterRnvRequestService(SmevMessageSenderService messageService,
                                      Smev3Config smev3Config,
-                                     BaseDao baseDao,
+                                     BaseReadDao baseReadDao,
                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
                                      SmevOutgoingAttachmentService attachmentService,
                                      RegisterRnvResponseService registerRnvResponseService) {
-        super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
+        super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseReadDao, schemaService, attachmentService, resourceLoader, smev3Config);
         this.registerRnvResponseService = registerRnvResponseService;
     }
 

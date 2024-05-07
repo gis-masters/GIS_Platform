@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -28,13 +28,13 @@ public class GisogdRfAuditor {
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfAuditor.class);
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
     private final GisogdRfDao gisogdRfDao;
     private final GisogdRfUtil gisogdRfUtil;
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
 
-    public GisogdRfAuditor(BaseDao baseDao,
+    public GisogdRfAuditor(BaseReadDao baseDao,
                            GisogdRfDao gisogdRfDao,
                            GisogdRfUtil gisogdRfUtil,
                            IMessageBusProducer messageBus,

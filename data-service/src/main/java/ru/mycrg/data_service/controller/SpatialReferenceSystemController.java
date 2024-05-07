@@ -1,0 +1,77 @@
+package ru.mycrg.data_service.controller;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.generated.SpatialReferenceSystem;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.service.SpatialReferenceSystemService;
+import ru.mycrg.data_service.service.cqrs.srs.requests.AddCustomSrsRequest;
+import ru.mycrg.data_service.validators.ecql.EcqlFilter;
+import ru.mycrg.mediator.Mediator;
+
+import java.util.ArrayList;
+
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
+
+@RestController
+public class SpatialReferenceSystemController {
+
+    private final Mediator mediator;
+    private final SpatialReferenceSystemService srsService;
+    private final IAuthenticationFacade authenticationFacade;
+
+    public SpatialReferenceSystemController(Mediator mediator,
+                                            SpatialReferenceSystemService srsService,
+                                            IAuthenticationFacade authenticationFacade) {
+        this.mediator = mediator;
+        this.srsService = srsService;
+        this.authenticationFacade = authenticationFacade;
+    }
+
+    // TODO: Удалить после переезда фронта на /srs
+    @GetMapping("/epsg")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> getAll(@RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
+                                         Pageable pageable) {
+        Page<SpatialReferenceSystem> knownEpsg = !authenticationFacade.isRoot()
+                ? srsService.getAll(ecqlFilter, pageable)
+                : new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        return ResponseEntity.ok(pageFromList(knownEpsg, pageable));
+    }
+
+    @GetMapping("/srs")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> getAllSrs(
+            @RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
+            Pageable pageable) {
+        Page<SpatialReferenceSystem> knownSrs = !authenticationFacade.isRoot()
+                ? srsService.getAll(ecqlFilter, pageable)
+                : new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        return ResponseEntity.ok(pageFromList(knownSrs, pageable));
+    }
+
+    @PostMapping("/srs")
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> addSrs(@RequestBody SpatialReferenceSystem srsDto) {
+        validateSrs(srsDto);
+
+        SpatialReferenceSystem newSrs = mediator.execute(new AddCustomSrsRequest(srsDto));
+
+        return ResponseEntity.ok(newSrs);
+    }
+
+    private static void validateSrs(SpatialReferenceSystem srs) {
+        if (srs.getSrtext() == null) {
+            throw new BadRequestException("Не задан обязательный параметр: srtext");
+        }
+    }
+}

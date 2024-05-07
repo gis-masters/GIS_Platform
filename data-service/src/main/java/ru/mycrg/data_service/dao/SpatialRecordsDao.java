@@ -37,14 +37,14 @@ public class SpatialRecordsDao {
 
     private final Logger log = LoggerFactory.getLogger(SpatialRecordsDao.class);
 
-    private final BaseDao baseDao;
-    private final ParameterizedBaseDao pBaseDao;
+    private final BaseReadDao baseDao;
+    private final BaseWriteDao pBaseDao;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
     private final SqlParameterSourceFactory sqlParameterSourceFactory;
 
-    public SpatialRecordsDao(BaseDao baseDao,
+    public SpatialRecordsDao(BaseReadDao baseDao,
                              NamedParameterJdbcTemplate parameterJdbcTemplate,
-                             ParameterizedBaseDao pBaseDao,
+                             BaseWriteDao pBaseDao,
                              SqlParameterSourceFactory parameterSourceMapperFactory) {
         this.baseDao = baseDao;
         this.pJdbcTemplate = parameterJdbcTemplate;

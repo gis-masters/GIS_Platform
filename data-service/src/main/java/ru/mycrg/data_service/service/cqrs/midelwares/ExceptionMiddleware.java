@@ -22,7 +22,8 @@ public class ExceptionMiddleware implements IRequestMiddleware {
             logError(msg, e);
 
             throw new DataServiceException(msg);
-        } catch (NotFoundException | ForbiddenException | ConflictException | BadRequestException e) {
+        } catch (NotFoundException | ForbiddenException | ConflictException | ServiceUnavailableException |
+                 DataServiceException | BadRequestException e) {
             throw e;
         } catch (Exception e) {
             String msg = "Непредвиденная ошибка в процессе обработки команды: " + request.getType();

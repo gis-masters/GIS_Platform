@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
@@ -271,7 +271,7 @@ public abstract class AXmlBuildProcessor {
         return ofNullable(schemasMap.get(schemaName));
     }
 
-    public BaseDao baseDao() {
+    public BaseReadDao baseDao() {
         return requestProcessor.getBaseDao();
     }
 

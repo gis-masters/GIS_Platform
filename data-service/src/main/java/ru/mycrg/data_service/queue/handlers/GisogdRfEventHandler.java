@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ParameterizedBaseDao;
+import ru.mycrg.data_service.dao.BaseWriteDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.gisog_service_contract.ResponseFromGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
@@ -57,7 +57,7 @@ public class GisogdRfEventHandler implements IEventHandler {
             NamedParameterJdbcTemplate jdbcTemplate =
                     new NamedParameterJdbcTemplate(
                             datasourceFactory.getNamedDataSource(databaseName, GISOGD_SOURCE_ID));
-            ParameterizedBaseDao parameterizedBaseDao = new ParameterizedBaseDao(jdbcTemplate);
+            BaseWriteDao baseWriteDao = new BaseWriteDao(jdbcTemplate);
 
             Status status = event.getStatus();
             String idTemplate = parent.getContent().containsKey(ID) ? ID : PRIMARY_KEY;
@@ -71,7 +71,7 @@ public class GisogdRfEventHandler implements IEventHandler {
 
                 log.debug("Query [gisogd-rf SUCCESS response]: [{}]", query);
 
-                parameterizedBaseDao.update(query, new MapSqlParameterSource());
+                baseWriteDao.update(query, new MapSqlParameterSource());
             } else {
                 Map<String, String> response = event.getContent();
                 response.put("status", event.getStatus().name());
@@ -84,8 +84,8 @@ public class GisogdRfEventHandler implements IEventHandler {
 
                 log.debug("Query [gisogd-rf FAIL response]: [{}]", query);
 
-                parameterizedBaseDao.update(query,
-                                            new MapSqlParameterSource().addValue("response", getJsonString(response)));
+                baseWriteDao.update(query,
+                                    new MapSqlParameterSource().addValue("response", getJsonString(response)));
             }
         } catch (Exception e) {
             log.error("Не удалось корректно обработать ResponseFromGisogdRfEvent. Причина: {}", e.getMessage());

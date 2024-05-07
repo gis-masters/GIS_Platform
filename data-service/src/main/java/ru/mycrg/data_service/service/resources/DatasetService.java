@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.DatasetModel;
@@ -36,14 +36,14 @@ public class DatasetService {
     private final IResourceProtector datasetProtector;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final IAuthenticationFacade authenticationFacade;
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
     private final TableService tableService;
 
     public DatasetService(BasePermissionsRepository permissionsRepository,
                           DatasetProtector datasetProtector,
                           SchemasAndTablesRepository schemasAndTablesRepository,
                           IAuthenticationFacade authenticationFacade,
-                          BaseDao baseDao,
+                          BaseReadDao baseDao,
                           TableService tableService) {
         this.permissionsRepository = permissionsRepository;
         this.datasetProtector = datasetProtector;

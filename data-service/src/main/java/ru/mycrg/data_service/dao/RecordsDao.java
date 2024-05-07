@@ -34,14 +34,14 @@ public class RecordsDao {
 
     private final Logger log = LoggerFactory.getLogger(RecordsDao.class);
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
     private final SpatialRecordsDao spatialRecordsDao;
     private final NamedParameterJdbcTemplate pJdbcTemplate;
     private final SystemAttributeHandler systemAttributeHandler;
 
     public RecordsDao(NamedParameterJdbcTemplate parameterJdbcTemplate,
                       SpatialRecordsDao spatialRecordsDao,
-                      BaseDao baseDao,
+                      BaseReadDao baseDao,
                       SystemAttributeHandler systemAttributeHandler) {
         System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
 

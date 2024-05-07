@@ -31,7 +31,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace)
+                        get("/geoserver/rest/workspaces/" + workspace)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NOT_FOUND);
@@ -52,7 +52,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/security/roles.json")
+                        get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -138,7 +138,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/security/roles.json")
+                        get("/geoserver/rest/security/roles.json")
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -214,7 +214,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
+                        get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -229,10 +229,21 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
+                        get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + currentDatasetIdentifier)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NOT_FOUND);
+    }
+
+    @And("Система координат присутствует на геосервере: {string}")
+    public void checkSrs(String expectedString) {
+        Response response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/resource/user_projections/epsg.properties");
+
+        response.then().statusCode(SC_OK);
+
+        assertTrue(response.asString().contains(expectedString));
     }
 
     public void checkGeoserverWorkspaceAndStorage(Integer orgId) {
@@ -241,7 +252,7 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
+                        get("/geoserver/rest/workspaces/" + workspace + "/datastores/" + store)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).

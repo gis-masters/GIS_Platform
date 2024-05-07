@@ -21,7 +21,7 @@ public class CreateBaseMapRequest implements IRequest<BaseMap>, Auditable {
 
     @Override
     public String getType() {
-        return "CreateBaseMapRequest";
+        return CreateBaseMapRequest.class.getSimpleName();
     }
 
     @Override

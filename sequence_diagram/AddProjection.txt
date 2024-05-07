@@ -1,0 +1,52 @@
+frame Add custom projection
+
+actor Actor
+participant DataService
+participant Queue
+participant GisService
+participant Geoserver
+participant Audit
+
+Actor-#red:2>DataService:Request to add projections
+
+activate DataService #skyBlue
+DataService-#orange:2>DataService:check srid exist
+Actor<#red:2--DataService:409
+DataService-#orange:2>DataService:add to actor DB
+
+linear
+DataService-#blue:2>>Queue:AddProjectionEvent
+Queue-#blue:2>>GisService:AddProjectionEvent
+deactivate DataService
+
+activate GisService #skyBlue
+GisService-#red:2>>Geoserver:PUT projection
+activate Geoserver #skyBlue
+Geoserver-#orange:2>Geoserver:check srid exist
+
+GisService<#red:2--Geoserver:409
+Queue<#blue:2--GisService:ProjectionAlreadyExistEvent
+DataService<#blue:2--Queue:ProjectionAlreadyExistEvent
+
+activate DataService #skyBlue
+DataService-#orange:2>DataService:rollback: \nremove projection from DB
+Actor<#red:2--DataService:409
+deactivate DataService #skyBlue
+
+Geoserver-#orange:2>Geoserver:put projection
+Geoserver-#orange:2>Geoserver:reload configuration
+linear off
+GisService<#red:2--Geoserver:projection successfully added
+deactivate Geoserver
+
+linear
+Queue<#blue:2--GisService:ProjectionSuccessfullyAddedEvent
+DataService<#blue:2--Queue:ProjectionSuccessfullyAddedEvent
+deactivate GisService
+
+activate DataService #skyBlue
+DataService-#orange:2>DataService:Write to audit
+DataService-#blue:2>>Queue:AddProjectionEvent
+Queue-#blue:2>>Audit:    AddProjectionEvent
+Actor<#red:2--DataService:200
+deactivate DataService #skyBlue

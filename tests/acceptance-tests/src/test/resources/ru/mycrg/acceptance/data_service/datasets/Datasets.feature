@@ -64,12 +64,12 @@ Feature: Наборы данных (datasets)
     Then В ответе присутствует поле 'itemsCount' и имеет значение 2
 
   Scenario Outline: Фильтрация по title 'набора данных' должна быть не чувствительна к регистру
-    When Отправляется запрос на создание набора "someDatasetTitle" "STRING_5" "STRING_0" "STRING_0" "500"
+    When Отправляется запрос на создание набора "some-Dataset_Title" "STRING_5" "STRING_0" "STRING_0" "500"
     When Администратор делает запрос на выборку наборов с фильтрацией по полю "<filterKey>" и значению: "<filterValue>"
     Then В выборке присутствуют определённое кол-во элементов: 1
     Examples:
-      | filterKey | filterValue |
-      | title     | SOME        |
+      | filterKey | filterValue        |
+      | title     | SOME-DATASET_TITLE |
 
   Scenario: Создание датасета фиксируется в журнале аудита системы
     When Пользователь создает новый набор данных

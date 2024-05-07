@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -27,9 +26,9 @@ import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildOrderBySection;
 
 @Transactional
 @Repository
-public class BaseDao {
+public class BaseReadDao {
 
-    private static final Logger log = LoggerFactory.getLogger(BaseDao.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseReadDao.class);
 
     static {
         System.setProperty("com.healthmarketscience.sqlbuilder.useBooleanLiterals", "true");
@@ -37,7 +36,7 @@ public class BaseDao {
 
     private final NamedParameterJdbcTemplate pJdbcTemplate;
 
-    public BaseDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
+    public BaseReadDao(NamedParameterJdbcTemplate parameterJdbcTemplate) {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
@@ -103,17 +102,6 @@ public class BaseDao {
         return findAll(qualifier, ecqlFilter, new BeanPropertyRowMapper<>(clazz));
     }
 
-    private <T> List<T> findAll(ResourceQualifier qualifier,
-                                String ecqlFilter,
-                                RowMapper<T> rowMapper) {
-        String query = "SELECT * FROM " + qualifier.getTableQualifier() +
-                " " + buildWhereSection(ecqlFilter);
-
-        log.debug("Query find all with filter: [{}]", query);
-
-        return pJdbcTemplate.query(query, rowMapper);
-    }
-
     public Long total(ResourceQualifier qualifier, String ecqlFilter) {
         String query = String.format("SELECT count(*) FROM %s %s",
                                      qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
@@ -128,51 +116,6 @@ public class BaseDao {
         return findByJson(qualifier, schema)
                 .orElseThrow(() -> CrgDaoException.recordNotFound(qualifier.getTableQualifier(),
                                                                   qualifier.getJsonIdValue()));
-    }
-
-    /**
-     * Для удаления записи по параметру и его значению.
-     * <p>
-     * Значение будет встроено в IN условие, соответственно можно передавать несколько значений через запятую
-     *
-     * @param rQualifier Квалификатор ресурса
-     * @param param      Поле, по которому производится удаление записи
-     * @param value      Значение, при котором запись удаляется
-     *
-     * @throws CrgDaoException Когда не удалось выполнить удаление
-     */
-    public void removeRecord(ResourceQualifier rQualifier, String param, Object value) throws CrgDaoException {
-        try {
-            String query = String.format("DELETE FROM %s WHERE %s IN (%s)",
-                                         rQualifier.getTableQualifier(), param, value);
-
-            log.debug("Request to delete record: [{}]", query);
-
-            pJdbcTemplate.getJdbcTemplate().execute(query);
-        } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить удаление объекта(ов): '%s' из: '%s'",
-                                       value, rQualifier.getTableQualifier());
-            log.debug(msg);
-
-            throw new CrgDaoException(msg, e.getCause());
-        }
-    }
-
-    public void removeAllRecords(ResourceQualifier rQualifier) {
-        try {
-            String query = String.format("DELETE FROM %s",
-                                         rQualifier.getTableQualifier());
-
-            log.debug("Request to delete all records: [{}]", query);
-
-            pJdbcTemplate.getJdbcTemplate().execute(query);
-        } catch (Exception e) {
-            String msg = String.format("Не удалось выполнить удаление объектов из: '%s'",
-                                       rQualifier.getTableQualifier());
-            log.debug(msg);
-
-            throw new DataServiceException(msg, e.getCause());
-        }
     }
 
     /**
@@ -198,6 +141,17 @@ public class BaseDao {
         return records.isEmpty()
                 ? Optional.empty()
                 : Optional.of(records.get(0));
+    }
+
+    private <T> List<T> findAll(ResourceQualifier qualifier,
+                                String ecqlFilter,
+                                RowMapper<T> rowMapper) {
+        String query = "SELECT * FROM " + qualifier.getTableQualifier() +
+                " " + buildWhereSection(ecqlFilter);
+
+        log.debug("Query find all with filter: [{}]", query);
+
+        return pJdbcTemplate.query(query, rowMapper);
     }
 
     private <T> Optional<T> findBy(ResourceQualifier qualifier,

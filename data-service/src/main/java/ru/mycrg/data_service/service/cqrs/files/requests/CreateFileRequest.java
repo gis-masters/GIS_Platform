@@ -20,6 +20,6 @@ public class CreateFileRequest implements IRequest<List<FileProjection>> {
 
     @Override
     public String getType() {
-        return "CreateFileRequest";
+        return CreateFileRequest.class.getSimpleName();
     }
 }

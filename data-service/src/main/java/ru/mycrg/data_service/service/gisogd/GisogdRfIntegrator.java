@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
+import static ru.mycrg.data_service.config.CrgCommonConfig.*;
 import static ru.mycrg.data_service_contract.enums.ValueType.DATETIME;
 
 @Service
@@ -163,13 +163,12 @@ public class GisogdRfIntegrator {
 
     private void sendRecord(String token, String path, String content) {
         try {
-            MediaType mediaType = MediaType.parse("application/json");
-            RequestBody body = RequestBody.create(mediaType, content);
+            RequestBody body = RequestBody.create(DEFAULT_MEDIA_TYPE, content);
             Request request = new Request.Builder()
                     .url(format("%s/%s", gisogdUrl, path))
                     .post(body)
                     .addHeader("Authorization", format("Bearer %s", token))
-                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Content-Type", DEFAULT_CONTENT_TYPE)
                     .build();
 
             ResponseModel<Object> response = httpClient.handleRequest(request);

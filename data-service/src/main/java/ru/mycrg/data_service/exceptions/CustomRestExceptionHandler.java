@@ -203,7 +203,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     // 500
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
-        String msg = "Something went wrong";
+        String msg = "☠ Something went wrong ☠";
         logError(msg, ex);
 
         log.debug("Exception class: {}", ex.getClass().getSimpleName());

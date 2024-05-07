@@ -18,9 +18,9 @@ import static java.util.Optional.ofNullable;
 public class SchemaDao {
     private static final Logger log = LoggerFactory.getLogger(SchemaDao.class);
 
-    private  final BaseDao baseDao;
+    private  final BaseReadDao baseDao;
 
-    public SchemaDao(BaseDao baseDao) {
+    public SchemaDao(BaseReadDao baseDao) {
         this.baseDao = baseDao;
     }
 

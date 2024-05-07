@@ -21,7 +21,7 @@ public class CreateDatasetRequest implements IRequest<DatasetModel>, Auditable {
 
     @Override
     public String getType() {
-        return "CreateDatasetRequest";
+        return CreateDatasetRequest.class.getSimpleName();
     }
 
     @Override

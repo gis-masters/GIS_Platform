@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.service.gisogd.GisogdRfAuditor;
 import ru.mycrg.data_service.service.gisogd.GisogdRfPublisher;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -25,16 +25,16 @@ import static ru.mycrg.data_service.service.gisogd.GisogdRfPublisher.INBOX_MARKE
 @RequestMapping("/gisogd-rf")
 public class GisogdRfController {
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseReadDao;
     private final TableService tableService;
     private final GisogdRfAuditor gisogdRfAuditor;
     private final GisogdRfPublisher gisogdRfPublisher;
 
-    public GisogdRfController(BaseDao baseDao,
+    public GisogdRfController(BaseReadDao baseReadDao,
                               TableService tableService,
                               GisogdRfAuditor gisogdRfAuditor,
                               GisogdRfPublisher gisogdRfPublisher) {
-        this.baseDao = baseDao;
+        this.baseReadDao = baseReadDao;
         this.tableService = tableService;
         this.gisogdRfAuditor = gisogdRfAuditor;
         this.gisogdRfPublisher = gisogdRfPublisher;
@@ -95,7 +95,7 @@ public class GisogdRfController {
         ResourceQualifier docLibraries = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries");
         String filterByTableName = "table_name = '" + entityName + "'";
 
-        return baseDao.findBy(docLibraries, filterByTableName)
-                      .isPresent();
+        return baseReadDao.findBy(docLibraries, filterByTableName)
+                          .isPresent();
     }
 }

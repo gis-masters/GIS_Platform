@@ -22,18 +22,18 @@ import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.cqrs.datasets.requests.CreateDatasetRequest;
+import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.import_.GmlImporter;
 import ru.mycrg.data_service.service.import_.dto.GmlPlacementModel;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
-import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service.service.processes.IFilePlacer;
-import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.http_client.HttpClient;
@@ -50,10 +50,11 @@ import java.util.UUID;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_MEDIA_TYPE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service_contract.enums.FileType.GML;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
+import static ru.mycrg.data_service_contract.enums.FileType.GML;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
@@ -269,7 +270,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                               ImportLayerReport layerReport) {
         try {
             RequestBody payload = RequestBody.create(
-                    MediaType.parse("application/json"),
+                    DEFAULT_MEDIA_TYPE,
                     "{" +
                             "    \"tableName\": \"" + layerReport.getTableIdentifier() + "\"," +
                             "    \"type\": \"vector\"," +
@@ -297,7 +298,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
 
     private Optional<Long> createGroup(Long projectId, String groupTitle) {
         try {
-            RequestBody payload = RequestBody.create(MediaType.parse("application/json"),
+            RequestBody payload = RequestBody.create(DEFAULT_MEDIA_TYPE,
                                                      "{\"title\": \"" + groupTitle + "\"}");
 
             Request request = new Request.Builder()

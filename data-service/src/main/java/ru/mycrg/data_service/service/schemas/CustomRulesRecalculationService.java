@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
@@ -29,7 +29,7 @@ public class CustomRulesRecalculationService {
 
     private final Logger log = LoggerFactory.getLogger(CustomRulesRecalculationService.class);
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
     private final SchemaExtractor schemaExtractor;
     private final SpatialRecordsDao spatialRecordsDao;
     private final IResourceProtector datasetProtector;
@@ -37,7 +37,7 @@ public class CustomRulesRecalculationService {
 
     public CustomRulesRecalculationService(CustomRuleCalculator customRuleCalculator,
                                            SpatialRecordsDao spatialRecordsDao,
-                                           BaseDao baseDao,
+                                           BaseReadDao baseDao,
                                            SchemaExtractor schemaExtractor,
                                            IResourceProtector datasetProtector) {
         this.baseDao = baseDao;

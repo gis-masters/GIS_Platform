@@ -45,4 +45,12 @@ public class JsonConverter {
             return Optional.empty();
         }
     }
+
+    public static <T> Optional<T> fromBytes(byte[] data, Class<T> clazz) {
+        try {
+            return Optional.ofNullable(mapper.readValue(data, clazz));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
 }

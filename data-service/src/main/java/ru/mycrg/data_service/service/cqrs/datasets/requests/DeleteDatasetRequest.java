@@ -20,7 +20,7 @@ public class DeleteDatasetRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "DeleteDatasetRequest";
+        return DeleteDatasetRequest.class.getSimpleName();
     }
 
     @Override

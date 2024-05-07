@@ -25,7 +25,7 @@ public class UpdateDatasetRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateDatasetRequest";
+        return UpdateDatasetRequest.class.getSimpleName();
     }
 
     @Override

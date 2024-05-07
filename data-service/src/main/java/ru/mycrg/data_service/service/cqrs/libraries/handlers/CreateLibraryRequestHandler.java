@@ -77,7 +77,7 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         library.setDetails(dto.getDetails());
         library.setTableName(schema.getTableName());
         library.setCreatedBy(authenticationFacade.getLogin());
-        library.setPath("/root");
+        library.setPath(ROOT_FOLDER_PATH);
         library.setVersioned(dto.isVersioned());
         library.setReadyForFts(dto.isReadyForFts());
 

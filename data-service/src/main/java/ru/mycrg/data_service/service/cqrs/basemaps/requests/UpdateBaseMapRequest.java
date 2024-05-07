@@ -24,7 +24,7 @@ public class UpdateBaseMapRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateBaseMapRequest";
+        return UpdateBaseMapRequest.class.getSimpleName();
     }
 
     @Override

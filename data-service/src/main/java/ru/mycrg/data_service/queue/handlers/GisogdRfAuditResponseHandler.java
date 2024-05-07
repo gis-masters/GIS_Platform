@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.ParameterizedBaseDao;
+import ru.mycrg.data_service.dao.BaseWriteDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.gisog_service_contract.AuditResponseGisogdRfEvent;
 import ru.mycrg.gisog_service_contract.dto.Document;
@@ -52,7 +52,7 @@ public class GisogdRfAuditResponseHandler implements IEventHandler {
             String databaseName = getDefaultDatabaseName(event.getOrgId());
             NamedParameterJdbcTemplate jdbcTemplate =
                     new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
-            ParameterizedBaseDao parameterizedBaseDao = new ParameterizedBaseDao(jdbcTemplate);
+            BaseWriteDao baseWriteDao = new BaseWriteDao(jdbcTemplate);
 
             String query = String.format("UPDATE %s.%s SET " +
                                                  "gisogdrf_response = :gisogdrf_response, " +
@@ -68,7 +68,7 @@ public class GisogdRfAuditResponseHandler implements IEventHandler {
                                      LocalDateTime.now(),
                                      Types.TIMESTAMP);
 
-            parameterizedBaseDao.update(query, parameterSource);
+            baseWriteDao.update(query, parameterSource);
         } catch (Exception e) {
             log.error("Не удалось корректно обработать AuditResponseGisogdRfEvent. Причина: {}", e.getMessage());
         }

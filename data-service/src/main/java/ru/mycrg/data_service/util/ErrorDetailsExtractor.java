@@ -24,18 +24,26 @@ public class ErrorDetailsExtractor {
         Map<String, String> errors = new HashMap<>();
 
         Throwable cause = exception.getCause();
-        if (cause instanceof PSQLException) {
-            ServerErrorMessage serverErrorMessage = ((PSQLException) cause).getServerErrorMessage();
-            String message = serverErrorMessage.getMessage();
-            String column = serverErrorMessage.getColumn();
-            if (column == null) {
-                column = extractColumn(message);
-            }
-
-            errors.put(column, message);
-        } else {
+        if (!(cause instanceof PSQLException)) {
             log.debug("Cant extract details: its not PSQLException");
+
+            return errors;
         }
+
+        ServerErrorMessage serverErrorMessage = ((PSQLException) cause).getServerErrorMessage();
+        if (serverErrorMessage == null) {
+            log.debug("Cant extract serverErrorMessage: its not PSQLException");
+
+            return errors;
+        }
+
+        String message = serverErrorMessage.getMessage();
+        String column = serverErrorMessage.getColumn();
+        if (column == null) {
+            column = extractColumn(message);
+        }
+
+        errors.put(column, message);
 
         return errors;
     }

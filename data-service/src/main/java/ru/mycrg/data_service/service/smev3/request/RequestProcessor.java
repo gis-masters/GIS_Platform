@@ -7,7 +7,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -37,7 +37,7 @@ public abstract class RequestProcessor {
     private static final Base64.Encoder base64Encoder = Base64.getEncoder();
 
     // общие бины
-    private final BaseDao baseDao;
+    private final BaseReadDao baseReadDao;
     private final SmevMessageSenderService messageService;
     private final ISchemaTemplateService schemaService;
     private final SmevOutgoingAttachmentService attachmentService;
@@ -53,14 +53,14 @@ public abstract class RequestProcessor {
 
     public RequestProcessor(Mnemonic mnemonic,
                             SmevMessageSenderService messageService,
-                            BaseDao baseDao,
+                            BaseReadDao baseReadDao,
                             ISchemaTemplateService schemaService,
                             SmevOutgoingAttachmentService attachmentService,
                             ResourceLoader resourceLoader,
                             Smev3Config smev3Config) {
         this.messageService = messageService;
         this.mnemonic = mnemonic;
-        this.baseDao = baseDao;
+        this.baseReadDao = baseReadDao;
         this.schemaService = schemaService;
         this.attachmentService = attachmentService;
         this.resourceLoader = resourceLoader;
@@ -69,8 +69,8 @@ public abstract class RequestProcessor {
         this.schema = loadSchema(mnemonic.getSchemaPath());
     }
 
-    public BaseDao getBaseDao() {
-        return baseDao;
+    public BaseReadDao getBaseDao() {
+        return baseReadDao;
     }
 
     public ISchemaTemplateService getSchemaService() {

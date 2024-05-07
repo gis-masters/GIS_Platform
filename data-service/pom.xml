@@ -254,6 +254,13 @@
             <version>7.1.4</version>
         </dependency>
 
+        <!-- Для конвертации проекций из формата WKT -> proj4 -->
+        <dependency>
+            <groupId>mil.nga</groupId>
+            <artifactId>crs</artifactId>
+            <version>1.1.5</version>
+        </dependency>
+
         <!-- CRG -->
         <dependency>
             <groupId>ru.mycrg</groupId>

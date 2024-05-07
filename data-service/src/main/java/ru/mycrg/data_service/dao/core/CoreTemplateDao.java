@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dao;
+package ru.mycrg.data_service.dao.core;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BaseTemplateDao {
+public class CoreTemplateDao {
 
     public <T> T queryForObject(JdbcTemplate jdbcTemplate, String query, Class<T> requiredType) {
         return jdbcTemplate.queryForObject(query, requiredType);

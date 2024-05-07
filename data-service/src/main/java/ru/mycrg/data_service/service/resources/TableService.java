@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.TableModel;
@@ -28,6 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
+import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
@@ -38,7 +39,7 @@ public class TableService {
 
     private final Logger log = LoggerFactory.getLogger(TableService.class);
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseReadDao;
     private final IAuthenticationFacade authenticationFacade;
     private final SystemAttributeHandler systemAttributeHandler;
     private final BasePermissionsRepository permissionsRepository;
@@ -47,9 +48,9 @@ public class TableService {
     public TableService(IAuthenticationFacade authenticationFacade,
                         SchemasAndTablesRepository schemasAndTablesRepository,
                         BasePermissionsRepository permissionsRepository,
-                        BaseDao baseDao,
+                        BaseReadDao baseReadDao,
                         SystemAttributeHandler systemAttributeHandler) {
-        this.baseDao = baseDao;
+        this.baseReadDao = baseReadDao;
         this.authenticationFacade = authenticationFacade;
         this.permissionsRepository = permissionsRepository;
         this.systemAttributeHandler = systemAttributeHandler;
@@ -66,28 +67,28 @@ public class TableService {
         if (authenticationFacade.isOrganizationAdmin()) {
             ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 
-            allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                            ecqlFilter,
-                                            pageable,
-                                            new SchemasAndTablesMapper())
-                                   .stream()
-                                   .map(item -> new TableModel(item, OWNER.name(), datasetIdentifier))
-                                   .collect(Collectors.toList());
-            total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+            allowedTables = baseReadDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                ecqlFilter,
+                                                pageable,
+                                                new SchemasAndTablesMapper())
+                                       .stream()
+                                       .map(item -> new TableModel(item, OWNER.name(), datasetIdentifier))
+                                       .collect(Collectors.toList());
+            total = baseReadDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
             Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (roleForParentDataset.isPresent()) {
                 ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 
-                allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                ecqlFilter,
-                                                pageable,
-                                                new SchemasAndTablesMapper())
-                                       .stream()
-                                       .map(item -> new TableModel(item, datasetIdentifier))
-                                       .collect(Collectors.toList());
-                total = baseDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
+                allowedTables = baseReadDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                    ecqlFilter,
+                                                    pageable,
+                                                    new SchemasAndTablesMapper())
+                                           .stream()
+                                           .map(item -> new TableModel(item, datasetIdentifier))
+                                           .collect(Collectors.toList());
+                total = baseReadDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
             } else {
                 allowedTables = permissionsRepository
                         .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo(), ecqlFilter, pageable,
@@ -108,16 +109,16 @@ public class TableService {
     public List<TableModel> getAll(SchemasAndTables dataset) {
         List<TableModel> allowedTables;
         if (authenticationFacade.isOrganizationAdmin()) {
-            allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                            addPathToDataset(dataset.pathTo()),
-                                            TableModel.class);
+            allowedTables = baseReadDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                addPathToDataset(dataset.pathTo()),
+                                                TableModel.class);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, dataset.getIdentifier());
             Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (roleForParentDataset.isPresent()) {
-                allowedTables = baseDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                addPathToDataset(dataset.pathTo()),
-                                                TableModel.class);
+                allowedTables = baseReadDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                    addPathToDataset(dataset.pathTo()),
+                                                    TableModel.class);
             } else {
                 allowedTables = permissionsRepository
                         .findAllowedByParent(SCHEMAS_AND_TABLES_QUALIFIER, dataset.pathTo())
@@ -169,7 +170,7 @@ public class TableService {
         }
 
         String tablePath = table.get().getPath();
-        if (tablePath.equals("/root")) {
+        if (tablePath.equals(ROOT_FOLDER_PATH)) {
             throw new BadRequestException("Данный квалификатор " + tableName + " не является табличным");
         }
 

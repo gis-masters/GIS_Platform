@@ -18,10 +18,10 @@ import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInser
 @Transactional
 public class CommonDao {
 
-    private final ParameterizedBaseDao pBaseDao;
+    private final BaseWriteDao pBaseDao;
     private final SqlParameterSourceFactory sqlParameterSourceFactory;
 
-    public CommonDao(ParameterizedBaseDao pBaseDao,
+    public CommonDao(BaseWriteDao pBaseDao,
                      SqlParameterSourceFactory parameterSourceMapperFactory) {
         this.pBaseDao = pBaseDao;
         this.sqlParameterSourceFactory = parameterSourceMapperFactory;

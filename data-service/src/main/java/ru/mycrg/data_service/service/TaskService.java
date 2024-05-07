@@ -10,7 +10,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -44,11 +44,11 @@ public class TaskService {
     public static final String TASK_OWNER_ID_PROPERTY = "owner_id";
     public static final String TASK_DESCRIPTION_PROPERTY = "description";
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
     private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
-    public TaskService(BaseDao baseDao,
+    public TaskService(BaseReadDao baseDao,
                        ISchemaTemplateService schemaService,
                        IAuthenticationFacade authenticationFacade) {
         this.baseDao = baseDao;

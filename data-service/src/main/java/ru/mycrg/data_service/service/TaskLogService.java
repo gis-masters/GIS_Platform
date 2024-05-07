@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.entity.TaskLog;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -31,9 +31,9 @@ public class TaskLogService {
     public static final ResourceQualifier TASK_LOG_QUALIFIER = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
                                                                                      TASK_LOG_TABLE_NAME);
     private final TaskLogRepository taskLogRepository;
-    private final BaseDao baseDao;
+    private final BaseReadDao baseDao;
 
-    public TaskLogService(TaskLogRepository taskLogRepository, BaseDao baseDao) {
+    public TaskLogService(TaskLogRepository taskLogRepository, BaseReadDao baseDao) {
         this.taskLogRepository = taskLogRepository;
         this.baseDao = baseDao;
     }

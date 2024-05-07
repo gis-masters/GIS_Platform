@@ -14,7 +14,7 @@ public class CreateExternalStatementRequest implements IRequest<Voidy> {
 
     @Override
     public String getType() {
-        return "CreateExternalStatementRequest";
+        return CreateExternalStatementRequest.class.getSimpleName();
     }
 
     public ExternalStatementDto getStatementDto() {

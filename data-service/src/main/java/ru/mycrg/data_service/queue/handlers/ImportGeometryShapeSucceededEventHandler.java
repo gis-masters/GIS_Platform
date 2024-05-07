@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
-import ru.mycrg.data_service.dao.BaseTemplateDao;
+import ru.mycrg.data_service.dao.core.CoreTemplateDao;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -30,14 +30,14 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
 
     private final ProcessService processService;
     private final DatasourceFactory datasourceFactory;
-    private final BaseTemplateDao baseTemplateDao;
+    private final CoreTemplateDao coreTemplateDao;
 
     public ImportGeometryShapeSucceededEventHandler(ProcessService processService,
                                                     DatasourceFactory datasourceFactory,
-                                                    BaseTemplateDao baseTemplateDao) {
+                                                    CoreTemplateDao coreTemplateDao) {
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
-        this.baseTemplateDao = baseTemplateDao;
+        this.coreTemplateDao = coreTemplateDao;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
             throwsIfGeometryIsNotMatching(jdbcTemplate, sourceTable, requestEvent.getGeometryType());
 
             String copyQuery = buildCopyGeometryQuery(sourceTable, targetTable);
-            Long insertedQuantity = baseTemplateDao.queryForObject(jdbcTemplate, copyQuery, Long.class);
+            Long insertedQuantity = coreTemplateDao.queryForObject(jdbcTemplate, copyQuery, Long.class);
 
             importGeometryReport.setSuccess(true);
             importGeometryReport.setQuantityOfImportedRecords(insertedQuantity);
@@ -107,7 +107,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
 
         String deleteTableQuery = buildDeleteTableQuery(sourceTable);
         log.debug("SQL Delete temporary table Query: {}", deleteTableQuery);
-        baseTemplateDao.execute(jdbcTemplate, deleteTableQuery);
+        coreTemplateDao.execute(jdbcTemplate, deleteTableQuery);
         log.debug("Временная таблица {} удалена.", sourceTable.getQualifier());
     }
 
@@ -119,7 +119,7 @@ public class ImportGeometryShapeSucceededEventHandler implements IEventHandler {
         try {
             String sourceGeomTypeQuery = buildGetGeometryTypeQuery(sourceTable, "wkb_geometry");
             log.debug("SQL get geometry type of table: {}", sourceGeomTypeQuery);
-            sourceGeomTypes = baseTemplateDao.queryForList(jdbcTemplate, sourceGeomTypeQuery, String.class);
+            sourceGeomTypes = coreTemplateDao.queryForList(jdbcTemplate, sourceGeomTypeQuery, String.class);
         } catch (Exception e) {
             String msg = "Не удалось вычислить тип геометрии в таблице: " + sourceTable.getQualifier();
             log.error("{}. Причина: {}", msg, e.getMessage());

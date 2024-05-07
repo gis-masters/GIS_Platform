@@ -144,20 +144,4 @@ public class FtsDao {
 
         return new HashSet<>(headlines);
     }
-
-    public Long countTotal(ResourceQualifier qualifier,
-                           List<String> resources,
-                           String ecqlFilter,
-                           String text,
-                           float bound) {
-        String query = "SELECT count(*) FROM " + qualifier.getTableQualifier() + " AS d " +
-                " " + buildFtsWhere(ecqlFilter, bound, resources);
-
-        log.debug("fts count total for documents: [{}]", query);
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("searchedText", text, VARCHAR);
-
-        return pJdbcTemplate.queryForObject(query, parameters, Long.class);
-    }
 }

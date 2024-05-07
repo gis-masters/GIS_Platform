@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.TerminateRnsRequestDto;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
@@ -37,7 +37,7 @@ public class TerminateRnsRequestService extends RequestProcessor {
 
     public TerminateRnsRequestService(SmevMessageSenderService messageService,
                                       Smev3Config smev3Config,
-                                      BaseDao baseDao,
+                                      BaseReadDao baseDao,
                                       @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       ResourceLoader resourceLoader,
                                       SmevOutgoingAttachmentService attachmentService,

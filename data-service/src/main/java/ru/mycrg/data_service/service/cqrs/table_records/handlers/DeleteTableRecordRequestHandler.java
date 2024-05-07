@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.table_records.handlers;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseWriteDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -20,9 +20,9 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.EXTENSION_TABLE
 public class DeleteTableRecordRequestHandler implements IRequestHandler<DeleteTableRecordRequest, Voidy> {
 
     private final SpatialRecordsDao spatialRecordsDao;
-    private final BaseDao baseDao;
+    private final BaseWriteDao baseDao;
 
-    public DeleteTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao, BaseDao baseDao) {
+    public DeleteTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao, BaseWriteDao baseDao) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.baseDao = baseDao;
     }

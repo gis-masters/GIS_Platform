@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseDao;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.entity.IRecord;
@@ -69,7 +69,7 @@ public class GisogdRfPublisher {
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfPublisher.class);
 
-    private final BaseDao baseDao;
+    private final BaseReadDao baseReadDao;
     private final GisogdRfDao gisogdRfDao;
     private final SpatialRecordsDao spatialRecordsDao;
 
@@ -81,7 +81,7 @@ public class GisogdRfPublisher {
     private final ISchemaTemplateService schemaService;
     private final SchemaExtractor schemaExtractor;
 
-    public GisogdRfPublisher(BaseDao baseDao,
+    public GisogdRfPublisher(BaseReadDao baseReadDao,
                              Mediator mediator,
                              GisogdRfDao gisogdRfDao,
                              GisogdRfUtil gisogdRfUtil,
@@ -90,7 +90,7 @@ public class GisogdRfPublisher {
                              SchemaExtractor schemaExtractor,
                              SpatialRecordsDao spatialRecordsDao,
                              IAuthenticationFacade authenticationFacade) {
-        this.baseDao = baseDao;
+        this.baseReadDao = baseReadDao;
         this.mediator = mediator;
         this.messageBus = messageBus;
         this.gisogdRfDao = gisogdRfDao;
@@ -104,7 +104,7 @@ public class GisogdRfPublisher {
     public void publish(long taskId, ResourceQualifier qualifier, int srid) {
         log.debug("Try publish: {}", qualifier);
 
-        IRecord parentDoc = baseDao
+        IRecord parentDoc = baseReadDao
                 .findById(qualifier)
                 .orElseThrow(() -> new DataServiceException("Не найден документ: " + qualifier.getQualifier()));
 
@@ -189,7 +189,7 @@ public class GisogdRfPublisher {
                 ResourceQualifier territoryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "territory");
                 String filterByGuid = "guid = '" + territoryGuid + "'";
 
-                Optional<IRecord> oTerritory = baseDao.findBy(territoryQualifier, filterByGuid);
+                Optional<IRecord> oTerritory = baseReadDao.findBy(territoryQualifier, filterByGuid);
                 if (oTerritory.isPresent()) {
                     IRecord territory = oTerritory.get();
                     String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
@@ -354,8 +354,8 @@ public class GisogdRfPublisher {
 
                     ResourceQualifier childQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, library, id, LIBRARY);
                     try {
-                        baseDao.findById(childQualifier)
-                               .ifPresentOrElse(record -> {
+                        baseReadDao.findById(childQualifier)
+                                   .ifPresentOrElse(record -> {
                                    String guid = record.getAsString(GUID.getName());
                                    String contentType = record.getAsString(CONTENT_TYPE_ID.getName());
 
@@ -604,8 +604,8 @@ public class GisogdRfPublisher {
     private Document prepareDocument(ResourceQualifier recordQualifier, int srid) {
         log.debug("Founded record: '{}'", recordQualifier.getQualifier());
 
-        Optional<IRecord> oLayerRecord = baseDao.findBy(recordQualifier,
-                                                        "objectId = " + recordQualifier.getRecordId());
+        Optional<IRecord> oLayerRecord = baseReadDao.findBy(recordQualifier,
+                                                            "objectId = " + recordQualifier.getRecordId());
         if (oLayerRecord.isEmpty()) {
             throw new IllegalStateException("Не найдена запись: " + recordQualifier.getRecordId());
         }
@@ -641,7 +641,7 @@ public class GisogdRfPublisher {
 
             // Тащим запись о слое, чтобы достать путь к набору данных
             String filterForLayer = "identifier = '" + layerName + "'";
-            Optional<IRecord> oLayer = baseDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
+            Optional<IRecord> oLayer = baseReadDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
             if (oLayer.isEmpty()) {
                 log.warn("Не найден слой: {}", layerName);
 
@@ -651,7 +651,7 @@ public class GisogdRfPublisher {
             long datasetId = Long.parseLong(oLayer.get().getContent().get(PATH.getName()).toString().split("root/")[1]);
 
             // Тащим запись о наборе данных, чтобы достать его название
-            IRecord dataset = baseDao
+            IRecord dataset = baseReadDao
                     .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
                     .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
             String datasetIdentifier = dataset.getContent().get("identifier").toString();
