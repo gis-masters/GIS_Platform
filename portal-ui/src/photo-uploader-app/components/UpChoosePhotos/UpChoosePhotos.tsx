@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { pluralize } from 'numeralize-ru';
 
 import { PseudoLink } from '../../../app/components/PseudoLink/PseudoLink';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
@@ -23,7 +24,7 @@ export const UpChoosePhoto: FC = observer(() => {
         <div className={cnUpChoosePhotos('Counter')}>
           Выбрано:{' '}
           <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={clickHandler}>
-            {photoUploaderStore.files.length} фотографий
+            {photoUploaderStore.files.length} фотографи{pluralize(photoUploaderStore.files.length, 'я', 'и', 'й')}
           </PseudoLink>
           {!!photoUploaderStore.filesWithError && (
             <span className={cnUpChoosePhotos('Counter', { type: 'error' })}> (есть ошибки)</span>

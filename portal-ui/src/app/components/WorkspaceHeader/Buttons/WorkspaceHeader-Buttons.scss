@@ -1,6 +1,8 @@
 .WorkspaceHeader-Buttons {
   grid-area: buttons;
 
-  text-align: right;
-  white-space: nowrap;
+  display: flex;
+  justify-content: flex-end;
+
+  width: 100%;
 }

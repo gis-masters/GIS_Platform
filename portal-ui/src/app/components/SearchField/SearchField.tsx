@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { FtsType } from '../../../server-types/common-contracts';
@@ -19,12 +20,12 @@ export interface SearchInfo {
   type?: FtsType;
 }
 
-interface SearchFieldProps {
+interface SearchFieldProps extends IClassNameProps {
   whiteStyle?: boolean;
   onSubmit: (search: ExplorerSearchValue) => void;
 }
 
-const cnExplorerSearch = cn('SearchField');
+const cnSearchField = cn('SearchField');
 
 @observer
 export class SearchField extends Component<SearchFieldProps> {
@@ -37,9 +38,11 @@ export class SearchField extends Component<SearchFieldProps> {
 
   render() {
     return (
-      <form className={cnExplorerSearch()} onSubmit={this.onSubmit}>
+      <form className={cnSearchField(null, [this.props.className])} onSubmit={this.onSubmit}>
         <TextField
-          className={cnExplorerSearch('Input', { whiteStyle: this.props.whiteStyle })}
+          className={cnSearchField('Input', {
+            whiteStyle: this.props.whiteStyle
+          })}
           value={this.search.searchValue || ''}
           onChange={this.handleSearchChange}
           placeholder='Поиск'

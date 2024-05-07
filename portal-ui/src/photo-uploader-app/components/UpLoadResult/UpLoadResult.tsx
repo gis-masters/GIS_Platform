@@ -30,7 +30,7 @@ export const UpLoadResult: FC = observer(() => (
       </>
     )}
     <Button className={cnUpLoadResult('Button')} onClick={loadMore}>
-      Загрузить еще
+      Загрузить ещё
     </Button>
   </div>
 ));

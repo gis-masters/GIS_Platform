@@ -26,12 +26,12 @@ export const UpLoadResultContent: FC = observer(() => {
     <div className={cnUpLoadResult('Content')}>
       <div className={cnUpLoadResult('Success')}>
         Успешно загружен{pluralize(successed, 'а', 'о', 'о')} {successed} фотографи
-        {pluralize(successed, 'я', 'й', 'й')}
+        {pluralize(successed, 'я', 'и', 'й')}
       </div>
       {!!withError && (
         <div className={cnUpLoadResult('NotUploaded')}>
           Не загружено загружен{pluralize(withError, 'а', 'о', 'о')} {withError} фотографи
-          {pluralize(withError, 'я', 'й', 'й')}
+          {pluralize(withError, 'я', 'и', 'й')}
         </div>
       )}
       <PseudoLink className={cnUpLoadResult('LinkToList')} onClick={linkToListClickHandler}>

@@ -1,0 +1,20 @@
+body .SearchInProject-SearchField {
+  display: none;
+
+  @container (min-width: 200px) {
+    display: block;
+  }
+
+  &_expanded {
+    position: absolute;
+    top: 3px;
+    right: -14px;
+
+    display: block;
+
+    width: 250px;
+
+    background-color: var(--blue);
+    box-shadow: -10px 0 10px var(--blue);
+  }
+}
