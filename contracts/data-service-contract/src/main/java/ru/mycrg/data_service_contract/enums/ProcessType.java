@@ -5,5 +5,6 @@ public enum ProcessType {
     VALIDATION,
     VALIDATION_REPORT,
     EXPORT,
-    IMPORT_GEOMETRY
+    IMPORT_GEOMETRY,
+    FULL_TEXT_SEARCH
 }
