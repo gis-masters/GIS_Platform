@@ -463,17 +463,22 @@
       },
       {
         "id": "dataSchemas",
-        "title": "Схемы данных",
+        "title": "Шаблоны схем данных",
         "children": [
           {
             "id": "dataSchemasBasis",
-            "title": "Схемы данных",
+            "title": "Шаблоны схем данных",
             "contentUrl": "/assets/help/5dataManagement/16dataSchemas/16dataSchemas.html"
           },
           {
             "id": "visualSchemas",
             "title": "Свойства схем",
             "contentUrl": "/assets/help/5dataManagement/17visualSchemas/17visualSchemas.html"
+          },
+          {
+            "id": "editSchemas",
+            "title": "Редактирование свойств (схем)",
+            "contentUrl": "/assets/help/5dataManagement/21editSchemas/21editSchemas.html"
           }
         ]
       },
