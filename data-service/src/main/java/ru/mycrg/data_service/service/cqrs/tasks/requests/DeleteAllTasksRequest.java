@@ -7,6 +7,6 @@ public class DeleteAllTasksRequest implements IRequest<Voidy> {
 
     @Override
     public String getType() {
-        return "DeleteAllTasksRequest";
+        return DeleteAllTasksRequest.class.getSimpleName();
     }
 }

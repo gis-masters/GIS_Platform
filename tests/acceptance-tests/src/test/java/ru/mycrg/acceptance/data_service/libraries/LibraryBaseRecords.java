@@ -52,7 +52,7 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                         patch(String.format("/%s/records/%d", library, recordId));
     }
 
-    public void deleteRecord(Integer recordId) {
+    public void deleteRecordFromDefaultLibrary(Integer recordId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete(String.format("/%s/records/%s", DEFAULT_LIBRARY, recordId));

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 public interface IRecord {
 
@@ -21,6 +22,14 @@ public interface IRecord {
 
     @Nullable
     String getAsString(String field);
+
+    default String getPath() {
+        return getAsString(PATH.getName());
+    }
+
+    default String getPathToMe() {
+        return getPath() + "/" + getId();
+    }
 
     default boolean isFolder() {
         return asBoolean(IS_FOLDER.getName());

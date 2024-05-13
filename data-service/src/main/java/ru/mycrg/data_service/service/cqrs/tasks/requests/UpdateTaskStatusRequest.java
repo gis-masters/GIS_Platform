@@ -22,7 +22,7 @@ public class UpdateTaskStatusRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateTaskStatusRequest";
+        return UpdateTaskStatusRequest.class.getSimpleName();
     }
 
     @Override

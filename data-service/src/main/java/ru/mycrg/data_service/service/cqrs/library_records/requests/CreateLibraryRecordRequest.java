@@ -31,7 +31,7 @@ public class CreateLibraryRecordRequest implements IRequest<IRecord>, Auditable,
 
     @Override
     public String getType() {
-        return "CreateLibraryRecordRequest";
+        return CreateLibraryRecordRequest.class.getSimpleName();
     }
 
     @Override

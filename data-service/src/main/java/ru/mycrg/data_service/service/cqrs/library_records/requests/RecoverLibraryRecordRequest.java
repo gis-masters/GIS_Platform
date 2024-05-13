@@ -22,7 +22,7 @@ public class RecoverLibraryRecordRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "RecoverLibraryRecordRequest";
+        return RecoverLibraryRecordRequest.class.getSimpleName();
     }
 
     @Override

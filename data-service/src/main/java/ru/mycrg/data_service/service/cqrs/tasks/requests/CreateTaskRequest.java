@@ -26,7 +26,7 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable {
 
     @Override
     public String getType() {
-        return "CreateTaskRequest";
+        return CreateTaskRequest.class.getSimpleName();
     }
 
     @Override

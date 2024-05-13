@@ -57,8 +57,8 @@ public class ResourceQualifier extends AQualifier {
         return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
     }
 
-    public static ResourceQualifier libraryQualifier(String schemaName, String libraryName) {
-        return new ResourceQualifier(schemaName, libraryName, LIBRARY);
+    public static ResourceQualifier libraryRecordQualifier(String libraryName, Long id) {
+        return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, id, LIBRARY_RECORD);
     }
 
     public static ResourceQualifier tableQualifier(String dataset, String table) {

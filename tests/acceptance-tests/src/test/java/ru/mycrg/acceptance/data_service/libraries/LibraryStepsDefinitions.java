@@ -141,13 +141,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Пользователь удаляет запись в библиотеке")
     public void deleteLibraryDocument() {
-        deleteRecord(currentDocumentId);
+        deleteRecordFromDefaultLibrary(currentDocumentId);
     }
 
     @Given("Текущая запись была удалена")
     public void currentLibraryRecordWasDeleted() {
         deletedDocumentId = currentDocumentId;
-        deleteRecord(deletedDocumentId);
+        deleteRecordFromDefaultLibrary(deletedDocumentId);
 
         assertEquals(204, response.getStatusCode());
     }
@@ -710,21 +710,30 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkSorting(sortingDirection, recordsSorted);
     }
 
-    @When("Пользователь пытается перенести каталог с id: {int}")
-    public void tryToMoveFolder(int folderId) {
-        moveRecord((long) folderId, (long) folderId);
+    @When("я переношу объект {int} в каталог {int}")
+    public void moveRecord(int movedFolderId, int targetFolderId) {
+        moveRecord((long) movedFolderId, (long) targetFolderId);
     }
 
-    @When("Отправляется запрос на перенос записи {int} в каталог {int}")
-    public void moveRecord(int recordId, int folderId) {
-        moveRecord((long) recordId, (long) folderId);
-    }
-
-    @Then("Перенос записи {int} выполнен успешно")
-    public void checkFilePath(int recordId) {
-        getRecordById(recordId, DEFAULT_LIBRARY);
-
+    @Then("перенос документа 1 выполнен успешно")
+    public void checkFile1Path() {
+        getRecordById(1, DEFAULT_LIBRARY);
         checkResponseValue("path", "/root/4/10/11/13");
+    }
+
+    @Then("перенос каталога 13 и его вложений выполнен успешно")
+    public void checkFile13Path() {
+        getRecordById(13, DEFAULT_LIBRARY);
+        checkResponseValue("path", "/root/17");
+
+        getRecordById(14, DEFAULT_LIBRARY);
+        checkResponseValue("path", "/root/17/13");
+
+        getRecordById(15, DEFAULT_LIBRARY);
+        checkResponseValue("path", "/root/17/13");
+
+        getRecordById(16, DEFAULT_LIBRARY);
+        checkResponseValue("path", "/root/17/13/14");
     }
 
     @When("Владелец организации отправляет запрос на восстановление документа в библиотеке по-умолчанию")
@@ -748,7 +757,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         recoverRecord(currentDocumentId, currentFolderId, DEFAULT_LIBRARY);
     }
 
-    @When("Сообщение об ошибке соответствует ожидаемому: {string}")
+    @When("сообщение об ошибке соответствует ожидаемому: {string}")
     public void checkErrorMsg(String msg) {
         checkResponseValue("message", msg);
     }
@@ -818,7 +827,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 .given().
                         contentType("multipart/form-data").
                         multiPart("body", body)
-                .when().log().all().
+                .when().
+                        log().all().
                         post(String.format("/%s/records", libraryId));
 
         currentDocumentId = extractEntityIdFromResponse(response);
@@ -834,10 +844,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         post(url);
     }
 
-    private void moveRecord(Long recordId, Long parentId) {
+    private void moveRecord(Long movedRecordId, Long targetRecordId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        post(String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, recordId, parentId));
+                        log().all().
+                        post(String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, movedRecordId, targetRecordId));
     }
 
     private void updateDocument(Integer docId, String payload, String currentLibraryId) {

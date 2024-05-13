@@ -22,7 +22,7 @@ public class CreateReestrRecordRequest implements IRequest<IRecord> {
 
     @Override
     public String getType() {
-        return "CreateReestrRecordRequest";
+        return CreateReestrRecordRequest.class.getSimpleName();
     }
 
     public @NotNull SchemaDto getSchema() {

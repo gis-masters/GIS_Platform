@@ -25,7 +25,7 @@ public class DeleteMultipleTableRecordsRequest implements IRequest<Voidy>, Audit
 
     @Override
     public String getType() {
-        return "DeleteMultipleTableRecordsRequest";
+        return DeleteMultipleTableRecordsRequest.class.getSimpleName();
     }
 
     @Override

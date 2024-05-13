@@ -152,7 +152,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
      * Визуальное представление структуры каталогов и фалов представлены в файле {@code prepearedLibraryStructures}
      * который расположен тут: {@code ru/mycrg/acceptance/data_service/libraries/prepearedLibraryStructures}
      */
-    @Given("В тестовой библиотеке существует следующая структура каталогов: Вариант {int}")
+    @Given("Владельцем организации, в тестовой библиотеке создана следующая структура каталогов: Вариант {int}")
     public void createSomeCatalogsAndFiles(int option) {
         authorizationBase.loginAsOwner();
 
@@ -212,6 +212,8 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             String file1 = "file_1";
             String file2 = "file_2";
             String file3 = "file_3";
+            String file4 = "file_4";
+            String file5 = "file_5";
             String folder1 = "folder_1";
             String folder2 = "folder_2";
             String folder3 = "folder_3";
@@ -222,8 +224,10 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             String folder8 = "folder_8";
             String folder9 = "folder_9";
             String folder10 = "folder_10";
+            String folder11 = "folder_11";
+            String folder12 = "folder_12";
 
-            addPermissionToLibraryForCurrentUser("VIEWER", "dl_default");
+            addPermissionToLibraryForCurrentUser("CONTRIBUTOR", "dl_default");
 
             Integer file1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
                                                                 new RecordDto(file1, null, fileContentType));
@@ -293,6 +297,27 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                                                                                  folderContentType));
             libraryCatalog.put(folder10, folder10Id);
             addPermissionToRecordForCurrentUser(folder10Id, "OWNER");
+
+            String pathToFolder10 = String.format("/root/%d/%d/%d/%d", folder2Id, folder8Id, folder9Id, folder10Id);
+            Integer folder11Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+                                                                   new RecordDto(folder11, pathToFolder10,
+                                                                                 folderContentType));
+            libraryCatalog.put(folder11, folder11Id);
+
+            Integer file4Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+                                                                new RecordDto(file4, pathToFolder10, fileContentType));
+            libraryCatalog.put(file4, file4Id);
+
+            String pathToFolder11 = String.format("/root/%d/%d/%d/%d/%d",
+                                                  folder2Id, folder8Id, folder9Id, folder10Id, folder11Id);
+            Integer file5Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+                                                                new RecordDto(file5, pathToFolder11, fileContentType));
+            libraryCatalog.put(file5, file5Id);
+
+            Integer folder12Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+                                                                   new RecordDto(folder12, null, folderContentType));
+            libraryCatalog.put(folder12, folder12Id);
+            addPermissionToRecordForCurrentUser(folder12Id, "OWNER");
         } else {
             System.out.println("Nothing to create. Not supported option: " + option);
         }
@@ -414,7 +439,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void tryDeleteFolder11() {
         authorizationBase.loginAsCurrentUser();
 
-        baseRecords.deleteRecord(folder11Id);
+        baseRecords.deleteRecordFromDefaultLibrary(folder11Id);
     }
 
     @Then("пользователь пытается создать новый каталог в тестовой библиотеке")
@@ -432,10 +457,10 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("пользователь пытается удалить каталог folder_1, расположенный в корне библиотеки: {string}")
-    public void tryRemoveFolder1(String library) {
+    public void tryRemoveFolder1FromDefaultLibrary(String libraryName) {
         authorizationBase.loginAsCurrentUser();
 
-        baseRecords.deleteRecord(folder1Id);
+        baseRecords.deleteRecordFromDefaultLibrary(folder1Id);
     }
 
     @When("Владелец организации устанавливает роль VIEWER для текущего пользователя, на файл file_1_1_1_2")

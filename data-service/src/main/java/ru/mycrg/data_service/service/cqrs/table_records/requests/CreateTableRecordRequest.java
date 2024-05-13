@@ -39,7 +39,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
 
     @Override
     public String getType() {
-        return "CreateTableRecordRequest";
+        return CreateTableRecordRequest.class.getSimpleName();
     }
 
     @Override

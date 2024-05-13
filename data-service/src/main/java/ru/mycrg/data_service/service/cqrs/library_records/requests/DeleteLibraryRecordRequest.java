@@ -30,7 +30,7 @@ public class DeleteLibraryRecordRequest implements IRequest<Voidy>, Auditable, I
 
     @Override
     public String getType() {
-        return "DeleteLibraryRecordRequest";
+        return DeleteLibraryRecordRequest.class.getSimpleName();
     }
 
     @Override

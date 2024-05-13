@@ -200,7 +200,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                    String table = source.getOrDefault("table", "").toString();
 
                                    if (!dataset.isBlank() || !table.isBlank()) {
-                                       return ResourceQualifier.libraryQualifier(dataset, table);
+                                       return ResourceQualifier.tableQualifier(dataset, table);
                                    } else {
                                        return null;
                                    }

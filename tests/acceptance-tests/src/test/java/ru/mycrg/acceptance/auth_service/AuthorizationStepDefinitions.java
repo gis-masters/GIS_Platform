@@ -44,8 +44,11 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
             case "Администратор системы":
                 authorizeAsSystemAdmin();
                 break;
-            case "Владелец организации":
+            case "пользователь":
                 authorizeAsCurrentUser();
+                break;
+            case "Владелец организации":
+                authorizeAsOrgOwner();
                 break;
             default:
                 UserCreateDto user = getUserByName(userName);

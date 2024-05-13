@@ -32,7 +32,7 @@ public class CopyTableRecordsRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "CopyTableRecordsRequest";
+        return CopyTableRecordsRequest.class.getSimpleName();
     }
 
     @Override

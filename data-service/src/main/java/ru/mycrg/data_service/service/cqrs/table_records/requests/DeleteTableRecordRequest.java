@@ -32,7 +32,7 @@ public class DeleteTableRecordRequest implements IRequest<Voidy>, Auditable, IDe
 
     @Override
     public String getType() {
-        return "DeleteTableRecordRequest";
+        return DeleteTableRecordRequest.class.getSimpleName();
     }
 
     @Override

@@ -70,12 +70,6 @@ public class RecordsDao {
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
-                                  @NotNull IContent content,
-                                  @NotNull SchemaDto schema) throws CrgDaoException {
-        this.addRecordsAsBatch(qualifier, content.asBatch(), schema);
-    }
-
-    public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,
                                   @NotNull Map<String, Object>[] body,
                                   SchemaDto schema) throws CrgDaoException {
         try {

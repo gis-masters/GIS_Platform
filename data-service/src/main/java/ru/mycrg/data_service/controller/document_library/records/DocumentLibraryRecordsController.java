@@ -16,7 +16,10 @@ import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.data_service.service.cqrs.library_records.requests.*;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.DeleteLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.RecoverLibraryRecordRequest;
+import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -189,25 +192,6 @@ public class DocumentLibraryRecordsController {
         mediator.execute(new RecoverLibraryRecordRequest(rQualifier, recoverFolderId));
 
         return ResponseEntity.noContent().build();
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/document-libraries/{docLibId}/records/{recId}/move/{parentId}")
-    public ResponseEntity<Object> moveRecord(@PathVariable String docLibId,
-                                             @PathVariable Long recId,
-                                             @PathVariable Long parentId) {
-        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-
-        mediator.execute(new MoveRecordToNewParentRequest(qualifier, parentId));
-
-        return ResponseEntity.ok().build();
-    }
-
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    @PostMapping("/document-libraries/{docLibId}/records/{recId}/move")
-    public ResponseEntity<Object> moveRecord(@PathVariable String docLibId,
-                                             @PathVariable Long recId) {
-        return moveRecord(docLibId, recId, null);
     }
 
     private void checkSortedFields(String docLibId, Pageable pageable) {

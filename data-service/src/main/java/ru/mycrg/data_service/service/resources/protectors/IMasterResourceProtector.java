@@ -40,7 +40,7 @@ public interface IMasterResourceProtector {
     boolean isAllowed(ResourceQualifier qualifier);
 
     /**
-     * Проверка доступности ресурса на пользователю, на редактирование.
+     * Проверка доступности ресурса пользователю, на редактирование.
      *
      * @param qualifier Квалификатор ресурса
      */

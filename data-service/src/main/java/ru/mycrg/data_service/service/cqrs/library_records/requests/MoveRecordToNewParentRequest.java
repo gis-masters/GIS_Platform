@@ -13,40 +13,40 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class MoveRecordToNewParentRequest implements IRequest<Voidy>, Auditable {
 
-    private final ResourceQualifier rQualifier;
-    private final Long parentId;
+    private final ResourceQualifier recordToMoveQualifier;
+    private final ResourceQualifier targetRecordQualifier;
 
-    public MoveRecordToNewParentRequest(ResourceQualifier rQualifier,
-                                        Long parentId) {
-        this.parentId = parentId;
-        this.rQualifier = rQualifier;
+    public MoveRecordToNewParentRequest(ResourceQualifier recordToMoveQualifier,
+                                        ResourceQualifier targetRecordQualifier) {
+        this.targetRecordQualifier = targetRecordQualifier;
+        this.recordToMoveQualifier = recordToMoveQualifier;
     }
 
     @Override
     public String getType() {
-        return "MoveRecordToNewParentRequest";
+        return MoveRecordToNewParentRequest.class.getSimpleName();
     }
 
     @Override
     public CrgAuditEvent getEvent() {
         String entityName = "unknown";
-        if (rQualifier.getTable() != null) {
-            entityName = rQualifier.getTable();
+        if (recordToMoveQualifier.getTable() != null) {
+            entityName = recordToMoveQualifier.getTable();
         }
 
-        return new CrgAuditEvent(mapper.convertValue(rQualifier, JsonNode.class),
+        return new CrgAuditEvent(mapper.convertValue(recordToMoveQualifier, JsonNode.class),
                                  "MOVE",
                                  entityName,
                                  FEATURE.name(),
-                                 rQualifier.getRecordIdAsLong());
+                                 recordToMoveQualifier.getRecordIdAsLong());
     }
 
-    public ResourceQualifier getRecordQualifier() {
-        return rQualifier;
+    public ResourceQualifier getRecordToMoveQualifier() {
+        return recordToMoveQualifier;
     }
 
     @Nullable
-    public Long getParentId() {
-        return parentId;
+    public ResourceQualifier getTargetRecordQualifier() {
+        return targetRecordQualifier;
     }
 }

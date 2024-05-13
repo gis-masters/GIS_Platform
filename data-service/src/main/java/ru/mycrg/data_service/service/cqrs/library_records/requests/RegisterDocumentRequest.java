@@ -19,7 +19,7 @@ public class RegisterDocumentRequest implements IRequest<String>, Auditable {
 
     @Override
     public String getType() {
-        return "RegisterDocumentRequest";
+        return RegisterDocumentRequest.class.getSimpleName();
     }
 
     @Override

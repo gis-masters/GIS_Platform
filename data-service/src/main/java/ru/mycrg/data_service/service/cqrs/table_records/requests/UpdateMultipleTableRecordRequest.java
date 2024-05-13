@@ -33,7 +33,7 @@ public class UpdateMultipleTableRecordRequest implements IRequest<Voidy>, Audita
 
     @Override
     public String getType() {
-        return "UpdateMultipleTableRecordRequest";
+        return UpdateMultipleTableRecordRequest.class.getSimpleName();
     }
 
     public ResourceQualifier getQualifier() {

@@ -29,8 +29,8 @@ public class SchemableRecordsDao {
         return recordsDao.findById(qualifier, getSchema(qualifier));
     }
 
-    public void updateRecordById(@NotNull ResourceQualifier qualifier,
-                                 @NotNull Map<String, Object> data) throws CrgDaoException {
+    public void updateById(@NotNull ResourceQualifier qualifier,
+                           @NotNull Map<String, Object> data) throws CrgDaoException {
         recordsDao.updateRecordById(qualifier, data, getSchema(qualifier));
     }
 

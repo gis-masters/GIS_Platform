@@ -15,8 +15,6 @@ public class UpdateTaskRequest implements IRequest<Voidy>, Auditable {
     private final Long taskId;
     private final IRecord newTask;
 
-    private IRecord oldTask;
-
     public UpdateTaskRequest(Long taskId, IRecord newTask) {
         this.taskId = taskId;
         this.newTask = newTask;
@@ -24,7 +22,7 @@ public class UpdateTaskRequest implements IRequest<Voidy>, Auditable {
 
     @Override
     public String getType() {
-        return "UpdateTaskRequest";
+        return UpdateTaskRequest.class.getSimpleName();
     }
 
     @Override
@@ -42,9 +40,5 @@ public class UpdateTaskRequest implements IRequest<Voidy>, Auditable {
 
     public Long getTaskId() {
         return taskId;
-    }
-
-    public void setTask(IRecord task) {
-        this.oldTask = task;
     }
 }
