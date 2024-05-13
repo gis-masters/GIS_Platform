@@ -1,9 +1,9 @@
-# !/bin/bash
+#!/bin/bash
 
 count=0
 while [ $count -lt 8 ]
 do
-count=`docker ps -f health=healthy | wc -l`
+count=$(docker ps -f health=healthy | wc -l)
 echo "Now healthy: $count"
 sleep 5
 done

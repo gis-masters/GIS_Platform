@@ -6,4 +6,4 @@
 # Actions
 printHeader "Stop all images with our LABEL"
 
-docker stop $(docker ps --filter "label=MAINTAINER=Fanatic Fiz <fanaticfiz@outlook.com>" --format "{{.Names}}")
+docker stop "$(docker ps --filter "label=MAINTAINER=Fanatic Fiz <fanaticfiz@outlook.com>" --format "{{.Names}}")"

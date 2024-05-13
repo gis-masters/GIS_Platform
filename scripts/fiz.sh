@@ -18,7 +18,7 @@ while true; do
     \n${GREEN}-----------------------------------${NC} \
     \n${GREEN}e  ${NC}- ${BLUE}exit\n${RED}"
 
-  read value
+  read -r value
   case $value in
     s ) . stop-all.sh ;;
     r ) . remove-our-images.sh ;;
