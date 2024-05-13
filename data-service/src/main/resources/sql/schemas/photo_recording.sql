@@ -44,10 +44,10 @@ SET class_rule =
       "valueType": "DATETIME"
     },
     {
-      "name": "tags",
-      "title": "Теги",
+      "name": "label",
+      "title": "Метки",
       "valueType": "STRING",
-      "maxLength": 100
+      "maxLength": 255
     },
     {
       "name": "user_fill_color",

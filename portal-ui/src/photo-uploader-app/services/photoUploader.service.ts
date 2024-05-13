@@ -74,6 +74,9 @@ export async function uploadPhotos(): Promise<void> {
         continue;
       }
 
+      const { labelValue } = photoUploaderStore;
+      item.feature.properties.label = labelValue === '' ? null : labelValue;
+
       item.feature.properties.photo = [
         {
           id: loadToServer.id,

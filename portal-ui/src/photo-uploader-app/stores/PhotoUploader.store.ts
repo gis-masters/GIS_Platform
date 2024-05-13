@@ -29,6 +29,7 @@ class PhotoUploaderStore {
   @observable canUploading: boolean = true;
   @observable uploaded: boolean = false;
   @observable uploadResult: UploadResultType | null = null;
+  @observable labelValue: string = '';
 
   private static _instance: PhotoUploaderStore;
 
@@ -193,6 +194,11 @@ class PhotoUploaderStore {
   @action
   clearUploadResult(): void {
     this.uploadResult = null;
+  }
+
+  @action.bound
+  setLabelValue(value: string): void {
+    this.labelValue = value;
   }
 }
 
