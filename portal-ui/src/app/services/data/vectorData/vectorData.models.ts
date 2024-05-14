@@ -2,8 +2,8 @@ import { SelectSchemaControl } from '../../../components/SelectSchemaControl/Sel
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { CrgProject } from '../../gis/projects/projects.models';
-import { getCrsFromEpsg } from '../epsg/epsg.util';
 import { Role } from '../permissions/permissions.models';
+import { getCrsFromProjection } from '../projection/projection.util';
 import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { OldSchema } from '../schema/schemaOld.models';
 
@@ -160,7 +160,10 @@ export const vectorTableSchema: SimpleSchema = {
       title: 'Координатная система',
       readOnly: true,
       propertyType: PropertyType.CHOICE,
-      options: organizationSettings.orgFavoritesEPSG.map(epsg => ({ title: epsg.title, value: getCrsFromEpsg(epsg) }))
+      options: organizationSettings.orgFavoriteProjections.map(projection => ({
+        title: projection.title,
+        value: getCrsFromProjection(projection)
+      }))
     },
     ...vectorTableSchemaBase.properties
   ]
@@ -179,10 +182,13 @@ export const emptyVectorTableSchema: SimpleSchema = {
       title: 'Координатная система',
       required: true,
       propertyType: PropertyType.CHOICE,
-      defaultValue: organizationSettings.orgDefaultEPSG
-        ? getCrsFromEpsg(organizationSettings.orgDefaultEPSG)
+      defaultValue: organizationSettings.orgDefaultProjection
+        ? getCrsFromProjection(organizationSettings.orgDefaultProjection)
         : undefined,
-      options: organizationSettings.orgFavoritesEPSG.map(epsg => ({ title: epsg.title, value: getCrsFromEpsg(epsg) }))
+      options: organizationSettings.orgFavoriteProjections.map(projection => ({
+        title: projection.title,
+        value: getCrsFromProjection(projection)
+      }))
     },
     {
       name: 'schemaId',

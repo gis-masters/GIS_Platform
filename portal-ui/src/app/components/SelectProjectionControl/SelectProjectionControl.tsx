@@ -4,26 +4,26 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { EpsgModel } from '../../../server-types/common-contracts';
-import { Epsg, isArrayOfEpsg, isEpsg } from '../../services/data/epsg/epsg.models';
-import { getEpsg } from '../../services/data/epsg/epsg.service';
+import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
+import { isArrayOfProjection, isProjection, Projection } from '../../services/data/projection/projection.models';
+import { getProjection } from '../../services/data/projection/projection.service';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
-import { SelectEPSGControlChip } from './Chip/SelectEPSGControl-Chip';
+import { SelectProjectionControlChip } from './Chip/SelectProjectionControlChip';
 
-import '!style-loader!css-loader!sass-loader!./SelectEPSGControl.scss';
+import '!style-loader!css-loader!sass-loader!./SelectProjectionControl.scss';
 
-const cnSelectEPSGControl = cn('SelectEPSGControl');
+const cnSelectProjectionControl = cn('SelectProjectionControl');
 
 @observer
-export class SelectEPSGControl extends Component<FormControlProps> {
+export class SelectProjectionControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
-  @observable private selectedEPSG: Epsg[] = [];
+  @observable private selectedProjection: Projection[] = [];
 
-  private cols: XTableColumn<Epsg>[] = [
+  private cols: XTableColumn<Projection>[] = [
     {
       field: 'title',
       title: 'Система координат',
@@ -65,22 +65,22 @@ export class SelectEPSGControl extends Component<FormControlProps> {
 
   render() {
     return (
-      <div className={cnSelectEPSGControl()}>
-        <div className={cnSelectEPSGControl('Wrapper')}>
-          {!!this.selectedEPSG?.length &&
-            this.selectedEPSG.map((epsg, i) => {
-              return <SelectEPSGControlChip key={i} epsg={epsg} onDelete={this.handleDelete} />;
+      <div className={cnSelectProjectionControl()}>
+        <div className={cnSelectProjectionControl('Wrapper')}>
+          {!!this.selectedProjection?.length &&
+            this.selectedProjection.map((proj, i) => {
+              return <SelectProjectionControlChip key={i} projection={proj} onDelete={this.handleDelete} />;
             })}
         </div>
 
-        <Button className={cnSelectEPSGControl('Button')} onClick={this.openDialog}>
+        <Button className={cnSelectProjectionControl('Button')} onClick={this.openDialog}>
           Выбрать систему координат
         </Button>
 
-        <ChooseXTableDialog<Epsg>
+        <ChooseXTableDialog<Projection>
           data={[]}
-          getData={getEpsg}
-          selectedItems={this.selectedEPSG}
+          getData={getProjection}
+          selectedItems={this.selectedProjection}
           title={'Выбор системы координат'}
           open={this.dialogOpen}
           cols={this.cols}
@@ -96,14 +96,13 @@ export class SelectEPSGControl extends Component<FormControlProps> {
   @boundMethod
   private init() {
     if (isStringArray(this.props.fieldValue)) {
-      const favoritesEpsg = this.props.fieldValue;
-
-      if (favoritesEpsg?.length) {
-        const selectedEPSG = favoritesEpsg.map(item => {
+      const favoritesProjection = this.props.fieldValue;
+      if (favoritesProjection?.length) {
+        const selectedProjection = favoritesProjection.map(item => {
           try {
             const parsedItem = JSON.parse(item) as unknown;
 
-            if (!isEpsg(parsedItem)) {
+            if (!isProjection(parsedItem)) {
               throw new Error('Ошибка при получении предпочитаемых систем координат');
             }
 
@@ -113,17 +112,17 @@ export class SelectEPSGControl extends Component<FormControlProps> {
           }
         });
 
-        if (selectedEPSG && isArrayOfEpsg(selectedEPSG)) {
-          this.setSelectedEPSG(selectedEPSG);
-          this.select(selectedEPSG);
+        if (selectedProjection && isArrayOfProjection(selectedProjection)) {
+          this.setSelectedProjection(selectedProjection);
+          this.select(selectedProjection);
         }
       }
     }
   }
 
   @action.bound
-  private select(items: Epsg[]) {
-    this.setSelectedEPSG(items);
+  private select(items: Projection[]) {
+    this.setSelectedProjection(items);
 
     const { onChange, property } = this.props;
 
@@ -137,8 +136,8 @@ export class SelectEPSGControl extends Component<FormControlProps> {
     this.closeDialog();
   }
 
-  private getRowId(rowData: EpsgModel) {
-    return rowData.authName + String(rowData.authSrid);
+  private getRowId(srs: SpatialReferenceSystem) {
+    return srs.authName + String(srs.authSrid);
   }
 
   @action.bound
@@ -152,16 +151,16 @@ export class SelectEPSGControl extends Component<FormControlProps> {
   }
 
   @action.bound
-  private setSelectedEPSG(selectedEPSG: Epsg[]) {
-    this.selectedEPSG = selectedEPSG;
+  private setSelectedProjection(selectedProjection: Projection[]) {
+    this.selectedProjection = selectedProjection;
   }
 
   @action.bound
-  private handleDelete(epsg: Epsg) {
-    if (this.selectedEPSG.length) {
-      this.setSelectedEPSG(this.selectedEPSG.filter(item => item.proj4Text !== epsg.proj4Text));
+  private handleDelete(proj: Projection) {
+    if (this.selectedProjection.length) {
+      this.setSelectedProjection(this.selectedProjection.filter(item => item.proj4Text !== proj.proj4Text));
 
-      this.select(this.selectedEPSG);
+      this.select(this.selectedProjection);
     }
   }
 }

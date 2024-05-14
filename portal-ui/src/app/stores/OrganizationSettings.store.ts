@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { Epsg, isEpsg } from '../services/data/epsg/epsg.models';
+import { isProjection, Projection } from '../services/data/projection/projection.models';
 import { Schema } from '../services/data/schema/schema.models';
 import { isStringArray } from '../services/util/typeGuards/isStringArray';
 import { currentUser } from './CurrentUser.store';
@@ -15,7 +15,7 @@ export interface Settings {
   reestrs: boolean;
   sedDialog: boolean;
   taskManagement: boolean;
-  favorites_epsg: Epsg[] | string[];
+  favorites_epsg: Projection[] | string[];
   default_epsg: string;
   tags: string | string[];
 }
@@ -119,22 +119,22 @@ export class OrganizationSettings {
   }
 
   @computed
-  get orgDefaultEPSG(): Epsg | undefined {
-    const defaultEpsg = organizationSettings.orgSettings?.organization?.default_epsg;
+  get orgDefaultProjection(): Projection | undefined {
+    const defaultProjection = organizationSettings.orgSettings?.organization?.default_epsg;
 
-    return this.orgFavoritesEPSG?.find(({ title }) => title === defaultEpsg);
+    return this.orgFavoriteProjections?.find(({ title }) => title === defaultProjection);
   }
 
   @computed
-  get orgFavoritesEPSG(): Epsg[] {
-    const epsg = this.orgSettings?.organization?.favorites_epsg;
+  get orgFavoriteProjections(): Projection[] {
+    const projection = this.orgSettings?.organization?.favorites_epsg;
 
-    if (isStringArray(epsg)) {
-      return epsg.map(item => {
+    if (isStringArray(projection)) {
+      return projection.map(item => {
         try {
           const parsedItem = JSON.parse(item) as unknown;
 
-          if (!isEpsg(parsedItem)) {
+          if (!isProjection(parsedItem)) {
             throw new Error('Ошибка при получении предпочитаемых систем координат');
           }
 

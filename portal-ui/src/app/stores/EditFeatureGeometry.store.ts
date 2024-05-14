@@ -2,16 +2,16 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
-import { Epsg } from '../services/data/epsg/epsg.models';
-import { transformGeometry } from '../services/data/epsg/epsg.util';
+import { Projection } from '../services/data/projection/projection.models';
+import { transformGeometry } from '../services/data/projection/projection.util';
 import { GeometryType, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
 
 // TODO: пофиксить ошибки типизации
 export class EditFeatureGeometryStore {
   @observable geometry?: WfsGeometry;
-  @observable currentEpsg: Epsg;
-  @observable nativeEpsg: Epsg;
+  @observable currentProjection: Projection;
+  @observable nativeProjection: Projection;
   @observable private virginGeometry?: WfsGeometry;
 
   constructor() {
@@ -20,14 +20,14 @@ export class EditFeatureGeometryStore {
 
   @computed
   get resultGeometry(): WfsGeometry<Coordinate> | undefined {
-    if (!this.currentEpsg) {
+    if (!this.currentProjection) {
       return;
     }
 
     return transformGeometry(
       this.geometry,
-      this.currentEpsg,
-      this.nativeEpsg,
+      this.currentProjection,
+      this.nativeProjection,
       this.virginGeometryInCurrentProjection,
       this.virginGeometry
     );
@@ -50,30 +50,30 @@ export class EditFeatureGeometryStore {
 
   @computed
   private get virginGeometryInCurrentProjection(): WfsGeometry | undefined {
-    return transformGeometry(this.virginGeometry, this.nativeEpsg, this.currentEpsg);
+    return transformGeometry(this.virginGeometry, this.nativeProjection, this.currentProjection);
   }
 
   @action
-  initGeometry(geometry: WfsGeometry, epsg: Epsg): void {
-    this.setNativeEpsg(epsg);
+  initGeometry(geometry: WfsGeometry, proj: Projection): void {
+    this.setNativeProjection(proj);
     this.virginGeometry = geometry;
     this.setGeometry(geometry);
   }
 
   @action.bound
   setGeometry(geometry: WfsGeometry): void {
-    this.geometry = transformGeometry(geometry, this.nativeEpsg, this.currentEpsg);
+    this.geometry = transformGeometry(geometry, this.nativeProjection, this.currentProjection);
   }
 
   @action
-  setEpsg(epsg: Epsg): void {
-    this.geometry = transformGeometry(this.resultGeometry, this.nativeEpsg, epsg);
-    this.currentEpsg = epsg;
+  setProjection(proj: Projection): void {
+    this.geometry = transformGeometry(this.resultGeometry, this.nativeProjection, proj);
+    this.currentProjection = proj;
   }
 
   @action
-  private setNativeEpsg(epsg: Epsg) {
-    this.nativeEpsg = epsg;
-    this.setEpsg(epsg);
+  private setNativeProjection(proj: Projection) {
+    this.nativeProjection = proj;
+    this.setProjection(proj);
   }
 }

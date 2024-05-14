@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../services/communication.service';
-import { Epsg } from '../../services/data/epsg/epsg.models';
-import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
-import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
+import { Projection } from '../../services/data/projection/projection.models';
+import { getProjectionByCrs } from '../../services/data/projection/projection.service';
+import { getCrsFromProjection } from '../../services/data/projection/projection.util';
 import {
   PropertyOption,
   PropertySchema,
@@ -46,7 +46,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   @observable private simpleStylesOptions: PropertyOption[] = [];
   @observable private currentFormValue?: Partial<CrgLayer>;
   @observable private busy: boolean = false;
-  @observable private defaultProjection?: Epsg;
+  @observable private defaultProjection?: Projection;
   private formInvoke: FormProps<Partial<CrgLayer>>['invoke'] = {};
 
   constructor(props: EditLayerDialogProps) {
@@ -100,15 +100,14 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       return;
     }
 
-    const epsg = await getEpsgByCrs(nativeCRS);
-
-    if (epsg) {
-      this.setDefaultProjection(epsg);
+    const projection = await getProjectionByCrs(nativeCRS);
+    if (projection) {
+      this.setDefaultProjection(projection);
     }
   }
 
   @action.bound
-  private setDefaultProjection(defaultProjection: Epsg) {
+  private setDefaultProjection(defaultProjection: Projection) {
     this.defaultProjection = defaultProjection;
   }
 
@@ -179,11 +178,14 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     if (defaultProjection) {
       properties = properties.map(property => {
         if (property.name === 'crs' && property.propertyType === PropertyType.CHOICE) {
-          property.defaultValue = getCrsFromEpsg(defaultProjection);
+          property.defaultValue = getCrsFromProjection(defaultProjection);
 
           property.options = [
-            { title: defaultProjection.title, value: getCrsFromEpsg(defaultProjection) },
-            ...organizationSettings.orgFavoritesEPSG.map(epsg => ({ title: epsg.title, value: getCrsFromEpsg(epsg) }))
+            { title: defaultProjection.title, value: getCrsFromProjection(defaultProjection) },
+            ...organizationSettings.orgFavoriteProjections.map(proj => ({
+              title: proj.title,
+              value: getCrsFromProjection(proj)
+            }))
           ];
         }
 

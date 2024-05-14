@@ -6,18 +6,18 @@ import proj4 from 'proj4';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { PageOptions } from '../../models';
-import { epsgClient } from './epsg.client';
-import { DEFAULT_OL_PROJECTION, defaultOlCrs, Epsg } from './epsg.models';
-import { epsgTitle, epsgUnit } from './epsg.util';
+import { projectionClient } from './projection.client';
+import { DEFAULT_OL_PROJECTION, defaultOlCrs, Projection } from './projection.models';
+import { getProjectionTitle, projectionUnit } from './projection.util';
 
-const epsgCache: Record<string, Promise<Epsg | undefined>> = {};
+const projectionCache: Record<string, Promise<Projection | undefined>> = {};
 
-export async function getEpsg(pageOptions: PageOptions): Promise<[Epsg[], number]> {
-  const response = await epsgClient.getKnownEpsg(pageOptions);
+export async function getProjection(pageOptions: PageOptions): Promise<[Projection[], number]> {
+  const response = await projectionClient.getKnownProjection(pageOptions);
 
-  const modifiedProjections: Epsg[] = response.content.map(proj => ({
+  const modifiedProjections: Projection[] = response.content.map(proj => ({
     ...proj,
-    title: `${epsgTitle(proj.srtext)}, ${proj.authName}:${proj.authSrid}, ${epsgUnit(proj.srtext)}`,
+    title: `${getProjectionTitle(proj.srtext)}, ${proj.authName}:${proj.authSrid}, ${projectionUnit(proj.srtext)}`,
     auth_srid: proj.authSrid,
     srtext: proj.srtext,
     proj4Text: proj.proj4Text
@@ -26,28 +26,28 @@ export async function getEpsg(pageOptions: PageOptions): Promise<[Epsg[], number
   return [modifiedProjections || [], response.page.totalPages];
 }
 
-export async function getEpsgByCrs(crs: string): Promise<Epsg | undefined> {
-  const cache = await epsgCache[crs];
+export async function getProjectionByCrs(crs: string): Promise<Projection | undefined> {
+  const cache = await projectionCache[crs];
 
   if (cache) {
-    return epsgCache[crs];
+    return projectionCache[crs];
   }
 
-  epsgCache[crs] = fetchEpsg(crs);
+  projectionCache[crs] = fetchProjection(crs);
 
-  const epsg = await epsgCache[crs];
+  const projection = await projectionCache[crs];
 
-  if (!epsg) {
+  if (!projection) {
     // не кешируем ошибки
-    delete epsgCache[crs];
+    delete projectionCache[crs];
 
     return;
   }
 
-  return epsg;
+  return projection;
 }
 
-async function fetchEpsg(crs: string): Promise<Epsg | undefined> {
+async function fetchProjection(crs: string): Promise<Projection | undefined> {
   const crsSrid = crs.split(':')[1];
 
   if (crsSrid) {
@@ -57,86 +57,88 @@ async function fetchEpsg(crs: string): Promise<Epsg | undefined> {
       filter: { auth_srid: Number(crsSrid) }
     };
 
-    const [result] = await getEpsg(pageOptions);
+    const [result] = await getProjection(pageOptions);
 
     if (!result.length) {
       return;
     }
 
-    registerEpsgArrayInProj4([result[0]]);
+    registerProjectionArrayInProj4([result[0]]);
 
     return result[0];
   }
 }
 
 // 3857 - проекция для корректной работы ol, не удалять, не менять
-export async function getOlEpsg(): Promise<Epsg> {
-  const epsg = await getEpsgByCrs(`${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.code}`);
+export async function getOlProjection(): Promise<Projection> {
+  const projection = await getProjectionByCrs(`${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.code}`);
 
-  if (!epsg) {
+  if (!projection) {
     throw new Error('Ошибка получения проекции ' + defaultOlCrs);
   }
 
-  return epsg;
+  return projection;
 }
 
-export async function getFeatureEpsg(feature: WfsFeature<Coordinate | CoordinateEdited>): Promise<Epsg | undefined> {
+export async function getFeatureProjection(
+  feature: WfsFeature<Coordinate | CoordinateEdited>
+): Promise<Projection | undefined> {
   const layer = getLayerByFeatureInCurrentProject(feature);
   if (!layer) {
     throw new Error('Не удалось определить проекцию слоя. Не найден слой для объекта: ' + feature.id);
   }
 
-  return await getEpsgByCrs(layer.nativeCRS);
+  return await getProjectionByCrs(layer.nativeCRS);
 }
 
-export function registerEpsgArrayInProj4(epsgArray: Epsg[]): void {
+export function registerProjectionArrayInProj4(projections: Projection[]): void {
   // TODO: пофиксить костыльный хардкод после выполнения №1852
-  for (const epsg of epsgArray) {
+  for (const proj of projections) {
     if (
-      epsg.authSrid !== 3857 &&
-      epsg.authSrid !== 28_406 &&
-      epsg.authSrid !== 28_407 &&
-      epsg.authSrid !== 314_315 &&
-      epsg.authSrid !== 314_314 &&
-      epsg.authSrid !== 7828 &&
-      epsg.authSrid !== 7829 &&
-      epsg.authSrid !== 3395
+      proj.authSrid !== 3857 &&
+      proj.authSrid !== 28_406 &&
+      proj.authSrid !== 28_407 &&
+      proj.authSrid !== 314_315 &&
+      proj.authSrid !== 314_314 &&
+      proj.authSrid !== 7828 &&
+      proj.authSrid !== 7829 &&
+      proj.authSrid !== 3395
     ) {
-      proj4.defs(`${epsg.authName}:${epsg.authSrid}`, epsg.proj4Text);
+      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj.proj4Text);
     }
 
-    if (epsg.authSrid === 28_406) {
-      proj4.defs(`${epsg.authName}:${epsg.authSrid}`, proj4Str({ lat_0: 0, lon_0: 33, x_0: 6_500_000 }));
+    if (proj.authSrid === 28_406) {
+      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj4Str({ lat_0: 0, lon_0: 33, x_0: 6_500_000 }));
     }
 
-    if (epsg.authSrid === 28_407) {
-      proj4.defs(`${epsg.authName}:${epsg.authSrid}`, proj4Str({ lat_0: 0, lon_0: 39, x_0: 7_500_000 }));
+    if (proj.authSrid === 28_407) {
+      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj4Str({ lat_0: 0, lon_0: 39, x_0: 7_500_000 }));
     }
 
-    if (epsg.authSrid === 314_315) {
+    if (proj.authSrid === 314_315) {
       proj4.defs(
-        `${epsg.authName}:${epsg.authSrid}`,
+        `${proj.authName}:${proj.authSrid}`,
         proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 })
       );
     }
 
-    if (epsg.authSrid === 314_314) {
+    if (proj.authSrid === 314_314) {
       proj4.defs(
-        `${epsg.authName}:${epsg.authSrid}`,
+        `${proj.authName}:${proj.authSrid}`,
         proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 })
       );
     }
 
-    if (epsg.authSrid === 7828) {
+    if (proj.authSrid === 7828) {
       proj4.defs(
-        `${epsg.authName}:${epsg.authSrid}`,
+        `${proj.authName}:${proj.authSrid}`,
         proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 })
       );
     }
 
-    if (epsg.authSrid === 7829) {
+    if (proj.authSrid === 7829) {
       proj4.defs(
-        `${epsg.authName}:${epsg.authSrid}`,
+        `${proj.authName}:${proj.authSrid}`,
         proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 })
       );
     }

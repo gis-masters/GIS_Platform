@@ -1,4 +1,4 @@
-export interface EpsgModel {
+export interface SpatialReferenceSystem {
   authName: string;
   authSrid: number;
   srtext: string;

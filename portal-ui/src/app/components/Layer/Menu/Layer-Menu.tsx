@@ -18,8 +18,6 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
-import { Epsg } from '../../../services/data/epsg/epsg.models';
-import { getCrsFromEpsg } from '../../../services/data/epsg/epsg.util';
 import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
@@ -29,6 +27,8 @@ import {
   isTableExportAllowed,
   isUpdateAllowed
 } from '../../../services/data/permissions/permissions.service';
+import { Projection } from '../../../services/data/projection/projection.models';
+import { getCrsFromProjection } from '../../../services/data/projection/projection.util';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
@@ -56,7 +56,7 @@ import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { MenuNestedItem } from '../../MenuNestedItem/MenuNestedItem';
-import { SelectEpsgDialog } from '../../SelectEpsgDialog/SelectEpsgDialog';
+import { SelectProjectionDialog } from '../../SelectProjectionDialog/SelectProjectionDialog';
 import { Toast } from '../../Toast/Toast';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
@@ -84,7 +84,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private layerExportAllowed = false;
   @observable private layersDeleteAllowed = false;
   @observable private geometryType?: GeometryType;
-  @observable private selectEpsgDialogOpen = false;
+  @observable private selectProjectionDialogOpen = false;
   @observable private importXmlDialogOpen = false;
   @observable private importShapeDialogOpen = false;
   @observable private importShapeAllowed = false;
@@ -197,7 +197,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {!editMode && this.isVectorLayer && this.layerExportAllowed && (
-            <MenuItem onClick={this.openSelectEpsgDialog}>
+            <MenuItem onClick={this.openSelectProjectionDialog}>
               <ListItemIcon>
                 <UnarchiveOutlined />
               </ListItemIcon>
@@ -283,11 +283,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
         )}
 
         {!editMode && this.isVectorLayer && (
-          <SelectEpsgDialog
-            open={this.selectEpsgDialogOpen}
+          <SelectProjectionDialog
+            open={this.selectProjectionDialogOpen}
             onSelect={this.export}
             defaultCrs={(entity as CrgVectorLayer).nativeCRS}
-            onClose={this.closeSelectEpsgDialog}
+            onClose={this.closeSelectProjectionDialog}
           />
         )}
 
@@ -419,11 +419,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @boundMethod
-  private async export(epsg: Epsg) {
+  private async export(proj: Projection) {
     const { entity, onClose } = this.props;
     const { dataset, tableName } = entity as CrgVectorLayer;
 
-    await exportVectorTableAsShape([{ dataset, table: tableName }], getCrsFromEpsg(epsg));
+    await exportVectorTableAsShape([{ dataset, table: tableName }], getCrsFromProjection(proj));
     sidebars.openInfo();
 
     onClose();
@@ -484,13 +484,13 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @action.bound
-  private openSelectEpsgDialog() {
-    this.selectEpsgDialogOpen = true;
+  private openSelectProjectionDialog() {
+    this.selectProjectionDialogOpen = true;
   }
 
   @action.bound
-  private closeSelectEpsgDialog() {
-    this.selectEpsgDialogOpen = false;
+  private closeSelectProjectionDialog() {
+    this.selectProjectionDialogOpen = false;
 
     this.props.onClose();
   }

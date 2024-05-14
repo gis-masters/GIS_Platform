@@ -9,8 +9,8 @@ import { AxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
 import { communicationService } from '../../services/communication.service';
-import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
-import { transformGeometry } from '../../services/data/epsg/epsg.util';
+import { getProjectionByCrs } from '../../services/data/projection/projection.service';
+import { transformGeometry } from '../../services/data/projection/projection.util';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
@@ -110,13 +110,13 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     try {
       const { layer, features } = this.props;
       const createdFeatures: WfsFeature[] = [];
-      const selectedEpsg = await getEpsgByCrs(selectedLayer.nativeCRS);
-      const currentEpsg = await getEpsgByCrs(layer.nativeCRS);
+      const selectedProjection = await getProjectionByCrs(selectedLayer.nativeCRS);
+      const currentProjection = await getProjectionByCrs(layer.nativeCRS);
 
       if (layer.type && (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type))) {
         for (const feature of features) {
           if (layer.nativeCRS && layer.nativeCRS !== selectedLayer.nativeCRS && feature.geometry) {
-            feature.geometry = transformGeometry(feature.geometry, currentEpsg, selectedEpsg);
+            feature.geometry = transformGeometry(feature.geometry, currentProjection, selectedProjection);
           }
 
           const createdFeature = await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature, true);
@@ -136,7 +136,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
         return feat;
       });
 
-      const message = `Успешно ${pluralize(features.length, 'скопирован', 'скопировано', 'скопировано')} 
+      const message = `Успешно ${pluralize(features.length, 'скопирован', 'скопировано', 'скопировано')}
           ${features.length}
           ${pluralize(features.length, 'объект', 'объекта', 'объектов')}. `;
 

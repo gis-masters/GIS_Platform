@@ -9,8 +9,8 @@ import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
-import { getFeatureEpsg } from '../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { getFeatureProjection } from '../../services/data/projection/projection.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import {
@@ -242,10 +242,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
 
-        const epsg = await getFeatureEpsg(firstFeature);
+        const projection = await getFeatureProjection(firstFeature);
 
-        if (firstFeature.geometry && epsg) {
-          this.editGeometryStore.initGeometry(firstFeature.geometry, epsg);
+        if (firstFeature.geometry && projection) {
+          this.editGeometryStore.initGeometry(firstFeature.geometry, projection);
         } else {
           Toast.error('Не удалось получить проекцию или геометрию объекта');
         }

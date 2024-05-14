@@ -2,8 +2,8 @@ import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import { Toast } from '../../components/Toast/Toast';
-import { getEpsgByCrs, getOlEpsg } from '../data/epsg/epsg.service';
-import { transform } from '../data/epsg/epsg.util';
+import { getOlProjection, getProjectionByCrs } from '../data/projection/projection.service';
+import { transform } from '../data/projection/projection.util';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { isVectorFromFile } from '../gis/layers/layers.utils';
 import { mapService } from '../map/map.service';
@@ -19,17 +19,17 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
         : await getLayerCoverage(layer);
 
     const { maxx, maxy, minx, miny } = latLonBoundingBox;
-    const geoserverEpsg = await getEpsgByCrs('EPSG:4326');
-    const olEpsg = await getOlEpsg();
+    const geoserverProjection = await getProjectionByCrs('EPSG:4326');
+    const olProjection = await getOlProjection();
 
-    if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0]) || !geoserverEpsg) {
+    if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0]) || !geoserverProjection) {
       showGoToBoundingBoxError();
 
       return;
     }
 
-    const [x1, y1] = transform(geoserverEpsg, olEpsg, [minx, miny]);
-    const [x2, y2] = transform(geoserverEpsg, olEpsg, [maxx, maxy]);
+    const [x1, y1] = transform(geoserverProjection, olProjection, [minx, miny]);
+    const [x2, y2] = transform(geoserverProjection, olProjection, [maxx, maxy]);
 
     if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
       showGoToBoundingBoxError();

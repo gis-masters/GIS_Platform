@@ -9,9 +9,9 @@ import { mapStore } from '../../../stores/Map.store';
 import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
-import { isArrayOfEpsg } from '../../data/epsg/epsg.models';
-import { getEpsgByCrs, registerEpsgArrayInProj4 } from '../../data/epsg/epsg.service';
 import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
+import { isArrayOfProjection } from '../../data/projection/projection.models';
+import { getProjectionByCrs, registerProjectionArrayInProj4 } from '../../data/projection/projection.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
@@ -171,20 +171,20 @@ class ProjectsService {
   }
 
   async registerLayersProjection(allowedLayers: CrgLayer[]) {
-    const epsgArray = await Promise.all(
+    const projections = await Promise.all(
       allowedLayers.map(async layer => {
         if (layer.nativeCRS) {
-          return await getEpsgByCrs(layer.nativeCRS);
+          return await getProjectionByCrs(layer.nativeCRS);
         }
       })
     );
 
-    const uniqueEpsg = epsgArray
+    const uniqueProjection = projections
       .filter((value, index, self) => index === self.findIndex(item => item?.authSrid === value?.authSrid))
       .filter(Boolean);
 
-    if (uniqueEpsg.length && isArrayOfEpsg(uniqueEpsg)) {
-      registerEpsgArrayInProj4(uniqueEpsg);
+    if (uniqueProjection.length && isArrayOfProjection(uniqueProjection)) {
+      registerProjectionArrayInProj4(uniqueProjection);
     }
   }
 

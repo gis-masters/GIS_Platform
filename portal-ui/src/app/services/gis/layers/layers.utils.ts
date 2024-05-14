@@ -2,7 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { defaultOlCrs } from '../../data/epsg/epsg.models';
+import { defaultOlCrs } from '../../data/projection/projection.models';
 import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';

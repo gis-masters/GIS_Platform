@@ -33,9 +33,9 @@ import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { defaultOlCrs, Epsg } from '../data/epsg/epsg.models';
-import { getFeatureEpsg, getOlEpsg } from '../data/epsg/epsg.service';
-import { transformExtent, transformGeometry } from '../data/epsg/epsg.util';
+import { defaultOlCrs, Projection } from '../data/projection/projection.models';
+import { getFeatureProjection, getOlProjection } from '../data/projection/projection.service';
+import { transformExtent, transformGeometry } from '../data/projection/projection.util';
 import { Schema } from '../data/schema/schema.models';
 import { applyView } from '../data/schema/schema.utils';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
@@ -475,7 +475,7 @@ class MapService {
   /**
    * Подсвечивает объект. (очищает черновой слой)
    */
-  async highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], epsg?: Epsg) {
+  async highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: Projection) {
     if (!this.draftSource) {
       throw new Error('Draft source is not created');
     }
@@ -484,13 +484,13 @@ class MapService {
       [...features]
         .filter(({ geometry }) => geometry)
         .map(async (feature: WfsFeature<Coordinate | CoordinateEdited>): Promise<WfsFeature> => {
-          const currentEpsg = epsg || (await getFeatureEpsg(feature));
-          const olEpsg = await getOlEpsg();
+          const currentProjection = projection || (await getFeatureProjection(feature));
+          const olProjection = await getOlProjection();
 
-          if (!currentEpsg || !olEpsg) {
+          if (!currentProjection || !olProjection) {
             throw new Error('Не найдена проекция выбранного объекта');
           }
-          const geometry = feature.geometry && transformGeometry(feature.geometry, currentEpsg, olEpsg);
+          const geometry = feature.geometry && transformGeometry(feature.geometry, currentProjection, olProjection);
 
           if (!geometry) {
             throw new Error('Геометрия не определена');
@@ -678,27 +678,27 @@ class MapService {
     }
   }
 
-  async positionToFeature(feature: WfsFeature, epsg?: Epsg) {
-    if (!epsg) {
-      epsg = await getFeatureEpsg(feature);
+  async positionToFeature(feature: WfsFeature, proj?: Projection) {
+    if (!proj) {
+      proj = await getFeatureProjection(feature);
     }
     const extent = getFeatureExtent(feature);
-    const olEpsg = await getOlEpsg();
-    if (extent && olEpsg && epsg) {
-      const transformedExtent = transformExtent(extent, epsg, olEpsg);
+    const olProjection = await getOlProjection();
+    if (extent && olProjection && proj) {
+      const transformedExtent = transformExtent(extent, proj, olProjection);
       this.positionToExtent(transformedExtent, feature.geometry?.type === GeometryType.POINT);
     }
   }
 
-  async positionToFeatures(features: WfsFeature[], epsg?: Epsg) {
-    const olEpsg = await getOlEpsg();
+  async positionToFeatures(features: WfsFeature[], projection?: Projection) {
+    const olProjection = await getOlProjection();
     const extents = await Promise.all(
       features
         .map(async feature => {
           const extent = getFeatureExtent(feature);
-          const proj = epsg || (await getFeatureEpsg(feature));
-          if (extent && proj && olEpsg) {
-            return transformExtent(extent, proj, olEpsg);
+          const proj = projection || (await getFeatureProjection(feature));
+          if (extent && proj && olProjection) {
+            return transformExtent(extent, proj, olProjection);
           }
         })
         .filter(notFalsyFilter)

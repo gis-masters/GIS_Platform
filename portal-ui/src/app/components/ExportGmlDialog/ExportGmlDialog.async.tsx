@@ -14,10 +14,10 @@ import {
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Epsg } from '../../services/data/epsg/epsg.models';
-import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import { ExportResourceModel } from '../../services/data/export/export.models';
 import { exportVectorTableAsGML } from '../../services/data/export/export.service';
+import { Projection } from '../../services/data/projection/projection.models';
+import { getCrsFromProjection } from '../../services/data/projection/projection.util';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
@@ -28,7 +28,7 @@ import { Button } from '../Button/Button';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { Form } from '../Form/Form';
 import { LayersList } from '../LayersList/LayersList';
-import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
 
 import '!style-loader!css-loader!sass-loader!./ExportGmlDialog.scss';
 
@@ -68,7 +68,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   @observable private selectedLayers: CrgVectorLayer[] = [];
   @observable private selectedSchema = '';
   @observable private invertedCoordinates = false;
-  @observable private epsg?: Epsg;
+  @observable private projection?: Projection;
 
   constructor(props: ExportGmlDialogProps) {
     super(props);
@@ -76,7 +76,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   componentDidMount(): void {
-    this.setSelectedEpsg(organizationSettings.orgDefaultEPSG);
+    this.setSelectedProjection(organizationSettings.orgDefaultProjection);
   }
 
   render() {
@@ -115,7 +115,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
             <ActionsLeft>
               <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
 
-              <SelectEpsg onSelect={this.setSelectedEpsg} />
+              <SelectProjection onSelect={this.setSelectedProjection} />
             </ActionsLeft>
 
             <ActionsRight>
@@ -146,8 +146,13 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
       };
     });
 
-    if (this.epsg) {
-      await exportVectorTableAsGML(this.selectedSchema, resources, getCrsFromEpsg(this.epsg), this.invertedCoordinates);
+    if (this.projection) {
+      await exportVectorTableAsGML(
+        this.selectedSchema,
+        resources,
+        getCrsFromProjection(this.projection),
+        this.invertedCoordinates
+      );
     }
 
     this.closeDialog();
@@ -178,7 +183,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private setSelectedEpsg(epsg: Epsg) {
-    this.epsg = epsg;
+  private setSelectedProjection(proj: Projection) {
+    this.projection = proj;
   }
 }

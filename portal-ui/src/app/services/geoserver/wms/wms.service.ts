@@ -1,5 +1,5 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { defaultOlCrs } from '../../data/epsg/epsg.models';
+import { defaultOlCrs } from '../../data/projection/projection.models';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 import { cqlBuild } from '../../util/cqlBuild';

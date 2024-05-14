@@ -35,18 +35,6 @@ public class SpatialReferenceSystemController {
         this.authenticationFacade = authenticationFacade;
     }
 
-    // TODO: Удалить после переезда фронта на /srs
-    @GetMapping("/epsg")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> getAll(@RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
-                                         Pageable pageable) {
-        Page<SpatialReferenceSystem> knownEpsg = !authenticationFacade.isRoot()
-                ? srsService.getAll(ecqlFilter, pageable)
-                : new PageImpl<>(new ArrayList<>(), pageable, 0);
-
-        return ResponseEntity.ok(pageFromList(knownEpsg, pageable));
-    }
-
     @GetMapping("/srs")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getAllSrs(

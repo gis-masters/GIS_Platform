@@ -5,8 +5,8 @@ import { MultiPolygon } from 'ol/geom';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
-import { getOlEpsg } from '../../data/epsg/epsg.service';
-import { getCrsFromEpsg } from '../../data/epsg/epsg.util';
+import { getOlProjection } from '../../data/projection/projection.service';
+import { getCrsFromProjection } from '../../data/projection/projection.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
@@ -198,11 +198,11 @@ export async function makeXmlPolygonIntersect(
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);
   const cqlFilter: string = cqlConcat(cqlBuild(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
-  const olEpsg = await getOlEpsg();
+  const olProjection = await getOlProjection();
 
   const olFilter = cqlFilter
-    ? and(intersects(geometryFieldName, polygon, getCrsFromEpsg(olEpsg)), cql2ol(cqlFilter))
-    : intersects(geometryFieldName, polygon, getCrsFromEpsg(olEpsg));
+    ? and(intersects(geometryFieldName, polygon, getCrsFromProjection(olProjection)), cql2ol(cqlFilter))
+    : intersects(geometryFieldName, polygon, getCrsFromProjection(olProjection));
 
   const featureRequest = new WFS().writeGetFeature({
     srsName,

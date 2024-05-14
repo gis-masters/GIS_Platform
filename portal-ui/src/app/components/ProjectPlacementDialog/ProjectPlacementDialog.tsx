@@ -7,26 +7,26 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { Epsg } from '../../services/data/epsg/epsg.models';
-import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import {
   placeFile,
   placeFileWithProjection,
   placeGml
 } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
-import { isFileWithProjection, isTifFile } from '../../services/data/files/files.util';
+import { isNeedDefineProjection, isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
+import { Projection } from '../../services/data/projection/projection.models';
+import { getCrsFromProjection } from '../../services/data/projection/projection.util';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { services } from '../../services/services';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { Link } from '../Link/Link';
-import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
@@ -46,7 +46,7 @@ interface ProjectPlacementDialogProps {
 export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProps> {
   @observable private addFormBusy = false;
   @observable private invertedCoordinates = false;
-  @observable private epsg?: Epsg;
+  @observable private projection?: Projection;
 
   constructor(props: ProjectPlacementDialogProps) {
     super(props);
@@ -54,10 +54,10 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   componentDidMount() {
-    const epsg = organizationSettings.orgDefaultEPSG;
+    const projection = organizationSettings.orgDefaultProjection;
 
-    if (epsg) {
-      this.setSelectedEpsg(epsg);
+    if (projection) {
+      this.setSelectedProjection(projection);
     }
   }
 
@@ -76,8 +76,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         fullWidth={fullWidth}
         additionalAction={
           !isTifFile(fileInfo) &&
-          (isFileWithProjection(fileInfo) ? (
-            <SelectEpsg onSelect={this.setSelectedEpsg} fullWidth />
+          (isNeedDefineProjection(fileInfo) ? (
+            <SelectProjection onSelect={this.setSelectedProjection} fullWidth />
           ) : (
             <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
           ))
@@ -99,8 +99,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   @action.bound
-  private setSelectedEpsg(epsg: Epsg) {
-    this.epsg = epsg;
+  private setSelectedProjection(proj: Projection) {
+    this.projection = proj;
   }
 
   @action.bound
@@ -145,7 +145,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       this.props.onClose();
       this.setFormBusy(false);
     } else {
-      if (!this.epsg) {
+      if (!this.projection) {
         Toast.error('Отсутствует проекция необходимая для размещения файла в проекте');
         this.setFormBusy(false);
 
@@ -153,8 +153,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
       }
 
       try {
-        const process = await (isFileWithProjection(this.props.fileInfo)
-          ? placeFileWithProjection(fileInfo, project.id, getCrsFromEpsg(this.epsg))
+        const process = await (isNeedDefineProjection(this.props.fileInfo)
+          ? placeFileWithProjection(fileInfo, project.id, getCrsFromProjection(this.projection))
           : placeGml(fileInfo, project.id, this.invertedCoordinates));
 
         void this.waitForProcess(process);

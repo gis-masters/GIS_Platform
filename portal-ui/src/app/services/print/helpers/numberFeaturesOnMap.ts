@@ -1,7 +1,7 @@
 import { pointOnFeature } from '@turf/turf';
 
-import { getEpsgByCrs, getOlEpsg } from '../../data/epsg/epsg.service';
-import { transform } from '../../data/epsg/epsg.util';
+import { getOlProjection, getProjectionByCrs } from '../../data/projection/projection.service';
+import { transform } from '../../data/projection/projection.util';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { mapLabelsService } from '../../map/map-labels.service';
@@ -12,12 +12,12 @@ export async function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): Promise<vo
     const layer = getLayerByFeatureInCurrentProject(wfsFeature);
 
     if (layer) {
-      const epsg = await getEpsgByCrs(layer.nativeCRS);
-      const olEpsg = await getOlEpsg();
+      const projection = await getProjectionByCrs(layer.nativeCRS);
+      const olProjection = await getOlProjection();
 
-      if (geometry && epsg && olEpsg) {
+      if (geometry && projection && olProjection) {
         const point = pointOnFeature({ ...wfsFeature, geometry });
-        const coordinate = transform(epsg, olEpsg, point.geometry.coordinates);
+        const coordinate = transform(projection, olProjection, point.geometry.coordinates);
 
         mapLabelsService.addPrintLabel(coordinate, i + 1);
       }

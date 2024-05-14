@@ -7,9 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
 
-import { Epsg } from '../../../services/data/epsg/epsg.models';
-import { getOlEpsg } from '../../../services/data/epsg/epsg.service';
-import { transformGeometry } from '../../../services/data/epsg/epsg.util';
+import { Projection } from '../../../services/data/projection/projection.models';
+import { getOlProjection } from '../../../services/data/projection/projection.service';
+import { transformGeometry } from '../../../services/data/projection/projection.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { mapService } from '../../../services/map/map.service';
@@ -39,7 +39,7 @@ interface EditFeatureGeometryCoordProps {
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  @observable private olEpsg?: Epsg;
+  @observable private olProjection?: Projection;
 
   private focusedPointMarker?: Feature<SimpleGeometry>;
 
@@ -49,10 +49,9 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   async componentDidMount(): Promise<void> {
-    const epsg = await getOlEpsg();
-
-    if (epsg) {
-      this.setOlEpsg(epsg);
+    const projection = await getOlProjection();
+    if (projection) {
+      this.setOlProjection(projection);
     }
   }
 
@@ -143,13 +142,13 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       coordinates: val
     };
 
-    const epsg = organizationSettings.orgDefaultEPSG;
+    const projection = organizationSettings.orgDefaultProjection;
 
-    if (isGeometryValid(markerGeometry) && epsg) {
-      if (this.olEpsg) {
+    if (isGeometryValid(markerGeometry) && projection) {
+      if (this.olProjection) {
         const feature: WfsFeature = {
           type: 'Feature',
-          geometry: transformGeometry(markerGeometry, store.currentEpsg, this.olEpsg),
+          geometry: transformGeometry(markerGeometry, store.currentProjection, this.olProjection),
           id: '',
           geometry_name: '',
           properties: {}
@@ -169,8 +168,8 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @action.bound
-  private setOlEpsg(olEpsg: Epsg) {
-    this.olEpsg = olEpsg;
+  private setOlProjection(olProj: Projection) {
+    this.olProjection = olProj;
   }
 
   private clearFocusedPointMarker() {

@@ -1,6 +1,6 @@
 import { isObject } from 'lodash';
 
-import { EpsgModel } from '../../../../server-types/common-contracts';
+import { SpatialReferenceSystem } from '../../../../server-types/common-contracts';
 
 export const DEFAULT_OL_PROJECTION = {
   authName: 'EPSG',
@@ -9,7 +9,7 @@ export const DEFAULT_OL_PROJECTION = {
 
 export const defaultOlCrs = `${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.code}`;
 
-export interface Epsg extends EpsgModel {
+export interface Projection extends SpatialReferenceSystem {
   title: string;
   auth_srid: number;
   hidden?: boolean;
@@ -17,13 +17,13 @@ export interface Epsg extends EpsgModel {
   defaultProj?: string;
 }
 
-export function isArrayOfEpsg(values: unknown): values is Epsg[] {
+export function isArrayOfProjection(values: unknown): values is Projection[] {
   if (!Array.isArray(values)) {
     return false;
   }
 
   for (const value of values) {
-    if (!isEpsg(value)) {
+    if (!isProjection(value)) {
       return false;
     }
   }
@@ -31,7 +31,7 @@ export function isArrayOfEpsg(values: unknown): values is Epsg[] {
   return true;
 }
 
-export function isEpsg(obj: unknown): obj is Epsg {
+export function isProjection(obj: unknown): obj is Projection {
   return (
     isObject(obj) &&
     'authName' in obj &&

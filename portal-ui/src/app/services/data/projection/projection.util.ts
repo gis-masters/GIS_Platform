@@ -16,26 +16,28 @@ import {
 } from '../../geoserver/wfs/wfs.models';
 import { isCoordinateValid, normalizeCoordinates } from '../../geoserver/wfs/wfs.util';
 import { isStringArray } from '../../util/typeGuards/isStringArray';
-import { Epsg } from './epsg.models';
+import { Projection } from './projection.models';
 
 type Coord = Coordinate | CoordinateEdited;
 
-export function getCrsFromEpsg(epsg: Epsg): string {
-  return `${epsg.authName}:${epsg.authSrid}`;
+export function getCrsFromProjection(projection: Projection): string {
+  return `${projection.authName}:${projection.authSrid}`;
 }
 
-export function transform(projFrom: Epsg, projTo: Epsg, coordinate: Coordinate): Coordinate {
+export function transform(projFrom: Projection, projTo: Projection, coordinate: Coordinate): Coordinate {
   if (projFrom.authSrid === projTo.authSrid) {
     return coordinate;
   }
 
-  return proj4(getCrsFromEpsg(projFrom), getCrsFromEpsg(projTo), coordinate).map(dis => Number(dis.toFixed(4)));
+  return proj4(getCrsFromProjection(projFrom), getCrsFromProjection(projTo), coordinate).map(dis =>
+    Number(dis.toFixed(4))
+  );
 }
 
 export function transformGeometry(
   geometry: WfsGeometry,
-  projFrom: Epsg,
-  projTo: Epsg,
+  projFrom: Projection,
+  projTo: Projection,
   originGeometry?: WfsGeometry,
   transformedOriginGeometry?: WfsGeometry
 ): WfsGeometry<Coordinate> | undefined {
@@ -108,14 +110,14 @@ export function transformGeometry(
   return geometry as WfsGeometry<Coordinate>;
 }
 
-export function transformExtent(extent: Extent, projectionFrom: Epsg, projectionTo: Epsg): Extent {
+export function transformExtent(extent: Extent, projectionFrom: Projection, projectionTo: Projection): Extent {
   return chunk(extent, 2).flatMap(coord => transform(projectionFrom, projectionTo, coord)) as Extent;
 }
 
 function transformCoordinate(
   coordEdited: Coord,
-  projFrom: Epsg,
-  projTo: Epsg,
+  projFrom: Projection,
+  projTo: Projection,
   originGroup?: Coord[],
   transformedOriginGroup: Coord[] = []
 ): Coord {
@@ -131,8 +133,8 @@ function transformCoordinate(
 
 function transformGroup(
   group: Coord[],
-  projFrom: Epsg,
-  projTo: Epsg,
+  projFrom: Projection,
+  projTo: Projection,
   origin?: Coord[],
   transformedOrigin?: Coord[]
 ): Coord[] {
@@ -141,8 +143,8 @@ function transformGroup(
 
 function transformSuperGroup(
   superGroup: Coord[][],
-  projFrom: Epsg,
-  projTo: Epsg,
+  projFrom: Projection,
+  projTo: Projection,
   origin?: Coord[][],
   transformedOrigin?: Coord[][]
 ): Coord[][] {
@@ -159,8 +161,8 @@ function transformSuperGroup(
 
 function transformMultiSuperGroup(
   superGroups: Coord[][][],
-  projFrom: Epsg,
-  projTo: Epsg,
+  projFrom: Projection,
+  projTo: Projection,
   origin?: Coord[][][],
   transformedOrigin?: Coord[][][]
 ): Coord[][][] {
@@ -175,12 +177,11 @@ function transformMultiSuperGroup(
   );
 }
 
-export function epsgUnit(epsg: string): string {
-  const unit = epsg.split('UNIT');
+export function projectionUnit(proj: string): string {
+  const unit = proj.split('UNIT');
 
   if (isStringArray(unit)) {
     const unitName = unit.at(-1)?.split('",')[0].split('["')[1];
-
     if (unitName === 'degree') {
       return 'градусы';
     }
@@ -197,11 +198,10 @@ export function epsgUnit(epsg: string): string {
   return '';
 }
 
-export function epsgTitle(epsg: string): string {
-  let projection = epsg.split('PROJCS');
-
+export function getProjectionTitle(proj: string): string {
+  let projection = proj.split('PROJCS');
   if (projection.length === 1) {
-    projection = epsg.split('GEOGCS');
+    projection = proj.split('GEOGCS');
   }
 
   return projection[1].split('",')[0].split('["')[1];

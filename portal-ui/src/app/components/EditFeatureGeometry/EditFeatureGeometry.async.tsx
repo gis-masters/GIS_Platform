@@ -7,14 +7,14 @@ import { boundMethod } from 'autobind-decorator';
 import { SimpleGeometry } from 'ol/geom';
 
 import { Emitter } from '../../services/common/Emitter';
-import { Epsg } from '../../services/data/epsg/epsg.models';
-import { getOlEpsg } from '../../services/data/epsg/epsg.service';
-import { transformGeometry } from '../../services/data/epsg/epsg.util';
+import { Projection } from '../../services/data/projection/projection.models';
+import { getOlProjection } from '../../services/data/projection/projection.service';
+import { transformGeometry } from '../../services/data/projection/projection.util';
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
-import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
@@ -32,7 +32,7 @@ export interface EditFeatureGeometryProps {
 
 @observer
 export default class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
-  @observable private olEpsg?: Epsg;
+  @observable private olProjection?: Projection;
 
   constructor(props: EditFeatureGeometryProps) {
     super(props);
@@ -43,10 +43,9 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     // TODO: хз что за ошибка тут с типами
     mapService.modificationDone.on(this.modifyHandler, this);
 
-    const olEpsg = await getOlEpsg();
-
-    if (olEpsg) {
-      this.setOlEpsg(olEpsg);
+    const olProjection = await getOlProjection();
+    if (olProjection) {
+      this.setOlProjection(olProjection);
     }
   }
 
@@ -71,7 +70,12 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     return (
       <div className={cnEditFeatureGeometry()}>
         <EditFeatureGeometryHeader>
-          <SelectEpsg onSelect={this.setSelectedCrs} defaultEpsg={store.currentEpsg} formView fullWidth />
+          <SelectProjection
+            onSelect={this.setSelectedCrs}
+            defaultProjection={store.currentProjection}
+            formView
+            fullWidth
+          />
         </EditFeatureGeometryHeader>
         {geometryType && (
           <div className={cnEditFeatureGeometry('Field')}>
@@ -91,8 +95,8 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
   @boundMethod
   private modifyHandler(e: CustomEvent<SimpleGeometry | undefined>) {
-    const { nativeEpsg, geometry, geometryType, setGeometry } = this.props.store;
-    if (!this.olEpsg) {
+    const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
+    if (!this.olProjection) {
       Toast.warn('Отсутствует проекция необходимая для изменения геометрии объекта');
 
       return;
@@ -100,21 +104,21 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
     const coordinates = e.detail
       ? transformGeometry(
-        {
-          type: geometryType,
-          coordinates: e.detail.getCoordinates() || []
-        },
-        this.olEpsg,
-        nativeEpsg
-      )?.coordinates
+          {
+            type: geometryType,
+            coordinates: e.detail.getCoordinates() || []
+          },
+          this.olProjection,
+          nativeProjection
+        )?.coordinates
       : geometry?.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
   }
 
   @boundMethod
-  private setSelectedCrs(epsg: Epsg) {
-    this.props.store.setEpsg(epsg);
+  private setSelectedCrs(proj: Projection) {
+    this.props.store.setProjection(proj);
   }
 
   private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {
@@ -141,7 +145,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   @action.bound
-  private setOlEpsg(olEpsg: Epsg) {
-    this.olEpsg = olEpsg;
+  private setOlProjection(olProj: Projection) {
+    this.olProjection = olProj;
   }
 }

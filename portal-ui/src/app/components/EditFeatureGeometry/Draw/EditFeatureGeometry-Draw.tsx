@@ -12,9 +12,9 @@ import { DrawEvent } from 'ol/interaction/Draw';
 
 import { Emitter } from '../../../services/common/Emitter';
 import { communicationService } from '../../../services/communication.service';
-import { Epsg } from '../../../services/data/epsg/epsg.models';
-import { getOlEpsg } from '../../../services/data/epsg/epsg.service';
-import { transform } from '../../../services/data/epsg/epsg.util';
+import { Projection } from '../../../services/data/projection/projection.models';
+import { getOlProjection } from '../../../services/data/projection/projection.service';
+import { transform } from '../../../services/data/projection/projection.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -35,7 +35,7 @@ interface EditFeatureGeometryDrawProps {
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
-  @observable private olEpsg?: Epsg;
+  @observable private olProjection?: Projection;
 
   constructor(props: EditFeatureGeometryDrawProps) {
     super(props);
@@ -55,10 +55,9 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
     mapService.modificationDisabled.on(this.deactivate);
 
-    const olEpsg = await getOlEpsg();
-
-    if (olEpsg) {
-      this.setOlEpsg(olEpsg);
+    const olProjection = await getOlProjection();
+    if (olProjection) {
+      this.setOlProjection(olProjection);
     }
   }
 
@@ -96,7 +95,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw(e: DrawEvent) {
     const { point, store, onDraw } = this.props;
 
-    if (!this.olEpsg) {
+    if (!this.olProjection) {
       Toast.warn('Отсутствует проекция необходимая для рисования на карте');
 
       return;
@@ -104,7 +103,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
     if (point) {
       const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as Coordinate;
-      point.splice(0, point.length, ...transform(this.olEpsg, store.currentEpsg, drawed));
+      point.splice(0, point.length, ...transform(this.olProjection, store.currentProjection, drawed));
       onDraw(point);
     } else {
       let drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as
@@ -116,7 +115,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
       }
 
       const newPart = (drawed as Coordinate[]).map((coord: Coordinate) =>
-        transform(this.olEpsg, store.currentEpsg, coord)
+        transform(this.olProjection, store.currentProjection, coord)
       );
 
       onDraw(newPart);
@@ -148,7 +147,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   @action.bound
-  private setOlEpsg(olEpsg: Epsg) {
-    this.olEpsg = olEpsg;
+  private setOlProjection(olProj: Projection) {
+    this.olProjection = olProj;
   }
 }

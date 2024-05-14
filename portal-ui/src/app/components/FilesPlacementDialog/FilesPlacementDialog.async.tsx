@@ -1,27 +1,19 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Step,
-  StepLabel,
-  Stepper
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Step, StepLabel, Stepper } from '@mui/material';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { Epsg } from '../../services/data/epsg/epsg.models';
-import { getCrsFromEpsg } from '../../services/data/epsg/epsg.util';
 import { placeFiles } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { Role } from '../../services/data/permissions/permissions.models';
+import { Projection } from '../../services/data/projection/projection.models';
+import { getCrsFromProjection } from '../../services/data/projection/projection.util';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -30,7 +22,7 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { Button } from '../Button/Button';
 import { ChooseXTable } from '../ChooseXTable/ChooseXTable';
 import { FilesPlacementDialogReport } from '../FilesPlacementDialogReport/FilesPlacementDialogReport';
-import { SelectEpsg } from '../SelectEpsg/SelectEpsg';
+import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { XTableColumn } from '../XTable/XTable.models';
 import { FilesPlacementReportStore as FilesPlacementStore } from './FilesPlacementDialog.store';
 import { FilesPlacementDialogStepIcon } from './StepIcon/FilesPlacementDialog-StepIcon';
@@ -145,7 +137,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
                 <div className={cnFilesPlacementDialog('CrsText')}>
                   Система координат будет применена при размещении для всех выбранных на следующем шаге файлов.
                 </div>
-                <SelectEpsg onSelect={this.setSelectedEpsg} fullWidth />
+                <SelectProjection onSelect={this.setSelectedProjection} fullWidth />
               </>
             )}
 
@@ -258,8 +250,8 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
   }
 
   @boundMethod
-  private setSelectedEpsg(epsg: Epsg) {
-    this.store.setCrs(getCrsFromEpsg(epsg));
+  private setSelectedProjection(proj: Projection) {
+    this.store.setCrs(getCrsFromProjection(proj));
   }
 
   @boundMethod

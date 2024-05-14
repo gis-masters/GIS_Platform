@@ -5,13 +5,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { defaultOlCrs } from '../../services/data/epsg/epsg.models';
 import { placeFile } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { getFile } from '../../services/data/files/files.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
+import { defaultOlCrs } from '../../services/data/projection/projection.models';
 import {
   ContentType,
   PropertySchema,

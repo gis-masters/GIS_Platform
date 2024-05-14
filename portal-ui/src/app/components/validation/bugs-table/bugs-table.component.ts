@@ -10,9 +10,9 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../../services/communication.service';
-import { getEpsgByCrs } from '../../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { ProcessStatus } from '../../../services/data/processes/processes.models';
+import { getProjectionByCrs } from '../../../services/data/projection/projection.service';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
 import { getValidationResults } from '../../../services/data/validation/validation.service';
@@ -143,10 +143,10 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     }
 
     const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
-    const epsg = await getEpsgByCrs(this.crgLayer.nativeCRS);
+    const projection = await getProjectionByCrs(this.crgLayer.nativeCRS);
 
-    await mapService.highlightFeatures([wfsFeature], epsg);
-    await mapService.positionToFeature(wfsFeature, epsg);
+    await mapService.highlightFeatures([wfsFeature], projection);
+    await mapService.positionToFeature(wfsFeature, projection);
   }
 
   editObject(event: Event, objectId: string): void {

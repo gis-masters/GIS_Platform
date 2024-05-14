@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { getEpsgByCrs } from '../../services/data/epsg/epsg.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { getProjectionByCrs } from '../../services/data/projection/projection.service';
 import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
@@ -118,9 +118,9 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     }
 
     const objectStringEnd = pluralize(selected.length, 'а', 'ов', 'ов');
-    const epsg = await getEpsgByCrs(selected[0].nativeCRS);
+    const projection = await getProjectionByCrs(selected[0].nativeCRS);
 
-    const changedCrsName = epsg?.title || selected[0].nativeCRS;
+    const changedCrsName = projection?.title || selected[0].nativeCRS;
 
     this.setWarningContent(
       `Внимание, будет выполнена трансформация координат объект${objectStringEnd} к проекции выбранного слоя (${changedCrsName})`

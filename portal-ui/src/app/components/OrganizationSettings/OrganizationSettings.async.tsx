@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import { Epsg, isArrayOfEpsg } from '../../services/data/epsg/epsg.models';
+import { isArrayOfProjection, Projection } from '../../services/data/projection/projection.models';
 import {
   PropertySchema,
   PropertySchemaChoice,
@@ -21,7 +21,7 @@ import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
-import { SelectEPSGControl } from '../SelectEPSGControl/SelectEPSGControl';
+import { SelectProjectionControl } from '../SelectProjectionControl/SelectProjectionControl';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./OrganizationSettings.scss';
@@ -40,7 +40,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   );
   @observable private busy = false;
   @observable private _schema?: SimpleSchema;
-  @observable private favoritesEpsg: Epsg[] = [];
+  @observable private favoritesProjection: Projection[] = [];
 
   private reactionDisposerOrganizationSettings?: IReactionDisposer;
   private reactionDisposerSystemSettings?: IReactionDisposer;
@@ -136,17 +136,17 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
   @boundMethod
   private fieldChangeHandler(value: unknown, propertyName: string, prevValue: unknown, formValue: Settings) {
-    if (formValue.favorites_epsg && isArrayOfEpsg(formValue.favorites_epsg)) {
-      this.setFavoritesEpsg(formValue.favorites_epsg);
+    if (formValue.favorites_epsg && isArrayOfProjection(formValue.favorites_epsg)) {
+      this.setFavoritesProjection(formValue.favorites_epsg);
       this.updateOptions();
     }
   }
 
   private updateOptions() {
-    const options = this.favoritesEpsg.length
-      ? this.favoritesEpsg.map(item => {
-        return { title: item.title, value: item.title };
-      })
+    const options = this.favoritesProjection.length
+      ? this.favoritesProjection.map(item => {
+          return { title: item.title, value: item.title };
+        })
       : [];
 
     this._schema?.properties.forEach(property => {
@@ -201,7 +201,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
           multiple: true,
           title: prop.title,
           propertyType: PropertyType.CUSTOM,
-          ControlComponent: props => <SelectEPSGControl {...props} />
+          ControlComponent: props => <SelectProjectionControl {...props} />
         };
       }
 
@@ -224,7 +224,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setFavoritesEpsg(favoritesEpsg: Epsg[]): void {
-    this.favoritesEpsg = favoritesEpsg;
+  private setFavoritesProjection(favoritesProjection: Projection[]): void {
+    this.favoritesProjection = favoritesProjection;
   }
 }

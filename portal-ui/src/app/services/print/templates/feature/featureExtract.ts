@@ -4,8 +4,8 @@ import { Coordinate } from 'ol/coordinate';
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
-import { getEpsgByCrs } from '../../../data/epsg/epsg.service';
-import { getCrsFromEpsg } from '../../../data/epsg/epsg.util';
+import { getProjectionByCrs } from '../../../data/projection/projection.service';
+import { getCrsFromProjection } from '../../../data/projection/projection.util';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
@@ -129,13 +129,13 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
         })
     );
 
-    const epsg = await getEpsgByCrs(layer.nativeCRS);
+    const projection = await getProjectionByCrs(layer.nativeCRS);
 
     return await this.renderFragment('main', {
       title: mapDialogResult.title,
       image: mapDialogResult.image,
       currentDate: moment().format('LL'),
-      crs: epsg ? getCrsFromEpsg(epsg) : layer.nativeCRS,
+      crs: projection ? getCrsFromProjection(projection) : layer.nativeCRS,
       coordinates: coordinatesFragment,
       properties: propertiesRows.join(''),
       area: ''
