@@ -34,15 +34,15 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
   }
 
   async componentDidUpdate(prevProps: Readonly<ExplorerWidgetsProps>) {
-    const { item } = this.props;
+    const { item, store } = this.props;
 
-    if (getId(item) !== getId(prevProps.item)) {
+    if (getId(item, store) !== getId(prevProps.item, store)) {
       await this.fetchData();
     }
 
     communicationService.projectUpdated.on(async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
       const { type, data } = e.detail;
-      if (getId({ type: ExplorerItemType.PROJECT, payload: data }) === getId(item) && type !== 'delete') {
+      if (getId({ type: ExplorerItemType.PROJECT, payload: data }, store) === getId(item, store) && type !== 'delete') {
         await this.fetchData();
       }
     }, this);

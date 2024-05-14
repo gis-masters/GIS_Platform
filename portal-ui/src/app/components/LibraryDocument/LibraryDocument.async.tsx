@@ -181,9 +181,8 @@ export default class LibraryDocument extends Component<LibraryDocumentProps> {
       if (includeSelf) {
         itemParentsBreadcrumbs.push({
           title: <b>{title}</b>,
-          url: `/data-management?path_dm=${
-            pathWithCurrent || JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
-          }`
+          url: `/data-management?path_dm=${pathWithCurrent || JSON.stringify([...libraryRootUrlItems, 'library', libraryTableName, ...currentItem])
+            }`
         });
       }
 

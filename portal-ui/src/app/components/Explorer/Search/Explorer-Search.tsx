@@ -50,7 +50,7 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
 
     return (
       <>
-        {explorerRole === 'dm' && hasSearch(openedItem) && (
+        {explorerRole === 'dm' && hasSearch(openedItem, this.props.store) && (
           <Form className={cnExplorerSearch()} onSubmit={this.onSubmit}>
             <TextField
               label={'Поиск'}

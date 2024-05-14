@@ -20,12 +20,15 @@ export class ExplorerService {
 
   private async _refreshItems(e?: CustomEvent<DataChangeEventDetail<unknown>>): Promise<void> {
     if (e?.detail?.type === 'delete') {
-      const deletingItemId = getId({
-        type: this.store.selectedItem.type,
-        payload: e.detail.data
-      } as ExplorerItemData);
-      if (deletingItemId === getId(this.store.selectedItem)) {
-        const selectedItemIndex = this.store.items.findIndex(item => getId(item) === deletingItemId);
+      const deletingItemId = getId(
+        {
+          type: this.store.selectedItem.type,
+          payload: e.detail.data
+        } as ExplorerItemData,
+        this.store
+      );
+      if (deletingItemId === getId(this.store.selectedItem, this.store)) {
+        const selectedItemIndex = this.store.items.findIndex(item => getId(item, this.store) === deletingItemId);
         this.store.selectItem(
           this.store.items[selectedItemIndex + 1] || this.store.items[selectedItemIndex - 1] || emptyItem
         );
@@ -62,7 +65,7 @@ export class ExplorerService {
       const response = await getChildrenWithParticularOne(
         openedItem,
         { page, pageSize, sort, sortOrder, filter },
-        getId(selectedItem),
+        getId(selectedItem, this.store),
         this.store,
         this
       );
@@ -114,7 +117,7 @@ export class ExplorerService {
   }
 
   itemsEqual(a: ExplorerItemData, b: ExplorerItemData): boolean {
-    return a && b && getId(a) === getId(b) && a.type === b.type;
+    return a && b && getId(a, this.store) === getId(b, this.store) && a.type === b.type;
   }
 
   mergeCustomFilter(filter: FilterQuery | undefined, item: ExplorerItemData, store: ExplorerStore): FilterQuery {

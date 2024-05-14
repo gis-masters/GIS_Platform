@@ -27,7 +27,7 @@ export const ExplorerInfo: FC<ExplorerInfoProps> = observer(({ className, store 
     <Card className={cnExplorerInfo({}, [className])} elevation={3} square>
       <ExplorerInfoContent>
         <ExplorerInfoTitle>{getTitle(selectedItem, store)}</ExplorerInfoTitle>
-        {getDescription(selectedItem)}
+        {getDescription(selectedItem, store)}
         <ExplorerWidgets className={cnExplorerWidgets()} store={store} item={selectedItem} type={selectedItem.type} />
       </ExplorerInfoContent>
       <ExplorerActions store={store} />

@@ -14,16 +14,17 @@ const cnExplorerSort = cn('Explorer', 'Sort');
 
 interface ExplorerSortProps {
   store: ExplorerStore;
+  hideItemsSort?: boolean;
   onChange: () => void;
 }
 
 @observer
 export class ExplorerSort extends Component<ExplorerSortProps> {
   render() {
-    const { store } = this.props;
+    const { store, hideItemsSort } = this.props;
     const { sortItems, sort, sortOrder } = store;
 
-    return sortItems?.length ? (
+    return !hideItemsSort && sortItems?.length ? (
       <div className={cnExplorerSort()}>
         <TextField label='Сортировать&nbsp;по' value={sort} onChange={this.handleSortChange} select variant='standard'>
           {sortItems.map(({ label, value }, i) => (

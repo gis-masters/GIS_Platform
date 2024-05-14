@@ -29,8 +29,8 @@ class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {
   }
 
   async componentDidUpdate(prevProps: Readonly<ExplorerWidgetsProps>) {
-    const { item } = this.props;
-    if (getId(item) !== getId(prevProps.item)) {
+    const { item, store } = this.props;
+    if (getId(item, store) !== getId(prevProps.item, store)) {
       await this.fetchData();
     }
   }

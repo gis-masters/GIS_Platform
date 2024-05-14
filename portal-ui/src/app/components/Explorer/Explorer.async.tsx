@@ -27,6 +27,7 @@ import {
 } from './Adapter/Explorer-Adapter';
 import { ExplorerBreadcrumb } from './Breadcrumbs/Explorer-Breadcrumb';
 import {
+  Adapter,
   CustomFilters,
   emptyItem,
   ExplorerItemData,
@@ -67,6 +68,9 @@ export interface ExplorerProps extends IClassNameProps {
   withInfoPanel?: boolean;
   withoutTitle?: boolean;
   fixedHeight?: boolean;
+  hideItemsSort?: boolean;
+  hidePageSize?: boolean;
+  adaptersOverride?: Record<string, Partial<Adapter>>;
   urlChangeEnabled?: boolean;
   customFilters?: CustomFilters;
   onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
@@ -91,6 +95,7 @@ export default class Explorer extends Component<ExplorerProps> {
     this.store = new ExplorerStore(props.explorerRole);
     this.service = new ExplorerService(this.store);
     this.store.setCustomFilters(props.customFilters || {});
+    this.store.setAdaptersOverride(props.adaptersOverride || {});
     this.init(props);
   }
 
@@ -131,9 +136,9 @@ export default class Explorer extends Component<ExplorerProps> {
         () => this.store.openedItem,
         openedItem => {
           this.store.setFilter({});
-          this.store.setSort(getChildrenSortDefaultValue(openedItem));
-          this.store.setSortOrder(getChildrenSortDefaultOrder(openedItem));
-          this.store.setSortItems(getChildrenSortItems(openedItem));
+          this.store.setSort(getChildrenSortDefaultValue(openedItem, this.store));
+          this.store.setSortOrder(getChildrenSortDefaultOrder(openedItem, this.store));
+          this.store.setSortItems(getChildrenSortItems(openedItem, this.store));
         }
       ),
 
@@ -162,7 +167,7 @@ export default class Explorer extends Component<ExplorerProps> {
             this.channels = [];
             // подписка на обновление
             for (const item of path) {
-              for (const channel of getRefreshEmitters(item)) {
+              for (const channel of getRefreshEmitters(item, this.store)) {
                 if (!this.channels.includes(channel)) {
                   this.channels.push(channel);
                   channel.on(this.service.refreshItems, this);
@@ -232,7 +237,8 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, className, disabledTester } = this.props;
+    const { withInfoPanel, fixedHeight, withoutTitle, className, hideItemsSort, hidePageSize, disabledTester } =
+      this.props;
 
     return (
       <div
@@ -245,6 +251,8 @@ export default class Explorer extends Component<ExplorerProps> {
         {!withoutTitle && <ExplorerBreadcrumb store={this.store} onOpen={this.openItem} />}
         <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
         <ExplorerToolbar
+          hideItemsSort={hideItemsSort}
+          hidePageSize={hidePageSize}
           service={this.service}
           store={this.store}
           onChange={this.service.refreshItems}
@@ -307,8 +315,8 @@ export default class Explorer extends Component<ExplorerProps> {
     }
 
     if (action === KeyAction.PREV || action === KeyAction.NEXT) {
-      const currentSelectionId = getId(selectedItem);
-      const currentSelectionIndex = items.findIndex(item => getId(item) === currentSelectionId);
+      const currentSelectionId = getId(selectedItem, this.store);
+      const currentSelectionIndex = items.findIndex(item => getId(item, this.store) === currentSelectionId);
       const newSelectionIndex = action === KeyAction.NEXT ? currentSelectionIndex + 1 : currentSelectionIndex - 1;
       if (newSelectionIndex >= 0 && newSelectionIndex < items.length) {
         this.store.selectItem(items[newSelectionIndex]);
@@ -316,8 +324,8 @@ export default class Explorer extends Component<ExplorerProps> {
     }
 
     if (action === KeyAction.OPEN) {
-      if (customOpenActionIcon(selectedItem)) {
-        void customOpenAction(selectedItem);
+      if (customOpenActionIcon(selectedItem, this.store)) {
+        void customOpenAction(selectedItem, this.store);
       } else {
         void this.openItem(selectedItem);
       }
@@ -338,7 +346,7 @@ export default class Explorer extends Component<ExplorerProps> {
     await services.provided;
     const { path, page, pageSize, sort, sortOrder, filter } = this.store;
 
-    const explorerItems = path.flatMap(item => [item.type, getId(item)]);
+    const explorerItems = path.flatMap(item => [item.type, getId(item, this.store)]);
     const encodedURIPath = JSON.stringify(explorerItems);
 
     const explorerOptions: ExplorerUrlOptions = [page, pageSize, sort, sortOrder, filter];

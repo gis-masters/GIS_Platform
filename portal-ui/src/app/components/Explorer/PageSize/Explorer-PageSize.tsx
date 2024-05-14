@@ -13,32 +13,35 @@ const cnExplorerPageSize = cn('Explorer', 'PageSize');
 
 interface ExplorerPageSizeProps {
   store: ExplorerStore;
+  hidePageSize?: boolean;
   onChange: () => void;
 }
 
 @observer
 export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
   render() {
-    const { store } = this.props;
+    const { store, hidePageSize } = this.props;
     const { pageSize } = store;
 
     return (
-      <div className={cnExplorerPageSize()}>
-        <TextField
-          label='На&nbsp;странице'
-          value={pageSize}
-          select
-          fullWidth
-          onChange={this.changeHandler}
-          variant='standard'
-        >
-          {pageSizeVariants.map(size => (
-            <MenuItem value={size} key={size}>
-              {size}
-            </MenuItem>
-          ))}
-        </TextField>
-      </div>
+      !hidePageSize && (
+        <div className={cnExplorerPageSize()}>
+          <TextField
+            label='На&nbsp;странице'
+            value={pageSize}
+            select
+            fullWidth
+            onChange={this.changeHandler}
+            variant='standard'
+          >
+            {pageSizeVariants.map(size => (
+              <MenuItem value={size} key={size}>
+                {size}
+              </MenuItem>
+            ))}
+          </TextField>
+        </div>
+      )
     );
   }
 

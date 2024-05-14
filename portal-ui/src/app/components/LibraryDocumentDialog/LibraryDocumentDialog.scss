@@ -1,4 +1,23 @@
-.LibraryDocumentDialog {
+body .LibraryDocumentDialog {
+  &-Document {
+    max-height: calc(100vh - 220px);
+    margin-bottom: 15px;
+  }
+
+  &-Explorer {
+    gap: 0;
+
+    & .Explorer {
+      &-List {
+        min-height: auto;
+      }
+
+      &-Empty {
+        padding: 10px;
+      }
+    }
+  }
+
   &-TypeIcon {
     position: relative;
     top: -1px;
@@ -8,11 +27,13 @@
     margin-right: 8px;
   }
 
-  &-Document {
-    max-height: calc(100vh - 220px);
-  }
-
   &-TitleDeleted {
     color: var(--error);
+  }
+
+  &-FolderContentTitle {
+    margin-right: 0.4em;
+
+    color: grey;
   }
 }

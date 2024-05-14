@@ -17,17 +17,26 @@ const cnExplorerToolbar = cn('Explorer', 'Toolbar');
 interface ExplorerToolbarProps {
   store: ExplorerStore;
   service: ExplorerService;
+  hideItemsSort?: boolean;
+  hidePageSize?: boolean;
   onChange: () => void;
   full: boolean;
 }
 
-export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({ store, service, onChange, full }) => {
+export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
+  store,
+  service,
+  hideItemsSort,
+  hidePageSize,
+  onChange,
+  full
+}) => {
   return (
     <div className={cnExplorerToolbar()}>
       <ExplorerFilter store={store} onChange={onChange} service={service} />
       <ExplorerSearch store={store} onChange={onChange} service={service} />
-      <ExplorerSort store={store} onChange={onChange} />
-      <ExplorerPageSize store={store} onChange={onChange} />
+      <ExplorerSort hideItemsSort={hideItemsSort} store={store} onChange={onChange} />
+      <ExplorerPageSize hidePageSize={hidePageSize} store={store} onChange={onChange} />
       <ToolbarDivider />
       <ExplorerToolbarActions service={service} store={store} full={full} />
     </div>

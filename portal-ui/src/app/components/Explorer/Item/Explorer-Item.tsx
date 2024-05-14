@@ -24,7 +24,7 @@ export interface ExplorerItemProps {
   selected: boolean;
   isFolder: boolean;
   customOpenActionIcon?: ReactNode;
-  customOpenAction?: (item: ExplorerItemData) => void;
+  customOpenAction?: (item: ExplorerItemData, store: ExplorerStore) => void;
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
   onOpen: (item: ExplorerItemData) => void;
@@ -81,10 +81,10 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
 
   @boundMethod
   private openHandler() {
-    const { customOpenActionIcon, customOpenAction, onOpen, item } = this.props;
+    const { customOpenActionIcon, customOpenAction, onOpen, item, store } = this.props;
 
     if (customOpenActionIcon && customOpenAction) {
-      customOpenAction(item);
+      customOpenAction(item, store);
     } else {
       onOpen(item);
     }

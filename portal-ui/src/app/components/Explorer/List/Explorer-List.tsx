@@ -53,7 +53,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
     await when(() => !store.restoringFromUrl);
 
     this.selectedItemReactionDisposer = reaction(
-      () => [getId(store.selectedItem), store.selectedItem.type],
+      () => [getId(store.selectedItem, store), store.selectedItem.type],
       async () => await this.scrollToSelectedItem(),
       { fireImmediately: true }
     );
@@ -69,7 +69,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
         {Boolean(this.currentList?.length) &&
           this.currentList
             .map(this.getItemProps)
-            .map((props, i) => <ExplorerItem {...props} key={String(i) + getId(props.item)} />)}
+            .map((props, i) => <ExplorerItem {...props} key={String(i) + getId(props.item, this.props.store)} />)}
         {!this.currentList?.length && <ExplorerEmpty />}
       </List>
     );
@@ -90,13 +90,13 @@ export class ExplorerList extends Component<ExplorerListProps> {
     return {
       item,
       title: getTitle(item, store),
-      meta: getMeta(item),
-      icon: getIcon(item),
-      additionalInfo: additionalInfo(item),
+      meta: getMeta(item, store),
+      icon: getIcon(item, store),
+      additionalInfo: additionalInfo(item, store),
       selected: selectedItem,
       isFolder: isFolder(item, store),
       itemRef: selectedItem ? this.selectedItemRef : undefined,
-      customOpenActionIcon: customOpenActionIcon(item),
+      customOpenActionIcon: customOpenActionIcon(item, store),
       customOpenAction,
       onOpen,
       store,
@@ -112,7 +112,7 @@ export class ExplorerList extends Component<ExplorerListProps> {
     const { store } = this.props;
     const { selectedItem } = store;
 
-    return selectedItem && getId(selectedItem) === getId(item);
+    return selectedItem && getId(selectedItem, store) === getId(item, store);
   }
 
   @boundMethod

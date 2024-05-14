@@ -24,13 +24,13 @@ interface ExplorerFilterProps {
 export class ExplorerFilter extends Component<ExplorerFilterProps> {
   render() {
     const { filter, openedItem } = this.props.store;
-    const filterField = getChildrenFilterField(openedItem) || null;
+    const filterField = getChildrenFilterField(openedItem, this.props.store) || null;
 
     return (
       filterField && (
         <div className={cnExplorerFilter()}>
           <TextField
-            label={getChildrenFilterLabel(openedItem) || 'Поиск'}
+            label={getChildrenFilterLabel(openedItem, this.props.store) || 'Поиск'}
             value={filter[filterField] || ''}
             onChange={this.handleFilterChange}
             InputProps={{
@@ -51,7 +51,7 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
   private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { store, service, onChange } = this.props;
     const { openedItem } = store;
-    const filterField = getChildrenFilterField(openedItem);
+    const filterField = getChildrenFilterField(openedItem, store);
 
     if (filterField) {
       store.setFilter({ [filterField]: e.target.value });

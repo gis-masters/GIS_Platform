@@ -35,14 +35,17 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
   }
 
   async componentDidUpdate(prevProps: Readonly<ExplorerWidgetsProps>) {
-    const { item } = this.props;
-    if (getId(item) !== getId(prevProps.item)) {
+    const { item, store } = this.props;
+    if (getId(item, store) !== getId(prevProps.item, store)) {
       await this.fetchData();
     }
 
     communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
       const { type, data } = e.detail;
-      if (getId({ type: ExplorerItemType.DOCUMENT, payload: data }) === getId(item) && type !== 'delete') {
+      if (
+        getId({ type: ExplorerItemType.DOCUMENT, payload: data }, store) === getId(item, store) &&
+        type !== 'delete'
+      ) {
         await this.fetchData();
       }
     }, this);

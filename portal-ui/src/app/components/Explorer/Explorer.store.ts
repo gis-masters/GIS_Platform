@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { SortOrder } from '../../services/models';
-import { CustomFilters, ExplorerItemData, ExplorerRole, pageSizeVariants, SortItem } from './Explorer.models';
+import { Adapter, CustomFilters, ExplorerItemData, ExplorerRole, pageSizeVariants, SortItem } from './Explorer.models';
 
 export class ExplorerStore {
   readonly explorerRole: ExplorerRole;
@@ -16,6 +16,7 @@ export class ExplorerStore {
   @observable sort?: string;
   @observable sortOrder: SortOrder = SortOrder.ASC;
   @observable filter: Record<string, string> = {};
+  @observable adaptersOverride: Record<string, Partial<Adapter>> = {};
   @observable loading = false;
   @observable restoringFromUrl = false;
 
@@ -124,5 +125,10 @@ export class ExplorerStore {
   @action
   setRestoringFromUrl(status: boolean): void {
     this.restoringFromUrl = status;
+  }
+
+  @action
+  setAdaptersOverride(adaptersOverride: Record<string, Partial<Adapter>>): void {
+    this.adaptersOverride = adaptersOverride;
   }
 }

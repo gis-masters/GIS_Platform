@@ -14,7 +14,7 @@ interface ExplorerActionsProps {
 }
 
 export const ExplorerActions: FC<ExplorerActionsProps> = observer(({ store }) => {
-  const actions = getActions(store.selectedItem);
+  const actions = getActions(store.selectedItem, store);
 
   return (store.selectedItem && actions && <div className={cnExplorer('Actions')}>{actions}</div>) || null;
 });
