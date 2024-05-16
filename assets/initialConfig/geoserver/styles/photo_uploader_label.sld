@@ -7,7 +7,7 @@
   <NamedLayer>
     <se:Name>Объекты фотофиксации</se:Name>
     <UserStyle>
-      <se:Name>photo_uploader</se:Name>
+      <se:Name>photo_uploader_label</se:Name>
       <se:FeatureTypeStyle>
         <se:Rule>
           <se:Name>Default</se:Name>
@@ -25,11 +25,11 @@
               <se:Mark>
                 <se:WellKnownName>circle</se:WellKnownName>
                 <se:Fill>
-                  <se:SvgParameter name="fill">#<ogc:PropertyName>user_fill_color</ogc:PropertyName>
+                  <se:SvgParameter name="fill">#<ogc:PropertyName>label_fill_color</ogc:PropertyName>
                   </se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-                  <se:SvgParameter name="stroke">#<ogc:PropertyName>user_stroke_color</ogc:PropertyName>
+                  <se:SvgParameter name="stroke">#<ogc:PropertyName>label_stroke_color</ogc:PropertyName>
                   </se:SvgParameter>
                   <se:SvgParameter name="stroke-width">2.5</se:SvgParameter>
                 </se:Stroke>
@@ -50,11 +50,11 @@
               <se:Mark>
                 <se:WellKnownName>circle</se:WellKnownName>
                 <se:Fill>
-                  <se:SvgParameter name="fill">#<ogc:PropertyName>user_fill_color</ogc:PropertyName>
+                  <se:SvgParameter name="fill">#                    <ogc:PropertyName>label_fill_color</ogc:PropertyName>
                   </se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-                  <se:SvgParameter name="stroke">#<ogc:PropertyName>user_stroke_color</ogc:PropertyName>
+                  <se:SvgParameter name="stroke">#                    <ogc:PropertyName>label_stroke_color</ogc:PropertyName>
                   </se:SvgParameter>
                   <se:SvgParameter name="stroke-width">2.5</se:SvgParameter>
                 </se:Stroke>

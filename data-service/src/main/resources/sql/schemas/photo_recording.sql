@@ -46,8 +46,7 @@ SET class_rule =
     {
       "name": "label",
       "title": "Метки",
-      "valueType": "STRING",
-      "maxLength": 255
+      "valueType": "STRING"
     },
     {
       "name": "user_fill_color",
@@ -62,6 +61,20 @@ SET class_rule =
       "hidden": true,
       "calculatedValueFormula": "return (Number(''0x''+(Number(obj.sender)*71).toString(16) + (Number(obj.sender)*91).toString(12) + (Number(obj.sender)*51).toString(15) + (Number(obj.sender)*31).toString(14) + (Number(obj.sender)*11).toString(13))*73719/16).toString(16).slice(8, 14)",
       "valueType": "STRING"
+    },
+    {
+      "name": "label_fill_color",
+      "title": "цвет заливки по отправителю",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "label_fill_color"
+    },
+    {
+      "name": "label_stroke_color",
+      "title": "цвет обводки по отправителю",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "label_stroke_color"
     },
     {
       "name": "rotation",
@@ -118,6 +131,92 @@ SET class_rule =
     }
   ],
   "description": "Объекты для привязки фото к слою",
-  "geometryType": "Point"
+  "geometryType": "Point",
+  "views": [
+    {
+      "id": "photo_uploader_label",
+      "title": "Цвета на основе меток",
+      "styleName": "photo_uploader_label",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_mono",
+      "title": "Одинаковые цвета",
+      "styleName": "photo_uploader_mono",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_mono_unrotate",
+      "title": "Одинаковые цвета без вращения",
+      "styleName": "photo_uploader_mono_unrotate",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    }
+  ]
 }'
 WHERE name = 'photo_uploader';

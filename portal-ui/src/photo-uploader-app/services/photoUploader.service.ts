@@ -168,12 +168,14 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
     type: 'Feature',
     properties: {
       photo: [],
-      creationtime: moment().format('YYYY-MM-DD'),
+      creation_time: moment().format('YYYY-MM-DD'),
       name: file.name,
-      photographytime: photoTime,
+      photography_time: photoTime,
       sender: currentUser.id,
-      color: '399959',
-      color2: '292919',
+      user_fill_color: '555555',
+      user_stroke_color: '555555',
+      label_fill_color: '555555',
+      label_stroke_color: '555555',
       rotation:
         !!tags?.exif?.GPSImgDirection?.description && !Number.isNaN(Number(tags.exif?.GPSImgDirection.description))
           ? Number(tags.exif?.GPSImgDirection.description)
