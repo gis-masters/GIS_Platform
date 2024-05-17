@@ -1,5 +1,4 @@
 import * as ExifReader from 'exifreader';
-import moment from 'moment';
 
 import { createFile } from '../../app/services/data/files/files.service';
 import { defaultOlCrs } from '../../app/services/data/projection/projection.models';
@@ -7,6 +6,7 @@ import { getProjectionByCrs } from '../../app/services/data/projection/projectio
 import { transformGeometry } from '../../app/services/data/projection/projection.util';
 import { createFeature } from '../../app/services/data/vectorData/vectorData.service';
 import { GeometryType, NewWfsFeature } from '../../app/services/geoserver/wfs/wfs.models';
+import { formatDate, systemFormat } from '../../app/services/util/date.util';
 import { currentUser } from '../../app/stores/CurrentUser.store';
 import { PhotoUploaderScreens, photoUploaderStore } from '../stores/PhotoUploader.store';
 import { UploadedFile, UploadedFileStatus } from './photoUploader.models';
@@ -142,7 +142,7 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
 
   const photoTime = tags?.exif?.DateTime?.description
     ? `${tags.exif?.DateTime?.description.slice(0, 4)}-${tags?.exif?.DateTime?.description.slice(5, 7)}-${tags?.exif?.DateTime?.description.slice(8, 10)}`
-    : moment(file.lastModified).format('YYYY-MM-DD');
+    : formatDate(file.lastModified, systemFormat);
 
   const longitude =
     !!tags?.exif?.GPSLongitude?.description && !Number.isNaN(Number(tags?.exif?.GPSLongitude.description))
@@ -168,7 +168,7 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
     type: 'Feature',
     properties: {
       photo: [],
-      creation_time: moment().format('YYYY-MM-DD'),
+      creationtime: formatDate(new Date(), systemFormat),
       name: file.name,
       photography_time: photoTime,
       sender: currentUser.id,

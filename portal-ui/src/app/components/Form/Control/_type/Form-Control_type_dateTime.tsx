@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import moment from 'moment';
 
 import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
+import { systemFormat } from '../../../../services/util/date.util';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { cnFormControl, FormControlProps } from '../Form-Control';
 
@@ -23,7 +24,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           id={htmlId}
           name={name}
           fullWidth={!inSet}
-          value={date?.isValid && date.isValid() ? date.format('YYYY-MM-DD') : ''}
+          value={date?.isValid && date.isValid() ? date.format(systemFormat) : ''}
           onChange={this.handleChange}
           label={inSet ? property.title : undefined}
           InputLabelProps={{

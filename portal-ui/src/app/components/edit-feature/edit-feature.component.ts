@@ -3,7 +3,6 @@ import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isNumber } from 'lodash';
-import moment from 'moment';
 import { Coordinate } from 'ol/coordinate';
 import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
@@ -36,7 +35,7 @@ import { MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { services } from '../../services/services';
-import { formatDate } from '../../services/util/date.util';
+import { formatDate, systemFormat } from '../../services/util/date.util';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
@@ -174,7 +173,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             }
 
             if (property?.valueType === ValueType.DATETIME && currentValue) {
-              currentValue = moment(currentValue).format('YYYY-MM-DD');
+              currentValue =
+                currentValue instanceof Date || typeof currentValue === 'number' || typeof currentValue === 'string'
+                  ? formatDate(currentValue, systemFormat)
+                  : '';
             }
 
             if ((property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) && currentValue) {

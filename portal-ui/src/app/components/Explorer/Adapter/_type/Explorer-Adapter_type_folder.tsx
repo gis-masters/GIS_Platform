@@ -232,16 +232,16 @@ export class ExplorerAdapterTypeFolder {
       <>
         {(currentItem.libraryTableName === 'dl_data_kpt' ||
           (library.schema.tags?.includes('КПТ') && library.schema.tags.includes('Библиотека'))) && (
-            <>
-              <LibraryMassKptLoad
-                libraryRecord={item.payload}
-                parent={currentItem}
-                library={library}
-                role={currentItem.role}
-              />
-              <LibraryKptRequest library={library} />
-            </>
-          )}
+          <>
+            <LibraryMassKptLoad
+              libraryRecord={item.payload}
+              parent={currentItem}
+              library={library}
+              role={currentItem.role}
+            />
+            <LibraryKptRequest library={library} />
+          </>
+        )}
         {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
         {store.explorerRole === 'dm' && (
           <>

@@ -5,11 +5,12 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { FileInfo } from '../../services/data/files/files.models';
+import { isZipFile } from '../../services/data/files/files.util';
+import { kptMassUploadSchema } from '../../services/data/kpt/kpt.models';
 import { uploadKpt } from '../../services/data/kpt/kpt.service';
-import { applyCustomContentType, havePermissionsForEdit } from '../../services/data/kpt/kpt.utils';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { Role } from '../../services/data/permissions/permissions.models';
-import { Schema } from '../../services/data/schema/schema.models';
+import { checkIsUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 import { KptImportMass } from '../Icons/KptImportMass';
@@ -51,7 +52,7 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
   }
 
   render() {
-    const permissions = havePermissionsForEdit(this.props.role);
+    const permissions = checkIsUpdateAllowed(this.props.role);
 
     const { library, libraryRecord, parent, role, disabled, tooltipTitle } = this.props;
 
@@ -78,7 +79,7 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
               open={!this.busy && this.formDialogOpen}
               onClose={this.closeFormDialog}
               title={titleWithPermissions}
-              schema={this.schema}
+              schema={kptMassUploadSchema}
               actionFunction={this.loadHandler}
               actionButtonProps={{ children: 'Загрузка' }}
               afterForm={<LibraryMassKptLoadWorker onChange={this.changeFilesHandler} />}
@@ -97,13 +98,6 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
         )}
       </>
     );
-  }
-
-  @computed
-  private get schema(): Schema {
-    const { library, libraryRecord } = this.props;
-
-    return applyCustomContentType({ schema: library.schema, libraryRecord });
   }
 
   @computed
@@ -145,7 +139,7 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
         data,
         file,
         libraryTableName: this.props.library.table_name,
-        properties: this.schema.properties
+        properties: kptMassUploadSchema.properties
       });
       file.status = status;
 
@@ -190,9 +184,7 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
 
   @action.bound
   private changeFilesHandler(incomeFiles: FileList): void {
-    const filesForUpload = [...incomeFiles]
-      .filter(file => file.name.endsWith('.zip'))
-      .map(file => ({ file, fileInfo: null, status: null }));
+    const filesForUpload = [...incomeFiles].filter(isZipFile).map(file => ({ file, fileInfo: null, status: null }));
 
     this.setFiles(filesForUpload);
     this.count = filesForUpload.length;

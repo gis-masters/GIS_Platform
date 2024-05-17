@@ -32,7 +32,8 @@ export function getFileBaseName(name: string): string {
 
 const extensionsAliases = {
   jpg: ['jpeg', 'jpe', 'jfif'],
-  tif: ['tiff']
+  tif: ['tiff'],
+  zip: ['zipx', 'z01', 'zx01']
 };
 
 export function normalizeExtension(ext: string): string {
@@ -64,36 +65,55 @@ export function getReadableFileSize(bytes: number): string {
   return `${bytes.toFixed(bytes % 1 > 0.1 ? 1 : 0)} ${units[u]}`;
 }
 
-export function isTifFile(file: FileInfo): boolean {
-  return normalizeExtension(getFileExtension(file.title)) === 'tif';
+export function isZipFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'zip';
 }
 
-export function isPdfFile(file: FileInfo): boolean {
-  return normalizeExtension(getFileExtension(file.title)) === 'pdf';
+export function isTifFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'tif';
 }
 
-export function isPreviewAllowed(file: FileInfo): boolean {
+export function isPdfFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'pdf';
+}
+
+export function isPreviewAllowed(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
   const types = ['jpg', 'png', 'gif', 'webp', 'pdf'];
 
-  return types.includes(normalizeExtension(getFileExtension(file.title)));
+  return types.includes(normalizeExtension(getFileExtension(title)));
 }
 
-export function isImageFile(file: FileInfo): boolean {
+export function isImageFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
   const types = ['jpg', 'png', 'gif', 'webp'];
 
-  return types.includes(normalizeExtension(getFileExtension(file.title)));
+  return types.includes(normalizeExtension(getFileExtension(title)));
 }
 
-export function isGmlFile(file: FileInfo): boolean {
-  return normalizeExtension(getFileExtension(file.title)) === 'gml';
+export function isGmlFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'gml';
 }
 
-export function isDxfFile(file: FileInfo): boolean {
-  return normalizeExtension(getFileExtension(file.title)) === 'dxf';
+export function isDxfFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'dxf';
 }
 
-export function isNeedDefineProjection(file: FileInfo): boolean {
-  const ext = normalizeExtension(getFileExtension(file.title));
+export function isNeedDefineProjection(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  const ext = normalizeExtension(getFileExtension(title));
 
   return ext === 'dxf' || ext === 'shp' || ext === 'tab' || ext === 'mid' || ext === 'mif';
 }
@@ -167,18 +187,6 @@ export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
   }
 
   return [];
-}
-
-const zipFileTypes = new Set([
-  'application/x-zip',
-  'application/zip',
-  'application/x-zip-compressed',
-  'application/s-compressed',
-  'multipart/x-zip'
-]);
-
-export function isZipFile(file: File): boolean {
-  return zipFileTypes.has(file.type);
 }
 
 function isFileInfo(obj: unknown): obj is FileInfo {

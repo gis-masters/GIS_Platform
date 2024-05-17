@@ -1,5 +1,7 @@
 import moment from 'moment';
 
+export const systemFormat = 'YYYY-MM-DD';
+
 export function formatDate(value: string | number | Date, format = 'DD.MM.YYYY'): string {
   if (!value) {
     return '';

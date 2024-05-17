@@ -152,7 +152,7 @@ export async function isRecordUpdateAllowed(record: LibraryRecord): Promise<bool
   return checkIsUpdateAllowed(libraryRecord.role);
 }
 
-function checkIsUpdateAllowed(role: Role) {
+export function checkIsUpdateAllowed(role: Role): boolean {
   return currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR;
 }
 

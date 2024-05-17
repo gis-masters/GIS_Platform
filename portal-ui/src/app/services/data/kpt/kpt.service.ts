@@ -1,4 +1,6 @@
+import { formatDate, systemFormat } from '../../util/date.util';
 import { createFile } from '../files/files.service';
+import { getFileBaseName } from '../files/files.util';
 import { createLibraryRecord } from '../library/library.service';
 import { kptClient } from './kpt.client';
 import { KptTaskInfo, UploadKptData, UploadKptReturnType } from './kpt.models';
@@ -13,6 +15,8 @@ export async function requestKpt(order: string[]): Promise<void> {
 
 export async function uploadKpt({ file, data, libraryTableName }: UploadKptData): Promise<UploadKptReturnType> {
   const failedResult: UploadKptReturnType = { status: 'error' };
+  const lastModified = new Date(file.file.lastModified);
+  const dateOrder = formatDate(lastModified, systemFormat);
 
   try {
     const fileToLoad = await createFile(file.file);
@@ -24,6 +28,9 @@ export async function uploadKpt({ file, data, libraryTableName }: UploadKptData)
     }
 
     data.file = [{ id, size, title }];
+    data.content_type_id = 'Карточка';
+    data.date_order_completion = dateOrder;
+    data.title = getFileBaseName(title);
 
     const libraryRecord = await createLibraryRecord(data, libraryTableName);
 
