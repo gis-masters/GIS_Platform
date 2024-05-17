@@ -385,7 +385,7 @@ Auto.args = {
   )
 };
 
-const schemaWithDefaultValue: SimpleSchema = {
+export const schemaWithDefaultValue: SimpleSchema = {
   properties: [
     {
       name: 'name',
@@ -415,7 +415,7 @@ DefaultValue.args = {
   value: getDefaultValues(schemaWithDefaultValue.properties, { surname: 'Doe' })
 };
 
-const schemaWithDynamicProperties: SimpleSchema = {
+export const schemaWithDynamicProperties: SimpleSchema = {
   properties: [
     {
       name: 'name',

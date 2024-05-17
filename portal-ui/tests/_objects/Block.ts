@@ -7,14 +7,14 @@ interface Selectors {
 
 export abstract class Block<S extends Selectors = Selectors> {
   abstract selectors: S;
-  protected parent: string | WebdriverIO.Element;
+  protected parent: string | WebdriverIO.Element | null;
   private readonly container?: WebdriverIO.Element;
 
   get name(): string {
     return this.constructor.name.replace(/Block$/, '');
   }
 
-  constructor(parent: string | WebdriverIO.Element = '', container?: WebdriverIO.Element) {
+  constructor(parent: string | WebdriverIO.Element | null = null, container?: WebdriverIO.Element) {
     this.container = container;
     this.parent = parent;
   }

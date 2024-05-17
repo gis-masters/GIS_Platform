@@ -6,10 +6,12 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
+import { cloneDeep, isEqual } from 'lodash';
 
 import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
+import { konfirmieren } from '../../services/utility-dialogs.service';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button, ButtonProps } from '../Button/Button';
@@ -47,10 +49,16 @@ export interface FormDialogProps<T> extends IClassNameProps {
 export class FormDialog<T> extends Component<FormDialogProps<T>> {
   @observable private busy = false;
   private formInvoke: FormProps<T>['invoke'] = {};
+  private initialFormValue?: Partial<T> = {};
+  @observable private actualFormValue?: Partial<T> = {};
 
   constructor(props: FormDialogProps<T>) {
     super(props);
     makeObservable(this);
+  }
+
+  componentDidMount(): void {
+    this.initialFormValue = cloneDeep(this.props.value);
   }
 
   componentDidUpdate() {
@@ -78,8 +86,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       afterForm,
       actionButtonProps = {},
       actionFunction,
-      closeButtonProps,
-      onFormChange
+      closeButtonProps
     } = this.props;
     const htmlId = generateRandomId();
 
@@ -104,7 +111,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 id={htmlId}
                 labelInField={labelInField}
                 auto
-                onFormChange={onFormChange}
+                onFormChange={this.formChangeHandler}
                 onFormSubmit={this.submitHandler}
                 onActionSuccess={this.successHandler}
                 onActionError={this.errorHandler}
@@ -160,7 +167,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     if (onSuccess) {
       onSuccess();
     }
-    this.close();
+    this.closeWithoutConfirm();
   }
 
   @action
@@ -169,7 +176,28 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
   }
 
   @boundMethod
-  private close() {
+  private async close() {
+    if (this.props.unclosable) {
+      return;
+    }
+
+    if (this.actualFormValue && !isEqual(this.actualFormValue, this.initialFormValue)) {
+      if (
+        await konfirmieren({
+          message: 'Закрыть диалоговое окно? Все несохраненные данные будут утеряны.'
+        })
+      ) {
+        this.closeWithoutConfirm();
+      }
+
+      return;
+    }
+
+    this.closeWithoutConfirm();
+  }
+
+  @boundMethod
+  private closeWithoutConfirm() {
     if (this.props.unclosable) {
       return;
     }
@@ -177,5 +205,15 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     const { onClose } = this.props;
     this.formInvoke?.reset?.();
     onClose();
+  }
+
+  @action.bound
+  private formChangeHandler(changedValue: T): void {
+    const { onFormChange } = this.props;
+
+    this.actualFormValue = changedValue;
+    if (onFormChange) {
+      onFormChange(changedValue);
+    }
   }
 }
