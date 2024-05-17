@@ -342,6 +342,7 @@ export default class Form<T> extends Component<FormProps<T>> {
     const { auto, onFieldChange } = this.props;
 
     if (auto) {
+      this.setGeneralServerErrors();
       this.filterFieldErrors(fieldName);
     }
 
@@ -381,6 +382,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   private reset() {
     this.setErrors();
     this.setServerErrors();
+    this.setGeneralServerErrors();
     this.setValue(cloneDeep(this.props.value || {}));
   }
 }

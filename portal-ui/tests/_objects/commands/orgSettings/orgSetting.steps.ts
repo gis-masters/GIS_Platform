@@ -1,9 +1,9 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { setOrgSetting } from './setOrgSetting';
-import { OrgSettings, Settings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
+import { OrgSettings, Settings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAsAdmin } from '../requestAs';
+import { setOrgSetting } from './setOrgSetting';
 
 Given('настройка {string} в настройках организации включена', async function (setting: string) {
   await setOrgSetting(await setOption(setting, true));

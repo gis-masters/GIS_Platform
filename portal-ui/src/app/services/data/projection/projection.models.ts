@@ -1,6 +1,8 @@
 import { isObject } from 'lodash';
 
 import { SpatialReferenceSystem } from '../../../../server-types/common-contracts';
+import { XTableColumn, XTableExtraColumnType } from '../../../components/XTable/XTable.models';
+import { PropertyType } from '../schema/schema.models';
 
 export const DEFAULT_OL_PROJECTION = {
   authName: 'EPSG',
@@ -12,9 +14,15 @@ export const defaultOlCrs = `${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJ
 export interface Projection extends SpatialReferenceSystem {
   title: string;
   auth_srid: number;
+  auth_name: string;
   hidden?: boolean;
   proj4Str?: string;
   defaultProj?: string;
+}
+
+export interface CreateProjectionModel {
+  srtext: string;
+  proj4Text: string;
 }
 
 export function isArrayOfProjection(values: unknown): values is Projection[] {
@@ -48,3 +56,53 @@ export function isProjection(obj: unknown): obj is Projection {
     typeof obj.auth_srid === 'number'
   );
 }
+
+export const projectionXTableCols: XTableColumn<Projection>[] = [
+  {
+    field: 'title',
+    title: 'Система координат',
+    minWidth: 300
+  },
+  {
+    field: 'auth_name',
+    title: 'Тип SRID',
+    filterable: true,
+    type: PropertyType.CHOICE,
+    minWidth: 100,
+    settings: {
+      options: [
+        {
+          title: 'EPSG',
+          value: 'EPSG'
+        },
+        {
+          title: 'ESRI',
+          value: 'ESRI'
+        },
+        {
+          title: 'CRG',
+          value: 'CRG'
+        }
+      ]
+    }
+  },
+  {
+    field: 'auth_srid',
+    title: 'Код SRID',
+    type: XTableExtraColumnType.ID,
+    filterable: true,
+    sortable: true,
+    minWidth: 100
+  },
+  {
+    field: 'srtext',
+    title: 'srtext',
+    filterable: true,
+    minWidth: 700
+  },
+  {
+    field: 'proj4Text',
+    title: 'proj4Text',
+    filterable: true
+  }
+];

@@ -19,6 +19,7 @@ export async function getProjection(pageOptions: PageOptions): Promise<[Projecti
     ...proj,
     title: `${getProjectionTitle(proj.srtext)}, ${proj.authName}:${proj.authSrid}, ${projectionUnit(proj.srtext)}`,
     auth_srid: proj.authSrid,
+    auth_name: proj.authName,
     srtext: proj.srtext,
     proj4Text: proj.proj4Text
   }));

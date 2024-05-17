@@ -16,7 +16,7 @@ import '!style-loader!css-loader!sass-loader!./Form-View_type_string.scss';
 @observer
 class FormViewTypeString extends Component<FormControlProps> {
   render() {
-    const { className, property, fullWidthForOldForm, errors, inSet } = this.props;
+    const { className, property, fullWidthForOldForm, labelInField, errors, inSet } = this.props;
     let { fieldValue = '—' } = this.props;
 
     if (fieldValue === null) {
@@ -28,9 +28,10 @@ class FormViewTypeString extends Component<FormControlProps> {
 
     return (
       <div
-        className={cnFormView({ inSet, fullWidthForOldForm, empty: fieldValue === '—', type: propertyType, display }, [
-          className
-        ])}
+        className={cnFormView(
+          { inSet, fullWidthForOldForm, labelInField, empty: fieldValue === '—', type: propertyType, display },
+          [className]
+        )}
       >
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue code={code}>

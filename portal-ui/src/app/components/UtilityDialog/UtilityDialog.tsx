@@ -44,6 +44,7 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
         PaperProps={{ className: cnUtilityDialog({ type }) }}
         open={Boolean(open)}
         onClose={this.closeHandler}
+        {...this.props.info.dialogProps}
       >
         {title && <DialogTitle className={cnUtilityDialog('Title')}>{title}</DialogTitle>}
         {(message || type === 'prompto') && <UtilityDialogContent info={this.props.info} type={type} formId={formId} />}

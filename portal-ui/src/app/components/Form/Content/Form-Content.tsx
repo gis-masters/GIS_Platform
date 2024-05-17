@@ -9,6 +9,7 @@ import { PropertySchema, PropertyType, Schema, SimpleSchema } from '../../../ser
 import { getFieldRelations } from '../../../services/data/schema/schema.utils';
 import { FieldErrors } from '../../../services/util/form/formValidation.utils';
 import { generateRandomId } from '../../../services/util/randomId';
+import { isStringArray } from '../../../services/util/typeGuards/isStringArray';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
 import { FormControl } from '../Control/Form-Control.composed';
@@ -52,6 +53,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
               <FormHiddenField
                 key={i}
                 name={String(propertySchema.name)}
+                // TODO: пофиксить непонятную ошибку типизации
                 value={formValue[propertySchema.name] as unknown}
               />
             );
@@ -86,7 +88,8 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   type={propertySchema.propertyType}
                   formValue={formValue}
                   fieldValue={convertToComplexField(propertySchema, formValue)}
-                  errors={propertyErrors}
+                  labelInField={labelInField}
+                  errors={isStringArray(propertyErrors) ? propertyErrors : undefined}
                 />
               ) : (
                 <FormControl
@@ -99,8 +102,9 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
                   fieldValue={convertToComplexField(propertySchema, formValue)}
                   formValue={formValue}
                   labelInField={labelInField}
-                  errors={propertyErrors}
+                  errors={isStringArray(propertyErrors) ? propertyErrors : undefined}
                 >
+                  {/* TODO: пофиксить непонятную ошибку типизации */}
                   {String(formValue[propertySchema.name])}
                 </FormControl>
               )}
@@ -118,15 +122,15 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
   @boundMethod
   private fieldChangeHandler({ value, propertyName }: { value: T[keyof T & string]; propertyName: keyof T & string }) {
     const { formValue, onFormChange, onFieldChange, schema } = this.props;
-    const propertySchema: PropertySchema = schema.properties.find(({ name }) => name === propertyName);
+    const propertySchema: PropertySchema | undefined = schema.properties.find(({ name }) => name === propertyName);
     const prevValue = formValue[propertyName];
 
-    if (onFormChange) {
+    if (onFormChange && propertySchema) {
       const newFormValue = cloneDeep(applyFieldValue<T>(propertySchema, formValue, value));
       onFormChange(newFormValue);
     }
 
-    if (onFieldChange) {
+    if (onFieldChange && prevValue) {
       onFieldChange(value, propertyName, prevValue);
     }
   }

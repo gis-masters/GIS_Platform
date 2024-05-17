@@ -6,13 +6,12 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
-import { Projection } from '../../services/data/projection/projection.models';
+import { Projection, projectionXTableCols } from '../../services/data/projection/projection.models';
 import { getProjection, registerProjectionArrayInProj4 } from '../../services/data/projection/projection.service';
 import { PageOptions } from '../../services/models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { Toast } from '../Toast/Toast';
-import { XTableColumn, XTableExtraColumnType } from '../XTable/XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./SelectProjection.scss';
 
@@ -32,37 +31,6 @@ export class SelectProjection extends Component<SelectProjectionProps> {
   @observable private dialogOpen = false;
   @observable private projections: Projection[] = [];
   @observable private selectedProjection?: Projection;
-
-  private cols: XTableColumn<Projection>[] = [
-    {
-      field: 'title',
-      title: 'Система координат',
-      minWidth: 300
-    },
-    {
-      field: 'authName',
-      title: 'Тип SRID'
-    },
-    {
-      field: 'auth_srid',
-      title: 'Код SRID',
-      type: XTableExtraColumnType.ID,
-      filterable: true,
-      sortable: true
-    },
-    {
-      field: 'srtext',
-      title: 'srtext',
-      filterable: true,
-      minWidth: 300
-    },
-    {
-      field: 'proj4Text',
-      title: 'proj4Text',
-      filterable: true,
-      minWidth: 300
-    }
-  ];
 
   async componentDidMount(): Promise<void> {
     await this.init();
@@ -116,7 +84,7 @@ export class SelectProjection extends Component<SelectProjectionProps> {
             selectedItems={[this.selectedProjection]}
             title={'Выбор системы координат'}
             open={this.dialogOpen}
-            cols={this.cols}
+            cols={projectionXTableCols}
             getRowId={this.getRowId}
             onClose={this.closeDialog}
             onSelect={this.select}
@@ -157,6 +125,7 @@ export class SelectProjection extends Component<SelectProjectionProps> {
       authName: selectAnother,
       auth_srid: 0,
       srtext: '',
+      auth_name: '',
       proj4Text: ''
     });
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tab, Tabs } from '@mui/material';
@@ -13,6 +13,7 @@ import { Loading } from '../Loading/Loading';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
 import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
+import { OrgProjection } from '../OrgProjection/OrgProjection';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
 
 import '!style-loader!css-loader!sass-loader!./OrgAdmin.scss';
@@ -23,6 +24,7 @@ const tabs = [
   [OrgUsers, 'Пользователи'],
   [OrgGroups, 'Группы'],
   [OrganizationSettings, 'Настройки организации'],
+  [OrgProjection, 'Системы координат'],
   [OrganizationClean, 'Очистка']
 ];
 
@@ -73,7 +75,7 @@ export default class OrgAdmin extends Component {
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent, value: number) {
+  private changeHandler(event: SyntheticEvent<Element, Event>, value: number) {
     this.activeTab = value;
   }
 }

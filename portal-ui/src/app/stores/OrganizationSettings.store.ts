@@ -135,12 +135,12 @@ export class OrganizationSettings {
           const parsedItem = JSON.parse(item) as unknown;
 
           if (!isProjection(parsedItem)) {
-            throw new Error('Ошибка при получении предпочитаемых систем координат');
+            throw new Error('Система координат не является проекцией');
           }
 
           return parsedItem;
         } catch {
-          throw new Error('Ошибка при получении предпочитаемых систем координат');
+          throw new Error(`Не удалось "прочитать" систему координат + ${item}`);
         }
       });
     }

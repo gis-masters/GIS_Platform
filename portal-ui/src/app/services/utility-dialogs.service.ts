@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { DialogProps } from '@mui/material';
 import { v4 as uuid } from 'uuid';
 
 import { FormProps } from '../components/Form/Form';
@@ -11,13 +12,15 @@ import { sleep } from './util/sleep';
 export async function achtung({
   title,
   message,
-  okText
+  okText,
+  dialogProps
 }: {
   title?: ReactNode;
   message?: ReactNode;
   okText?: string;
+  dialogProps?: Partial<DialogProps>;
 }): Promise<void> {
-  await doDialog({ id: uuid(), type: 'achtung', title, message, okText });
+  await doDialog({ id: uuid(), type: 'achtung', title, message, okText, dialogProps });
 }
 
 // диалог с подтверждением, аналог confirm

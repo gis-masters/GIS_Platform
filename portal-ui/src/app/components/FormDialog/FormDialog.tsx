@@ -29,6 +29,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   open: boolean;
   unclosable?: boolean;
   disabled?: boolean;
+  labelInField?: boolean;
   afterForm?: ReactNode;
   formRole?: FormRole;
   onClose(): void;
@@ -71,6 +72,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       disabled = false,
       schema,
       formRole,
+      labelInField,
       value = getDefaultValues(schema.properties),
       additionalAction,
       afterForm,
@@ -100,6 +102,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 schema={schema}
                 value={value}
                 id={htmlId}
+                labelInField={labelInField}
                 auto
                 onFormChange={onFormChange}
                 onFormSubmit={this.submitHandler}
