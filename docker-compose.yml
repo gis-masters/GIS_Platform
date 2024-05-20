@@ -187,6 +187,7 @@ services:
       - /opt/export:/opt/export
       - /opt/spatial_data:/opt/spatial_data
       - /opt/kpt_order:/opt/kpt_order
+      - /opt/specialization:/opt/specialization
     ports:
       - "8084:8084"
     mem_limit: ${DATA_MEM_LIMIT:-950}m
@@ -217,11 +218,11 @@ services:
       CRG_OPTIONS_CLIENT_SECRET: geoserver
       CRG_OPTIONS_SYSTEM_ADMIN_LOGIN: ${SYSTEM_ADMIN_LOGIN}
       CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD: ${SYSTEM_ADMIN_PASSWORD}
-
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
     volumes:
       - /opt/logs:/opt/logs
+      - /opt/specialization:/opt/specialization
     ports:
       - "8082:8082"
     logging:

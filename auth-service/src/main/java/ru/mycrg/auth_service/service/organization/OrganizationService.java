@@ -18,17 +18,20 @@ import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service.service.AuthService;
+import ru.mycrg.auth_service.service.SpecializationService;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
+import ru.mycrg.common_contracts.generated.Specialization;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
@@ -48,6 +51,7 @@ public class OrganizationService {
     private final IAuthenticationFacade authenticationFacade;
     private final OrganizationRepository organizationRepository;
     private final OrganizationSettingService settingService;
+    private final SpecializationService specializationService;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository,
@@ -58,7 +62,8 @@ public class OrganizationService {
                                AESCryptor aesCryptor,
                                AuthService authService,
                                BCryptPasswordEncoder encoder,
-                               OrganizationSettingService settingService) {
+                               OrganizationSettingService settingService,
+                               SpecializationService specializationService) {
         this.organizationRepository = organizationRepository;
         this.authenticationFacade = authenticationFacade;
         this.projectionFactory = projectionFactory;
@@ -68,6 +73,7 @@ public class OrganizationService {
         this.authService = authService;
         this.encoder = encoder;
         this.settingService = settingService;
+        this.specializationService = specializationService;
     }
 
     public Page<OrganizationFullProjection> getPaged(Pageable pageable) {
@@ -93,6 +99,16 @@ public class OrganizationService {
             throw new ConflictException(String.format("email: '%s' уже занят", owner.getEmail()));
         }
 
+        Specialization specialization = nonNull(createDto.getSpecializationId())
+                ? specializationService
+                .getAllSpecializations()
+                .stream()
+                .filter(item -> createDto.getSpecializationId().equals(item.getId()))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException(
+                        "Не найдена специализация с id " + createDto.getSpecializationId()))
+                : null;
+
         User newUser = userRepository.save(mapDtoToUser(owner));
 
         Organization newOrganization;
@@ -101,7 +117,7 @@ public class OrganizationService {
 
         Organization savedOrg = organizationRepository.save(newOrganization);
 
-        settingService.initOrgSetting(savedOrg);
+        settingService.initOrgSetting(savedOrg, specialization);
 
         // We use email as login
         newUser.setLogin(owner.getEmail());
@@ -114,7 +130,8 @@ public class OrganizationService {
                                                  aesCryptor.encrypt(owner.getPassword()),
                                                  owner.getEmail(),
                                                  newUser.getLogin(),
-                                                 newUser.getGeoserverLogin()));
+                                                 newUser.getGeoserverLogin(),
+                                                 specialization));
 
         return newOrganization;
     }

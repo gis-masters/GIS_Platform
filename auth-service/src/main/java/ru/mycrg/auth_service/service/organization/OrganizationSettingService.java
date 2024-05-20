@@ -14,12 +14,14 @@ import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
+import ru.mycrg.common_contracts.generated.Specialization;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
+import static java.util.Objects.nonNull;
 import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSettings;
 import static ru.mycrg.auth_service.util.SettingsHandler.*;
 
@@ -144,8 +146,10 @@ public class OrganizationSettingService {
     }
 
     synchronized
-    public void initOrgSetting(Organization organization) {
+    public void initOrgSetting(Organization organization, Specialization specialization) {
         Map<String, Object> enabledKnownSetting = orgSettingsSchemaHolder.allInclusive();
+
+        fillSettingsWithTagsFromSpecialization(specialization, enabledKnownSetting);
 
         // init in system settings
         Set<OrgSettingsRequestDto> systemSettings = getSystemSettings()
@@ -177,5 +181,12 @@ public class OrganizationSettingService {
 
         return buildSchema(orgSettingsSchemaHolder.getSchema(),
                            orgSettingsRepository.readOrganizationSettings(authenticationFacade.getOrganizationId()));
+    }
+
+    private static void fillSettingsWithTagsFromSpecialization(Specialization specialization, Map<String, Object> enabledKnownSetting) {
+        String tagsName = "tags";
+        if (nonNull(specialization) && !specialization.getTags().isEmpty() && enabledKnownSetting.containsKey(tagsName)) {
+            enabledKnownSetting.put(tagsName, specialization.getTags());
+        }
     }
 }

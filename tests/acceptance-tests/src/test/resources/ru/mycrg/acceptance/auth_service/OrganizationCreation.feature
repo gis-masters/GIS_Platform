@@ -2,7 +2,7 @@ Feature: Регистрация новой организации
 
   Scenario Outline: Создание организации с указанием валидных данных
     When Отправляется запрос на создание организации
-      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
+      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> | <specializationId> |
     Then Сервер отвечает со статус-кодом 202
     And В заголовке Location передается ID созданной организации
     When Авторизуемся владельцем организации
@@ -10,6 +10,7 @@ Feature: Регистрация новой организации
     Then Сервер отвечает со статус-кодом 200
     And Статус организации соответствует "PROVISIONED"
     And Поля совпадают с переданными
+    And Настройки организации включены в зависимости от выбранной специализации "<specializationId>"
     And Существует база данных
     And На Геосервере существует scratch рабочая область и хранилище
     And На Геосервере создан пользователь
@@ -20,9 +21,9 @@ Feature: Регистрация новой организации
     And На Геосервере дан доступ к сервисам
     And На Геосервере дан доступ к rest
     Examples:
-      | orgName            | orgPhone   | adminName | adminSurname | adminEmail | adminPassword |
-      | ООО БыкиИКоровы    | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 |
-      | ООО 'Бараны&Козлы' | 1234567890 | M'Kyne    | Ivan         | EMAIL_20   | testPassword2 |
+      | orgName            | orgPhone   | adminName | adminSurname | adminEmail | adminPassword | specializationId |
+      | ООО БыкиИКоровы    | 1234567890 | Иванов    | Иван         | EMAIL_20   | testPassword1 | 1                |
+      | ООО 'Бараны&Козлы' | 1234567890 | M'Kyne    | Ivan         | EMAIL_20   | testPassword2 | 2                |
 
   Scenario Outline: Создание огранизации, которая уже существует
     Given Существует организация

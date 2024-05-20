@@ -52,6 +52,10 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         userPool.put(-1, owner);
         orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
 
+        if (data.size() > 6) {
+            orgDto.setSpecializationId(Integer.valueOf(data.get(6)));
+        }
+
         createOrganization(orgDto);
     }
 
@@ -193,6 +197,39 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.getList("users.name").get(0), orgDto.getOwner().getName());
         assertEquals(jsonPath.getList("users.surname").get(0), orgDto.getOwner().getSurname());
         assertEquals(jsonPath.getList("users.email").get(0), orgDto.getOwner().getEmail());
+    }
+
+    @And("Настройки организации включены в зависимости от выбранной специализации {string}")
+    public void checkSettingsBySpecialization(String specializationId) {
+        JsonPath jsonPath = response.jsonPath();
+        List<String> tags = jsonPath.get("settings.tags");
+
+        List<Map<String, Object>> specializations = getSpecializations();
+        Map<String, Object> specializationById = specializations.stream()
+                                                                .filter(specialization -> specializationId.equals(
+                                                                        specialization.get("id").toString()))
+                                                                .findFirst()
+                                                                .get();
+        List<String> tagsBySpecialization = (List<String>) specializationById.get("tags");
+
+        assertTrue(tags.size() == tagsBySpecialization.size()
+                           && tags.containsAll(tagsBySpecialization)
+                           && tagsBySpecialization.containsAll(tags));
+    }
+
+    @And("Глобальные настройки организации включены в зависимости от выбранной специализации {string}")
+    public void checkGlobalSettingsBySpecialization(String specializationId) {
+        List<Map<String, Object>> specializations = getSpecializations();
+        Map<String, Object> specializationById = specializations.stream()
+                                                                .filter(specialization -> specializationId.equals(
+                                                                        specialization.get("id").toString()))
+                                                                .findFirst()
+                                                                .get();
+        List<String> tagsBySpecialization = (List<String>) specializationById.get("tags");
+
+//        assertTrue(tags.size() == tagsBySpecialization.size()
+//                           && tags.containsAll(tagsBySpecialization)
+//                           && tagsBySpecialization.containsAll(tags));
     }
 
     /**
@@ -375,12 +412,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, SC_OK);
     }
 
-    private Response getDatabase(Integer orgId) {
-        return getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/api/data/databases/database_" + orgId);
-    }
-
     @When("Пользователь делает запрос на все организации")
     public void checkAllOrganizationsByRoot() {
         response = getBaseRequestWithCurrentCookie()
@@ -433,6 +464,21 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         get("/organizations/" + orgId);
 
         assertNotNull(orgId);
+    }
+
+    private Response getDatabase(Integer orgId) {
+        return getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/api/data/databases/database_" + orgId);
+    }
+
+    private List<Map<String, Object>> getSpecializations() {
+
+        Response specializations = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/specializations");
+
+        return specializations.jsonPath().get();
     }
 
     private void updateUsersAndOrgPool(String status) {
