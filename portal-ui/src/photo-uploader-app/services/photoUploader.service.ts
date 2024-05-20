@@ -168,7 +168,7 @@ export async function getMetaData(file: File): Promise<NewWfsFeature> {
     type: 'Feature',
     properties: {
       photo: [],
-      creationtime: formatDate(new Date(), systemFormat),
+      creation_time: formatDate(new Date(), systemFormat),
       name: file.name,
       photography_time: photoTime,
       sender: currentUser.id,

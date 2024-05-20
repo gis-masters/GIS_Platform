@@ -34,6 +34,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   labelInField?: boolean;
   afterForm?: ReactNode;
   formRole?: FormRole;
+  closeWithConfirm?: boolean;
   onClose(): void;
   onSuccess?(): void;
   onError?(): void;
@@ -181,7 +182,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       return;
     }
 
-    if (this.actualFormValue && !isEqual(this.actualFormValue, this.initialFormValue)) {
+    if (this.props.closeWithConfirm && this.actualFormValue && !isEqual(this.actualFormValue, this.initialFormValue)) {
       if (
         await konfirmieren({
           message: 'Закрыть диалоговое окно? Все несохраненные данные будут утеряны.'

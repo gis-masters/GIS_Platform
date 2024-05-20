@@ -89,6 +89,7 @@ export const WithDinamicProps = Template.bind({});
 WithDinamicProps.args = {
   title: 'С динамическими свойствами',
   schema: schemaWithDynamicProperties,
+  closeWithConfirm: true,
   value: getDefaultValues(schemaWithDynamicProperties.properties),
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,
@@ -100,6 +101,7 @@ export const WithDefaultValues = Template.bind({});
 WithDefaultValues.args = {
   title: 'С дефолтными значениями',
   schema: schemaWithDefaultValue,
+  closeWithConfirm: true,
   value: getDefaultValues(schemaWithDefaultValue.properties, { surname: 'Doe' }),
   actionButtonProps: { startIcon: <SaveOutlined />, children: 'Сохранить' },
   actionFunction,
