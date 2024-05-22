@@ -7,14 +7,14 @@
   <NamedLayer>
     <se:Name>Объекты фотофиксации</se:Name>
     <UserStyle>
-      <se:Name>photo_uploader</se:Name>
+      <se:Name>photo_uploader_photo_date</se:Name>
       <se:FeatureTypeStyle>
-      
+
         <!-- Ниже только для для отображения в легенде-->
         <se:Rule>
           <se:Name>1</se:Name>
           <se:Description>
-            <se:Title>Цвет меняется по отправителю</se:Title>
+            <se:Title>Цвет меток зависит от даты съёмки</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
           <ogc:And>
@@ -91,11 +91,11 @@
               <se:Mark>
                 <se:WellKnownName>circle</se:WellKnownName>
                 <se:Fill>
-                  <se:SvgParameter name="fill">#<ogc:PropertyName>user_fill_color</ogc:PropertyName>
+                  <se:SvgParameter name="fill">#<ogc:PropertyName>photo_date_fill_color</ogc:PropertyName>
                   </se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-                  <se:SvgParameter name="stroke">#<ogc:PropertyName>user_stroke_color</ogc:PropertyName>
+                  <se:SvgParameter name="stroke">#<ogc:PropertyName>photo_date_stroke_color</ogc:PropertyName>
                   </se:SvgParameter>
                   <se:SvgParameter name="stroke-width">2.5</se:SvgParameter>
                 </se:Stroke>
@@ -113,11 +113,11 @@
               <se:Mark>
                 <se:WellKnownName>circle</se:WellKnownName>
                 <se:Fill>
-                  <se:SvgParameter name="fill">#<ogc:PropertyName>user_fill_color</ogc:PropertyName>
+                  <se:SvgParameter name="fill">#<ogc:PropertyName>photo_date_fill_color</ogc:PropertyName>
                   </se:SvgParameter>
                 </se:Fill>
                 <se:Stroke>
-                  <se:SvgParameter name="stroke">#<ogc:PropertyName>user_stroke_color</ogc:PropertyName>
+                  <se:SvgParameter name="stroke">#<ogc:PropertyName>photo_date_stroke_color</ogc:PropertyName>
                   </se:SvgParameter>
                   <se:SvgParameter name="stroke-width">2.5</se:SvgParameter>
                 </se:Stroke>

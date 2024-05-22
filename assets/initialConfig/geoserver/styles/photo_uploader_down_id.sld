@@ -7,14 +7,14 @@
   <NamedLayer>
     <se:Name>Объекты фотофиксации</se:Name>
     <UserStyle>
-      <se:Name>photo_uploader</se:Name>
+      <se:Name>photo_uploader_down_id</se:Name>
       <se:FeatureTypeStyle>
-      
+
         <!-- Ниже только для для отображения в легенде-->
         <se:Rule>
           <se:Name>1</se:Name>
           <se:Description>
-            <se:Title>Цвет меняется по отправителю</se:Title>
+            <se:Title>Точка с цветом по отправителю и номером</se:Title>
           </se:Description>
           <ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
           <ogc:And>
@@ -103,6 +103,37 @@
               <se:Size>30</se:Size>
             </se:Graphic>
           </se:PointSymbolizer>
+          <se:TextSymbolizer>
+            <se:Label>
+              <ogc:Function name="strSubstringStart">
+                <ogc:Function name="id" />
+                <ogc:Add>
+                  <ogc:Function name="strIndexOf">
+                    <ogc:Function name="id" />
+                    <ogc:Literal>.</ogc:Literal>
+                  </ogc:Function>
+                  <ogc:Literal>1</ogc:Literal>
+                </ogc:Add>
+              </ogc:Function>
+            </se:Label>
+            <se:LabelPlacement>
+              <se:PointPlacement>
+                <se:AnchorPoint>
+                  <se:AnchorPointX>0.5</se:AnchorPointX>
+                  <se:AnchorPointY>3</se:AnchorPointY>
+                </se:AnchorPoint>
+              </se:PointPlacement>
+            </se:LabelPlacement>
+            <se:Halo>
+              <se:Radius>2.5</se:Radius>
+              <se:Fill>
+                <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
+              </se:Fill>
+            </se:Halo>
+            <se:Fill>
+              <se:SvgParameter name="fill">#111111</se:SvgParameter>
+            </se:Fill>
+          </se:TextSymbolizer>
         </se:Rule>
 
         <se:Rule>
@@ -137,6 +168,37 @@
               </se:Rotation>
             </se:Graphic>
           </se:PointSymbolizer>
+          <se:TextSymbolizer>
+            <se:Label>
+              <ogc:Function name="strSubstringStart">
+                <ogc:Function name="id" />
+                <ogc:Add>
+                  <ogc:Function name="strIndexOf">
+                    <ogc:Function name="id" />
+                    <ogc:Literal>.</ogc:Literal>
+                  </ogc:Function>
+                  <ogc:Literal>1</ogc:Literal>
+                </ogc:Add>
+              </ogc:Function>
+            </se:Label>
+            <se:LabelPlacement>
+              <se:PointPlacement>
+                <se:AnchorPoint>
+                  <se:AnchorPointX>0.5</se:AnchorPointX>
+                  <se:AnchorPointY>3</se:AnchorPointY>
+                </se:AnchorPoint>
+              </se:PointPlacement>
+            </se:LabelPlacement>
+            <se:Halo>
+              <se:Radius>2.5</se:Radius>
+              <se:Fill>
+                <se:SvgParameter name="fill">#ffffff</se:SvgParameter>
+              </se:Fill>
+            </se:Halo>
+            <se:Fill>
+              <se:SvgParameter name="fill">#111111</se:SvgParameter>
+            </se:Fill>
+          </se:TextSymbolizer>
         </se:Rule>
 
       </se:FeatureTypeStyle>

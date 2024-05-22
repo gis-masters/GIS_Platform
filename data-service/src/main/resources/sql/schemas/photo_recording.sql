@@ -77,6 +77,20 @@ SET class_rule =
       "calculatedValueWellKnownFormula": "label_stroke_color"
     },
     {
+      "name": "photo_date_fill_color",
+      "title": "цвет заливки по отправителю",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "date_fill_color"
+    },
+    {
+      "name": "photo_date_stroke_color",
+      "title": "цвет обводки по отправителю",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "date_stroke_color"
+    },
+    {
       "name": "rotation",
       "title": "Вращение",
       "valueType": "STRING"
@@ -135,8 +149,204 @@ SET class_rule =
   "views": [
     {
       "id": "photo_uploader_label",
-      "title": "Цвета на основе меток",
+      "title": "Объект меняет цвет от значения поля \"Метки\"",
       "styleName": "photo_uploader_label",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_photo_date",
+      "title": "Объект меняет цвет от даты съёмки фото",
+      "styleName": "photo_uploader_photo_date",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_live",
+      "title": "Цвет объекта изменяется от возраста фото",
+      "styleName": "photo_uploader_live",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_live_gradient",
+      "title": "Цвет объекта плавно изменяется от возраста фото",
+      "styleName": "photo_uploader_live_gradient",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_live_red",
+      "title": "Цвет объекта изменяется к красному от возраста фото",
+      "styleName": "photo_uploader_live_red",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_live_gradient_red",
+      "title": "Цвет объекта плавно изменяется к красному от возраста фото",
+      "styleName": "photo_uploader_live_gradient_red",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_id",
+      "title": "Объект с номером",
+      "styleName": "photo_uploader_id",
+      "attributes": [
+        {
+          "name": "name"
+        },
+        {
+          "name": "sender"
+        },
+        {
+          "name": "photography_time"
+        },
+        {
+          "name": "creation_time"
+        },
+        {
+          "name": "label"
+        },
+        {
+          "name": "rotation"
+        },
+        {
+          "name": "photo"
+        }
+      ]
+    },
+    {
+      "id": "photo_uploader_down_id",
+      "title": "Объект с цветом по отправителю и номером",
+      "styleName": "photo_uploader_down_id",
       "attributes": [
         {
           "name": "name"
@@ -165,34 +375,6 @@ SET class_rule =
       "id": "photo_uploader_mono",
       "title": "Одинаковые цвета",
       "styleName": "photo_uploader_mono",
-      "attributes": [
-        {
-          "name": "name"
-        },
-        {
-          "name": "sender"
-        },
-        {
-          "name": "photography_time"
-        },
-        {
-          "name": "creation_time"
-        },
-        {
-          "name": "label"
-        },
-        {
-          "name": "rotation"
-        },
-        {
-          "name": "photo"
-        }
-      ]
-    },
-    {
-      "id": "photo_uploader_mono_unrotate",
-      "title": "Одинаковые цвета без вращения",
-      "styleName": "photo_uploader_mono_unrotate",
       "attributes": [
         {
           "name": "name"
