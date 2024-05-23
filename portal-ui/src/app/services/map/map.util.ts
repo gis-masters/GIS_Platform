@@ -14,7 +14,7 @@ export function getFeaturesUrl(
 ): string {
   let baseUrl: string;
 
-  if (typeof browser === 'object') {
+  if (typeof browser === 'object' && browser && browser.options) {
     baseUrl = browser.options.baseUrl;
   } else if (typeof window === 'object') {
     baseUrl = window.location.origin;

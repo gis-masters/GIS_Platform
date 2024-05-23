@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { EnvironmentData, environment } from '../../../src/app/services/environment';
+import { environment, EnvironmentData } from '../../../src/app/services/environment';
 
 export async function getEnvironment(): Promise<void> {
   if (!environment.inited) {
