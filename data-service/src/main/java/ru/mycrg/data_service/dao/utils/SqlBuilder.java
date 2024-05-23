@@ -30,9 +30,9 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
 import static ru.mycrg.data_service.util.StringUtil.join;
 import static ru.mycrg.data_service.util.StringUtil.joinAndQuoteMark;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_DELETED;
@@ -273,7 +273,7 @@ public class SqlBuilder {
     }
 
     public static String buildFtsWhere2(String ecqlFilter) {
-        String ftsCondition = "ts_rank(d.vector_data, query) > 0.0";
+        String ftsCondition = "d.vector_data @@ query";
 
         String filter = buildWhereSection(ecqlFilter);
 
