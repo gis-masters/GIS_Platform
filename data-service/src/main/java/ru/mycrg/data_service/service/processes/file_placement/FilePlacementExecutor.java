@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes.executors;
+package ru.mycrg.data_service.service.processes.file_placement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +16,12 @@ import ru.mycrg.data_service.service.files.FileUtil;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.dto.publication.BaseWsProcess;
 import ru.mycrg.data_service_contract.dto.publication.GeoserverPublicationData;
 import ru.mycrg.data_service_contract.dto.publication.GisPublicationData;
 import ru.mycrg.data_service_contract.enums.FileType;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.FilePublicationEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -151,11 +149,6 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
         // Nothing to do
 
         return this;
-    }
-
-    @Override
-    public ProcessType getType() {
-        return IMPORT;
     }
 
     @Override

@@ -43,6 +43,7 @@ import static java.util.stream.Collectors.toMap;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD;
 import static javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service_contract.enums.GeometryType.GEOMETRY_COLLECTION;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 
@@ -50,7 +51,6 @@ import static ru.mycrg.data_service_contract.enums.ValueType.*;
 public class GmlParser {
 
     private static final Logger log = LoggerFactory.getLogger(GmlParser.class);
-    private static final String ERROR_MESSAGE = "Something went wrong while gml parsing of file";
 
     private final GML gml;
     private final DocumentBuilder documentBuilder;
@@ -71,14 +71,62 @@ public class GmlParser {
                 .collect(toMap(IGmlImportGeometryHandler::getType, Function.identity()));
     }
 
-    public List<SimpleFeatureData> parseFeatures(Resource file) throws GMLException {
-        try (SimpleFeatureIterator iter = gml.decodeFeatureIterator(file.getInputStream())) {
-            return parseFeatures(iter);
-        } catch (IOException | ParserConfigurationException | SAXException e) {
-            String msg = ERROR_MESSAGE + e.getMessage();
-            log.error(msg);
+    public List<SimpleFeatureData> parseFeatures(Resource file) {
+        try (SimpleFeatureIterator featureIterator = gml.decodeFeatureIterator(file.getInputStream())) {
+            List<SimpleFeatureData> featureDataList = new ArrayList<>();
+            while (featureIterator.hasNext()) {
+                parseFeature(featureIterator.next(), featureDataList);
+            }
 
-            throw new GMLException(msg);
+            return featureDataList;
+        } catch (Exception e) {
+            log.error("Не удалось распарсить фичи => {}", e.getMessage());
+
+            return List.of();
+        }
+    }
+
+    private static void parseFeature(SimpleFeature feature, List<SimpleFeatureData> featureDataList) {
+        try {
+            SimpleFeatureData simpleFeatureData = new SimpleFeatureData();
+            simpleFeatureData.setGeometryTypes("Point", "Polygon", "LineString");
+
+            String schemaName = getSchemaName(feature);
+            Optional<SimpleFeatureData> existedSchema =
+                    featureDataList.stream()
+                                   .filter(geometryData -> geometryData.getSchemaName().equals(schemaName))
+                                   .findFirst();
+            if (existedSchema.isPresent()) {
+                simpleFeatureData = existedSchema.get();
+            } else {
+                simpleFeatureData.setSchemaName(schemaName);
+            }
+
+            if (nonNull(feature.getDefaultGeometry())) {
+                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
+                if (defaultGeometry.getUserData() != null) {
+                    AbstractCRS userData = (AbstractCRS) defaultGeometry.getUserData();
+                    if (nonNull(userData)) {
+                        Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
+                        if (oEpsgIdentifier.isPresent()) {
+                            simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
+                        }
+                    } else {
+                        log.debug("Фича: '{}.{}' не содержит UserData в формате AbstractCRS",
+                                  schemaName, feature.getID());
+                    }
+                } else {
+                    log.debug("Фича: '{}.{}' не содержит UserData", schemaName, feature.getID());
+                }
+            } else {
+                log.debug("Фича: '{}.{}' не содержит DefaultGeometry", schemaName, feature.getID());
+            }
+
+            if (existedSchema.isEmpty()) {
+                featureDataList.add(simpleFeatureData);
+            }
+        } catch (Exception e) {
+            logError("Не удалось распарсить фичу: '" + feature.getID() + "'", e);
         }
     }
 
@@ -96,8 +144,7 @@ public class GmlParser {
 
             return null;
         } catch (IOException | SAXException e) {
-            String msg = ERROR_MESSAGE + e.getMessage();
-            log.error(msg);
+            log.error("Не удалось взять bbox => {}", e.getMessage(), e);
 
             return null;
         }
@@ -131,8 +178,8 @@ public class GmlParser {
 
             result.setObjects(featureObjects);
         } catch (IOException | SAXException e) {
-            String msg = ERROR_MESSAGE + e.getMessage();
-            log.error(msg);
+            String msg = "Не удалось распарсить атрибуты => " + e.getMessage();
+            log.error(msg, e);
 
             throw new GMLException(msg);
         }
@@ -152,44 +199,6 @@ public class GmlParser {
         }
 
         return String.format("%s_%s", schema.getOriginName(), geometryType);
-    }
-
-    private List<SimpleFeatureData> parseFeatures(SimpleFeatureIterator featureIterator) {
-        List<SimpleFeatureData> featureDataList = new ArrayList<>();
-        while (featureIterator.hasNext()) {
-            SimpleFeature feature = featureIterator.next();
-            String schemaName = getSchemaName(feature);
-
-            Optional<SimpleFeatureData> existedSchema =
-                    featureDataList.stream()
-                                   .filter(geometryData -> geometryData.getSchemaName().equals(schemaName))
-                                   .findFirst();
-            SimpleFeatureData simpleFeatureData = new SimpleFeatureData();
-            simpleFeatureData.setGeometryTypes("Point", "Polygon", "LineString");
-
-            if (existedSchema.isPresent()) {
-                simpleFeatureData = existedSchema.get();
-            } else {
-                simpleFeatureData.setSchemaName(schemaName);
-            }
-
-            if (nonNull(feature.getDefaultGeometry())) {
-                Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
-                AbstractCRS userData = (AbstractCRS) defaultGeometry.getUserData();
-                if (nonNull(userData)) {
-                    Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
-                    if (oEpsgIdentifier.isPresent()) {
-                        simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
-                    }
-                }
-            }
-
-            if (existedSchema.isEmpty()) {
-                featureDataList.add(simpleFeatureData);
-            }
-        }
-
-        return featureDataList;
     }
 
     private static String getSchemaName(SimpleFeature feature) {

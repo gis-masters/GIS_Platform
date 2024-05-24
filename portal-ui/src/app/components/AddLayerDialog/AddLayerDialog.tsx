@@ -368,7 +368,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           title: title || getFileBaseName(file.title),
           dataStoreName: workspace,
           tableName: fileTableName, // name слоя не геосервере
-          complexName: buildComplexName(workspace, fileTableName),
+          complexName: buildComplexName(workspace, fileTableName, defaultOlCrs),
           dataSourceUri: 'file://' + path,
           libraryId: record.libraryTableName,
           recordId: record.id

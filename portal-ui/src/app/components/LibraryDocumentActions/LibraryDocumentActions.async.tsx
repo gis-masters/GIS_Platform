@@ -22,7 +22,6 @@ import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocument
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
 import { LibraryDocumentActionsEdit } from './Edit/LibraryDocumentActions-Edit';
-import { LibraryDocumentActionsFilesPlacement } from './FilesPlacement/LibraryDocumentActions-FilesPlacement';
 import { LibraryDocumentActionsImportKpt } from './ImportKpt/LibraryDocumentActions-ImportKpt';
 import { LibraryDocumentActionsMove } from './Move/LibraryDocumentActions-Move';
 import { LibraryDocumentActionsOpen } from './Open/LibraryDocumentActions-Open';
@@ -90,9 +89,6 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
-        {this.canBePlaced && (
-          <LibraryDocumentActionsFilesPlacement document={this.document || document} schema={this.schema} as={as} />
-        )}
         {!isNew && canEdit && !isFolder && (
           <LibraryDocumentActionsMove document={this.document || document} schema={this.schema} as={as} />
         )}

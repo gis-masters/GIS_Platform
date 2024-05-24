@@ -128,41 +128,20 @@ public class ProcessService {
     public String getWsUiId(Process process) {
         try {
             JsonNode extra = process.getExtra();
-            if (extra != null) {
-                final JsonNode jsonNode;
-                if (extra.isValueNode()) {
-                    jsonNode = mapper.readTree(extra.asText());
-                } else {
-                    jsonNode = mapper.readTree(extra.toString());
-                }
-
-                return jsonNode.get("wsUiId").asText();
-            } else {
-                throw new DataServiceException("");
+            if (extra == null) {
+                throw new IllegalStateException("extra данные не заполнены");
             }
-        } catch (Exception e) {
-            throw new DataServiceException("");
-        }
-    }
 
-    @NotNull
-    public String getValueFromExtra(Process process, String key) {
-        try {
-            JsonNode extra = process.getExtra();
-            if (extra != null) {
-                final JsonNode jsonNode;
-                if (extra.isValueNode()) {
-                    jsonNode = mapper.readTree(extra.asText());
-                } else {
-                    jsonNode = mapper.readTree(extra.toString());
-                }
-
-                return jsonNode.get(key).asText();
+            JsonNode jsonNode;
+            if (extra.isValueNode()) {
+                jsonNode = mapper.readTree(extra.asText());
             } else {
-                throw new DataServiceException("Failed to get value from process by key: " + key);
+                jsonNode = mapper.readTree(extra.toString());
             }
+
+            return jsonNode.get("wsUiId").asText();
         } catch (Exception e) {
-            throw new DataServiceException("Failed to get value from process by key: " + key);
+            throw new DataServiceException("Не удалось получить ws идентификатор UI клиента => " + e.getMessage());
         }
     }
 }

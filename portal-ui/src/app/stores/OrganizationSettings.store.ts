@@ -120,7 +120,8 @@ export class OrganizationSettings {
 
   @computed
   get orgDefaultProjection(): Projection | undefined {
-    const defaultProjection = organizationSettings.orgSettings?.organization?.default_epsg;
+    let defaultProjection = organizationSettings.orgSettings?.organization?.default_epsg;
+    defaultProjection = isStringArray(defaultProjection) ? defaultProjection[0] : defaultProjection;
 
     return this.orgFavoriteProjections?.find(({ title }) => title === defaultProjection);
   }

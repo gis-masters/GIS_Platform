@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes;
+package ru.mycrg.data_service.dto;
 
 import ru.mycrg.data_service.validators.ValidateEnum;
 import ru.mycrg.data_service_contract.enums.ProcessType;
@@ -12,7 +12,7 @@ public class ProcessDto {
 
     @NotNull
     @ValidateEnum(targetClassType = ProcessType.class, message = "Допустимые значения поля type: " +
-            "IMPORT, VALIDATION, VALIDATION_REPORT, EXPORT, GEOMETRY_SHAPE")
+            "IMPORT, VALIDATION, VALIDATION_REPORT, EXPORT, IMPORT_GEOMETRY")
     String type;
 
     public ProcessDto() {

@@ -15,7 +15,11 @@ interface CoverageTransparentColor {
   };
 }
 
-export async function updateFileTransparentColor(coverages: string, InputTransparentColor: string): Promise<void> {
+export async function updateFileTransparentColor(
+  coverageStore: string,
+  coverages: string,
+  InputTransparentColor: string
+): Promise<void> {
   const value = {
     coverage: {
       parameters: {
@@ -29,15 +33,18 @@ export async function updateFileTransparentColor(coverages: string, InputTranspa
   };
 
   try {
-    await http.put(getGeoserverFileUrl(currentUser.workspaceName, coverages), value);
+    await http.put(getGeoserverFileUrl(currentUser.workspaceName, coverageStore, coverages), value);
   } catch {
     throw new Error('Не удалось обновить настройки слоя');
   }
 }
 
-export async function getFileTransparentColor(coverages: string): Promise<CoverageTransparentColor | undefined> {
+export async function getFileTransparentColor(
+  coverageStore: string,
+  coverage: string
+): Promise<CoverageTransparentColor | undefined> {
   try {
-    return await http.get(getGeoserverFileUrl(currentUser.workspaceName, coverages));
+    return await http.get(getGeoserverFileUrl(currentUser.workspaceName, coverageStore, coverage));
   } catch {
     Toast.error({
       message: 'Не удалось получить настройки слоя'

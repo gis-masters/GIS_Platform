@@ -17,6 +17,23 @@ public class LayerPublicationDto implements Serializable {
     private String styleName;
     private String dataStoreName;
     private String dataset;
+    private String dataSourceUri;
+
+    public LayerPublicationDto(String dataset, String tableName, String title, String libraryId, Long recordId,
+                               String nativeCRS, Long projectId, String dataSourceUri) {
+        this.title = title;
+        this.tableName = tableName;
+        this.libraryId = libraryId;
+        this.recordId = recordId;
+        this.dataSourceUri = dataSourceUri;
+        this.dataset = dataset;
+        this.nativeCRS = nativeCRS;
+        this.projectId = projectId;
+
+        this.type = "raster";
+        this.mode = "full";
+        this.enabled = true;
+    }
 
     public LayerPublicationDto(String type, String mode, Long projectId, String tableName, String nativeName,
                                String title, String nativeCRS, String libraryId, Long recordId, String styleName,
@@ -143,6 +160,14 @@ public class LayerPublicationDto implements Serializable {
         this.nativeName = nativeName;
     }
 
+    public String getDataSourceUri() {
+        return dataSourceUri;
+    }
+
+    public void setDataSourceUri(String dataSourceUri) {
+        this.dataSourceUri = dataSourceUri;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -154,11 +179,12 @@ public class LayerPublicationDto implements Serializable {
                 "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"recordId\":" + (recordId == null ? "null" : recordId) + ", " +
                 "\"enabled\":\"" + enabled + "\"" + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
-                "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") +
+                "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
+                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") +
                 "}";
     }
 }

@@ -43,6 +43,7 @@ import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertiesWithCalculatedFunctions;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 @Service
@@ -131,10 +132,11 @@ public class GmlImporter {
             importResult.setImportLayerReports(importLayerReports);
 
             return importResult;
-        } catch (GMLException e) {
-            throw new ImportException(e.getMessage());
         } catch (Exception e) {
-            throw new ImportException("Не удалось выполнить импорт. Причина: " + e.getMessage());
+            String msg = "Не удалось выполнить импорт. Причина: " + e.getMessage();
+            logError(msg, e);
+
+            throw new ImportException(msg);
         }
     }
 
@@ -142,21 +144,21 @@ public class GmlImporter {
     private static String getEpsgFromFeature(Optional<String> oLayerEpsg, FeatureData featureData) {
         if (oLayerEpsg.isPresent()) {
             return oLayerEpsg.get();
-        } else {
-            Optional<FeatureProperty> shapeOpt = featureData
-                    .getObjects().get(0).getProperties()
-                    .stream()
-                    .filter(property ->
-                                    DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(property.getName()))
-                    .findFirst();
-            if (shapeOpt.isEmpty()) {
-                return null;
-            } else {
-                PGgeometry geometry = (PGgeometry) shapeOpt.get().getValue();
-                int srid = geometry.getGeometry().getSrid();
-                return (srid != 0) ? "EPSG:" + srid : null;
-            }
         }
+
+        Optional<FeatureProperty> shapeOpt = featureData
+                .getObjects().get(0).getProperties()
+                .stream()
+                .filter(property -> DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(property.getName()))
+                .findFirst();
+        if (shapeOpt.isEmpty()) {
+            return null;
+        }
+
+        PGgeometry geometry = (PGgeometry) shapeOpt.get().getValue();
+        int srid = geometry.getGeometry().getSrid();
+
+        return (srid != 0) ? "EPSG:" + srid : null;
     }
 
     private Optional<String> getEpsgForLayer(List<SimpleFeatureData> features, SchemaDto schema) {

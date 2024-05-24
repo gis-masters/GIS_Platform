@@ -86,8 +86,8 @@ export function getGeoserverFeatureTypesInfoUrl(workspace: string, datastore: st
   return `${getGeoserverFeatureTypesUrl(workspace, datastore)}.json`;
 }
 
-export function getGeoserverFileUrl(workspace: string, coverages: string): string {
-  return `${getGeoserverWorkspaceUrl(workspace)}/coveragestores/store_${coverages}/coverages/${coverages}.json`;
+export function getGeoserverFileUrl(workspace: string, coverageStore: string, coverage: string): string {
+  return `${getGeoserverWorkspaceUrl(workspace)}/coveragestores/${coverageStore}/coverages/${coverage}.json`;
 }
 
 export function getGeoserverImportUrl(importId: number | string): string {

@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.processes;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 
 public interface IExecutor<T> {
 
@@ -15,13 +14,6 @@ public interface IExecutor<T> {
      * @throws ru.mycrg.data_service.exceptions.DataServiceException в общем случае
      */
     T execute();
-
-    /**
-     * Для идентификации конкретного executor-а.
-     *
-     * @return ProcessType тип, который executor умеет обрабатывать.
-     */
-    ProcessType getType();
 
     /**
      * Инициализация, добавляем данные по процессу в котором это будет выполняться.

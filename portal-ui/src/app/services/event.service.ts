@@ -55,7 +55,7 @@ class EventService {
   }
 
   private constructor() {
-    const savedEvents: IEvent[] = this.getFromLocalStorage();
+    const savedEvents: IEvent[] | undefined = this.getFromLocalStorage();
     if (savedEvents && savedEvents.length > 0) {
       this._events$.next(savedEvents);
     }
@@ -70,7 +70,7 @@ class EventService {
   }
 
   private isAllowedMessageType(msg: IWsMessage): boolean {
-    if (
+    return !!(
       msg.type === 'EXPORT' ||
       msg.type === 'VALIDATION_REPORT' ||
       msg.type === 'IMPORT_GML' ||
@@ -78,10 +78,8 @@ class EventService {
       msg.type === 'IMPORT_TAB' ||
       msg.type === 'IMPORT_MID' ||
       msg.type === 'IMPORT_SHP' ||
-      msg.type === 'IMPORT_RASTER'
-    ) {
-      return true;
-    }
+      msg.type === 'IMPORT_TIF'
+    );
   }
 
   /**
@@ -113,13 +111,15 @@ class EventService {
     localStorage.setItem(this.EVENTS_KEY, JSON.stringify(events));
   }
 
-  private getFromLocalStorage(): IEvent[] {
+  private getFromLocalStorage(): IEvent[] | undefined {
     const events = localStorage.getItem(this.EVENTS_KEY);
 
-    try {
-      return JSON.parse(events) as IEvent[];
-    } catch {
-      this.update([]);
+    if (typeof events === 'string') {
+      try {
+        return JSON.parse(events) as IEvent[];
+      } catch {
+        this.update([]);
+      }
     }
   }
 
@@ -132,7 +132,7 @@ class EventService {
           type === 'IMPORT_TAB' ||
           type === 'IMPORT_MID' ||
           type === 'IMPORT_SHP' ||
-          type === 'IMPORT_RASTER') &&
+          type === 'IMPORT_TIF') &&
         (payload.status === 'DONE' || payload.status === 'ERROR')
       ) {
         const importGml = payload as WsImportModel;

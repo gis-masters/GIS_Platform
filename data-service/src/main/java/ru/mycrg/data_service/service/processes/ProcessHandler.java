@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -41,16 +42,15 @@ public class ProcessHandler {
     }
 
     public Process handle(ProcessDto model) {
-        ProcessType type = ProcessType.valueOf(model.getType());
-        IProcessExecutorsFactory executorsFactory = executorFactories.get(type);
+        ProcessType processType = ProcessType.valueOf(model.getType());
+        IProcessExecutorsFactory executorsFactory = executorFactories.get(processType);
         if (executorsFactory == null) {
-            throw new BadRequestException("Задан не поддерживаемый тип процесса: " + type);
+            throw new BadRequestException("Задан не поддерживаемый тип процесса: " + processType);
         }
 
         IExecutor<?> executor = executorsFactory.getExecutor(model);
 
         try {
-            ProcessType processType = executor.getType();
             String databaseName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
             Process process = processService.create(authenticationFacade.getLogin(),
                                                     processType.name(),
@@ -71,7 +71,8 @@ public class ProcessHandler {
 
             return process;
         } catch (Exception e) {
-            String msg = "Не удалось создать процесс";
+            String msg = "Не удалось создать процесс => " + e.getMessage();
+            log.error(msg, e);
 
             throw new DataServiceException(msg, e.getCause());
         }

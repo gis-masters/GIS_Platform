@@ -1,6 +1,5 @@
-package ru.mycrg.data_service.service.processes.executors;
+package ru.mycrg.data_service.service.processes.file_placement;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -28,14 +27,12 @@ import ru.mycrg.data_service.service.import_.dto.GmlPlacementModel;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -198,11 +195,6 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         }
 
         return this;
-    }
-
-    @Override
-    public ProcessType getType() {
-        return IMPORT;
     }
 
     @Override

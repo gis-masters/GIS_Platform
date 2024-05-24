@@ -60,7 +60,7 @@ export async function importFeaturesFromShapeFile(
       payload: {
         datasetId: datasetId,
         tableName: tableName,
-        fileType: 'GEOMETRY_FROM_SHAPE'
+        fileType: 'SHP'
       }
     })
   );
@@ -81,7 +81,15 @@ export function placeFiles(
 ): Promise<unknown>[] {
   const tasks: Promise<unknown>[] = [];
   const creatingGroup =
-    files.length > 1 ? projectsService.createGroup({ title: document.title, enabled: true }, project.id) : undefined;
+    files.length > 1
+      ? projectsService.createGroup(
+          {
+            title: document.title || String(document.id),
+            enabled: true
+          },
+          project.id
+        )
+      : undefined;
 
   if (creatingGroup) {
     tasks.push(creatingGroup);

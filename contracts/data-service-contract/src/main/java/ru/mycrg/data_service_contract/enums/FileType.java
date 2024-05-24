@@ -6,6 +6,5 @@ public enum FileType {
     MID,
     DXF,
     SHP,
-    RASTER,
-    GEOMETRY_FROM_SHAPE
+    TIF
 }

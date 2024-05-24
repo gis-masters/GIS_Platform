@@ -13,7 +13,7 @@ class EditLayerPropertiesDialogBlock extends Block {
 
   async viewFieldFirstValue(viewTitle: string): Promise<void> {
     const $layerPropertyFormDialogViewSelect = await this.$('layerPropertyFormDialogViewSelect');
-    await $layerPropertyFormDialogViewSelect.waitForClickable();
+    await $layerPropertyFormDialogViewSelect.waitForClickable({ timeout: 5000 });
 
     const view = await $layerPropertyFormDialogViewSelect.getText();
 

@@ -1,7 +1,12 @@
-package ru.mycrg.data_service.service.processes;
+package ru.mycrg.data_service.service.processes.fts;
 
 import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.dto.ProcessDto;
+import ru.mycrg.data_service.service.processes.IExecutor;
+import ru.mycrg.data_service.service.processes.IProcessExecutorsFactory;
 import ru.mycrg.data_service_contract.enums.ProcessType;
+
+import static ru.mycrg.data_service_contract.enums.ProcessType.FULL_TEXT_SEARCH;
 
 @Component
 public class FtsProcessExecutorFactory implements IProcessExecutorsFactory {
@@ -13,12 +18,12 @@ public class FtsProcessExecutorFactory implements IProcessExecutorsFactory {
     }
 
     @Override
-    public IExecutor<?> getExecutor(ProcessDto model) {
+    public IExecutor<?> getExecutor(ProcessDto payload) {
         return executor;
     }
 
     @Override
     public ProcessType getType() {
-        return ProcessType.FULL_TEXT_SEARCH;
+        return FULL_TEXT_SEARCH;
     }
 }

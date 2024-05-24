@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.buildRasterStoreName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
+import static ru.mycrg.gis_service.service.geoserver.FeatureUtil.buildGeoserverFeatureName;
 
 @Component
 public class RasterLayerHandler implements ILayerHandler {
@@ -48,17 +49,21 @@ public class RasterLayerHandler implements ILayerHandler {
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
-        log.debug("Try create raster layer: {}", dto);
-
         if (!GIS_SERVICE_MODE.equals(dto.getMode())) {
-            String tableName = dto.getTableName();
-            String workspaceName = getScratchWorkspaceName(authenticationFacade.getOrganizationId());
-            String storeName = buildRasterStoreName(tableName);
+            Long orgId = authenticationFacade.getOrganizationId();
+            String workspaceName = getScratchWorkspaceName(orgId);
+            String storeName = dto.getDataset() == null
+                    ? buildRasterStoreName(dto.getTableName())
+                    : dto.getDataset();
             String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : defaultEpsgCode();
-            CoverageModel coverage = new CoverageModel(dto.getTableName(),
+            String tableName = buildGeoserverFeatureName(dto.getTableName(), nativeCRS);
+
+            CoverageModel coverage = new CoverageModel(tableName,
                                                        dto.getTitle(),
                                                        nativeCRS,
                                                        dto.getNativeCRS());
+
+            log.debug("Try create coverage: {}", coverage);
 
             try {
                 createRasterStore(workspaceName, storeName, dto.getDataSourceUri());

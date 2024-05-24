@@ -115,7 +115,7 @@ export function isNeedDefineProjection(file: File | FileInfo): boolean {
 
   const ext = normalizeExtension(getFileExtension(title));
 
-  return ext === 'dxf' || ext === 'shp' || ext === 'tab' || ext === 'mid' || ext === 'mif';
+  return ext === 'dxf' || ext === 'shp' || ext === 'tab' || ext === 'mid' || ext === 'mif' || ext === 'tif';
 }
 
 export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] {

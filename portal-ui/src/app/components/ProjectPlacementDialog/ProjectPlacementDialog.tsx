@@ -7,13 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import {
-  placeFile,
-  placeFileWithProjection,
-  placeGml
-} from '../../services/data/file-placement/file-placement.service';
+import { placeFileWithProjection, placeGml } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
-import { isNeedDefineProjection, isTifFile } from '../../services/data/files/files.util';
+import { isGmlFile, isNeedDefineProjection } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
@@ -24,7 +20,6 @@ import { services } from '../../services/services';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
-import { Link } from '../Link/Link';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
@@ -75,12 +70,12 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         maxWidth={maxWidth}
         fullWidth={fullWidth}
         additionalAction={
-          !isTifFile(fileInfo) &&
-          (isNeedDefineProjection(fileInfo) ? (
-            <SelectProjection onSelect={this.setSelectedProjection} fullWidth />
-          ) : (
-            <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
-          ))
+          <>
+            {isNeedDefineProjection(fileInfo) && <SelectProjection onSelect={this.setSelectedProjection} fullWidth />}
+            {isGmlFile(fileInfo) && (
+              <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
+            )}
+          </>
         }
       />
     );
@@ -114,65 +109,33 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     }
 
     this.setFormBusy(true);
+    if (!this.projection) {
+      Toast.error('Отсутствует проекция необходимая для размещения файла в проекте');
+      this.setFormBusy(false);
 
-    if (isTifFile(this.props.fileInfo)) {
-      if (this.props.document) {
-        try {
-          await placeFile(this.props.fileInfo, { crs: 'EPSG:28406', mode: 'full' }, project, this.props.document);
-          communicationService.fileConnectionsUpdated.emit({ type: 'update', data: [this.props.fileInfo] });
+      return;
+    }
 
-          Toast.success(
-            <>
-              Файл {this.props.fileInfo.title} успешно размещен в проекте{' '}
-              {<Link href={`/projects/${project.id}/map`}>{project.name}</Link>}
-            </>
-          );
-        } catch (error) {
-          Toast.error('Не удалось подключить слой');
-          services.logger.error('Не удалось подключить слой: ', (error as AxiosError).message);
+    try {
+      const process = await (isNeedDefineProjection(this.props.fileInfo)
+        ? placeFileWithProjection(fileInfo, project.id, getCrsFromProjection(this.projection))
+        : placeGml(fileInfo, project.id, this.invertedCoordinates));
 
-          return;
-        } finally {
-          this.setFormBusy(false);
-        }
-      } else {
-        Toast.error({
-          message: 'Не удалось подключить слой',
-          details: 'Не найден документ содержащий файл для подключения'
-        });
-      }
+      void this.waitForProcess(process);
 
       this.props.onClose();
+      sidebars.openInfo();
+    } catch (error) {
+      const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
+      if (err.response?.status === 400) {
+        const message = err.response?.data?.message;
+        services.logger.error(message, error);
+        Toast.error({ message, details: (error as Error).message });
+      } else {
+        throw error;
+      }
+    } finally {
       this.setFormBusy(false);
-    } else {
-      if (!this.projection) {
-        Toast.error('Отсутствует проекция необходимая для размещения файла в проекте');
-        this.setFormBusy(false);
-
-        return;
-      }
-
-      try {
-        const process = await (isNeedDefineProjection(this.props.fileInfo)
-          ? placeFileWithProjection(fileInfo, project.id, getCrsFromProjection(this.projection))
-          : placeGml(fileInfo, project.id, this.invertedCoordinates));
-
-        void this.waitForProcess(process);
-
-        this.props.onClose();
-        sidebars.openInfo();
-      } catch (error) {
-        const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-        if (err.response?.status === 400) {
-          const message = err.response?.data?.message;
-          services.logger.error(message, error);
-          Toast.error({ message, details: (error as Error).message });
-        } else {
-          throw error;
-        }
-      } finally {
-        this.setFormBusy(false);
-      }
     }
   }
 

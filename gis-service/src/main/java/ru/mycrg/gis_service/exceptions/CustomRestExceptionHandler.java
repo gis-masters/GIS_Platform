@@ -1,5 +1,7 @@
 package ru.mycrg.gis_service.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,8 @@ import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private final Logger log = LoggerFactory.getLogger(CustomRestExceptionHandler.class);
 
     // 400
     @Override
@@ -144,6 +148,8 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex,
                                                                    final WebRequest request) {
+        log.info("handleMethodArgumentTypeMismatch WebRequest: {}", request);
+
         String typeName = "";
         final Class<?> requiredType = ex.getRequiredType();
         if (requiredType != null) {

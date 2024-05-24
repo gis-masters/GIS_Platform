@@ -140,11 +140,15 @@ export class FilesConnections extends Component<ConnectionsProps> {
   }
 
   private async updateTransparentColor() {
-    if (!isTifFile(this.props.file) || !this.props.connections[0].layer?.tableName) {
+    const layer = this.props.connections[0].layer;
+    if (!isTifFile(this.props.file) || !layer?.tableName || !layer?.nativeCRS || !layer.dataset) {
       return;
     }
 
-    const response = await getFileTransparentColor(this.props.connections[0].layer.tableName);
+    const response = await getFileTransparentColor(
+      layer.dataset,
+      layer.tableName + '__' + layer.nativeCRS.split(':')[1]
+    );
     const entry = response?.coverage?.parameters?.entry;
 
     if (Array.isArray(entry)) {
@@ -158,10 +162,15 @@ export class FilesConnections extends Component<ConnectionsProps> {
 
   @boundMethod
   private async update(value: RasterLayerInfo) {
-    if (!this.props.connections[0].layer?.tableName) {
-      throw new Error('Ошибка сохранения. Не найден слой или tableName');
+    const layer = this.props.connections[0].layer;
+    if (!layer?.tableName || !layer.dataset || !layer.nativeCRS) {
+      throw new Error('Ошибка сохранения. Не найден слой, набор данных tableName или система координат ');
     }
 
-    await updateFileTransparentColor(this.props.connections[0].layer.tableName, value.transparentColor);
+    await updateFileTransparentColor(
+      layer.dataset,
+      layer.tableName + '__' + layer.nativeCRS.split(':')[1],
+      value.transparentColor
+    );
   }
 }

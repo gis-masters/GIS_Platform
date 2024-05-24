@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.processes.ProcessDto;
+import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
 

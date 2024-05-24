@@ -4,13 +4,16 @@ import { geoserverLayerClient } from './geoserverLayer.client';
 import { GeoserverCoverage, GeoserverLayerInfo } from './geoserverLayer.models';
 
 async function getGeoserverLayerInfo(layer: CrgLayer): Promise<GeoserverLayerInfo> {
-  if (!layer.tableName || !layer.complexName) {
+  if (!layer.tableName || !layer.complexName || !layer.nativeCRS) {
     throw new Error('Передан некорректный слой: ' + JSON.stringify(layer));
   }
 
   const workspace = extractWorkspaceFromComplexName(layer.complexName);
 
-  const result = await geoserverLayerClient.getGeoserverLayerInfo(workspace, layer.tableName);
+  const result = await geoserverLayerClient.getGeoserverLayerInfo(
+    workspace,
+    layer.tableName + '__' + layer.nativeCRS.split(':')[1]
+  );
 
   return result.layer;
 }

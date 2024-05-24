@@ -1,23 +1,20 @@
-package ru.mycrg.data_service.service.processes.executors;
+package ru.mycrg.data_service.service.processes.file_placement;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.FileType;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 
-import static ru.mycrg.data_service_contract.enums.FileType.TAB;
-import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
+import static ru.mycrg.data_service_contract.enums.FileType.TIF;
 
 @Component
-public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
+public class TifPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
 
     private final FilePlacementExecutor filePlacementExecutor;
 
-    public TabPlacementExecutor(FilePlacementExecutor filePlacementExecutor) {
+    public TifPlacementExecutor(FilePlacementExecutor filePlacementExecutor) {
         this.filePlacementExecutor = filePlacementExecutor;
     }
 
@@ -58,13 +55,8 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
     }
 
     @Override
-    public ProcessType getType() {
-        return IMPORT;
-    }
-
-    @Override
     public FileType getFileType() {
-        return TAB;
+        return TIF;
     }
 
     @Override

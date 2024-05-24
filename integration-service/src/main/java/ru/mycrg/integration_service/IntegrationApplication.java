@@ -1,5 +1,6 @@
 package ru.mycrg.integration_service;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.camunda.bpm.spring.boot.starter.annotation.EnableProcessApplication;
@@ -23,6 +24,7 @@ public class IntegrationApplication {
 
     public static final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
 
     private final Logger log = LoggerFactory.getLogger(IntegrationApplication.class);

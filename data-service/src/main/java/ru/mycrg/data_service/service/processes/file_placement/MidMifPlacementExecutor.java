@@ -1,16 +1,13 @@
-package ru.mycrg.data_service.service.processes.executors;
+package ru.mycrg.data_service.service.processes.file_placement;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.enums.FileType;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import static ru.mycrg.data_service_contract.enums.FileType.MID;
-import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 @Component
 public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
@@ -55,11 +52,6 @@ public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePl
         // Nothing to do
 
         return this;
-    }
-
-    @Override
-    public ProcessType getType() {
-        return IMPORT;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes;
+package ru.mycrg.data_service.service.processes.fts;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,14 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
+import ru.mycrg.data_service.service.processes.IExecutor;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.mediator.Mediator;
 
 import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service_contract.enums.ProcessType.FULL_TEXT_SEARCH;
 
 @Component
 public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
@@ -43,11 +42,6 @@ public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
         result = mediator.execute(new FtsRequest(payload, pageable));
 
         return result;
-    }
-
-    @Override
-    public ProcessType getType() {
-        return FULL_TEXT_SEARCH;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes.executors;
+package ru.mycrg.data_service.service.processes.geometry_importer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,6 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.GeometryFromShapePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.processes.IFilePlacer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.resources.protectors.TableProtector;
@@ -22,7 +21,6 @@ import ru.mycrg.data_service_contract.dto.ImportGeometryShapeReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.FileType;
-import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -32,12 +30,11 @@ import java.util.LinkedHashMap;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT_GEOMETRY;
 
 @Component
-public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeReport>, IFilePlacer {
+public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometryShapeReport> {
 
-    private final Logger log = LoggerFactory.getLogger(GeometryShapeExecutor.class);
+    private final Logger log = LoggerFactory.getLogger(ShapeGeometryImporterExecutor.class);
 
     private final IMessageBusProducer messageBus;
 
@@ -52,12 +49,12 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
     private ImportGeometryShapeReport importReport;
     private GeometryFromShapePlacementPayloadModel payload;
 
-    public GeometryShapeExecutor(IMessageBusProducer messageBus,
-                                 FileStorageService fileStorageService,
-                                 Environment environment,
-                                 IAuthenticationFacade authenticationFacade,
-                                 TableService tableService,
-                                 TableProtector tableProtector) {
+    public ShapeGeometryImporterExecutor(IMessageBusProducer messageBus,
+                                         FileStorageService fileStorageService,
+                                         Environment environment,
+                                         IAuthenticationFacade authenticationFacade,
+                                         TableService tableService,
+                                         TableProtector tableProtector) {
         this.messageBus = messageBus;
         this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
@@ -175,17 +172,7 @@ public class GeometryShapeExecutor implements IExecutor<ImportGeometryShapeRepor
     }
 
     @Override
-    public ProcessType getType() {
-        return IMPORT_GEOMETRY;
-    }
-
-    @Override
     public boolean notDetached() {
         return false;
-    }
-
-    @Override
-    public FileType getFileType() {
-        return FileType.GEOMETRY_FROM_SHAPE;
     }
 }

@@ -29,4 +29,14 @@ public class CoverageModel {
     public String getSrs() {
         return srs;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
+                "\"srs\":" + (srs == null ? "null" : "\"" + srs + "\"") +
+                "}";
+    }
 }

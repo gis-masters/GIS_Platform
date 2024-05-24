@@ -96,7 +96,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
         shapePlacementModel.setDatasetId(currentDatasetIdentifier);
         shapePlacementModel.setTableName(anotherTableName);
-        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+        shapePlacementModel.setFileType("SHP");
 
         placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
     }
@@ -108,7 +108,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
         shapePlacementModel.setDatasetId(currentDatasetIdentifier);
         shapePlacementModel.setTableName(anotherTableName);
-        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+        shapePlacementModel.setFileType("SHP");
 
         placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
     }
@@ -120,7 +120,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
         shapePlacementModel.setDatasetId(currentDatasetIdentifier);
         shapePlacementModel.setTableName(anotherTableName);
-        shapePlacementModel.setFileType("GEOMETRY_FROM_SHAPE");
+        shapePlacementModel.setFileType("SHP");
 
         placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
     }

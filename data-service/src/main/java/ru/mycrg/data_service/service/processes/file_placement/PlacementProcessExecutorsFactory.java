@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.processes;
+package ru.mycrg.data_service.service.processes.file_placement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.service.processes.IExecutor;
+import ru.mycrg.data_service.service.processes.IProcessExecutorsFactory;
+import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
@@ -38,8 +41,8 @@ public class PlacementProcessExecutorsFactory implements IProcessExecutorsFactor
     }
 
     @Override
-    public IExecutor<?> getExecutor(ProcessDto processableModel) {
-        UUID fileId = extractFileIdOrThrow(processableModel);
+    public IExecutor<?> getExecutor(ProcessDto payload) {
+        UUID fileId = extractFileIdOrThrow(payload);
         Optional<File> oFile = fileRepository.findById(fileId);
         if (oFile.isEmpty()) {
             String msg = String.format("Не удалось найти файл: '%s'", fileId);
