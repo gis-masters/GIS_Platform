@@ -1,6 +1,7 @@
 package ru.mycrg.auth_service.service.organization;
 
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class OrganizationSettingService {
     }
 
     synchronized
-    public void initOrgSetting(Organization organization, Specialization specialization) {
+    public void initOrgSetting(Organization organization, @Nullable Specialization specialization) {
         Map<String, Object> enabledKnownSetting = orgSettingsSchemaHolder.allInclusive();
 
         fillSettingsWithTagsFromSpecialization(specialization, enabledKnownSetting);
@@ -183,10 +184,11 @@ public class OrganizationSettingService {
                            orgSettingsRepository.readOrganizationSettings(authenticationFacade.getOrganizationId()));
     }
 
-    private static void fillSettingsWithTagsFromSpecialization(Specialization specialization, Map<String, Object> enabledKnownSetting) {
+    private static void fillSettingsWithTagsFromSpecialization(@Nullable Specialization specialization,
+                                                               Map<String, Object> settings) {
         String tagsName = "tags";
-        if (nonNull(specialization) && !specialization.getTags().isEmpty() && enabledKnownSetting.containsKey(tagsName)) {
-            enabledKnownSetting.put(tagsName, specialization.getTags());
+        if (nonNull(specialization) && !specialization.getTags().isEmpty() && settings.containsKey(tagsName)) {
+            settings.put(tagsName, specialization.getTags());
         }
     }
 }

@@ -33,7 +33,7 @@ public class SqlParameterSourceMapperChoice implements SqlParameterSourceMapper 
         } else if (ForeignKeyType.STRING == propertyFKType) {
             parameterSource.addValue(name, value);
         } else {
-            log.debug("Not set 'foreignKeyType' for CHOICE property: '{}'. Handle it as string by default", name);
+            log.trace("Not set 'foreignKeyType' for CHOICE property: '{}'. Handle it as string by default", name);
 
             parameterSource.addValue(name, value);
         }

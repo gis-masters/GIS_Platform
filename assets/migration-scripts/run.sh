@@ -32,4 +32,8 @@ fi
 echo "Copy styles"
 cp -r ../initialConfig/geoserver/styles/* ${GEOSERVER_DATA_DIR}/styles
 
+echo "Copy specializations"
+mkdir -p /opt/crg/specializations
+cp -r ../specializations/* /opt/crg/specializations/
+
 popd || exit

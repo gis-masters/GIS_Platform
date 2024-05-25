@@ -31,7 +31,6 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
@@ -99,15 +98,15 @@ public class OrganizationService {
             throw new ConflictException(String.format("email: '%s' уже занят", owner.getEmail()));
         }
 
-        Specialization specialization = nonNull(createDto.getSpecializationId())
-                ? specializationService
-                .getAllSpecializations()
-                .stream()
-                .filter(item -> createDto.getSpecializationId().equals(item.getId()))
-                .findFirst()
-                .orElseThrow(() -> new BadRequestException(
-                        "Не найдена специализация с id " + createDto.getSpecializationId()))
-                : null;
+        Specialization specialization = null;
+        if (createDto.getSpecializationId() != null) {
+            specialization = specializationService
+                    .getAllSpecializations().stream()
+                    .filter(item -> createDto.getSpecializationId().equals(item.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new BadRequestException(
+                            "Не найдена специализация с id " + createDto.getSpecializationId()));
+        }
 
         User newUser = userRepository.save(mapDtoToUser(owner));
 

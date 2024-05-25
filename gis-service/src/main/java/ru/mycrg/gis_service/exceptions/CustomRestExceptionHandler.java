@@ -192,6 +192,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
+    @ExceptionHandler(GisServiceException.class)
+    public ResponseEntity<Object> internalExceptionsHandler(final RuntimeException ex) {
+        GisServiceException gEx = (GisServiceException) ex;
+        ApiErrorModel errorModel = new ApiErrorModel(INTERNAL_SERVER_ERROR, ex.getMessage(), gEx.getErrors());
+
+        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+    }
+
     // Handle CrgExceptions
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFound(final RuntimeException ex) {

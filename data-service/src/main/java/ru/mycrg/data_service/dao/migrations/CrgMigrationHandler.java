@@ -89,7 +89,7 @@ public class CrgMigrationHandler {
             throw new DataServiceException(msg);
         }
 
-        try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, SYSTEM_SCHEMA_NAME)) {
+        try (HikariDataSource tempDataSource = datasourceFactory.getNotPoolableSystemDataSource(dbName)) {
             try (final Connection connection = tempDataSource.getConnection()) {
                 log.debug("====== Выполняем основные миграции ======");
                 Arrays.stream(ctx.getResources("classpath:sql/common/**"))

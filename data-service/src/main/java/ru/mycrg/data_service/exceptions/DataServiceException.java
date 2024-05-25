@@ -6,6 +6,7 @@ import ru.mycrg.http_client.ResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 public class DataServiceException extends RuntimeException {
@@ -14,6 +15,14 @@ public class DataServiceException extends RuntimeException {
 
     public DataServiceException(String msg) {
         super(msg);
+    }
+
+    public DataServiceException(String msg, Map<String, String> details) {
+        super(msg);
+
+        for (Map.Entry<String, String> entry: details.entrySet()) {
+            this.errors.add(new ErrorInfo(entry.getKey(), entry.getValue()));
+        }
     }
 
     public DataServiceException(String msg, ErrorInfo errorInfo) {

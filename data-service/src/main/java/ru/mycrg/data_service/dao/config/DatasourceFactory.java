@@ -35,6 +35,10 @@ public class DatasourceFactory {
         return getDataSourceByDbName(dbName, schemaName, MINIMAL_POOL);
     }
 
+    public HikariDataSource getNotPoolableSystemDataSource(String dbName) {
+        return getDataSourceByDbName(dbName, SYSTEM_SCHEMA_NAME, MINIMAL_POOL);
+    }
+
     public DataSource getInitialDataSource() {
         return getDataSourceByUrl(environment.getProperty("spring.datasource.url"),
                                   null,

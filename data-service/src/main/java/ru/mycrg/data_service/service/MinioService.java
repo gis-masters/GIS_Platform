@@ -10,7 +10,6 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 
 import java.io.ByteArrayInputStream;
 
-
 @Service
 @ConditionalOnProperty(
         value = "crg-options.integration.smev3.enabled",
@@ -46,10 +45,9 @@ public class MinioService {
         }
     }
 
-    public void uploadFile(String fileName, byte[] bytes, String bucket){
+    public void uploadFile(String fileName, byte[] bytes, String bucket) {
         try {
-            var putObject = PutObjectArgs
-                                                   .builder()
+            PutObjectArgs putObject = PutObjectArgs.builder()
                                                    .bucket(bucket)
                                                    .object(fileName)
                                                    .stream(new ByteArrayInputStream(bytes), bytes.length, -1)

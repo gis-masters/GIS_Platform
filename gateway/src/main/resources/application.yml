@@ -66,6 +66,10 @@ zuul:
       path: /projects/**
       url: http://crg-gis-service:8082/projects/
 
+    crg-gis-service-specializations:
+      path: /gis/specializations/**
+      url: http://crg-gis-service:8082/specializations/
+
     # INTEGRATION SERVICE
     crg-gis-integration-resource-analyzers:
       path: /resource-analyzers/**

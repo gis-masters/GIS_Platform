@@ -187,7 +187,7 @@ services:
       - /opt/export:/opt/export
       - /opt/spatial_data:/opt/spatial_data
       - /opt/kpt_order:/opt/kpt_order
-      - /opt/specialization:/opt/specialization
+      - /opt/crg/specializations:/opt/crg/specializations
     ports:
       - "8084:8084"
     mem_limit: ${DATA_MEM_LIMIT:-950}m
@@ -222,7 +222,7 @@ services:
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
     volumes:
       - /opt/logs:/opt/logs
-      - /opt/specialization:/opt/specialization
+      - /opt/crg/specializations:/opt/crg/specializations
     ports:
       - "8082:8082"
     logging:

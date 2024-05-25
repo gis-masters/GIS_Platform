@@ -60,6 +60,7 @@ crg-options:
   data-service-url: http://127.0.0.1:8084
   ui-service-url: http://127.0.0.1:80
   fileStoragePath: /opt/file_storage
+  specializationsPath: /opt/crg/specializations
   kptArchivesPath: /opt/kpt_order/
   geoserverDbName: geoserver_db
   exportStoragePath: /opt/export/
