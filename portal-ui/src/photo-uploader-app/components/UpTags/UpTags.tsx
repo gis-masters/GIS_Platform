@@ -49,10 +49,10 @@ export const UpTags: FC = observer(() => {
           value={labelValue}
           onChange={onChange}
           variant='standard'
-          placeholder='Добавить метку'
+          placeholder='Пометить фотографии'
         />
       )}
-      <Tooltip title='Добавить метку'>
+      <Tooltip title='Пометить фотографии'>
         <IconButton onClick={onClick}>
           <SellOutlined />
         </IconButton>

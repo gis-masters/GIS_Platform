@@ -7,7 +7,6 @@ import { UpChoiceLayer } from '../UpChoiceLayer/UpChoiceLayer';
 import { UpChoosePhoto } from '../UpChoosePhotos/UpChoosePhotos';
 import { UpError } from '../UpError/UpError';
 import { UpPreviewer } from '../UpPreviewer/UpPreviewer';
-import { UpTags } from '../UpTags/UpTags';
 
 import '!style-loader!css-loader!sass-loader!./UpMain.scss';
 
@@ -19,7 +18,6 @@ export const UpMain: FC = observer(() => (
     {!photoUploaderStore.errors.length && (
       <main className={cnUpMain()}>
         <UpChoiceLayer />
-        <UpTags />
         {!!photoUploaderStore.files.length && <UpPreviewer files={photoUploaderStore.files} />}
         <UpChoosePhoto />
       </main>

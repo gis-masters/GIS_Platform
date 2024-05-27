@@ -5,6 +5,7 @@ import { pluralize } from 'numeralize-ru';
 
 import { PseudoLink } from '../../../app/components/PseudoLink/PseudoLink';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
+import { UpTags } from '../UpTags/UpTags';
 import { UpChoosePhotoActions } from './Actions/UpChoosePhotos-Actions';
 
 import '!style-loader!css-loader!sass-loader!./UpChoosePhotos.scss';
@@ -21,15 +22,18 @@ export const UpChoosePhoto: FC = observer(() => {
   return (
     <div className={cnUpChoosePhotos()}>
       {!!photoUploaderStore.files.length && (
-        <div className={cnUpChoosePhotos('Counter')}>
-          Выбрано:{' '}
-          <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={clickHandler}>
-            {photoUploaderStore.files.length} фотографи{pluralize(photoUploaderStore.files.length, 'я', 'и', 'й')}
-          </PseudoLink>
-          {!!photoUploaderStore.filesWithError && (
-            <span className={cnUpChoosePhotos('Counter', { type: 'error' })}> (есть ошибки)</span>
-          )}
-        </div>
+        <>
+          <div className={cnUpChoosePhotos('Counter')}>
+            Выбрано:{' '}
+            <PseudoLink className={cnUpChoosePhotos('Counter', { type: 'selected' })} onClick={clickHandler}>
+              {photoUploaderStore.files.length} фотографи{pluralize(photoUploaderStore.files.length, 'я', 'и', 'й')}
+            </PseudoLink>
+            {!!photoUploaderStore.filesWithError && (
+              <span className={cnUpChoosePhotos('Counter', { type: 'error' })}> (есть ошибки)</span>
+            )}
+          </div>
+          <UpTags />
+        </>
       )}
       {!photoUploaderStore.files.length && (
         <span className={cnUpChoosePhotos('Description')}>Фотографии не выбраны</span>
