@@ -37,6 +37,7 @@ export class CreateLibrary extends Component {
           value={{}}
           schema={librarySchema}
           onClose={this.closeDialog}
+          closeWithConfirm
           actionFunction={this.create}
           actionButtonProps={{ children: 'Создать' }}
         />

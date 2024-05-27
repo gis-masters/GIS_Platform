@@ -35,6 +35,7 @@ export class OrgGroupsCreateEditDialog extends Component<OrgGroupsCreateEditDial
         actionFunction={this.create}
         actionButtonProps={{ children: group ? 'Обновить' : 'Создать' }}
         onClose={onClose}
+        closeWithConfirm
       />
     );
   }

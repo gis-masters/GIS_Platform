@@ -48,6 +48,7 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
           actionFunction={this.updateDocumentPage}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
+          closeWithConfirm
           title={
             <>
               Редактирование проекта

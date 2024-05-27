@@ -36,6 +36,7 @@ export class CreateDataset extends Component {
           value={{}}
           schema={datasetSchema}
           onClose={this.closeDialog}
+          closeWithConfirm
           actionFunction={this.create}
           actionButtonProps={{ children: 'Создать' }}
         />

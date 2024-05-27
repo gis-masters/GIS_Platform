@@ -122,6 +122,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
             className={cnLibraryDocumentActionsCreateChildEditDialog()}
             open={this.dialogOpen}
             onClose={this.formDialogCloseHandler}
+            closeWithConfirm
             schema={this.currentChild.schema}
             value={{
               content_type_id: this.currentChild?.contentType,

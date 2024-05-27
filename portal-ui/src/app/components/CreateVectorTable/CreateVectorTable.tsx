@@ -46,6 +46,7 @@ export class CreateVectorTable extends Component<CreateVectorTableProps> {
             children: 'Создать'
           }}
           onClose={this.closeDialog}
+          closeWithConfirm
           title='Создание нового слоя'
         />
       </>

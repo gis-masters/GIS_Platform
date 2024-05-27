@@ -80,6 +80,7 @@ export class CreateLibraryRecordItemBase extends Component<CreateLibraryRecordIt
           title='Создание нового элемента'
           actionFunction={this.create}
           onClose={this.closeDialog}
+          closeWithConfirm
           open={this.dialogOpen}
           schema={this.preparedSchema}
           actionButtonProps={{ children: 'Создать', loading: this.loading }}

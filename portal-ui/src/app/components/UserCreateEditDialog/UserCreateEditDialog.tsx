@@ -40,6 +40,7 @@ export class UserCreateEditDialog extends Component<UserCreateEditDialogProps> {
         actionFunction={this.save}
         actionButtonProps={{ children: user ? 'Обновить' : 'Создать' }}
         onClose={onClose}
+        closeWithConfirm
       />
     );
   }

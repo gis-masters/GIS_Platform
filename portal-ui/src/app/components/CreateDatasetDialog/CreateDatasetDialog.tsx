@@ -25,6 +25,7 @@ export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {
         className={cnCreateDatasetDialog()}
         open={open}
         onClose={onClose}
+        closeWithConfirm
         title='Создание нового набора данных'
         actionFunction={this.create}
         schema={datasetSchema}

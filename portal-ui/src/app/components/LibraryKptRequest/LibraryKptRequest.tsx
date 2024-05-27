@@ -60,6 +60,7 @@ export class LibraryKptRequest extends Component<LibraryKptRequestProps> {
           className={cnLibraryKptRequest()}
           open={this.dialogOpen}
           onClose={this.closeDialog}
+          closeWithConfirm
           title='Заказ КПТ'
           actionFunction={this.save}
           schema={requestKptSchema}

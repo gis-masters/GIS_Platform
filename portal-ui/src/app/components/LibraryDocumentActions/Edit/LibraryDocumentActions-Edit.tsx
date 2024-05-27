@@ -53,6 +53,7 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
           actionFunction={this.updateDocument}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
+          closeWithConfirm
           title={
             <>
               Редактирование документа
