@@ -15,9 +15,9 @@ Feature: Действия с пользователями
     When Авторизуемся пользователем
     Then Сервер отвечает со статус-кодом 200
     Examples:
-      | userName         | userSurname | userEmail | userPassword | middleName | job       | phone     | department |
-      | BaseUserName     | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  |           |           |            |
-      | ExtendedUserName | STRING_10   | EMAIL_20  | testtestQ1   | STRING_10  | STRING_10 | NUMBER_10 | STRING_10  |
+      | userName         | userSurname | userEmail | userPassword  | middleName | job       | phone     | department |
+      | BaseUserName     | STRING_10   | EMAIL_20  | testPassword1 | STRING_10  |           |           |            |
+      | ExtendedUserName | STRING_10   | EMAIL_20  | testPassword1 | STRING_10  | STRING_10 | NUMBER_10 | STRING_10  |
 
   Scenario Outline: Нельзя создать пользователя c одинаковым email
     Given Существует пользователь
@@ -25,32 +25,32 @@ Feature: Действия с пользователями
     When Администратор повторно создает пользователя
     Then Сервер отвечает со статус-кодом 409
     Examples:
-      | userName     | userSurname     | userEmail | userPassword |
-      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword  |
+      | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
       | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> | <department> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
-      | userName     | userSurname     | userEmail              | userPassword | middleName | job        | phone     | department | reason                        |
-      | testUserName | testUserSurname | invalidUser1           | testtestQ1   |            |            |           |            | Невалидный email пользователя |
-      | STRING_0     | testUserSurname | invalidUser2@user.com  | testtestQ1   |            |            |           |            | Пустое имя пользователя       |
-      | STRING_61    | testUserSurname | invalidUser4@user.com  | testtestQ1   |            |            |           |            | Длинное имя пользователя      |
-      | testUserName | STRING_101      | invalidUser5@user.com  | testtestQ1   |            |            |           |            | Длинная фамилия пользователя  |
-      | testUserName | STRING_0        | invalidUser6@user.com  | testtestQ1   |            |            |           |            | Пустая фамилия пользователя   |
-      | testUserName | testUserSurname | STRING_0               | testtestQ1   |            |            |           |            | Нет email пользователя        |
-      | testUserName | testUserSurname | EMAIL_61               | testtestQ1   |            |            |           |            | Длинный email пользователя    |
-      | testUserName | testUserSurname | invalidUser9@user.com  | STRING_2     |            |            |           |            | Простой пароль пользователя   |
-      | testUserName | testUserSurname | invalidUser10@user.com | testtestQ1   | STRING_2   | STRING_10  | NUMBER_10 | geoplan    | Короткое отчество             |
-      | testUserName | testUserSurname | invalidUser11@user.com | testtestQ1   | STRING_52  | STRING_10  | NUMBER_10 | geoplan    | Длинное отчество              |
-      | testUserName | testUserSurname | invalidUser12@user.com | testtestQ1   | STRING_10  | STRING_252 | NUMBER_10 | geoplan    | Длинная должность             |
-      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_22 | geoplan    | Длинный телефон               |
-      | testUserName | testUserSurname | invalidUser13@user.com | testtestQ1   | STRING_10  | STRING_10  | NUMBER_10 | STRING_201 | Длинное название организации  |
+      | userName     | userSurname     | userEmail              | userPassword  | middleName | job        | phone     | department | reason                        |
+      | testUserName | testUserSurname | invalidUser1           | testPassword1 |            |            |           |            | Невалидный email пользователя |
+      | STRING_0     | testUserSurname | invalidUser2@user.com  | testPassword1 |            |            |           |            | Пустое имя пользователя       |
+      | STRING_61    | testUserSurname | invalidUser4@user.com  | testPassword1 |            |            |           |            | Длинное имя пользователя      |
+      | testUserName | STRING_101      | invalidUser5@user.com  | testPassword1 |            |            |           |            | Длинная фамилия пользователя  |
+      | testUserName | STRING_0        | invalidUser6@user.com  | testPassword1 |            |            |           |            | Пустая фамилия пользователя   |
+      | testUserName | testUserSurname | STRING_0               | testPassword1 |            |            |           |            | Нет email пользователя        |
+      | testUserName | testUserSurname | EMAIL_61               | testPassword1 |            |            |           |            | Длинный email пользователя    |
+      | testUserName | testUserSurname | invalidUser9@user.com  | STRING_2      |            |            |           |            | Простой пароль пользователя   |
+      | testUserName | testUserSurname | invalidUser10@user.com | testPassword1 | STRING_2   | STRING_10  | NUMBER_10 | geoplan    | Короткое отчество             |
+      | testUserName | testUserSurname | invalidUser11@user.com | testPassword1 | STRING_52  | STRING_10  | NUMBER_10 | geoplan    | Длинное отчество              |
+      | testUserName | testUserSurname | invalidUser12@user.com | testPassword1 | STRING_10  | STRING_252 | NUMBER_10 | geoplan    | Длинная должность             |
+      | testUserName | testUserSurname | invalidUser13@user.com | testPassword1 | STRING_10  | STRING_10  | NUMBER_22 | geoplan    | Длинный телефон               |
+      | testUserName | testUserSurname | invalidUser13@user.com | testPassword1 | STRING_10  | STRING_10  | NUMBER_10 | STRING_201 | Длинное название организации  |
 
   Scenario: Активация/деактивация пользователя
     Given Существует пользователь
-      | enableUser | enableUser | EMAIL_10 | testtestQ1 |
+      | enableUser | enableUser | EMAIL_10 | testPassword1 |
     Given Администратор делает запрос на изменение статуса пользователя на "false"
     Then Статус пользователя равен "false"
     And Пользователь не может авторизоваться
@@ -76,17 +76,17 @@ Feature: Действия с пользователями
     Then Сервер отвечает со статус-кодом 200
     And В ответе есть контент
     Examples:
-      | userName     | userSurname     | userEmail | userPassword |
-      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword  |
+      | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
 
   Scenario Outline: Выборка всех пользователей c сортировкой (<sorting factor>|<sorting direction>)
     Given Существуют пользователи
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
-      | STRING_15 | STRING_15 | EMAIL_20 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
+      | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на всех пользователей
     Then Сервер отвечает со статус-кодом 200
     And Данные отсортированы по "<sorting factor>" и "<sorting direction>"
@@ -108,8 +108,8 @@ Feature: Действия с пользователями
 
   Scenario: При выборке всех пользователей из базы данных данные не теряются
     Given Существуют пользователи
-      | test1 | middleNameTest1 | surnameTest1 | tester | NUMBER_10 | EMAIL_20 | testtestQ1 | IT-Department |
-      | test2 | middleNameTest2 | surnameTest2 | tester | NUMBER_10 | EMAIL_20 | testtestQ1 | IT-Department |
+      | test1 | middleNameTest1 | surnameTest1 | tester | NUMBER_10 | EMAIL_20 | testPassword1 | IT-Department |
+      | test2 | middleNameTest2 | surnameTest2 | tester | NUMBER_10 | EMAIL_20 | testPassword1 | IT-Department |
     When Администратор делает постраничный запрос на пользователей
     Then При выборке пользователей данные не были утеряны
 
@@ -125,15 +125,15 @@ Feature: Действия с пользователями
     When Авторизуемся пользователем
     Then Сервер отвечает со статус-кодом 200
     Examples:
-      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword | newUserIsEnabled |
-      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      | true             |
+      | userName  | userSurname | userEmail | userPassword  | newUserName | newUserSurname | newUserPassword | newUserIsEnabled |
+      | STRING_10 | STRING_10   | EMAIL_20  | testPassword1 | UpdUserName | UpdUserSurname | testtestQ2      | true             |
 
   Scenario: Администратор организации может назначить начальника для пользователя
     Given Существует пользователь
-      | Обычный пользователь | STRING_15 | EMAIL_10 | testtestQ1 |
+      | Обычный пользователь | STRING_15 | EMAIL_10 | testPassword1 |
 #  Пользователь является текущим
     Given Существует другой пользователь
-      | Начальник | STRING_15 | EMAIL_10 | testtestQ1 |
+      | Начальник | STRING_15 | EMAIL_10 | testPassword1 |
     When Администратор организации назначает текущему пользователю в качестве начальника другого пользователя
     Then Сервер отвечает со статус-кодом 200
     When Администратор делает запрос на созданного пользователя
@@ -141,7 +141,7 @@ Feature: Действия с пользователями
 
   Scenario: Невозможно назначить начальником пользователя, которого не существует
     Given Существует пользователь
-      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_10 | testPassword1 |
     When Администратор организации делает запрос на назначение в качестве начальника, пользователя, которого не существует
     Then Сервер отвечает со статус-кодом 400
 
@@ -155,12 +155,12 @@ Feature: Действия с пользователями
       | <newUserName> | <newUserSurname> | <newUserPassword> |
     Then Сервер отвечает со статус-кодом 404
     Examples:
-      | userName  | userSurname | userEmail | userPassword | newUserName | newUserSurname | newUserPassword |
-      | STRING_10 | STRING_10   | EMAIL_20  | testtestQ1   | UpdUserName | UpdUserSurname | testtestQ2      |
+      | userName  | userSurname | userEmail | userPassword  | newUserName | newUserSurname | newUserPassword |
+      | STRING_10 | STRING_10   | EMAIL_20  | testPassword1 | UpdUserName | UpdUserSurname | testtestQ2      |
 
   Scenario Outline: Обновление полей пользователя ЗАПРЕЩЕНО другому пользователем
     Given Существует пользователь
-      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_10 | testPassword1 |
     Given Существует и авторизован некий пользователь
     When Пользователь делает запрос на обновление чужого пользователя
       | <newUserName> | <newUserSurname> | <newUserPassword> |
@@ -176,12 +176,12 @@ Feature: Действия с пользователями
     Then Сервер отвечает со статус-кодом 204
     And Пользователь не может авторизоваться
     Examples:
-      | userName     | userSurname     | userEmail | userPassword |
-      | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
+      | userName     | userSurname     | userEmail | userPassword  |
+      | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
 
   Scenario: Наличие токена для восстановления пароля не блокирует удаление пользователя
     Given Существует пользователь
-      | STRING_15 | STRING_15 | EMAIL_10 | testtestQ1 |
+      | STRING_15 | STRING_15 | EMAIL_10 | testPassword1 |
     Given Текущий пользователь отправляет запрос на восстановление пароля
     When Администратор организации удаляет пользователя
     Then Сервер отвечает со статус-кодом 204

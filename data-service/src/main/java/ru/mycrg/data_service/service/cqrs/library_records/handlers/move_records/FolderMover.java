@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BaseWriteDao;
 import ru.mycrg.data_service.dao.SchemableRecordsDao;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
+import static java.sql.Types.BIGINT;
 import static java.sql.Types.VARCHAR;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 
@@ -32,28 +34,39 @@ public class FolderMover implements IRecordMover {
     @Transactional
     public void move(ResourceQualifier folderToMoveQualifier,
                      ResourceQualifier targetFolderQualifier) {
-        String folderToMovePath = recordsDao
+        IRecord movedFolder = recordsDao
                 .findById(folderToMoveQualifier)
-                .orElseThrow(() -> new NotFoundException(targetFolderQualifier.getRecordIdAsLong()))
-                .getPath();
+                .orElseThrow(() -> new NotFoundException(folderToMoveQualifier.getRecordIdAsLong()));
+        Long movedFolderId = movedFolder.getId();
+        String movedFolderSelfPath = movedFolder.getPathToMe();
 
-        String targetFolderPath = ROOT_FOLDER_PATH;
+        String targetFolderSelfPath = ROOT_FOLDER_PATH;
         if (targetFolderQualifier != null) {
-            targetFolderPath = recordsDao
+            targetFolderSelfPath = recordsDao
                     .findById(targetFolderQualifier)
                     .orElseThrow(() -> new NotFoundException(targetFolderQualifier.getRecordIdAsLong()))
                     .getPathToMe();
         }
 
         try {
+            String newParentForChildren = targetFolderSelfPath + "/" + movedFolderId;
+
+            String query = "" +
+                    "UPDATE " + folderToMoveQualifier.getTableQualifier() + " " +
+                    "  SET path = CASE " +
+                    "                WHEN id = :movedFolderId THEN :targetFolderSelfPath " +
+                    "                ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren)" +
+                    "  END" +
+                    "  WHERE id = :movedFolderId OR path LIKE :movedFolderSelfPathLike";
+
             baseWriteDao.update(
-                    "UPDATE " + targetFolderQualifier.getTableQualifier() + " " +
-                            "  SET path = replace(path, :folderToMovePath, :targetPath)" +
-                            "  WHERE path like :folderToMovePathLike",
+                    query,
                     new MapSqlParameterSource()
-                            .addValue("targetPath", targetFolderPath, VARCHAR)
-                            .addValue("folderToMovePath", folderToMovePath, VARCHAR)
-                            .addValue("folderToMovePathLike", folderToMovePath + "%", VARCHAR));
+                            .addValue("movedFolderId", movedFolderId, BIGINT)
+                            .addValue("targetFolderSelfPath", targetFolderSelfPath, VARCHAR)
+                            .addValue("newParentForChildren", newParentForChildren, VARCHAR)
+                            .addValue("movedFolderSelfPath", movedFolderSelfPath, VARCHAR)
+                            .addValue("movedFolderSelfPathLike", movedFolderSelfPath + "%", VARCHAR));
         } catch (Exception e) {
             String msg = "Не удалось выполнить перемещение каталога: " + folderToMoveQualifier.getRecordId();
             log.error("{} => {}", msg, e.getMessage(), e);

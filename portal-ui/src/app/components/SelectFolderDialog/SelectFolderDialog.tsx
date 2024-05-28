@@ -54,7 +54,7 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
     const { title, subtitle, open, startPath, onClose } = this.props;
 
     return (
-      <Dialog open={open} onClose={onClose} className={cnSelectFolderDialog()}>
+      <Dialog open={open} onClose={onClose} className={cnSelectFolderDialog()} fullWidth maxWidth='md'>
         <DialogTitle>
           {title}
           {subtitle && <div className={cnSelectFolderDialog('Subtitle')}>{subtitle}</div>}
@@ -92,8 +92,15 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
 
   @boundMethod
   private async handleSelect(item: ExplorerItemData) {
+    const { document } = this.props;
+    this.setSelectedFolder();
+
     if (item.type === ExplorerItemType.FOLDER) {
-      this.setSelectedFolder(item.payload);
+      if (document?.id === item.payload.id) {
+        this.setDisabled(true);
+      } else {
+        this.setSelectedFolder(item.payload);
+      }
     } else {
       this.setSelectedFolder();
       this.setDisabled(true);
@@ -112,13 +119,10 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
   }
 
   @boundMethod
-  private async testForDisabled(item: ExplorerItemData): Promise<boolean> {
-    const { customTestForDisabled } = this.props;
-
+  private testForDisabled(item: ExplorerItemData): boolean {
+    const { customTestForDisabled, document } = this.props;
     if (item.type === ExplorerItemType.FOLDER) {
-      const allowed = await isRecordUpdateAllowed(item.payload);
-
-      return !allowed;
+      return document?.id === item.payload.id;
     }
 
     if (item.type === ExplorerItemType.DOCUMENT) {

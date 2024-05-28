@@ -742,7 +742,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto = new UserCreateDto(generateString("STRING_10"),
                                     generateString("STRING_10"),
                                     generateString("EMAIL_10"),
-                                    "testtestQ1");
+                                    "testPassword1");
 
         createUser(userDto);
     }

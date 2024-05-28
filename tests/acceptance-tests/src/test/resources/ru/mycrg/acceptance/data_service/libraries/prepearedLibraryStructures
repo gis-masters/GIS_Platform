@@ -12,6 +12,7 @@
 #          -> file_1_3
 
 # Вариант 2
+# Текущий пользователь имеет права CONTRIBUTOR на библиотеку
 #                                                                       | Выданные разрешения | Expected role | ID |
 # file_1                                                                | OWNER               | OWNER         | 1  |
 # file_2                                                                | -                   | NOT ALLOWED   | 2  |
@@ -45,3 +46,10 @@
 #           -> folder_1_9   | 10 |
 # folder_2                  | 11 |
 #           -> file_2_1     | 12 |
+
+# Вариант 4
+# Работа с библиотекой, с правами на чтение
+# Текущий пользователь имеет права VIEWER на библиотеку
+#           | Выданные разрешения | Expected role | ID |
+# Folder 1  | CONTRIBUTOR         | CONTRIBUTOR   | 1  |
+# Folder 2  | CONTRIBUTOR         | CONTRIBUTOR   | 2  |

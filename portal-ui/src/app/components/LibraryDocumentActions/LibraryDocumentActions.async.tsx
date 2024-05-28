@@ -89,7 +89,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
-        {!isNew && canEdit && !isFolder && (
+        {!isNew && canEdit && (
           <LibraryDocumentActionsMove document={this.document || document} schema={this.schema} as={as} />
         )}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}

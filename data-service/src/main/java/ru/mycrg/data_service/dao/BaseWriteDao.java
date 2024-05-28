@@ -16,6 +16,7 @@ import java.util.List;
 
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.ErrorDetailsExtractor.extractDetails;
+import static ru.mycrg.data_service.util.StringUtil.buildQueryWithParams;
 
 @Transactional
 @Repository
@@ -32,7 +33,8 @@ public class BaseWriteDao {
     public Long save(@NotNull String query,
                      @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
         try {
-            log.debug("Execute parameterized save query: [{}]", query);
+            log.debug("Execute parameterized save query: [{}]",
+                      buildQueryWithParams(query, parameterSource.getValues()));
 
             return pJdbcTemplate.queryForObject(query, parameterSource, Long.class);
         } catch (Exception e) {
@@ -45,7 +47,8 @@ public class BaseWriteDao {
     public void update(@NotNull String query,
                        @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
         try {
-            log.debug("Execute parameterized update query: [{}]", query);
+            log.debug("Execute parameterized update query: [{}]",
+                      buildQueryWithParams(query, parameterSource.getValues()));
 
             pJdbcTemplate.update(query, parameterSource);
         } catch (Exception e) {

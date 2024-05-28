@@ -7,10 +7,12 @@ import { cn } from '@bem-react/classname';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibrary, moveLibraryRecord } from '../../../services/data/library/library.service';
 import { Schema } from '../../../services/data/schema/schema.models';
+import { isAxiosError } from '../../../services/util/typeGuards/isAxiosError';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
+import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 
@@ -69,9 +71,20 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   @action.bound
   private async selectFolder(folder: LibraryRecord | null) {
     this.setLoading(true);
-    await moveLibraryRecord(this.props.document, folder?.is_folder ? folder.id : undefined);
-    this.setLoading(false);
-    this.closeDocumentMoveDialog();
+    try {
+      await moveLibraryRecord(this.props.document, folder?.is_folder ? folder.id : undefined);
+    } catch (error) {
+      if (isAxiosError<{ message?: string }>(error)) {
+        Toast.error({
+          message: error.response?.data?.message || error?.message
+        });
+      } else {
+        Toast.error({ message: 'Не удалось переместить' });
+      }
+    } finally {
+      this.setLoading(false);
+      this.closeDocumentMoveDialog();
+    }
   }
 
   @action.bound

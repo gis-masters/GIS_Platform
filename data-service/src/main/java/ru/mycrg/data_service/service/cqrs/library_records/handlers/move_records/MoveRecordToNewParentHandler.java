@@ -40,10 +40,29 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
     @Override
     public Voidy handle(MoveRecordToNewParentRequest request) {
         ResourceQualifier recordToMoveQualifier = request.getRecordToMoveQualifier();
-        ResourceQualifier targetRecordQualifier = request.getTargetRecordQualifier();
+
+        ResourceQualifier libraryQualifier = libraryQualifier(recordToMoveQualifier.getTable());
+        if (!resourceProtector.isAllowed(libraryQualifier)) {
+            String msg = "Нет прав на редактирование библиотеки: " + libraryQualifier.getQualifier();
+            log.warn(msg);
+
+            throw new ForbiddenException(msg);
+        }
 
         inspectRecordToMove(recordToMoveQualifier);
-        inspectTarget(targetRecordQualifier);
+
+        ResourceQualifier targetRecordQualifier = request.getTargetRecordQualifier();
+        if (targetRecordQualifier == null) {
+            // Перемещение в корень библиотеки требует прав на редактирование
+            if (!resourceProtector.isEditAllowed(libraryQualifier)) {
+                String msg = "Нет прав на редактирование библиотеки: " + libraryQualifier.getQualifier();
+                log.warn(msg);
+
+                throw new ForbiddenException(msg);
+            }
+        } else {
+            inspectTarget(targetRecordQualifier);
+        }
 
         getMover(recordToMoveQualifier).move(recordToMoveQualifier, targetRecordQualifier);
 
@@ -72,14 +91,6 @@ public class MoveRecordToNewParentHandler implements IRequestHandler<MoveRecordT
     }
 
     private void inspectRecordToMove(ResourceQualifier recordToMoveQualifier) {
-        ResourceQualifier libraryQualifier = libraryQualifier(recordToMoveQualifier.getTable());
-        if (!resourceProtector.isEditAllowed(libraryQualifier)) {
-            String msg = "Нет прав на редактирование библиотеки: " + libraryQualifier.getQualifier();
-            log.warn(msg);
-
-            throw new ForbiddenException(msg);
-        }
-
         if (!resourceProtector.isEditAllowed(recordToMoveQualifier)) {
             String msg = "Нет прав на перенос записи: " + recordToMoveQualifier.getRecordId();
             log.warn(msg);

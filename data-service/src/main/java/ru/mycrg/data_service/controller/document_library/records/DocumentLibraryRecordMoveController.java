@@ -25,10 +25,18 @@ public class DocumentLibraryRecordMoveController {
     public ResponseEntity<Object> moveRecord(@PathVariable String docLibId,
                                              @PathVariable Long recordToMoveId,
                                              @PathVariable Long targetRecordId) {
+        if (recordToMoveId.equals(targetRecordId)) {
+            return ResponseEntity.ok().build();
+        }
+
         mediator.execute(
                 new MoveRecordToNewParentRequest(
                         ResourceQualifier.libraryRecordQualifier(docLibId, recordToMoveId),
-                        ResourceQualifier.libraryRecordQualifier(docLibId, targetRecordId)));
+                        targetRecordId != null
+                                ? ResourceQualifier.libraryRecordQualifier(docLibId, targetRecordId)
+                                : null
+                )
+        );
 
         return ResponseEntity.ok().build();
     }

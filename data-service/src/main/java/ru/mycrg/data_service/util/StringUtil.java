@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -68,6 +69,15 @@ public class StringUtil {
 
     public static String removeSpecificChars(String input) {
         return input.replaceAll("[.(\"'\\[\\]{}),]", " ");
+    }
+
+    public static String buildQueryWithParams(String query, Map<String, Object> values) {
+        String result = query;
+        for (Map.Entry<String, Object> entry: values.entrySet()) {
+            result = result.replace(":" + entry.getKey(), "'" + entry.getValue() + "'");
+        }
+
+        return result;
     }
 
     public static String removePunctuation(String input) {

@@ -6,6 +6,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
@@ -14,6 +15,7 @@ import ru.mycrg.acceptance.data_service.dto.LibraryModel;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -32,8 +34,7 @@ import static ru.mycrg.acceptance.Config.DATE_TIME_FORMAT;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.folder11Id;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.*;
 import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.currentSchemaName;
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
@@ -715,6 +716,21 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         moveRecord((long) movedFolderId, (long) targetFolderId);
     }
 
+    @When("я переношу каталог {string} в каталог {string}")
+    public void moveRecord(String movedFolderTitle, String targetFolderTitle) {
+        Integer movedFolderId = libraryCatalog.get(movedFolderTitle);
+        Integer targetFolderId = libraryCatalog.get(targetFolderTitle);
+
+        moveRecord((long) movedFolderId, (long) targetFolderId);
+    }
+
+    @When("я перемещаю каталог {string} в корень библиотеки")
+    public void moveRecordToLibraryRoot(String movedFolderTitle) {
+        Integer movedFolderId = libraryCatalog.get(movedFolderTitle);
+
+        moveRecord((long) movedFolderId, null);
+    }
+
     @Then("перенос документа 1 выполнен успешно")
     public void checkFile1Path() {
         getRecordById(1, DEFAULT_LIBRARY);
@@ -844,11 +860,16 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         post(url);
     }
 
-    private void moveRecord(Long movedRecordId, Long targetRecordId) {
+    private void moveRecord(@NotNull Long movedRecordId,
+                            @Nullable Long targetRecordId) {
+        String path = (targetRecordId == null)
+                ? String.format("/%s/records/%d/move", DEFAULT_LIBRARY, movedRecordId)
+                : String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, movedRecordId, targetRecordId);
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         log().all().
-                        post(String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, movedRecordId, targetRecordId));
+                        post(path);
     }
 
     private void updateDocument(Integer docId, String payload, String currentLibraryId) {
