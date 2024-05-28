@@ -75,6 +75,7 @@
     "react-dom": "18.2.0",
     "react-dropzone": "14.2.3",
     "react-favicon": "2.0.3",
+    "react-helmet": "6.1.0",
     "react-highlight-words": "0.20.0",
     "react-input-mask": "2.0.4",
     "react-nl2br": "1.0.4",

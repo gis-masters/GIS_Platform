@@ -23,6 +23,7 @@
             "vendorChunk": true,
             "assets": [
               "src/assets",
+              "src/sw.js",
               "src/reglaments",
               {
                 "glob": "**",
