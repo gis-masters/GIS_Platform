@@ -228,7 +228,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         properties.unshift({
           name: 'view',
           title: 'Представление',
-          options: getViewChoiceOptions(schema.views) || [],
+          options: getViewChoiceOptions(schema) || [],
           defaultValue: '',
           propertyType: PropertyType.CHOICE
         });

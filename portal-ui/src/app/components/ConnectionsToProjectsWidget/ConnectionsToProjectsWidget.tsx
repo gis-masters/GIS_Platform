@@ -224,6 +224,6 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   @computed
   private get options(): PropertyOption[] {
-    return getViewChoiceOptions(this.props.schema?.views) || [];
+    return this.props.schema ? getViewChoiceOptions(this.props.schema) : [];
   }
 }

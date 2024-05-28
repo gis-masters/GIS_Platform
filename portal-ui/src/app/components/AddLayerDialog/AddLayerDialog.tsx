@@ -169,7 +169,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
   @computed
   private get fields(): PropertySchema[] {
     if (!this.formValue?.layerType || this.formValue?.layerType === CrgLayerType.VECTOR) {
-      const options = getViewChoiceOptions(this.views) || [];
+      const options = this.schema ? getViewChoiceOptions(this.schema) : [];
 
       return [
         {

@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { ContentType, PropertyOption, Schema } from '../../data/schema/schema.models';
+import { PropertyOption, Schema } from '../../data/schema/schema.models';
 import { schemaService } from '../../data/schema/schema.service';
 import {
   convertGeoserverPropertiesToSchemaProperties,
@@ -113,9 +113,11 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
   throw new Error(`Тип слоя: ${layer.type} не поддерживается`);
 }
 
-export function getViewChoiceOptions(views: ContentType[] = []): PropertyOption[] {
+export function getViewChoiceOptions(schema: Schema): PropertyOption[] {
+  const views = schema.views || [];
+
   return [
-    { title: 'Вид по умолчанию', value: '' },
+    { title: `${schema.title} (по-умолчанию)`, value: '' },
     ...(views.map(type => ({
       title: type.title || '',
       value: type.id,
