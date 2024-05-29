@@ -129,6 +129,7 @@
 }
 
 .close-button {
+  margin-left: auto;
   padding: 6px;
 
   --mdc-icon-button-state-layer-size: 36px;

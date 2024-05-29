@@ -8,7 +8,7 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
 
-const EditFeatureActionsName = withRegistry(registry)(EditFeatureActions);
+const EditFeatureActionsWithRegistry = withRegistry(registry)(EditFeatureActions);
 
 @Component({
   selector: 'crg-edit-feature-actions',
@@ -43,7 +43,7 @@ export class EditFeatureActionsComponent implements OnInit, OnDestroy, OnChanges
       return;
     }
 
-    const reactElement = createElement(EditFeatureActionsName, {
+    const reactElement = createElement(EditFeatureActionsWithRegistry, {
       feature: this.feature,
       layer: this.layer
     });

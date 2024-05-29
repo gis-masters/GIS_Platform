@@ -23,6 +23,7 @@ import { EditFeatureActionsComponent } from './components/edit-feature-actions/e
 import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
+import { EditFeatureNavigationComponent } from './components/edit-feature-navigation/edit-feature-navigation.component';
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { ErrorsBadgeComponent } from './components/errors-badge/errors-badge.component';
 import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
@@ -138,7 +139,8 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     MessagesRegistryComponent,
     TasksJournalComponent,
     UtilityDialogsRootComponent,
-    PhotoModePreviewerComponent
+    PhotoModePreviewerComponent,
+    EditFeatureNavigationComponent
   ],
   imports: [
     HttpClientModule,

@@ -1,0 +1,11 @@
+.EditFeatureNavigation {
+  display: inline-block;
+
+  margin: 0 auto;
+
+  color: var(--gray);
+
+  &-Text {
+    margin: 0 5px;
+  }
+}

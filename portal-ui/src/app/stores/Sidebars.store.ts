@@ -181,6 +181,7 @@ class Sidebars {
     if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
       return;
     }
+
     this.editFeaturesData = data;
     this.closeBugReport();
     this.editOpen = true;
