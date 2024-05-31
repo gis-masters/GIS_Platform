@@ -217,21 +217,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                            && tagsBySpecialization.containsAll(tags));
     }
 
-    @And("Глобальные настройки организации включены в зависимости от выбранной специализации {string}")
-    public void checkGlobalSettingsBySpecialization(String specializationId) {
-        List<Map<String, Object>> specializations = getSpecializations();
-        Map<String, Object> specializationById = specializations.stream()
-                                                                .filter(specialization -> specializationId.equals(
-                                                                        specialization.get("id").toString()))
-                                                                .findFirst()
-                                                                .get();
-        List<String> tagsBySpecialization = (List<String>) specializationById.get("tags");
-
-//        assertTrue(tags.size() == tagsBySpecialization.size()
-//                           && tags.containsAll(tagsBySpecialization)
-//                           && tagsBySpecialization.containsAll(tags));
-    }
-
     /**
      * Гарантирует создание огранизации, если таковая не была найдена в пуле. Добавляет созданную орг. в пул и "current"
      * переменные

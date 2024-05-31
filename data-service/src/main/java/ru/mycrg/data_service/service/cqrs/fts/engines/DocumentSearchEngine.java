@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -13,16 +12,17 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.RegistryData;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
 import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ru.mycrg.common_contracts.generated.fts.FtsType.DOCUMENT;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
@@ -66,7 +67,7 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
     }
 
     @Override
-    public Page<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
+    public PageableResources<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
         log.info("Document searcher: {}, with dictionary: [{}]", request, dictionaryWords);
 
         FtsRequestDto dto = request.getFtsRequestDto();
@@ -127,23 +128,23 @@ public class DocumentSearchEngine implements IFullTextSearchEngine {
                 .limit(pageable.getPageSize())
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(page, pageable, allSortedEntities.size());
+        return pageFromList(new PageImpl<>(page, pageable, allSortedEntities.size()), pageable);
     }
 
     @Override
-    public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
+    public PageableResources<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
         Pageable pageable = request.getPageable();
         FtsRequestDto dto = request.getFtsRequestDto();
 
         List<String> allowedLibraries = getAllowedLibraries(dto).collect(Collectors.toList());
         if (allowedLibraries.isEmpty()) {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+            return pageFromList(new PageImpl<>(new ArrayList<>(), pageable, 0), pageable);
         }
 
         List<FtsItem> founded = ftsDao.searchCadastrNumber(DOCUMENTS, allowedLibraries, null, dto.getText(), pageable);
         List<FtsResponseDto> result = fetchEntities(founded, Set.of(dto.getText())).collect(Collectors.toList());
 
-        return new PageImpl<>(result, pageable, pageable.getPageNumber());
+        return pageFromList(new PageImpl<>(result, pageable, pageable.getPageNumber()), pageable);
     }
 
     @Override

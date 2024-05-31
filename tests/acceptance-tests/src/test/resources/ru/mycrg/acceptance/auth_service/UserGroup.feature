@@ -102,8 +102,8 @@ Feature: Действия с пользовательскими группами
     When Администратор делает запрос на указанную группу
     Then В пользовательской групппе присутствует указанный пользователь
     Examples:
-      | groupName | groupDescription | userName     | userSurname     | userEmail | userPassword |
-      | STRING_15 | STRING_15        | testUserName | testUserSurname | EMAIL_20  | testtestQ1   |
+      | groupName | groupDescription | userName     | userSurname     | userEmail | userPassword  |
+      | STRING_15 | STRING_15        | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
 
   Scenario Outline: Удаление пользователя из пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"
@@ -114,8 +114,8 @@ Feature: Действия с пользовательскими группами
     Then Сервер отвечает со статус-кодом 200
     And В пользовательской групппе отсутствует указанный пользователь
     Examples:
-      | groupName | groupDescription | userName      | userSurname      | userEmail | userPassword |
-      | STRING_15 | STRING_15        | testUserNameD | testUserSurnameD | EMAIL_20  | testtestQ1   |
+      | groupName | groupDescription | userName      | userSurname      | userEmail | userPassword  |
+      | STRING_15 | STRING_15        | testUserNameD | testUserSurnameD | EMAIL_20  | testPassword1 |
 
   Scenario Outline: Удаление пользовательской группы
     Given Существует пользовательская группа "<groupName>", "<groupDescription>"

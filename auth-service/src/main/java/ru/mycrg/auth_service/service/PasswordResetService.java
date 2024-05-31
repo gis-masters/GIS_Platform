@@ -52,18 +52,23 @@ public class PasswordResetService {
 
     public void init(InitPasswordResetDto dto) {
         userRepository.findByEmail(dto.getEmail())
-                      .ifPresent(user -> {
-                          throwIfTokenRequestToOften(user.getId());
+                      .ifPresentOrElse(
+                              user -> {
+                                  throwIfTokenRequestToOften(user.getId());
 
-                          PasswordResetToken resetToken = new PasswordResetToken(user, generateToken());
-                          tokenRepository.save(resetToken);
+                                  PasswordResetToken resetToken = new PasswordResetToken(user, generateToken());
+                                  tokenRepository.save(resetToken);
 
-                          // Clear expired tokens
-                          tokenRepository.deleteExpiredTokens(now().minusMinutes(tokenExpirationTime));
+                                  // Clear expired tokens
+                                  tokenRepository.deleteExpiredTokens(now().minusMinutes(tokenExpirationTime));
 
-                          // Send email
-                          emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOrigin());
-                      });
+                                  // Send email
+                                  emailService.sendEmailResetPassword(user, resetToken.getToken(), dto.getOrigin());
+                              },
+                              () -> {
+                                  log.debug("Пользователь: '{}' не найден 👀. Восстанавливать нечего 📧",
+                                            dto.getEmail());
+                              });
     }
 
     public String activateToken(PasswordResetDto dto) {

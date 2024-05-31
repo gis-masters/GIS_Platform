@@ -2,7 +2,10 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
+import { preparePageOptions } from '../../api/http.utils';
+import { PageOptions } from '../../models';
 import { Mime } from '../../util/Mime';
+import { SearchRequest } from '../search/search.model';
 import { Process, ProcessableModel, ProcessResponse } from './processes.models';
 
 @boundClass
@@ -25,6 +28,10 @@ class ProcessesClient extends Client {
     return `${this.getProcessesUrl()}/file`;
   }
 
+  private getSearchProcessesUrl(): string {
+    return `${this.getDataUrl()}/fts`;
+  }
+
   async getProcess(id: number): Promise<Process> {
     return http.get<Process>(this.getProcessUrl(id), {
       cache: { disabled: true }
@@ -40,6 +47,15 @@ class ProcessesClient extends Client {
   async createFileProcess(model: FormData): Promise<ProcessResponse> {
     return http.post<ProcessResponse>(this.getFileProcessesUrl(), model, {
       headers: { 'Content-Type': Mime.FORM_DATA }
+    });
+  }
+
+  async createSearchProcess(searchRequest: SearchRequest, pageOptions: PageOptions): Promise<ProcessResponse> {
+    const params = preparePageOptions(pageOptions, true);
+
+    return await http.post<ProcessResponse>(this.getSearchProcessesUrl(), searchRequest, {
+      cache: { clear: false, disabled: false },
+      params
     });
   }
 }

@@ -25,7 +25,7 @@ public class PasswordResetController {
 
     @PostMapping("/request-password-reset")
     public ResponseEntity<Object> initPasswordReset(@Valid @RequestBody InitPasswordResetDto dto) {
-        log.info("Init reset password. For: {}", dto);
+        log.debug("Init reset password. For: {}", dto);
 
         passwordResetService.init(dto);
 
@@ -34,7 +34,7 @@ public class PasswordResetController {
 
     @PostMapping("/password-reset")
     public ResponseEntity<Object> passwordReset(@Valid @RequestBody PasswordResetDto dto) {
-        log.info("Reset password: {}", dto);
+        log.debug("Reset password: {}", dto);
 
         String login = passwordResetService.activateToken(dto);
 
@@ -43,7 +43,7 @@ public class PasswordResetController {
 
     @GetMapping("/password-reset")
     public ResponseEntity<Object> checkToken(@RequestParam String token) {
-        log.info("Check reset-token: {}", token);
+        log.debug("Check reset-token: {}", token);
 
         if (passwordResetService.isExist(token)) {
             return ResponseEntity.ok().build();

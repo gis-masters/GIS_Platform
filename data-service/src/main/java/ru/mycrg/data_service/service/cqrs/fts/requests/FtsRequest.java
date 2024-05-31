@@ -1,13 +1,13 @@
 package ru.mycrg.data_service.service.cqrs.fts.requests;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.mediator.IRequest;
 
-public class FtsRequest implements IRequest<Page<FtsResponseDto>> {
+public class FtsRequest implements IRequest<PageableResources<FtsResponseDto>> {
 
     private final FtsRequestDto ftsRequestDto;
     private final Pageable pageable;

@@ -1,3 +1,4 @@
+import { PageableResources } from '../../../../server-types/common-contracts';
 import {
   GmlPlacementModel,
   ImportFeaturesFromShapeFileModel,
@@ -12,7 +13,7 @@ export interface Process {
   type: ProcessType;
   extra: unknown;
   message?: string;
-  details: ProcessTasks | ImportShapeProcess;
+  details: ProcessTasks | ImportShapeProcess | PageableResources<unknown>;
 }
 
 export interface ProcessTasks {

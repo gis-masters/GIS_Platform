@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.service.cqrs.fts;
 
-import org.springframework.data.domain.Page;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 
 import java.util.Comparator;
@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 
 public interface IFullTextSearchEngine {
 
-    Page<FtsResponseDto> search(FtsRequest dto, Set<String> dictionaryWords);
+    PageableResources<FtsResponseDto> search(FtsRequest dto, Set<String> dictionaryWords);
 
-    Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest dto);
+    PageableResources<FtsResponseDto> searchAsCadastrNumber(FtsRequest dto);
 
     FtsType getType();
 

@@ -40,16 +40,16 @@ Feature: Регистрация новой организации
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | orgName    | orgPhone   | adminName | adminSurname | adminEmail        | adminPassword | reason                             |
-      | testOrg    | 123456789  | testName  | testSurname  | admin1            | testtestQ1    | Невалидный email                   |
-      | STRING_2   | 1234567890 | testName  | testSurname  | admin2@email.com  | testtestQ1    | Короткое название организации      |
-      | STRING_501 | 1234567890 | testName  | testSurname  | admin3@email.com  | testtestQ1    | Длинное название организации       |
-      | testOrg    | NUMBER_21  | testName  | testSurname  | admin4@email.com  | testtestQ1    | Длинный номер телефона организации |
-      | testOrg    | 1234567890 | STRING_0  | testSurname  | admin5@email.com  | testtestQ1    | Пустое имя админа                  |
-      | testOrg    | 1234567890 | STRING_61 | testSurname  | admin7@email.com  | testtestQ1    | Длинное имя админа                 |
-      | testOrg    | 1234567890 | testName  | STRING_0     | admin8@email.com  | testtestQ1    | Пустая фамилия админа              |
-      | testOrg    | 1234567890 | testName  | STRING_101   | admin9@email.com  | testtestQ1    | Длинная фамилия админа             |
-      | testOrg    | 1234567890 | testName  | testSurname  | STRING_0          | testtestQ1    | Нет email админа                   |
-      | testOrg    | 1234567890 | testName  | testSurname  | EMAIL_61          | testtestQ1    | Длинный email админа               |
+      | testOrg    | 123456789  | testName  | testSurname  | admin1            | testPassword1 | Невалидный email                   |
+      | STRING_2   | 1234567890 | testName  | testSurname  | admin2@email.com  | testPassword1 | Короткое название организации      |
+      | STRING_501 | 1234567890 | testName  | testSurname  | admin3@email.com  | testPassword1 | Длинное название организации       |
+      | testOrg    | NUMBER_21  | testName  | testSurname  | admin4@email.com  | testPassword1 | Длинный номер телефона организации |
+      | testOrg    | 1234567890 | STRING_0  | testSurname  | admin5@email.com  | testPassword1 | Пустое имя админа                  |
+      | testOrg    | 1234567890 | STRING_61 | testSurname  | admin7@email.com  | testPassword1 | Длинное имя админа                 |
+      | testOrg    | 1234567890 | testName  | STRING_0     | admin8@email.com  | testPassword1 | Пустая фамилия админа              |
+      | testOrg    | 1234567890 | testName  | STRING_101   | admin9@email.com  | testPassword1 | Длинная фамилия админа             |
+      | testOrg    | 1234567890 | testName  | testSurname  | STRING_0          | testPassword1 | Нет email админа                   |
+      | testOrg    | 1234567890 | testName  | testSurname  | EMAIL_61          | testPassword1 | Длинный email админа               |
       | testOrg    | 1234567890 | testName  | testSurname  | admin12@email.com | STRING_2      | Простой пароль                     |
 
   Scenario: Одновременное создание нескольких организаций не ломает сервис

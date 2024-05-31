@@ -3,13 +3,13 @@ package ru.mycrg.data_service.service.cqrs.fts.engines;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @Component
 public class AllPlaceSearchEngine implements IFullTextSearchEngine {
@@ -37,7 +39,7 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
     }
 
     @Override
-    public Page<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
+    public PageableResources<FtsResponseDto> search(FtsRequest request, Set<String> dictionaryWords) {
         log.info("AllPlaceSearcher: {}", request);
 
         String text = getSearchedText(request);
@@ -52,11 +54,11 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
 
         // Search by documents
         Set<String> docWords = ftsDictionaryService.collectWordsForDocuments(text);
-        Page<FtsResponseDto> documents = documentSearchEngine.search(request, docWords);
+        PageableResources<FtsResponseDto> documents = documentSearchEngine.search(request, docWords);
 
         // Search by layers
-         Set<String> layerWords = ftsDictionaryService.collectWordsForFeatures(text);
-        Page<FtsResponseDto> features = featureSearchEngine.search(request, layerWords);
+        Set<String> layerWords = ftsDictionaryService.collectWordsForFeatures(text);
+        PageableResources<FtsResponseDto> features = featureSearchEngine.search(request, layerWords);
 
         watcher.stop();
         double docTotal = watcher.getTotalTimeSeconds();
@@ -66,7 +68,7 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
     }
 
     @Override
-    public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
+    public PageableResources<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
         return combineResults(request.getPageable(),
                               documentSearchEngine.searchAsCadastrNumber(request),
                               featureSearchEngine.searchAsCadastrNumber(request));
@@ -78,9 +80,9 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
     }
 
     @NotNull
-    private static PageImpl<FtsResponseDto> combineResults(Pageable pageable,
-                                                           Page<FtsResponseDto> documents,
-                                                           Page<FtsResponseDto> features) {
+    private static PageableResources<FtsResponseDto> combineResults(Pageable pageable,
+                                                                    PageableResources<FtsResponseDto> documents,
+                                                                    PageableResources<FtsResponseDto> features) {
         List<FtsResponseDto> combined = new ArrayList<>();
         combined.addAll(documents.getContent());
         combined.addAll(features.getContent());
@@ -91,6 +93,10 @@ public class AllPlaceSearchEngine implements IFullTextSearchEngine {
                                               .limit(pageable.getPageSize())
                                               .collect(Collectors.toList());
 
-        return new PageImpl<>(result, pageable, documents.getTotalElements() + features.getTotalElements());
+        return pageFromList(
+                new PageImpl<>(result,
+                               pageable,
+                               documents.getPage().getTotalElements() + features.getPage().getTotalElements()),
+                pageable);
     }
 }

@@ -1,9 +1,9 @@
 package ru.mycrg.data_service.service.cqrs.fts.handlers;
 
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
 import ru.mycrg.mediator.IRequestHandler;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 
 @Component
-public class FtsHandler implements IRequestHandler<FtsRequest, Page<FtsResponseDto>> {
+public class FtsHandler implements IRequestHandler<FtsRequest, PageableResources<FtsResponseDto>> {
 
     private final Map<FtsType, IFullTextSearchEngine> searchEngines;
 
@@ -25,7 +25,7 @@ public class FtsHandler implements IRequestHandler<FtsRequest, Page<FtsResponseD
     }
 
     @Override
-    public Page<FtsResponseDto> handle(FtsRequest request) {
+    public PageableResources<FtsResponseDto> handle(FtsRequest request) {
         return searchEngines.get(request.getRequestType())
                             .search(request, null);
     }

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -13,6 +12,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
@@ -34,6 +34,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_contracts.generated.fts.FtsType.FEATURE;
+import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 
@@ -74,8 +75,8 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     }
 
     @Override
-    public Page<FtsResponseDto> search(FtsRequest request,
-                                       @Nullable Set<String> dictionaryWords) {
+    public PageableResources<FtsResponseDto> search(FtsRequest request,
+                                                    @Nullable Set<String> dictionaryWords) {
         log.info("FeatureSearcher: {}, with dictionary: [{}]", request, dictionaryWords);
 
         FtsRequestDto dto = request.getFtsRequestDto();
@@ -92,7 +93,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         Pageable pageable = request.getPageable();
         List<String> allowedTables = getAllowedSources(dto);
         if (allowedTables == null) {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+            return pageFromList(new PageImpl<>(new ArrayList<>(), pageable, 0), pageable);
         }
 
         // Соберем слова из словаря если их нам не прислали
@@ -118,23 +119,23 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
 
         List<FtsResponseDto> result = fetchEntities(founded, dictionaryWords);
 
-        return new PageImpl<>(result, pageable, pageable.getPageNumber());
+        return pageFromList(new PageImpl<>(result, pageable, pageable.getPageNumber()), pageable);
     }
 
     @Override
-    public Page<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
+    public PageableResources<FtsResponseDto> searchAsCadastrNumber(FtsRequest request) {
         Pageable pageable = request.getPageable();
         FtsRequestDto dto = request.getFtsRequestDto();
 
         List<String> allowedTables = getAllowedSources(dto);
         if (allowedTables == null) {
-            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+            return pageFromList(new PageImpl<>(new ArrayList<>(), pageable, 0), pageable);
         }
 
         List<FtsItem> founded = ftsDao.searchCadastrNumber(LAYERS, allowedTables, null, dto.getText(), pageable);
         List<FtsResponseDto> result = fetchEntities(founded, Set.of(dto.getText()));
 
-        return new PageImpl<>(result, pageable, pageable.getPageNumber());
+        return pageFromList(new PageImpl<>(result, pageable, pageable.getPageNumber()), pageable);
     }
 
     @Override

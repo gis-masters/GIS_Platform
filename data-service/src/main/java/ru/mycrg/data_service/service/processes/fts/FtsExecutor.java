@@ -2,12 +2,11 @@ package ru.mycrg.data_service.service.processes.fts;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsResponseDto;
+import ru.mycrg.common_contracts.generated.page.PageableResources;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsRequest;
@@ -22,13 +21,13 @@ import java.util.Map;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 @Component
-public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
+public class FtsExecutor implements IExecutor<PageableResources<FtsResponseDto>> {
 
     private final Logger log = LoggerFactory.getLogger(FtsExecutor.class);
 
     private FtsRequestDto payload;
     private Pageable pageable;
-    private Page<FtsResponseDto> result;
+    private PageableResources<FtsResponseDto> result;
 
     private final Mediator mediator;
 
@@ -37,7 +36,7 @@ public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
     }
 
     @Override
-    public Page<FtsResponseDto> execute() {
+    public PageableResources<FtsResponseDto> execute() {
         log.info("FTS executor started");
         result = mediator.execute(new FtsRequest(payload, pageable));
 
@@ -46,10 +45,12 @@ public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public IExecutor<Page<FtsResponseDto>> initialize(Object payload) {
-
+    public IExecutor<PageableResources<FtsResponseDto>> initialize(Object payload) {
         try {
-            this.payload = mapper.convertValue(payload, FtsRequestDto.class);
+            Map<String, Object> data = (Map<String, Object>) payload;
+
+            this.payload = mapper.convertValue(data.get("ftsDto"), FtsRequestDto.class);
+            this.pageable = (Pageable) data.get("pageable");
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель FTS поиска: %s", payload);
             log.error(msg, e.getCause());
@@ -57,18 +58,11 @@ public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
             throw new BadRequestException(msg);
         }
 
-        Map<String, Object> data = (Map<String, Object>) payload;
-        if (data.containsKey("page") && data.containsKey("size")) {
-            this.pageable = PageRequest.of((int) data.get("page"), (int) data.get("size"));
-        } else {
-            this.pageable = PageRequest.of(0, 20);
-        }
-
         return this;
     }
 
     @Override
-    public IExecutor<Page<FtsResponseDto>> validate() {
+    public IExecutor<PageableResources<FtsResponseDto>> validate() {
         if (payload.getText() == null || payload.getText().isBlank()) {
             throw new BadRequestException("Некорректный запрос",
                                           List.of(new ErrorInfo("text", "Поле обязательно к заполнению")));
@@ -78,12 +72,12 @@ public class FtsExecutor implements IExecutor<Page<FtsResponseDto>> {
     }
 
     @Override
-    public Page<FtsResponseDto> getReport() {
+    public PageableResources<FtsResponseDto> getReport() {
         return result;
     }
 
     @Override
-    public IExecutor<Page<FtsResponseDto>> setPayload(ProcessModel processModel) {
+    public IExecutor<PageableResources<FtsResponseDto>> setPayload(ProcessModel processModel) {
         return this;
     }
 

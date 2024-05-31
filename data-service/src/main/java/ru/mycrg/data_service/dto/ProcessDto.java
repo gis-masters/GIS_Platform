@@ -12,7 +12,7 @@ public class ProcessDto {
 
     @NotNull
     @ValidateEnum(targetClassType = ProcessType.class, message = "Допустимые значения поля type: " +
-            "IMPORT, VALIDATION, VALIDATION_REPORT, EXPORT, IMPORT_GEOMETRY")
+            "IMPORT, VALIDATION, VALIDATION_REPORT, EXPORT, IMPORT_GEOMETRY, FULL_TEXT_SEARCH")
     String type;
 
     public ProcessDto() {
