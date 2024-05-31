@@ -1,3 +1,7 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable regexp/no-useless-escape */
+/* eslint-disable regexp/no-unused-capturing-group */
+/* eslint-disable unicorn/better-regex */
 import { chunk, cloneDeep, isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 import { Extent } from 'ol/extent';
@@ -199,10 +203,32 @@ export function projectionUnit(proj: string): string {
 }
 
 export function getProjectionTitle(proj: string): string {
-  let projection = proj.split('PROJCS');
-  if (projection.length === 1) {
-    projection = proj.split('GEOGCS');
+  const projcsRegex = /PROJCS\["([A-Z][\w \/-]+)",/;
+  const geogcsRegex = /GEOGCS\["([A-Z][\w \/-]+)",/;
+  const unknownRegex = /\["([A-Z][\w \/\(\)-]+)",/;
+
+  const extractTitle = (regex: RegExp): string | null => {
+    const match = proj.match(regex);
+
+    return match ? match[1].replaceAll('_', ' ') : null;
+  };
+
+  const projcsTitle = extractTitle(projcsRegex);
+  if (projcsTitle) {
+    return projcsTitle;
   }
 
-  return projection[1].split('",')[0].split('["')[1];
+  const geogcsTitle = extractTitle(geogcsRegex);
+  if (geogcsTitle) {
+    return geogcsTitle;
+  }
+
+  const unknownTitle = extractTitle(unknownRegex);
+  if (unknownTitle) {
+    return unknownTitle;
+  }
+
+  console.warn('Тип SRID не определен');
+
+  return 'Тип SRID не определен';
 }

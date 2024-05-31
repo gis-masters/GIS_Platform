@@ -424,6 +424,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       return;
     }
     this.setBusy(true);
+
     const { getData } = this.props as XTablePropsAsync<T>;
     const operationId = Symbol();
     this.fetchingOperationId = operationId;
