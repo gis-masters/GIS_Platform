@@ -10,9 +10,9 @@
 
 enabled=true
 
-initdb=true
+initdb=false
 initScript=jdbcconfig/scripts/initdb.h2.sql
-import=true
+import=false
 
 jdbcUrl=jdbc:h2:file:${GEOSERVER_DATA_DIR}/jdbcconfig/catalog;AUTO_SERVER=TRUE
 driverClassName=org.h2.Driver

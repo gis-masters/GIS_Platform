@@ -23,14 +23,11 @@ elif [[ currentMigration -eq 4 ]]; then
 
     ./V5__geoserverJdbc/run.sh
 elif [[ currentMigration -eq 5 ]]; then
-    echo -e "  All migration completed";
+    echo -e "  All migration before docker completed";
 else
-    echo -e "  No migrations yet"
+    echo -e "  No migrations before docker yet"
     ./V1__Initial_Migration/run.sh
 fi
-
-echo "Copy styles"
-cp -r ../initialConfig/geoserver/styles/* ${GEOSERVER_DATA_DIR}/styles
 
 echo "Copy specializations"
 mkdir -p /opt/crg/specializations
