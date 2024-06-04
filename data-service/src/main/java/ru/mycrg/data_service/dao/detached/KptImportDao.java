@@ -24,7 +24,7 @@ import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
 public class KptImportDao {
 
     private static final Logger log = LoggerFactory.getLogger(KptImportDao.class);
-    private static final String CADASTRAL_SQARE_FILTER_TEMPLATE = "(source_doc::json)->0->>'title' = ?";
+    private static final String CADASTRAL_SQUARE_FILTER_TEMPLATE = "(source_doc::json)->0->>'title' = ?";
 
     private final DatasourceFactory datasourceFactory;
     private final DdlTablesBase ddlTablesBase;
@@ -40,7 +40,7 @@ public class KptImportDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = String.format(
                 "SELECT COUNT(*) FROM %s.%s WHERE %s",
-                tableQualifier.getSchema(), tableQualifier.getTable(), CADASTRAL_SQARE_FILTER_TEMPLATE
+                tableQualifier.getSchema(), tableQualifier.getTable(), CADASTRAL_SQUARE_FILTER_TEMPLATE
         );
         log.debug("Count records by cadastral square query: [{}]", query);
 
@@ -92,6 +92,7 @@ public class KptImportDao {
                             List<SimplePropertyDto> properties,
                             String primaryKeyName) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
+
         String query = buildCreateTableQuery(schemaName,
                                              tableName,
                                              primaryKeyName,
@@ -109,12 +110,15 @@ public class KptImportDao {
      * @param cadasttralSquare параметры, которые будут подставлены в условие
      * @param dbName           название БД
      */
-    public void deleteAllByCadatstralSquare(String dbName, ResourceQualifier tableQualifier,
+    public void deleteAllByCadatstralSquare(String dbName,
+                                            ResourceQualifier tableQualifier,
                                             String cadasttralSquare) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
+
         String query = String.format("DELETE FROM %s.%s WHERE %s",
-                                     tableQualifier.getSchema(), tableQualifier, CADASTRAL_SQARE_FILTER_TEMPLATE);
+                                     tableQualifier.getSchema(), tableQualifier, CADASTRAL_SQUARE_FILTER_TEMPLATE);
         log.debug("Delete by cadastral square query: [{}]", query);
+
         jdbcTemplate.update(query, cadasttralSquare);
     }
 
@@ -125,25 +129,31 @@ public class KptImportDao {
                                     List<SimplePropertyDto> targetProps,
                                     String cadastralSquare) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
+
         String query = buildCopyQuery(source.getTableQualifier(), target.getTableQualifier(), sourceProps, targetProps,
-                                      CADASTRAL_SQARE_FILTER_TEMPLATE, Collections.emptyMap());
+                                      CADASTRAL_SQUARE_FILTER_TEMPLATE, Collections.emptyMap());
         log.debug("Copy cadastral square query: [{}]", query);
+
         jdbcTemplate.update(query, cadastralSquare);
     }
 
-    public void deduplicateData(String dbName, ResourceQualifier table, String groupByProperty, String maxByProperty) {
+    public void deduplicateData(String dbName,
+                                ResourceQualifier tableQualifier,
+                                String groupByProperty,
+                                String maxByProperty) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
-        String tablePath = table.getSchema() + "." + table.getTable();
         String query = String.format(
-                "DELETE FROM %s " +
-                        "WHERE (%s, %s) NOT IN ( " +
-                        "SELECT %s, MAX(%s) " +
-                        "FROM %s " +
-                        "GROUP BY %s)",
-                tablePath, groupByProperty, maxByProperty, groupByProperty, maxByProperty, tablePath, groupByProperty
+                "DELETE FROM %1$s a " +
+                        "WHERE EXISTS (" +
+                        "SELECT 1 " +
+                        "FROM %1$s b " +
+                        "WHERE a.%2$s = b.%2$s " +
+                        "AND a.%3$s < b.%3$s " +
+                        ")",
+                tableQualifier.getTableQualifier(), groupByProperty, maxByProperty
         );
-        log.debug("KPT deduplication query: " + query);
+        log.debug("Запрос для KPT удаляющий дубли: [{}]", query);
 
         jdbcTemplate.update(query);
     }
