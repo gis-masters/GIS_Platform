@@ -214,8 +214,8 @@ export async function isLayerFromFileReadAllowed(layer: CrgLayer): Promise<boole
       return false;
     }
 
-    // проверка наличия файла в документе (пока только растры и dxf)
-    if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.DXF) {
+    // проверка наличия файла в документе (пока только растры и dxf, shape)
+    if (layer.type === CrgLayerType.RASTER || layer.type === CrgLayerType.DXF || layer.type === CrgLayerType.SHP) {
       const files = getLibraryRecordFiles(record);
       const datasource = files?.find(file => layer.tableName?.includes(file.id));
 
