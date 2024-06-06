@@ -1,5 +1,7 @@
 import React, { FC, Fragment } from 'react';
 
+import { LABEL_PROPERTY_NAME_DEFAULT } from '../../../styles.models';
+import { CustomLabel } from '../../CustomLabel/CustomLabel';
 import { Filter } from '../../Filter/Filter';
 import { Function } from '../../Function/Function';
 import { LineSymbolizer } from '../../LineSymbolizer/LineSymbolizer';
@@ -38,6 +40,10 @@ export const CustomRuleTypeLine: FC<CustomRuleProps> = ({ rule, type, bare }) =>
           )}
         </Stroke>
       </LineSymbolizer>
+
+      {rule.labelPropertyName && rule.labelPropertyName !== LABEL_PROPERTY_NAME_DEFAULT && (
+        <CustomLabel propertyName={rule.labelPropertyName} />
+      )}
     </Wrapper>
   );
 };

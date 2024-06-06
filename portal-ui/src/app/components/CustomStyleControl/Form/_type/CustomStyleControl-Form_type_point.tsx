@@ -6,6 +6,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { customStyleStrokeColors, PointRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
+import { cnCustomStyleControl } from '../../CustomStyleControl';
+import { CustomStyleControlLabelPropertyNameSelect } from '../../LabelPropertyNameSelect/CustomStyleControl-LabelPropertyNameSelect';
 import { CustomStyleControlMarkSelect } from '../../MarkSelect/CustomStyleControl-MarkSelect';
 import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
@@ -24,27 +26,52 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
       <div className={cnCustomStyleControlForm(null, [className])}>
         {withIcon && <Adjust color='primary' />}
 
-        <CustomStyleControlMarkSelect
-          label='маркер'
-          value={value.rule}
-          onChange={this.markChangeHandler}
-          color={value.rule.markColor}
-        />
+        <div className={cnCustomStyleControl('OptionsWrapper')}>
+          <CustomStyleControlMarkSelect
+            label='маркер'
+            value={value.rule}
+            onChange={this.markChangeHandler}
+            color={value.rule.markColor}
+          />
 
-        <CustomStyleControlColorSelect
-          colors={customStyleStrokeColors}
-          value={value.rule.markColor}
-          onChange={this.colorChangeHandler}
-        />
+          <CustomStyleControlColorSelect
+            colors={customStyleStrokeColors}
+            value={value.rule.markColor}
+            onChange={this.colorChangeHandler}
+          />
 
-        <CustomStyleControlColorSelect
-          label='цвет обводки'
-          colors={customStyleStrokeColors}
-          value={value.rule.strokeColor}
-          onChange={this.strokeColorChangeHandler}
-        />
+          <CustomStyleControlColorSelect
+            label='цвет обводки'
+            colors={customStyleStrokeColors}
+            value={value.rule.strokeColor}
+            onChange={this.strokeColorChangeHandler}
+          />
+
+          <CustomStyleControlLabelPropertyNameSelect
+            label='подпись'
+            schema={this.props.schema}
+            onChange={this.labelChangeHandler}
+            value={value.rule.labelPropertyName}
+          />
+        </div>
       </div>
     );
+  }
+
+  @boundMethod
+  private labelChangeHandler(labelPropertyName: string) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'point') {
+      throw this.ruleTypeError;
+    }
+
+    const rule: PointRule = {
+      ...value.rule,
+      labelPropertyName
+    };
+
+    onChange({ ...value, rule });
   }
 
   @boundMethod

@@ -4,8 +4,10 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { Schema } from '../../services/data/schema/schema.models';
 import {
   CustomStyleDescription,
+  LABEL_PROPERTY_NAME_DEFAULT,
   LineRule,
   PointRule,
   PolygonRule,
@@ -21,24 +23,27 @@ import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview'
 
 import '!style-loader!css-loader!sass-loader!./CustomStyleControl.scss';
 
-const cnCustomStyleControl = cn('CustomStyleControl');
+export const cnCustomStyleControl = cn('CustomStyleControl');
 
 const defaultPointRule: PointRule = {
   markType: 'circle',
   markSize: 20,
   markColor: '#ed5c57',
   strokeColor: '#0f5c1a',
+  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
   strokeWidth: 2
 };
 
 const defaultLineRule: LineRule = {
   strokeColor: '#0f5c1a',
+  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
   strokeWidth: 2
 };
 
 const defaultPolygonRule: PolygonRule = {
   fillColor: '#80ff80',
   strokeColor: '#0f5c1a',
+  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
   strokeWidth: 2
 };
 
@@ -60,6 +65,7 @@ const defaultCustomStyles: Record<CustomStyleDescription['type'], CustomStyleDes
 export class CustomStyleControl extends Component<FormControlProps> {
   @observable private type: CustomStyleDescription['type'] = 'all';
   @observable private preview?: string;
+  @observable private schema?: Schema;
 
   constructor(props: FormControlProps) {
     super(props);
@@ -80,6 +86,8 @@ export class CustomStyleControl extends Component<FormControlProps> {
       throw new Error('Некорректная схема слоя: отсутствует geometryType');
     }
 
+    this.setSchema(schema);
+
     if (layer?.type && isVectorFromFile(layer.type)) {
       this.setType('all');
     } else {
@@ -99,8 +107,13 @@ export class CustomStyleControl extends Component<FormControlProps> {
       <div className={cnCustomStyleControl()}>
         {this.preview && <CustomStyleControlPreview previewSrc={this.preview} />}
 
-        {this.parsedValue && (
-          <CustomStyleControlForm type={this.parsedValue.type} value={this.parsedValue} onChange={this.onFormChange} />
+        {this.parsedValue && this.schema && (
+          <CustomStyleControlForm
+            type={this.parsedValue.type}
+            value={this.parsedValue}
+            onChange={this.onFormChange}
+            schema={this.schema}
+          />
         )}
       </div>
     );
@@ -138,5 +151,10 @@ export class CustomStyleControl extends Component<FormControlProps> {
   @action
   private setType(type: CustomStyleDescription['type']) {
     this.type = type;
+  }
+
+  @action
+  private setSchema(schema: Schema) {
+    this.schema = schema;
   }
 }

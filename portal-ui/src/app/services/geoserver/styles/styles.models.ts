@@ -73,12 +73,14 @@ export interface PointRule {
   markType: 'circle' | 'square' | 'triangle' | 'star';
   strokeColor: string;
   strokeWidth: number;
+  labelPropertyName?: string;
 }
 
 export interface LineRule {
   strokeColor: string;
   strokeWidth: number;
   strokeDashArray?: number[];
+  labelPropertyName?: string;
 }
 
 export type FillGraphicType = 'oarrow' | 'slash' | 'backslash' | 'times' | 'horline' | 'vertline' | 'plus';
@@ -88,6 +90,7 @@ export interface PolygonRule {
   strokeWidth: number;
   strokeDashArray?: number[];
   fillColor: string;
+  labelPropertyName?: string;
   fillGraphic?: {
     type: FillGraphicType;
     strokeWidth: number;
@@ -282,3 +285,5 @@ export const customStyleMarks: Pick<PointRule, 'markSize' | 'markType'>[] = [
   { markSize: 40, markType: 'triangle' },
   { markSize: 40, markType: 'star' }
 ];
+
+export const LABEL_PROPERTY_NAME_DEFAULT = 'без подписи';

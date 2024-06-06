@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
+import { Paper } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
@@ -16,7 +17,7 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
   private ruleTypeError = new Error('Неправильный тип стиля');
 
   render() {
-    const { className, value } = this.props;
+    const { className, value, schema } = this.props;
 
     if (value.type !== 'all') {
       throw this.ruleTypeError;
@@ -26,26 +27,35 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
 
     return (
       <div className={cnCustomStyleControlForm(null, [className])}>
-        <CustomStyleControlFormTypePoint
-          type='line'
-          value={{ type: 'point', rule: pointRule }}
-          withIcon
-          onChange={this.partChangeHandler}
-        />
+        <Paper square elevation={2} variant='outlined'>
+          <CustomStyleControlFormTypePoint
+            type='line'
+            schema={schema}
+            value={{ type: 'point', rule: pointRule }}
+            withIcon
+            onChange={this.partChangeHandler}
+          />
+        </Paper>
 
-        <CustomStyleControlFormTypeLine
-          type='line'
-          value={{ type: 'line', rule: lineRule }}
-          withIcon
-          onChange={this.partChangeHandler}
-        />
+        <Paper square elevation={2} variant='outlined'>
+          <CustomStyleControlFormTypeLine
+            type='line'
+            schema={schema}
+            value={{ type: 'line', rule: lineRule }}
+            withIcon
+            onChange={this.partChangeHandler}
+          />
+        </Paper>
 
-        <CustomStyleControlFormTypePolygon
-          type='polygon'
-          value={{ type: 'polygon', rule: polygonRule }}
-          withIcon
-          onChange={this.partChangeHandler}
-        />
+        <Paper square elevation={2} variant='outlined'>
+          <CustomStyleControlFormTypePolygon
+            type='polygon'
+            schema={schema}
+            value={{ type: 'polygon', rule: polygonRule }}
+            withIcon
+            onChange={this.partChangeHandler}
+          />
+        </Paper>
       </div>
     );
   }

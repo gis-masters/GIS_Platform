@@ -40,36 +40,53 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
   const lineSymbolizerNode = sldDocument.querySelector('LineSymbolizer');
   const polygonSymbolizerNode = sldDocument.querySelector('PolygonSymbolizer');
   const pointSymbolizerNode = sldDocument.querySelector('PointSymbolizer');
+  const textSymbolizerNode = sldDocument.querySelector('TextSymbolizer');
+
+  const labelPropertyName = textSymbolizerNode?.querySelector('PropertyName');
 
   if (pointSymbolizerNode && lineSymbolizerNode && polygonSymbolizerNode) {
     return {
       type: 'all',
-      rule: [
-        parsePointSymbolizer(pointSymbolizerNode),
-        parseLineSymbolizer(lineSymbolizerNode),
-        parsePolygonSymbolizer(polygonSymbolizerNode)
-      ]
+      rule: getCustomStyleAllRule(sldDocument)
     };
   }
 
   if (lineSymbolizerNode) {
+    const rule = parseLineSymbolizer(lineSymbolizerNode);
+
+    if (labelPropertyName?.textContent) {
+      rule.labelPropertyName = labelPropertyName?.textContent;
+    }
+
     return {
       type: 'line',
-      rule: parseLineSymbolizer(lineSymbolizerNode)
+      rule
     };
   }
 
   if (polygonSymbolizerNode) {
+    const rule = parsePolygonSymbolizer(polygonSymbolizerNode);
+
+    if (labelPropertyName?.textContent) {
+      rule.labelPropertyName = labelPropertyName?.textContent;
+    }
+
     return {
       type: 'polygon',
-      rule: parsePolygonSymbolizer(polygonSymbolizerNode)
+      rule
     };
   }
 
   if (pointSymbolizerNode) {
+    const rule = parsePointSymbolizer(pointSymbolizerNode);
+
+    if (labelPropertyName?.textContent) {
+      rule.labelPropertyName = labelPropertyName?.textContent;
+    }
+
     return {
       type: 'point',
-      rule: parsePointSymbolizer(pointSymbolizerNode)
+      rule
     };
   }
 
@@ -157,7 +174,6 @@ function parsePolygonSymbolizer(polygonSymbolizerNode: Element): PolygonRule {
   if (fillColorNode?.textContent) {
     fillColor = fillColorNode.textContent;
   }
-
   const graphicNode = polygonSymbolizerNode.querySelector('Graphic');
 
   if (graphicNode) {
@@ -202,4 +218,46 @@ export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygo
   }
 
   throw new Error('неподдерживаемый тип геометрии ' + geometryType);
+}
+
+function getCustomStyleAllRule(sldDocument: Document): [PointRule, LineRule, PolygonRule] {
+  const sldRules = sldDocument.querySelectorAll('Rule');
+
+  let pointRule: PointRule;
+  let lineRule: LineRule;
+  let polygonRule: PolygonRule;
+
+  for (const rule of sldRules) {
+    const textSymbolizerNode = rule.querySelector('TextSymbolizer');
+    const labelPropertyName = textSymbolizerNode?.querySelector('PropertyName');
+
+    const pointSymbolizer = rule.querySelector('PointSymbolizer');
+    if (pointSymbolizer) {
+      pointRule = parsePointSymbolizer(pointSymbolizer);
+
+      if (labelPropertyName?.textContent) {
+        pointRule.labelPropertyName = labelPropertyName?.textContent;
+      }
+    }
+
+    const lineSymbolizer = rule.querySelector('LineSymbolizer');
+    if (lineSymbolizer) {
+      lineRule = parseLineSymbolizer(lineSymbolizer);
+
+      if (labelPropertyName?.textContent) {
+        lineRule.labelPropertyName = labelPropertyName?.textContent;
+      }
+    }
+
+    const polygonSymbolizer = rule.querySelector('PolygonSymbolizer');
+    if (polygonSymbolizer) {
+      polygonRule = parsePolygonSymbolizer(polygonSymbolizer);
+
+      if (labelPropertyName?.textContent) {
+        polygonRule.labelPropertyName = labelPropertyName?.textContent;
+      }
+    }
+  }
+
+  return [pointRule, lineRule, polygonRule];
 }

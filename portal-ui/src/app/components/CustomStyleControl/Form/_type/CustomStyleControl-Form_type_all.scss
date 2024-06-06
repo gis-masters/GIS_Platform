@@ -1,5 +1,18 @@
 .CustomStyleControl-Form_type_all {
-  .CustomStyleControl-Form:not(:last-child) {
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  width: 100%;
+
+  .CustomStyleControl-Form {
+    display: flex;
+    align-items: center;
+
+    padding: 7px 12px;
+
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
   }
 }

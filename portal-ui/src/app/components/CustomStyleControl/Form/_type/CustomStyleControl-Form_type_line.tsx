@@ -6,6 +6,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { customStyleStrokeColors, LineRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
+import { cnCustomStyleControl } from '../../CustomStyleControl';
+import { CustomStyleControlLabelPropertyNameSelect } from '../../LabelPropertyNameSelect/CustomStyleControl-LabelPropertyNameSelect';
 import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
 import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
@@ -24,19 +26,45 @@ export class CustomStyleControlFormTypeLine extends Component<CustomStyleControl
       <div className={cnCustomStyleControlForm(null, [className])}>
         {withIcon && <PolylineOutlined color='primary' />}
 
-        <CustomStyleControlStrokeSelect
-          label='линия'
-          value={value.rule}
-          color={value.rule.strokeColor}
-          onChange={this.strokeChangeHandler}
-        />
-        <CustomStyleControlColorSelect
-          colors={customStyleStrokeColors}
-          value={value.rule.strokeColor}
-          onChange={this.colorChangeHandler}
-        />
+        <div className={cnCustomStyleControl('OptionsWrapper')}>
+          <CustomStyleControlStrokeSelect
+            label='линия'
+            value={value.rule}
+            color={value.rule.strokeColor}
+            onChange={this.strokeChangeHandler}
+          />
+
+          <CustomStyleControlColorSelect
+            colors={customStyleStrokeColors}
+            value={value.rule.strokeColor}
+            onChange={this.colorChangeHandler}
+          />
+
+          <CustomStyleControlLabelPropertyNameSelect
+            label='подпись'
+            schema={this.props.schema}
+            onChange={this.labelChangeHandler}
+            value={value.rule.labelPropertyName}
+          />
+        </div>
       </div>
     );
+  }
+
+  @boundMethod
+  private labelChangeHandler(labelPropertyName: string) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'line') {
+      throw this.ruleTypeError;
+    }
+
+    const rule: LineRule = {
+      ...value.rule,
+      labelPropertyName
+    };
+
+    onChange({ ...value, rule });
   }
 
   @boundMethod

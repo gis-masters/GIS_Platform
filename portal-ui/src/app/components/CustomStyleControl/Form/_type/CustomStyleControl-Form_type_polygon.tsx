@@ -11,7 +11,9 @@ import {
 } from '../../../../services/geoserver/styles/styles.models';
 import { Shape } from '../../../Icons/Shape';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
+import { cnCustomStyleControl } from '../../CustomStyleControl';
 import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
+import { CustomStyleControlLabelPropertyNameSelect } from '../../LabelPropertyNameSelect/CustomStyleControl-LabelPropertyNameSelect';
 import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
 import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
@@ -30,33 +32,58 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
       <div className={cnCustomStyleControlForm(null, [className])}>
         {withIcon && <Shape color='primary' />}
 
-        <CustomStyleControlStrokeSelect
-          label='обводка'
-          color={value.rule.strokeColor}
-          value={{ strokeWidth: value.rule.strokeWidth, strokeDashArray: value.rule.strokeDashArray }}
-          onChange={this.strokeChangeHandler}
-        />
+        <div className={cnCustomStyleControl('OptionsWrapper')}>
+          <CustomStyleControlStrokeSelect
+            label='обводка'
+            color={value.rule.strokeColor}
+            value={{ strokeWidth: value.rule.strokeWidth, strokeDashArray: value.rule.strokeDashArray }}
+            onChange={this.strokeChangeHandler}
+          />
 
-        <CustomStyleControlColorSelect
-          colors={customStyleStrokeColors}
-          value={value.rule.strokeColor}
-          onChange={this.strokeColorChangeHandler}
-        />
+          <CustomStyleControlColorSelect
+            colors={customStyleStrokeColors}
+            value={value.rule.strokeColor}
+            onChange={this.strokeColorChangeHandler}
+          />
 
-        <CustomStyleControlHatchingSelect
-          label='заливка'
-          color={value.rule.fillColor}
-          value={value.rule.fillGraphic}
-          onChange={this.fillGraphicChangeHandler}
-        />
+          <CustomStyleControlHatchingSelect
+            label='заливка'
+            color={value.rule.fillColor}
+            value={value.rule.fillGraphic}
+            onChange={this.fillGraphicChangeHandler}
+          />
 
-        <CustomStyleControlColorSelect
-          colors={customStyleFillColors}
-          value={value.rule.fillColor}
-          onChange={this.fillColorChangeHandler}
-        />
+          <CustomStyleControlColorSelect
+            colors={customStyleFillColors}
+            value={value.rule.fillColor}
+            onChange={this.fillColorChangeHandler}
+          />
+
+          <CustomStyleControlLabelPropertyNameSelect
+            label='подпись'
+            schema={this.props.schema}
+            onChange={this.labelChange}
+            value={value.rule.labelPropertyName}
+          />
+        </div>
       </div>
     );
+  }
+
+  @boundMethod
+  private labelChange(labelPropertyName: string) {
+    const { onChange, value } = this.props;
+
+    if (value.type !== 'polygon') {
+      throw this.ruleTypeError;
+    }
+
+    const rule: PolygonRule = {
+      ...value.rule,
+      labelPropertyName
+    };
+
+    onChange({ ...value, rule });
   }
 
   @boundMethod
