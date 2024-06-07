@@ -21,7 +21,7 @@
       },
       {
         "id": "registration",
-        "title": "Регистрация предприятия",
+        "title": "Регистрация новой организации",
         "contentUrl": "/assets/help/2login/1registration/01registration.html"
       },
       {
@@ -334,7 +334,7 @@
       },
       {
         "id": "exportShp",
-        "title": "Выгрузка векторных данных в формате shp с атрибутами согласно требованиям приказа.",
+        "title": "Экспорт ESRI Shape-файла",
         "platforms": ["conv"],
         "contentUrl": "/assets/help/7export/01exportShp/01exportShp.html"
       },
@@ -359,23 +359,40 @@
             "title": "Наборы данных",
             "contentUrl": "/assets/help/5dataManagement/1dataSets/01dataSets.html"
           },
-
           {
             "id": "editDataset",
             "title": "Редактирование набора данных",
             "contentUrl": "/assets/help/5dataManagement/8editDataset/08editDataset.html"
           },
-
           {
             "id": "11layerInDataset",
-            "title": "Создание пустого векторного слоя",
+            "title": "Создание пустой векторной таблицы",
             "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
           },
-
+          {
+            "id": "tableProperties",
+            "title": "Свойства векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/25tableProperties/25tableProperties.html"
+          },
+          {
+            "id": "editVectorTable",
+            "title": "Редактирование схемы векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/23editVectorTable/23editVectorTable.html"
+          },
+          {
+            "id": "vectorTables",
+            "title": "Табличный вид векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/22vectorTables/22vectorTables.html"
+          },
           {
             "id": "representation",
-            "title": "Представления векторной таблицы",
+            "title": "Публикация векторной таблицы",
             "contentUrl": "/assets/help/5dataManagement/12representation/12representation.html"
+          },
+          {
+            "id": "deleteVectorTable",
+            "title": "Удаление векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/24deleteVectorTable/24deleteVectorTable.html"
           }
         ]
       },
@@ -458,6 +475,12 @@
             "id": "importKpt",
             "title": "Импорт КПТ",
             "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
+          },
+
+          {
+            "id": "massLoadingKPT",
+            "title": "Массовая загрузка КПТ из zip-архивов",
+            "contentUrl": "/assets/help/5dataManagement/26massLoadingKPT/26massLoadingKPT.html"
           }
         ]
       },
@@ -518,6 +541,11 @@
         "id": "3orgManagement",
         "title": "Настройка организации",
         "contentUrl": "/assets/help/8orgManagement/03orgManagement/03orgManagement.html"
+      },
+      {
+        "id": "05coordinateSystems",
+        "title": "Системы координат",
+        "contentUrl": "/assets/help/8orgManagement/05coordinateSystems/05coordinateSystems.html"
       },
       {
         "id": "04addUser",
