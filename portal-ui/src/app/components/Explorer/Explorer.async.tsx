@@ -67,6 +67,7 @@ export interface ExplorerProps extends IClassNameProps {
   preset?: keyof typeof presets;
   withInfoPanel?: boolean;
   withoutTitle?: boolean;
+  hideToolbarActions?: boolean;
   fixedHeight?: boolean;
   hideItemsSort?: boolean;
   hidePageSize?: boolean;
@@ -237,8 +238,16 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   render() {
-    const { withInfoPanel, fixedHeight, withoutTitle, className, hideItemsSort, hidePageSize, disabledTester } =
-      this.props;
+    const {
+      withInfoPanel,
+      fixedHeight,
+      withoutTitle,
+      className,
+      hideItemsSort,
+      hideToolbarActions,
+      hidePageSize,
+      disabledTester
+    } = this.props;
 
     return (
       <div
@@ -252,6 +261,7 @@ export default class Explorer extends Component<ExplorerProps> {
         <ExplorerList store={this.store} onOpen={this.openItem} disabledTester={disabledTester} />
         <ExplorerToolbar
           hideItemsSort={hideItemsSort}
+          hideToolbarActions={hideToolbarActions}
           hidePageSize={hidePageSize}
           service={this.service}
           store={this.store}

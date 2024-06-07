@@ -1,5 +1,7 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
+import { ScenarioScope } from '../../ScenarioScope';
+import { ExplorerBlock } from '../Explorer/Explorer.block';
 import { libraryDocumentActionsBlock } from '../LibraryDocumentActions/LibraryDocumentActions.block';
 import { libraryDocumentActionsCreateChildEditDialogBlock } from './CreateChildEditDialog/LibraryDocumentActions-CreateChildEditDialog.block';
 import { libraryDocumentActionsEditDialogBlock } from './EditDialog/LibraryDocumentActions-EditDialog.block';
@@ -37,4 +39,57 @@ When('в окне редактирования дочернего докумен
 
 When('в созданной библиотеке у выбранного документа я нажимаю кнопку `Удалить`', async function () {
   await libraryDocumentActionsBlock.clickDeleteButton();
+});
+
+When(
+  'в библиотеке документов у созданного документа я нажимаю на кнопку `Переместить`',
+  async function (this: ScenarioScope) {
+    const explorerBlock = new ExplorerBlock();
+
+    if (this.latestLibraryRecords[0].title) {
+      await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
+      await libraryDocumentActionsBlock.clickDocumentMoveBtn();
+    } else {
+      throw new Error('Что то пошло не так при перемещении документа');
+    }
+  }
+);
+
+When(
+  'в библиотеке документов у созданной папки я нажимаю на кнопку `Переместить`',
+  async function (this: ScenarioScope) {
+    const explorerBlock = new ExplorerBlock();
+
+    if (this.latestFolder.title) {
+      await explorerBlock.selectExplorerItem(this.latestFolder.title);
+      await libraryDocumentActionsBlock.clickDocumentMoveBtn();
+    } else {
+      throw new Error('Что то пошло не так при перемещении папки');
+    }
+  }
+);
+
+Then(
+  'в библиотеке документов у созданного документа недоступна кнопка `Переместить`',
+  async function (this: ScenarioScope) {
+    if (this.latestLibraryRecords[0].title) {
+      const explorerBlock = new ExplorerBlock();
+      await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
+      const exist = await libraryDocumentActionsBlock.documentMoveBtnExist();
+      await expect(exist).toEqual(false);
+    } else {
+      throw new Error('Что то пошло не так при перемещении документа');
+    }
+  }
+);
+
+Then('в библиотеке документов у созданной папки недоступна кнопка `Переместить`', async function (this: ScenarioScope) {
+  if (this.latestFolder.title) {
+    const explorerBlock = new ExplorerBlock();
+    await explorerBlock.selectExplorerItem(this.latestFolder.title);
+    const exist = await libraryDocumentActionsBlock.documentMoveBtnExist();
+    await expect(exist).toEqual(false);
+  } else {
+    throw new Error('Что то пошло не так при перемещении папки');
+  }
 });

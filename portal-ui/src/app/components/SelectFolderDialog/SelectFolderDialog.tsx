@@ -67,6 +67,7 @@ export class SelectFolderDialog extends Component<SelectFolderDialogProps> {
                 path={startPath}
                 onSelect={this.handleSelect}
                 disabledTester={this.testForDisabled}
+                hideToolbarActions
                 customFilters={{
                   [ExplorerItemType.LIBRARY]: { is_folder: { $in: [true] } }
                 }}

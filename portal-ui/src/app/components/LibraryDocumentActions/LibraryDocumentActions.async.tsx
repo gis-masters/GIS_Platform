@@ -68,6 +68,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
     const { as, document, className, hideOpen, forDialog, onDialogClose, onSave } = this.props;
     const canEdit =
       (this.document?.role && [Role.CONTRIBUTOR, Role.OWNER].includes(this.document.role)) || currentUser.isAdmin;
+    const isOwner = (this.document?.role && [Role.OWNER].includes(this.document.role)) || currentUser.isAdmin;
     const isFolder = this.schema?.contentTypes?.some(
       ({ id, type }) => this.document?.content_type_id === id && type === 'FOLDER'
     );
@@ -89,7 +90,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
-        {!isNew && canEdit && (
+        {!isNew && isOwner && (
           <LibraryDocumentActionsMove document={this.document || document} schema={this.schema} as={as} />
         )}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}

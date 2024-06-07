@@ -18,6 +18,7 @@ interface ExplorerToolbarProps {
   store: ExplorerStore;
   service: ExplorerService;
   hideItemsSort?: boolean;
+  hideToolbarActions?: boolean;
   hidePageSize?: boolean;
   onChange: () => void;
   full: boolean;
@@ -27,6 +28,7 @@ export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
   store,
   service,
   hideItemsSort,
+  hideToolbarActions,
   hidePageSize,
   onChange,
   full
@@ -38,7 +40,7 @@ export const ExplorerToolbar: FC<ExplorerToolbarProps> = ({
       <ExplorerSort hideItemsSort={hideItemsSort} store={store} onChange={onChange} />
       <ExplorerPageSize hidePageSize={hidePageSize} store={store} onChange={onChange} />
       <ToolbarDivider />
-      <ExplorerToolbarActions service={service} store={store} full={full} />
+      {!hideToolbarActions && <ExplorerToolbarActions service={service} store={store} full={full} />}
     </div>
   );
 };
