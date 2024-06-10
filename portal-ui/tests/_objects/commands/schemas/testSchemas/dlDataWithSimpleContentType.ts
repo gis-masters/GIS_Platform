@@ -51,6 +51,11 @@ export const dlDataWithSimpleContentType: Schema = {
       propertyType: PropertyType.STRING
     },
     {
+      name: 'shape',
+      title: 'Поле GEOMETRY',
+      propertyType: PropertyType.GEOMETRY
+    },
+    {
       name: 'created_at',
       title: 'Дата создания',
       hidden: true,
