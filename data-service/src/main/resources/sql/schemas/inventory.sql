@@ -35,14 +35,6 @@ SELECT 'oks_krymtel',
 '{}'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'oks_krymtel');
 INSERT INTO data.schemas (name, class_rule)
-SELECT 'zouit',
-'{}'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zouit');
-INSERT INTO data.schemas (name, class_rule)
-SELECT 'zu_new_k',
-'{}'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'zu_new_k');
-INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_2_surveys_schema',
 '{}'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_2_surveys_schema');
@@ -378,16 +370,6 @@ SET class_rule =
             "library": "dl_data_flats",
             "property": "cadastralnum",
             "targetProperty": "cad_oks"
-        },
-        {
-            "type": "feature",
-            "title": "Перейти к ЗУ",
-            "layers": [
-                "scratch_database_32: zu_new_k_1_df89"
-            ],
-            "property": "cad_num_zu",
-            "projectId": 1846,
-            "targetProperty": "cadastralnum"
         }
     ],
     "styleName": "buildings_new",
@@ -1744,172 +1726,6 @@ WHERE name = 'oks_krymtel';
 UPDATE data.schemas 
 SET class_rule =
     '{
-    "styleName": "zouit",
-    "tags": [
-        "system",
-        "Инвентаризация недвижимости"
-    ],
-    "name": "zouit",
-    "title": "Зоны с особыми условиями использования",
-    "readOnly": true,
-    "tableName": "zouit",
-    "originName": "zouit",
-    "properties": [
-        {
-            "name": "name",
-            "title": "Наименование объекта",
-            "minWidth": 0,
-            "required": true,
-            "valueType": "STRING",
-            "asTitle": true
-        },
-        {
-            "name": "shape_star",
-            "title": "Площадь объекта, га",
-            "minWidth": 0,
-            "required": true,
-            "valueType": "DOUBLE",
-            "totalDigits": 38,
-            "fractionDigits": 8
-        },
-        {
-            "name": "shape",
-            "minWidth": 0,
-            "valueType": "GEOMETRY",
-            "allowedValues": [
-                "Polygon"
-            ]
-        },
-        {
-            "name": "ruleid",
-            "title": "Идентификатор стиля",
-            "hidden": true,
-            "minWidth": 0,
-            "required": true,
-            "valueType": "STRING"
-        }
-    ],
-    "description": "ЗОУИТ",
-    "geometryType": "MultiPolygon"
-}'
-WHERE name = 'zouit';
-
-UPDATE data.schemas 
-SET class_rule =
-    '{
-    "tags": [
-        "system",
-        "Инвентаризация недвижимости"
-    ],
-    "name": "zu_new_k",
-    "title": "Земельные участки",
-    "styleName": "zu_new_k",
-    "tableName": "zu_new_k",
-    "originName": "zu_new_k",
-    "properties": [
-        {
-            "name": "n_ter",
-            "title": "Номер территории",
-            "required": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "cad_zu",
-            "title": "Кадастровый номер",
-            "asTitle": true,
-            "required": true,
-            "maxLength": 20,
-            "valueType": "STRING"
-        },
-        {
-            "name": "address",
-            "title": "Адрес",
-            "asTitle": true,
-            "required": true,
-            "maxLength": 300,
-            "valueType": "STRING"
-        },
-        {
-            "name": "area_doc",
-            "title": "Площадь ЕГРН, м.кв.",
-            "valueType": "DOUBLE",
-            "totalDigits": 38,
-            "fractionDigits": 2
-        },
-        {
-            "name": "category",
-            "title": "Категория",
-            "asTitle": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "area_fact_autocalc",
-            "title": "Площадь фактическая, м. кв.",
-            "readOnly": true,
-            "valueType": "DOUBLE",
-            "totalDigits": 38,
-            "fractionDigits": 2,
-            "calculatedValueWellKnownFormula": "st_area"
-        },
-        {
-            "name": "doc_egrn",
-            "title": "Документы привязанные к данном объекту",
-            "maxSize": 50000000,
-            "multiple": true,
-            "valueType": "FILE",
-            "maxDocuments": 25
-        },
-        {
-            "name": "created_by",
-            "title": "Создатель",
-            "hidden": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "created_at",
-            "title": "Дата создания",
-            "hidden": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "last_modified",
-            "title": "Дата модификации",
-            "hidden": true,
-            "valueType": "DATETIME",
-            "description": "Дата последней модификации документа"
-        },
-        {
-            "name": "updated_by",
-            "title": "Кто обновил",
-            "hidden": true,
-            "readOnly": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "ruleid",
-            "title": "Идентификатор стиля",
-            "hidden": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "shape",
-            "title": "Геометрия",
-            "hidden": true,
-            "valueType": "GEOMETRY",
-            "allowedValues": [
-                "Polygon"
-            ]
-        }
-    ],
-    "geometryType": "MultiPolygon"
-}'
-WHERE name = 'zu_new_k';
-
-UPDATE data.schemas 
-SET class_rule =
-    '{
     "tags": [
         "system",
         "Библиотека",
@@ -2696,15 +2512,7 @@ SET class_rule =
             "readOnly": true,
             "valueType": "URL",
             "description": "Объект на карте",
-            "displayMode": "newTab",
-            "valueFormulaParams": {
-                "layers": [
-                    "scratch_database_32: zu_new_k_1_df89"
-                ],
-                "property": "cadastralnum",
-                "projectId": 1846
-            },
-            "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+            "displayMode": "newTab"
         },
         {
             "name": "path",
@@ -3118,17 +2926,7 @@ SET class_rule =
             "readOnly": true,
             "valueType": "URL",
             "description": "Объект на карте",
-            "displayMode": "newTab",
-            "valueFormulaParams": {
-                "layers": [
-                    "scratch_database_32: buildings_new_1_96b6",
-                    "scratch_database_32: zu_new_k_1_df89"
-                ],
-                "property": "dl_data_documents_connections",
-                "projectId": 1846,
-                "includeParents": true
-            },
-            "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+            "displayMode": "newTab"
         },
         {
             "name": "document_feedback",
@@ -5376,8 +5174,7 @@ SET class_rule =
       "type": "feature",
       "title": "Переход к объекту на карте",
       "layers": [
-        "scratch_database_32:buildings_new_1_96b6",
-        "scratch_database_32:zu_new_k_1_df89"
+        "scratch_database_32:buildings_new_1_96b6"
       ],
       "property": "cad_num",
       "projectId": 1846,
@@ -5456,8 +5253,7 @@ SET class_rule =
       "displayMode": "newTab",
       "valueFormulaParams": {
         "layers": [
-          "scratch_database_32:buildings_new_1_96b6",
-          "scratch_database_32:zu_new_k_1_df89"
+          "scratch_database_32:buildings_new_1_96b6"
         ],
         "property": "dl_data_flats_connections",
         "projectId": 1846,
