@@ -30,3 +30,9 @@ popd || exit
 
 printHeader "Docker compose UP"
 docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml --env-file ../.env up -d
+
+./wait.sh
+
+pushd ../assets/migration-scripts/ || exit
+./uploadStylesFolder.sh
+popd || exit
