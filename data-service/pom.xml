@@ -523,7 +523,6 @@
                             <packageName>ru.mycrg.data_service.kpt_import.model.generated</packageName>
                             <encoding>UTF-8</encoding>
                             <clearOutputDir>false</clearOutputDir>
-
                         </configuration>
                     </execution>
 

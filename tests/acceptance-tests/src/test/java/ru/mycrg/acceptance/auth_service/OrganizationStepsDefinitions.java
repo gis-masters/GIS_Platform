@@ -10,7 +10,13 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
+import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
+import ru.mycrg.acceptance.data_service.features.FeaturesStepsDefinitions;
+import ru.mycrg.acceptance.data_service.libraries.LibraryBaseRecords;
+import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition;
+import ru.mycrg.acceptance.gis_service.LayerStepDefinitions;
+import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskType;
@@ -20,6 +26,8 @@ import java.util.*;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
@@ -38,6 +46,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
     private final TaskStepDefinition taskStepDefinition = new TaskStepDefinition();
     private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
+    private final TablesStepsDefinitions tablesStepsDefinitions = new TablesStepsDefinitions();
+    private final LibraryBaseRecords libraryBaseRecords = new LibraryBaseRecords();
+    private final FeaturesStepsDefinitions featuresStepsDefinitions = new FeaturesStepsDefinitions();
+    private final LayerStepDefinitions layerStepDefinitions = new LayerStepDefinitions();
+    private final ProjectStepsDefinitions projectStepsDefinitions = new ProjectStepsDefinitions();
+    private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
     private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
 
     @When("Отправляется запрос на создание организации")
@@ -185,7 +199,11 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         assertEquals(jsonPath.get("status"), status);
 
-        updateUsersAndOrgPool(status);
+        if (status.equalsIgnoreCase("DELETING")) {
+            userPool.remove(userPool.get(-1));
+        } else {
+            orgPool.put(orgId, orgDto);
+        }
     }
 
     @And("Поля совпадают с переданными")
@@ -397,11 +415,46 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, SC_OK);
     }
 
+    @And("Согласно специализации созданы: набор данных, таблица с данными, библиотека документов, проект и слои")
+    public void checkBySpecialization1() {
+        JsonPath datasetsJsonPath = datasetsStepsDefinitions.getAllDatasets().jsonPath();
+        assertEquals("Набор данных по специализации 1", datasetsJsonPath.get("content.title[0]"));
+
+        currentDatasetIdentifier = datasetsJsonPath.get("content.identifier[0]").toString();
+
+        JsonPath tablesJsonPath = tablesStepsDefinitions.getAllEntities().jsonPath();
+        assertEquals("Тестовое название первой таблицы", tablesJsonPath.get("content.title[0]"));
+        assertEquals("EPSG:7829", tablesJsonPath.get("content.crs[0]"));
+        assertEquals("zu_pro", tablesJsonPath.get("content.schema.name[0]"));
+
+        String tableIdentifier = tablesJsonPath.get("content.identifier[0]").toString();
+
+        Response allFeatures = featuresStepsDefinitions.getAllFeatures(tableIdentifier);
+        allFeatures.prettyPrint();
+
+        JsonPath featuresJsonPath = allFeatures.jsonPath();
+        assertEquals("3", featuresJsonPath.get("page.totalElements").toString());
+
+        JsonPath docLibrariesJsonPath = libraryBaseRecords.getAllEntities().jsonPath();
+        List<String> docLibraries = docLibrariesJsonPath.get("content.schema.name");
+        assertTrue(docLibraries.contains("dl_data_kpt"));
+
+        JsonPath projectJsonPath = projectStepsDefinitions.getAllEntities().jsonPath();
+        assertEquals("Проект по специализации 1", projectJsonPath.get("content.name[0]"));
+
+        projectId = Integer.valueOf(projectJsonPath.get("content.id[0]").toString());
+
+        JsonPath layerJsonPath = layerStepDefinitions.getAllEntities().jsonPath();
+        assertEquals("Тестовое название первой таблицы", layerJsonPath.get("title[0]"));
+        assertEquals("EPSG:7829", layerJsonPath.get("nativeCRS[0]"));
+        assertEquals("zu_pro", layerJsonPath.get("styleName[0]"));
+    }
+
     @When("Пользователь делает запрос на все организации")
     public void checkAllOrganizationsByRoot() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/organizations/");
+                        get("/organizations");
     }
 
     @And("Представление организации корректно")
@@ -464,14 +517,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         get("/specializations");
 
         return specializations.jsonPath().get();
-    }
-
-    private void updateUsersAndOrgPool(String status) {
-        if (!status.equalsIgnoreCase("DELETING")) {
-            orgPool.put(orgId, orgDto);
-        } else {
-            userPool.remove(userPool.get(-1));
-        }
     }
 
     private void checkStatusCodeIs(Response response, int code) {
@@ -552,6 +597,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private void getOrganization(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        log().all().
                         get("/organizations/" + id);
     }
 

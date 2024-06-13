@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isError } from 'lodash';
 
-import { Specialization } from '../../../server-types/common-contracts';
+import { SpecializationView } from '../../../server-types/common-contracts';
 import { authService } from '../../services/auth/auth/auth.service';
 import { getSpecializations } from '../../services/auth/specializations/specializations.service';
 import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
@@ -48,7 +48,7 @@ const defaultData: OrgRegistration = {
 @observer
 export class OrgRegistrationForm extends Component {
   @observable private loading = false;
-  @observable private specializations: Specialization[] = [];
+  @observable private specializations: SpecializationView[] = [];
 
   constructor(props: Record<string, never>) {
     super(props);

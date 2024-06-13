@@ -2,10 +2,8 @@ package ru.mycrg.data_service.controller.specialization;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.common_contracts.generated.specialization.TableContentModel;
 import ru.mycrg.data_service.service.cqrs.specialization.requests.GetSpecializationResourcesRequest;
 import ru.mycrg.data_service.service.cqrs.specialization.requests.InitSpecializationRequest;
 import ru.mycrg.mediator.Mediator;
@@ -13,6 +11,7 @@ import ru.mycrg.mediator.Mediator;
 import java.util.Set;
 
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class SpecializationController {
@@ -23,7 +22,7 @@ public class SpecializationController {
         this.mediator = mediator;
     }
 
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     @GetMapping("/specializations/{id}")
     public ResponseEntity<Set<String>> getSpecializationResources(@PathVariable Integer id) {
         Set<String> resources = mediator.execute(
@@ -34,9 +33,10 @@ public class SpecializationController {
 
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     @PostMapping("/specializations/{id}")
-    public ResponseEntity<?> initSpecialization(@PathVariable Integer id) {
+    public ResponseEntity<?> initSpecialization(@PathVariable Integer id,
+                                                @RequestBody TableContentModel tableContentModel) {
         mediator.execute(
-                new InitSpecializationRequest(id));
+                new InitSpecializationRequest(id, tableContentModel));
 
         return ResponseEntity.ok().build();
     }

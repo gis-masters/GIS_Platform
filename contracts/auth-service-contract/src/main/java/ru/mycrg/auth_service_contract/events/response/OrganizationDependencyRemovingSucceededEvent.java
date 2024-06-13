@@ -9,6 +9,6 @@ public class OrganizationDependencyRemovingSucceededEvent extends OrganizationBa
     }
 
     public OrganizationDependencyRemovingSucceededEvent(OrganizationRemovedEvent event) {
-        super(event, event.getOrgId(), event.getToken());
+        super(event, event.getOrgId(), event.getRootToken());
     }
 }

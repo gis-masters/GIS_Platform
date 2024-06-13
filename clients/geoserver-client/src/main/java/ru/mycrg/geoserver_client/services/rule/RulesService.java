@@ -98,7 +98,7 @@ public class RulesService extends GeoServerBaseService {
         }
     }
 
-    public ResponseModel<?> getRestRules() throws HttpClientException {
+    public ResponseModel<HashMap> getRestRules() throws HttpClientException {
         Request getRestRoles = builderWithBearerAuth.url(REST_URL)
                                                     .get().build();
 

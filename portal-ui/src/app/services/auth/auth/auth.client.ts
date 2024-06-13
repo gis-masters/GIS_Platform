@@ -54,7 +54,7 @@ class AuthClient extends Client {
     return http.post(this.getLogoutUrl(), {}, { withCredentials: true });
   }
 
-  async registration(regData: RegData): Promise<void> {
+  async registration(regData: RegData): Promise<number> {
     const payload = {
       name: regData.company,
       phone: regData.contactPhone,
@@ -67,7 +67,7 @@ class AuthClient extends Client {
       }
     };
 
-    return http.post(this.getOrganizationInitUrl(), payload);
+    return http.post<number>(this.getOrganizationInitUrl(), payload);
   }
 
   async restorePassword(email: string, origin: string): Promise<void> {

@@ -5,6 +5,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
@@ -28,6 +29,10 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
         return super.getBaseRequestWithCurrentCookie()
                     .basePath(url);
+    }
+
+    public Response getAllFeatures(String tableIdentifier) {
+        return getFeatures(tableIdentifier);
     }
 
     @When("Таблица наполнена данными {string}")
@@ -105,5 +110,16 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         get("/" + tableName + "/records/" + joinedIds);
+    }
+
+    private Response getFeatures(String tableName) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON)
+                .when().
+                        log().all().
+                        get("/" + tableName + "/records");
+
+        return response;
     }
 }

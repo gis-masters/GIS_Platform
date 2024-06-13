@@ -125,6 +125,9 @@ services:
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_AUDIT_SERVICE_URL: http://audit-service:8086
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_CLIENT_ID: admin
+      CRG_OPTIONS_CLIENT_SECRET: geoserver
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
     ports:
       - "8338:8338"

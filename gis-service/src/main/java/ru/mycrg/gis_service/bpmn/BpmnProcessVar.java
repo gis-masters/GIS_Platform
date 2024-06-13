@@ -2,6 +2,7 @@ package ru.mycrg.gis_service.bpmn;
 
 public enum BpmnProcessVar {
 
+    PROCESS_ID_VAR_NAME("PROCESS_ID_VAR_NAME"),
     CREATE_DTO_VAR_NAME("createOrgDto"),
     ORG_ID_VAR_NAME("orgId"),
     WORKSPACES_VAR_NAME("workspaces"),

@@ -5,7 +5,7 @@ import io.cucumber.java.en.When;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.common_contracts.generated.Specialization;
+import ru.mycrg.common_contracts.generated.specialization.SpecializationView;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class SpecializationsStepsDefinitions extends BaseStepsDefinitions {
 
     @And("специализации получены в ожидаемом формате")
     public void checkSpecializationFormat() {
-        List<Specialization> specializations = response.then()
+        List<SpecializationView> specializations = response.then()
                 .extract()
                 .as(new TypeRef<>() {
                 });

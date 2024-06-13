@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>common-contracts</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
 
     <name>common-contracts Maven Webapp</name>
     <description>Common contract</description>
@@ -17,6 +17,19 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+    </dependencies>
 
     <distributionManagement>
         <repository>
@@ -62,6 +75,24 @@
                     <classPatterns>ru.mycrg.common_contracts.generated.**</classPatterns>
                     <outputKind>module</outputKind>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <sourceDirectory>${basedir}/../../auth-service/src/main/resources/specializations</sourceDirectory>
+                    <targetPackage>ru.mycrg.common_contracts.specialization</targetPackage>
+                    <sourceType>json</sourceType>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -12,8 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.mycrg.auth_service.dto.OrganizationFullProjection;
 import ru.mycrg.auth_service.entity.Organization;
+import ru.mycrg.auth_service.entity.User;
+import ru.mycrg.auth_service.service.AuthService;
 import ru.mycrg.auth_service.service.organization.OrganizationService;
+import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
+import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
+import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -22,6 +27,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
@@ -30,10 +36,19 @@ public class OrganizationController {
 
     private final Logger log = LoggerFactory.getLogger(OrganizationController.class);
 
+    private final AESCryptor aesCryptor;
+    private final AuthService authService;
+    private final IMessageBusProducer messageBus;
     private final OrganizationService organizationService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService) {
+    public OrganizationController(AESCryptor aesCryptor,
+                                  AuthService authService,
+                                  IMessageBusProducer messageBus,
+                                  OrganizationService organizationService) {
+        this.aesCryptor = aesCryptor;
+        this.authService = authService;
+        this.messageBus = messageBus;
         this.organizationService = organizationService;
     }
 
@@ -51,6 +66,22 @@ public class OrganizationController {
 
         Organization newOrganization = organizationService.create(createDto);
 
+        User owner = newOrganization.getUsers().stream().findFirst().orElseThrow();
+        String rootAccessToken = authService.getRootAccessToken();
+        String ownerAccessToken = authService.authorize(owner.getEmail(),
+                                                        createDto.getOwner().getPassword()).getAccess_token();
+
+        // TODO: Мы не можем передавать всю специализацию - камунда не может хранить более 4000 символов и падает
+        messageBus.produce(
+                new OrganizationInitializedEvent(newOrganization.getId(),
+                                                 rootAccessToken,
+                                                 ownerAccessToken,
+                                                 aesCryptor.encrypt(owner.getPassword()),
+                                                 owner.getEmail(),
+                                                 owner.getEmail(),
+                                                 prepareGeoserverLogin(owner.getEmail(), owner.getId()),
+                                                 createDto.getSpecializationId()));
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/{id}")
@@ -60,7 +91,9 @@ public class OrganizationController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(location);
 
-        return new ResponseEntity<>(headers, ACCEPTED);
+        return ResponseEntity.accepted()
+                             .headers(headers)
+                             .body(newOrganization.getId());
     }
 
     @GetMapping("/{id}")

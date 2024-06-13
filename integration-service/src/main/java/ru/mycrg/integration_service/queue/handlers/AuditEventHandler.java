@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.queue.handlers;
 
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -18,13 +17,12 @@ import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 
 @Service
 public class AuditEventHandler implements IEventHandler {
-
-    public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
     private final Logger log = LoggerFactory.getLogger(AuditEventHandler.class);
 
@@ -46,8 +44,8 @@ public class AuditEventHandler implements IEventHandler {
             CrgAuditEvent event = (CrgAuditEvent) mqEvent;
 
             String entityType = isNull(event.getEntityType())
-                                ? null
-                                : event.getEntityType();
+                    ? null
+                    : event.getEntityType();
 
             AuditEventDto auditEventDto = new AuditEventDto(LocalDateTime.parse(event.getDateTime()),
                                                             event.getActionType(),

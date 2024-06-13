@@ -73,7 +73,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на выборку таблиц из 'набора данных'")
-    public void getAllTables() {
+    public void getAllTablesAsCurrentUser() {
         authorizationBase.loginAsCurrentUser();
 
         response = getBaseRequestWithCurrentCookie()

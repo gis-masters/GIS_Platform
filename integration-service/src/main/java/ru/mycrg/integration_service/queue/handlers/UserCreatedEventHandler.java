@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.queue.handlers;
 
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -19,6 +18,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import java.net.URL;
 import java.util.Objects;
 
+import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 
@@ -53,13 +53,10 @@ public class UserCreatedEventHandler implements IEventHandler {
         try {
             log.debug("userCreatedEvent: {}", event);
 
-            RequestBody body = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"),
-                    objectMapper.writeValueAsString(userDto));
             Request req = new Request.Builder()
                     .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/users"))
                     .addHeader("Authorization", "Bearer " + token)
-                    .post(body)
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, objectMapper.writeValueAsString(userDto)))
                     .build();
 
             Response response = httpClient.newCall(req).execute();
@@ -74,6 +71,8 @@ public class UserCreatedEventHandler implements IEventHandler {
 
                 messageBus.produce(new UserProvisioningFailedEvent(event));
             }
+
+            response.close();
         } catch (Exception e) {
             log.error("Что-то пошло не так. Не удалось создать пользователя на геосервере: '{}' Token: '{}' ",
                       e.getMessage(), token);

@@ -330,10 +330,12 @@ public class BaseStepsDefinitions {
         getEntity(id);
     }
 
-    public void getAllEntities() {
+    public Response getAllEntities() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get();
+
+        return response;
     }
 
     public void get1000Entities() {

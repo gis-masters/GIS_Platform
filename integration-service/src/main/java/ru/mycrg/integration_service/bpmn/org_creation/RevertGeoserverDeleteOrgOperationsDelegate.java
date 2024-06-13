@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.org_creation;
 
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -16,6 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
@@ -40,7 +40,7 @@ public class RevertGeoserverDeleteOrgOperationsDelegate implements JavaDelegate 
                 .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
         Long orgId = event.getOrgId();
-        String accessToken = event.getToken();
+        String accessToken = event.getRootToken();
         List<String> geoserverLogins = new ArrayList<>();
         String login = event.getOwnerEmail() + "_" + orgId;
 
@@ -48,9 +48,8 @@ public class RevertGeoserverDeleteOrgOperationsDelegate implements JavaDelegate 
 
         geoserverLogins.add(login);
 
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                objectMapper.writeValueAsString(geoserverLogins));
+        RequestBody body = RequestBody.create(JSON_MEDIA_TYPE,
+                                              objectMapper.writeValueAsString(geoserverLogins));
 
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations/" + orgId))

@@ -1,19 +1,20 @@
-package ru.mycrg.common_contracts.generated;
+package ru.mycrg.common_contracts.generated.specialization;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class Specialization {
+public class SpecializationView {
 
     private int id;
     private String title;
     private String description;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
 
-    public Specialization() {
+    public SpecializationView() {
         // Required
     }
 
-    public Specialization(int id, String title, String description, List<String> tags) {
+    public SpecializationView(int id, String title, String description, List<String> tags) {
         this.id = id;
         this.title = title;
         this.description = description;

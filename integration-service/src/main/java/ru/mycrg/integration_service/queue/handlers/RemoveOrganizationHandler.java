@@ -49,7 +49,7 @@ public class RemoveOrganizationHandler implements IEventHandler {
                     .putValue(EVENT_VAR_NAME, objectMapper.writeValueAsString(mqEvent))
                     .putValue(ORG_ID_VAR_NAME, mqEvent.getOrgId())
                     .putValue(USERS_VAR_NAME, mqEvent.getGeoserverLogins())
-                    .putValue(TOKEN_VAR_NAME, mqEvent.getToken());
+                    .putValue(TOKEN_VAR_NAME, mqEvent.getRootToken());
 
             bpmnRuntimeService.startProcessInstanceByKey(
                     REMOVE_ORGANIZATION_PROCESS_ID.getValue(),

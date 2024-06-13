@@ -14,6 +14,7 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.ITERATION_COUNTER_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.CREATE_ORGANIZATION_PROCESS_ID;
 
 /**
@@ -46,6 +47,7 @@ public class CreateOrganizationHandler implements IEventHandler {
 
             VariableMap variables = Variables
                     .createVariables()
+                    .putValue(ITERATION_COUNTER_VAR_NAME, 3)
                     .putValue(EVENT_VAR_NAME, objectMapper.writeValueAsString(mqEvent));
 
             bpmnRuntimeService.startProcessInstanceByKey(

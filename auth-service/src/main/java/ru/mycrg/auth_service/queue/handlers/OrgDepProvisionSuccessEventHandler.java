@@ -8,16 +8,16 @@ import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.AuthServiceException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.auth_service_contract.events.response.OrganizationDependencyProvisionSucceededEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
+import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import javax.persistence.EntityNotFoundException;
 
+import static java.time.LocalDateTime.now;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
 
 @Service
-@Transactional
 public class OrgDepProvisionSuccessEventHandler implements IEventHandler {
 
     private final Logger log = LoggerFactory.getLogger(OrgDepProvisionSuccessEventHandler.class);
@@ -37,26 +37,31 @@ public class OrgDepProvisionSuccessEventHandler implements IEventHandler {
     }
 
     @Override
+    @Transactional
     public void handle(IMessageBusEvent mqEvent) {
         try {
-            final Long orgId = ((OrganizationDependencyProvisionSucceededEvent) mqEvent).getOrgId();
+            Long orgId = ((OrganizationDependencyProvisionSucceededEvent) mqEvent).getOrgId();
 
             organizationRepository
                     .findById(orgId)
                     .ifPresentOrElse(organization -> {
                         organization.setStatus(PROVISIONED.toString());
+                        organization.setLastModified(now());
                         organizationRepository.save(organization);
 
-                        User orgAdmin = organization.getUsers().iterator().next();
-                        orgAdmin.setEnabled(true);
-                        userRepository.save(orgAdmin);
+                        User owner = organization.getUsers().iterator().next();
+                        owner.setEnabled(true);
+                        owner.setLastModified(now());
+                        userRepository.save(owner);
 
-                        log.info("Organization with user successfully created");
+                        log.info("Организация: '{}' с владельцем: '{}' успешно создана", orgId,
+                                 owner.getName());
                     }, () -> {
-                        throw new EntityNotFoundException("Not found org by id: " + orgId);
+                        throw new EntityNotFoundException("Не найдена организация по id: " + orgId);
                     });
         } catch (Exception e) {
-            throw new AuthServiceException("Failed handle OrganizationDependencyProvisionSucceededEvent", e.getCause());
+            throw new AuthServiceException("Не удалось обработать OrganizationDependencyProvisionSucceededEvent",
+                                           e.getCause());
         }
     }
 }

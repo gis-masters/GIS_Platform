@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.org_deletion;
 
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -14,6 +13,7 @@ import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import java.net.URL;
 import java.util.List;
 
+import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -37,14 +37,10 @@ public class GeoserverDeleteOrgOperationsDelegate implements JavaDelegate {
 
         String usersJson = objectMapper.writeValueAsString(geoserverLogins);
 
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                usersJson);
-
         Request request = new Request.Builder()
                 .url(new URL(baseHttpService.getGisServiceUrl(), "/geoserver/organizations/" + orgId))
                 .addHeader("Authorization", "Bearer " + accessToken)
-                .delete(body)
+                .delete(RequestBody.create(JSON_MEDIA_TYPE, usersJson))
                 .build();
 
         Response response = httpClient.newCall(request).execute();

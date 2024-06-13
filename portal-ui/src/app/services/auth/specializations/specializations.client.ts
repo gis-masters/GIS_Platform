@@ -1,6 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
-import { Specialization } from '../../../../server-types/common-contracts';
+import { SpecializationView } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 
@@ -16,8 +16,8 @@ class SpecializationsClient extends Client {
     return this.getBaseUrl() + '/specializations';
   }
 
-  async getSpecializations(): Promise<Specialization[]> {
-    return http.get<Specialization[]>(this.getSpecializationsUrl());
+  async getSpecializations(): Promise<SpecializationView[]> {
+    return http.get<SpecializationView[]>(this.getSpecializationsUrl());
   }
 }
 

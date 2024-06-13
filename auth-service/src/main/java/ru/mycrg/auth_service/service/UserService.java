@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -42,7 +44,6 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 
 @Service
-@Transactional
 public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -126,10 +127,16 @@ public class UserService {
     /**
      * Use only this authentication context.
      */
+    @Transactional
     public UserProjection create(UserCreateDto dto, Long orgId) {
         return create(dto, orgId, authenticationFacade.getAccessToken(), authenticationFacade.getLogin(), false);
     }
 
+    // TODO: вынести retryable код в отдельный, более мелкий метод, например, "messageBus.produce" точно должен быть за
+    //  "бортом". В тестах есть шаг: "Существует 30 пользователей", где в многопотоке создаются N пользователей, на нём
+    //  можно оттестировать поведение.
+    @Retryable
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public UserProjection create(UserCreateDto dto, Long orgId, String accessToken, String creator, boolean enabled) {
         log.debug("'{}' create user: '{}' in organization: '{}'", creator, dto.getEmail(), orgId);
 
@@ -240,6 +247,7 @@ public class UserService {
         return projectionFactory.createProjection(UserProjection.class, findOrThrow(id));
     }
 
+    @Transactional
     public void delete(Long id) {
         UserProjection userProjection = findById(id);
         log.debug("Try delete user: {}", userProjection.getEmail());
@@ -259,6 +267,7 @@ public class UserService {
         });
     }
 
+    @Transactional
     public void invite(String email, Long orgId) {
         log.debug("Try to invite user: {} in organization: {}", email, orgId);
 
@@ -288,6 +297,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void addAuthority(Long id, String authority) {
         UserProjection userProjection = findById(id);
 
@@ -296,6 +306,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void removeAuthority(Long id, String authority) {
         UserProjection userProjection = findById(id);
 
@@ -306,6 +317,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void update(Long userId, UserUpdateDto dto) {
         User userForUpdate = findOrThrow(userId);
 
@@ -382,10 +394,12 @@ public class UserService {
     /**
      * Use only this authentication context.
      */
+    @Transactional
     public void upVersion(Long userId) {
         upVersion(findOrThrow(userId));
     }
 
+    @Transactional
     public void upVersion(User user) {
         Short userVersion = user.getVersion();
         if (nonNull(userVersion) && userVersion < Short.MAX_VALUE) {
@@ -396,6 +410,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void userUpdatedByAndLastModifiedUpdate(Long userId, String updatedBy) {
         User user = findOrThrow(userId);
 

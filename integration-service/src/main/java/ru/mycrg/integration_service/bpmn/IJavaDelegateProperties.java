@@ -16,6 +16,7 @@ public interface IJavaDelegateProperties {
     String IS_CREATED_VAR_NAME = "isCreated";
 
     String ITERATION_COUNTER_VAR_NAME = "counter";
+    String SPECIALIZATION_LAYERS_FOR_PUBLICATION = "SPECIALIZATION_LAYERS_FOR_PUBLICATION";
 
     String CHECK_STATUS_VAR_NAME = "checkStatus";
 

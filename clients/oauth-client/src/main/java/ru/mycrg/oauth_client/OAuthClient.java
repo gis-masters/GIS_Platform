@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
+import ru.mycrg.common_contracts.specialization.Specialization;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.config.RetryConfig;
@@ -140,6 +141,23 @@ public class OAuthClient {
         }
     }
 
+    public Specialization getSpecialization(Integer specId) throws HttpClientException {
+        try {
+            Request request = new Request.Builder()
+                    .url(new URL(baseUrl, "/specializations/" + specId))
+                    .get()
+                    .build();
+
+            ResponseModel<Specialization> response = httpClient.handleRequest(request, Specialization.class);
+
+            return response.getBody();
+        } catch (HttpClientException | IOException e) {
+            String msg = String.format("Ошибка получения специализации: %d => %s", specId, e.getMessage());
+
+            throw new HttpClientException(msg);
+        }
+    }
+
     public static class OAuthClientBuilder {
 
         private URL url;
@@ -147,6 +165,7 @@ public class OAuthClient {
         private String clientSecret;
 
         OAuthClientBuilder() {
+            // Required
         }
 
         public OAuthClientBuilder url(URL url) {

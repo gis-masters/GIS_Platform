@@ -15,7 +15,7 @@ import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
-import ru.mycrg.common_contracts.generated.Specialization;
+import ru.mycrg.common_contracts.generated.specialization.SpecializationView;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.*;
@@ -147,7 +147,7 @@ public class OrganizationSettingService {
     }
 
     synchronized
-    public void initOrgSetting(Organization organization, @Nullable Specialization specialization) {
+    public void initOrgSetting(Organization organization, @Nullable SpecializationView specialization) {
         Map<String, Object> enabledKnownSetting = orgSettingsSchemaHolder.allInclusive();
 
         fillSettingsWithTagsFromSpecialization(specialization, enabledKnownSetting);
@@ -184,7 +184,7 @@ public class OrganizationSettingService {
                            orgSettingsRepository.readOrganizationSettings(authenticationFacade.getOrganizationId()));
     }
 
-    private static void fillSettingsWithTagsFromSpecialization(@Nullable Specialization specialization,
+    private static void fillSettingsWithTagsFromSpecialization(@Nullable SpecializationView specialization,
                                                                Map<String, Object> settings) {
         String tagsName = "tags";
         if (nonNull(specialization) && !specialization.getTags().isEmpty() && settings.containsKey(tagsName)) {

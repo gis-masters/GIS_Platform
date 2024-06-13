@@ -50,6 +50,9 @@ crg-options:
   gis_service_url: http://127.0.0.1:8082
   data_service_url: http://127.0.0.1:8084
   audit_service_url: http://127.0.0.1:8086
+  auth_service_url: http://127.0.0.1:9000
+  client_id: admin
+  client_secret: geoserver
   geoserver-host: 127.0.0.1:8080
   resources_query_base_path: "resources"
   resource_analyzers_base_path: "resource-analyzers"

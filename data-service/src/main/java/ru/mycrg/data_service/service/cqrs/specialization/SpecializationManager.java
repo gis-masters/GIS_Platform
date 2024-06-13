@@ -21,8 +21,16 @@ public class SpecializationManager {
 
     private final Path specializationsRootPath;
 
-    public SpecializationManager(Environment environment) {
+    public SpecializationManager(Environment environment) throws IOException {
         this.specializationsRootPath = Path.of(environment.getRequiredProperty("crg-options.specializationsPath"));
+
+        Path pathToVersion = Path.of(specializationsRootPath.toString(), "version");
+        if (Files.notExists(pathToVersion)) {
+            throw new IllegalStateException(
+                    "Специализации не развернуты корректно. Проверьте каталог: " + specializationsRootPath);
+        }
+
+        log.info("Текущая версия специализаций: {}", Files.readString(pathToVersion));
     }
 
     @NotNull

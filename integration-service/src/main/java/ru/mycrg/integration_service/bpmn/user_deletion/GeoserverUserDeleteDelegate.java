@@ -1,6 +1,5 @@
 package ru.mycrg.integration_service.bpmn.user_deletion;
 
-import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -15,6 +14,7 @@ import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import java.net.URL;
 import java.util.Objects;
 
+import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -37,7 +37,7 @@ public class GeoserverUserDeleteDelegate implements JavaDelegate {
         final String login = getVariable(execution, USERS_VAR_NAME, getClass().getName()).toString();
         final String accessToken = getVariable(execution, TOKEN_VAR_NAME, getClass().getName()).toString();
         final RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
+                JSON_MEDIA_TYPE,
                 objectMapper.writeValueAsString(new UserGeoserverDto(login, geoserverLogin)));
 
         Request req = new Request.Builder()
@@ -53,5 +53,7 @@ public class GeoserverUserDeleteDelegate implements JavaDelegate {
             String responseBody = Objects.requireNonNull(response.body()).string();
             log.error("Не удалось удалить пользователя на геосервере: {} ", responseBody);
         }
+
+        response.close();
     }
 }

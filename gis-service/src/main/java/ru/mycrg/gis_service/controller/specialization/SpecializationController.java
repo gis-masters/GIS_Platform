@@ -8,7 +8,8 @@ import ru.mycrg.gis_service.service.specialization.SpecializationService;
 import java.util.Map;
 import java.util.Set;
 
-import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 
 @RestController
 public class SpecializationController {
@@ -19,7 +20,7 @@ public class SpecializationController {
         this.specializationService = specializationService;
     }
 
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
     @GetMapping("/specializations/{id}")
     public ResponseEntity<Set<String>> getSpecializationResources(@PathVariable Integer id) {
         Set<String> resources = specializationService.getResources(id);
@@ -27,7 +28,7 @@ public class SpecializationController {
         return ResponseEntity.ok(resources);
     }
 
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     @PostMapping("/specializations/{id}")
     public ResponseEntity<?> initSpecialization(@PathVariable Integer id,
                                                 @RequestBody(required = false) Map<String, String> params) {

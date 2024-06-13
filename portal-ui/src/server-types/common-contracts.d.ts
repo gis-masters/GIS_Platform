@@ -5,13 +5,6 @@ export interface SpatialReferenceSystem {
   proj4Text: string;
 }
 
-export interface Specialization {
-  id: number;
-  title: string;
-  description: string;
-  tags: string[];
-}
-
 export interface FtsRequestDto {
   text: string;
   ecqlFilter: string;
@@ -38,6 +31,13 @@ export interface Page {
 export interface PageableResources<T> {
   content: T[];
   page: Page;
+}
+
+export interface SpecializationView {
+  id: number;
+  title: string;
+  description: string;
+  tags: string[];
 }
 
 export type FtsType = 'DOCUMENT' | 'FEATURE';

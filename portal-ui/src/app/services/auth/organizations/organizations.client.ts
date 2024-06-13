@@ -3,6 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { OrgSettings } from '../../../stores/OrganizationSettings.store';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
+import { Organization } from './organizations.models';
 
 @boundClass
 class OrganizationsClient extends Client {
@@ -30,6 +31,10 @@ class OrganizationsClient extends Client {
 
   async getOrganizationSettings(): Promise<OrgSettings> {
     return http.get<OrgSettings>(this.getOrganizationsSettingsUrl());
+  }
+
+  async getOrganization(orgId: number): Promise<Organization> {
+    return http.get<Organization>(this.getOrganizationUrl(orgId));
   }
 
   async setOrganizationSettings(settings: OrgSettings): Promise<void> {

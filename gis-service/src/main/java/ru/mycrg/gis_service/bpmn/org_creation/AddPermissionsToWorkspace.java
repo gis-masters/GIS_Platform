@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.services.rule.RulesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
 
+import java.util.UUID;
+
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.geoserver_client.services.rule.GeoServerPermissions.*;
 import static ru.mycrg.geoserver_client.services.rule.RulesUtil.buildRule;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
-import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.CREATE_DTO_VAR_NAME;
-import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.TOKEN_VAR_NAME;
+import static ru.mycrg.gis_service.bpmn.BpmnProcessVar.*;
 
 @Service("addPermissionsToWorkspace")
 public class AddPermissionsToWorkspace implements JavaDelegate {
@@ -39,6 +40,9 @@ public class AddPermissionsToWorkspace implements JavaDelegate {
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, ADMIN), roleName);
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, WRITE), roleName);
             rulesService.addLayersRule(buildRule(scratchWorkspaceName, READ), roleName);
+
+            execution.setVariable(PROCESS_ID_VAR_NAME.getValue(), orgId + "_" + roleName);
+            execution.setVariable(ITERATION_COUNTER_VAR_NAME.getValue(), 1);
         } catch (Exception e) {
             log.error("Failed to execute addPermissionsToWorkspace step. Reason: {}", e.getMessage());
         }

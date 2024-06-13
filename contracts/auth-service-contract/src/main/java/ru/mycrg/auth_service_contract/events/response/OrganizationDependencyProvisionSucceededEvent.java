@@ -9,6 +9,6 @@ public class OrganizationDependencyProvisionSucceededEvent extends OrganizationB
     }
 
     public OrganizationDependencyProvisionSucceededEvent(OrganizationInitializedEvent event) {
-        super(event, event.getOrgId(), event.getToken());
+        super(event, event.getOrgId(), event.getRootToken());
     }
 }

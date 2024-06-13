@@ -9,6 +9,6 @@ public class OrganizationDependencyProvisionFailedEvent extends OrganizationBase
     }
 
     public OrganizationDependencyProvisionFailedEvent(OrganizationInitializedEvent event) {
-        super(event, event.getOrgId(), event.getToken());
+        super(event, event.getOrgId(), event.getRootToken());
     }
 }

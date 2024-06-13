@@ -27,11 +27,9 @@ public class AddPermissionsToRest implements JavaDelegate {
             Long orgId = dto.getOrgId();
             String roleName = getDefaultRoleName(orgId);
 
-            log.debug("Try add permissions to rest: {}", orgId);
+            log.debug("Try ADD role: '{}' to REST", roleName);
 
-            RulesService rulesService = new RulesService(accessToken);
-
-            rulesService.addRestRule(roleName);
+            new RulesService(accessToken).addRestRule(roleName);
         } catch (Exception e) {
             log.error("Failed to execute addPermissionsToRest step. Reason: {}", e.getMessage());
         }

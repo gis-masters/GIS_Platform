@@ -28,7 +28,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .authorizeRequests()
                 .antMatchers(POST, "/organizations/init", "/request-password-reset", "/password-reset").permitAll()
                 .antMatchers(GET, "/actuator/health", "/password-reset", "/esia/**", "/users/organizations",
-                             "/specializations").permitAll()
+                             "/specializations/**").permitAll()
                 .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated();
     }

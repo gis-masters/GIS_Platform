@@ -17,14 +17,11 @@ import ru.mycrg.auth_service.exceptions.ForbiddenException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
-import ru.mycrg.auth_service.service.AuthService;
-import ru.mycrg.auth_service.service.SpecializationService;
-import ru.mycrg.auth_service_contract.AESCryptor;
+import ru.mycrg.auth_service.service.specialization.SpecializationService;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
-import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
-import ru.mycrg.common_contracts.generated.Specialization;
+import ru.mycrg.common_contracts.specialization.Specialization;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
@@ -34,6 +31,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
+import static ru.mycrg.auth_service.service.specialization.SpecializationMapper.mapToCompact;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 
@@ -41,8 +39,6 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 @Transactional
 public class OrganizationService {
 
-    private final AESCryptor aesCryptor;
-    private final AuthService authService;
     private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
     private final IMessageBusProducer messageBus;
@@ -58,8 +54,6 @@ public class OrganizationService {
                                IMessageBusProducer messageBus,
                                ProjectionFactory projectionFactory,
                                IAuthenticationFacade authenticationFacade,
-                               AESCryptor aesCryptor,
-                               AuthService authService,
                                BCryptPasswordEncoder encoder,
                                OrganizationSettingService settingService,
                                SpecializationService specializationService) {
@@ -68,8 +62,6 @@ public class OrganizationService {
         this.projectionFactory = projectionFactory;
         this.userRepository = userRepository;
         this.messageBus = messageBus;
-        this.aesCryptor = aesCryptor;
-        this.authService = authService;
         this.encoder = encoder;
         this.settingService = settingService;
         this.specializationService = specializationService;
@@ -100,12 +92,7 @@ public class OrganizationService {
 
         Specialization specialization = null;
         if (createDto.getSpecializationId() != null) {
-            specialization = specializationService
-                    .getAllSpecializations().stream()
-                    .filter(item -> createDto.getSpecializationId().equals(item.getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new BadRequestException(
-                            "Не найдена специализация с id " + createDto.getSpecializationId()));
+            specialization = specializationService.getSpecialization(createDto.getSpecializationId());
         }
 
         User newUser = userRepository.save(mapDtoToUser(owner));
@@ -116,21 +103,13 @@ public class OrganizationService {
 
         Organization savedOrg = organizationRepository.save(newOrganization);
 
-        settingService.initOrgSetting(savedOrg, specialization);
+        settingService.initOrgSetting(savedOrg, mapToCompact(specialization));
 
         // We use email as login
         newUser.setLogin(owner.getEmail());
         newUser.addAuthority(ORG_ADMIN);
         newUser.setGeoserverLogin(prepareGeoserverLogin(newUser.getEmail(), newUser.getId()));
-
-        messageBus.produce(
-                new OrganizationInitializedEvent(newOrganization.getId(),
-                                                 authService.getRootAccessToken(),
-                                                 aesCryptor.encrypt(owner.getPassword()),
-                                                 owner.getEmail(),
-                                                 newUser.getLogin(),
-                                                 newUser.getGeoserverLogin(),
-                                                 specialization));
+        newUser.setEnabled(true);
 
         return newOrganization;
     }

@@ -16,7 +16,6 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.IS_DELETED_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service
@@ -32,29 +31,31 @@ public class RevertDeleteDbDelegate implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-        Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
-        OrganizationInitializedEvent event = objectMapper
-                .readValue((String) jsonString, OrganizationInitializedEvent.class);
+        try {
+            Object jsonString = getVariable(execution, EVENT_VAR_NAME, getClass().getName());
+            OrganizationInitializedEvent event = objectMapper
+                    .readValue((String) jsonString, OrganizationInitializedEvent.class);
 
-        Long orgId = event.getOrgId();
-        String accessToken = event.getToken();
-        String dbName = getDefaultDatabaseName(orgId.toString());
+            Long orgId = event.getOrgId();
+            String accessToken = event.getRootToken();
+            String dbName = getDefaultDatabaseName(orgId.toString());
 
-        Request request = new Request.Builder()
-                .url(new URL(baseHttpService.getDataServiceUrl(), "/databases/" + dbName))
-                .addHeader("Authorization", "Bearer " + accessToken)
-                .delete()
-                .build();
+            Request request = new Request.Builder()
+                    .url(new URL(baseHttpService.getDataServiceUrl(), "/databases/" + dbName))
+                    .addHeader("Authorization", "Bearer " + accessToken)
+                    .delete()
+                    .build();
 
-        Response response = httpClient.newCall(request).execute();
-        if (response.isSuccessful()) {
-            log.info("БД: {} успешно удалена", dbName);
-            execution.setVariable(IS_DELETED_VAR_NAME, true);
-        } else {
-            log.warn("Удаление БД проекта: {}, потерпело неудачу", dbName);
-            execution.setVariable(IS_DELETED_VAR_NAME, false);
+            Response response = httpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                log.info("БД: {} успешно удалена", dbName);
+            } else {
+                log.warn("Удаление БД проекта: {}, потерпело неудачу", dbName);
+            }
+
+            response.close();
+        } catch (Exception e) {
+            log.error("Не удалось выполнить компенсационное действие - удаление БД => {}", e.getMessage(), e);
         }
-
-        response.close();
     }
 }

@@ -11,7 +11,7 @@ public class OrganizationRemovedEvent extends OrganizationBaseRequestEvent {
     }
 
     public OrganizationRemovedEvent(Long orgId, String token, List<String> geoserverLogins) {
-        super(orgId, token);
+        super(orgId, token, null);
 
         this.geoserverLogins = geoserverLogins;
     }

@@ -41,10 +41,10 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Владелец организации делает запрос на выборку всех наборов данных")
-    public void getAllDatasets() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get();
+    public Response getAllDatasets() {
+        response = super.getAllEntities();
+
+        return response;
     }
 
     @When("Проверяем наличие данных в наборе данных")

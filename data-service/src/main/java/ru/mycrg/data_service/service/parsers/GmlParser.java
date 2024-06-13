@@ -104,19 +104,16 @@ public class GmlParser {
 
             if (nonNull(feature.getDefaultGeometry())) {
                 Geometry defaultGeometry = (Geometry) feature.getDefaultGeometry();
-                if (defaultGeometry.getUserData() != null) {
-                    AbstractCRS userData = (AbstractCRS) defaultGeometry.getUserData();
-                    if (nonNull(userData)) {
-                        Optional<ReferenceIdentifier> oEpsgIdentifier = userData.getIdentifiers().stream().findFirst();
-                        if (oEpsgIdentifier.isPresent()) {
-                            simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
-                        }
-                    } else {
-                        log.debug("Фича: '{}.{}' не содержит UserData в формате AbstractCRS",
-                                  schemaName, feature.getID());
+                Object userData = defaultGeometry.getUserData();
+                if (userData instanceof AbstractCRS) {
+                    AbstractCRS abstractCrs = (AbstractCRS) userData;
+                    Optional<ReferenceIdentifier> oEpsgIdentifier = abstractCrs.getIdentifiers().stream().findFirst();
+                    if (oEpsgIdentifier.isPresent()) {
+                        simpleFeatureData.setEpsgCode(oEpsgIdentifier.get().toString());
                     }
                 } else {
-                    log.debug("Фича: '{}.{}' не содержит UserData", schemaName, feature.getID());
+                    log.trace("Геометрия объекта: '{}.{}' не типа AbstractCRS: не удаётся получить систему координат",
+                              schemaName, feature.getID());
                 }
             } else {
                 log.debug("Фича: '{}.{}' не содержит DefaultGeometry", schemaName, feature.getID());
@@ -339,7 +336,7 @@ public class GmlParser {
         ValueType vType;
         if (CHOICE.equals(schemaProperty.getValueTypeAsEnum())) {
             if (schemaProperty.getForeignKeyType() == null) {
-                log.warn("Не задан параметр: foreignKeyType для свойства типа CHOICE: '{}'. " +
+                log.trace("Не задан параметр: foreignKeyType для свойства типа CHOICE: '{}'. " +
                                  "По дефолту будет использован STRING", schemaProperty.getName());
 
                 vType = schemaProperty.getValueTypeAsEnum();

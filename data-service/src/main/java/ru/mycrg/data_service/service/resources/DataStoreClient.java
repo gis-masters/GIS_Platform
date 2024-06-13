@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.resources;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -18,7 +17,6 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_CONTENT_TYPE;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_MEDIA_TYPE;
 
 @Service
@@ -42,10 +40,11 @@ public class DataStoreClient {
 
     public ResponseModel<Object> create(String dataStoreName) {
         try {
-            log.debug("Try create dataStore {} via gis-service on geoserver", dataStoreName);
+            String accessToken = authenticationFacade.getAccessToken();
+            log.debug("Try create dataStore: '{}' via gis-service on geoserver as: '{}'", dataStoreName, accessToken);
 
             Request request = new Request.Builder()
-                    .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
+                    .addHeader("Authorization", "Bearer " + accessToken)
                     .url(new URL(gisServiceUrl, "/geoserver/datastores/" + dataStoreName))
                     .post(RequestBody.create(DEFAULT_MEDIA_TYPE, ""))
                     .build();

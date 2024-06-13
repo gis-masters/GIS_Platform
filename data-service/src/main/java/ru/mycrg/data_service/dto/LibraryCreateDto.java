@@ -7,15 +7,15 @@ public class LibraryCreateDto {
 
     @Size(max = 1024)
     private String details;
+
     @NotBlank
     @Size(max = 50)
     private String schemaId;
-
     private boolean versioned = false;
-
     private boolean readyForFts = false;
 
     public LibraryCreateDto() {
+        // Required
     }
 
     public String getDetails() {
