@@ -29,4 +29,8 @@ public class CoreReadDao implements ICoreReadDao {
 
         return Optional.ofNullable(queryResult);
     }
+
+    public void execute(String query) {
+        coreTemplateDao.execute(pJdbcTemplate.getJdbcTemplate(), query);
+    }
 }

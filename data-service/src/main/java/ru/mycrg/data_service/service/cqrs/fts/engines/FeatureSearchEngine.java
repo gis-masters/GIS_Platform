@@ -18,6 +18,7 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.FtsItem;
 import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.service.PsqlTimeoutService;
 import ru.mycrg.data_service.service.cqrs.fts.FtsDictionaryService;
 import ru.mycrg.data_service.service.cqrs.fts.HeadlineService;
 import ru.mycrg.data_service.service.cqrs.fts.IFullTextSearchEngine;
@@ -55,6 +56,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
     private final SpatialRecordsDao spatialRecordsDao;
     private final FtsDictionaryService ftsDictionaryService;
     private final IAuthenticationFacade authenticationFacade;
+    private final PsqlTimeoutService psqlTimeoutService;
 
     public FeatureSearchEngine(FtsDao ftsDao,
                                TableService tableService,
@@ -63,7 +65,8 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
                                SchemaExtractor schemaExtractor,
                                SpatialRecordsDao spatialRecordsDao,
                                FtsDictionaryService ftsDictionaryService,
-                               IAuthenticationFacade authenticationFacade) {
+                               IAuthenticationFacade authenticationFacade,
+                               PsqlTimeoutService psqlTimeoutService) {
         this.ftsDao = ftsDao;
         this.tableService = tableService;
         this.datasetService = datasetService;
@@ -72,6 +75,7 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         this.spatialRecordsDao = spatialRecordsDao;
         this.ftsDictionaryService = ftsDictionaryService;
         this.authenticationFacade = authenticationFacade;
+        this.psqlTimeoutService = psqlTimeoutService;
     }
 
     @Override
@@ -106,11 +110,15 @@ public class FeatureSearchEngine implements IFullTextSearchEngine {
         // Собственно основной поиск
         StopWatch foundWatcher = new StopWatch();
         foundWatcher.start();
-        List<FtsItem> founded = ftsDao.search(LAYERS,
-                                              allowedTables,
-                                              text,
-                                              dictionaryWords,
-                                              pageable);
+
+        final Set<String> dwords = dictionaryWords;
+        List<FtsItem> founded = psqlTimeoutService.execute(() -> {
+            return ftsDao.search(LAYERS,
+                                 allowedTables,
+                                 text,
+                                 dwords,
+                                 pageable);
+        });
         foundWatcher.stop();
         double totalTimeSeconds = foundWatcher.getTotalTimeSeconds();
         log.debug("Поиск по слоям выполнен за: {} сек", totalTimeSeconds);
