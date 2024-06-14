@@ -143,7 +143,7 @@ class MapSelectionService {
           mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
           originalEvent.button !== 1
         ) {
-          await this.selectFeaturesOnMap(this.areaExtentAdd, MapSelectionTypes.ADD, e.coordinate);
+          await this.selectFeaturesOnMap(MapSelectionTypes.ADD, this.areaExtentAdd, e.coordinate);
         } else if (
           originalEvent.ctrlKey &&
           !originalEvent.shiftKey &&
@@ -151,7 +151,7 @@ class MapSelectionService {
           mapStore.allowedActions.includes(MapAction.SELECT_WITH_MODIFICATORS) &&
           originalEvent.button !== 1
         ) {
-          await this.selectFeaturesOnMap(this.areaExtentRemove, MapSelectionTypes.REMOVE, e.coordinate);
+          await this.selectFeaturesOnMap(MapSelectionTypes.REMOVE, this.areaExtentRemove, e.coordinate);
         } else if (
           !originalEvent.shiftKey &&
           !originalEvent.ctrlKey &&
@@ -159,7 +159,7 @@ class MapSelectionService {
           mapStore.allowedActions.includes(MapAction.SELECT) &&
           originalEvent.button !== 1
         ) {
-          await this.selectFeaturesOnMap(this.areaExtentReplace, MapSelectionTypes.REPLACE, e.coordinate);
+          await this.selectFeaturesOnMap(MapSelectionTypes.REPLACE, this.areaExtentReplace, e.coordinate);
         } else {
           this.areaExtentAdd.setExtent([0, 0, 0, 0]);
           this.areaExtentRemove.setExtent([0, 0, 0, 0]);
@@ -179,15 +179,16 @@ class MapSelectionService {
   }
 
   private async selectFeaturesOnMap(
+    selectionType: MapSelectionTypes,
     areaExtent?: Extent,
-    selectionType?: MapSelectionTypes,
     coordinate?: Coordinate
   ): Promise<void> {
-    if (!areaExtent || !selectionType || !coordinate) {
+    if (!areaExtent || !coordinate) {
       return;
     }
 
     const buffer = this.generateBuffer(areaExtent, coordinate);
+
     if (buffer) {
       await this.selectFeaturesByCoordinates(selectionType, buffer);
     }
