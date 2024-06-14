@@ -11,7 +11,7 @@ import { CrgProject } from '../projects/projects.models';
 import { projectBasemapClient } from './project-basemaps.client';
 import { ProjectBasemap } from './project-basemaps.models';
 
-export async function fetchBasemaps(): Promise<void> {
+export async function fetchCurrentProjectBasemaps(): Promise<void> {
   await services.provided;
 
   try {
@@ -53,12 +53,16 @@ export async function connectBasemapToProject(project: CrgProject, basemap: Base
 }
 
 export async function getBasemapConnections(basemap: Basemap): Promise<CrgProject[]> {
+  // TODO: нужно унести обработку ошибки и показ уведомления в компонент
   try {
     return await projectBasemapClient.getBasemapConnections(basemap.id);
   } catch (error) {
     const message = `Ошибка получения проектов относящихся к подложке: "${basemap.id}"`;
     services.logger.error(message, error);
+
     Toast.error({ message, details: (error as AxiosError).message });
+
+    return [];
   }
 }
 

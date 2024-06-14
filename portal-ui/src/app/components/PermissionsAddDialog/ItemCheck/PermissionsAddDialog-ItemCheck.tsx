@@ -13,7 +13,7 @@ interface PermissionsAddDialogItemCheckProps {
   item: CrgProject | VectorTable | Dataset;
   checked: boolean;
   disabled: boolean;
-  onChange: (item: CrgProject | VectorTable | Dataset, checked: boolean) => void;
+  onChange(item: CrgProject | VectorTable | Dataset, checked: boolean): void;
 }
 
 @observer
@@ -26,13 +26,13 @@ export class PermissionsAddDialogItemCheck extends Component<PermissionsAddDialo
         className={cnPermissionsAddDialogItemCheck()}
         checked={checked}
         disabled={disabled}
-        onChange={this.changeHandler}
+        onChange={this.handleChange}
       />
     );
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { item, onChange } = this.props;
     onChange(item, checked);
   }

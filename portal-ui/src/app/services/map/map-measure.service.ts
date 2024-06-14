@@ -112,8 +112,8 @@ class MapMeasureService {
 
     this.draw = this.getDraw(mode);
 
-    this.draw.on('drawstart', this.measureDrawStartHandler);
-    this.draw.on('drawend', this.drawEndHandler);
+    this.draw.on('drawstart', this.handleMeasureDrawStart);
+    this.draw.on('drawend', this.handleDrawEnd);
 
     mapService.map.addInteraction(this.draw);
   }
@@ -134,7 +134,7 @@ class MapMeasureService {
         ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {
           return feature.getGeometry()?.on('change', (e: BaseEvent) => {
             const modifyingItem = mapStore.measureItems.find(item => item.feature === feature);
-            this.featureGeometryChangeHandler(e, modifyingItem);
+            this.handleFeatureGeometryChange(e, modifyingItem);
           });
         })
       ];
@@ -142,15 +142,15 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private measureDrawStartHandler(e: DrawEvent) {
+  private handleMeasureDrawStart(e: DrawEvent) {
     this.sketchItem = this.createItem(e.feature);
     this.featureGeometryChangeListenersKeys = (e.feature as Feature<SimpleGeometry>)
       .getGeometry()
-      ?.on('change', this.featureGeometryChangeHandler);
+      ?.on('change', this.handleFeatureGeometryChange);
   }
 
   @boundMethod
-  private featureGeometryChangeHandler(e: BaseEvent, item: MeasureItem | undefined = this.sketchItem) {
+  private handleFeatureGeometryChange(e: BaseEvent, item: MeasureItem | undefined = this.sketchItem) {
     const geom = e.target as SimpleGeometry;
     let tooltipCoord: Coordinate | undefined;
 
@@ -171,7 +171,7 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private drawEndHandler() {
+  private handleDrawEnd() {
     if (!this.sketchItem) {
       return;
     }
@@ -206,7 +206,7 @@ class MapMeasureService {
 
   measureOff() {
     if (this.draw) {
-      this.draw.un('drawend', this.drawEndHandler);
+      this.draw.un('drawend', this.handleDrawEnd);
       if (this.featureGeometryChangeListenersKeys) {
         unByKey(this.featureGeometryChangeListenersKeys);
       }
@@ -307,7 +307,7 @@ class MapMeasureService {
     mapService.map.addOverlay(this.helpTooltip);
   }
 
-  pointerMoveHandler(evt: MapBrowserEvent<UIEvent>) {
+  handlePointerMove(evt: MapBrowserEvent<UIEvent>) {
     if (evt.dragging) {
       return;
     }
@@ -326,7 +326,7 @@ class MapMeasureService {
     });
 
     mapService.map.on('pointermove', (e: MapBrowserEvent<UIEvent>) => {
-      this.pointerMoveHandler(e);
+      this.handlePointerMove(e);
     });
   }
 }

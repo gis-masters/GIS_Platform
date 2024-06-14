@@ -36,14 +36,14 @@ export class CustomStyleControlMarkSelect extends Component<CustomStyleControlMa
             tile: <CustomStyleControlMarkTile size={mark.markSize} type={mark.markType} color={color} />,
             value: i
           }))}
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
         />
       </CustomStyleControlSubControl>
     );
   }
 
   @boundMethod
-  private changeHandler(e: SelectChangeEvent<unknown>) {
+  private handleChange(e: SelectChangeEvent<unknown>) {
     const { onChange } = this.props;
 
     if (typeof e.target.value !== 'number') {

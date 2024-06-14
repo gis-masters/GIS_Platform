@@ -34,7 +34,7 @@ export class FilesPlacement extends Component<PlacementProps> {
     return (
       <>
         <Tooltip title='Разместить в проекте'>
-          <IconButton className={cnFilesPlacement()} onClick={this.placementHandler} size='small'>
+          <IconButton className={cnFilesPlacement()} onClick={this.handlePlacement} size='small'>
             {this.dialogOpen ? <LayerAdd fontSize='small' /> : <LayerAddOutlined fontSize='small' />}
           </IconButton>
         </Tooltip>
@@ -52,7 +52,7 @@ export class FilesPlacement extends Component<PlacementProps> {
   }
 
   @boundMethod
-  private placementHandler() {
+  private handlePlacement() {
     this.openDialog();
   }
 

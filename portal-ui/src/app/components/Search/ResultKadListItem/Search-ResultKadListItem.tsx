@@ -44,7 +44,7 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
           secondary={this.pointExist ? '' : 'Нет координат'}
         />
         <ListItemSecondaryAction>
-          <IconButton edge='end' onClick={this.clickHandler}>
+          <IconButton edge='end' onClick={this.handleClick}>
             <MyLocation />
           </IconButton>
         </ListItemSecondaryAction>
@@ -53,7 +53,7 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
   }
 
   @boundMethod
-  private async clickHandler() {
+  private async handleClick() {
     const kadNum = this.props.kadObject.value;
     try {
       mapService.clearMarkers();

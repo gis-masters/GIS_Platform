@@ -1,24 +1,22 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { SimpleGeometry } from 'ol/geom';
+import { Geometry, SimpleGeometry } from 'ol/geom';
 
 import { Emitter } from '../../services/common/Emitter';
-import { Projection } from '../../services/data/projection/projection.models';
-import { getOlProjection } from '../../services/data/projection/projection.service';
-import { transformGeometry } from '../../services/data/projection/projection.util';
+import { transformGeometry } from '../../services/data/projections/projections.util';
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { projectionsStore } from '../../stores/Projections.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
-import { SelectProjection } from '../SelectProjection/SelectProjection';
-import { Toast } from '../Toast/Toast';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
+import { EditFeatureGeometryField } from './Field/EditFeatureGeometry-Field';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
+import { EditFeatureGeometrySelectProjection } from './SelectProjection/EditFeatureGeometry-SelectProjection';
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
@@ -32,21 +30,8 @@ export interface EditFeatureGeometryProps {
 
 @observer
 export default class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
-  @observable private olProjection?: Projection;
-
-  constructor(props: EditFeatureGeometryProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  async componentDidMount() {
-    // TODO: хз что за ошибка тут с типами
-    mapService.modificationDone.on(this.modifyHandler, this);
-
-    const olProjection = await getOlProjection();
-    if (olProjection) {
-      this.setOlProjection(olProjection);
-    }
+  componentDidMount() {
+    mapService.modificationDone.on(this.handleModify, this);
   }
 
   componentWillUnmount() {
@@ -56,7 +41,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   render() {
     const { store, readOnly } = this.props;
 
-    if (!(store && store.geometry)) {
+    if (!(store && store.geometry && store.currentProjection)) {
       return (
         <div className={cnEditFeatureGeometry()}>
           <EditFeatureGeometryError>Отсутствует геометрия.</EditFeatureGeometryError>
@@ -70,22 +55,20 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     return (
       <div className={cnEditFeatureGeometry()}>
         <EditFeatureGeometryHeader>
-          <SelectProjection
-            onSelect={this.setSelectedCrs}
-            defaultProjection={store.currentProjection}
-            formView
-            fullWidth
-          />
+          <EditFeatureGeometryField>
+            Система координат:
+            <EditFeatureGeometrySelectProjection value={store.currentProjection} onChange={store.setProjection} />
+          </EditFeatureGeometryField>
         </EditFeatureGeometryHeader>
         {geometryType && (
-          <div className={cnEditFeatureGeometry('Field')}>
+          <EditFeatureGeometryField>
             Тип геометрии:
             <Tooltip title={this.getFeatureIconGeometryType(geometryType)}>
               <span>
                 <FeatureIcon geometryType={geometryType} className={cnEditFeatureGeometry('Svg')} />
               </span>
             </Tooltip>
-          </div>
+          </EditFeatureGeometryField>
         )}
         {geometryType && !readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
         {geometryType && readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
@@ -94,31 +77,26 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   @boundMethod
-  private modifyHandler(e: CustomEvent<SimpleGeometry | undefined>) {
+  private handleModify(e: CustomEvent<Geometry>) {
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
-    if (!this.olProjection) {
-      Toast.warn('Отсутствует проекция необходимая для изменения геометрии объекта');
 
-      return;
+    if (!geometryType || !projectionsStore.olProjection || !nativeProjection) {
+      throw new Error('Не удалось изменить геометрию');
     }
 
-    const coordinates = e.detail
-      ? transformGeometry(
-          {
-            type: geometryType,
-            coordinates: e.detail.getCoordinates() || []
-          },
-          this.olProjection,
-          nativeProjection
-        )?.coordinates
-      : geometry?.coordinates;
+    const coordinates =
+      e.detail instanceof SimpleGeometry
+        ? transformGeometry(
+            {
+              type: geometryType,
+              coordinates: e.detail.getCoordinates() || []
+            },
+            projectionsStore.olProjection,
+            nativeProjection
+          )?.coordinates
+        : geometry?.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
-  }
-
-  @boundMethod
-  private setSelectedCrs(proj: Projection) {
-    this.props.store.setProjection(proj);
   }
 
   private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {
@@ -142,10 +120,5 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         return 'точка';
       }
     }
-  }
-
-  @action.bound
-  private setOlProjection(olProj: Projection) {
-    this.olProjection = olProj;
   }
 }

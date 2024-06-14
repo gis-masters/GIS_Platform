@@ -3,7 +3,7 @@ import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 const EditFeatureGeometryFormTypeMultiLineString: FC<EditFeatureGeometryFormProps> = ({ store, className }) => {
   const geometry = store.geometry as WfsMultiLineStringGeometry;

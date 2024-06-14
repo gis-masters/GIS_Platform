@@ -128,14 +128,14 @@ export default class Form<T> extends Component<FormProps<T>> {
     } = this.props;
 
     return (
-      <form action='#' onSubmit={this.submitHandler} {...otherProps} className={cnForm({ readonly }, [className])}>
+      <form action='#' onSubmit={this.handleSubmit} {...otherProps} className={cnForm({ readonly }, [className])}>
         {children}
         {!!this.schema && (
           <FormContent<T>
             schema={this.schema}
             formRole={formRole}
             formValue={this.value || {}}
-            onFormChange={this.changeHandler}
+            onFormChange={this.handleChange}
             onFieldChange={this.fieldChanged}
             onFieldNeedValidate={this.fieldValidate}
             errors={[...(errors || []), ...(this.serverErrors || []), ...(this.errors || [])]}
@@ -158,7 +158,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @boundMethod
-  private changeHandler(changedValue: Partial<T>) {
+  private handleChange(changedValue: Partial<T>) {
     const { onFormChange, auto, schema } = this.props;
 
     if (!schema) {
@@ -177,7 +177,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @boundMethod
-  private async submitHandler(e: React.FormEvent<HTMLElement>) {
+  private async handleSubmit(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
     e.stopPropagation();
 

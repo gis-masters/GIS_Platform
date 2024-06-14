@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -14,22 +13,17 @@ const cnMapSelectionCancel = cn('MapSelection', 'Cancel');
 
 @observer
 export class MapSelectionCancel extends Component {
-  @observable private timer = 0;
-  @observable private escKeyPressed = false;
-
-  constructor(props: Record<string, never>) {
-    super(props);
-    makeObservable(this);
-  }
+  private timer = 0;
+  private escKeyPressed = false;
 
   componentDidMount() {
-    document.addEventListener('keydown', this.keydownHandler);
-    document.addEventListener('keyup', this.keyupHandler);
+    document.addEventListener('keydown', this.handleKeydown);
+    document.addEventListener('keyup', this.handleKeyup);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.keydownHandler);
-    document.removeEventListener('keyup', this.keyupHandler);
+    document.removeEventListener('keydown', this.handleKeydown);
+    document.removeEventListener('keyup', this.handleKeyup);
   }
 
   render() {
@@ -50,7 +44,7 @@ export class MapSelectionCancel extends Component {
   }
 
   @boundMethod
-  private keydownHandler(event: KeyboardEvent): void {
+  private handleKeydown(event: KeyboardEvent): void {
     clearTimeout(this.timer);
 
     if (this.escKeyPressed && event.key === 'Escape') {
@@ -59,29 +53,16 @@ export class MapSelectionCancel extends Component {
   }
 
   @boundMethod
-  private keyupHandler(event: KeyboardEvent): void {
+  private handleKeyup(event: KeyboardEvent): void {
     if (event.key === 'Escape') {
-      this.setEscKeyState(true);
+      this.escKeyPressed = true;
     }
 
-    this.setTimer(
-      window.setTimeout(() => {
-        this.setEscKeyState(false);
-      }, 400)
-    );
+    this.timer = window.setTimeout(() => {
+      this.escKeyPressed = false;
+    }, 400);
   }
 
-  @action
-  private setEscKeyState(status: boolean): void {
-    this.escKeyPressed = status;
-  }
-
-  @action
-  private setTimer(timer: number): void {
-    this.timer = timer;
-  }
-
-  @boundMethod
   private clearSelectedFeatures(): void {
     mapSelectionService.selectFeatures([]);
   }

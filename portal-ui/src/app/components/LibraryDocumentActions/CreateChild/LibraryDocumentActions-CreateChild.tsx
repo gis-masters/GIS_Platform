@@ -121,7 +121,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
           <FormDialog
             className={cnLibraryDocumentActionsCreateChildEditDialog()}
             open={this.dialogOpen}
-            onClose={this.formDialogCloseHandler}
+            onClose={this.handleFormDialogClose}
             closeWithConfirm
             schema={this.currentChild.schema}
             value={{
@@ -186,7 +186,7 @@ export class LibraryDocumentActionsCreateChild extends Component<LibraryDocument
   }
 
   @boundMethod
-  private async formDialogCloseHandler() {
+  private async handleFormDialogClose() {
     this.closeFormDialog();
     await sleep(300);
     this.setCurrentChild();

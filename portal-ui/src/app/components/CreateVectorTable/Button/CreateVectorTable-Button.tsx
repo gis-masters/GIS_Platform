@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
 
 interface CreateVectorTableButtonProps {
-  onClick: () => void;
+  onClick(): void;
 }
 
 export class CreateVectorTableButton extends Component<CreateVectorTableButtonProps> {

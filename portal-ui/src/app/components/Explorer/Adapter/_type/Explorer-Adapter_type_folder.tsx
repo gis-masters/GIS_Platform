@@ -220,7 +220,7 @@ export class ExplorerAdapterTypeFolder {
       (organizationSettings.createLibraryItem &&
         currentItem.role &&
         [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
-    const createHandler = (record: LibraryRecord, isFolder: boolean) => {
+    const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
     const library = store.path.find(({ type }) => type === ExplorerItemType.LIBRARY)?.payload as Library;
@@ -242,7 +242,7 @@ export class ExplorerAdapterTypeFolder {
             <LibraryKptRequest library={library} />
           </>
         )}
-        {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={createHandler} />}
+        {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={handleCreate} />}
         {store.explorerRole === 'dm' && (
           <>
             <LibraryDeletedDocumentsSwitch library={library} />

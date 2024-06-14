@@ -9,7 +9,7 @@ import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { getFeatureProjection } from '../../services/data/projection/projection.service';
+import { getFeatureProjection } from '../../services/data/projections/projections.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import {
@@ -65,7 +65,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   layer?: CrgVectorableLayer;
   private properties?: Properties;
   isNew?: boolean;
-  selectTab?: number;
+  selectedTab?: number;
 
   updatingAllowed = false;
 
@@ -101,7 +101,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.layer = { ...(data.layer || getLayerByFeatureInCurrentProject(firstFeature)) };
         this.properties = data.properties;
         this.isNew = data.isNew;
-        this.selectTab = Number(data.isNew);
+        this.selectedTab = Number(data.isNew);
         if (!this.isNew) {
           await mapService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
@@ -331,7 +331,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   async editFeature(): Promise<void> {
     if (this.isNew && !this.isGeometryValid) {
-      this.selectTab = Number(!this.isGeometryValid);
+      this.selectedTab = Number(!this.isGeometryValid);
 
       return;
     }

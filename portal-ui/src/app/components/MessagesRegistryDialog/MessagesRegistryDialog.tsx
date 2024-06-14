@@ -13,19 +13,14 @@ import '!style-loader!css-loader!sass-loader!./MessagesRegistryDialog.scss';
 const cnMessagesRegistryDialog = cn('MessagesRegistryDialog');
 
 interface MessagesRegistryDialogProps {
-  closeDialog: () => void;
   dialogOpen: boolean;
   message: MessagesRegistriesMessages;
   schema: Schema;
+  onClose(): void;
 }
 
-export const MessagesRegistryDialog: FC<MessagesRegistryDialogProps> = ({
-  dialogOpen,
-  message,
-  schema,
-  closeDialog
-}) => (
-  <Dialog open={dialogOpen} onClose={closeDialog} fullWidth maxWidth='xl'>
+export const MessagesRegistryDialog: FC<MessagesRegistryDialogProps> = ({ dialogOpen, message, schema, onClose }) => (
+  <Dialog open={dialogOpen} onClose={onClose} fullWidth maxWidth='xl'>
     <DialogTitle>
       <div className={cnMessagesRegistryDialog('TypeIcon')}>
         <EmailOutlined color='primary' />
@@ -38,7 +33,7 @@ export const MessagesRegistryDialog: FC<MessagesRegistryDialogProps> = ({
     </DialogContent>
 
     <DialogActions>
-      <Button onClick={closeDialog}>Закрыть</Button>
+      <Button onClick={onClose}>Закрыть</Button>
     </DialogActions>
   </Dialog>
 );

@@ -35,7 +35,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   @observable private previewDragStartY = 0;
   @observable private previewDragX = 0;
   @observable private previewDragY = 0;
-  @observable private previewImageDataUri: string;
+  @observable private previewImageDataUri?: string;
 
   constructor(props: PrintMapDialogPreviewProps) {
     super(props);
@@ -89,9 +89,9 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
         >
           <Loading visible={!this.previewImageDataUri} />
           <PrintMapDialogPreviewImageContainer
-            onDragStart={this.dragStartHandler}
-            onDragEnd={this.dragEndHandler}
-            onDrag={this.dragHandler}
+            onDragStart={this.handleDragStart}
+            onDragEnd={this.handleDragEnd}
+            onDrag={this.handleDrag}
           >
             {this.previewImageDataUri && (
               <>
@@ -121,7 +121,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   private async updatePreview(translateX?: number, translateY?: number) {
-    if (!this.props.open) {
+    if (!this.props.open || !mapService.view) {
       return;
     }
 
@@ -148,7 +148,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   @action.bound
-  private dragStartHandler(e: React.DragEvent<HTMLDivElement>) {
+  private handleDragStart(e: React.DragEvent<HTMLDivElement>) {
     e.dataTransfer.setDragImage(document.createElement('div'), 0, 0);
     this.previewDragStartX = e.clientX;
     this.previewDragX = e.clientX;
@@ -157,7 +157,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   @action.bound
-  private dragHandler(e: React.DragEvent<HTMLDivElement>) {
+  private handleDrag(e: React.DragEvent<HTMLDivElement>) {
     if (!e.clientX && !e.clientY) {
       return false;
     }
@@ -166,8 +166,12 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   @boundMethod
-  private async dragEndHandler(e: React.DragEvent<HTMLDivElement>) {
+  private async handleDragEnd(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
+
+    if (!this.previewRef.current) {
+      return;
+    }
 
     const { clientWidth, clientHeight } = this.previewRef.current;
     const translateX = (this.previewDragX - this.previewDragStartX) / clientWidth;

@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
-import { getProjectionByCrs } from '../../services/data/projection/projection.service';
+import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
@@ -118,7 +118,7 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
     }
 
     const objectStringEnd = pluralize(selected.length, 'а', 'ов', 'ов');
-    const projection = await getProjectionByCrs(selected[0].nativeCRS);
+    const projection = await getProjectionByCode(selected[0].nativeCRS);
 
     const changedCrsName = projection?.title || selected[0].nativeCRS;
 
@@ -137,11 +137,13 @@ export class SelectSuitableVectorLayerDialog extends Component<SelectSuitableVec
       layersUpdatePermissions.push(await isUpdateAllowed(layer));
     }
     const layersAvailableForCopy = currentProject.vectorLayers.filter((layer, i) => {
-      if (!schemas[i]) {
+      const schema = schemas[i];
+
+      if (!schema) {
         return false;
       }
 
-      const { geometryType } = schemas[i];
+      const { geometryType } = schema;
 
       if (features && geometryType) {
         return (

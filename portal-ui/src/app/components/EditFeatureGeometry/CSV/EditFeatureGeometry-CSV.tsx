@@ -8,7 +8,7 @@ import { clone, isEqual } from 'lodash';
 import { parse } from 'papaparse';
 
 import { communicationService } from '../../../services/communication.service';
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { CoordinateEdited, GeometryType, isCoordinateEdited } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
@@ -46,7 +46,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       <>
         {!readOnly && (
           <Tooltip title={`Импорт координат ${partLabel} из CSV`}>
-            <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.importClickHandler}>
+            <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.handleImportClick}>
               <ArchiveOutlined />
             </IconButton>
           </Tooltip>
@@ -57,27 +57,27 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
             <IconButton
               className={cnEditFeatureGeometryCSV({ do: 'export' })}
               disabled={empty}
-              onClick={this.exportClickHandler}
+              onClick={this.handleExportClick}
             >
               <UnarchiveOutlined />
             </IconButton>
           </span>
         </Tooltip>
 
-        <EditFeatureGeometryCSVInput onChange={this.fileHandler} inputRef={this.inputRef} />
+        <EditFeatureGeometryCSVInput onChange={this.handleFileInput} inputRef={this.inputRef} />
       </>
     );
   }
 
   @boundMethod
-  private importClickHandler() {
-    this.inputRef.current.click();
+  private handleImportClick() {
+    this.inputRef.current?.click();
 
     communicationService.drawOff.emit();
   }
 
   @boundMethod
-  private exportClickHandler() {
+  private handleExportClick() {
     exportAsCSV(
       this.props.coordinates.map(coord => {
         const newCoords = clone(coord);
@@ -92,7 +92,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   }
 
   @boundMethod
-  private fileHandler(e: ChangeEvent<HTMLInputElement>) {
+  private handleFileInput(e: ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -113,7 +113,11 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
     const { coordinates, mustBeClosed } = this.props;
     const newCoordinates: CoordinateEdited[] = result.data
-      .map((point: CoordinateEdited) => {
+      .map(point => {
+        if (!isCoordinateEdited(point)) {
+          throw new Error('Некорректная геометрия');
+        }
+
         point.reverse();
 
         return point;

@@ -27,13 +27,13 @@ const cnFeaturesListItemOpenEdit = cn('FeaturesListItem', 'OpenEdit');
 interface FeaturesListItemProps {
   feature?: WfsFeature;
   searchResultHighlight?: ReactNode;
-  onSelect?: (item: WfsFeature) => void;
-  onHighlight?: (item: WfsFeature | null) => void;
   highlighted?: boolean;
   errorData?: FeatureError;
   message?: string;
   style?: CSSProperties;
   isSearchList?: boolean;
+  onSelect?(item: WfsFeature): void;
+  onHighlight?(item: WfsFeature | null): void;
 }
 
 @observer
@@ -81,7 +81,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
         {searchResultHighlight}
         {!errorData && (
           <div className={cnFeaturesListItem('Buttons')}>
-            {feature && <ZoomToFeature feature={feature} onClick={this.zoomHandler} />}
+            {feature && <ZoomToFeature feature={feature} onClick={this.handleZoom} />}
             <Tooltip title='Открыть'>
               <IconButton className={cnFeaturesListItemOpenEdit()} onClick={this.selectIt}>
                 <ArrowForward />
@@ -151,7 +151,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   @boundMethod
-  private zoomHandler() {
+  private handleZoom() {
     const { onHighlight, feature } = this.props;
     if (onHighlight && feature) {
       onHighlight(feature);

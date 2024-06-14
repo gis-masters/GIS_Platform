@@ -13,8 +13,8 @@ const cnDataImportTasksList = cn('DataImportTasksList');
 
 interface DataImportTasksListTaskProps {
   task: ImportTaskExtended;
-  onDeleteTask: () => void;
   short: boolean;
+  onDeleteTask(): void;
 }
 
 @observer

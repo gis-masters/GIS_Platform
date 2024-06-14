@@ -30,7 +30,7 @@ interface LibraryRegistryBreadcrumbsProps extends IClassNameProps {
   fromHome?: boolean;
   additionalItem?: ReactNode;
   size?: BreadcrumbsProps['size'];
-  onItemClick(path: number[]): void;
+  onItemClick(path: unknown): void;
   menuButtonOnly?: boolean;
 }
 
@@ -69,9 +69,9 @@ export class LibraryRegistryBreadcrumbs extends Component<LibraryRegistryBreadcr
   }
 
   @computed
-  private get items(): BreadcrumbsItemData<number[]>[] {
+  private get items(): BreadcrumbsItemData[] {
     const { filter, library, fromHome, additionalItem, onItemClick } = this.props;
-    const items: BreadcrumbsItemData<number[]>[] = [];
+    const items: BreadcrumbsItemData[] = [];
 
     if (fromHome) {
       const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];

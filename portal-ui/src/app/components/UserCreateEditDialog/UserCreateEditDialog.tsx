@@ -16,7 +16,7 @@ const cnUserCreateEditDialog = cn('UserCreateEditDialog');
 
 interface UserCreateEditDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
   create?: boolean;
   user?: CrgUser;
 }

@@ -75,7 +75,7 @@ export default class FeaturesListSidebar extends Component {
             value={this.activeTab}
             indicatorColor='primary'
             textColor='primary'
-            onChange={this.changeHandler}
+            onChange={this.handleChange}
           >
             {tabsTitles.map((label, i) => (
               <Tab
@@ -86,8 +86,8 @@ export default class FeaturesListSidebar extends Component {
                       edge='end'
                       size='small'
                       color='inherit'
-                      onPointerDown={this.closePointerDownHandler}
-                      onMouseDown={this.closePointerDownHandler}
+                      onPointerDown={this.handleClosePointerDown}
+                      onMouseDown={this.handleClosePointerDown}
                       onClick={label === 'Выделенные объекты' ? this.closeSelectedFeaturesTab : this.closeSearchTab}
                     >
                       <Close fontSize='small' />
@@ -111,7 +111,7 @@ export default class FeaturesListSidebar extends Component {
     );
   }
 
-  private closePointerDownHandler(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleClosePointerDown(e: React.PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
   }
 
@@ -178,7 +178,7 @@ export default class FeaturesListSidebar extends Component {
   }
 
   @boundMethod
-  private changeHandler(event: SyntheticEvent<Element, Event>, value: number) {
+  private handleChange(event: SyntheticEvent<Element, Event>, value: number) {
     if (!this.singleTab) {
       this.setActiveTab(value);
     }

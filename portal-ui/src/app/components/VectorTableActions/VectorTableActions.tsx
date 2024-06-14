@@ -39,25 +39,21 @@ export class VectorTableActions extends Component<VectorTableActionsProps> {
   }
 
   render() {
-    const actionAllowed = currentUser.isAdmin || this.vectorTable?.role === Role.OWNER;
+    const editAllowed = currentUser.isAdmin || this.vectorTable?.role === Role.OWNER;
 
     return (
       <div className={cnVectorTableActions()}>
+        {editAllowed && this.vectorTable && <VectorTableActionsEdit vectorTable={this.vectorTable} />}
         {this.vectorTable && (
           <SchemaActionsEdit
             withPreview
-            readonly={!actionAllowed}
-            explorerItem={this.vectorTable}
+            readonly={!editAllowed}
+            item={this.vectorTable}
             schema={this.vectorTable.schema}
             as='iconButton'
           />
         )}
-        {actionAllowed && this.vectorTable && (
-          <>
-            <VectorTableActionsEdit vectorTable={this.vectorTable} />
-            <VectorTableActionsDelete vectorTable={this.vectorTable} />
-          </>
-        )}
+        {editAllowed && this.vectorTable && <VectorTableActionsDelete vectorTable={this.vectorTable} />}
       </div>
     );
   }

@@ -41,7 +41,7 @@ export class LibraryActions extends Component<LibraryActionsProps> {
         <SchemaActionsEdit
           withPreview
           readonly={!canEdit}
-          explorerItem={this.library}
+          item={this.library}
           schema={this.library.schema}
           as='iconButton'
         />

@@ -23,11 +23,11 @@ const cnDocumentsSelectDialog = cn('DocumentsSelectDialog');
 
 interface DocumentsSelectDialogProps {
   addedDocuments: DocumentInfo[];
-  maxDocuments: number;
+  maxDocuments?: number;
   dialogOpen: boolean;
   librariesTableNames?: string[];
   onChange(selectedItems: DocumentInfo[]): void;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer

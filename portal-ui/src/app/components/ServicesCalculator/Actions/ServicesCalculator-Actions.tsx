@@ -14,11 +14,11 @@ import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Actions.scss';
 const cnServicesCalculatorActions = cn('ServicesCalculator', 'Actions');
 
 interface ServicesCalculatorActionsProps {
-  openRequisitesDialog: () => void;
-  onClearAll: () => void;
   resultPrice: number;
   selectedServices: ServicesInfo[];
-  onClearSelectedServices: (clear: boolean) => void;
+  onClearAll(): void;
+  openRequisitesDialog(): void;
+  onClearSelectedServices(clear: boolean): void;
 }
 
 @observer

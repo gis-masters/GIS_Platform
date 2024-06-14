@@ -12,9 +12,9 @@ import { Toast } from '../Toast/Toast';
 
 interface OrgGroupsCreateEditDialogProps {
   open: boolean;
-  onClose: () => void;
   create?: boolean;
   group?: CrgGroup;
+  onClose(): void;
 }
 
 @observer

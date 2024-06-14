@@ -154,7 +154,7 @@ export default class ServicesCalculator extends Component {
         <FormDialog
           open={this.requisitesDialogOpen}
           schema={{ properties }}
-          value={(JSON.parse(localStorage.getItem('invoiceRequisites')) as InvoiceInfo) || {}}
+          value={(JSON.parse(String(localStorage.getItem('invoiceRequisites'))) as InvoiceInfo) || {}}
           actionButtonProps={{ children: 'Сохранить' }}
           actionFunction={this.setSelectedServices}
           onClose={this.closeRequisitesDialog}
@@ -164,10 +164,10 @@ export default class ServicesCalculator extends Component {
 
         <ServicesCalculatorList
           servicesDialogOpen={this.servicesDialogOpen}
-          closeServicesDialog={this.closeServicesDialog}
-          setServices={this.setServices}
+          onCloseServicesDialog={this.closeServicesDialog}
+          onChangeServices={this.setServices}
           clearSelectedServices={this.clearSelectedServices}
-          setClearSelectedServices={this.setClearSelectedServices}
+          onClearServices={this.setClearSelectedServices}
         />
       </>
     );
@@ -258,7 +258,7 @@ export default class ServicesCalculator extends Component {
     let sum = 0;
     this.selectedServices.forEach(service => {
       if (service.enable) {
-        sum += service.price * service.counter;
+        sum += service.price * (service.counter || 0);
 
         if (service.additions && service.counter) {
           service.additions.forEach(addition => {

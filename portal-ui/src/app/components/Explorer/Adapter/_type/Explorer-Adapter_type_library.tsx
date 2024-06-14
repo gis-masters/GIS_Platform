@@ -217,7 +217,7 @@ export class ExplorerAdapterTypeLibrary {
       currentUser.isAdmin ||
       (organizationSettings.createLibraryItem && currentItem.role && currentItem.role !== Role.VIEWER);
 
-    const createHandler = (record: LibraryRecord, isFolder: boolean) => {
+    const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };
 
@@ -234,7 +234,7 @@ export class ExplorerAdapterTypeLibrary {
               <LibraryKptRequest library={item.payload} />
             </>
           )}
-          {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={createHandler} />}
+          {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={handleCreate} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
         </>

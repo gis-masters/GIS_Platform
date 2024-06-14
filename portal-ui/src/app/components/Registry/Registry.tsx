@@ -25,9 +25,9 @@ export interface RegistryProps<T> {
   filtersAlwaysEnabled?: boolean;
   showFiltersPanel?: boolean;
   counter?: ReactNode;
-  onSelect?: (items: T[]) => void;
-  onPageOptionsChange?: (pageOptions: PageOptions) => void;
-  setPageOptions?: (pageOptions: PageOptions) => void;
+  onSelect?(items: T[]): void;
+  onPageOptionsChange?(pageOptions: PageOptions): void;
+  setPageOptions?(pageOptions: PageOptions): void;
   getData(pageOptions: PageOptions): Promise<[T[], number]>;
   headerActions?: ReactNode;
   invoke?: {

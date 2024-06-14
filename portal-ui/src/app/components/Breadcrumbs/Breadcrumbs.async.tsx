@@ -25,40 +25,40 @@ const cnBreadcrumbs = cn('Breadcrumbs');
 const WHEN_ITEMS_HIDE = 150;
 const WHEN_ITEMS_SHOW = 250;
 
-export interface BreadcrumbsItemData<T = unknown> extends ChildrenProps {
+export interface BreadcrumbsItemData extends ChildrenProps {
   title?: ReactNode;
   subtitle?: ReactNode;
   url?: string;
   nestingLevel?: number;
-  payload?: T;
+  payload?: unknown;
   itemType?: BreadcrumbsItemsType;
   style?: CSSProperties;
-  onClick?: (payload: T) => void;
+  onClick?(payload: unknown): void;
 }
 
-export interface BreadcrumbsProps<T = unknown> extends IClassNameProps {
+export interface BreadcrumbsProps extends IClassNameProps {
   itemsType: BreadcrumbsItemsType;
-  items: BreadcrumbsItemData<T>[];
+  items: BreadcrumbsItemData[];
   size?: 'small' | 'medium';
   menuButtonOnly?: boolean;
 }
 
 @observer
-export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
+export default class Breadcrumbs extends Component<BreadcrumbsProps> {
   @observable private hiddenItemsCount = 0;
-  @observable private contentBoxSize: number;
+  @observable private contentBoxSize = 0;
   @observable private menuAnchorEl: HTMLElement | null = null;
-  private debouncedMouseMoveHandler: (e: MouseEvent) => void;
+  private handleMouseMoveDebounced: (e: MouseEvent) => void;
 
   private containerRef: RefObject<HTMLDivElement> = createRef();
   private menuRef: RefObject<HTMLDivElement> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
 
-  constructor(props: BreadcrumbsProps<T>) {
+  constructor(props: BreadcrumbsProps) {
     super(props);
     makeObservable(this);
 
-    this.debouncedMouseMoveHandler = throttle(this.handleMouseMove.bind(this), 100);
+    this.handleMouseMoveDebounced = throttle(this.handleMouseMove.bind(this), 100);
   }
 
   async componentDidMount() {
@@ -67,10 +67,10 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
       this.resizeObserver.observe(this.containerRef.current);
     }
 
-    document.body.addEventListener('mousemove', this.debouncedMouseMoveHandler);
+    document.body.addEventListener('mousemove', this.handleMouseMoveDebounced);
   }
 
-  async componentDidUpdate(prevProps: BreadcrumbsProps<T>) {
+  async componentDidUpdate(prevProps: BreadcrumbsProps) {
     const { items } = this.props;
     if (!isEqual(items, prevProps.items)) {
       await this.checkItemsFit();
@@ -78,8 +78,10 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
   }
 
   componentWillUnmount() {
-    this.resizeObserver.unobserve(this.containerRef.current);
-    document.body.removeEventListener('mousemove', this.debouncedMouseMoveHandler);
+    if (this.containerRef?.current) {
+      this.resizeObserver.unobserve(this.containerRef.current);
+    }
+    document.body.removeEventListener('mousemove', this.handleMouseMoveDebounced);
   }
 
   render() {
@@ -148,6 +150,8 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
     const { clientX, clientY } = e;
 
     if (
+      this.containerRef.current &&
+      this.menuRef.current &&
       !this.intersects(clientX, clientY, this.containerRef.current) &&
       !this.intersects(clientX, clientY, this.menuRef.current)
     ) {
@@ -160,7 +164,12 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
       return false;
     }
 
-    const { x, y, width, height } = element.getClientRects().item(0);
+    const rect = element.getClientRects().item(0);
+    if (!rect) {
+      return false;
+    }
+
+    const { x, y, width, height } = rect;
 
     return clientX > x && clientX < x + width && clientY > y && clientY < y + height;
   }
@@ -177,7 +186,7 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
         ...(this.containerRef?.current?.querySelectorAll('.' + cnBreadcrumbs('Item')) || [])
       ] as HTMLElement[];
       const shrunkItems = itemsElements.filter(
-        el => el.offsetWidth < el.querySelector('.' + cnBreadcrumbs('ItemTitle'))?.scrollWidth
+        el => el.offsetWidth < (el.querySelector('.' + cnBreadcrumbs('ItemTitle'))?.scrollWidth || 0)
       );
       const shrunkItemsAverageWidth = shrunkItems.reduce((acc, item) => acc + item.offsetWidth, 0) / shrunkItems.length;
 
@@ -231,13 +240,13 @@ export default class Breadcrumbs<T> extends Component<BreadcrumbsProps<T>> {
   }
 
   @computed
-  private get visibleItems(): BreadcrumbsItemData<T>[] {
+  private get visibleItems(): BreadcrumbsItemData[] {
     const { menuButtonOnly, items } = this.props;
     if (menuButtonOnly) {
       return [];
     }
     const clonedItems = [...items];
-    const result: BreadcrumbsItemData<T>[] = [];
+    const result: BreadcrumbsItemData[] = [];
 
     if (!this.rootHidden) {
       result.push(...clonedItems.splice(0, 1));

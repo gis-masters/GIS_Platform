@@ -20,7 +20,7 @@ export interface XTableFilterPanelItemProps<T> {
   filter: FilterQuery;
   col: XTableColumn<T>;
   updateFilters: boolean;
-  onUpdateFilter: (filter: FilterQuery) => void;
+  onUpdateFilter(filter: FilterQuery): void;
   onBeforeFilterChange(): void;
   onFilterChange(): void;
 }

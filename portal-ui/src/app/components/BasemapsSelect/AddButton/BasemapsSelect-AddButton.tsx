@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import {
   connectBasemapToProject,
-  fetchBasemaps
+  fetchCurrentProjectBasemaps
 } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { Button } from '../../Button/Button';
@@ -40,7 +40,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
         <Tooltip disableInteractive title={'Подключить подложку'} placement='left' arrow>
           <span>
             <MenuItem className={cnBasemapsSelectAddButton()} disableRipple>
-              <BasemapsSelectAddIcon onClick={this.clickHandler} />
+              <BasemapsSelectAddIcon onClick={this.handleClick} />
             </MenuItem>
           </span>
         </Tooltip>
@@ -70,7 +70,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
   }
 
   @action.bound
-  private clickHandler() {
+  private handleClick() {
     this.dialogOpen = true;
   }
 
@@ -104,7 +104,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
 
     await connectBasemapToProject(currentProject, this.basemap);
     this.closeSelectBasemapDialog();
-    await fetchBasemaps();
+    await fetchCurrentProjectBasemaps();
   }
 
   @boundMethod

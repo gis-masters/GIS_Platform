@@ -9,19 +9,19 @@ import { ServicesInfo } from '../ServicesCalculator';
 const cnServicesCalculatorScrollContainer = cn('ServicesCalculator', 'ScrollContainer');
 
 interface ServicesCalculatorScrollContainerProps {
-  selectAllService: () => void;
   selectedAllServices: boolean;
-  openServicesDialog: () => void;
-  selectService: (service: ServicesInfo) => void;
-  deleteService: (service: ServicesInfo) => void;
   selectedServices: ServicesInfo[];
+  selectAllService(): void;
+  openServicesDialog(): void;
+  selectService(service: ServicesInfo): void;
+  deleteService(service: ServicesInfo): void;
 }
 
 export const ServicesCalculatorScrollContainer: FC<ServicesCalculatorScrollContainerProps> = ({
-  selectAllService,
   selectedAllServices,
-  openServicesDialog,
   selectedServices,
+  selectAllService,
+  openServicesDialog,
   selectService,
   deleteService
 }) => (

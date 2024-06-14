@@ -17,6 +17,7 @@ export interface XTableCellContentProps<T>
   col: XTableColumn<T>;
   type?: XTableColumnType;
   cellData?: unknown;
+  inHead?: boolean;
 }
 
 export const XTableCellContentBase: <T>(props: XTableCellContentProps<T>) => ReactElement = (({
@@ -25,9 +26,17 @@ export const XTableCellContentBase: <T>(props: XTableCellContentProps<T>) => Rea
   className,
   cellData,
   type,
+  col,
+  inHead,
   ...spanProps
 }) => (
-  <span className={cnXTableCellContent({ singleLineContent, type: type || 'string' }, [className])} {...spanProps}>
+  <span
+    className={cnXTableCellContent(
+      { singleLineContent, type: type || 'string', display: !inHead && col.settings?.display },
+      [className]
+    )}
+    {...spanProps}
+  >
     {children !== null && children !== undefined ? children : ''}
   </span>
 )) as <T>(props: XTableCellContentProps<T>) => ReactElement;

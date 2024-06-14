@@ -10,8 +10,8 @@ import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
 import { isLayerReadAllowed } from '../../data/permissions/permissions.service';
-import { isArrayOfProjection } from '../../data/projection/projection.models';
-import { getProjectionByCrs, registerProjectionArrayInProj4 } from '../../data/projection/projection.service';
+import { isArrayOfProjections } from '../../data/projections/projections.models';
+import { getProjectionByCode, registerProjectionArrayInProj4 } from '../../data/projections/projections.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
@@ -174,7 +174,7 @@ class ProjectsService {
     const projections = await Promise.all(
       allowedLayers.map(async layer => {
         if (layer.nativeCRS) {
-          return await getProjectionByCrs(layer.nativeCRS);
+          return await getProjectionByCode(layer.nativeCRS);
         }
       })
     );
@@ -183,7 +183,7 @@ class ProjectsService {
       .filter((value, index, self) => index === self.findIndex(item => item?.authSrid === value?.authSrid))
       .filter(Boolean);
 
-    if (uniqueProjection.length && isArrayOfProjection(uniqueProjection)) {
+    if (uniqueProjection.length && isArrayOfProjections(uniqueProjection)) {
       registerProjectionArrayInProj4(uniqueProjection);
     }
   }

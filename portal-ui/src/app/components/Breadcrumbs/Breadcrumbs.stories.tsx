@@ -34,8 +34,10 @@ const Template: StoryFn<typeof Breadcrumbs> = props => {
     Icon = WidthFull;
   }
 
-  const handleSliderChange = (e: Event, value: number) => {
-    setMaxWidth(value);
+  const handleSliderChange = (e: Event, value: number | number[]) => {
+    if (typeof value === 'number') {
+      setMaxWidth(value);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +54,10 @@ const Template: StoryFn<typeof Breadcrumbs> = props => {
 
   return (
     <div className={cnBreadcrumbsStory()}>
-      <div className={cnBreadcrumbsStory('Container')} style={{ maxWidth: maxWidth < MAX && minMax(maxWidth) }}>
+      <div
+        className={cnBreadcrumbsStory('Container')}
+        style={{ maxWidth: (maxWidth < MAX && minMax(maxWidth)) || 'none' }}
+      >
         <Breadcrumbs {...props} />
       </div>
 

@@ -55,7 +55,18 @@ type CarouselStore = {
 };
 
 export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, startingImage }) => {
-  const store = useLocalObservable(
+  const {
+    currentImage,
+    setCurrentImage,
+    expanded,
+    toggleExpanded,
+    thumbsSwiper,
+    setThumbsSwiper,
+    mainSwiper,
+    setMainSwiper,
+    zoomed,
+    setZoomed
+  } = useLocalObservable(
     (): CarouselStore => ({
       currentImage: startingImage || images[0],
       expanded: false,
@@ -80,27 +91,14 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
     })
   );
 
-  const {
-    currentImage,
-    setCurrentImage,
-    expanded,
-    toggleExpanded,
-    thumbsSwiper,
-    setThumbsSwiper,
-    mainSwiper,
-    setMainSwiper,
-    zoomed,
-    setZoomed
-  } = store;
-
-  const zoomedHandler = useCallback(() => {
+  const handleZoomChange = useCallback(() => {
     setZoomed(!zoomed);
     if (zoomed) {
-      mainSwiper.zoom.in(ratio || 5);
+      mainSwiper?.zoom.in(ratio || 5);
     } else {
-      mainSwiper.zoom.out();
+      mainSwiper?.zoom.out();
     }
-  }, [setZoomed, zoomed]);
+  }, [setZoomed, zoomed, mainSwiper?.zoom]);
 
   const imagesWithUrls = images.map(image => ({ ...image, url: filesClient.getFileDownloadUrl(image.file.id) }));
 
@@ -123,7 +121,7 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
     >
       {currentImage && <CarouselHeader title={currentImage.title} subTitle={currentImage.subTitle} />}
       {mainSwiper && !!currentImage && !isPdfFile(currentImage.file) && (
-        <CarouselZoom zoomed={zoomed} onZoomChange={zoomedHandler} />
+        <CarouselZoom zoomed={zoomed} onZoomChange={handleZoomChange} />
       )}
       <CarouselWrapper
         imagesWithUrls={imagesWithUrls}

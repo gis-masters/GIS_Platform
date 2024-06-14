@@ -7,8 +7,8 @@ import { generateRandomId } from '../../../services/util/randomId';
 const cnServicesCalculatorSelectAll = cn('ServicesCalculator', 'SelectAll');
 
 interface ServicesCalculatorSelectAllProps {
-  selectAllService: () => void;
   selectedAllServices: boolean;
+  selectAllService(): void;
 }
 
 const htmlId = 'servicesCalculator_' + generateRandomId();

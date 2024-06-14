@@ -35,7 +35,7 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
     const { id, title, type, okText, cancelText, message, open } = this.props.info;
     const formId = `UtilityDialogForm_${id}`;
     const submitProps: ButtonProps =
-      type === 'prompto' || type === 'formPrompt' ? { form: formId, type: 'submit' } : { onClick: this.okHandler };
+      type === 'prompto' || type === 'formPrompt' ? { form: formId, type: 'submit' } : { onClick: this.handleOk };
     const baseDialogProps: Partial<DialogProps> = type === 'formPrompt' ? { fullWidth: true, maxWidth: 'md' } : {};
 
     return (
@@ -43,7 +43,7 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
         {...baseDialogProps}
         PaperProps={{ className: cnUtilityDialog({ type }) }}
         open={Boolean(open)}
-        onClose={this.closeHandler}
+        onClose={this.handleClose}
         {...this.props.info.dialogProps}
       >
         {title && <DialogTitle className={cnUtilityDialog('Title')}>{title}</DialogTitle>}
@@ -52,20 +52,20 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
           <Button {...submitProps} color='primary' autoFocus={type !== 'prompto'}>
             {okText || submitTexts[type]}
           </Button>
-          {type !== 'achtung' && <Button onClick={this.closeHandler}>{cancelText || cancelTexts[type]}</Button>}
+          {type !== 'achtung' && <Button onClick={this.handleClose}>{cancelText || cancelTexts[type]}</Button>}
         </DialogActions>
       </Dialog>
     );
   }
 
   @boundMethod
-  private okHandler() {
+  private handleOk() {
     const { id } = this.props.info;
     communicationService.utilityDialogClosed.emit({ id, answer: true });
   }
 
   @boundMethod
-  private closeHandler() {
+  private handleClose() {
     communicationService.utilityDialogClosed.emit({ id: this.props.info.id, answer: false });
   }
 }

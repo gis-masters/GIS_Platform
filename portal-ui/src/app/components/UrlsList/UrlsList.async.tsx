@@ -20,7 +20,7 @@ export interface UrlsListProps extends IClassNameProps {
   value: string;
   editable?: boolean;
   property: PropertySchemaUrl;
-  onChange?: (value: string) => void;
+  onChange?(value: string): void;
 }
 
 const cnUrlsList = cn('UrlsList');
@@ -36,7 +36,7 @@ export default class UrlsList extends Component<UrlsListProps> {
   }
 
   render() {
-    const { className, property, editable } = this.props;
+    const { className, property, editable = false } = this.props;
 
     return (
       <div className={cnUrlsList(null, [className])}>
@@ -83,7 +83,7 @@ export default class UrlsList extends Component<UrlsListProps> {
   private handleChange(formValue: UrlInfo[]) {
     const { onChange } = this.props;
 
-    onChange(JSON.stringify(formValue));
+    onChange?.(JSON.stringify(formValue));
   }
 
   @computed

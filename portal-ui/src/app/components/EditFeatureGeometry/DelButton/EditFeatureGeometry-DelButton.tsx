@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 const cnEditFeatureGeometryDelButton = cn('EditFeatureGeometry', 'DelButton');
 
 interface EditFeatureGeometryDelButtonProps {
-  onClick: () => void;
+  onClick(): void;
   labelToDelete: string;
 }
 

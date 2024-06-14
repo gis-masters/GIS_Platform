@@ -2,16 +2,15 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
-import { Projection } from '../services/data/projection/projection.models';
-import { transformGeometry } from '../services/data/projection/projection.util';
+import { Projection } from '../services/data/projections/projections.models';
+import { transformGeometry } from '../services/data/projections/projections.util';
 import { GeometryType, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
 
-// TODO: пофиксить ошибки типизации
 export class EditFeatureGeometryStore {
   @observable geometry?: WfsGeometry;
-  @observable currentProjection: Projection;
-  @observable nativeProjection: Projection;
+  @observable currentProjection?: Projection;
+  @observable nativeProjection?: Projection;
   @observable private virginGeometry?: WfsGeometry;
 
   constructor() {
@@ -20,8 +19,8 @@ export class EditFeatureGeometryStore {
 
   @computed
   get resultGeometry(): WfsGeometry<Coordinate> | undefined {
-    if (!this.currentProjection) {
-      return;
+    if (!this.currentProjection || !this.geometry || !this.nativeProjection) {
+      throw new Error('Отсутствует проекция, невозможно получить координаты');
     }
 
     return transformGeometry(
@@ -44,36 +43,41 @@ export class EditFeatureGeometryStore {
   }
 
   @computed
-  get geometryType(): GeometryType {
-    return this.geometry && this.geometry.type;
+  get geometryType(): GeometryType | undefined {
+    return this.geometry?.type;
   }
 
   @computed
   private get virginGeometryInCurrentProjection(): WfsGeometry | undefined {
+    if (!this.virginGeometry || !this.nativeProjection || !this.currentProjection) {
+      throw new Error('Отсутствует проекция или начальная геометрия');
+    }
+
     return transformGeometry(this.virginGeometry, this.nativeProjection, this.currentProjection);
   }
 
   @action
-  initGeometry(geometry: WfsGeometry, proj: Projection): void {
-    this.setNativeProjection(proj);
+  initGeometry(geometry: WfsGeometry, projection: Projection): void {
+    this.nativeProjection = projection;
+    this.currentProjection = projection;
     this.virginGeometry = geometry;
     this.setGeometry(geometry);
   }
 
   @action.bound
   setGeometry(geometry: WfsGeometry): void {
+    if (!this.nativeProjection || !this.currentProjection) {
+      throw new Error('Отсутствует проекция');
+    }
     this.geometry = transformGeometry(geometry, this.nativeProjection, this.currentProjection);
   }
 
-  @action
+  @action.bound
   setProjection(proj: Projection): void {
+    if (!this.resultGeometry || !this.nativeProjection) {
+      throw new Error('Отсутствует геометрия или базовая проекция');
+    }
     this.geometry = transformGeometry(this.resultGeometry, this.nativeProjection, proj);
     this.currentProjection = proj;
-  }
-
-  @action
-  private setNativeProjection(proj: Projection) {
-    this.nativeProjection = proj;
-    this.setProjection(proj);
   }
 }

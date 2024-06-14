@@ -24,7 +24,6 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   title: string;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   open: boolean;
-  data: T[];
   loading?: boolean;
   maxWidth?: Breakpoint;
   fullWidth?: boolean;
@@ -34,10 +33,10 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
   afterTable?: ReactNode;
-  getRowId?: (rowData: T) => string | number;
   single?: boolean;
   withoutSelectAll?: boolean;
   additionalAction?: ReactNode;
+  getRowId?(rowData: T): string | number;
   onClose(): void;
   onSelect(items: T[]): void;
   onChange?(items: T[]): void;

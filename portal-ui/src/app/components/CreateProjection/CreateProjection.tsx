@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { projectionClient } from '../../services/data/projection/projection.client';
-import { CreateProjectionModel } from '../../services/data/projection/projection.models';
+import { projectionsClient } from '../../services/data/projections/projections.client';
+import { CreateProjectionModel } from '../../services/data/projections/projections.models';
 import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
 import { achtung } from '../../services/utility-dialogs.service';
@@ -37,7 +37,7 @@ const schema: SimpleSchema = {
 
 interface CreateProjectionProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer
@@ -87,7 +87,7 @@ export class CreateProjection extends Component<CreateProjectionProps> {
     this.setBusy(true);
 
     try {
-      const customCrs = await projectionClient.createCustomProjection(value);
+      const customCrs = await projectionsClient.createCustomProjection(value);
       Toast.success(`Добавлена новая система координат CRG:${customCrs.authSrid}`, { duration: 15_000 });
     } catch (error) {
       const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;

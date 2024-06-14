@@ -41,7 +41,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
     return (
       <Tab
         className={cnAttributesTab({ grade, selected }, [className])}
-        onClick={this.clickHandler}
+        onClick={this.handleClick}
         label={
           <TabInner>
             <TabTitle selected={selected}>{layer.title}</TabTitle>
@@ -56,9 +56,9 @@ export class AttributesTab extends Component<AttributesTabProps> {
               edge='end'
               size='small'
               color='inherit'
-              onPointerDown={this.closePointerDownHandler}
-              onMouseDown={this.closePointerDownHandler}
-              onClick={this.closeClickHandler}
+              onPointerDown={this.handleClosePointerDown}
+              onMouseDown={this.handleClosePointerDown}
+              onClick={this.handleCloseClick}
             >
               <Close fontSize='small' />
             </IconButton>
@@ -75,7 +75,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
   }
 
   @boundMethod
-  private clickHandler() {
+  private handleClick() {
     const { layer, selected, onMinimize } = this.props;
     if (selected) {
       onMinimize(layer);
@@ -84,12 +84,12 @@ export class AttributesTab extends Component<AttributesTabProps> {
     }
   }
 
-  private closePointerDownHandler(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleClosePointerDown(e: React.PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
   }
 
   @boundMethod
-  private closeClickHandler(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleCloseClick(e: React.PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
     e.preventDefault();
     const { layer, onClose } = this.props;

@@ -67,12 +67,22 @@ export enum PrincipalType {
   GROUP = 'group'
 }
 
+export function isPrincipalType(value: unknown): value is PrincipalType {
+  return value === PrincipalType.USER || value === PrincipalType.GROUP;
+}
+
 export interface RoleAssignmentBody {
   id?: number;
   createdAt?: string;
   principalId: number;
   principalType: PrincipalType;
   role: Role;
+}
+
+export interface PermissionsListItem<T = unknown> {
+  entity: T;
+  permissions: RoleAssignmentBody[];
+  broken?: boolean;
 }
 
 export interface ResourcePermissions {

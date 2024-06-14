@@ -1,4 +1,4 @@
-import { compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-CellContent_type_bool';
 import { withTypeChoice } from './_type/XTable-CellContent_type_choice';
@@ -10,17 +10,17 @@ import { withTypeFloat } from './_type/XTable-CellContent_type_float';
 import { withTypeUrl } from './_type/XTable-CellContent_type_url';
 import { withTypeUser } from './_type/XTable-CellContent_type_user';
 import { withTypeUserId } from './_type/XTable-CellContent_type_userId';
-import { XTableCellContentBase as Presenter } from './XTable-CellContent.base';
+import { XTableCellContentBase as Presenter, XTableCellContentProps } from './XTable-CellContent.base';
 
 export const XTableCellContent = compose(
-  withTypeBool,
-  withTypeChoice,
-  withTypeDateTime,
-  withTypeDocument,
-  withTypeFloat,
-  withTypeFile,
-  withTypeFias,
-  withTypeUserId,
-  withTypeUser,
-  withTypeUrl
+  withTypeBool as HOC<XTableCellContentProps<unknown>>,
+  withTypeChoice as HOC<XTableCellContentProps<unknown>>,
+  withTypeDateTime as HOC<XTableCellContentProps<unknown>>,
+  withTypeDocument as HOC<XTableCellContentProps<unknown>>,
+  withTypeFloat as HOC<XTableCellContentProps<unknown>>,
+  withTypeFile as HOC<XTableCellContentProps<unknown>>,
+  withTypeFias as HOC<XTableCellContentProps<unknown>>,
+  withTypeUserId as HOC<XTableCellContentProps<unknown>>,
+  withTypeUser as HOC<XTableCellContentProps<unknown>>,
+  withTypeUrl as HOC<XTableCellContentProps<unknown>>
 )(Presenter) as typeof Presenter;

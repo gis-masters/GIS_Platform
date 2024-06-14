@@ -1,54 +1,54 @@
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
-
-import { editable } from './testSchemas/editable';
-import { readonly } from './testSchemas/readonly';
 import { allTypes } from './testSchemas/allTypes';
-import { withViews } from './testSchemas/withViews';
-import { testSorting } from './testSchemas/testSorting';
-import { withoutViews } from './testSchemas/withoutViews';
-import { forTestTitles } from './testSchemas/forTestTitles';
-import { testNotSorting } from './testSchemas/testNotSorting';
+import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { allTypesEditable } from './testSchemas/allTypesEditable';
 import { allTypesReadonly } from './testSchemas/allTypesReadonly';
-import { withCalculatedArea } from './testSchemas/withCalculatedArea';
-import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
-import { photoLayer } from './testSchemas/photoLayer';
 import { createDocumentsSource } from './testSchemas/createDocumentsSource';
 import { createDocumentsTarget } from './testSchemas/createDocumentsTarget';
-import { withSimpleContentType } from './testSchemas/withSimpleContentType';
-import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
-import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
-import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
-import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
-import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { dlDataWithSimpleContentType } from './testSchemas/dlDataWithSimpleContentType';
-
+import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
+import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
+import { editable } from './testSchemas/editable';
+import { forTestTitles } from './testSchemas/forTestTitles';
+import { photoLayer } from './testSchemas/photoLayer';
+import { readonly } from './testSchemas/readonly';
+import { simple } from './testSchemas/simple';
+import { testNotSorting } from './testSchemas/testNotSorting';
+import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
+import { testSorting } from './testSchemas/testSorting';
+import { withCalculatedArea } from './testSchemas/withCalculatedArea';
+import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
 import { withFile } from './testSchemas/withFiles';
+import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
+import { withoutViews } from './testSchemas/withoutViews';
+import { withSimpleContentType } from './testSchemas/withSimpleContentType';
+import { withViews } from './testSchemas/withViews';
 
 const testSchemas: Schema[] = [
   allTypes,
   allTypesChoiceAsString,
   allTypesEditable,
   allTypesReadonly,
-  editable,
-  forTestTitles,
-  readonly,
-  testNotSorting,
-  testSorting,
-  withSimpleContentType,
-  documentWithoutVersioned,
-  withCalculatedArea,
-  withDefinitionQuery,
-  documentWithDocumentField,
-  withInappropriateStyleName,
-  dlDataWithSimpleContentType,
-  testShapeFeaturesCopy,
-  withoutViews,
-  withFile,
-  withViews,
   createDocumentsSource,
   createDocumentsTarget,
-  photoLayer
+  dlDataWithSimpleContentType,
+  documentWithDocumentField,
+  documentWithoutVersioned,
+  editable,
+  forTestTitles,
+  photoLayer,
+  readonly,
+  simple,
+  testNotSorting,
+  testShapeFeaturesCopy,
+  testSorting,
+  withCalculatedArea,
+  withDefinitionQuery,
+  withFile,
+  withInappropriateStyleName,
+  withoutViews,
+  withSimpleContentType,
+  withViews
 ];
 
 export function getTestSchema(title: string): Schema {

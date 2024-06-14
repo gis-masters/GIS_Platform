@@ -40,7 +40,7 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
           return (
             <FilesItem
               item={item}
-              onDelete={getMissingCompoundFileTypes(files).length ? onDelete : this.deleteHandler}
+              onDelete={getMissingCompoundFileTypes(files).length ? onDelete : this.handleDelete}
               onPreview={onPreview}
               showMainCompoundFileActions={!getMissingCompoundFileTypes(files).length && !i}
               key={`${item.id}_${i}`}
@@ -112,7 +112,7 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
   }
 
   @boundMethod
-  private deleteHandler() {
+  private handleDelete() {
     const { files, onDelete } = this.props;
 
     onDelete(files);

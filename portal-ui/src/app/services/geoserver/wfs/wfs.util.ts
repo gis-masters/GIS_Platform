@@ -80,7 +80,7 @@ export function isPoint(...geometryTypes: (GeometryType | undefined)[]): boolean
 }
 
 export function selectLabelForGeometryType(
-  geometryType: GeometryType,
+  geometryType: GeometryType | undefined,
   ifPolygonal: string,
   ifLinear: string,
   ifPointOrOther?: string,

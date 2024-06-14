@@ -3,8 +3,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { Projection } from '../../services/data/projection/projection.models';
-import { getProjectionByCrs } from '../../services/data/projection/projection.service';
+import { Projection } from '../../services/data/projections/projections.models';
+import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { Button } from '../Button/Button';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
@@ -12,7 +12,7 @@ import { Toast } from '../Toast/Toast';
 interface SelectProjectionDialogProps {
   defaultCrs: string;
   open: boolean;
-  onSelect: (proj: Projection) => void;
+  onSelect(proj: Projection): void;
   onClose(): void;
 }
 
@@ -27,7 +27,7 @@ export class SelectProjectionDialog extends Component<SelectProjectionDialogProp
 
   async componentDidMount(): Promise<void> {
     const { defaultCrs } = this.props;
-    const projection = await getProjectionByCrs(defaultCrs);
+    const projection = await getProjectionByCode(defaultCrs);
     if (projection) {
       this.setSelectedProjection(projection);
     }
@@ -40,12 +40,7 @@ export class SelectProjectionDialog extends Component<SelectProjectionDialogProp
       <Dialog open={open} onClose={onClose} maxWidth='md' fullWidth>
         <DialogTitle>Выбор системы координат</DialogTitle>
         <DialogContent>
-          <SelectProjection
-            onSelect={this.setSelectedProjection}
-            formView
-            fullWidth
-            defaultProjection={this.projection}
-          />
+          <SelectProjection onChange={this.setSelectedProjection} fullWidth value={this.projection} />
         </DialogContent>
         <DialogActions>
           <Button onClick={this.save} color='primary'>
@@ -67,10 +62,8 @@ export class SelectProjectionDialog extends Component<SelectProjectionDialogProp
       return;
     }
 
-    if (onSelect && onClose) {
-      onSelect(this.projection);
-      onClose();
-    }
+    onSelect?.(this.projection);
+    onClose?.();
   }
 
   @action.bound

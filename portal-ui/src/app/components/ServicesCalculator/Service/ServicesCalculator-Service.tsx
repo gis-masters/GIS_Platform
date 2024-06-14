@@ -16,8 +16,8 @@ const cnServicesCalculatorService = cn('ServicesCalculator', 'Service');
 
 interface ServicesCalculatorServiceProps {
   service: ServicesInfo;
-  selectService: (service: ServicesInfo) => void;
-  deleteService: (service: ServicesInfo) => void;
+  selectService(service: ServicesInfo): void;
+  deleteService(service: ServicesInfo): void;
 }
 
 @observer
@@ -33,7 +33,7 @@ export class ServicesCalculatorService extends Component<ServicesCalculatorServi
           <ServicesCalculatorServiceDetails service={service} />
           {service.additions?.map((addition, index) => <ServicesCalculatorAdditions addition={addition} key={index} />)}
         </CardContent>
-        <ServicesCalculatorDelete clickHandler={this.delete} />
+        <ServicesCalculatorDelete onClick={this.delete} />
       </Card>
     );
   }

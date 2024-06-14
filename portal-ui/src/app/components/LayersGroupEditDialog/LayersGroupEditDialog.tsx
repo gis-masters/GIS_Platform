@@ -11,10 +11,10 @@ const cnLayersGroupEditDialog = cn('LayersGroupEditDialog');
 
 interface LayersGroupEditDialogProps {
   open: boolean;
-  onClose: () => void;
-  onEdit: (title: string) => void;
   title?: string;
   create?: boolean;
+  onClose(): void;
+  onEdit(title: string): void;
 }
 
 @observer

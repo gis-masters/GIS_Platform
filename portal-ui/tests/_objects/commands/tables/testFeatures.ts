@@ -1,23 +1,24 @@
 import { clone } from 'lodash';
 
-import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
 import { generateObjectBySchema } from '../../utils/generateObjectBySchema';
-
+import { getUserByEmail } from '../auth/getUserByEmail';
+import { getTestUser } from '../auth/testUsers';
+import { blackSea } from './testFeatures/blackSea';
+import { crimea } from './testFeatures/crimea';
+import { forCopy } from './testFeatures/forCopy';
+import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
+import { forFiltering } from './testFeatures/forFiltering';
 import { forForm } from './testFeatures/forForm';
 import { forForm2 } from './testFeatures/forForm2';
-import { forProkol } from './testFeatures/forProkol';
-import { forTitles } from './testFeatures/forTitles';
-import { forSorting } from './testFeatures/forSorting';
-import { forFiltering } from './testFeatures/forFiltering';
 import { forOtherFiltering } from './testFeatures/forOtherFiltering';
 import { forOtherFiltering2 } from './testFeatures/forOtherFiltering2';
-import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
-import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { forPhotoLayerWithMultipleObjects } from './testFeatures/forPhotoLayerWithMultipleObjects';
-import { getTestUser } from '../auth/testUsers';
-import { getUserByEmail } from '../auth/getUserByEmail';
-import { forCopy } from './testFeatures/forCopy';
+import { forProkol } from './testFeatures/forProkol';
+import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
+import { forSorting } from './testFeatures/forSorting';
+import { forTitles } from './testFeatures/forTitles';
 
 const KEY = 'тестовые данные';
 
@@ -125,6 +126,12 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'для копирования (в том числе без геометрии)': {
       return forCopy;
+    }
+    case 'Чёрное море': {
+      return blackSea;
+    }
+    case 'Крым': {
+      return crimea;
     }
     default: {
       if (key.includes(KEY)) {

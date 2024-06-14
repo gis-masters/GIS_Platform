@@ -90,7 +90,7 @@ export default class DataImport extends Component {
           loading={this.loading}
           file={file}
           importOn={on}
-          onDrop={this.fileDropHandler}
+          onDrop={this.handleFileDrop}
           onClear={this.reset}
         />
 
@@ -123,7 +123,7 @@ export default class DataImport extends Component {
   }
 
   @action.bound
-  private fileDropHandler(files: File[]) {
+  private handleFileDrop(files: File[]) {
     if (files.length) {
       currentImport.file = files[0];
       if (!currentImport.isWrongExt) {

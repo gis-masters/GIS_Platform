@@ -11,7 +11,7 @@ import { getFile } from '../../services/data/files/files.service';
 import { getFileBaseName } from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { defaultOlCrs } from '../../services/data/projection/projection.models';
+import { defaultOlProjectionCode } from '../../services/data/projections/projections.models';
 import {
   ContentType,
   PropertySchema,
@@ -44,8 +44,8 @@ const cnAddLayerDialog = cn('AddLayerDialog');
 
 interface AddLayerDialogProps {
   open: boolean;
-  onClose: () => void;
-  onAdd: (layer: CrgLayer) => void;
+  onClose(): void;
+  onAdd(layer: CrgLayer): void;
 }
 
 interface LayerFormValue extends CrgLayer {
@@ -360,7 +360,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         const { path } = await getFile(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
-        await placeFile(file, { crs: defaultOlCrs, mode: 'geoserver' }, currentProject, record);
+        await placeFile(file, { crs: defaultOlProjectionCode, mode: 'geoserver' }, currentProject, record);
 
         this.props.onAdd({
           ...rasterDefaults,
@@ -368,7 +368,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           title: title || getFileBaseName(file.title),
           dataStoreName: workspace,
           tableName: fileTableName, // name слоя не геосервере
-          complexName: buildComplexName(workspace, fileTableName, defaultOlCrs),
+          complexName: buildComplexName(workspace, fileTableName, defaultOlProjectionCode),
           dataSourceUri: 'file://' + path,
           libraryId: record.libraryTableName,
           recordId: record.id

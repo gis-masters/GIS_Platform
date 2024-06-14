@@ -10,9 +10,9 @@ const cnDataImport = cn('DataImport');
 import '!style-loader!css-loader!sass-loader!./DataImport-NavButtons.scss';
 
 interface DataImportNavButtonsProps {
-  onNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  onCancel: () => void;
   nextUrl: string;
+  onNext(e: React.MouseEvent<HTMLButtonElement>): void;
+  onCancel(): void;
 }
 
 export const DataImportNavButtons: FC<DataImportNavButtonsProps> = observer(({ onNext, onCancel, nextUrl }) => {

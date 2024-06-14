@@ -1,7 +1,7 @@
 import { pointOnFeature } from '@turf/turf';
 
-import { getOlProjection, getProjectionByCrs } from '../../data/projection/projection.service';
-import { transform } from '../../data/projection/projection.util';
+import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
+import { transform } from '../../data/projections/projections.util';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { mapLabelsService } from '../../map/map-labels.service';
@@ -12,7 +12,7 @@ export async function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): Promise<vo
     const layer = getLayerByFeatureInCurrentProject(wfsFeature);
 
     if (layer) {
-      const projection = await getProjectionByCrs(layer.nativeCRS);
+      const projection = await getProjectionByCode(layer.nativeCRS);
       const olProjection = await getOlProjection();
 
       if (geometry && projection && olProjection) {

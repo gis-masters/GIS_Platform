@@ -17,7 +17,7 @@ const cnExplorerFilter = cn('Explorer', 'Filter');
 interface ExplorerFilterProps {
   store: ExplorerStore;
   service: ExplorerService;
-  onChange: () => void;
+  onChange(): void;
 }
 
 @observer

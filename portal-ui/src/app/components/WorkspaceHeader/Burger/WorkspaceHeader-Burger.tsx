@@ -8,7 +8,7 @@ import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Burger.scss';
 const cnWorkspaceHeaderBurger = cn('WorkspaceHeader', 'Burger');
 
 export interface WorkspaceHeaderBurgerProps {
-  toggleOpen: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  toggleOpen(e: React.MouseEvent<HTMLElement, MouseEvent>): void;
 }
 
 export const WorkspaceHeaderBurger: FC<WorkspaceHeaderBurgerProps> = ({ toggleOpen }) => (

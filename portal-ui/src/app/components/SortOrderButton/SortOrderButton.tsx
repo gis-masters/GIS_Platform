@@ -10,7 +10,7 @@ const cnSortOrderButton = cn('SortOrderButton');
 
 interface SortOrderButtonProps extends IClassNameProps {
   asc: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
 export const SortOrderButton: FC<SortOrderButtonProps> = ({ asc, onClick, className }) => (

@@ -4,13 +4,6 @@ import { allPermissions } from '../../../stores/AllPermissions.store';
 import { communicationService } from '../../communication.service';
 import { projectsService } from '../../gis/projects/projects.service';
 import { permissionsClient } from './permissions.client';
-import { RoleAssignmentBody } from './permissions.models';
-
-export interface PermissionsListItem<T = unknown> {
-  entity: T;
-  permissions: RoleAssignmentBody[];
-  broken?: boolean;
-}
 
 class AllPermissionsService {
   private static _instance: AllPermissionsService;

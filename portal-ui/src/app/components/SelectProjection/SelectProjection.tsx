@@ -1,125 +1,37 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { FormControl, FormLabel, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
-import { Projection, projectionXTableCols } from '../../services/data/projection/projection.models';
-import { getProjection, registerProjectionArrayInProj4 } from '../../services/data/projection/projection.service';
-import { PageOptions } from '../../services/models';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
+import { getProjections, registerProjectionArrayInProj4 } from '../../services/data/projections/projections.service';
+import { getProjectionCode } from '../../services/data/projections/projections.util';
+import { projectionsStore } from '../../stores/Projections.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { Toast } from '../Toast/Toast';
-
-import '!style-loader!css-loader!sass-loader!./SelectProjection.scss';
 
 const cnSelectProjection = cn('SelectProjection');
 
 const selectAnother = 'Выбрать другую';
 
-interface SelectProjectionProps {
-  onSelect: (projection: Projection) => void;
-  formView?: boolean;
+interface SelectProjectionProps extends IClassNameProps {
+  label?: string;
+  labelInField?: boolean;
   fullWidth?: boolean;
-  defaultProjection?: Projection;
+  value?: Projection;
+  htmlId?: string;
+  onChange(projection: Projection): void;
 }
 
 @observer
 export class SelectProjection extends Component<SelectProjectionProps> {
   @observable private dialogOpen = false;
-  @observable private projections: Projection[] = [];
-  @observable private selectedProjection?: Projection;
-
-  async componentDidMount(): Promise<void> {
-    await this.init();
-  }
-
-  constructor(props: SelectProjectionProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  render() {
-    const { formView = false, fullWidth } = this.props;
-
-    return (
-      this.projections.length > 1 && (
-        <div className={cnSelectProjection()}>
-          <FormControl
-            fullWidth={fullWidth}
-            variant='standard'
-            className={cnSelectProjection('Control', { formView })}
-            size='small'
-          >
-            {formView ? (
-              <FormLabel className={cnSelectProjection('Label')} color='secondary' htmlFor='projSelector'>
-                Система координат
-              </FormLabel>
-            ) : (
-              <InputLabel id='projectionSelectLabel'>Система координат</InputLabel>
-            )}
-            <Select
-              className={cnSelectProjection('Select', { formView })}
-              size='small'
-              autoWidth
-              labelId='projectionSelectLabel'
-              fullWidth={fullWidth}
-              value={this.selectedProjection?.title}
-              variant='standard'
-              onChange={this.handleChange}
-            >
-              {this.projections.map((item, key) => (
-                <MenuItem value={item.title} key={key}>
-                  {item.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <ChooseXTableDialog<Projection>
-            data={[]}
-            getData={this.getProjection}
-            selectedItems={[this.selectedProjection]}
-            title={'Выбор системы координат'}
-            open={this.dialogOpen}
-            cols={projectionXTableCols}
-            getRowId={this.getRowId}
-            onClose={this.closeDialog}
-            onSelect={this.select}
-            withoutSelectAll
-            single
-          />
-        </div>
-      )
-    );
-  }
-
-  @boundMethod
-  private async init() {
-    this.setProjections(organizationSettings.orgFavoriteProjections);
-    const projection = organizationSettings.orgDefaultProjection;
-
-    if (projection) {
-      this.setSelectedProjection(projection);
-    }
-
-    const { defaultProjection } = this.props;
-
-    if (defaultProjection) {
-      const pageOptions: PageOptions = {
-        page: 0,
-        pageSize: 1,
-        filter: { auth_srid: defaultProjection.authSrid }
-      };
-      const [projections] = await getProjection(pageOptions);
-
-      this.setProjections([projections[0], ...this.projections]);
-      this.setSelectedProjection(projections[0]);
-    }
-
-    this.addProjection({
+  @observable private additionalProjections: Projection[] = [
+    {
       title: selectAnother,
       authSrid: 0,
       authName: selectAnother,
@@ -127,25 +39,95 @@ export class SelectProjection extends Component<SelectProjectionProps> {
       srtext: '',
       auth_name: '',
       proj4Text: ''
-    });
+    }
+  ];
 
-    for (const item of this.projections) {
-      if (item.authName !== selectAnother) {
-        registerProjectionArrayInProj4([item]);
-      }
+  constructor(props: SelectProjectionProps) {
+    super(props);
+    makeObservable(this);
+
+    if (props.value) {
+      this.addProjection(props.value);
     }
   }
 
-  @action.bound
-  private async handleChange(e: SelectChangeEvent) {
-    if (e.target.value === selectAnother) {
+  componentDidUpdate(prevProps: SelectProjectionProps): void {
+    const { value } = this.props;
+    if (value && prevProps.value !== value) {
+      this.addProjection(value);
+    }
+  }
+
+  render() {
+    const {
+      labelInField,
+      fullWidth,
+      className,
+      value,
+      htmlId = 'projectionSelect',
+      label = 'Система координат'
+    } = this.props;
+
+    return (
+      <div className={cnSelectProjection(null, [className])}>
+        {labelInField && (
+          <InputLabel shrink id={htmlId + 'label'}>
+            {label}
+          </InputLabel>
+        )}
+        <Select
+          className={cnSelectProjection('Select')}
+          id={htmlId}
+          size='small'
+          autoWidth
+          labelId={htmlId + 'label'}
+          fullWidth={fullWidth}
+          value={(value && getProjectionCode(value)) || ''}
+          variant='standard'
+          onChange={this.handleChange}
+        >
+          {!value && <MenuItem value='' />}
+
+          {this.projections.map(item => {
+            const crs = getProjectionCode(item);
+
+            return (
+              <MenuItem value={crs} key={crs}>
+                {item.title}
+              </MenuItem>
+            );
+          })}
+        </Select>
+
+        <ChooseXTableDialog<Projection>
+          getData={getProjections}
+          selectedItems={[...projectionsStore.favoriteProjections, ...this.additionalProjections]}
+          title={'Выбор системы координат'}
+          open={this.dialogOpen}
+          cols={projectionXTableCols}
+          getRowId={this.getRowId}
+          onClose={this.closeDialog}
+          onSelect={this.handleAdditionalProjectionSelect}
+          withoutSelectAll
+          single
+        />
+      </div>
+    );
+  }
+
+  @computed private get projections(): Projection[] {
+    return [...projectionsStore.favoriteProjections, ...this.additionalProjections];
+  }
+
+  @boundMethod
+  private handleChange(e: SelectChangeEvent) {
+    if (e.target.value.startsWith(selectAnother)) {
       this.openDialog();
     } else {
-      const projection = await this.getProjectionByTitle(e.target.value);
+      const projection = this.projections.find(projection => e.target.value === getProjectionCode(projection));
 
       if (projection) {
-        this.setSelectedProjection(projection);
-        this.props.onSelect(projection);
+        this.props.onChange(projection);
       } else {
         Toast.error('Не найдена выбранная система координат ' + e.target.value);
       }
@@ -153,19 +135,12 @@ export class SelectProjection extends Component<SelectProjectionProps> {
   }
 
   @action.bound
-  private select(items: Projection[]) {
+  private handleAdditionalProjectionSelect(items: Projection[]) {
+    const { onChange } = this.props;
     const selectedProjection = items[0];
     registerProjectionArrayInProj4([selectedProjection]);
-
-    this.setProjections([selectedProjection, ...this.projections]);
-    this.setSelectedProjection(selectedProjection);
-
-    const { onSelect } = this.props;
-
-    if (onSelect) {
-      onSelect(selectedProjection);
-    }
-
+    this.addProjection(selectedProjection);
+    onChange?.(selectedProjection);
     this.closeDialog();
   }
 
@@ -180,42 +155,14 @@ export class SelectProjection extends Component<SelectProjectionProps> {
   }
 
   @action.bound
-  private setSelectedProjection(selectedProjection: Projection) {
-    this.selectedProjection = selectedProjection;
-  }
-
-  @action.bound
   private addProjection(projection: Projection) {
-    const isExist = this.projections.find(proj => proj.title === projection.title);
+    const isExist = this.projections.some(({ title }) => title === projection.title);
     if (!isExist) {
-      this.projections.push(projection);
+      this.additionalProjections.unshift(projection);
     }
-  }
-
-  @action.bound
-  private setProjections(proj: Projection[]) {
-    this.projections = proj;
   }
 
   private getRowId(srs: SpatialReferenceSystem) {
     return srs.authName + String(srs.authSrid);
-  }
-
-  private async getProjection(pageOptions: PageOptions): Promise<[Projection[], number]> {
-    const [proj, totalPages] = await getProjection(pageOptions);
-
-    return [proj, totalPages];
-  }
-
-  private async getProjectionByTitle(projectionTitle: string): Promise<Projection | undefined> {
-    const pageOptions: PageOptions = {
-      page: 0,
-      pageSize: 1,
-      filter: { auth_srid: projectionTitle.split(':')[1].split(',')[0] }
-    };
-
-    const [proj] = await getProjection(pageOptions);
-
-    return proj.find(({ title }) => title === projectionTitle);
   }
 }

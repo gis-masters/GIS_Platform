@@ -29,9 +29,9 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 interface EditFeatureGeometryAsTextProps {
   coordinates: CoordinateEdited[];
   mustBeClosed: boolean;
-  onChange?: (coordinates: CoordinateEdited[]) => void;
   geometryType: GeometryType;
   first: boolean;
+  onChange?(coordinates: CoordinateEdited[]): void;
 }
 
 @observer
@@ -70,7 +70,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
             <TextField
               className={cnEditFeatureGeometry('Text')}
               value={this.text}
-              onChange={this.changeHandler}
+              onChange={this.handleChange}
               multiline
               autoFocus
               variant='standard'
@@ -101,7 +101,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  private handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     this.setText(e.target.value);
   }
 

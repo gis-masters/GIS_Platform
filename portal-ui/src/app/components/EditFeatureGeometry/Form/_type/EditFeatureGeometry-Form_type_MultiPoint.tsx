@@ -3,11 +3,17 @@ import { action, makeObservable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
 import { Coordinate } from 'ol/coordinate';
 
-import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import {
+  CoordinateEdited,
+  GeometryType,
+  isCoordinateEdited,
+  WfsMultiPointGeometry
+} from '../../../../services/geoserver/wfs/wfs.models';
+import { isArrayOf } from '../../../../services/util/typeGuards/isArrayOf';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
-import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group';
+import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
-import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 class EditFeatureGeometryFormTypeMultiPoint extends Component<EditFeatureGeometryFormProps> {
   constructor(props: EditFeatureGeometryFormProps) {
@@ -39,7 +45,11 @@ class EditFeatureGeometryFormTypeMultiPoint extends Component<EditFeatureGeometr
 
   @action.bound
   private handleDraw(coords: Coordinate[]) {
-    (this.props.store.geometry.coordinates as Coordinate[]).push(...coords);
+    const coordinates = this.props.store.geometry?.coordinates;
+    if (isArrayOf(coordinates, isCoordinateEdited)) {
+      // TODO: убрать as после перехода на strict mode
+      (coordinates as CoordinateEdited[]).push(...coords);
+    }
   }
 }
 

@@ -10,8 +10,8 @@ const cnLayerOpen = cn('Layer', 'Open');
 
 interface LayerOpenProps {
   open: boolean;
-  onClick: () => void;
   disabled: boolean;
+  onClick(): void;
 }
 
 export const LayerOpen: FC<LayerOpenProps> = ({ onClick, open, disabled }) => (

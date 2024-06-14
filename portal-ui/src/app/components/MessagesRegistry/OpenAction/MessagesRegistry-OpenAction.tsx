@@ -39,7 +39,7 @@ export class MessagesRegistryOpenAction extends Component<MessagesRegistryOpenAc
 
         <MessagesRegistryDialog
           dialogOpen={this.dialogOpen}
-          closeDialog={this.closeDialog}
+          onClose={this.closeDialog}
           schema={schema}
           message={message}
         />

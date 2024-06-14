@@ -4,7 +4,7 @@ import { MuiInputBlock } from '../../../MuiInput/MuiInput.block';
 
 export class XTableFilterTypeStringBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_string',
+    container: '.XTable-Filter_type_string,.XTable-Filter_type_id',
     strictness: '.XTable-Filter_type_string .XTable-FilterStrictness'
   };
 

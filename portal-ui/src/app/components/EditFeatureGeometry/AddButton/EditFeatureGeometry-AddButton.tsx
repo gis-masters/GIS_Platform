@@ -10,7 +10,7 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-AddButton.scs
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAddButtonProps extends ChildrenProps {
-  onClick: () => void;
+  onClick(): void;
 }
 
 export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (

@@ -27,8 +27,8 @@ import {
   isTableExportAllowed,
   isUpdateAllowed
 } from '../../../services/data/permissions/permissions.service';
-import { Projection } from '../../../services/data/projection/projection.models';
-import { getCrsFromProjection } from '../../../services/data/projection/projection.util';
+import { Projection } from '../../../services/data/projections/projections.models';
+import { getProjectionCode } from '../../../services/data/projections/projections.util';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
@@ -423,7 +423,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, onClose } = this.props;
     const { dataset, tableName } = entity as CrgVectorLayer;
 
-    await exportVectorTableAsShape([{ dataset, table: tableName }], getCrsFromProjection(proj));
+    await exportVectorTableAsShape([{ dataset, table: tableName }], getProjectionCode(proj));
     sidebars.openInfo();
 
     onClose();

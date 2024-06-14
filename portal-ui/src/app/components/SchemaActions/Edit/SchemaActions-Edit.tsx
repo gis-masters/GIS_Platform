@@ -42,10 +42,10 @@ const cnSchemaActionsEditInJsonForm = cn('SchemaActions', 'EditInJsonForm');
 interface SchemaActionsEditProps {
   schema: Schema;
   as: ActionsItemVariant;
-  explorerItem?: Library | VectorTable;
+  item?: Library | VectorTable;
   withPreview?: boolean;
   readonly?: boolean;
-  editIcon?: boolean;
+  isTemplateEditing?: boolean;
 }
 
 @observer
@@ -72,7 +72,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
   }
 
   render() {
-    const { as, withPreview, editIcon, readonly = false } = this.props;
+    const { as, withPreview, isTemplateEditing: editIcon, readonly = false } = this.props;
     const icons = [
       [SchemaOutlined, SchemaIcon],
       [EditOutlined, Edit]
@@ -153,7 +153,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
 
   @computed
   private get buttonTitle(): string {
-    const { readonly, editIcon } = this.props;
+    const { readonly, isTemplateEditing: editIcon } = this.props;
 
     if (editIcon) {
       return 'Редактировать';
@@ -164,7 +164,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
 
   @computed
   private get schemaEditTitle() {
-    const { readonly, explorerItem, schema } = this.props;
+    const { readonly, item: explorerItem, schema } = this.props;
     const title = readonly ? 'Просмотр схемы' : 'Редактирование схемы';
 
     if (explorerItem?.type === DataEntityType.LIBRARY && explorerItem?.title) {
@@ -271,7 +271,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
   }
 
   private async updateSchema(schema: Schema) {
-    const { explorerItem } = this.props;
+    const { item: explorerItem } = this.props;
 
     if (!explorerItem) {
       await schemaService.updateSchema(schema);

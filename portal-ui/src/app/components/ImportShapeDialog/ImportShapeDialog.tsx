@@ -19,7 +19,7 @@ import { Toast } from '../Toast/Toast';
 
 interface ImportShapeDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
   datasetId: string;
   tableId: string;
 }
@@ -39,7 +39,7 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
   @observable private importDetails?: ImportShapeProcess;
   @observable private importDetailsDialogOpen = false;
   @observable private importWarningDialogOpen = false;
-  @observable private importWarningMessage: string;
+  @observable private importWarningMessage?: string;
   @observable private loading = false;
 
   constructor(props: ImportShapeDialogProps) {
@@ -56,11 +56,11 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
           <DialogTitle>Импорт геометрии из Shape-файла</DialogTitle>
           <DialogContent>
             <DialogContentText>Выберите zip архив, в котором содержится Shape-файл</DialogContentText>
-            <Form id='importShapeFileForm' onSubmit={this.submitHandler}>
+            <Form id='importShapeFileForm' onSubmit={this.handleSubmit}>
               <FormField>
                 <FormLabel htmlFor='importShapeFileField'>Файл</FormLabel>
                 <div className={cnFormControl()}>
-                  <FileInput accept={Mime.ZIP} fullWidth onChange={this.changeHandler} id='importShapeFileField' />
+                  <FileInput accept={Mime.ZIP} fullWidth onChange={this.handleChange} id='importShapeFileField' />
                 </div>
               </FormField>
             </Form>
@@ -121,13 +121,16 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
   }
 
   @boundMethod
-  private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  private async handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const { datasetId, tableId } = this.props;
 
     try {
       this.setLoading(true);
+      if (!this.file) {
+        throw new Error('Файл не выбран');
+      }
       const response = await importFeaturesFromShapeFile(this.file, datasetId, tableId);
       const importInfo = await awaitProcess(Number(response._links.process.href.split('/').at(-1)));
 
@@ -158,9 +161,9 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
   }
 
   @action.bound
-  private changeHandler(fileList: FileList) {
+  private handleChange(fileList: FileList | null) {
     this.reset();
-    if (fileList[0] && isZipFile(fileList[0])) {
+    if (fileList?.[0] && isZipFile(fileList[0])) {
       this.file = fileList[0];
     }
   }
@@ -172,7 +175,7 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
 
   @action
   private reset() {
-    this.file = null;
+    this.file = undefined;
     this.loading = false;
   }
 

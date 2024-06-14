@@ -12,7 +12,7 @@ export interface CustomStyleControlFormProps extends IClassNameProps {
   value: CustomStyleDescription;
   withIcon?: boolean;
   schema: Schema;
-  onChange: (style: CustomStyleDescription) => void;
+  onChange(style: CustomStyleDescription): void;
 }
 
 export const CustomStyleControlFormBase: FC<CustomStyleControlFormProps> = () => {

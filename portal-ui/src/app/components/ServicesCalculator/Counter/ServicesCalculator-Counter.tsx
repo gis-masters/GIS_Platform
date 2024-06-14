@@ -27,21 +27,25 @@ export class ServicesCalculatorCounter extends Component<ServicesCalculatorCount
 
     return (
       <div className={cnServicesCalculatorCounter()}>
-        <ServicesCalculatorButton action={'+'} clickHandler={this.increment} />
-        <ServicesCalculatorCounterValue counter={service.counter} />
-        <ServicesCalculatorButton action={'-'} clickHandler={this.decrement} />
+        <ServicesCalculatorButton action={'+'} onClick={this.increment} />
+        <ServicesCalculatorCounterValue counter={service.counter || 0} />
+        <ServicesCalculatorButton action={'-'} onClick={this.decrement} />
       </div>
     );
   }
 
   @action.bound
   private increment() {
-    this.props.service.counter++;
+    if (typeof this.props.service?.counter === 'number') {
+      this.props.service.counter++;
+    } else {
+      this.props.service.counter = 1;
+    }
   }
 
   @action.bound
   private decrement() {
-    if (this.props.service.counter > 0) {
+    if (this.props.service?.counter && this.props.service.counter > 0) {
       this.props.service.counter--;
     }
   }

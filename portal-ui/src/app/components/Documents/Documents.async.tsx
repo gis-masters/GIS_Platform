@@ -35,8 +35,8 @@ export default class Documents extends Component<DocumentsProps> {
   }
 
   render() {
-    const { value, property, editable } = this.props;
-    const { multiple, maxDocuments } = property;
+    const { value, property, editable = false } = this.props;
+    const { multiple = false, maxDocuments } = property;
     const numerous = value.length > 1;
 
     return (
@@ -47,7 +47,7 @@ export default class Documents extends Component<DocumentsProps> {
               return (
                 <DocumentsItem
                   item={item}
-                  onDelete={this.deleteHandler}
+                  onDelete={this.handleDelete}
                   key={`${item.libraryTableName}_${item.id}_${i}`}
                   editable={editable}
                   numerous={numerous}
@@ -60,7 +60,7 @@ export default class Documents extends Component<DocumentsProps> {
         {editable && value.length < this.max && (
           <DocumentsAdd
             filled={Boolean(value.length)}
-            onChange={this.addHandler}
+            onChange={this.handleAdd}
             value={value}
             maxDocuments={multiple ? maxDocuments : 1}
             librariesTableNames={this.librariesTableNames}
@@ -84,9 +84,9 @@ export default class Documents extends Component<DocumentsProps> {
   }
 
   @boundMethod
-  private deleteHandler(deletingItem: DocumentInfo) {
+  private handleDelete(deletingItem: DocumentInfo) {
     const { onChange, value } = this.props;
-    onChange(
+    onChange?.(
       value.filter(
         ({ id, libraryTableName }) => !(id === deletingItem.id && libraryTableName === deletingItem.libraryTableName)
       )
@@ -94,8 +94,8 @@ export default class Documents extends Component<DocumentsProps> {
   }
 
   @boundMethod
-  private addHandler(selectedDocuments: DocumentInfo[]) {
+  private handleAdd(selectedDocuments: DocumentInfo[]) {
     const { onChange, value } = this.props;
-    onChange([...value, ...selectedDocuments]);
+    onChange?.([...value, ...selectedDocuments]);
   }
 }

@@ -20,7 +20,7 @@ interface HelpProps {
 
 @observer
 export class Help extends Component<HelpProps> {
-  @observable private selectedItem: TocItem;
+  @observable private selectedItem?: TocItem;
 
   private helpPart: HelpPart;
 
@@ -48,22 +48,25 @@ export class Help extends Component<HelpProps> {
           <HelpToc
             className={cnHelp('Toc', ['scroll'])}
             items={items}
-            onSelect={this.selectHandler}
+            onSelect={this.handleSelect}
             selectedItem={this.currentItem}
           />
         ) : null}
-        <div className={cnHelp('Content', ['scroll'])} dangerouslySetInnerHTML={{ __html: this.currentItem.content }} />
+        <div
+          className={cnHelp('Content', ['scroll'])}
+          dangerouslySetInnerHTML={{ __html: this.currentItem?.content || '' }}
+        />
       </div>
     );
   }
 
   @computed
-  get currentItem(): TocItem {
-    return this.selectedItem || this.props.selectedItem || this.helpPart.items[0];
+  get currentItem(): TocItem | undefined {
+    return this.selectedItem || this.props.selectedItem || this.helpPart.items?.[0];
   }
 
   @action.bound
-  private selectHandler(item: TocItem) {
+  private handleSelect(item: TocItem) {
     this.selectedItem = item;
   }
 }

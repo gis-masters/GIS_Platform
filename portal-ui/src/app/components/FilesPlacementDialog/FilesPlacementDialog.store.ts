@@ -2,6 +2,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 
 import { FileInfo } from '../../services/data/files/files.models';
 import { LibraryRecord } from '../../services/data/library/library.models';
+import { Projection } from '../../services/data/projections/projections.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 
 export interface PlacementTask {
@@ -17,7 +18,7 @@ export class FilesPlacementReportStore {
   @observable commonProgress: boolean;
   @observable tasks: PlacementTask[];
   @observable activeStep = 0;
-  @observable crs = '';
+  @observable projection?: Projection;
   @observable files: FileInfo[] = [];
   @observable project: CrgProject;
 
@@ -29,7 +30,7 @@ export class FilesPlacementReportStore {
   @computed
   get nextStepDisabled(): boolean {
     if (this.activeStep === 0) {
-      return !this.crs;
+      return !this.projection;
     }
 
     if (this.activeStep === 1) {
@@ -141,9 +142,9 @@ export class FilesPlacementReportStore {
     this.files = files;
   }
 
-  @action
-  setCrs(crs: string): void {
-    this.crs = crs;
+  @action.bound
+  setProjection(projection?: Projection): void {
+    this.projection = projection;
   }
 
   private findTaskById(taskId: string) {

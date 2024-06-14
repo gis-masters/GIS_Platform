@@ -230,38 +230,16 @@ class FormControlTypeChoice extends Component<FormControlProps> {
         ? JSON.stringify(event.target.value.filter(item => item !== EMPTY))
         : event.target.value;
 
-    if (onChange) {
-      onChange({
-        value,
-        propertyName: property.name
-      });
-    }
-
-    if (onNeedValidate) {
-      onNeedValidate({
-        value,
-        propertyName: property.name
-      });
-    }
+    onChange?.({ value, propertyName: property.name });
+    onNeedValidate?.({ value, propertyName: property.name });
   }
 
   @boundMethod
   private handleChangeButtonToggle(event: React.MouseEvent<HTMLElement, MouseEvent>, value: string) {
     const { onChange, onNeedValidate, property } = this.props;
 
-    if (onChange) {
-      onChange({
-        value: value,
-        propertyName: property.name
-      });
-    }
-
-    if (onNeedValidate) {
-      onNeedValidate({
-        value: value,
-        propertyName: property.name
-      });
-    }
+    onChange?.({ value, propertyName: property.name });
+    onNeedValidate?.({ value, propertyName: property.name });
   }
 
   private valueCanBeDisplayed(value: string | number): boolean {

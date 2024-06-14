@@ -20,7 +20,7 @@ const cnValidateLayersDialog = cn('ValidateLayersDialog');
 
 export interface ValidateLayersDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer

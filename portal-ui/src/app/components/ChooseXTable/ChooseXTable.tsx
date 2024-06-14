@@ -27,12 +27,12 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
-  getRowId?: (rowData: T) => string | number;
   single?: boolean;
   withoutSelectAll?: boolean;
   loading?: boolean;
   filterable?: boolean;
   filtersAlwaysEnabled?: boolean;
+  getRowId?(rowData: T): string | number;
   onSelect(items: T[]): void;
 }
 

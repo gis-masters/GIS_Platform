@@ -27,13 +27,13 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
         className={cnAttributesCheck()}
         checked={mapStore.selectedFeatures.some(({ id }) => id === feature.id)}
         value={feature.id}
-        onChange={this.changeHandler}
+        onChange={this.handleChange}
       />
     );
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { feature } = this.props;
     if (mapStore.limitReached) {
       mapSelectionService.selectFeatures([feature], (!checked && MapSelectionTypes.REMOVE) || undefined);

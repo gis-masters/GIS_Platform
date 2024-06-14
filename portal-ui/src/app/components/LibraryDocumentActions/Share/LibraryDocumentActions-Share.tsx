@@ -28,14 +28,14 @@ export class LibraryDocumentActionsShare extends Component<LibraryDocumentAction
         className={cnLibraryDocumentActionsShare()}
         title='Копировать ссылку'
         icon={<ShareOutlined />}
-        onClick={this.clickHandler}
+        onClick={this.handleClick}
         as={as}
       />
     );
   }
 
   @boundMethod
-  private clickHandler() {
+  private handleClick() {
     const { document } = this.props;
     copyToClipboard(
       `${location.protocol}//${location.host}/data-management/library/${document.libraryTableName}/document/${document.id}`

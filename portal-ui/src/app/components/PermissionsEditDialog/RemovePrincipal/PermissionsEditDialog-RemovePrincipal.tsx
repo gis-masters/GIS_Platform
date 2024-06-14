@@ -11,7 +11,7 @@ const cnPermissionsEditDialogRemovePrincipal = cn('PermissionsEditDialog', 'Remo
 interface PermissionsEditDialogRemovePrincipalProps {
   principalId: number;
   principalType: PrincipalType;
-  onRemove: (principalId: number, principalType: PrincipalType) => void;
+  onRemove(principalId: number, principalType: PrincipalType): void;
 }
 
 export class PermissionsEditDialogRemovePrincipal extends Component<PermissionsEditDialogRemovePrincipalProps> {

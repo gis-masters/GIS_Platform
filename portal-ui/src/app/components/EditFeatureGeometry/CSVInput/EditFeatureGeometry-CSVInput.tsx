@@ -6,8 +6,8 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CSVInput.scss
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryCSVInputProps {
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   inputRef: RefObject<HTMLInputElement>;
+  onChange(e: ChangeEvent<HTMLInputElement>): void;
 }
 
 export const EditFeatureGeometryCSVInput: FC<EditFeatureGeometryCSVInputProps> = ({ onChange, inputRef }) => (

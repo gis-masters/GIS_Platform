@@ -31,7 +31,7 @@ export class EditFeatureGeometryCopy extends Component<EditFeatureGeometryCopyPr
 
     return (
       <Tooltip title={`Копировать координаты ${partLabel} в буфер обмена`}>
-        <IconButton className={cnEditFeatureGeometryCopy()} onClick={this.clickHandler}>
+        <IconButton className={cnEditFeatureGeometryCopy()} onClick={this.handleClick}>
           <FileCopyOutlined />
         </IconButton>
       </Tooltip>
@@ -39,7 +39,10 @@ export class EditFeatureGeometryCopy extends Component<EditFeatureGeometryCopyPr
   }
 
   @boundMethod
-  private clickHandler() {
-    copyNodeToClipboard(this.props.tableRef.current);
+  private handleClick() {
+    const { tableRef } = this.props;
+    if (tableRef.current) {
+      copyNodeToClipboard(tableRef.current);
+    }
   }
 }

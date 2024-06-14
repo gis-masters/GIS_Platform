@@ -2,8 +2,8 @@ import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { defaultOlCrs } from '../../data/projection/projection.models';
-import { extractFeatureTypeName, extractFeatureTypeNameFromComplexName } from '../../geoserver/feature.util';
+import { defaultOlProjectionCode } from '../../data/projections/projections.models';
+import { extractTableNameFromFeatureId } from '../../geoserver/feature.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 
@@ -33,7 +33,7 @@ export function rasterLayerDefaults(): Pick<
 > {
   return {
     ...defaultProps,
-    nativeCRS: defaultOlCrs,
+    nativeCRS: defaultOlProjectionCode,
     mode: 'gis-service',
     enabled: true,
     type: CrgLayerType.RASTER
@@ -46,7 +46,7 @@ export function externalLayerDefaults(): Pick<
 > {
   return {
     ...defaultProps,
-    nativeCRS: defaultOlCrs,
+    nativeCRS: defaultOlProjectionCode,
     type: CrgLayerType.EXTERNAL
   };
 }
@@ -54,9 +54,9 @@ export function externalLayerDefaults(): Pick<
 export function getLayerByFeatureInCurrentProject(
   feature: WfsFeature<Coordinate | CoordinateEdited>
 ): CrgVectorLayer | undefined {
-  return currentProject.vectorableLayers.find(({ complexName }) => {
-    return extractFeatureTypeNameFromComplexName(complexName) === extractFeatureTypeName(feature.id);
-  });
+  return currentProject.vectorableLayers.find(
+    ({ tableName }) => tableName === extractTableNameFromFeatureId(feature.id)
+  );
 }
 
 export function getLayerByComplexNameInCurrentProject(complexName: string): CrgVectorLayer | undefined {

@@ -1,17 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { Given } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../auth/testUsers';
-import { ScenarioScope } from '../../ScenarioScope';
-import { getTestFeatures } from './testFeatures';
-import { createVectorTableAs } from './createVectorTableAs';
-import { createRecordAsAdmin } from './vectorTableRecordsManagement';
-import { getUserByEmail } from '../auth/getUserByEmail';
-import { getVectorTableByTitle } from './getVectorTableByTitle';
-import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
-import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { PrincipalType, Role } from '../../../../src/app/services/data/permissions/permissions.models';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { ScenarioScope } from '../../ScenarioScope';
+import { getUserByEmail } from '../auth/getUserByEmail';
+import { TestUser } from '../auth/testUsers';
+import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
+import { addVectorTablePermissions } from './addVectorTablePermissions';
+import { createVectorTableAs } from './createVectorTableAs';
+import { getVectorTableByTitle } from './getVectorTableByTitle';
+import { getTestFeatures } from './testFeatures';
+import { createRecordAsAdmin } from './vectorTableRecordsManagement';
 
 const DEFAULT_CRS = 'EPSG:28406';
 

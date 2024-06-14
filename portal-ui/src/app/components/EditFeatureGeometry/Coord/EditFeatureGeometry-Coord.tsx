@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import TextField from '@mui/material/TextField';
 import { cn } from '@bem-react/classname';
@@ -7,15 +7,13 @@ import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
 
-import { Projection } from '../../../services/data/projection/projection.models';
-import { getOlProjection } from '../../../services/data/projection/projection.service';
-import { transformGeometry } from '../../../services/data/projection/projection.util';
+import { transformGeometry } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { mapService } from '../../../services/map/map.service';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { projectionsStore } from '../../../stores/Projections.store';
 import { Toast } from '../../Toast/Toast';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
@@ -29,30 +27,21 @@ interface EditFeatureGeometryCoordProps {
   store: EditFeatureGeometryStore;
   val: CoordinateEdited;
   withControls?: boolean;
-  onChange: (val: CoordinateEdited, i: number) => void;
-  onDelete?: (index: number) => void;
   canBeDeleted?: boolean;
   disabled?: boolean;
   index?: number;
   active?: boolean;
+  onChange(val: CoordinateEdited, i: number): void;
+  onDelete?(index: number): void;
 }
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  @observable private olProjection?: Projection;
-
   private focusedPointMarker?: Feature<SimpleGeometry>;
 
   constructor(props: EditFeatureGeometryCoordProps) {
     super(props);
     makeObservable(this);
-  }
-
-  async componentDidMount(): Promise<void> {
-    const projection = await getOlProjection();
-    if (projection) {
-      this.setOlProjection(projection);
-    }
   }
 
   render() {
@@ -67,7 +56,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
           value={val[1]}
           error={!isDimensionValid(val[1])}
-          onChange={this.changeYHandler}
+          onChange={this.handleChangeY}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
           disabled={disabled}
@@ -78,7 +67,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
           value={val[0]}
           error={!isDimensionValid(val[0])}
-          onChange={this.changeXHandler}
+          onChange={this.handleChangeX}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
           disabled={disabled}
@@ -86,14 +75,14 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         />
 
         {withControls ? (
-          <EditFeatureGeometryCoordDel onClick={this.deleteHandler} disabled={!canBeDeleted || !!disabled} />
+          <EditFeatureGeometryCoordDel onClick={this.handleDelete} disabled={!canBeDeleted || !!disabled} />
         ) : null}
       </div>
     );
   }
 
   @action.bound
-  private changeXHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[0] = e.target.value;
     if (index) {
@@ -103,7 +92,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @action.bound
-  private changeYHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChangeY(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[1] = e.target.value;
     if (index) {
@@ -113,7 +102,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @boundMethod
-  private deleteHandler() {
+  private handleDelete() {
     const { onDelete, index } = this.props;
     if (onDelete && index) {
       onDelete(index);
@@ -142,13 +131,11 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       coordinates: val
     };
 
-    const projection = organizationSettings.orgDefaultProjection;
-
-    if (isGeometryValid(markerGeometry) && projection) {
-      if (this.olProjection) {
+    if (isGeometryValid(markerGeometry)) {
+      if (projectionsStore.olProjection && store.currentProjection) {
         const feature: WfsFeature = {
           type: 'Feature',
-          geometry: transformGeometry(markerGeometry, store.currentProjection, this.olProjection),
+          geometry: transformGeometry(markerGeometry, store.currentProjection, projectionsStore.olProjection),
           id: '',
           geometry_name: '',
           properties: {}
@@ -165,11 +152,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     } else {
       this.clearFocusedPointMarker();
     }
-  }
-
-  @action.bound
-  private setOlProjection(olProj: Projection) {
-    this.olProjection = olProj;
   }
 
   private clearFocusedPointMarker() {

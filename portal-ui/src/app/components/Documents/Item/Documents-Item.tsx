@@ -34,7 +34,7 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
   @observable private dialogOpen = false;
   @observable private status: LookupStatusType = 'normal';
   @observable private statusText = '';
-  @observable private document: LibraryRecord;
+  @observable private document?: LibraryRecord;
 
   constructor(props: DocumentsItemProps) {
     super(props);
@@ -107,7 +107,11 @@ export class DocumentsItem extends Component<DocumentsItemProps> {
   private async load() {
     const { item } = this.props;
     try {
-      const document = await getLibraryRecord(item.libraryTableName || item.libraryId, item.id);
+      const libraryTableName = item.libraryTableName || item.libraryId;
+      if (!libraryTableName) {
+        throw new Error('Не указана библиотека документа');
+      }
+      const document = await getLibraryRecord(libraryTableName, item.id);
       this.setDocument(document);
     } catch (error) {
       const axiosError = error as AxiosError<{ message?: string }>;

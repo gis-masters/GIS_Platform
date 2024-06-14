@@ -9,12 +9,12 @@ import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 
 interface UserInvite {
-  email?: string;
+  email: string;
 }
 
 interface OrgUsersInviteDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer

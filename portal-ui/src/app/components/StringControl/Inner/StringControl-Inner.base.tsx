@@ -28,7 +28,7 @@ export class StringControlInnerBase extends Component<StringControlInnerProps> {
         name={name}
         className={cnStringControlInner(null, [className])}
         fullWidth={labelInField || !inSet}
-        value={fieldValue}
+        value={fieldValue || ''}
         error={!!errors?.length}
         helperText={errors}
         label={labelInField || inSet ? title : undefined}

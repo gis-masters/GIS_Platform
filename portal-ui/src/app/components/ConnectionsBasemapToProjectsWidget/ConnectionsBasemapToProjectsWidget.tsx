@@ -46,7 +46,7 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
     return (
       <ConnectionsToProjectsWidget
         className={cnConnectionsBasemapToProjectsWidget()}
-        onConnect={this.connectHandler}
+        onConnect={this.handleConnect}
         connections={this.connections}
         loading={this.loading}
         dialogTitle='Проекты в которые подключена подложка'
@@ -72,7 +72,7 @@ export class ConnectionsBasemapToProjectsWidget extends Component<ConnectionsBas
   }
 
   @boundMethod
-  private async connectHandler(project: CrgProject) {
+  private async handleConnect(project: CrgProject) {
     const { basemap } = this.props;
     await connectBasemapToProject(project, basemap);
     await this.fetchConnections();

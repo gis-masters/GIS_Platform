@@ -14,14 +14,12 @@ export class XTableRow<T> extends Component<XTableRowProps<T>> {
   render() {
     const { rowData, onRowDoubleClick, ...props } = this.props;
 
-    return <TableRow hover {...props} className={cnXTableRow()} onDoubleClick={this.doubleClickHandler} />;
+    return <TableRow hover {...props} className={cnXTableRow()} onDoubleClick={this.handleDoubleClick} />;
   }
 
   @boundMethod
-  private doubleClickHandler() {
+  private handleDoubleClick() {
     const { onRowDoubleClick: onRowDoubleClick, rowData } = this.props;
-    if (onRowDoubleClick) {
-      onRowDoubleClick(rowData);
-    }
+    onRowDoubleClick?.(rowData);
   }
 }

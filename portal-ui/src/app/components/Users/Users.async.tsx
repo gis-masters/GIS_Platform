@@ -34,7 +34,7 @@ export default class Users extends Component<UsersProps> {
               return (
                 <UsersItem
                   item={item}
-                  onDelete={this.deleteHandler}
+                  onDelete={this.handleDelete}
                   key={`${item.id}_${i}`}
                   editable={editable}
                   numerous={numerous}
@@ -49,7 +49,7 @@ export default class Users extends Component<UsersProps> {
             onlySubordinates={onlySubordinates}
             multiple={multiple}
             filled={Boolean(value.length)}
-            onChange={this.addHandler}
+            onChange={this.handleAdd}
             value={value}
           />
         )}
@@ -58,7 +58,7 @@ export default class Users extends Component<UsersProps> {
   }
 
   @boundMethod
-  private deleteHandler(deletingItem: MinimizedCrgUser) {
+  private handleDelete(deletingItem: MinimizedCrgUser) {
     const { onChange, value } = this.props;
 
     if (onChange) {
@@ -69,7 +69,7 @@ export default class Users extends Component<UsersProps> {
   }
 
   @boundMethod
-  private addHandler(selectedUsers: MinimizedCrgUser[]) {
+  private handleAdd(selectedUsers: MinimizedCrgUser[]) {
     const { onChange } = this.props;
 
     if (onChange) {

@@ -1,9 +1,9 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { deleteAllTasks } from './deleteAllTasks';
+import { ScenarioScope } from '../../ScenarioScope';
 import { TestUser } from '../auth/testUsers';
 import { createTask } from './createTask';
-import { ScenarioScope } from '../../ScenarioScope';
+import { deleteAllTasks } from './deleteAllTasks';
 
 Given('удалены все задачи', async function () {
   await deleteAllTasks();

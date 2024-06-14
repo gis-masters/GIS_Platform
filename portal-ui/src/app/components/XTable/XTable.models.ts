@@ -5,6 +5,7 @@ import {
   PropertySchemaChoice,
   PropertySchemaDatetime,
   PropertySchemaFloat,
+  PropertySchemaString,
   PropertySchemaUrl,
   PropertyType,
   Relation
@@ -32,14 +33,15 @@ export interface XTableColumn<T> {
     Pick<PropertySchemaChoice, 'options'> &
       Pick<PropertySchemaFloat, 'precision'> &
       Pick<PropertySchemaDatetime, 'format'> &
-      Pick<PropertySchemaUrl, 'openIn'> & { relations: Relation[] }
+      Pick<PropertySchemaUrl, 'openIn'> &
+      Pick<PropertySchemaString, 'display'> & { relations: Relation[] }
   >;
   sortable?: boolean;
   CellContent?: ComponentType<XTableCustomCellProps<T>>;
   cellContentProps?: XTableCellContentProps<T>;
   BeforeCellContent?: ComponentType<XTableCustomCellProps<T>>;
   AfterCellContent?: ComponentType<XTableCustomCellProps<T>>;
-  getIdBadge?: (rowData: T) => string | number;
+  getIdBadge?(rowData: T): string | number;
   cellProps?: TableCellProps;
   headerCellProps?: TableCellProps;
   align?: TableCellProps['align'];

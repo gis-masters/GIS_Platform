@@ -5,7 +5,7 @@ import { Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/mat
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 
 import { FiasValue } from '../../services/data/fias/fias.models';
 import { getFiasAddressItems, getFiasOktmoItems } from '../../services/data/fias/fias.service';
@@ -22,20 +22,21 @@ export interface FiasProps extends IClassNameProps {
   errors?: string[];
   variant?: 'outlined' | 'standard';
   readonly?: boolean;
-  onChange?: (value: FiasValue | undefined) => void;
-  onBlur?: () => void;
+  onChange?(value: FiasValue | undefined): void;
+  onBlur?(): void;
 }
 
 @observer
 export default class Fias extends Component<FiasProps> {
   @observable private options: FiasValue[] = [];
   private operationId?: symbol;
+  private getFiasListDebounced: DebouncedFunc<(value: string) => Promise<void>>;
 
   constructor(props: FiasProps) {
     super(props);
     makeObservable(this);
 
-    this.getFiasList = debounce(this.getFiasList, 666);
+    this.getFiasListDebounced = debounce(this.getFiasList, 666);
   }
 
   render() {
@@ -87,7 +88,7 @@ export default class Fias extends Component<FiasProps> {
       });
     }
 
-    await this.getFiasList(value);
+    await this.getFiasListDebounced(value);
   }
 
   private filterOptions(options: FiasValue[]): FiasValue[] {
@@ -132,7 +133,11 @@ export default class Fias extends Component<FiasProps> {
     );
   }
 
-  private getOptionLabel(option: FiasValue): string {
+  private getOptionLabel(option: FiasValue | string): string {
+    if (typeof option === 'string') {
+      return option;
+    }
+
     return option?.address || '';
   }
 }

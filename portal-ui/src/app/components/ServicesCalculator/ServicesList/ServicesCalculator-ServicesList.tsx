@@ -9,12 +9,12 @@ import '!style-loader!css-loader!sass-loader!./ServicesCalculator-ServicesList.s
 const cnServicesCalculatorServicesList = cn('ServicesCalculator', 'ServicesList');
 
 interface ServicesCalculatorServicesListProps {
-  selectAllService: () => void;
   selectedAllServices: boolean;
-  openServicesDialog: () => void;
-  selectService: (service: ServicesInfo) => void;
-  deleteService: (service: ServicesInfo) => void;
   selectedServices: ServicesInfo[];
+  selectAllService(): void;
+  openServicesDialog(): void;
+  selectService(service: ServicesInfo): void;
+  deleteService(service: ServicesInfo): void;
 }
 
 export const ServicesCalculatorServicesList: FC<ServicesCalculatorServicesListProps> = props => (

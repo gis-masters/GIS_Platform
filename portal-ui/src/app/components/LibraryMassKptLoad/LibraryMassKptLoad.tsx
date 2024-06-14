@@ -52,20 +52,19 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
   }
 
   render() {
-    const permissions = checkIsUpdateAllowed(this.props.role);
-
     const { library, libraryRecord, parent, role, disabled, tooltipTitle } = this.props;
+    const updateAllowed = role ? checkIsUpdateAllowed(role) : false;
 
     const isData = !!role && !!library && !!libraryRecord && !!parent;
 
     return (
       <>
-        <Tooltip title={tooltipTitle || permissions ? titleWithPermissions : titleWithoutPermissions}>
+        <Tooltip title={tooltipTitle || updateAllowed ? titleWithPermissions : titleWithoutPermissions}>
           <span>
             <IconButton
               className={cnLibraryMassKptLoad()}
               onClick={this.openFormDialog}
-              disabled={disabled || !permissions}
+              disabled={disabled || !updateAllowed}
             >
               <KptImportMass />
             </IconButton>
@@ -80,9 +79,9 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
               onClose={this.closeFormDialog}
               title={titleWithPermissions}
               schema={kptMassUploadSchema}
-              actionFunction={this.loadHandler}
+              actionFunction={this.handleLoad}
               actionButtonProps={{ children: 'Загрузка' }}
-              afterForm={<LibraryMassKptLoadWorker onChange={this.changeFilesHandler} />}
+              afterForm={<LibraryMassKptLoadWorker onChange={this.handleChangeFiles} />}
             />
 
             <LibraryMassKptLoadUploader
@@ -116,7 +115,13 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
   }
 
   @action.bound
-  private async loadHandler(data: LibraryRecord): Promise<void> {
+  private async handleLoad(data: LibraryRecord): Promise<void> {
+    const { parent, library } = this.props;
+
+    if (!library) {
+      throw new Error('Ошибка: библиотека не определена');
+    }
+
     if (!this.files.length) {
       return;
     }
@@ -131,14 +136,12 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
         continue;
       }
 
-      const { parent } = this.props;
-
       data.path = parent?.path ? `${parent.path}/${parent.id}` : '/root';
 
       const { status } = await uploadKpt({
         data,
         file,
-        libraryTableName: this.props.library.table_name,
+        libraryTableName: library.table_name,
         properties: kptMassUploadSchema.properties
       });
       file.status = status;
@@ -183,7 +186,7 @@ export class LibraryMassKptLoad extends Component<LibraryMassKptLoadProps> {
   }
 
   @action.bound
-  private changeFilesHandler(incomeFiles: FileList): void {
+  private handleChangeFiles(incomeFiles: FileList): void {
     const filesForUpload = [...incomeFiles].filter(isZipFile).map(file => ({ file, fileInfo: null, status: null }));
 
     this.setFiles(filesForUpload);

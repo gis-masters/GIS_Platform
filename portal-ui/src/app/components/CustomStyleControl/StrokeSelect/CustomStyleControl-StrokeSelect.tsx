@@ -43,14 +43,14 @@ export class CustomStyleControlStrokeSelect extends Component<CustomStyleControl
             ),
             value: i
           }))}
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
         />
       </CustomStyleControlSubControl>
     );
   }
 
   @boundMethod
-  private changeHandler(e: SelectChangeEvent<unknown>) {
+  private handleChange(e: SelectChangeEvent<unknown>) {
     if (typeof e.target.value !== 'number') {
       throw new TypeError('Ошибка при выборе линии');
     }

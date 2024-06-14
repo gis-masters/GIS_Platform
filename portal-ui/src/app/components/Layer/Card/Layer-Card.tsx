@@ -8,8 +8,8 @@ import '!style-loader!css-loader!sass-loader!./Layer-Card.scss';
 const cnLayerCard = cn('Layer', 'Card');
 
 interface LayerCardProps extends ChildrenProps {
-  onContextMenu: (e: React.MouseEvent<HTMLDivElement>) => void;
   highlighted: boolean;
+  onContextMenu(e: React.MouseEvent<HTMLDivElement>): void;
 }
 
 export const LayerCard: FC<LayerCardProps> = ({ children, onContextMenu, highlighted }) => (

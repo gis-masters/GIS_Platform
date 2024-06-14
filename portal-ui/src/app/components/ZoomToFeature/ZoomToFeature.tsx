@@ -14,7 +14,7 @@ const cnZoomToFeature = cn('ZoomToFeature');
 
 interface ZoomToFeatureProps extends IClassNameProps {
   feature: WfsFeature;
-  onClick?: (feature: WfsFeature) => void;
+  onClick?(feature: WfsFeature): void;
 }
 
 export class ZoomToFeature extends Component<ZoomToFeatureProps> {
@@ -25,7 +25,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
     return (
       <Tooltip title='Перейти к объекту'>
-        <IconButton className={cnZoomToFeature(null, [className])} onClick={this.clickHandler} ref={this.btnRef}>
+        <IconButton className={cnZoomToFeature(null, [className])} onClick={this.handleClick} ref={this.btnRef}>
           <MyLocation />
         </IconButton>
       </Tooltip>
@@ -33,7 +33,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   }
 
   @boundMethod
-  private async clickHandler() {
+  private async handleClick() {
     const { feature, onClick } = this.props;
 
     const layer = getLayerByFeatureInCurrentProject(feature);

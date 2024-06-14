@@ -9,7 +9,7 @@ const cnPermissionsListDialogActions = cn('PermissionsListDialog', 'Actions');
 interface PermissionsListActionsProps {
   id: string | number;
   additionalId?: string;
-  onDelete: (id: string | number, additionalId?: string) => void;
+  onDelete(id: string | number, additionalId?: string): void;
 }
 
 export class PermissionsListActions extends Component<PermissionsListActionsProps> {

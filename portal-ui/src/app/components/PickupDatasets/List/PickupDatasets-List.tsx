@@ -5,7 +5,7 @@ import { FormControl, Input, InputAdornment, InputLabel, List, Pagination } from
 import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 
 import { communicationService } from '../../../services/communication.service';
 import { Dataset } from '../../../services/data/vectorData/vectorData.models';
@@ -23,14 +23,14 @@ import '!style-loader!css-loader!sass-loader!./../Content/PickupDatasets-Content
 const cnPickupDatasets = cn('PickupDatasets');
 
 export interface PickupDatasetsListProps {
-  onDatasetSelected: (dataset: Dataset) => void;
+  onDatasetSelected(dataset: Dataset): void;
 }
 
 @observer
 export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   @observable private filterValue = '';
   @observable private busy = false;
-  @observable private totalPages: number;
+  @observable private totalPages = 0;
   @observable private currentPage = 1;
   @observable private datasets: Dataset[] = [];
 
@@ -40,7 +40,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   private readonly sortField = 'title';
   private readonly sortOrder = SortOrder.ASC;
 
-  private readonly fetchDatasets: () => Promise<void>;
+  private readonly fetchDatasets: DebouncedFunc<() => Promise<void>>;
 
   constructor(props: PickupDatasetsListProps) {
     super(props);
@@ -90,7 +90,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
             </List>
             {this.totalPages > 1 && (
               <div className={cnPickupDatasets('Paging')}>
-                <Pagination count={this.totalPages} page={this.currentPage} onChange={this.pageChanged} />
+                <Pagination count={this.totalPages} page={this.currentPage} onChange={this.handlePageChange} />
               </div>
             )}
           </>
@@ -139,7 +139,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   }
 
   @boundMethod
-  private async pageChanged(event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) {
+  private async handlePageChange(event: unknown, newPage: number) {
     this.setCurrentPage(newPage);
     await this.fetchDatasets();
   }

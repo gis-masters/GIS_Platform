@@ -6,7 +6,7 @@ export const withViews: Schema = {
   name: 'withViews',
   title: 'С представлениями',
   readOnly: false,
-  tableName: 'schema_with_views',
+  tableName: 'with_views',
   styleName: 'admemo',
   properties: [
     {

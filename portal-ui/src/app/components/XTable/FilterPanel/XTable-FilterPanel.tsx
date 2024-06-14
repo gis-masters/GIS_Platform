@@ -18,7 +18,7 @@ const cnXTableFilterPanel = cn('XTable', 'FilterPanel');
 export interface XTableFilterPanelProps<T> {
   filterQuery: FilterQuery;
   cols: XTableColumn<T>[];
-  onUpdateFilter: (filter: FilterQuery) => void;
+  onUpdateFilter(filter: FilterQuery): void;
   onBeforeFilterChange(): void;
   onFilterChange(): void;
 }

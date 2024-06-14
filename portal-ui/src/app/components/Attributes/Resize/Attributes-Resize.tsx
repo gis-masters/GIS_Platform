@@ -30,13 +30,13 @@ export class AttributesResize extends Component<AttributesResizeProps> {
 
     document.body.classList.add(cnAttributesResizing());
 
-    document.addEventListener('mousemove', this.documentMoveHandler);
-    document.addEventListener('mouseup', this.onResizeEnd);
-    document.addEventListener('mouseleave', this.onResizeLeave);
+    document.addEventListener('mousemove', this.handleDocumentMove);
+    document.addEventListener('mouseup', this.handleResizeEnd);
+    document.addEventListener('mouseleave', this.handleResizeLeave);
   }
 
   @boundMethod
-  private documentMoveHandler(e: MouseEvent) {
+  private handleDocumentMove(e: MouseEvent) {
     if (!this.started || !this.initialY || !this.finishY) {
       return;
     }
@@ -46,7 +46,7 @@ export class AttributesResize extends Component<AttributesResizeProps> {
   }
 
   @boundMethod
-  private onResizeEnd() {
+  private handleResizeEnd() {
     this.started = false;
     this.initialY = undefined;
     this.finishY = this.props.initialHeight;
@@ -56,9 +56,9 @@ export class AttributesResize extends Component<AttributesResizeProps> {
 
     document.body.classList.remove(cnAttributesResizing());
 
-    document.removeEventListener('mousemove', this.documentMoveHandler);
-    document.removeEventListener('mouseup', this.onResizeEnd);
-    document.removeEventListener('mouseleave', this.onResizeLeave);
+    document.removeEventListener('mousemove', this.handleDocumentMove);
+    document.removeEventListener('mouseup', this.handleResizeEnd);
+    document.removeEventListener('mouseleave', this.handleResizeLeave);
   }
 
   private saveHeight(arg: number) {
@@ -66,9 +66,9 @@ export class AttributesResize extends Component<AttributesResizeProps> {
   }
 
   @boundMethod
-  private onResizeLeave() {
-    document.removeEventListener('mousemove', this.documentMoveHandler);
-    document.removeEventListener('mouseup', this.onResizeEnd);
-    document.removeEventListener('mouseleave', this.onResizeLeave);
+  private handleResizeLeave() {
+    document.removeEventListener('mousemove', this.handleDocumentMove);
+    document.removeEventListener('mouseup', this.handleResizeEnd);
+    document.removeEventListener('mouseleave', this.handleResizeLeave);
   }
 }

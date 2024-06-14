@@ -6,7 +6,7 @@ export const withDefinitionQuery: Schema = {
   title: 'С определяющим запросом',
   description: 'Схема с определяющим запросом в одном из представлений',
   readOnly: false,
-  tableName: 'schema_definition_query',
+  tableName: 'definition_query',
   styleName: 'generic',
   properties: [
     {

@@ -10,8 +10,8 @@ const cnLayer = cn('Layer');
 interface LayerEyeProps {
   enabled: boolean;
   disabled: boolean;
-  onClick: () => void;
   tooltipText: string;
+  onClick(): void;
 }
 
 export const LayerEye: FC<LayerEyeProps> = ({ enabled, disabled, onClick, tooltipText }) => {

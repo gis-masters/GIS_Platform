@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import { isArrayOfProjection, Projection } from '../../services/data/projection/projection.models';
+import { isArrayOfProjections, Projection } from '../../services/data/projections/projections.models';
 import {
   PropertySchema,
   PropertySchemaChoice,
@@ -21,7 +21,7 @@ import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
-import { SelectProjectionControl } from '../SelectProjectionControl/SelectProjectionControl';
+import { SelectFavoriteProjectionsControl } from '../SelectFavoriteProjectionsControl/SelectFavoriteProjectionsControl';
 import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./OrganizationSettings.scss';
@@ -107,7 +107,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
                   actionFunction={this.save}
                   schema={this.schema}
                   value={this.formValue}
-                  onFieldChange={this.fieldChangeHandler}
+                  onFieldChange={this.handleFieldChange}
                   auto
                   actions={
                     <Button loading={this.busy} form={htmlId} color='primary' type='submit'>
@@ -135,8 +135,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @boundMethod
-  private fieldChangeHandler(value: unknown, propertyName: string, prevValue: unknown, formValue: Settings) {
-    if (formValue.favorites_epsg && isArrayOfProjection(formValue.favorites_epsg)) {
+  private handleFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: Settings) {
+    if (formValue.favorites_epsg && isArrayOfProjections(formValue.favorites_epsg)) {
       this.setFavoritesProjection(formValue.favorites_epsg);
       this.updateOptions();
     }
@@ -177,7 +177,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
       }
     }
 
-    // поле favorites_epsg на бэке сейчас ест только массив стрингов
+    // поле favorites_epsg на бэке сейчас ест только массив строк
     value.favorites_epsg = value.favorites_epsg.map(item => JSON.stringify(item));
 
     if (id) {
@@ -201,7 +201,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
           multiple: true,
           title: prop.title,
           propertyType: PropertyType.CUSTOM,
-          ControlComponent: props => <SelectProjectionControl {...props} />
+          ControlComponent: props => <SelectFavoriteProjectionsControl {...props} />
         };
       }
 

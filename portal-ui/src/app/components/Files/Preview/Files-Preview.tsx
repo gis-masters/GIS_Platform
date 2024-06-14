@@ -17,7 +17,7 @@ export class FilesPreview<T> extends Component<PreviewProps<T>> {
   render() {
     return (
       <Tooltip title='Просмотр'>
-        <IconButton className={cnFilesPreview()} onClick={this.previewHandler} size='small'>
+        <IconButton className={cnFilesPreview()} onClick={this.handlePreview} size='small'>
           <ImageSearchOutlined fontSize='small' />
         </IconButton>
       </Tooltip>
@@ -25,7 +25,7 @@ export class FilesPreview<T> extends Component<PreviewProps<T>> {
   }
 
   @boundMethod
-  private previewHandler() {
+  private handlePreview() {
     const { item, onPreview } = this.props;
     onPreview(item);
   }

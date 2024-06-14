@@ -13,12 +13,12 @@ import '!style-loader!css-loader!sass-loader!./ProjectForm.scss';
 const cnProjectForm = cn('ProjectForm');
 
 interface ProjectFormProps {
-  onClose: () => void;
-  onSubmit: (name: string) => void;
-  onChange: () => void;
   busy: boolean;
   errors?: string[];
   buttonProps?: Omit<ButtonProps, 'ref'>;
+  onClose(): void;
+  onSubmit(name: string): void;
+  onChange(): void;
 }
 
 @observer

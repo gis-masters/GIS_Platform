@@ -14,7 +14,7 @@ const cnPickupDatasetsItem = cn('PickupDatasets', 'Item');
 
 export interface PickupDatasetsItemProps {
   item: Dataset;
-  onClick: (dataset: Dataset) => void;
+  onClick(dataset: Dataset): void;
 }
 
 @observer
@@ -26,7 +26,7 @@ export class PickupDatasetsItem extends Component<PickupDatasetsItemProps> {
       <ListItemButton className={cnPickupDatasetsItem()} key={item.identifier}>
         <ListItemText
           primary={item.title}
-          secondary={`${item.itemsCount} ${pluralize(item.itemsCount, 'таблица', 'таблицы', 'таблиц')}`}
+          secondary={`${item.itemsCount} ${pluralize(item.itemsCount || 0, 'таблица', 'таблицы', 'таблиц')}`}
         />
         <ListItemSecondaryAction>
           <Button onClick={this.onSelect} color='primary' variant='outlined' size='small'>

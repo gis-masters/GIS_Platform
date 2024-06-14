@@ -10,7 +10,7 @@ const cnPrintMapDialogExtra = cn('PrintMapDialog', 'Extra');
 
 interface PrintMapDialogExtraProps {
   open: boolean;
-  onClick: () => void;
+  onClick(): void;
 }
 
 export const PrintMapDialogExtra: FC<PrintMapDialogExtraProps> = ({ open, onClick }) => (

@@ -10,7 +10,7 @@ import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.bas
 
 interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   type: 'button';
-  onClick?: (itemData: BreadcrumbsItemData['payload']) => void;
+  onClick?(itemData: BreadcrumbsItemData['payload']): void;
 }
 
 @observer

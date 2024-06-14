@@ -12,7 +12,7 @@ import {
 import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form';
+import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeometryFormProps> {
@@ -35,24 +35,24 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
             store={store}
             index={index}
             key={index}
-            onPolygonDelete={this.deletePolygonHandler}
+            onPolygonDelete={this.handleDeletePolygon}
           />
         ))}
 
-        <EditFeatureGeometryAddButton onClick={this.addPolygonHandler}>Добавить полигон</EditFeatureGeometryAddButton>
+        <EditFeatureGeometryAddButton onClick={this.handlePolygonAdd}>Добавить полигон</EditFeatureGeometryAddButton>
       </div>
     );
   }
 
   @action.bound
-  private addPolygonHandler() {
+  private handlePolygonAdd() {
     const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
     const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry<CoordinateEdited>;
     geometry.coordinates.push(coordinates);
   }
 
   @action.bound
-  private deletePolygonHandler(i: number) {
+  private handleDeletePolygon(i: number) {
     const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
     geometry.coordinates.splice(i, 1);
   }

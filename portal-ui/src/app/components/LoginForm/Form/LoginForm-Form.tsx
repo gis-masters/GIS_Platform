@@ -38,7 +38,7 @@ interface LoginFormFormProps {
   userData: AuthUserData;
   notShowEsiaIn?: boolean;
   notRightActions?: boolean;
-  actionFunction: (value: AuthUserData) => Promise<void>;
+  actionFunction(value: AuthUserData): Promise<void>;
 }
 
 @observer

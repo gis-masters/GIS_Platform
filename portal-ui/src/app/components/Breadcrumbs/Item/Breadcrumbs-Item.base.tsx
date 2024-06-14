@@ -13,14 +13,18 @@ export const cnBreadcrumbsItem = cn('Breadcrumbs', 'Item');
 
 export type BreadcrumbsItemsType = 'button' | 'link' | 'none' | 'showMore';
 
-export interface BreadcrumbsItemProps<T = unknown> extends BreadcrumbsItemData<T>, IClassNameProps {
+export interface BreadcrumbsItemProps extends BreadcrumbsItemData, IClassNameProps {
   type: BreadcrumbsItemsType;
   ContainerComponent?: ComponentType<BreadcrumbsItemProps>;
 }
 
-export class BreadcrumbsItemBase<T> extends Component<BreadcrumbsItemProps<T>> {
+export class BreadcrumbsItemBase extends Component<BreadcrumbsItemProps> {
   render() {
     const { title, subtitle, nestingLevel, ContainerComponent, className, children } = this.props;
+
+    if (!ContainerComponent) {
+      throw new Error('Не указан ContainerComponent');
+    }
 
     return (
       <ContainerComponent

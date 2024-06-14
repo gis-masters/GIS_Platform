@@ -17,7 +17,7 @@ const cnDataImport = cn('DataImport');
 
 interface DataImportDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
   nextUrl: string;
 }
 

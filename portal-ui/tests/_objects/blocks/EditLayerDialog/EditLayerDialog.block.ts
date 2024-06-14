@@ -2,6 +2,7 @@ import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
+import { SelectProjectionBlock } from '../SelectProjection/SelectProjection.block';
 
 class EditLayerPropertiesDialogBlock extends Block {
   selectors = {
@@ -11,17 +12,28 @@ class EditLayerPropertiesDialogBlock extends Block {
     loading: '.EditLayerDialog .Loading'
   };
 
-  async viewFieldFirstValue(viewTitle: string): Promise<void> {
-    const $layerPropertyFormDialogViewSelect = await this.$('layerPropertyFormDialogViewSelect');
-    await $layerPropertyFormDialogViewSelect.waitForClickable({ timeout: 5000 });
+  async getChoiceValue(fieldTitle: string): Promise<string> {
+    const formBlock = new FormBlock(this.selectors.container);
+    const $field = await formBlock.getField(fieldTitle);
 
-    const view = await $layerPropertyFormDialogViewSelect.getText();
+    if (!$field) {
+      throw new Error(`Не найден элемент ${fieldTitle}`);
+    }
 
-    await expect(view).toEqual(viewTitle);
+    const muiSelect = new MuiSelectBlock($field);
+
+    return await muiSelect.getText();
   }
 
-  async layerPropertyDialogSelectOptionByTitle(optionTitle: string): Promise<void> {
-    const muiSelect = new MuiSelectBlock(this.selectors.container);
+  async selectOption(optionTitle: string, fieldTitle: string): Promise<void> {
+    const formBlock = new FormBlock(this.selectors.container);
+    const $field = await formBlock.getField(fieldTitle);
+
+    if (!$field) {
+      throw new Error(`Не найден элемент ${fieldTitle}`);
+    }
+
+    const muiSelect = new MuiSelectBlock($field);
     await muiSelect.selectOptionByTitle(optionTitle);
   }
 
@@ -64,6 +76,11 @@ class EditLayerPropertiesDialogBlock extends Block {
   async waitForLoadingHide(): Promise<void> {
     const $loading = await this.$('loading');
     await $loading.waitForDisplayed({ reverse: true, timeout: 5000 });
+  }
+
+  async selectProjection(code: string): Promise<void> {
+    const selectProjectionBlock = new SelectProjectionBlock(this.selectors.container);
+    await selectProjectionBlock.selectProjectionByCode(code);
   }
 }
 

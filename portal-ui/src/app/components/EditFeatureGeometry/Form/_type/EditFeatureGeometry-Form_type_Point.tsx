@@ -13,14 +13,14 @@ import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeo
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 import {
   cnEditFeatureGeometryForm,
-  EditFeatureGeometryForm,
+  EditFeatureGeometryFormBase,
   EditFeatureGeometryFormProps
-} from '../EditFeatureGeometry-Form';
+} from '../EditFeatureGeometry-Form.base';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Point.scss';
 
 @observer
-class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
+class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
   @observable active = false;
 
   constructor(props: EditFeatureGeometryFormProps) {
@@ -32,15 +32,19 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
     const { className, store } = this.props;
     const geometry = store.geometry as WfsPointGeometry;
 
+    if (!store.geometryType) {
+      return <></>;
+    }
+
     return (
       <div className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw store={store} point={geometry.coordinates} onDraw={this.changeHandler} />
+            <EditFeatureGeometryDraw store={store} point={geometry.coordinates} onDraw={this.handleChange} />
             <EditFeatureGeometryAsText
               coordinates={[geometry.coordinates]}
               mustBeClosed={false}
-              onChange={this.asTextHandler}
+              onChange={this.handleAsTextChange}
               geometryType={store.geometryType}
               first
             />
@@ -48,19 +52,29 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryForm {
         </EditFeatureGeometryToolbar>
 
         <EditFeatureGeometryXY />
-        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} onChange={this.changeHandler} />
+        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} onChange={this.handleChange} />
       </div>
     );
   }
 
   @boundMethod
-  private changeHandler(val?: CoordinateEdited) {
-    this.props.store.geometry.coordinates = val;
+  private handleChange(val: CoordinateEdited) {
+    const { store } = this.props;
+
+    if (!store.geometry) {
+      throw new Error('Отсутствует геометрия');
+    }
+
+    store.geometry.coordinates = val;
   }
 
   @boundMethod
-  private asTextHandler(val: CoordinateEdited[]) {
-    this.props.store.geometry.coordinates = val[0];
+  private handleAsTextChange(val: CoordinateEdited[]) {
+    const { store } = this.props;
+
+    if (store.geometry) {
+      store.geometry.coordinates = val[0] || [];
+    }
   }
 }
 

@@ -19,7 +19,7 @@ interface ServicesCalculatorInvoiceProps {
 @observer
 export class ServicesCalculatorInvoice extends Component<ServicesCalculatorInvoiceProps> {
   @observable private counter = 1;
-  @observable private font: string;
+  @observable private font?: string;
 
   constructor(props: ServicesCalculatorInvoiceProps) {
     super(props);
@@ -48,6 +48,10 @@ export class ServicesCalculatorInvoice extends Component<ServicesCalculatorInvoi
   private async print() {
     const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF('p', 'px', 'a4');
+
+    if (!this.font) {
+      throw new Error('Шрифт не загружен');
+    }
 
     doc.addFileToVFS('roboto.ttf', this.font);
     doc.addFont('roboto.ttf', 'roboto', 'normal');
@@ -93,25 +97,27 @@ export class ServicesCalculatorInvoice extends Component<ServicesCalculatorInvoi
 
   @action.bound
   private additions(service: ServicesInfo): string {
-    return service.additions
-      ?.map(addition => {
-        if (addition.counter) {
-          return `<tr style='border-left: 1px solid;border-bottom: 1px solid;border-right: 1px solid'>
+    return (
+      service.additions
+        ?.map(addition => {
+          if (addition.counter) {
+            return `<tr style='border-left: 1px solid;border-bottom: 1px solid;border-right: 1px solid'>
           <th style='width: 13px;'>№${this.counter++}</th>
           <th style='border-left: 1px solid'>${service.service}. ${addition.service}</th>
           <th style='width: 40px; border-left: 1px solid; text-align: right;'>${addition.price}</th>
           <th style='width: 34px; border-left: 1px solid; text-align: right;'>${addition.counter}</th>
           <th style='width: 40px; border-left: 1px solid; text-align: right;'>${addition.price * addition.counter}</th>
         </tr>`;
-        }
-      })
-      .join('');
+          }
+        })
+        .join('') || ''
+    );
   }
 
   @boundMethod
   private invoice() {
     const date = new Date();
-    const invoiceInfo = JSON.parse(localStorage.getItem('invoiceRequisites')) as InvoiceInfo;
+    const invoiceInfo = JSON.parse(String(localStorage.getItem('invoiceRequisites'))) as InvoiceInfo;
 
     return `<div style="width: 426px; margin-left: 10px; margin-top: 15px;margin-right: auto; font-size: 8px; font-family: roboto">
         <div style="font-weight: bold; font-size: 12px; padding-left: 5px">

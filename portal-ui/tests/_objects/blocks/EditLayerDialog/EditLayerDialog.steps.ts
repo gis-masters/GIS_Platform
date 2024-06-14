@@ -3,12 +3,19 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { attributesBlock } from '../Attributes/Attributes.block';
 import { editLayerPropertiesDialogBlock } from './EditLayerDialog.block';
 
-Then('в диалоговом окне `Свойства слоя` у поля `Представление` выбрано {string}', async (viewTitle: string) => {
-  await editLayerPropertiesDialogBlock.viewFieldFirstValue(viewTitle);
+When(
+  'в диалоговом окне `Свойства слоя` в поле {string} выбираю {string}',
+  async (fieldTitle: string, optionTitle: string) => {
+    await editLayerPropertiesDialogBlock.selectOption(optionTitle, fieldTitle);
+  }
+);
+
+When('в диалоговом окне `Свойства слоя` в поле `Координатная система` выбираю {string}', async (crs: string) => {
+  await editLayerPropertiesDialogBlock.selectProjection(crs);
 });
 
-When('в диалоговом окне `Свойства слоя` в поле `Представление` выбираю {string}', async (view: string) => {
-  await editLayerPropertiesDialogBlock.layerPropertyDialogSelectOptionByTitle(view);
+Then('в диалоговом окне `Свойства слоя` у поля `Представление` выбрано {string}', async (viewTitle: string) => {
+  await expect(await editLayerPropertiesDialogBlock.getChoiceValue('Представление')).toBe(viewTitle);
 });
 
 When('в диалоговом окне `Свойства слоя` нажимаю `Изменить`', async () => {

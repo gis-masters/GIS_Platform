@@ -32,8 +32,8 @@ const cnLayersSidebarSaveBtn = cn('LayersSidebar', 'SaveBtn');
 interface LayersSidebarToolbarProps {
   above: boolean;
   editMode: boolean;
-  onChangeMode: (editMode: boolean) => void;
-  onSave: () => void;
+  onChangeMode(editMode: boolean): void;
+  onSave(): void;
 }
 
 @observer

@@ -15,8 +15,8 @@ export interface XTableFilterProps extends IClassNameProps {
   filterQuery: FilterQuery;
   type: XTableColumnType;
   options: PropertyOption[];
-  onBeforeFilterChange: () => void;
-  onFilterChange: () => void;
+  onBeforeFilterChange(): void;
+  onFilterChange(): void;
 }
 
 export const XTableFilterBase: FC<XTableFilterProps> = () => <div className={cnXTableFilter()} />;

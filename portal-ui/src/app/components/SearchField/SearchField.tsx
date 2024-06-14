@@ -22,7 +22,7 @@ export interface SearchInfo {
 
 interface SearchFieldProps extends IClassNameProps {
   whiteStyle?: boolean;
-  onSubmit: (search: ExplorerSearchValue) => void;
+  onSubmit(search: ExplorerSearchValue): void;
 }
 
 const cnSearchField = cn('SearchField');

@@ -21,7 +21,7 @@ export class OrgActionsUserGroupCheck extends Component<OrgActionsUserGroupCheck
   }
 
   render() {
-    return <Checkbox className={cnOrgActionsUserGroupCheck()} checked={this.selected} onChange={this.changeHandler} />;
+    return <Checkbox className={cnOrgActionsUserGroupCheck()} checked={this.selected} onChange={this.handleChange} />;
   }
 
   @computed
@@ -32,7 +32,7 @@ export class OrgActionsUserGroupCheck extends Component<OrgActionsUserGroupCheck
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { group, selectedList } = this.props;
 
     if (checked) {

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';
 import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
 import { BreadcrumbsItemsType } from '../../Breadcrumbs/Item/Breadcrumbs-Item.base';
 import { getTitle } from '../Adapter/Explorer-Adapter';
@@ -14,23 +15,41 @@ const cnExplorerBreadcrumb = cn('Explorer', 'Breadcrumbs');
 
 interface ExplorerBreadcrumbsProps {
   store: ExplorerStore;
-  onOpen: (item: ExplorerItemData, depth: number) => void;
+  onOpen(item: ExplorerItemData, depth: number): void;
 }
 
 interface ExplorerBreadcrumbItemData {
   item: ExplorerItemData;
   depth: number;
-  onOpen: (item: ExplorerItemData, depth: number) => void;
+  onOpen(item: ExplorerItemData, depth: number): void;
 }
 
-const handleClick = ({ item, depth, onOpen }: ExplorerBreadcrumbItemData) => {
-  onOpen(item, depth);
+function isExplorerBreadcrumbItemData(item: unknown): item is ExplorerBreadcrumbItemData {
+  if (!isRecordStringUnknown(item)) {
+    return false;
+  }
+
+  if (typeof item.item !== 'object') {
+    return false;
+  }
+
+  if (typeof item.depth !== 'number') {
+    return false;
+  }
+
+  return !(typeof item.onOpen !== 'function');
+}
+
+const handleClick = (itemData: unknown) => {
+  if (!isExplorerBreadcrumbItemData(itemData)) {
+    throw new Error('Ошибка данных для ExplorerBreadcrumb');
+  }
+
+  itemData.onOpen(itemData.item, itemData.depth);
 };
 
 export const ExplorerBreadcrumb: FC<ExplorerBreadcrumbsProps> = observer(({ store, onOpen }) => {
-  let items: BreadcrumbsItemData<ExplorerBreadcrumbItemData>[] = [];
-
-  items = store.path.slice(0, -1).map((pathItem, i) => ({
+  let items: BreadcrumbsItemData[] = store.path.slice(0, -1).map((pathItem, i) => ({
     title: getTitle(pathItem, store),
     payload: {
       item: pathItem,

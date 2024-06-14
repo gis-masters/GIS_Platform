@@ -26,14 +26,14 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
           className={cnAttributesFiltersEnabler()}
           size='small'
           checked={attributesTableStore.isLayerFilterEnabled(layer)}
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
         />
       </Tooltip>
     );
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     attributesTableStore.setFilterEnablednessForLayer(this.props.layer, checked);
   }
 }

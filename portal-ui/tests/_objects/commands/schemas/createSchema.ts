@@ -1,5 +1,5 @@
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { schemaClient } from '../../../../src/app/services/data/schema/schema.client';
+import { Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { convertNewToOldSchema } from '../../../../src/app/services/data/schema/schema.utils';
 import { requestAsAdmin } from '../requestAs';
 import { getSchema } from './getSchema';

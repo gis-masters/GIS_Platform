@@ -30,27 +30,27 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
           <CustomStyleControlMarkSelect
             label='маркер'
             value={value.rule}
-            onChange={this.markChangeHandler}
+            onChange={this.handleMarkChange}
             color={value.rule.markColor}
           />
 
           <CustomStyleControlColorSelect
             colors={customStyleStrokeColors}
             value={value.rule.markColor}
-            onChange={this.colorChangeHandler}
+            onChange={this.handleColorChange}
           />
 
           <CustomStyleControlColorSelect
             label='цвет обводки'
             colors={customStyleStrokeColors}
             value={value.rule.strokeColor}
-            onChange={this.strokeColorChangeHandler}
+            onChange={this.handleStrokeColorChange}
           />
 
           <CustomStyleControlLabelPropertyNameSelect
             label='подпись'
             schema={this.props.schema}
-            onChange={this.labelChangeHandler}
+            onChange={this.handlerLabelChange}
             value={value.rule.labelPropertyName}
           />
         </div>
@@ -59,7 +59,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
-  private labelChangeHandler(labelPropertyName: string) {
+  private handlerLabelChange(labelPropertyName: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'point') {
@@ -75,7 +75,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
-  private colorChangeHandler(color: string) {
+  private handleColorChange(color: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'point') {
@@ -91,7 +91,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
-  private strokeColorChangeHandler(color: string) {
+  private handleStrokeColorChange(color: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'point') {
@@ -107,7 +107,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
-  private markChangeHandler(mark: Pick<PointRule, 'markSize' | 'markType'>) {
+  private handleMarkChange(mark: Pick<PointRule, 'markSize' | 'markType'>) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'point') {

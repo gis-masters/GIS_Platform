@@ -24,7 +24,7 @@ const cnMapMeasureTooltip = cn('MapMeasureTooltip');
 interface MapMeasureTooltipProps {
   item: MeasureItem;
   sketch: boolean;
-  onClear: (item: MeasureItem) => void;
+  onClear(item: MeasureItem): void;
 }
 
 @observer
@@ -33,8 +33,8 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
     const { item, sketch } = this.props;
     const { printingInProcess, printingResolution } = printSettings;
     const geom = item.feature.getGeometry();
-    let value: number;
-    let units: UnitsOfAreaMeasurement | UnitsOfLengthMeasurement;
+    let value: number | undefined;
+    let units: UnitsOfAreaMeasurement | UnitsOfLengthMeasurement | undefined;
     let switchingUnitsEnabled = false;
 
     if (geom instanceof Polygon) {
@@ -66,7 +66,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
           units
         )}
         {!sketch && (
-          <IconButton size='small' onClick={this.clearHandler} className={cnMapMeasureTooltip('Clear')}>
+          <IconButton size='small' onClick={this.handleClear} className={cnMapMeasureTooltip('Clear')}>
             <Close fontSize='inherit' />
           </IconButton>
         )}
@@ -75,7 +75,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
   }
 
   @boundMethod
-  private clearHandler() {
+  private handleClear() {
     const { item, onClear } = this.props;
     onClear(item);
   }

@@ -10,9 +10,9 @@ import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Controls.scss'
 const cnServicesCalculatorControls = cn('ServicesCalculator', 'Controls');
 
 interface ServicesCalculatorControlsProps {
-  selectAllService: () => void;
   selectedAllServices: boolean;
-  openServicesDialog: () => void;
+  selectAllService(): void;
+  openServicesDialog(): void;
 }
 
 export const ServicesCalculatorControls: FC<ServicesCalculatorControlsProps> = ({

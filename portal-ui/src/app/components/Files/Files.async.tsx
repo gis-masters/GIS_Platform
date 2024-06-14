@@ -26,7 +26,6 @@ import {
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { PropertySchemaFile } from '../../services/data/schema/schema.models';
 import { environment } from '../../services/environment';
-import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { sleep } from '../../services/util/sleep';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Carousel, CarouselImageInfo } from '../Carousel/Carousel';
@@ -91,8 +90,8 @@ export default class Files extends Component<FilesProps> {
                 return (
                   <FilesItem
                     item={item}
-                    onDelete={this.deleteHandler}
-                    onPreview={this.previewHandler}
+                    onDelete={this.handleDelete}
+                    onPreview={this.handlePreview}
                     key={`${item.id}_${i}`}
                     editable={editable}
                     showPlaceAction={showPlaceAction}
@@ -112,8 +111,8 @@ export default class Files extends Component<FilesProps> {
                     key={key}
                     files={compoundFiles[key]}
                     showPlaceAction={showPlaceAction}
-                    onDelete={this.deleteHandler}
-                    onPreview={this.previewHandler}
+                    onDelete={this.handleDelete}
+                    onPreview={this.handlePreview}
                     getNewbie={this.getNewbie}
                     editable={editable}
                   />
@@ -126,7 +125,7 @@ export default class Files extends Component<FilesProps> {
             <LookupAdd filled={Boolean(value.length)}>
               <FileInput
                 multiple={multiple}
-                onChange={this.addHandler}
+                onChange={this.handleAdd}
                 nameHidden={Boolean(value.length)}
                 buttonCaption={value.length ? 'Добавить' : 'Выбрать'}
                 autoClear
@@ -157,7 +156,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   @boundMethod
-  private deleteHandler(deletingItem: FileInfo[]) {
+  private handleDelete(deletingItem: FileInfo[]) {
     this.delete(deletingItem);
   }
 
@@ -181,7 +180,7 @@ export default class Files extends Component<FilesProps> {
   }
 
   @action.bound
-  private previewHandler(item: FileInfo) {
+  private handlePreview(item: FileInfo) {
     this.previewOpen = true;
     this.startingImageForPreview = { file: item, title: item.title };
   }
@@ -192,21 +191,12 @@ export default class Files extends Component<FilesProps> {
   }
 
   @computed
-  private get allImages(): CarouselImageInfo[] | undefined {
-    const { value } = this.props;
-    if (value.length) {
-      return value
-        .map(item => {
-          if (isPreviewAllowed(item)) {
-            return { file: item, title: item.title };
-          }
-        })
-        .filter(notFalsyFilter);
-    }
+  private get allImages(): CarouselImageInfo[] {
+    return this.props.value.filter(isPreviewAllowed).map(item => ({ file: item, title: item.title }));
   }
 
   @boundMethod
-  private addHandler(selectedFiles: FileList | null) {
+  private handleAdd(selectedFiles: FileList | null) {
     const { onChange, value } = this.props;
 
     const newFileItems: FileInfo[] = [];

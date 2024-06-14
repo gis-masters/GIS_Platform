@@ -21,7 +21,7 @@ interface CopyUrlButtonProps extends IClassNameProps {
   inHeader?: boolean;
   features?: WfsFeature[];
   vectorTable?: VectorTable;
-  onClick?: () => void;
+  onClick?(): void;
 }
 
 export class CopyUrlButton extends Component<CopyUrlButtonProps> {
@@ -38,7 +38,7 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
       >
         <IconButton
           className={cnCopyUrlButton({ in: inHeader ? 'header' : 'sidebar' })}
-          onClick={this.clickHandler}
+          onClick={this.handleClick}
           color={inHeader ? 'inherit' : undefined}
         >
           <Share />
@@ -48,14 +48,23 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
   }
 
   @boundMethod
-  private clickHandler() {
+  private handleClick() {
     const { features, vectorTable } = this.props;
 
     let urlForClipboard = location.href;
     if (features) {
       /* количество объектов может быть больше одного; сейчас это сломано, но уже есть задача на починку #5229 */
-      const firstFeature = this.props.features[0];
+      const firstFeature = this.props.features?.[0];
+
+      if (!firstFeature) {
+        throw new Error('Не передан объект');
+      }
+
       const layer = getLayerByFeatureInCurrentProject(firstFeature);
+
+      if (!layer) {
+        throw new Error('Не найден слой');
+      }
 
       urlForClipboard = getFeaturesUrl(currentProject.id, layer.dataset, layer.tableName, [firstFeature.id]);
     } else if (vectorTable) {

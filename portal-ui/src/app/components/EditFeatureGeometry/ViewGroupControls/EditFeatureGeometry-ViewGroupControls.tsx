@@ -23,14 +23,15 @@ export const EditFeatureGeometryViewGroupControls: FC<EditFeatureGeometryViewGro
   tableRef,
   store,
   index
-}) => (
-  <Paper className={cnEditFeatureGeometryViewGroupControls()} square>
-    <EditFeatureGeometryCopy
-      coordinates={coordinates}
-      tableRef={tableRef}
-      geometryType={store.geometryType}
-      first={!index}
-    />
-    <EditFeatureGeometryCSV coordinates={coordinates} readOnly geometryType={store.geometryType} first={!index} />
-  </Paper>
-);
+}) =>
+  !!store.geometryType && (
+    <Paper className={cnEditFeatureGeometryViewGroupControls()} square>
+      <EditFeatureGeometryCopy
+        coordinates={coordinates}
+        tableRef={tableRef}
+        geometryType={store.geometryType}
+        first={!index}
+      />
+      <EditFeatureGeometryCSV coordinates={coordinates} readOnly geometryType={store.geometryType} first={!index} />
+    </Paper>
+  );

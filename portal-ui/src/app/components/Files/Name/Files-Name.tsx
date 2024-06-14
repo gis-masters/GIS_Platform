@@ -57,7 +57,7 @@ export class FilesName extends Component<FilesNameProps> {
             disabled={disabled}
             href={filesClient.getFileDownloadUrl(item.id)}
             download={item.title}
-            onClick={this.clickHandler}
+            onClick={this.handleClick}
           >
             <FilesBaseName>{baseName}</FilesBaseName>
             {ext && <FilesExt>.{ext}</FilesExt>}
@@ -68,7 +68,7 @@ export class FilesName extends Component<FilesNameProps> {
   }
 
   @boundMethod
-  private clickHandler(e: React.MouseEvent<HTMLAnchorElement>) {
+  private handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
     const { file, item } = this.props;
 
     if (file) {

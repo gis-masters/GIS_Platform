@@ -10,9 +10,9 @@ import '!style-loader!css-loader!sass-loader!./PrintMapDialog-PreviewImageContai
 const cnPrintMapDialogPreviewImageContainer = cn('PrintMapDialog', 'PreviewImageContainer');
 
 interface PrintMapDialogPreviewImageContainerProps extends ChildrenProps {
-  onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrag: (e: React.DragEvent<HTMLDivElement>) => void;
+  onDragStart(e: React.DragEvent<HTMLDivElement>): void;
+  onDragEnd(e: React.DragEvent<HTMLDivElement>): void;
+  onDrag(e: React.DragEvent<HTMLDivElement>): void;
 }
 
 export const PrintMapDialogPreviewImageContainer: FC<PrintMapDialogPreviewImageContainerProps> = observer(

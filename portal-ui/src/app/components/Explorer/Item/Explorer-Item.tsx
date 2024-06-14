@@ -24,11 +24,11 @@ export interface ExplorerItemProps {
   selected: boolean;
   isFolder: boolean;
   customOpenActionIcon?: ReactNode;
-  customOpenAction?: (item: ExplorerItemData, store: ExplorerStore) => void;
   store: ExplorerStore;
   itemRef?: RefObject<HTMLDivElement>;
-  onOpen: (item: ExplorerItemData) => void;
+  onOpen(item: ExplorerItemData): void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
+  customOpenAction?(item: ExplorerItemData, store: ExplorerStore): void;
 }
 
 @observer
@@ -54,8 +54,8 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
       <ListItemButton
         className={cnExplorerItem({ selected })}
         selected={selected}
-        onClick={this.selectHandler}
-        onDoubleClickCapture={this.openHandler}
+        onClick={this.handleSelect}
+        onDoubleClickCapture={this.handleOpen}
         disabled={this.disabled}
         ref={itemRef}
       >
@@ -70,7 +70,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
         )}
         {isFolder && (
           <ListItemSecondaryAction>
-            <IconButton edge='end' onClick={this.buttonClickHandler} disabled={this.disabled}>
+            <IconButton edge='end' onClick={this.handleButtonClick} disabled={this.disabled}>
               {customOpenActionIcon || <ChevronRight />}
             </IconButton>
           </ListItemSecondaryAction>
@@ -80,7 +80,7 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   }
 
   @boundMethod
-  private openHandler() {
+  private handleOpen() {
     const { customOpenActionIcon, customOpenAction, onOpen, item, store } = this.props;
 
     if (customOpenActionIcon && customOpenAction) {
@@ -91,12 +91,12 @@ export class ExplorerItem extends Component<ExplorerItemProps> {
   }
 
   @boundMethod
-  private buttonClickHandler() {
-    this.openHandler();
+  private handleButtonClick() {
+    this.handleOpen();
   }
 
   @boundMethod
-  private selectHandler() {
+  private handleSelect() {
     const { store, item } = this.props;
     store.selectItem(item);
   }

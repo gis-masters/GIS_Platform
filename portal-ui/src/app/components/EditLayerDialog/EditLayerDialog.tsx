@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../services/communication.service';
-import { Projection } from '../../services/data/projection/projection.models';
-import { getProjectionByCrs } from '../../services/data/projection/projection.service';
-import { getCrsFromProjection } from '../../services/data/projection/projection.util';
+import { Projection } from '../../services/data/projections/projections.models';
+import { getProjectionByCode } from '../../services/data/projections/projections.service';
+import { getSrid } from '../../services/data/projections/projections.util';
 import {
   PropertyOption,
   PropertySchema,
@@ -15,15 +15,17 @@ import {
   SimpleSchema
 } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/schema.utils';
+import { buildComplexName } from '../../services/geoserver/feature.util';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
 import { FormProps } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';
@@ -35,10 +37,10 @@ const cnEditLayerDialog = cn('EditLayerDialog');
 
 interface EditLayerDialogProps {
   open: boolean;
-  onClose(): void;
   layer: CrgLayer;
   schema?: Schema;
   geometryType?: GeometryType;
+  onClose(): void;
 }
 
 @observer
@@ -78,7 +80,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
         value={layer}
         afterForm={<Loading visible={this.busy} />}
         actionFunction={this.editLayer}
-        onFormChange={this.formChangeHandler}
+        onFormChange={this.handleFormChange}
         actionButtonProps={{ children: 'Изменить' }}
         onClose={onClose}
         title={
@@ -100,7 +102,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       return;
     }
 
-    const projection = await getProjectionByCrs(nativeCRS);
+    const projection = await getProjectionByCode(nativeCRS);
     if (projection) {
       this.setDefaultProjection(projection);
     }
@@ -112,7 +114,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   }
 
   @action.bound
-  private formChangeHandler(changedValue: Partial<CrgLayer>) {
+  private handleFormChange(changedValue: Partial<CrgLayer>) {
     const currentValue = { ...this.props.layer, ...this.currentFormValue };
 
     if (currentValue.view !== changedValue.view && currentValue.styleName === this.schemaWithAppliedView?.styleName) {
@@ -173,25 +175,29 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   private get layerSchema(): SimpleSchema {
     const { layer, schema } = this.props;
     let properties: PropertySchema[] = [...crgLayerSchema.properties];
-    const defaultProjection = this.defaultProjection;
 
-    if (defaultProjection) {
-      properties = properties.map(property => {
-        if (property.name === 'crs' && property.propertyType === PropertyType.CHOICE) {
-          property.defaultValue = getCrsFromProjection(defaultProjection);
+    properties = properties.map(property => {
+      // TODO: выпилить этот костыль после #2075
+      if (property.name === 'nativeCRS' && !layer.complexName.endsWith(`__${getSrid(layer.nativeCRS)}`)) {
+        property.hidden = true;
+      }
 
-          property.options = [
-            { title: defaultProjection.title, value: getCrsFromProjection(defaultProjection) },
-            ...organizationSettings.orgFavoriteProjections.map(proj => ({
-              title: proj.title,
-              value: getCrsFromProjection(proj)
-            }))
-          ];
-        }
+      // TODO: включить для tif, shp и tab, mid после #2086
+      if (
+        [
+          CrgLayerType.EXTERNAL,
+          CrgLayerType.EXTERNAL_GEOSERVER,
+          CrgLayerType.RASTER,
+          CrgLayerType.MID,
+          CrgLayerType.TAB,
+          CrgLayerType.SHP
+        ].includes(layer.type)
+      ) {
+        property.hidden = true;
+      }
 
-        return property;
-      });
-    }
+      return property;
+    });
 
     if (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)) {
       properties.push({
@@ -278,6 +284,17 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       layer.photoMode = patch.photoMode;
     }
 
+    if (patch.nativeCRS !== undefined && layer.nativeCRS !== patch.nativeCRS && layer.tableName) {
+      layer.nativeCRS = patch.nativeCRS;
+      layer.complexName = buildComplexName(currentUser.workspaceName, layer.tableName, patch.nativeCRS);
+      void this.changeLayerProjection(layer);
+    } else {
+      communicationService.layerUpdated.emit({ type: 'update', data: layer });
+    }
+  }
+
+  private async changeLayerProjection(layer: CrgLayer): Promise<void> {
+    await createLayer({ ...layer, mode: 'geoserver' }, currentProject.id);
     communicationService.layerUpdated.emit({ type: 'update', data: layer });
   }
 

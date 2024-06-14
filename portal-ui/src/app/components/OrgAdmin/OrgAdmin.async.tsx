@@ -13,7 +13,7 @@ import { Loading } from '../Loading/Loading';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
 import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
-import { OrgProjection } from '../OrgProjection/OrgProjection';
+import { OrgProjections } from '../OrgProjections/OrgProjections';
 import { OrgUsers } from '../OrgUsers/OrgUsers';
 
 import '!style-loader!css-loader!sass-loader!./OrgAdmin.scss';
@@ -24,7 +24,7 @@ const tabs = [
   [OrgUsers, 'Пользователи'],
   [OrgGroups, 'Группы'],
   [OrganizationSettings, 'Настройки организации'],
-  [OrgProjection, 'Системы координат'],
+  [OrgProjections, 'Системы координат'],
   [OrganizationClean, 'Очистка']
 ];
 
@@ -57,7 +57,7 @@ export default class OrgAdmin extends Component {
           value={this.activeTab}
           indicatorColor='primary'
           textColor='primary'
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
         >
           {tabs.map(([, label], i) => (
             <Tab label={label as string} value={i} key={i} />
@@ -75,7 +75,7 @@ export default class OrgAdmin extends Component {
   }
 
   @action.bound
-  private changeHandler(event: SyntheticEvent<Element, Event>, value: number) {
+  private handleChange(event: SyntheticEvent<Element, Event>, value: number) {
     this.activeTab = value;
   }
 }

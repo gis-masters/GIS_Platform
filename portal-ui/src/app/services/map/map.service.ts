@@ -33,9 +33,9 @@ import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { defaultOlCrs, Projection } from '../data/projection/projection.models';
-import { getFeatureProjection, getOlProjection } from '../data/projection/projection.service';
-import { transformExtent, transformGeometry } from '../data/projection/projection.util';
+import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
+import { getFeatureProjection, getOlProjection } from '../data/projections/projections.service';
+import { transformExtent, transformGeometry } from '../data/projections/projections.util';
 import { Schema } from '../data/schema/schema.models';
 import { applyView } from '../data/schema/schema.utils';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
@@ -124,7 +124,7 @@ class MapService {
   private draftStyle?: Style;
   private draftSourceModify?: Modify;
   private draftSourceDraw?: Draw;
-  private drawHandler?: (e: DrawEvent) => void;
+  private handleDraw?(e: DrawEvent): void;
 
   private isModifying = false;
 
@@ -627,7 +627,7 @@ class MapService {
 
     this.isModifying = true;
     this.selectDraftColor();
-    this.draftSourceModify.on('modifyend', this.modificationHandler);
+    this.draftSourceModify.on('modifyend', this.handleModification);
     this.map.addInteraction(this.draftSourceModify);
     this.modificationEnabled.emit();
   }
@@ -639,13 +639,13 @@ class MapService {
 
     this.isModifying = false;
     this.selectDraftColor();
-    this.draftSourceModify.un('modifyend', this.modificationHandler);
+    this.draftSourceModify.un('modifyend', this.handleModification);
     this.map.removeInteraction(this.draftSourceModify);
     this.modificationDisabled.emit();
   }
 
   @boundMethod
-  modificationHandler(e: ModifyEvent) {
+  handleModification(e: ModifyEvent) {
     const geometry = (e.features.item(0) as Feature<SimpleGeometry>).getGeometry();
     this.modificationDone.emit(geometry);
   }
@@ -659,20 +659,20 @@ class MapService {
       type: geometryType
     });
 
-    this.drawHandler = async (e: DrawEvent) => {
+    this.handleDraw = async (e: DrawEvent) => {
       handler(e);
       await sleep(500);
       this.modificationDone.emit();
     };
 
-    this.draftSourceDraw.on('drawend', this.drawHandler);
+    this.draftSourceDraw.on('drawend', this.handleDraw);
     this.map.addInteraction(this.draftSourceDraw);
   }
 
   drawOff() {
     document.body.classList.remove('global-crosshair-cursor');
-    if (this.draftSourceDraw && this.drawHandler) {
-      this.draftSourceDraw.un(['drawend'], this.drawHandler as (event: BaseEvent | Event) => unknown);
+    if (this.draftSourceDraw && this.handleDraw) {
+      this.draftSourceDraw.un(['drawend'], this.handleDraw as (event: BaseEvent | Event) => unknown);
       this.map.removeInteraction(this.draftSourceDraw);
       delete this.draftSourceDraw;
     }
@@ -799,7 +799,7 @@ class MapService {
         return new XYZ({
           crossOrigin: 'Anonymous',
           url: basemap.url || undefined,
-          projection: basemap.projection || defaultOlCrs
+          projection: basemap.projection || defaultOlProjectionCode
         });
       }
     }

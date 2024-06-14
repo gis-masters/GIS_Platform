@@ -33,7 +33,7 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
             schema={schema}
             value={{ type: 'point', rule: pointRule }}
             withIcon
-            onChange={this.partChangeHandler}
+            onChange={this.handlePartChange}
           />
         </Paper>
 
@@ -43,7 +43,7 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
             schema={schema}
             value={{ type: 'line', rule: lineRule }}
             withIcon
-            onChange={this.partChangeHandler}
+            onChange={this.handlePartChange}
           />
         </Paper>
 
@@ -53,7 +53,7 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
             schema={schema}
             value={{ type: 'polygon', rule: polygonRule }}
             withIcon
-            onChange={this.partChangeHandler}
+            onChange={this.handlePartChange}
           />
         </Paper>
       </div>
@@ -61,7 +61,7 @@ class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProp
   }
 
   @boundMethod
-  private partChangeHandler(partValue: CustomStyleDescription) {
+  private handlePartChange(partValue: CustomStyleDescription) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'all') {

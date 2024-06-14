@@ -71,8 +71,8 @@ export class LayersTree extends Component<LayersTreeProps> {
   @boundMethod
   private onDragUpdate({ source, destination, combine }: DragUpdate) {
     if ((!combine && !destination) || source.index === destination?.index) {
-      this.setCombine(false, null);
-    } else {
+      this.setCombine(false, undefined);
+    } else if (destination) {
       const sourceItem = currentProject.visibleTreeWithEmptyGroups[source.index];
       const destinationItem = combine
         ? this.getItemByDraggableId(combine.draggableId)
@@ -80,14 +80,14 @@ export class LayersTree extends Component<LayersTreeProps> {
 
       this.setCombine(
         destinationItem.isGroup && !currentProject.isAncestor(destinationItem, sourceItem),
-        destinationItem.isGroup && combine ? destinationItem : null
+        destinationItem.isGroup && combine ? destinationItem : undefined
       );
     }
   }
 
   @action.bound
   private onDragEnd({ source, destination, combine }: DropResult) {
-    this.setCombine(false, null);
+    this.setCombine(false, undefined);
     const sourceItem = currentProject.visibleTreeWithEmptyGroups[source.index];
 
     if (combine) {
@@ -155,8 +155,15 @@ export class LayersTree extends Component<LayersTreeProps> {
 
   private getItemByDraggableId(draggableId: string): TreeItem {
     const [, g, id] = draggableId.split('_');
+    const item = currentProject.tree.find(
+      ({ payload, isGroup }) => payload.id === Number(id) && isGroup === (g === 'g')
+    );
 
-    return currentProject.tree.find(({ payload, isGroup }) => payload.id === Number(id) && isGroup === (g === 'g'));
+    if (!item) {
+      throw new Error('Ошибка перемещения');
+    }
+
+    return item;
   }
 
   private getItemIndex(item: TreeItem): number {

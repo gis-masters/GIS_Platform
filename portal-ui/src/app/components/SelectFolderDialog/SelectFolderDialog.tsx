@@ -21,13 +21,13 @@ const cnSelectFolderDialog = cn('SelectFolderDialog');
 interface SelectFolderDialogProps {
   open: boolean;
   title: string;
-  onClose: () => void;
   startPath?: ExplorerItemData[] | undefined;
   subtitle?: string;
   loading?: boolean;
   document?: LibraryRecord;
-  customTestForDisabled?: (item: ExplorerItemData) => boolean | undefined;
-  onSelect?: (folder: LibraryRecord) => void;
+  onClose(): void;
+  onSelect?(folder: LibraryRecord): void;
+  customTestForDisabled?(item: ExplorerItemData): boolean | undefined;
 }
 
 @observer

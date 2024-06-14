@@ -7,8 +7,9 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import '!style-loader!css-loader!ol/ol.css';
 
 import { Emitter } from '../../services/common/Emitter';
+import { getOlProjection } from '../../services/data/projections/projections.service';
 import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { fetchBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
+import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { MapMode } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
@@ -43,10 +44,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   private reactionDisposer?: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  constructor(private cdRef: ChangeDetectorRef) {}
+  constructor(private cdRef: ChangeDetectorRef) {
+    void getOlProjection();
+  }
 
   async ngOnInit() {
-    await fetchBasemaps();
+    await fetchCurrentProjectBasemaps();
 
     const queryParams = route.queryParams as { [key: string]: string };
     const basemap = queryParams?.basemap;
@@ -73,7 +76,12 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.reactionDisposer = reaction(
       () => [
-        currentProject.visibleOnMapLayers.map(({ payload }) => [payload.view, payload.styleName, payload.style]),
+        currentProject.visibleOnMapLayers.map(({ payload }) => [
+          payload.view,
+          payload.styleName,
+          payload.style,
+          payload.nativeCRS
+        ]),
         cloneDeep(attributesTableStore.filter),
         cloneDeep(attributesTableStore.filterDisabled)
       ],

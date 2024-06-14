@@ -88,7 +88,7 @@ class MapLabelsService {
       this.removeLabelToolboxDebounced.cancel();
       this.renderLabelToolboxDebounced.cancel();
       this.removeLabelToolbox();
-      mapService.map.un('pointermove', this.pointerMoveHandler);
+      mapService.map.un('pointermove', this.handlePointerMove);
     });
   }
 
@@ -112,7 +112,7 @@ class MapLabelsService {
     await this.show();
 
     this.draw = this.getDraw(type);
-    this.draw.on('drawend', this.drawEndHandler);
+    this.draw.on('drawend', this.handleDrawEnd);
     mapService.map.addInteraction(this.draw);
   }
 
@@ -123,7 +123,7 @@ class MapLabelsService {
 
   private drawOff() {
     if (this.draw) {
-      this.draw.un('drawend', this.drawEndHandler);
+      this.draw.un('drawend', this.handleDrawEnd);
       mapService.map.removeInteraction(this.draw);
       delete this.draw;
     }
@@ -131,8 +131,8 @@ class MapLabelsService {
 
   private modifyOff() {
     if (this.modify) {
-      this.modify.un(['modifystart'], this.modifyStartHandler);
-      this.modify.un(['modifyend'], this.modifyEndHandler);
+      this.modify.un(['modifystart'], this.handleModifyStart);
+      this.modify.un(['modifyend'], this.handleModifyEnd);
       mapService.map.removeInteraction(this.modify);
       delete this.modify;
     }
@@ -165,7 +165,7 @@ class MapLabelsService {
   }
 
   @boundMethod
-  private async drawEndHandler(e: DrawEvent) {
+  private async handleDrawEnd(e: DrawEvent) {
     const feature = e.feature;
     feature.setId(uuid());
     feature.setProperties({ type: mapStore.currentLabelType });
@@ -222,12 +222,12 @@ class MapLabelsService {
     mapService.map.addLayer(this.layer);
     this.modify = new Modify({ source: this.source });
     mapService.map.addInteraction(this.modify);
-    this.modify.on(['modifystart'], this.modifyStartHandler);
-    this.modify.on(['modifyend'], this.modifyEndHandler);
+    this.modify.on(['modifystart'], this.handleModifyStart);
+    this.modify.on(['modifyend'], this.handleModifyEnd);
 
     this.restoreLabelsState();
 
-    mapService.map.on('pointermove', this.pointerMoveHandler);
+    mapService.map.on('pointermove', this.handlePointerMove);
   }
 
   private restoreLabelsState() {
@@ -263,13 +263,13 @@ class MapLabelsService {
   }
 
   @boundMethod
-  private modifyStartHandler() {
+  private handleModifyStart() {
     this.modifyingNow = true;
     this.removeLabelToolbox();
   }
 
   @boundMethod
-  private modifyEndHandler() {
+  private handleModifyEnd() {
     this.modifyingNow = false;
     this.saveToStorages();
   }
@@ -370,7 +370,7 @@ class MapLabelsService {
   }
 
   @boundMethod
-  private pointerMoveHandler(e: MapBrowserEvent<PointerEvent>) {
+  private handlePointerMove(e: MapBrowserEvent<PointerEvent>) {
     const wasSelected = this.selectedFeature;
     delete this.selectedFeature;
     let selectedAgain = false;
@@ -421,8 +421,8 @@ class MapLabelsService {
       labelType: this.getLabelType(feature),
       onEdit: this.editLabel,
       onRemove: this.removeItem,
-      onMouseEnter: this.toolboxMouseEnterHandler,
-      onMouseLeave: this.toolboxMouseLeaveHandler
+      onMouseEnter: this.handleToolboxMouseEnter,
+      onMouseLeave: this.handleToolboxMouseLeave
     });
     this.currentToolboxRoot.render(reactElement);
 
@@ -447,13 +447,13 @@ class MapLabelsService {
   }
 
   @boundMethod
-  private toolboxMouseEnterHandler() {
+  private handleToolboxMouseEnter() {
     this.toolboxHovered = true;
     this.removeLabelToolboxDebounced.cancel();
   }
 
   @boundMethod
-  private toolboxMouseLeaveHandler() {
+  private handleToolboxMouseLeave() {
     this.toolboxHovered = false;
   }
 

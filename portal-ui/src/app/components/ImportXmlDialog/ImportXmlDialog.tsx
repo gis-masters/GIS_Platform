@@ -19,10 +19,10 @@ import { Toast } from '../Toast/Toast';
 
 interface ImportXmlDialogProps {
   open: boolean;
-  onClose: () => void;
   datasetId: string;
   tableId: string;
   complexName?: string;
+  onClose(): void;
 }
 
 @observer
@@ -43,11 +43,11 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
         <DialogTitle>Импорт межевого плана из XML</DialogTitle>
         <DialogContent>
           <DialogContentText>Выберите межевой план в формате XML</DialogContentText>
-          <Form id='importXmlFileForm' onSubmit={this.submitHandler}>
+          <Form id='importXmlFileForm' onSubmit={this.handleSubmit}>
             <FormField>
               <FormLabel htmlFor='importXmlFileField'>Файл</FormLabel>
               <div className={cnFormControl()}>
-                <FileInput accept={Mime.XML} fullWidth onChange={this.changeHandler} id='importXmlFileField' />
+                <FileInput accept={Mime.XML} fullWidth onChange={this.handleChange} id='importXmlFileField' />
               </div>
             </FormField>
           </Form>
@@ -68,7 +68,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   }
 
   @boundMethod
-  private async submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  private async handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const { datasetId, tableId, onClose, complexName } = this.props;
@@ -101,7 +101,7 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
   }
 
   @action.bound
-  private changeHandler(fileList: FileList | null) {
+  private handleChange(fileList: FileList | null) {
     if (fileList?.[0]) {
       this.file = fileList[0];
     }

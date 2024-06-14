@@ -37,7 +37,7 @@ interface ConnectionsToProjectsWidgetProps extends IClassNameProps {
   dialogTitle: string;
   schema?: Schema;
   showAsExtendList?: boolean;
-  onConnect: (project: CrgProject, view: string) => void;
+  onConnect(project: CrgProject, view: string): void;
 }
 
 interface ViewFormValue extends Record<string, unknown> {

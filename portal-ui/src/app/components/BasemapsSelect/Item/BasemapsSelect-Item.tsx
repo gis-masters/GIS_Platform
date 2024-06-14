@@ -17,7 +17,7 @@ const cnBasemapsSelectItem = cn('BasemapsSelect', 'Item');
 
 interface BasemapsSelectItemProps {
   basemap: Basemap;
-  onClick: () => void;
+  onClick(): void;
 }
 
 @observer
@@ -38,14 +38,14 @@ export class BasemapsSelectItem extends Component<BasemapsSelectItemProps> {
     const { thumbnailUrn } = this.props.basemap;
 
     return (
-      <MenuItem className={cnBasemapsSelectItem()} onClick={this.clickHandler}>
+      <MenuItem className={cnBasemapsSelectItem()} onClick={this.handleClick}>
         <BasemapsSelectThumbnail urn={thumbnailUrn} />
       </MenuItem>
     );
   }
 
   @boundMethod
-  private async clickHandler() {
+  private async handleClick() {
     const { basemap, onClick } = this.props;
     onClick();
     await sleep(300);

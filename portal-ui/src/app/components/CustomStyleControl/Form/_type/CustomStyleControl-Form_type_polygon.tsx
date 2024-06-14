@@ -37,26 +37,26 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
             label='обводка'
             color={value.rule.strokeColor}
             value={{ strokeWidth: value.rule.strokeWidth, strokeDashArray: value.rule.strokeDashArray }}
-            onChange={this.strokeChangeHandler}
+            onChange={this.handleStrokeChange}
           />
 
           <CustomStyleControlColorSelect
             colors={customStyleStrokeColors}
             value={value.rule.strokeColor}
-            onChange={this.strokeColorChangeHandler}
+            onChange={this.handleStrokeColorChange}
           />
 
           <CustomStyleControlHatchingSelect
             label='заливка'
             color={value.rule.fillColor}
             value={value.rule.fillGraphic}
-            onChange={this.fillGraphicChangeHandler}
+            onChange={this.handleFillGraphicChange}
           />
 
           <CustomStyleControlColorSelect
             colors={customStyleFillColors}
             value={value.rule.fillColor}
-            onChange={this.fillColorChangeHandler}
+            onChange={this.handleFillColorChange}
           />
 
           <CustomStyleControlLabelPropertyNameSelect
@@ -87,7 +87,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
   }
 
   @boundMethod
-  private strokeChangeHandler(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
+  private handleStrokeChange(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'polygon') {
@@ -104,12 +104,12 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
   }
 
   @boundMethod
-  private strokeColorChangeHandler(color: string) {
+  private handleStrokeColorChange(color: string) {
     this.colorChange('strokeColor', color);
   }
 
   @boundMethod
-  private fillColorChangeHandler(color: string) {
+  private handleFillColorChange(color: string) {
     this.colorChange('fillColor', color);
   }
 
@@ -129,7 +129,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
   }
 
   @boundMethod
-  private fillGraphicChangeHandler(graphic: PolygonRule['fillGraphic']) {
+  private handleFillGraphicChange(graphic: PolygonRule['fillGraphic']) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'polygon') {

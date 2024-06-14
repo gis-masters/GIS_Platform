@@ -39,14 +39,14 @@ export class CustomStyleControlColorSelect extends Component<CustomStyleControlC
             tile: <CustomStyleControlColorTile color={color} />,
             value: color
           }))}
-          onChange={this.changeHandler}
+          onChange={this.handleChange}
         />
       </CustomStyleControlSubControl>
     );
   }
 
   @boundMethod
-  private changeHandler(e: SelectChangeEvent<unknown>) {
+  private handleChange(e: SelectChangeEvent<unknown>) {
     if (typeof e.target.value !== 'string') {
       throw new TypeError('Ошибка при выборе цвета');
     }

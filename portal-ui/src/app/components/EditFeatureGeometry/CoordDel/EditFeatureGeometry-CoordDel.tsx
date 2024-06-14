@@ -9,7 +9,7 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordDel.scss
 const cnEditFeatureGeometryCoordDel = cn('EditFeatureGeometry', 'CoordDel');
 
 interface EditFeatureGeometryCoordDelProps {
-  onClick: () => void;
+  onClick(): void;
   disabled: boolean;
 }
 
@@ -20,7 +20,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
         <span>
           <IconButton
             className={cnEditFeatureGeometryCoordDel()}
-            onClick={this.clickHandler}
+            onClick={this.handleClick}
             size='small'
             disabled={this.props.disabled}
           >
@@ -32,7 +32,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
   }
 
   @boundMethod
-  private clickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  private handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.currentTarget.blur();
     this.props.onClick();
   }

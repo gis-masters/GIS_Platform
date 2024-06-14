@@ -5,7 +5,7 @@ import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutlin
 import { StoryFn } from '@storybook/react';
 
 import { PropertySchema, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
-import { validateFormValue } from '../../services/util/form/formValidation.utils';
+import { FieldErrors, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { Mime } from '../../services/util/Mime';
 import { sleep } from '../../services/util/sleep';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
@@ -196,11 +196,11 @@ const testFields: PropertySchema[] = [
 ];
 
 const value = observable(getDefaultValues(testFields));
-const errors = observable([]);
+const errors = observable<FieldErrors>([]);
 
 const emptyValue: Partial<TestData> = {};
 for (const field of testFields) {
-  emptyValue[field.name] = undefined;
+  emptyValue[field.name as keyof TestData] = undefined;
 }
 
 const validValue: TestData = {
@@ -369,10 +369,10 @@ Auto.args = {
   schema: { properties: testFields },
   value,
   actionFunction,
-  onActionSuccess: () => {
+  onActionSuccess() {
     Toast.success('Success!');
   },
-  onActionError: () => {
+  onActionError() {
     Toast.warn('Error!');
   },
   actions: (

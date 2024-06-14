@@ -18,7 +18,7 @@ export class ServicesCalculatorCheckbox extends Component<ServicesCalculatorChec
   }
 
   render() {
-    return <Checkbox checked={this.selected} onChange={this.changeHandler} />;
+    return <Checkbox checked={this.selected} onChange={this.handleChange} />;
   }
 
   @computed
@@ -31,7 +31,7 @@ export class ServicesCalculatorCheckbox extends Component<ServicesCalculatorChec
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { selectedService, selectedServicesList } = this.props;
 
     if (checked) {

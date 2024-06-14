@@ -10,7 +10,7 @@ const cnFilterButton = cn('TableOverHead', 'FilterButton');
 
 interface FilterButtonProps extends IClassNameProps {
   filterActive: boolean;
-  onClick: () => void;
+  onClick(): void;
 }
 
 export const FilterButton: FC<FilterButtonProps> = ({ filterActive, onClick, className }) => (

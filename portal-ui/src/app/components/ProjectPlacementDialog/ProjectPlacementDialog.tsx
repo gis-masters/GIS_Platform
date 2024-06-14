@@ -13,11 +13,11 @@ import { isGmlFile, isNeedDefineProjection } from '../../services/data/files/fil
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
-import { Projection } from '../../services/data/projection/projection.models';
-import { getCrsFromProjection } from '../../services/data/projection/projection.util';
+import { Projection } from '../../services/data/projections/projections.models';
+import { getProjectionCode } from '../../services/data/projections/projections.util';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { services } from '../../services/services';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { projectionsStore } from '../../stores/Projections.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
@@ -49,10 +49,10 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   componentDidMount() {
-    const projection = organizationSettings.orgDefaultProjection;
+    const projection = projectionsStore.defaultProjection;
 
     if (projection) {
-      this.setSelectedProjection(projection);
+      this.setProjection(projection);
     }
   }
 
@@ -71,7 +71,9 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         fullWidth={fullWidth}
         additionalAction={
           <>
-            {isNeedDefineProjection(fileInfo) && <SelectProjection onSelect={this.setSelectedProjection} fullWidth />}
+            {isNeedDefineProjection(fileInfo) && (
+              <SelectProjection value={this.projection} onChange={this.setProjection} fullWidth />
+            )}
             {isGmlFile(fileInfo) && (
               <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
             )}
@@ -94,8 +96,8 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   @action.bound
-  private setSelectedProjection(proj: Projection) {
-    this.projection = proj;
+  private setProjection(projection: Projection) {
+    this.projection = projection;
   }
 
   @action.bound
@@ -118,7 +120,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
 
     try {
       const process = await (isNeedDefineProjection(this.props.fileInfo)
-        ? placeFileWithProjection(fileInfo, project.id, getCrsFromProjection(this.projection))
+        ? placeFileWithProjection(fileInfo, project.id, getProjectionCode(this.projection))
         : placeGml(fileInfo, project.id, this.invertedCoordinates));
 
       void this.waitForProcess(process);

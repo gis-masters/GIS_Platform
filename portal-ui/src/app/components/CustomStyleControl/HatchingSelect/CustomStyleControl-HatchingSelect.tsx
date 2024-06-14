@@ -46,7 +46,7 @@ export class CustomStyleControlHatchingSelect extends Component<CustomStyleContr
               ),
               value: i
             }))}
-            onChange={this.changeHandler}
+            onChange={this.handleChange}
           />
         )}
       </CustomStyleControlSubControl>
@@ -54,7 +54,7 @@ export class CustomStyleControlHatchingSelect extends Component<CustomStyleContr
   }
 
   @boundMethod
-  private changeHandler(e: SelectChangeEvent<unknown>) {
+  private handleChange(e: SelectChangeEvent<unknown>) {
     const { onChange } = this.props;
 
     if (typeof e.target.value !== 'number') {

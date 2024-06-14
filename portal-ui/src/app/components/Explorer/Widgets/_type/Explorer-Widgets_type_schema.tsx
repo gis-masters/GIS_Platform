@@ -70,7 +70,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
             <CardRow>
               <CardRowTitle>Представление:</CardRowTitle>
               <CardValue>
-                <Select options={this.viewsOptions} onChange={this.changeViewHandler} value={this.selectedViewId} />
+                <Select options={this.viewsOptions} onChange={this.handleViewChange} value={this.selectedViewId} />
               </CardValue>
             </CardRow>
           ) : null}
@@ -79,7 +79,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
               <CardRowTitle>Тип документа:</CardRowTitle>
               <Select
                 options={this.contentTypesOptions}
-                onChange={this.changeContentTypeHandler}
+                onChange={this.handleContentTypeChange}
                 value={this.selectedContentTypeId}
               />
             </CardRow>
@@ -161,7 +161,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
   }
 
   @boundMethod
-  private changeViewHandler(event: SelectChangeEvent<unknown>) {
+  private handleViewChange(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }
@@ -170,7 +170,7 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
   }
 
   @boundMethod
-  private changeContentTypeHandler(event: SelectChangeEvent<unknown>) {
+  private handleContentTypeChange(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }

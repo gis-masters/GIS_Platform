@@ -18,7 +18,7 @@ export class LookupDelete<T> extends Component<LookupDeleteProps<T>> {
   render() {
     return (
       <Tooltip title={this.props.tooltip || 'Удалить'}>
-        <IconButton className={cnLookupDelete()} onClick={this.deleteHandler} size='small'>
+        <IconButton className={cnLookupDelete()} onClick={this.handleDelete} size='small'>
           <DeleteOutline fontSize='small' />
         </IconButton>
       </Tooltip>
@@ -26,7 +26,7 @@ export class LookupDelete<T> extends Component<LookupDeleteProps<T>> {
   }
 
   @boundMethod
-  private deleteHandler() {
+  private handleDelete() {
     const { item, onDelete } = this.props;
     onDelete(item);
   }

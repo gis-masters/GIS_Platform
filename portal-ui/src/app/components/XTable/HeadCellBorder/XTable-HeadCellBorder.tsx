@@ -28,37 +28,34 @@ export class XTableHeadCellBorder extends Component<XTableHeadCellBorderProps> {
 
   render() {
     return (
-      <span
-        className={cnXTableHeadCellBorder({ dragging: this.dragging })}
-        onMouseDownCapture={this.dragStartHandler}
-      />
+      <span className={cnXTableHeadCellBorder({ dragging: this.dragging })} onMouseDownCapture={this.handleDragStart} />
     );
   }
 
   @boundMethod
-  private dragStartHandler(e: React.MouseEvent<HTMLSpanElement>) {
+  private handleDragStart(e: React.MouseEvent<HTMLSpanElement>) {
     this.lastX = e.clientX;
     this.startX = e.clientX;
     this.props.onResizeStart();
     this.setDragging(true);
-    document.body.addEventListener('mousemove', this.dragHandler);
-    document.body.addEventListener('mouseup', this.dragEndHandler);
+    document.body.addEventListener('mousemove', this.handleDrag);
+    document.body.addEventListener('mouseup', this.handleDragEnd);
     document.body.classList.add(cnXTableColResizing());
   }
 
   @boundMethod
-  private dragHandler(e: MouseEvent) {
+  private handleDrag(e: MouseEvent) {
     if (this.dragging && e.clientX > 0) {
       this.lastX = e.clientX;
-      this.props.onResize(this.lastX - this.startX);
+      this.props.onResize(this.lastX - (this.startX || 0));
     }
   }
 
   @boundMethod
-  private dragEndHandler() {
+  private handleDragEnd() {
     this.setDragging(false);
-    document.body.removeEventListener('mousemove', this.dragHandler);
-    document.body.removeEventListener('mouseup', this.dragEndHandler);
+    document.body.removeEventListener('mousemove', this.handleDrag);
+    document.body.removeEventListener('mouseup', this.handleDragEnd);
     document.body.classList.remove(cnXTableColResizing());
   }
 

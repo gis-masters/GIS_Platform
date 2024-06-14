@@ -5,8 +5,8 @@ import { MultiPolygon } from 'ol/geom';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
-import { getOlProjection } from '../../data/projection/projection.service';
-import { getCrsFromProjection } from '../../data/projection/projection.util';
+import { getOlProjection } from '../../data/projections/projections.service';
+import { getProjectionCode } from '../../data/projections/projections.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
@@ -201,8 +201,8 @@ export async function makeXmlPolygonIntersect(
   const olProjection = await getOlProjection();
 
   const olFilter = cqlFilter
-    ? and(intersects(geometryFieldName, polygon, getCrsFromProjection(olProjection)), cql2ol(cqlFilter))
-    : intersects(geometryFieldName, polygon, getCrsFromProjection(olProjection));
+    ? and(intersects(geometryFieldName, polygon, getProjectionCode(olProjection)), cql2ol(cqlFilter))
+    : intersects(geometryFieldName, polygon, getProjectionCode(olProjection));
 
   const featureRequest = new WFS().writeGetFeature({
     srsName,

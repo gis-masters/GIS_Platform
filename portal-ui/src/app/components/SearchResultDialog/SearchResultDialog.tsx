@@ -15,7 +15,7 @@ const cnSearchResultDialog = cn('SearchResultDialog');
 export interface SearchResultDialogProps {
   open: boolean;
   search: ExplorerSearchValue;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer

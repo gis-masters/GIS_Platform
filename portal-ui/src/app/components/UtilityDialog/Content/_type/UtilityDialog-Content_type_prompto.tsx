@@ -25,14 +25,14 @@ class UtilityDialogContentTypePrompto extends Component<UtilityDialogContentProp
       <DialogContent className={className}>
         <DialogContentText>{message}</DialogContentText>
 
-        <form onSubmit={this.okHandler} id={formId}>
+        <form onSubmit={this.handleOk} id={formId}>
           <TextField
             fullWidth
             variant='standard'
             type='text'
             multiline={multiline}
             value={this.text ?? defaultValue}
-            onChange={this.textChangeHandler}
+            onChange={this.handleTextChange}
             autoFocus
           />
         </form>
@@ -41,14 +41,14 @@ class UtilityDialogContentTypePrompto extends Component<UtilityDialogContentProp
   }
 
   @boundMethod
-  private okHandler(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  private handleOk(e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
     const { id, defaultValue = '' } = this.props.info;
     communicationService.utilityDialogClosed.emit({ id, answer: true, value: this.text ?? defaultValue });
   }
 
   @action.bound
-  private textChangeHandler(event: React.ChangeEvent<HTMLInputElement>) {
+  private handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.text = event.target.value;
   }
 }

@@ -12,8 +12,8 @@ const cnCreateDatasetDialog = cn('CreateDatasetDialog');
 
 interface CreateDatasetDialogProps {
   open: boolean;
-  onClose: () => void;
-  onCreated: () => void;
+  onClose(): void;
+  onCreated(): void;
 }
 
 export class CreateDatasetDialog extends Component<CreateDatasetDialogProps> {

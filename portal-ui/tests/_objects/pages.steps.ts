@@ -1,22 +1,22 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { blPage } from './pages/BL.page';
+import { Schema } from '../../src/app/services/data/schema/schema.models';
+import { sleep } from '../../src/app/services/util/sleep';
+import { mapBlock } from './blocks/Map/Map.block';
 import { root } from './blocks/Root/Root';
-import { MapPage } from './pages/Map.page';
-import { Page } from './Page';
-import { ScenarioScope } from './ScenarioScope';
+import { xTableBlock } from './blocks/XTable/XTable.block';
 import { TestUser } from './commands/auth/testUsers';
+import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
+import { getProjectByTitle } from './commands/projects/getProjectByTitle';
+import { Page } from './Page';
+import { pagesRegistry } from './pages/_pagesRegistry';
+import { blPage } from './pages/BL.page';
 import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
-import { getProjectByTitle } from './commands/projects/getProjectByTitle';
-import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
-import { Schema } from '../../src/app/services/data/schema/schema.models';
-import { tasksJournalPage } from './pages/TasksJournal.page';
+import { MapPage } from './pages/Map.page';
 import { OrgAdminPage } from './pages/OrgAdmin';
-import { sleep } from '../../src/app/services/util/sleep';
-import { pagesRegistry } from './pages/_pagesRegistry';
-import { mapBlock } from './blocks/Map/Map.block';
-import { xTableBlock } from './blocks/XTable/XTable.block';
+import { tasksJournalPage } from './pages/TasksJournal.page';
+import { ScenarioScope } from './ScenarioScope';
 
 async function findPage(title: string): Promise<Page> {
   const page = pagesRegistry.find(page => page.title === title);
@@ -77,12 +77,19 @@ const openProjectMap = async (title: string) => {
 
 Given('я на странице карты проекта {string}', openProjectMap);
 
-Given('я нахожусь на странице карты проекта', async function (this: ScenarioScope) {
+Given(
+  'я на странице карты проекта с центром {string} и масштабом {string}',
+  async function (this: ScenarioScope, center: string, zoom: string) {
+    await new MapPage(this.latestProject.id).open(`?zoom=${zoom}&center=${center}`);
+  }
+);
+
+Given('я на странице карты проекта', async function (this: ScenarioScope) {
   await new MapPage(this.latestProject.id).open();
 });
 
 Given(
-  'я нахожусь на странице карты проекта, спозиционированной на объектах созданного слоя: {strings}',
+  'я на странице карты проекта, спозиционированной на объектах созданного слоя: {strings}',
   async function (this: ScenarioScope, ids: string[]) {
     const { latestDataset, latestVectorTable, latestProject } = this;
 
@@ -98,7 +105,7 @@ Given(
 );
 
 Given(
-  'я нахожусь на странице карты проекта, спозиционированной на объектах слоя {string}: {strings}',
+  'я на странице карты проекта, спозиционированной на объектах слоя {string}: {strings}',
   async function (this: ScenarioScope, layerTitle: string, ids: string[]) {
     const { latestDataset, latestProject } = this;
 
@@ -113,7 +120,7 @@ Given(
 );
 
 Given(
-  'я нахожусь на странице карты проекта, открыт объект с id {int} слоя {string}',
+  'я на странице карты проекта, открыт объект с id {int} слоя {string}',
   async function (this: ScenarioScope, objectId: number, layerTitle: string) {
     const { latestDataset, latestProject } = this;
 
@@ -131,19 +138,16 @@ Given(
   }
 );
 
-Given(
-  'я нахожусь на странице карты проекта, открыт объект с id {int}',
-  async function (this: ScenarioScope, objectId: number) {
-    const { latestDataset, latestVectorTable, latestProject } = this;
+Given('я на странице карты проекта, открыт объект с id {int}', async function (this: ScenarioScope, objectId: number) {
+  const { latestDataset, latestVectorTable, latestProject } = this;
 
-    await new MapPage(latestProject.id).openWithPositionToFeatures(
-      latestProject.id,
-      latestDataset.identifier,
-      latestVectorTable.identifier,
-      [String(objectId)]
-    );
-  }
-);
+  await new MapPage(latestProject.id).openWithPositionToFeatures(
+    latestProject.id,
+    latestDataset.identifier,
+    latestVectorTable.identifier,
+    [String(objectId)]
+  );
+});
 
 When('я перехожу на страницу карты проекта {string}', openProjectMap);
 

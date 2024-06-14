@@ -1,3 +1,4 @@
+import { SelectProjectionCodeControl } from '../../../components/SelectProjectionCodeControl/SelectProjectionCodeControl';
 import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
 import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
 
@@ -102,11 +103,10 @@ export const crgLayerSchema: SimpleSchema = {
       propertyType: PropertyType.INT
     },
     {
-      name: 'crs',
+      name: 'nativeCRS',
       title: 'Координатная система',
-      hidden: true,
-      propertyType: PropertyType.CHOICE,
-      options: []
+      propertyType: PropertyType.CUSTOM,
+      ControlComponent: SelectProjectionCodeControl
     }
   ]
 };

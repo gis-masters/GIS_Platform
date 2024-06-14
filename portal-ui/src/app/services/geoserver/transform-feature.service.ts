@@ -7,8 +7,8 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { http } from '../api/http.service';
 import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
 import { usersService } from '../auth/users/users.service';
-import { getFeatureProjection } from '../data/projection/projection.service';
-import { getCrsFromProjection } from '../data/projection/projection.util';
+import { getFeatureProjection } from '../data/projections/projections.service';
+import { getProjectionCode } from '../data/projections/projections.util';
 import { OldSchema } from '../data/schema/schemaOld.models';
 import { createFeature } from '../data/vectorData/vectorData.service';
 import { environment } from '../environment';
@@ -122,7 +122,7 @@ export class TransformFeatureService {
       return newFeature;
     });
     const projection = await getFeatureProjection(features[0]);
-    const crs = projection ? getCrsFromProjection(projection) : undefined;
+    const crs = projection ? getProjectionCode(projection) : undefined;
 
     const options: WriteTransactionOptions = {
       featureNS: 'castyl_for_remove',

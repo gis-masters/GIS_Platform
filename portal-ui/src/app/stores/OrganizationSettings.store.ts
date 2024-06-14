@@ -1,8 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { isProjection, Projection } from '../services/data/projection/projection.models';
+import { Projection } from '../services/data/projections/projections.models';
 import { Schema } from '../services/data/schema/schema.models';
-import { isStringArray } from '../services/util/typeGuards/isStringArray';
 import { currentUser } from './CurrentUser.store';
 
 export interface Settings {
@@ -116,37 +115,6 @@ export class OrganizationSettings {
   @computed
   get SEDDialog(): boolean {
     return Boolean(this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog);
-  }
-
-  @computed
-  get orgDefaultProjection(): Projection | undefined {
-    let defaultProjection = organizationSettings.orgSettings?.organization?.default_epsg;
-    defaultProjection = isStringArray(defaultProjection) ? defaultProjection[0] : defaultProjection;
-
-    return this.orgFavoriteProjections?.find(({ title }) => title === defaultProjection);
-  }
-
-  @computed
-  get orgFavoriteProjections(): Projection[] {
-    const projection = this.orgSettings?.organization?.favorites_epsg;
-
-    if (isStringArray(projection)) {
-      return projection.map(item => {
-        try {
-          const parsedItem = JSON.parse(item) as unknown;
-
-          if (!isProjection(parsedItem)) {
-            throw new Error('Система координат не является проекцией');
-          }
-
-          return parsedItem;
-        } catch {
-          throw new Error(`Не удалось "прочитать" систему координат + ${item}`);
-        }
-      });
-    }
-
-    return [];
   }
 
   private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {

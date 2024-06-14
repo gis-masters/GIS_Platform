@@ -19,7 +19,7 @@ interface PermissionsEditDialogRoleSelectProps {
   principalId: number;
   principalType: PrincipalType;
   currentPermissions: RoleAssignmentBody[];
-  onChange: (principalId: number, principalType: PrincipalType, role: Role) => void;
+  onChange(principalId: number, principalType: PrincipalType, role: Role): void;
 }
 
 @observer
@@ -34,7 +34,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
       <Select
         className={cnPermissionsEditDialogRoleSelect()}
         value={this.principalRole}
-        onChange={this.changeHandler}
+        onChange={this.handleChange}
         variant='standard'
       >
         {roles.map(roleName => (
@@ -60,7 +60,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
   }
 
   @boundMethod
-  private changeHandler(e: SelectChangeEvent<Role>) {
+  private handleChange(e: SelectChangeEvent<Role>) {
     const { onChange, principalId, principalType } = this.props;
     onChange(principalId, principalType, e.target.value as Role);
   }

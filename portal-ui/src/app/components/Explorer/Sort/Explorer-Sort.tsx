@@ -15,7 +15,7 @@ const cnExplorerSort = cn('Explorer', 'Sort');
 interface ExplorerSortProps {
   store: ExplorerStore;
   hideItemsSort?: boolean;
-  onChange: () => void;
+  onChange(): void;
 }
 
 @observer

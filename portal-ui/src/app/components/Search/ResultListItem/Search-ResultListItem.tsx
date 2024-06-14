@@ -29,7 +29,7 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
       <ListItem key={Point.pos} className={cnSearch('ResultListItem')}>
         <ListItemText className={cnSearch('PrimaryText')} primary={name} secondary={description} />
         <ListItemSecondaryAction>
-          <IconButton edge='end' onClick={this.clickHandler}>
+          <IconButton edge='end' onClick={this.handleClick}>
             <MyLocation />
           </IconButton>
         </ListItemSecondaryAction>
@@ -38,7 +38,7 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
   }
 
   @boundMethod
-  private clickHandler() {
+  private handleClick() {
     mapService.clearMarkers();
 
     const { pos } = this.props.geoObject.Point;

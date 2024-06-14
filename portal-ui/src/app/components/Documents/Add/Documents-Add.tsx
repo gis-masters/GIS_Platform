@@ -16,7 +16,7 @@ interface DocumentsAddProps {
   filled: boolean;
   value: DocumentInfo[];
   librariesTableNames: string[];
-  maxDocuments: number;
+  maxDocuments?: number;
   onChange(selectedItems: DocumentInfo[]): void;
 }
 

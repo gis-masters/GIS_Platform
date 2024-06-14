@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
@@ -10,7 +10,12 @@ import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
-import { PrincipalType, Role, RoleAssignmentBody } from '../../services/data/permissions/permissions.models';
+import {
+  isPrincipalType,
+  PrincipalType,
+  Role,
+  RoleAssignmentBody
+} from '../../services/data/permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions/permissions.service';
 import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
@@ -35,8 +40,8 @@ interface PermissionsEditDialogProps {
   permissions: RoleAssignmentBody[];
   itemEntityType?: ExplorerItemEntityTypeTitle;
   open: boolean;
-  onClose: () => void;
-  onChange: () => void;
+  onClose(): void;
+  onChange(): void;
 }
 
 @observer
@@ -223,7 +228,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   private async save() {
     const { permissions, url, title, itemEntityType } = this.props;
     let existing = [...permissions];
-    const changed = [...this.changedPermissions];
+    const changed = [...(this.changedPermissions || [])];
     const toCreate: RoleAssignmentBody[] = [];
     const toDelete: RoleAssignmentBody[] = [];
     this.setBusy(true);
@@ -251,11 +256,11 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
     toDelete.splice(toDelete.length, 0, ...existing);
 
     for (const item of toCreate) {
-      await addEntityPermission(item, url, title, itemEntityType);
+      await addEntityPermission(item, url, title || '', itemEntityType);
     }
 
     for (const item of toDelete) {
-      await removeEntityPermission(item, url, title, itemEntityType);
+      await removeEntityPermission(item, url, title || '', itemEntityType);
     }
 
     communicationService.permissionsUpdated.emit();
@@ -269,7 +274,10 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   }
 
   @action.bound
-  private handleTabsChange(e: React.ChangeEvent, value: PrincipalType) {
+  private handleTabsChange(e: SyntheticEvent<Element, Event>, value: unknown) {
+    if (!isPrincipalType(value)) {
+      throw new Error('Ошибка: невозможное значение');
+    }
     this.activeTab = value;
   }
 
@@ -289,7 +297,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
         currentPermissions={this.currentPermissions}
         principalId={principal.id}
         principalType={principalType}
-        onChange={this.changeRoleHandler}
+        onChange={this.handleChangeRole}
       />
     );
   }
@@ -315,7 +323,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
   }
 
   @action.bound
-  private changeRoleHandler(principalId: number, principalType: PrincipalType, role: Role) {
+  private handleChangeRole(principalId: number, principalType: PrincipalType, role: Role) {
     this.changedPermissions = [
       ...filterOutPrincipal(principalId, principalType, this.currentPermissions),
       {

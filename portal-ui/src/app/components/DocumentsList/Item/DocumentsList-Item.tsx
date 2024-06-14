@@ -28,7 +28,7 @@ interface DocumentItemProps {
   document: DocumentListItemData;
   editedField: EditedField;
   featureInfo: EditFeatureInfo;
-  deleteCallback: (id: string) => void;
+  onDelete(id: string): void;
 }
 
 /**
@@ -131,7 +131,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
       services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);
     }
 
-    this.props.deleteCallback(document.id);
+    this.props.onDelete(document.id);
     this.closeDeleteDialog();
   }
 }

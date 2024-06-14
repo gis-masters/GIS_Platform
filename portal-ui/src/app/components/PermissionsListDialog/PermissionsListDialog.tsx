@@ -6,8 +6,12 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
-import { PrincipalType, projectRoles, RoleAssignmentBody } from '../../services/data/permissions/permissions.models';
+import {
+  PermissionsListItem,
+  PrincipalType,
+  projectRoles,
+  RoleAssignmentBody
+} from '../../services/data/permissions/permissions.models';
 import {
   addDatasetPermission,
   addProjectPermission,
@@ -39,7 +43,7 @@ interface PermissionsListProps {
   principalType: PrincipalType;
   principalName: string;
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer
@@ -81,7 +85,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
                   value={this.activeTab}
                   indicatorColor='primary'
                   textColor='primary'
-                  onChange={this.tabChangeHandler}
+                  onChange={this.handleTabChange}
                 >
                   <Tab label='Проекты' value={PermissionsListItemType.PROJECT} />
                   <Tab label='Векторные слои' value={PermissionsListItemType.TABLE} />
@@ -547,7 +551,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action.bound
-  private tabChangeHandler(e: React.ChangeEvent, value: PermissionsListItemType) {
+  private handleTabChange(e: React.ChangeEvent, value: PermissionsListItemType) {
     this.activeTab = value;
   }
 }

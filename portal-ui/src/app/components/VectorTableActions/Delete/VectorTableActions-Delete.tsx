@@ -28,8 +28,8 @@ interface VectorTableActionsDeleteProps {
 @observer
 export class VectorTableActionsDelete extends Component<VectorTableActionsDeleteProps> {
   @observable private dialogOpen = false;
-  @observable private btnLoading: boolean;
-  @observable private errorMessage: string;
+  @observable private btnLoading = false;
+  @observable private errorMessage?: string;
 
   constructor(props: VectorTableActionsDeleteProps) {
     super(props);

@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactNode } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
@@ -31,15 +31,15 @@ export interface MessagesRegistryProps {
   id: string;
   urlChangeEnabled?: boolean;
   messagesRegistryTableName: string;
-  onSelect?: (items: MessagesRegistriesMessages[]) => void;
+  onSelect?(items: MessagesRegistriesMessages[]): void;
 }
 
 @observer
 export default class MessagesRegistry extends Component<MessagesRegistryProps> {
   @observable private schema?: Schema;
-  @observable private error: string;
+  @observable private error: string | undefined;
   private defaultSort: SortParams<MessagesRegistriesMessages> = { field: 'system', asc: true };
-  private defaultFilter: FilterQuery;
+  private defaultFilter: FilterQuery | undefined;
 
   constructor(props: MessagesRegistryProps) {
     super(props);
@@ -104,23 +104,30 @@ export default class MessagesRegistry extends Component<MessagesRegistryProps> {
 
   @computed
   private get cols(): XTableColumn<MessagesRegistriesMessages>[] {
-    return [
-      {
-        CellContent: this.renderActions,
-        align: 'center',
-        minWidth: 60,
-        filterable: false,
-        cellProps: { padding: 'checkbox' }
-      },
-      ...getXTableColumnsFromSchema<MessagesRegistriesMessages>(this.schema)
-    ].map((item: XTableColumn<MessagesRegistriesMessages>) => ({
+    if (!this.schema) {
+      return [];
+    }
+
+    const checkCol: XTableColumn<MessagesRegistriesMessages> = {
+      CellContent: this.renderActions,
+      align: 'center',
+      minWidth: 60,
+      filterable: false,
+      cellProps: { padding: 'checkbox' }
+    };
+
+    return [checkCol, ...getXTableColumnsFromSchema<MessagesRegistriesMessages>(this.schema)].map(item => ({
       ...item,
       filterable: item.filterable
     }));
   }
 
   @boundMethod
-  private renderActions({ rowData }: { rowData: MessagesRegistriesMessages }): ReactElement {
+  private renderActions({ rowData }: { rowData: MessagesRegistriesMessages }): ReactNode {
+    if (!this.schema) {
+      return null;
+    }
+
     return <MessagesRegistryOpenAction schema={this.schema} message={rowData} />;
   }
 

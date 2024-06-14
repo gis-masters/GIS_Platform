@@ -10,7 +10,7 @@ import '!style-loader!css-loader!sass-loader!./XTable-FilterStrictness.scss';
 const cnXTableFilterStrictness = cn('XTable', 'FilterStrictness');
 
 interface XTableFilterStrictnessProps extends IClassNameProps {
-  onClick: () => void;
+  onClick(): void;
   strict: boolean;
   filtered: boolean;
 }

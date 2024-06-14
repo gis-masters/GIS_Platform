@@ -32,7 +32,7 @@ export interface DocumentsListProps {
   documents?: DocumentListItemData[];
   editedField: EditedField;
   featureInfo: EditFeatureInfo;
-  modifyCallback: (payload: DocumentListItemData[]) => void;
+  modifyCallback(payload: DocumentListItemData[]): void;
 }
 
 /**
@@ -61,7 +61,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
           accept='*/*'
           id={htmlId}
           type='file'
-          onChange={this.onFileChangeHandler}
+          onChange={this.handleFileChange}
         />
         {!featureInfo.isNew && featureInfo.isReadOnly && (
           <label className={cnDocumentsList('Label')} htmlFor={htmlId}>
@@ -77,7 +77,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
                 document={document}
                 editedField={editedField}
                 featureInfo={featureInfo}
-                deleteCallback={this.handleDeletion}
+                onDelete={this.handleDeletion}
                 key={document.id}
               />
             ))}
@@ -114,7 +114,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
   }
 
   @boundMethod
-  private async onFileChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  private async handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     if (this.loading) {
       return;

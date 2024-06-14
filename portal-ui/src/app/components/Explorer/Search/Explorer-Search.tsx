@@ -22,7 +22,7 @@ const cnExplorerSearch = cn('Explorer', 'Search');
 interface ExplorerSearchProps {
   store: ExplorerStore;
   service: ExplorerService;
-  onChange: () => void;
+  onChange(): void;
 }
 
 @observer

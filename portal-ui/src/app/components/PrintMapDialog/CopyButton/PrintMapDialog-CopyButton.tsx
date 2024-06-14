@@ -8,9 +8,9 @@ import '!style-loader!css-loader!sass-loader!./PrintMapDialog-CopyButton.scss';
 const cnPrintMapDialogCopyButton = cn('PrintMapDialog', 'CopyButton');
 
 interface PrintMapDialogCopyButtonProps {
-  onClick: () => void;
   color: PropTypes.Color;
   disabled: boolean;
+  onClick(): void;
 }
 
 export const PrintMapDialogCopyButton: FC<PrintMapDialogCopyButtonProps> = ({ color, disabled, onClick }) => (

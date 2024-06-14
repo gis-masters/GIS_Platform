@@ -131,7 +131,7 @@ export class FilesItem extends Component<FilesItemProps> {
               <LookupDelete
                 tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : undefined}
                 item={item}
-                onDelete={this.deleteButtonClickHandler}
+                onDelete={this.handleDeleteButtonClick}
               />
             )}
           </LookupActions>
@@ -144,7 +144,7 @@ export class FilesItem extends Component<FilesItemProps> {
             <ConnectionsToProjects type='list' connections={this.connections} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.deleteHandler} color='primary'>
+            <Button onClick={this.handleDelete} color='primary'>
               Удалить
             </Button>
             <Button onClick={this.closeDeleteDialog}>Закрыть</Button>
@@ -155,7 +155,7 @@ export class FilesItem extends Component<FilesItemProps> {
   }
 
   @boundMethod
-  private deleteButtonClickHandler(item: FileInfo) {
+  private handleDeleteButtonClick(item: FileInfo) {
     if (this.connections?.length) {
       this.openDeleteDialog();
     } else {
@@ -164,7 +164,7 @@ export class FilesItem extends Component<FilesItemProps> {
   }
 
   @boundMethod
-  private deleteHandler() {
+  private handleDelete() {
     this.props.onDelete([this.props.item]);
   }
 

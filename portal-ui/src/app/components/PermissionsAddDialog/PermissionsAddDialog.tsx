@@ -5,8 +5,8 @@ import { Checkbox, Dialog, DialogActions, DialogContent, MenuItem, Select, Selec
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PermissionsListItem } from '../../services/data/permissions/allPermissions.service';
 import {
+  PermissionsListItem,
   PrincipalType,
   projectRoles,
   Role,
@@ -40,9 +40,9 @@ interface PermissionsAddDialogProps {
   principalId: number;
   principalType: PrincipalType;
   open: boolean;
-  onClose: () => void;
-  onAdd: (item: PermissionsListItem[]) => void;
   type: PermissionsListItemType;
+  onClose(): void;
+  onAdd(item: PermissionsListItem[]): void;
 }
 
 @observer
@@ -194,7 +194,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: CrgProject | VectorTable | Dataset }): ReactElement {
     const { type } = this.props;
-    let selected: boolean;
+    let selected: boolean = false;
     const alreadyUsed = this.isAlreadyUsed(rowData);
 
     if (type === PermissionsListItemType.PROJECT) {
@@ -235,6 +235,8 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
 
       return usedDatasets.some(usedDataset => usedDataset.identifier === identifier);
     }
+
+    return false;
   }
 
   @action.bound

@@ -31,19 +31,19 @@ export class CustomStyleControlFormTypeLine extends Component<CustomStyleControl
             label='линия'
             value={value.rule}
             color={value.rule.strokeColor}
-            onChange={this.strokeChangeHandler}
+            onChange={this.handleStrokeChange}
           />
 
           <CustomStyleControlColorSelect
             colors={customStyleStrokeColors}
             value={value.rule.strokeColor}
-            onChange={this.colorChangeHandler}
+            onChange={this.handleColorChange}
           />
 
           <CustomStyleControlLabelPropertyNameSelect
             label='подпись'
             schema={this.props.schema}
-            onChange={this.labelChangeHandler}
+            onChange={this.handleLabelChange}
             value={value.rule.labelPropertyName}
           />
         </div>
@@ -52,7 +52,7 @@ export class CustomStyleControlFormTypeLine extends Component<CustomStyleControl
   }
 
   @boundMethod
-  private labelChangeHandler(labelPropertyName: string) {
+  private handleLabelChange(labelPropertyName: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'line') {
@@ -68,7 +68,7 @@ export class CustomStyleControlFormTypeLine extends Component<CustomStyleControl
   }
 
   @boundMethod
-  private strokeChangeHandler(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
+  private handleStrokeChange(stroke: Pick<LineRule, 'strokeWidth' | 'strokeDashArray'>) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'line') {
@@ -85,7 +85,7 @@ export class CustomStyleControlFormTypeLine extends Component<CustomStyleControl
   }
 
   @boundMethod
-  private colorChangeHandler(color: string) {
+  private handleColorChange(color: string) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'line') {

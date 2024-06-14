@@ -13,15 +13,15 @@ const cnDataImport = cn('DataImport');
 
 interface DataImportDropzoneProps {
   loading: boolean;
-  file: File;
+  file?: File;
   importOn: boolean;
-  onDrop: (files: File[]) => void;
-  onClear: () => void;
+  onDrop(files: File[]): void;
+  onClear(): void;
 }
 
 export const DataImportDropzone: FC<DataImportDropzoneProps> = props => {
   const { file, loading, onDrop, onClear, importOn } = props;
-  let fileSize: number;
+  let fileSize: number | null = null;
   if (file) {
     fileSize = file.size / 1024 / 1024;
     if (fileSize < 0.001) {
@@ -53,8 +53,8 @@ export const DataImportDropzone: FC<DataImportDropzoneProps> = props => {
       {file || emptyFile ? (
         <div className={cnDataImport('DropzoneFiles')}>
           <div className={cnDataImport('DropzoneFile')}>
-            <div className={cnDataImport('DropzoneFileName')}>{emptyFile ? 'Загруженный файл' : file.name}</div>
-            {emptyFile ? null : (
+            <div className={cnDataImport('DropzoneFileName')}>{emptyFile ? 'Загруженный файл' : file?.name}</div>
+            {!emptyFile && fileSize && (
               <div className={cnDataImport('DropzoneFileSize')}>{Number(fileSize.toFixed(3))} MB</div>
             )}
             <IconButton className={cnDataImport('DropzoneFileDel')} onClick={onClear}>

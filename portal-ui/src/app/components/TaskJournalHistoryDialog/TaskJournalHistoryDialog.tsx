@@ -17,10 +17,10 @@ const cnTaskJournalHistoryDialog = cn('TaskJournalHistoryDialog');
 const cnTaskJournalHistoryDialogContent = cn('TaskJournalHistoryDialog', 'Content');
 
 interface TaskJournalHistoryDialogProps {
-  closeDialog: () => void;
   dialogOpen: boolean;
   task: Task;
   schema: Schema;
+  onClose(): void;
 }
 
 @observer
@@ -31,10 +31,10 @@ export class TaskJournalHistoryDialog extends Component<TaskJournalHistoryDialog
   }
 
   render() {
-    const { dialogOpen, closeDialog } = this.props;
+    const { dialogOpen, onClose } = this.props;
 
     return (
-      <Dialog className={cnTaskJournalHistoryDialog()} open={dialogOpen} onClose={closeDialog} fullWidth maxWidth='xl'>
+      <Dialog className={cnTaskJournalHistoryDialog()} open={dialogOpen} onClose={onClose} fullWidth maxWidth='xl'>
         <DialogTitle>
           <div className={cnTaskJournalHistoryDialog('TypeIcon')}>
             <ArchiveOutlined color='primary' />
@@ -52,7 +52,7 @@ export class TaskJournalHistoryDialog extends Component<TaskJournalHistoryDialog
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog}>Закрыть</Button>
+          <Button onClick={onClose}>Закрыть</Button>
         </DialogActions>
       </Dialog>
     );

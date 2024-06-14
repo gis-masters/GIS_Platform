@@ -42,7 +42,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
         depth={depth}
         visible={visible}
         hiddenByZoom={hiddenByZoom}
-        onEyeClick={this.eyeHandler}
+        onEyeClick={this.handleEye}
         errors={errors}
         editMode={editMode}
         highlighted={highlighted}
@@ -51,7 +51,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
   }
 
   @action.bound
-  private eyeHandler() {
+  private handleEye() {
     const { item } = this.props;
 
     if (item.visible) {

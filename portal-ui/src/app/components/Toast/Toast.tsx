@@ -60,7 +60,7 @@ export class Toast extends Component<ToastProps> {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type] || null;
     const toastInfo: { id: Id } = { id: '0' };
-    const closeHandler = () => {
+    const handleClose = () => {
       toast.dismiss(toastInfo.id);
     };
 
@@ -69,7 +69,7 @@ export class Toast extends Component<ToastProps> {
       className: 'Toast-Toastify',
       closeButton: (
         <>
-          <IconButton type='button' className={cnToast('Close')} onClick={closeHandler}>
+          <IconButton type='button' className={cnToast('Close')} onClick={handleClose}>
             <Close className={cnToast('CloseIcon')} />
           </IconButton>
         </>

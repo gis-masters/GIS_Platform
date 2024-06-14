@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Divider, ListItemText, MenuItem, Select } from '@mui/material';
+import { Checkbox, Divider, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -73,7 +73,7 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: SelectChangeEvent<string[]>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     onBeforeFilterChange();

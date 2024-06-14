@@ -21,13 +21,13 @@ export class PrintActionTemplate<T> extends Component<PrintActionTemplateProps<T
 
     return (
       <div className={cnPrintActionTemplate()}>
-        <PseudoLink onClick={this.clickHandler}>{template.title}</PseudoLink>
+        <PseudoLink onClick={this.handleClick}>{template.title}</PseudoLink>
       </div>
     );
   }
 
   @boundMethod
-  private async clickHandler() {
+  private async handleClick() {
     const { template, entity, onPrint } = this.props;
     await template.print(entity);
     onPrint();

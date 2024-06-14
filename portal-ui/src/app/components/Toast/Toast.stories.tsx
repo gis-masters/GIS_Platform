@@ -15,7 +15,7 @@ export const Error = Template.bind({});
 Error.args = {
   children: 'Error',
   color: 'error',
-  onClick: () => {
+  onClick() {
     Toast.error({
       message: 'Произошла ошибка.',
       details: 'window.notExistFunction is not a function',

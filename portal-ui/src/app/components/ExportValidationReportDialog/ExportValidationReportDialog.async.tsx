@@ -17,7 +17,7 @@ const cnExportValidationReportDialog = cn('ExportValidationReportDialog');
 export interface ExportValidationReportDialogProps {
   layers: CrgVectorLayer[];
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer

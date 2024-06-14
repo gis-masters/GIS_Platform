@@ -20,7 +20,7 @@ interface ExplorerToolbarProps {
   hideItemsSort?: boolean;
   hideToolbarActions?: boolean;
   hidePageSize?: boolean;
-  onChange: () => void;
+  onChange(): void;
   full: boolean;
 }
 

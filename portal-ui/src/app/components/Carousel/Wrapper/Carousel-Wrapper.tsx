@@ -20,8 +20,8 @@ export interface ImagesForCarouselWrapper extends CarouselImageInfo {
 
 interface CarouselWrapperProps {
   imagesWithUrls: ImagesForCarouselWrapper[];
-  currentImage: CarouselImageInfo | undefined;
-  startingImage: CarouselImageInfo;
+  currentImage?: CarouselImageInfo;
+  startingImage?: CarouselImageInfo;
   error?: string;
   expanded: boolean;
   thumbsSwiper?: SwiperClass;

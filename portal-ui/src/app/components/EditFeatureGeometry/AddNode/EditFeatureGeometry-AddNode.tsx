@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 
 interface EditFeatureGeometryAddNodeProps {
-  onClick: () => void;
+  onClick(): void;
 }
 
 export const EditFeatureGeometryAddNode: FC<EditFeatureGeometryAddNodeProps> = ({ onClick }) => (

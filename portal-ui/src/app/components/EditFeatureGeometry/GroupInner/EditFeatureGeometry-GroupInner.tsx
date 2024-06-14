@@ -13,17 +13,17 @@ interface EditFeatureGeometryGroupInnerProps extends ChildrenProps {
   startOffset: number;
   endOffset: number;
   innerRef: RefObject<HTMLDivElement>;
-  onScroll: (e: React.UIEvent<HTMLDivElement>) => void;
+  onScroll(e: React.UIEvent<HTMLDivElement>): void;
 }
 
 export const EditFeatureGeometryGroupInner: FC<EditFeatureGeometryGroupInnerProps> = props => {
   const { coordHeight, startOffset, endOffset, onScroll, coordsInViewport, children, innerRef } = props;
-  const style = {
+  const style: CSSProperties = {
     '--EditFeatureGeometryCoordHeight': coordHeight,
     '--EditFeatureGeometryCoordsInViewport': coordsInViewport,
     '--EditFeatureGeometryGroupStartOffset': startOffset,
     '--EditFeatureGeometryGroupEndOffset': endOffset
-  } as CSSProperties;
+  };
 
   return (
     <div className={cnEditFeatureGeometryGroupInner(null, ['scroll'])} style={style} onScroll={onScroll} ref={innerRef}>

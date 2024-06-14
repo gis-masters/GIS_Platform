@@ -40,7 +40,7 @@ const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 interface PermissionsEditDialogAddPrincipalProps {
   principalType: PrincipalType;
   currentPrincipals: (CrgUser | CrgGroup)[];
-  onAdd: (permissions: RoleAssignmentBody[]) => void;
+  onAdd(permissions: RoleAssignmentBody[]): void;
 }
 
 @observer

@@ -30,8 +30,8 @@ interface BasemapActionsDeleteProps {
 @observer
 export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
   @observable private dialogOpen = false;
-  @observable private btnLoading: boolean;
-  @observable private projectsCount: number;
+  @observable private btnLoading = false;
+  @observable private projectsCount = 0;
 
   constructor(props: BasemapActionsDeleteProps) {
     super(props);

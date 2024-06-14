@@ -6,6 +6,17 @@
 
   width: calc(calc(var(--XTableCellWidth) - 28) * 1px);
 
+  &_display {
+    &_code {
+      white-space: pre-wrap;
+
+      font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+      font-size: 1rem;
+
+      line-break: anywhere;
+    }
+  }
+
   &_singleLineContent {
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -2,8 +2,8 @@ import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import { Toast } from '../../components/Toast/Toast';
-import { getOlProjection, getProjectionByCrs } from '../data/projection/projection.service';
-import { transform } from '../data/projection/projection.util';
+import { getOlProjection, getProjectionByCode } from '../data/projections/projections.service';
+import { transform } from '../data/projections/projections.util';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { isVectorFromFile } from '../gis/layers/layers.utils';
 import { mapService } from '../map/map.service';
@@ -19,7 +19,7 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
         : await getLayerCoverage(layer);
 
     const { maxx, maxy, minx, miny } = latLonBoundingBox;
-    const geoserverProjection = await getProjectionByCrs('EPSG:4326');
+    const geoserverProjection = await getProjectionByCode('EPSG:4326');
     const olProjection = await getOlProjection();
 
     if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0]) || !geoserverProjection) {

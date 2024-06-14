@@ -16,11 +16,11 @@ import { boundMethod } from 'autobind-decorator';
 
 import { ExportResourceModel } from '../../services/data/export/export.models';
 import { exportVectorTableAsGML } from '../../services/data/export/export.service';
-import { Projection } from '../../services/data/projection/projection.models';
-import { getCrsFromProjection } from '../../services/data/projection/projection.util';
+import { Projection } from '../../services/data/projections/projections.models';
+import { getProjectionCode } from '../../services/data/projections/projections.util';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { projectionsStore } from '../../stores/Projections.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
@@ -60,7 +60,7 @@ const knownSchemas: SpatialPlanningSchema[] = [
 
 export interface ExportGmlDialogProps {
   open: boolean;
-  onClose: () => void;
+  onClose(): void;
 }
 
 @observer
@@ -76,7 +76,9 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   componentDidMount(): void {
-    this.setSelectedProjection(organizationSettings.orgDefaultProjection);
+    if (projectionsStore.defaultProjection) {
+      this.setProjection(projectionsStore.defaultProjection);
+    }
   }
 
   render() {
@@ -114,8 +116,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
           <DialogActions>
             <ActionsLeft>
               <CoordinateAxes onSelect={this.handleSelect} invertedCoordinates={this.invertedCoordinates} />
-
-              <SelectProjection onSelect={this.setSelectedProjection} />
+              <SelectProjection value={this.projection} onChange={this.setProjection} />
             </ActionsLeft>
 
             <ActionsRight>
@@ -150,7 +151,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
       await exportVectorTableAsGML(
         this.selectedSchema,
         resources,
-        getCrsFromProjection(this.projection),
+        getProjectionCode(this.projection),
         this.invertedCoordinates
       );
     }
@@ -183,7 +184,7 @@ export default class ExportGmlDialog extends Component<ExportGmlDialogProps> {
   }
 
   @action.bound
-  private setSelectedProjection(proj: Projection) {
-    this.projection = proj;
+  private setProjection(projection: Projection) {
+    this.projection = projection;
   }
 }

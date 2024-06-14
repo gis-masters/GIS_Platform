@@ -24,14 +24,14 @@ class ButtonComponent extends Component<ButtonProps> {
       href: routerLink || href,
       children: <span className={cnButton('Text')}>{children}</span>,
       ...props,
-      onClick: this.onClickHandler
+      onClick: this.handleClick
     };
 
     return <LoadingButton ref={innerRef} {...extendedProps} />;
   }
 
   @boundMethod
-  private onClickHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  private handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     if (this.props.onClick) {
       this.props.onClick(e);
     }

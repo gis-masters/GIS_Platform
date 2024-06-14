@@ -12,7 +12,7 @@ const cnExplorerPagination = cn('Explorer', 'Pagination');
 
 interface ExplorerPaginationProps {
   store: ExplorerStore;
-  onChange: (page: number) => void;
+  onChange(page: number): void;
 }
 
 @observer

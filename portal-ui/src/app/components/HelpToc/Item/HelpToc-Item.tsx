@@ -13,7 +13,7 @@ import '!style-loader!css-loader!sass-loader!./HelpToc-Item.scss';
 
 interface HelpTocProps extends IClassNameProps {
   item: TocItem;
-  onSelect?: (item: TocItem) => void;
+  onSelect?(item: TocItem): void;
 }
 
 @observer
@@ -32,7 +32,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
         key={item.id}
         itemId={item.id}
         label={item.title}
-        onClick={this.clickHandler}
+        onClick={this.handleClick}
       >
         {Array.isArray(item.children)
           ? item.children.map((node, index) => <HelpTocItem key={index} item={node} onSelect={onSelect} />)
@@ -42,7 +42,7 @@ export class HelpTocItem extends Component<HelpTocProps> {
   }
 
   @action.bound
-  private clickHandler() {
+  private handleClick() {
     const { item, onSelect } = this.props;
     if (!item.children && onSelect) {
       onSelect(item);

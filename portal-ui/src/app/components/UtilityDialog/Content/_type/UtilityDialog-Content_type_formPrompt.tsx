@@ -26,8 +26,8 @@ class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentP
               schema={schema}
               id={formId}
               auto
-              actionFunction={this.submitHandler}
-              value={getDefaultValues(schema.properties)}
+              actionFunction={this.handleSubmit}
+              value={getDefaultValues(schema?.properties || [])}
               {...formProps}
             />
           )}
@@ -37,7 +37,7 @@ class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentP
   }
 
   @boundMethod
-  private submitHandler(formValue: unknown) {
+  private handleSubmit(formValue: unknown) {
     const { id } = this.props.info;
     communicationService.utilityDialogClosed.emit({ id, answer: true, formValue });
   }

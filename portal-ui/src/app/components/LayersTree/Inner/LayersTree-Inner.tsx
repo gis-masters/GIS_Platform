@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, LegacyRef, ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { DroppableProvidedProps } from 'react-beautiful-dnd';
@@ -10,11 +10,11 @@ import { LayersTreeItemContainer } from '../ItemContainer/LayersTree-ItemContain
 const cnLayersTreeInner = cn('LayersTree', 'Inner');
 
 interface LayersTreeInnerProps {
-  innerRef: (element: HTMLElement) => unknown;
+  innerRef: LegacyRef<HTMLDivElement> | undefined;
   droppableProvidedProps: DroppableProvidedProps;
   editMode: boolean;
   placeholder: ReactNode;
-  highlightedGroupId: number;
+  highlightedGroupId?: number;
 }
 
 export const LayersTreeInner: FC<LayersTreeInnerProps> = observer(

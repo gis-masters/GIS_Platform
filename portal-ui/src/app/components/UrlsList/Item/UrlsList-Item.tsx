@@ -21,12 +21,12 @@ import '!style-loader!css-loader!sass-loader!../Button/UrlsList-Button.scss';
 import '!style-loader!css-loader!sass-loader!../Link/UrlsList-Link.scss';
 
 interface UrlFieldItemProps {
-  onDelete: (index: number) => void;
-  onEdit: (value: UrlInfo, index: number) => void;
   index: number;
   item: UrlInfo;
   editable: boolean;
   property: PropertySchemaUrl;
+  onDelete(index: number): void;
+  onEdit(value: UrlInfo, index: number): void;
 }
 
 const cnUrlsList = cn('UrlsList');

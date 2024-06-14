@@ -8,8 +8,8 @@ import '!style-loader!css-loader!sass-loader!./Layer-Burger.scss';
 const cnLayerBurger = cn('Layer', 'Burger');
 
 interface LayerBurgerProps {
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  onClick(e: React.MouseEvent<HTMLButtonElement>): void;
 }
 
 export const LayerBurger: FC<LayerBurgerProps> = ({ onClick, disabled }) => (

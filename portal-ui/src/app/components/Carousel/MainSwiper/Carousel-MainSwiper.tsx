@@ -15,8 +15,8 @@ const cnCarousel = cn('Carousel');
 
 interface CarouselMainSwiperProps {
   imagesWithUrls: ImagesForCarouselWrapper[];
-  currentImage: CarouselImageInfo | undefined;
-  startingImage: CarouselImageInfo;
+  currentImage?: CarouselImageInfo;
+  startingImage?: CarouselImageInfo;
   error?: string;
   busy: boolean;
   expanded: boolean;
@@ -44,7 +44,7 @@ export const CarouselMainSwiper: FC<CarouselMainSwiperProps> = ({
   onMainSwiperReady,
   onZoomed
 }) => {
-  const mainSwiperReadyHandler = useCallback(
+  const handleMainSwiperReady = useCallback(
     (e: SwiperClass) => {
       onMainSwiperReady(e);
       onZoomed(e.zoom.scale === 1);
@@ -52,11 +52,11 @@ export const CarouselMainSwiper: FC<CarouselMainSwiperProps> = ({
     [onMainSwiperReady, onZoomed]
   );
 
-  const zoomedHandler = useCallback(() => {
+  const handleZoomChange = useCallback(() => {
     onZoomed(!zoomed);
   }, [onZoomed, zoomed]);
 
-  const swiperChangeHadler = useCallback(
+  const handleSlideChange = useCallback(
     (swiper: SwiperClass) => {
       const activeIndex: number = swiper.activeIndex;
       if (imagesWithUrls) {
@@ -66,7 +66,7 @@ export const CarouselMainSwiper: FC<CarouselMainSwiperProps> = ({
     [imagesWithUrls, onImageChange]
   );
 
-  const mainSwiperClickHandler = useCallback(() => {
+  const handleMainSwiperClick = useCallback(() => {
     if (mainSwiper) {
       mainSwiper.zoom.in(ratio);
     }
@@ -74,23 +74,23 @@ export const CarouselMainSwiper: FC<CarouselMainSwiperProps> = ({
 
   return (
     <Swiper
-      className={cnCarousel('MainSwiper', { type: isPdfFile(currentImage.file) && 'document' })}
-      onSwiper={mainSwiperReadyHandler}
+      className={cnCarousel('MainSwiper', { type: currentImage?.file && isPdfFile(currentImage.file) && 'document' })}
+      onSwiper={handleMainSwiperReady}
       data-swiper-zoom={{ maxRatio: ratio, minRatio: 1 }}
-      onZoomChange={zoomedHandler}
-      onSlideChange={swiperChangeHadler}
+      onZoomChange={handleZoomChange}
+      onSlideChange={handleSlideChange}
       pagination={{
         type: 'fraction'
       }}
       navigation
       zoom
       thumbs={{ swiper: thumbsSwiper }}
-      onClick={mainSwiperClickHandler}
+      onClick={handleMainSwiperClick}
       modules={[Pagination, FreeMode, Navigation, Thumbs, Zoom]}
     >
       {imagesWithUrls.map(imageWithUrl => (
         <SwiperSlide key={imageWithUrl.file.id}>
-          {isPdfFile(currentImage.file) ? (
+          {currentImage?.file && isPdfFile(currentImage.file) ? (
             <CarouselDocument imageWithUrl={imageWithUrl} onLoad={onImageLoad} />
           ) : (
             <div className='swiper-zoom-container'>

@@ -74,8 +74,8 @@ export interface ExplorerProps extends IClassNameProps {
   adaptersOverride?: Record<string, Partial<Adapter>>;
   urlChangeEnabled?: boolean;
   customFilters?: CustomFilters;
-  onSelect?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
-  onOpen?: (item: ExplorerItemData, path: ExplorerItemData[]) => void;
+  onOpen?(item: ExplorerItemData, path: ExplorerItemData[]): void;
+  onSelect?(item: ExplorerItemData, path: ExplorerItemData[]): void;
   disabledTester?(item: ExplorerItemData): Promise<boolean> | boolean;
 }
 
@@ -252,7 +252,7 @@ export default class Explorer extends Component<ExplorerProps> {
     return (
       <div
         className={cnExplorer({ withInfoPanel }, [className])}
-        onKeyDown={this.keyDownHandler}
+        onKeyDown={this.handleKeyDown}
         ref={this.explorerRef}
         tabIndex={0}
         style={{ '--ExplorerPageSize': fixedHeight ? this.store.pageSize : 0 } as CSSProperties}
@@ -300,7 +300,7 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   @boundMethod
-  private keyDownHandler(e: React.KeyboardEvent<HTMLElement>) {
+  private handleKeyDown(e: React.KeyboardEvent<HTMLElement>) {
     if (!this.explorerRef.current?.contains(e.target as HTMLElement)) {
       return;
     }

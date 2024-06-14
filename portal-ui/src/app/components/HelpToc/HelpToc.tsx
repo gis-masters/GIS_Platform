@@ -21,7 +21,7 @@ const cnHelpToc = cn('HelpToc');
 interface HelpTocProps extends IClassNameProps {
   items: Toc;
   selectedItem?: TocItem;
-  onSelect: (item: TocItem) => void;
+  onSelect(item: TocItem): void;
 }
 
 @observer
@@ -60,7 +60,7 @@ export class HelpToc extends Component<HelpTocProps> {
               <div
                 className={cnHelpToc('ItemTitleLink')}
                 key={item.id}
-                onClick={() => this.clickHandler(item)}
+                onClick={() => this.handleClick(item)}
                 dangerouslySetInnerHTML={{ __html: item.title }}
               />
             ))
@@ -81,7 +81,7 @@ export class HelpToc extends Component<HelpTocProps> {
   }
 
   @action
-  private clickHandler(item: TocItem) {
+  private handleClick(item: TocItem) {
     if (!item.children) {
       this.props.onSelect(item);
     }

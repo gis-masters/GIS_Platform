@@ -18,9 +18,9 @@ const cnServicesCalculatorList = cn('ServicesCalculator', 'List');
 interface ServicesCalculatorListProps {
   servicesDialogOpen: boolean;
   clearSelectedServices: boolean;
-  closeServicesDialog: () => void;
-  setServices: (services: ServicesInfo[]) => void;
-  setClearSelectedServices: (clear: boolean) => void;
+  onCloseServicesDialog(): void;
+  onChangeServices(services: ServicesInfo[]): void;
+  onClearServices(clear: boolean): void;
 }
 
 @observer
@@ -35,7 +35,7 @@ export class ServicesCalculatorList extends Component<ServicesCalculatorListProp
   componentDidUpdate() {
     if (this.props.clearSelectedServices) {
       this.clearAllSelect();
-      this.props.setClearSelectedServices(false);
+      this.props.onClearServices(false);
     }
   }
 
@@ -44,7 +44,7 @@ export class ServicesCalculatorList extends Component<ServicesCalculatorListProp
       <Dialog
         className={cnServicesCalculatorList()}
         open={this.props.servicesDialogOpen}
-        onClose={this.props.closeServicesDialog}
+        onClose={this.props.onCloseServicesDialog}
         maxWidth='xl'
       >
         <DialogContent>
@@ -75,7 +75,7 @@ export class ServicesCalculatorList extends Component<ServicesCalculatorListProp
             <Button onClick={this.handleAdd} color='primary'>
               Выбрать
             </Button>
-            <Button onClick={this.props.closeServicesDialog}>Отмена</Button>
+            <Button onClick={this.props.onCloseServicesDialog}>Отмена</Button>
           </ActionsRight>
         </DialogActions>
       </Dialog>
@@ -84,8 +84,8 @@ export class ServicesCalculatorList extends Component<ServicesCalculatorListProp
 
   @action.bound
   private handleAdd() {
-    this.props.setServices(this.selectedList);
-    this.props.closeServicesDialog();
+    this.props.onChangeServices(this.selectedList);
+    this.props.onCloseServicesDialog();
   }
 
   @action.bound

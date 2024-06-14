@@ -11,34 +11,30 @@ import '!style-loader!css-loader!sass-loader!./DataImportTasksList.scss';
 const cnDataImportTasksList = cn('DataImportTasksList');
 
 interface DataImportTasksListProps {
-  onDeleteAllTask?: () => void;
   short?: boolean;
   onlyErrors?: boolean;
   className?: string;
+  onDeleteAllTask?(): void;
 }
 
 @observer
 export class DataImportTasksList extends Component<DataImportTasksListProps> {
-  private progressTimeout: number;
+  private progressTimeout?: number;
 
   componentWillUnmount() {
     window.clearTimeout(this.progressTimeout);
   }
 
   render() {
-    const tasks = this.props.onlyErrors ? currentImport.errorTasks : currentImport.tasks;
+    const { short = false, onlyErrors, className } = this.props;
+    const tasks = onlyErrors ? currentImport.errorTasks : currentImport.tasks;
 
     return (
-      <div className={cnDataImportTasksList(null, [this.props.className])}>
+      <div className={cnDataImportTasksList(null, [className])}>
         <table className={cnDataImportTasksList('Table')}>
           <tbody>
             {tasks.map(task => (
-              <DataImportTasksListTask
-                task={task}
-                key={task.id}
-                onDeleteTask={this.onDeleteTask}
-                short={this.props.short}
-              />
+              <DataImportTasksListTask task={task} key={task.id} onDeleteTask={this.onDeleteTask} short={short} />
             ))}
           </tbody>
         </table>
@@ -49,7 +45,7 @@ export class DataImportTasksList extends Component<DataImportTasksListProps> {
   @boundMethod
   private onDeleteTask() {
     if (!currentImport.tasks.length) {
-      this.props.onDeleteAllTask();
+      this.props.onDeleteAllTask?.();
     }
   }
 }

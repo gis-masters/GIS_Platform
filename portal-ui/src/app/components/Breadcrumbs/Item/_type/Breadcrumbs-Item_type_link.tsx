@@ -27,9 +27,13 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
   render() {
     const { url, title, className, style, children } = this.props;
 
+    if (!url) {
+      console.error('Breadcrumbs-Item_type_link: не указан url');
+    }
+
     const inner = (
       <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} style={style}>
-        <Link href={url} onClick={this.handleClick}>
+        <Link href={url || ''} onClick={this.handleClick}>
           {children}
         </Link>
       </ButtonBase>
@@ -50,8 +54,10 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
 
   @action.bound
   private handleMouseEnter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const itemTitle = e.currentTarget.children[0] as Partial<HTMLDivElement>;
-    this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
+    const itemTitle = e.currentTarget.children[0];
+    if (itemTitle instanceof HTMLElement) {
+      this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
+    }
   }
 
   @boundMethod

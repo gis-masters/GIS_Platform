@@ -9,11 +9,11 @@ import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Delete.scss';
 const cnServicesCalculatorDelete = cn('ServicesCalculator', 'Delete');
 
 interface ServicesCalculatorDeleteProps {
-  clickHandler: () => void;
+  onClick(): void;
 }
 
-export const ServicesCalculatorDelete: FC<ServicesCalculatorDeleteProps> = ({ clickHandler }) => (
-  <IconButton className={cnServicesCalculatorDelete()} onClick={clickHandler}>
+export const ServicesCalculatorDelete: FC<ServicesCalculatorDeleteProps> = ({ onClick }) => (
+  <IconButton className={cnServicesCalculatorDelete()} onClick={onClick}>
     <Close />
   </IconButton>
 );

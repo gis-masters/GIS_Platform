@@ -5,8 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
-import { PrincipalType } from '../../../services/data/permissions/permissions.models';
+import { PermissionsListItem, PrincipalType } from '../../../services/data/permissions/permissions.models';
 import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
@@ -20,8 +19,8 @@ interface PermissionsListDialogAddProps {
   usedDatasets: Dataset[];
   principalId: number;
   principalType: PrincipalType;
-  onAdd: (item: PermissionsListItem[]) => void;
   type: PermissionsListItemType;
+  onAdd(item: PermissionsListItem[]): void;
 }
 
 const entityTypeLabels = {

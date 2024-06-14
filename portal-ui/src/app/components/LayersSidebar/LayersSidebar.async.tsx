@@ -50,7 +50,7 @@ export default class LayersSidebar extends Component {
             onSave={this.save}
             above={this.toolbarAbove}
           />
-          <LayersSidebarContent onScroll={this.contentScrollHandler}>
+          <LayersSidebarContent onScroll={this.handleContentScroll}>
             <LayersTree editMode={this.editMode} />
           </LayersSidebarContent>
         </LayersSidebarInner>
@@ -199,7 +199,7 @@ export default class LayersSidebar extends Component {
   }
 
   @action.bound
-  private contentScrollHandler(e: React.UIEvent<HTMLDivElement, UIEvent>) {
+  private handleContentScroll(e: React.UIEvent<HTMLDivElement, UIEvent>) {
     this.toolbarAbove = Boolean(e.currentTarget.scrollTop);
   }
 }

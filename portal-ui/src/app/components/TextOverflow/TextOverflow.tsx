@@ -26,7 +26,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
 
   private ref: RefObject<HTMLSpanElement> = createRef();
   private wrapperRef: RefObject<HTMLDivElement> = createRef();
-  private resizeObserver: ResizeObserver = new ResizeObserver(this.resizeHandler);
+  private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
 
   constructor(props: TextOverflowProps) {
     super(props);
@@ -107,7 +107,7 @@ export class TextOverflow extends Component<TextOverflowProps> {
   }
 
   @boundMethod
-  private resizeHandler() {
+  private handleResize() {
     this.setTextOverflow();
   }
 

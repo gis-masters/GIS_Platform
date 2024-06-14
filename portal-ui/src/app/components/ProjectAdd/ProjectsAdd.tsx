@@ -10,14 +10,14 @@ import { ProjectForm } from '../ProjectForm/ProjectForm';
 const cnProjectsAdd = cn('ProjectsAdd');
 
 interface ProjectsAddProps extends IClassNameProps {
-  onClose: () => void;
-  onOpen: () => void;
   open: boolean;
   busy: boolean;
-  onSubmit: (name: string) => void;
-  onChange: () => void;
   buttonProps?: Omit<ButtonProps, 'ref'>;
   errors: string[];
+  onClose(): void;
+  onOpen(): void;
+  onSubmit(name: string): void;
+  onChange(): void;
 }
 
 @observer

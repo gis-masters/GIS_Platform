@@ -12,8 +12,7 @@ import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { Role } from '../../services/data/permissions/permissions.models';
-import { Projection } from '../../services/data/projection/projection.models';
-import { getCrsFromProjection } from '../../services/data/projection/projection.util';
+import { getProjectionCode } from '../../services/data/projections/projections.util';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -137,7 +136,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
                 <div className={cnFilesPlacementDialog('CrsText')}>
                   Система координат будет применена при размещении для всех выбранных на следующем шаге файлов.
                 </div>
-                <SelectProjection onSelect={this.setSelectedProjection} fullWidth />
+                <SelectProjection value={this.store.projection} onChange={this.store.setProjection} fullWidth />
               </>
             )}
 
@@ -250,11 +249,6 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
   }
 
   @boundMethod
-  private setSelectedProjection(proj: Projection) {
-    this.store.setCrs(getCrsFromProjection(proj));
-  }
-
-  @boundMethod
   private async close() {
     this.props.onClose();
 
@@ -274,8 +268,8 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
 
   private async place() {
     const { document } = this.props;
-    const { files, crs, project, tasks } = this.store;
-    const apiActions = placeFiles(files, crs, project, document);
+    const { files, projection, project, tasks } = this.store;
+    const apiActions = placeFiles(files, getProjectionCode(projection), project, document);
 
     this.store.initTasks(document);
 
@@ -302,7 +296,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
   private resetState() {
     this.store.setStep(0);
     this.store.setFiles([]);
-    this.store.setCrs('');
+    this.store.setProjection();
     this.store.setProject();
 
     this.store.clear();

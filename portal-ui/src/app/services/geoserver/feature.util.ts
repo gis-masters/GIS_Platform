@@ -37,9 +37,9 @@ export const extractFeatureTypeName = (featureId: string): string => {
   return featureTypeName;
 };
 
-const extractTableNameFromFeatureTypeName = (featureTypeName: string): string => {
+function extractTableNameFromFeatureTypeName(featureTypeName: string): string {
   return featureTypeName.replace(/__\d+$/, '');
-};
+}
 
 export const extractTableNameFromFeatureId = (id: string): string => {
   return extractTableNameFromFeatureTypeName(extractFeatureTypeName(id));
@@ -58,15 +58,13 @@ export const extractWorkspaceFromComplexName = (complexName: string | undefined)
 };
 
 export function buildComplexName(workspace: string, tableName: string, crs?: string): string {
-  if (!workspace || !tableName) {
-    throw new Error('workspace, body: обязательные параметри для построения complexName');
-  }
-
   let epsgCode = undefined;
   if (crs) {
     const code = crs.split(':')[1];
     if (code) {
       epsgCode = code;
+    } else {
+      throw new Error(`Передан некорректный crs: '${crs}'`);
     }
   }
 

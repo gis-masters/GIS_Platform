@@ -34,8 +34,8 @@ export const cnSchemaCardInput = cn('SchemaCard', 'Input');
 export interface SchemaCardProps extends IClassNameProps {
   schema: Schema;
   readonly: boolean;
-  onSchemaChange: (currentSchema: Schema) => void;
-  onError: (error: string) => void;
+  onSchemaChange(currentSchema: Schema): void;
+  onError(error: string): void;
 }
 
 export const titleSchema: SimpleSchema = {
@@ -128,7 +128,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
             {this.schemaWithAppliedType.views?.length ? (
               <CardRow>
                 <CardRowTitle>Представление:</CardRowTitle>
-                <Select options={this.viewsOptions} onChange={this.changeViewHandler} value={this.selectedViewId} />
+                <Select options={this.viewsOptions} onChange={this.handleViewChange} value={this.selectedViewId} />
               </CardRow>
             ) : null}
             {this.schemaWithAppliedType.contentTypes?.length ? (
@@ -136,7 +136,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
                 <CardRowTitle>Тип документа:</CardRowTitle>
                 <Select
                   options={this.contentTypesOptions}
-                  onChange={this.changeContentTypeHandler}
+                  onChange={this.handleContentTypeChange}
                   value={this.selectedContentTypeId}
                 />
               </CardRow>
@@ -223,7 +223,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
   }
 
   @boundMethod
-  private changeViewHandler(event: SelectChangeEvent<unknown>) {
+  private handleViewChange(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }
@@ -232,7 +232,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
   }
 
   @boundMethod
-  private changeContentTypeHandler(event: SelectChangeEvent<unknown>) {
+  private handleContentTypeChange(event: SelectChangeEvent<unknown>) {
     if (typeof event.target.value !== 'string') {
       throw new TypeError('Некорректное значение поля');
     }

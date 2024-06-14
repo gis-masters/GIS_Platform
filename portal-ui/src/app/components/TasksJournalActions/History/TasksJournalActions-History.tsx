@@ -40,12 +40,7 @@ export class TasksJournalActionsHistory extends Component<TasksJournalActionsHis
           onClick={this.openDialog}
         />
 
-        <TaskJournalHistoryDialog
-          schema={schema}
-          task={task}
-          closeDialog={this.closeDialog}
-          dialogOpen={this.dialogOpen}
-        />
+        <TaskJournalHistoryDialog schema={schema} task={task} onClose={this.closeDialog} dialogOpen={this.dialogOpen} />
       </>
     );
   }

@@ -41,7 +41,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   onFormChange?(changedValue: T): void;
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
-  actionFunction: (value: T) => Promise<void> | void;
+  actionFunction(value: T): Promise<void> | void;
   closeButtonProps?: ButtonProps;
   invoke?: FormProps<T>['invoke'];
 }
@@ -50,8 +50,8 @@ export interface FormDialogProps<T> extends IClassNameProps {
 export class FormDialog<T> extends Component<FormDialogProps<T>> {
   @observable private busy = false;
   private formInvoke: FormProps<T>['invoke'] = {};
-  private initialFormValue?: Partial<T> = {};
-  @observable private actualFormValue?: Partial<T> = {};
+  private initialFormValue: Partial<T> | undefined = {};
+  private actualFormValue: Partial<T> = {};
 
   constructor(props: FormDialogProps<T>) {
     super(props);
@@ -112,10 +112,10 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 id={htmlId}
                 labelInField={labelInField}
                 auto
-                onFormChange={this.formChangeHandler}
-                onFormSubmit={this.submitHandler}
-                onActionSuccess={this.successHandler}
-                onActionError={this.errorHandler}
+                onFormChange={this.handleFormChange}
+                onFormSubmit={this.handleSubmit}
+                onActionSuccess={this.handleSuccess}
+                onActionError={this.handleError}
                 actionFunction={actionFunction}
                 invoke={this.formInvoke}
               />
@@ -148,12 +148,12 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
   }
 
   @boundMethod
-  private submitHandler() {
+  private handleSubmit() {
     this.setBusy(true);
   }
 
   @boundMethod
-  private errorHandler() {
+  private handleError() {
     const { onError } = this.props;
     this.setBusy(false);
     if (onError) {
@@ -162,7 +162,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
   }
 
   @boundMethod
-  private successHandler() {
+  private handleSuccess() {
     const { onSuccess } = this.props;
     this.setBusy(false);
     if (onSuccess) {
@@ -182,12 +182,14 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       return;
     }
 
-    if (this.props.closeWithConfirm && this.actualFormValue && !isEqual(this.actualFormValue, this.initialFormValue)) {
-      if (
-        await konfirmieren({
-          message: 'Закрыть диалоговое окно? Все несохраненные данные будут утеряны.'
-        })
-      ) {
+    if (this.props.closeWithConfirm && !isEqual(this.actualFormValue, this.initialFormValue)) {
+      const confirmed = await konfirmieren({
+        message: 'Все несохраненные данные будут утеряны.',
+        okText: 'Всё равно закрыть',
+        cancelText: 'Не закрывать'
+      });
+
+      if (confirmed) {
         this.closeWithoutConfirm();
       }
 
@@ -208,8 +210,8 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     onClose();
   }
 
-  @action.bound
-  private formChangeHandler(changedValue: T): void {
+  @boundMethod
+  private handleFormChange(changedValue: T): void {
     const { onFormChange } = this.props;
 
     this.actualFormValue = changedValue;

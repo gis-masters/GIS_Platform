@@ -12,53 +12,45 @@ import { DrawEvent } from 'ol/interaction/Draw';
 
 import { Emitter } from '../../../services/common/Emitter';
 import { communicationService } from '../../../services/communication.service';
-import { Projection } from '../../../services/data/projection/projection.models';
-import { getOlProjection } from '../../../services/data/projection/projection.service';
-import { transform } from '../../../services/data/projection/projection.util';
+import { transform } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { mapService } from '../../../services/map/map.service';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { projectionsStore } from '../../../stores/Projections.store';
 import { IconButton } from '../../IconButton/IconButton';
-import { Toast } from '../../Toast/Toast';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
 
 interface EditFeatureGeometryDrawProps {
   point?: CoordinateEdited;
   store: EditFeatureGeometryStore;
-  onDraw: (val: CoordinateEdited | CoordinateEdited[]) => void;
   Icon?: SvgIconComponent;
   IconWhenActive?: SvgIconComponent;
   tip?: string;
+  onDraw(val: CoordinateEdited | CoordinateEdited[]): void;
 }
 
 @observer
 export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
   @observable private active = false;
-  @observable private olProjection?: Projection;
 
   constructor(props: EditFeatureGeometryDrawProps) {
     super(props);
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     communicationService.drawOff.on(() => {
       this.activate();
-      this.clickHandler();
+      this.handleClick();
     }, this);
 
     if (!this.props.store.isValid) {
       this.deactivate();
-      this.clickHandler();
+      this.handleClick();
     }
 
     mapService.modificationDisabled.on(this.deactivate);
-
-    const olProjection = await getOlProjection();
-    if (olProjection) {
-      this.setOlProjection(olProjection);
-    }
   }
 
   componentWillUnmount() {
@@ -78,14 +70,14 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
     return (
       <Tooltip title={tip || 'Рисовать на карте'}>
-        <IconButton className={cnEditFeatureGeometryDraw()} onClick={this.clickHandler} checked={this.active}>
+        <IconButton className={cnEditFeatureGeometryDraw()} onClick={this.handleClick} checked={this.active}>
           {this.active ? <IconActive /> : <IconNormal />}
         </IconButton>
       </Tooltip>
     );
   }
 
-  private get drawingGeometryType(): GeometryType {
+  private get drawingGeometryType(): GeometryType | undefined {
     const { geometryType } = this.props.store;
 
     return geometryType === GeometryType.MULTI_POLYGON ? GeometryType.POLYGON : geometryType;
@@ -95,15 +87,13 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleDraw(e: DrawEvent) {
     const { point, store, onDraw } = this.props;
 
-    if (!this.olProjection) {
-      Toast.warn('Отсутствует проекция необходимая для рисования на карте');
-
-      return;
+    if (!projectionsStore.olProjection || !store.currentProjection) {
+      throw new Error('Внезапно пропала проекция, необходимая для рисования на карте');
     }
 
     if (point) {
       const drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as Coordinate;
-      point.splice(0, point.length, ...transform(this.olProjection, store.currentProjection, drawed));
+      point.splice(0, point.length, ...transform(projectionsStore.olProjection, store.currentProjection, drawed));
       onDraw(point);
     } else {
       let drawed = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates() as
@@ -114,21 +104,28 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
         drawed = drawed[0] as Coordinate[];
       }
 
-      const newPart = (drawed as Coordinate[]).map((coord: Coordinate) =>
-        transform(this.olProjection, store.currentProjection, coord)
-      );
+      const newPart = (drawed as Coordinate[]).map((coord: Coordinate) => {
+        if (!projectionsStore.olProjection || !store.currentProjection) {
+          throw new Error('Внезапно пропала проекция, необходимая для рисования на карте');
+        }
+
+        return transform(projectionsStore.olProjection, store.currentProjection, coord);
+      });
 
       onDraw(newPart);
     }
   }
 
   @boundMethod
-  private clickHandler() {
+  private handleClick() {
     if (this.active) {
       mapService.drawOff();
       mapService.disableDraftModification();
       this.deactivate();
     } else {
+      if (!this.drawingGeometryType) {
+        return;
+      }
       mapService.draw(this.drawingGeometryType, this.handleDraw);
       mapService.disableDraftModification();
       mapService.enableDraftModification();
@@ -144,10 +141,5 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @action.bound
   private deactivate() {
     this.active = false;
-  }
-
-  @action.bound
-  private setOlProjection(olProj: Projection) {
-    this.olProjection = olProj;
   }
 }

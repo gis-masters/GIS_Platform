@@ -14,7 +14,7 @@ const cnExplorerPageSize = cn('Explorer', 'PageSize');
 interface ExplorerPageSizeProps {
   store: ExplorerStore;
   hidePageSize?: boolean;
-  onChange: () => void;
+  onChange(): void;
 }
 
 @observer
@@ -31,7 +31,7 @@ export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
             value={pageSize}
             select
             fullWidth
-            onChange={this.changeHandler}
+            onChange={this.handleChange}
             variant='standard'
           >
             {pageSizeVariants.map(size => (
@@ -46,7 +46,7 @@ export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
   }
 
   @boundMethod
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.setSize(Number(e.target.value));
   }
 

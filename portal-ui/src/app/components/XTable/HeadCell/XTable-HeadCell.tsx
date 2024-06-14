@@ -91,7 +91,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
 
     return (
       <TableCell {...cellProps} ref={this.cellRef}>
-        <XTableCellContent singleLineContent={singleLineContent} col={col as XTableColumn<unknown>}>
+        <XTableCellContent singleLineContent={singleLineContent} col={col as XTableColumn<unknown>} inHead>
           <XTableHeadCellLabel
             col={col}
             onSort={this.handleSort}
@@ -126,7 +126,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
             onFilterChange={onFilterChange}
           />
         )}
-        <XTableHeadCellBorder onResizeStart={this.resizeStartHandler} onResize={this.resizeHandler} />
+        <XTableHeadCellBorder onResizeStart={this.handleResizeStart} onResize={this.handleResize} />
       </TableCell>
     );
   }
@@ -144,14 +144,14 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   }
 
   @action.bound
-  private resizeStartHandler() {
+  private handleResizeStart() {
     const { col, onWidthChange } = this.props;
     this.initialWidth = this.cellRef.current.clientWidth;
     onWidthChange(col.field, this.cellRef.current.clientWidth);
   }
 
   @action.bound
-  private resizeHandler(deltaX: number) {
+  private handleResize(deltaX: number) {
     const { col, onWidthChange } = this.props;
     onWidthChange(col.field, Math.max(this.initialWidth + deltaX, col.minWidth || MIN_CELL_WIDTH));
   }

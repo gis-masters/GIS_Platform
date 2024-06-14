@@ -1,9 +1,9 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { projectionsStore } from '../../../stores/Projections.store';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { CrgProject } from '../../gis/projects/projects.models';
 import { Role } from '../permissions/permissions.models';
-import { getCrsFromProjection } from '../projection/projection.util';
+import { getProjectionCode } from '../projections/projections.util';
 import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { OldSchema } from '../schema/schemaOld.models';
 
@@ -160,9 +160,9 @@ export const vectorTableSchema: SimpleSchema = {
       title: 'Координатная система',
       readOnly: true,
       propertyType: PropertyType.CHOICE,
-      options: organizationSettings.orgFavoriteProjections.map(projection => ({
+      options: projectionsStore.favoriteProjections.map(projection => ({
         title: projection.title,
-        value: getCrsFromProjection(projection)
+        value: getProjectionCode(projection)
       }))
     },
     ...vectorTableSchemaBase.properties
@@ -182,12 +182,12 @@ export const emptyVectorTableSchema: SimpleSchema = {
       title: 'Координатная система',
       required: true,
       propertyType: PropertyType.CHOICE,
-      defaultValue: organizationSettings.orgDefaultProjection
-        ? getCrsFromProjection(organizationSettings.orgDefaultProjection)
+      defaultValue: projectionsStore.defaultProjection
+        ? getProjectionCode(projectionsStore.defaultProjection)
         : undefined,
-      options: organizationSettings.orgFavoriteProjections.map(projection => ({
+      options: projectionsStore.favoriteProjections.map(projection => ({
         title: projection.title,
-        value: getCrsFromProjection(projection)
+        value: getProjectionCode(projection)
       }))
     },
     {

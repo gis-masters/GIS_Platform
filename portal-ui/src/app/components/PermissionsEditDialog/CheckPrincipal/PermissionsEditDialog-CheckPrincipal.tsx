@@ -27,7 +27,7 @@ export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEd
       <Checkbox
         className={cnPermissionsEditDialogCheckPrincipal()}
         checked={this.selected || this.alreadyAdded}
-        onChange={this.changeHandler}
+        onChange={this.handleChange}
         disabled={this.alreadyAdded}
       />
     );
@@ -48,7 +48,7 @@ export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEd
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { principal, selectedPrincipals } = this.props;
 
     if (checked) {

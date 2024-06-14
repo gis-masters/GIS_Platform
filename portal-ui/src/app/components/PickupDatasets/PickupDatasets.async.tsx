@@ -17,7 +17,7 @@ import '!style-loader!css-loader!sass-loader!./PickupDatasets.scss';
 const cnPickupDatasets = cn('PickupDatasets');
 
 export interface PickupDatasetsProps {
-  onDatasetSelected: (dataset: Dataset) => void;
+  onDatasetSelected(dataset: Dataset): void;
 }
 
 /**
@@ -27,7 +27,7 @@ export interface PickupDatasetsProps {
 export default class PickupDatasets extends Component<PickupDatasetsProps> {
   @observable private open = false;
   @observable private creationDialogOpen = false;
-  @observable private selectedDataset: string;
+  @observable private selectedDataset?: string;
 
   constructor(props: PickupDatasetsProps) {
     super(props);

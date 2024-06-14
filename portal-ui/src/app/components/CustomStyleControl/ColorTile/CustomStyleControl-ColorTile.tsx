@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { transparent } from '../../../services/geoserver/styles/styles.models';
 
 import '!style-loader!css-loader!sass-loader!./CustomStyleControl-ColorTile.scss';
-import '!style-loader!css-loader!sass-loader!../TransparancyTile/CustomStyleControl-TransparancyTile.scss';
+import '!style-loader!css-loader!sass-loader!../TransparencyTile/CustomStyleControl-TransparencyTile.scss';
 import '!style-loader!css-loader!sass-loader!../TileDescription/CustomStyleControl-TileDescription.scss';
 
 const cnCustomStyleControl = cn('CustomStyleControl');
@@ -17,7 +17,7 @@ export const CustomStyleControlColorTile: FC<CustomStyleControlColorTileProps> =
   return (
     <>
       {color === transparent ? (
-        <div className={cnCustomStyleControl('TransparancyTile')}>
+        <div className={cnCustomStyleControl('TransparencyTile')}>
           <span className={cnCustomStyleControl('TileDescription')} />
           без заливки
         </div>

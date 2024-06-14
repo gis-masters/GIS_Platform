@@ -40,13 +40,13 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
       <Dialog open={open} onClose={onClose} PaperProps={{ className: cnPrintMapDialog() }}>
         <PrintMapDialogContent>
           <PrintMapDialogPreview open={open} />
-          <PrintMapDialogForm format={format} onSubmit={this.submitHandler} />
+          <PrintMapDialogForm format={format} onSubmit={this.handleSubmit} />
         </PrintMapDialogContent>
         <DialogActions>
           {allowJpg && (
             <Button
               className={cnPrintMapDialog('JpegButton', { secondary: allowPdf })}
-              onClick={this.exportHandler}
+              onClick={this.handleExport}
               color={allowPdf ? 'secondary' : 'primary'}
               type={allowPdf ? 'button' : 'submit'}
             >
@@ -65,7 +65,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
   }
 
   @boundMethod
-  private async submitHandler() {
+  private async handleSubmit() {
     const { onClose, directlyPrint = false, onPrint } = this.props;
     onClose();
 
@@ -77,7 +77,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
   }
 
   @boundMethod
-  private async exportHandler() {
+  private async handleExport() {
     const { onClose, directlyPrint = false, onExport } = this.props;
     onClose();
 

@@ -15,13 +15,13 @@ const cnFileInput = cn('FileInput');
 
 export interface FileInputProps
   extends Omit<DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
-  onChange?: (selectedFiles: FileList | null) => void;
   fullWidth?: boolean;
   buttonCaption?: ReactNode;
   nameHidden?: boolean;
   iconButton?: boolean;
   buttonProps?: Omit<ButtonProps, 'ref'>;
   autoClear?: boolean;
+  onChange?(selectedFiles: FileList | null): void;
 }
 
 @observer
@@ -66,7 +66,7 @@ export class FileInput extends Component<FileInputProps> {
         />
 
         {!this.empty && !nameHidden && !autoClear && (
-          <IconButton size='small' onClick={this.clearClickHandler} className={cnFileInput('Clear')}>
+          <IconButton size='small' onClick={this.handleClearClick} className={cnFileInput('Clear')}>
             <Close fontSize='small' />
           </IconButton>
         )}
@@ -76,7 +76,7 @@ export class FileInput extends Component<FileInputProps> {
             <IconButton
               color='primary'
               ref={this.btnRef}
-              onClick={this.browseClickHandler}
+              onClick={this.handleBrowseClick}
               className={cnFileInput('Browse')}
             >
               <AddCircleOutline />
@@ -85,7 +85,7 @@ export class FileInput extends Component<FileInputProps> {
         ) : (
           <Button
             ref={this.btnRef}
-            onClick={this.browseClickHandler}
+            onClick={this.handleBrowseClick}
             className={cnFileInput('Browse')}
             children={buttonCaption}
             {...buttonProps}
@@ -122,10 +122,12 @@ export class FileInput extends Component<FileInputProps> {
   private handleChange() {
     const { onChange, autoClear } = this.props;
 
-    this.files = this.inputRef.current.files;
-    this._empty = !this.files.length;
+    if (this.inputRef.current) {
+      this.files = this.inputRef.current?.files;
+      this._empty = !this.files?.length;
+    }
 
-    onChange(this.files);
+    onChange?.(this.files);
 
     if (autoClear) {
       this.clear();
@@ -133,19 +135,21 @@ export class FileInput extends Component<FileInputProps> {
   }
 
   @boundMethod
-  private clearClickHandler() {
+  private handleClearClick() {
     this.clear();
     this.handleChange();
   }
 
   @action.bound
   private clear() {
-    this.inputRef.current.value = '';
+    if (this.inputRef.current) {
+      this.inputRef.current.value = '';
+    }
     this.files = null;
   }
 
   @boundMethod
-  private browseClickHandler() {
-    this.inputRef.current.click();
+  private handleBrowseClick() {
+    this.inputRef.current?.click();
   }
 }

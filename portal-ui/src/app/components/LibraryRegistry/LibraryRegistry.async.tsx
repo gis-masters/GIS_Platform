@@ -22,6 +22,7 @@ import {
 } from '../../services/util/filterObjects';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { SortParams } from '../../services/util/sortObjects';
+import { isNumberArray } from '../../services/util/typeGuards/isNumberArray';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Counter, CounterItem } from '../Counter/Counter';
 import { getIdsFromPath, getPathFilter, registryDefaultFilter } from '../DataManagement/DataManagement.utils';
@@ -56,7 +57,7 @@ export interface LibraryRegistryProps {
   urlChangeEnabled?: boolean;
   addedDocuments?: DocumentInfo[];
   checkedLibraryDocuments?: LibraryRecord[];
-  onSelect?: (items: LibraryRecord[]) => void;
+  onSelect?(items: LibraryRecord[]): void;
 }
 
 @observer
@@ -281,7 +282,11 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action.bound
-  private handleBreadcrumbsItemClick(path: number[]) {
+  private handleBreadcrumbsItemClick(path: unknown) {
+    if (!isNumberArray(path)) {
+      throw new Error('Невозможные данные');
+    }
+
     const filter = { ...this.tablePageOptions?.filter };
 
     removeFieldFilter(filter, 'path');
@@ -320,7 +325,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
         disabled={addedDocuments?.some(item => item.id === rowData.id)}
         defaultChecked={checked}
         value={rowData.id}
-        onChange={this.changeHandler}
+        onChange={this.handleChange}
       />
     );
   }
@@ -499,7 +504,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const selectedRecord = this.libraryDocuments.find(item => item.id === Number(e.target.value));
 
     if (!selectedRecord) {

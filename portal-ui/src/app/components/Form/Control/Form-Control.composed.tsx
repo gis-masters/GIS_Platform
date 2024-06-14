@@ -1,4 +1,5 @@
-import { compose } from '@bem-react/core';
+import { FormControlProps } from '@mui/material';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeBinary } from './_type/Form-Control_type_binary';
 import { withTypeBool } from './_type/Form-Control_type_bool';
@@ -18,19 +19,19 @@ import { withTypeUserId } from './_type/Form-Control_type_userId';
 import { FormControl as Presenter } from './Form-Control';
 
 export const FormControl = compose(
-  withTypeInt,
-  withTypeFloat,
-  withTypeString,
-  withTypeChoice,
-  withTypeBinary,
-  withTypeBool,
-  withTypeCustom,
-  withTypeSet,
-  withTypeFias,
-  withTypeFile,
-  withTypeDocument,
-  withTypeUrl,
-  withTypeUser,
-  withTypeUserId,
-  withTypeDatetime
+  withTypeInt as HOC<FormControlProps>,
+  withTypeFloat as HOC<FormControlProps>,
+  withTypeString as HOC<FormControlProps>,
+  withTypeChoice as HOC<FormControlProps>,
+  withTypeBinary as HOC<FormControlProps>,
+  withTypeBool as HOC<FormControlProps>,
+  withTypeCustom as HOC<FormControlProps>,
+  withTypeSet as HOC<FormControlProps>,
+  withTypeFias as HOC<FormControlProps>,
+  withTypeFile as HOC<FormControlProps>,
+  withTypeDocument as HOC<FormControlProps>,
+  withTypeUrl as HOC<FormControlProps>,
+  withTypeUser as HOC<FormControlProps>,
+  withTypeUserId as HOC<FormControlProps>,
+  withTypeDatetime as HOC<FormControlProps>
 )(Presenter) as typeof Presenter;

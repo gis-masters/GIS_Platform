@@ -26,7 +26,7 @@ const cnPrintMapDialog = cn('PrintMapDialog');
 
 interface PrintMapDialogFormProps {
   format?: string;
-  onSubmit: () => void;
+  onSubmit(): void;
 }
 
 type MainFormValues = Pick<PrintSettings, 'pageFormatId' | 'scale' | 'orientation' | 'legend' | 'showSystemLayers'>;
@@ -72,7 +72,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
     };
 
     return (
-      <Form className={cnPrintMapDialog('Form')} onSubmit={this.submitHandler} id='printMapDialogForm'>
+      <Form className={cnPrintMapDialog('Form')} onSubmit={this.handleSubmit} id='printMapDialogForm'>
         <FormContent<MainFormValues>
           className={cnPrintMapDialog('FormPart', { part: 'main' })}
           schema={{ name: '', title: '', properties: this.mainFields }}
@@ -236,7 +236,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
   }
 
   @boundMethod
-  private submitHandler(e: FormEvent<HTMLFormElement>) {
+  private handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     e.stopPropagation();
     this.props.onSubmit();

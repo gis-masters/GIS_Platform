@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { PermissionsListItem } from '../../../services/data/permissions/allPermissions.service';
 import {
+  PermissionsListItem,
   PrincipalType,
   projectRoles,
   Role,
@@ -21,10 +21,10 @@ const cnPermissionsListRoleSelect = cn('PermissionsListDialog', 'RoleSelect');
 
 interface PermissionsListRoleSelectProps {
   listItem: PermissionsListItem;
-  onChange: (newItem: PermissionsListItem) => void;
   principalId: number;
   principalType: PrincipalType;
   listItemType: PermissionsListItemType;
+  onChange(newItem: PermissionsListItem): void;
 }
 
 @observer

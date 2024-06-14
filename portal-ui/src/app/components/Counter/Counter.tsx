@@ -18,8 +18,8 @@ export interface CounterItem {
 }
 
 interface CounterProps {
-  setCounters?: () => Promise<CounterItem[]>;
   totalItemCounter?: string;
+  setCounters?(): Promise<CounterItem[]>;
 }
 
 @observer

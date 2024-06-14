@@ -9,8 +9,8 @@ const cnChooseXTableCheck = cn('ChooseXTable', 'Check');
 interface ChooseXTableCheckProps<T> {
   item: T;
   selectedItems: T[];
-  getRowId: (rowData: T) => string | number;
   single: boolean;
+  getRowId(rowData: T): string | number;
   onSelect(items: T[]): void;
 }
 
@@ -25,7 +25,7 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
     const { single } = this.props;
     const Check = single ? Radio : Checkbox;
 
-    return <Check className={cnChooseXTableCheck()} checked={this.selected} onChange={this.changeHandler} />;
+    return <Check className={cnChooseXTableCheck()} checked={this.selected} onChange={this.handleChange} />;
   }
 
   @computed
@@ -36,7 +36,7 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   }
 
   @action.bound
-  private changeHandler(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { item, selectedItems, getRowId, single, onSelect } = this.props;
     if (single && checked) {
       selectedItems.splice(0, selectedItems.length, item);

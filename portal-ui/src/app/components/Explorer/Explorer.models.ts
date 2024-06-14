@@ -157,48 +157,48 @@ export const keyActions: { [key in KeyAction]: string[] } = {
 export const pageSizeVariants = [5, 10, 20, 50, 100];
 
 export interface Adapter {
-  getId: (item: ExplorerItemData, store: ExplorerStore) => string;
-  getTitle: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  getMeta: (item: ExplorerItemData, store: ExplorerStore) => string;
-  getDescription?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  getIcon?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  additionalInfo?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  isFolder: (item: ExplorerItemData, store: ExplorerStore) => boolean;
-  customOpenActionIcon?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  customOpenAction?: (item: ExplorerItemData, store: ExplorerStore) => void;
-  getChildren?: (
+  getId(item: ExplorerItemData, store: ExplorerStore): string;
+  getTitle(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  getMeta(item: ExplorerItemData, store: ExplorerStore): string;
+  getDescription?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  getIcon?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  additionalInfo?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  isFolder(item: ExplorerItemData, store: ExplorerStore): boolean;
+  customOpenActionIcon?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  customOpenAction?(item: ExplorerItemData, store: ExplorerStore): void;
+  getChildren?(
     item: ExplorerItemData,
     pageOptions: PageOptions,
     store: ExplorerStore,
     service: ExplorerService
-  ) => [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
-  getChildrenWithParticularOne?: (
+  ): [ExplorerItemData[], number] | Promise<[ExplorerItemData[], number]>;
+  getChildrenWithParticularOne?(
     item: ExplorerItemData,
     pageOptions: PageOptions,
     id: string,
     store: ExplorerStore,
     service: ExplorerService
-  ) => [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number] | undefined> | undefined;
-  getChildrenSortItems?: (item: ExplorerItemData, store: ExplorerStore) => SortItem[];
-  getChildById?: (
+  ): [ExplorerItemData[], number, number] | Promise<[ExplorerItemData[], number, number] | undefined> | undefined;
+  getChildrenSortItems?(item: ExplorerItemData, store: ExplorerStore): SortItem[];
+  getChildById?(
     item: ExplorerItemData,
     id: string,
     type: ExplorerItemType,
     store: ExplorerStore
-  ) => ExplorerItemData | Promise<ExplorerItemData> | undefined;
-  getChildrenSortDefaultValue?: (item: ExplorerItemData, store: ExplorerStore) => string;
-  getChildrenSortDefaultOrder?: (item: ExplorerItemData, store: ExplorerStore) => SortOrder;
-  getChildrenFilterField?: (item: ExplorerItemData, store: ExplorerStore) => string;
-  getChildrenFilterLabel?: (item: ExplorerItemData, store: ExplorerStore) => string;
-  getToolbarActions?: (
+  ): ExplorerItemData | Promise<ExplorerItemData> | undefined;
+  getChildrenSortDefaultValue?(item: ExplorerItemData, store: ExplorerStore): string;
+  getChildrenSortDefaultOrder?(item: ExplorerItemData, store: ExplorerStore): SortOrder;
+  getChildrenFilterField?(item: ExplorerItemData, store: ExplorerStore): string;
+  getChildrenFilterLabel?(item: ExplorerItemData, store: ExplorerStore): string;
+  getToolbarActions?(
     item: ExplorerItemData,
     store: ExplorerStore,
     service: ExplorerService,
     full: boolean
-  ) => Promise<ReactNode> | ReactNode;
-  getRefreshEmitters?: (item: ExplorerItemData, store: ExplorerStore) => Emitter<DataChangeEventDetail<unknown>>[];
-  getActions?: (item: ExplorerItemData, store: ExplorerStore) => ReactNode;
-  hasSearch?: (item: ExplorerItemData, store: ExplorerStore) => boolean;
+  ): Promise<ReactNode> | ReactNode;
+  getRefreshEmitters?(item: ExplorerItemData, store: ExplorerStore): Emitter<DataChangeEventDetail<unknown>>[];
+  getActions?(item: ExplorerItemData, store: ExplorerStore): ReactNode;
+  hasSearch?(item: ExplorerItemData, store: ExplorerStore): boolean;
 }
 
 export const itemTypeError: Error = new Error('Некорректный тип данных в Explorer');

@@ -9,8 +9,8 @@ import { AxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
 import { communicationService } from '../../services/communication.service';
-import { getProjectionByCrs } from '../../services/data/projection/projection.service';
-import { transformGeometry } from '../../services/data/projection/projection.util';
+import { getProjectionByCode } from '../../services/data/projections/projections.service';
+import { transformGeometry } from '../../services/data/projections/projections.util';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
@@ -110,8 +110,17 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     try {
       const { layer, features } = this.props;
       const createdFeatures: WfsFeature[] = [];
-      const selectedProjection = await getProjectionByCrs(selectedLayer.nativeCRS);
-      const currentProjection = await getProjectionByCrs(layer.nativeCRS);
+      if (!layer.nativeCRS) {
+        throw new Error(`Отсутствует nativeCRS у слоя "${layer.title}"`);
+      }
+      const selectedProjection = await getProjectionByCode(selectedLayer.nativeCRS);
+      if (!selectedProjection) {
+        throw new Error(`Не найдена проекция "${selectedLayer.nativeCRS}" для слоя "${selectedLayer.title}"`);
+      }
+      const currentProjection = await getProjectionByCode(layer.nativeCRS);
+      if (!currentProjection) {
+        throw new Error(`Не найдена проекция "${layer.nativeCRS}" для слоя "${layer.title}"`);
+      }
 
       if (layer.type && (layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type))) {
         for (const feature of features) {
