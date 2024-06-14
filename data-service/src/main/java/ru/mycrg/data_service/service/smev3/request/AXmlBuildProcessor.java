@@ -5,19 +5,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMapper;
@@ -35,11 +38,13 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.util.JsonConverter.fromJson;
+import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_FILE;
 
 public abstract class AXmlBuildProcessor {
+
+    private static final Logger log = LoggerFactory.getLogger(AXmlBuildProcessor.class);
 
     protected final RequestProcessor requestProcessor;
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
@@ -50,12 +55,11 @@ public abstract class AXmlBuildProcessor {
         this.requestProcessor = requestProcessor;
     }
 
-    protected <T> BuildRequestAndSources<T> buildRequest(T request) {
-        return new BuildRequestAndSources<>(
+    protected <T> RequestAndSources<T> buildRequest(T request) {
+        return new RequestAndSources<>(
                 request,
                 this.sourceRecordsMap,
-                this.attachmentsMap
-        );
+                this.attachmentsMap);
     }
 
     public Optional<String> ofNullableString(String value) {
@@ -109,7 +113,7 @@ public abstract class AXmlBuildProcessor {
 
     protected Optional<RefType> asRefType(IRecord record, String tableName, String fieldName) {
         return asString(record, fieldName)
-                .map(value -> refType(tableName, fieldName, value));
+                .map(value -> prepareRefType(tableName, fieldName, value));
     }
 
     protected Optional<IRecord> asRefRecord(@NotNull IRecord record, @NotNull String fieldName) {
@@ -120,70 +124,59 @@ public abstract class AXmlBuildProcessor {
                 .map(jsonNode -> {
                     var table = jsonNode.get("libraryTableName").asText();
                     var id = jsonNode.get("id").asLong();
-                    return getRecordById(LIBRARY_RECORD, SYSTEM_SCHEMA_NAME, table, table, id);
+
+                    return getRecordById(table, table, id);
                 });
     }
 
-    protected List<IRecord> asFileRecord(IRecord record, String fieldName) {
-        return asString(record, fieldName)
-                .flatMap(jsonString -> fromJson(jsonString, new TypeReference<List<FileDescription>>() {
-                         })
+    protected List<IRecord> asFileRecord(IRecord record) {
+        return asString(record, PROPERTY_FILE)
+                .flatMap(jsonString -> JsonConverter.<List<FileDescription>>fromJson(
+                        jsonString,
+                        new TypeReference<List<FileDescription>>() {
+                        })
                 )
-                .map(object -> (List<FileDescription>) object)
-                .map(fileDescriptions -> fileDescriptions
-                        .stream()
-                        .map(fileDescription -> getRecordById(
-                                LIBRARY_RECORD,
-                                SYSTEM_SCHEMA_NAME,
-                                null,
-                                FieldsFiles.TABLE,
-                                fileDescription.getId()
-                        ))
-                        .collect(Collectors.toList())
-                )
+                .map(this::collectAttachments)
                 .orElse(List.of());
     }
 
-    //TODO с атачментами пока не понятно как должно быть. Оставить так, до успешного  внедрения
-    protected List<SmevAttachment> asAttachment(IRecord record, String fieldName) {
-        return asFileRecord(record, fieldName)
+    // TODO: с атачментами пока не понятно как должно быть. Оставить так, до успешного внедрения
+    protected void asAttachment(IRecord record) {
+        asFileRecord(record)
                 .stream()
-                .map(fileRecord -> {
-                    var fileId = fileRecord.getAsString(FieldsFiles.PROPERTY_ID);
+                .filter(item -> !item.getContent().isEmpty())
+                .forEach(item -> {
+                    String fileId = item.getAsString(FieldsFiles.PROPERTY_ID);
                     if (!attachmentsMap.containsKey(fileId)) {
-                        var smevAttachment = attachmentService().pushAttachment(fileRecord);
+                        SmevAttachment smevAttachment = attachmentService().pushAttachment(item);
+
                         attachmentsMap.put(smevAttachment.getFileId(), smevAttachment);
                     }
-                    return attachmentsMap.get(fileId);
-                })
-                .collect(Collectors.toList());
+                });
     }
 
-    protected IRecord getRecordById(ResourceType resourceType,
-                                    String workspace,
-                                    String schemaId,
+    protected IRecord getRecordById(String schemaId,
                                     String libId,
                                     Object recordId) {
         try {
-            var recordData = RecordData.byId(libId, recordId);
-            if (!sourceRecordsMap.containsKey(recordData)) {
-                var schemaDto = ofNullable(schemaId)
-                        .flatMap(this::getSchema)
-                        .orElse(null);
-                var record = baseDao().getById(
-                        new ResourceQualifier(
-                                workspace,
-                                libId,
-                                recordId,
-                                resourceType
-                        ),
-                        schemaDto
-                );
-                sourceRecordsMap.put(recordData, record);
+            ResourceQualifier recordQualifier = libraryRecordQualifier(libId, (Long) recordId);
+
+            RecordData recordData = RecordData.byId(libId, recordId);
+            if (sourceRecordsMap.containsKey(recordData)) {
+                return sourceRecordsMap.get(recordData);
             }
-            return sourceRecordsMap.get(recordData);
-        } catch (CrgDaoException e) {
-            throw SmevRequestException.crgDaoException(e);
+
+            SchemaDto schemaDto = ofNullable(schemaId)
+                    .flatMap(this::getSchema)
+                    .orElseThrow(() -> new IllegalStateException("Не найдена схема: " + schemaId));
+
+            IRecord record = baseDao().getById(recordQualifier, schemaDto);
+
+            sourceRecordsMap.put(recordData, record);
+
+            return record;
+        } catch (Exception e) {
+            throw new IllegalStateException("Запись не найдена: " + libId + "." + recordId);
         }
     }
 
@@ -194,65 +187,70 @@ public abstract class AXmlBuildProcessor {
                                              String libId,
                                              String jsonFieldName,
                                              Long jsonIdValue) {
+        ResourceJsonCondition jsonCondition = ResourceJsonCondition.byJsonIdValue(
+                workspace,
+                libId,
+                jsonFieldName,
+                jsonIdValue,
+                resourceType);
+
         try {
-            var recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
-            if (!sourceRecordsMap.containsKey(recordData)) {
-                var schemaDto = ofNullable(schemaId)
-                        .flatMap(this::getSchema)
-                        .orElse(null);
-                var record = baseDao().getByJson(
+            RecordData recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
+            if (sourceRecordsMap.containsKey(recordData)) {
+                return sourceRecordsMap.get(recordData);
+            }
+
+            SchemaDto schemaDto = ofNullable(schemaId)
+                    .flatMap(this::getSchema)
+                    .orElseThrow(() -> new IllegalStateException("Не найдена схема: " + schemaId));
+
+            IRecord record = baseDao().getByJson(jsonCondition, schemaDto);
+
+            sourceRecordsMap.put(recordData, record);
+
+            return record;
+        } catch (CrgDaoException e) {
+            throw new IllegalStateException("Запись не найдена: " + jsonCondition);
+        }
+    }
+
+    @Nullable
+    protected IRecord findRecordByJsonIdValue(String workspace,
+                                              String schemaId,
+                                              String libId,
+                                              String jsonFieldName,
+                                              Long jsonIdValue) {
+        RecordData recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
+        if (sourceRecordsMap.containsKey(recordData)) {
+            return null;
+        }
+
+        SchemaDto schemaDto = ofNullable(schemaId)
+                .flatMap(this::getSchema)
+                .orElseThrow(() -> new IllegalStateException("Не найдена схема: " + schemaId));
+
+        IRecord record = baseDao()
+                .findByJson(
                         ResourceJsonCondition.byJsonIdValue(
                                 workspace,
                                 libId,
                                 jsonFieldName,
                                 jsonIdValue,
-                                resourceType
+                                FEATURE
                         ),
-                        schemaDto
-                );
-                sourceRecordsMap.put(recordData, record);
-            }
-            return sourceRecordsMap.get(recordData);
-        } catch (CrgDaoException e) {
-            throw SmevRequestException.crgDaoException(e);
+                        schemaDto)
+                .orElse(null);
+
+        if (record != null) {
+            sourceRecordsMap.put(recordData, record);
+
+            return record;
         }
-    }
 
-    @Nullable
-    protected IRecord findRecordByJsonIdValue(ResourceType resourceType,
-                                              String workspace,
-                                              String schemaId,
-                                              String libId,
-                                              String jsonFieldName,
-                                              Long jsonIdValue) {
-        var recordData = RecordData.byJsonId(libId, jsonFieldName, jsonIdValue);
-        if (!sourceRecordsMap.containsKey(recordData)) {
-            var schemaDto = ofNullable(schemaId)
-                    .flatMap(this::getSchema)
-                    .orElse(null);
-
-            var record = baseDao()
-                    .findByJson(
-                            ResourceJsonCondition.byJsonIdValue(
-                                    workspace,
-                                    libId,
-                                    jsonFieldName,
-                                    jsonIdValue,
-                                    resourceType
-                            ),
-                            schemaDto
-                    )
-                    .orElse(null);
-
-            if (record != null) {
-                sourceRecordsMap.put(recordData, record);
-                return record;
-            }
-        }
         return null;
     }
 
-    protected RefType refType(String tableName, String field, String strValue) {
+    protected RefType prepareRefType(String tableName, String field, String strValue) {
         return getSchema(tableName)
                 .map(SchemaDto::getProperties)
                 .map(Collection::stream)
@@ -268,6 +266,7 @@ public abstract class AXmlBuildProcessor {
         if (!schemasMap.containsKey(schemaName)) {
             schemaService().getSchemaByName(schemaName).ifPresent(schemaDto -> schemasMap.put(schemaName, schemaDto));
         }
+
         return ofNullable(schemasMap.get(schemaName));
     }
 
@@ -281,5 +280,26 @@ public abstract class AXmlBuildProcessor {
 
     public SmevOutgoingAttachmentService attachmentService() {
         return requestProcessor.getAttachmentService();
+    }
+
+    private @NotNull List<IRecord> collectAttachments(List<FileDescription> attachments) {
+        return attachments.stream()
+                          .map(fileDescription -> {
+                              // TODO: Не из той таблицы пытаемся тягать файлы. В реальности файл захардкожен:
+                              //  attachmentRefType.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
+                              //  this.stubScan.setName("PHC_08.04.2022_19.01.53.pdf");
+
+                              try {
+                                  return getRecordById(null,
+                                                       FieldsFiles.TABLE,
+                                                       fileDescription.getId()
+                                  );
+                              } catch (Exception e) {
+                                  log.warn("Для СМЭВ попытались взять атач из записи, не из той таблицы ☕");
+                              }
+
+                              return new RecordEntity();
+                          })
+                          .collect(Collectors.toList());
     }
 }

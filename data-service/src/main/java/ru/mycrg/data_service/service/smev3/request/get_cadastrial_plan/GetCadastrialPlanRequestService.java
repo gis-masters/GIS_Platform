@@ -34,7 +34,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -291,20 +291,20 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     }
 
     @Override
-    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         var getCadastrialPlanDto = (GetCadastrialPlanDto) dto;
         var buildRequest = new GetCadastrialPlanXmlBuildProcessor(this).run();
         var clientMessage = clientMessage(buildRequest.getRequest(),
                                           getCadastrialPlanDto.getArchiveFilename(),
                                           getCadastrialPlanDto.getClientId());
-        var meta = new XmlBuildMeta(
+        var meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 toJsonNode(clientMessage),
-                buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson()
+                buildRequest.getSourcesAsJson(),
+                buildRequest.getAttachmentsAsJson()
         );
         validate(meta, buildRequest.getRequest(), Request.class);
 

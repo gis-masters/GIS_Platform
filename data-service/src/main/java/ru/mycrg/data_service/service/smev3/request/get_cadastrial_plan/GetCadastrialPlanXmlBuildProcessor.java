@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
@@ -20,7 +20,7 @@ public class GetCadastrialPlanXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public BuildRequestAndSources<Request> run() {
+    public RequestAndSources<Request> run() {
 
         String requestFilename = "request.xml";
         String statementFilename = "statement.xml";

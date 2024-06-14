@@ -9,7 +9,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
 import ru.mycrg.data_service.service.smev3.fields.*;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestConst;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
@@ -30,7 +30,7 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public BuildRequestAndSources<Request> run(@NotNull RegisterRnvRequestDto dto) {
+    public RequestAndSources<Request> run(@NotNull RegisterRnvRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 
@@ -46,8 +46,6 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
     private void loadRecords(Long section13Id) {
         // section13Record
         rue.section13Record = getRecordById(
-                LIBRARY_RECORD,
-                SYSTEM_SCHEMA_NAME,
                 FieldsSection.TABLE_13,
                 FieldsSection.TABLE_13,
                 section13Id
@@ -213,7 +211,7 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
                 .ifPresent(type::setConstPermitDate);
 
         // Добавляем вложение
-        asAttachment(rue.section13Record, FieldsSection.PROPERTY_FILE);
+        asAttachment(rue.section13Record);
 
         type.setRecipientInfo(developerRecipientInfo());
         type.setIssueOrgan(issueOrgan());

@@ -1,26 +1,34 @@
 package ru.mycrg.data_service.dto.smev3;
 
+import javax.validation.constraints.NotNull;
+
 public class RegisterRnsRequestDto implements ISmevRequestDto {
+
+    @NotNull(message = "Забыли указать идентификатор отправляемой записи")
     private Long recId;
-    private Boolean sendToSmev = true;
-    private String stubSmevResponse;
+    private String fakeRequest;
 
     public Long getRecId() {
         return recId;
     }
 
-    public RegisterRnsRequestDto setRecId(Long recId) {
+    public void setRecId(Long recId) {
         this.recId = recId;
-        return this;
+    }
+
+    public String getFakeRequest() {
+        return fakeRequest;
+    }
+
+    public void setFakeRequest(String fakeRequest) {
+        this.fakeRequest = fakeRequest;
     }
 
     @Override
-    public Boolean isSendToSmev() {
-        return sendToSmev;
-    }
-
-    @Override
-    public String getStubSmevResponse() {
-        return stubSmevResponse;
+    public String toString() {
+        return "{" +
+                "\"recId\":" + (recId == null ? "null" : "\"" + recId + "\"") + ", " +
+                "\"fakeRequest\":" + (fakeRequest == null ? "null" : "\"" + fakeRequest + "\"") +
+                "}";
     }
 }

@@ -7,7 +7,7 @@ import ru.mycrg.data_service.dto.smev3.TerminateRnsRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.fields.FieldsCustomer;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.terminate_rns_1_0_6.OrganizationInfoType;
@@ -18,8 +18,6 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import static java.util.Optional.of;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsOrganization.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.*;
 
@@ -36,7 +34,7 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public BuildRequestAndSources<Request> run(@NotNull TerminateRnsRequestDto dto) {
+    public RequestAndSources<Request> run(@NotNull TerminateRnsRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 
@@ -52,8 +50,6 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
     private void loadRecords(Long section13Id) {
         // section13Record
         rue.section13Record = getRecordById(
-                LIBRARY_RECORD,
-                SYSTEM_SCHEMA_NAME,
                 TABLE_13,
                 TABLE_13,
                 section13Id

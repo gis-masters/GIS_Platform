@@ -11,7 +11,7 @@ import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
 import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
@@ -36,7 +36,7 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
         try {
             QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
-            XmlBuildMeta metaInfo = new XmlBuildMeta(
+            SmevRequestMeta metaInfo = new SmevRequestMeta(
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),

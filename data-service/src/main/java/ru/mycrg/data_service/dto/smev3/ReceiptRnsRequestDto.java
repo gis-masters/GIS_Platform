@@ -7,16 +7,12 @@ import java.time.LocalDate;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATE_PATTERN;
 
 public class ReceiptRnsRequestDto implements ISmevRequestDto {
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate constPermitDateFrom;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate constPermitDateTo;
-
     private String constPermitNumber;
-
-    private Boolean sendToSmev = true;
-
-    private String stubSmevResponse;
 
     public LocalDate getConstPermitDateFrom() {
         return constPermitDateFrom;
@@ -43,15 +39,5 @@ public class ReceiptRnsRequestDto implements ISmevRequestDto {
     public ReceiptRnsRequestDto setConstPermitNumber(String constPermitNumber) {
         this.constPermitNumber = constPermitNumber;
         return this;
-    }
-
-    @Override
-    public Boolean isSendToSmev() {
-        return sendToSmev;
-    }
-
-    @Override
-    public String getStubSmevResponse() {
-        return stubSmevResponse;
     }
 }

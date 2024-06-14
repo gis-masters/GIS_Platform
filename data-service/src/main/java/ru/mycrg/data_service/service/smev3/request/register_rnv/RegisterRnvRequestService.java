@@ -16,14 +16,13 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/register-rnv/1.0.8
@@ -34,65 +33,60 @@ import java.util.stream.Collectors;
         havingValue = "true",
         matchIfMissing = true)
 public class RegisterRnvRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(RegisterRnvRequestService.class);
-    private final RegisterRnvResponseService registerRnvResponseService;
 
     public RegisterRnvRequestService(SmevMessageSenderService messageService,
                                      Smev3Config smev3Config,
                                      BaseReadDao baseReadDao,
                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
-                                     SmevOutgoingAttachmentService attachmentService,
-                                     RegisterRnvResponseService registerRnvResponseService) {
-        super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseReadDao, schemaService, attachmentService, resourceLoader, smev3Config);
-        this.registerRnvResponseService = registerRnvResponseService;
+                                     SmevOutgoingAttachmentService attachmentService) {
+        super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseReadDao, schemaService, attachmentService,
+              resourceLoader, smev3Config);
     }
 
     @Override
-    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
-        if (dto.isStubResponse()) {
-            registerRnvResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
-            return null;
-        } else {
-            return super.sendRequest(dto);
-        }
+    public SmevRequestMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        return super.sendRequest(dto);
     }
 
     @Override
-    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("Построение запроса register-rnv в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new RegisterRnvXmlBuildProcessor(this).run((RegisterRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
-        var meta = new XmlBuildMeta(
+        var meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson()
+                buildRequest.getSourcesAsJson(),
+                buildRequest.getAttachmentsAsJson()
         );
         validate(meta, buildRequest.getRequest(), Request.class);
 
         return meta;
     }
 
-    private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
+    private ClientMessage clientMessage(RequestAndSources<Request> requestAndSources) {
         var content = new Content();
 
         // PrimaryContent
         var primaryContent = new MessagePrimaryContent();
-        primaryContent.setRequest(buildRequestAndSources.getRequest());
+        primaryContent.setRequest(requestAndSources.getRequest());
         content.setMessagePrimaryContent(primaryContent);
 
         // AttachmentHeaderList
-        var attachmentHeaderTypeList = buildRequestAndSources.getAttachmentsMap()
-                .values()
-                .stream()
+        var attachmentHeaderTypeList = requestAndSources
+                .getAttachments()
+                .values().stream()
                 .map(smevAttachment -> {
                     var type = new AttachmentHeaderType();
-                    type.setId(smevAttachment.getAttachmentId().toString());
+                    type.setId(
+                            smevAttachment.getAttachmentId().toString());
                     type.setFilePath(smevAttachment.getS3fileName());
                     return type;
                 })

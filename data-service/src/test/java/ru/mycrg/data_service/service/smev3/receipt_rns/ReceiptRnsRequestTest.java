@@ -26,7 +26,7 @@ public class ReceiptRnsRequestTest {
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
 
-        var processor = new ReceiptRnsRequestService(smev3Config, null, null, null);
+        var processor = new ReceiptRnsRequestService(smev3Config, null, null);
 
         var dto = new ReceiptRnsRequestDto();
         dto.setConstPermitDateFrom(LocalDate.of(2022, 1, 1));

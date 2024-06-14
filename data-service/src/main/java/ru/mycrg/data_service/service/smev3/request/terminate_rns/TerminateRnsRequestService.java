@@ -15,8 +15,8 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.terminate_rns_1_0_6.*;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -32,56 +32,50 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class TerminateRnsRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(TerminateRnsRequestService.class);
-    private final TerminateRnsResponseService terminateRnsResponseService;
 
     public TerminateRnsRequestService(SmevMessageSenderService messageService,
                                       Smev3Config smev3Config,
                                       BaseReadDao baseDao,
                                       @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       ResourceLoader resourceLoader,
-                                      SmevOutgoingAttachmentService attachmentService,
-                                      TerminateRnsResponseService terminateRnsResponseService) {
-        super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader, smev3Config);
-        this.terminateRnsResponseService = terminateRnsResponseService;
+                                      SmevOutgoingAttachmentService attachmentService) {
+        super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader,
+              smev3Config);
     }
 
     @Override
-    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
-        if (dto.isStubResponse()) {
-            terminateRnsResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
-            return null;
-        } else {
-            return super.sendRequest(dto);
-        }
+    public SmevRequestMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        return super.sendRequest(dto);
     }
 
     @Override
-    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("Построение запроса terminate-rns в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new TerminateRnsXmlBuildProcessor(this).run((TerminateRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest);
-        var meta = new XmlBuildMeta(
+        var meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson()
+                buildRequest.getSourcesAsJson(),
+                buildRequest.getAttachmentsAsJson()
         );
         validate(meta, buildRequest.getRequest(), Request.class);
 
         return meta;
     }
 
-    private ClientMessage clientMessage(BuildRequestAndSources<Request> buildRequestAndSources) {
+    private ClientMessage clientMessage(RequestAndSources<Request> requestAndSources) {
         var content = new Content();
 
         // PrimaryContent
         var primaryContent = new MessagePrimaryContent();
-        primaryContent.setRequest(buildRequestAndSources.getRequest());
+        primaryContent.setRequest(requestAndSources.getRequest());
         content.setMessagePrimaryContent(primaryContent);
 
         var contentType = new RequestContentType();

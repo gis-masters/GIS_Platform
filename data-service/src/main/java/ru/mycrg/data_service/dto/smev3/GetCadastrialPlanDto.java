@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.dto.smev3;
 
 public class GetCadastrialPlanDto implements ISmevRequestDto {
+
     private String archiveFilename;
     private String clientId;
 
@@ -18,16 +19,5 @@ public class GetCadastrialPlanDto implements ISmevRequestDto {
 
     public void setClientId(String clientId) {
         this.clientId = clientId;
-    }
-
-    //todo заглушка
-    @Override
-    public Boolean isSendToSmev() {
-        return true;
-    }
-
-    @Override
-    public String getStubSmevResponse() {
-        return null;
     }
 }

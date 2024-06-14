@@ -10,7 +10,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.smev3.fields.*;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 
@@ -24,6 +24,7 @@ import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_
 import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_REGION;
 
 public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
+
     private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcessor.class);
     private final ReusableElements rue = new ReusableElements();
 
@@ -33,30 +34,29 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
     public RegisterRnsXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
 
-        var attachmentRefType = new AttachmentRefType();
-        attachmentRefType.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
+        AttachmentRefType attachment = new AttachmentRefType();
+        attachment.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
+
         this.stubScan.setName("PHC_08.04.2022_19.01.53.pdf");
-        this.stubScan.setAttachmentRef(attachmentRefType);
+        this.stubScan.setAttachmentRef(attachment);
     }
 
-    public BuildRequestAndSources<Request> run(@NotNull RegisterRnsRequestDto dto) {
+    public RequestAndSources<Request> run(@NotNull RegisterRnsRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 
             // бизнес часть запроса
-            var request = requestType();
+            Request request = prepareRequest();
 
             return buildRequest(request);
         } catch (Exception e) {
-            throw new SmevRequestException("Ошибка при построении запрос в СМЭВ: " + e.getMessage());
+            throw new SmevRequestException("Не удалось построить запрос: " + e.getMessage());
         }
     }
 
     private void loadRecords(Long section13Id) {
         // section13Record
         rue.section13Record = getRecordById(
-                LIBRARY_RECORD,
-                SYSTEM_SCHEMA_NAME,
                 FieldsSection.TABLE_13,
                 FieldsSection.TABLE_13,
                 section13Id
@@ -89,10 +89,8 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 FieldsRsoks.PROPERTY_DL_DATA_SECTION13_DATA_CONNECTION,
                 rue.section13Record.getId()
         );
-        log.debug("rsoksRecord read. is not null {}", rue.rsoksRecord != null);
 
         rue.oks13Record = findRecordByJsonIdValue(
-                ResourceType.FEATURE,
                 FieldsOks13.WORKSPACE,
                 FieldsOks13.SCHEMA,
                 FieldsOks13.TABLE,
@@ -102,7 +100,6 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
         log.debug("oks13Record read. is not null {}", rue.oks13Record != null);
 
         rue.oks13LineRecord = findRecordByJsonIdValue(
-                ResourceType.FEATURE,
                 FieldsOks13Line.WORKSPACE,
                 FieldsOks13Line.SCHEMA,
                 FieldsOks13Line.TABLE,
@@ -119,7 +116,6 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 FieldsLandplot.PROPERTY_FILE,
                 rue.section13Record.getId()
         );
-        log.debug("landplotRecord read. is not null {}", rue.landplotRecord != null);
 
         // developer_CustomerRecord
         rue.developerOrganizationRecord = asRefRecord(
@@ -144,7 +140,6 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 FieldsRsoksPart.PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION,
                 rue.rsoksRecord.getId()
         );
-        log.debug("rsoksPartRecord read. is not null {}", rue.rsoksPartRecord != null);
 
         rue.gpzuRecord = asRefRecord(
                 rue.rsoksRecord,
@@ -180,7 +175,8 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 rue.rsoksRecord,
                 FieldsRsoks.PROPERTY_DL_DATA_PROJECT_DOCUMENTATION_DESCRIPTION_CONNECTION
         );
-        log.debug("rprojectDocumentation_Section13Record read. is not null {}", rue.projectDocumentation_Section13Record.isPresent());
+        log.debug("rprojectDocumentation_Section13Record read. is not null {}",
+                  rue.projectDocumentation_Section13Record.isPresent());
 
         // ugeRecord
         rue.uge_Section13record = rue.uge_UgeRecord
@@ -202,7 +198,6 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 FieldsLandplot.PROPERTY_FILE,
                 rue.gpzuSection13Record.getId()
         );
-        log.debug("gpzuSection13LandplotRecord read. is not null {}", rue.gpzuSection13LandplotRecord != null);
 
         // gece_Section13Record
         rue.gece_Section13Record
@@ -223,52 +218,52 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
     /**
      * Корневая сущность
      */
-    private Request requestType() {
-        var type = new ConstructionType();
+    private Request prepareRequest() {
+        ConstructionType construction = new ConstructionType();
         asString(rue.section13Record, FieldsSection.PROPERTY_DOC_NUM)
-                .ifPresent(type::setConstPermitNumber);
+                .ifPresent(construction::setConstPermitNumber);
         asXMLGregorianCalendar(rue.section13Record, FieldsSection.PROPERTY_DOC_DATE)
-                .ifPresent(type::setConstPermitDate);
+                .ifPresent(construction::setConstPermitDate);
         asString(rue.section13Record, FieldsSection.PROPERTY_IDENTIFIER)
-                .ifPresent(type::setConstPermitID);
+                .ifPresent(construction::setConstPermitID);
         asInt(rue.section13Record, FieldsSection.PROPERTY_CONST_GOVERNMENT_ORDER_ID)
-                .ifPresent(type::setConstGovernmentOrderId);
+                .ifPresent(construction::setConstGovernmentOrderId);
         asString(rue.section13Record, FieldsSection.PROPERTY_CONST_CADASTRAL_DISTRICT)
-                .ifPresent(type::setConstCadastralDistrict);
+                .ifPresent(construction::setConstCadastralDistrict);
         asString(rue.section13Record, FieldsSection.PROPERTY_CONST_CADASTRAL_AREA)
-                .ifPresent(type::setConstCadastralArea);
+                .ifPresent(construction::setConstCadastralArea);
         asConstructorKind(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_CONSTRUCTION_TYPE)
-                .ifPresent(type::setConstructionKind);
+                .ifPresent(construction::setConstructionKind);
         asRefBookType(rue.section13Record, FieldsSection.TABLE_13, FieldsSection.PROPERTY_PERMISSION_TYPE)
-                .ifPresent(type::setConstPermissionType);
+                .ifPresent(construction::setConstPermissionType);
         asString(rue.section13Record, FieldsSection.PROPERTY_NAME_FROM_P_D)
-                .ifPresent(type::setObjectNameProjectDoc);
+                .ifPresent(construction::setObjectNameProjectDoc);
         asString(rue.section13Record, FieldsSection.PROPERTY_NUMBER_OBJECTS)
-                .ifPresent(type::setNumberObjects);
+                .ifPresent(construction::setNumberObjects);
         asString(rue.section13Record, FieldsSection.PROPERTY_NUMBER_LONG_OBJECTS)
-                .ifPresent(type::setNumberLongObjects);
+                .ifPresent(construction::setNumberLongObjects);
         asStatus(rue.section13Record, FieldsSection.PROPERTY_DOC_STATUS)
-                .ifPresent(type::setStatusConstruction);
+                .ifPresent(construction::setStatusConstruction);
         asXMLGregorianCalendar(rue.section13Record, FieldsSection.PROPERTY_VALID_UNTIL)
-                .ifPresent(type::setExpireDate);
+                .ifPresent(construction::setExpireDate);
 
         // issuePerson_afterTriggerRecord
         asString(rue.issuePerson_afterTriggerRecord, FieldsUsersAfterTrigger.PROPERTY_POSITION1)
-                .ifPresent(type::setIssuePersonPosition);
-        type.setIssuePerson(supplierIssuePerson());
+                .ifPresent(construction::setIssuePersonPosition);
+        construction.setIssuePerson(supplierIssuePerson());
 
-        type.setIssueOrgan(issueOrgan());
-        type.setRecipientInfo(recipientInfo());
-        type.getObjectInfo().add(objectInfo());
+        construction.setIssueOrgan(issueOrgan());
+        construction.setRecipientInfo(recipientInfo());
+        construction.getObjectInfo().add(objectInfo());
 
         // Добавляем вложение
-        asAttachment(rue.section13Record, FieldsSection.PROPERTY_FILE);
+        asAttachment(rue.section13Record);
 
         // Вставляем заглушку. Это валидное поведение
-        type.getScans().add(stubScan);
+        construction.getScans().add(stubScan);
 
-        var request = new Request();
-        request.setRegisterNewConstruction(type);
+        Request request = new Request();
+        request.setRegisterNewConstruction(construction);
 
         return request;
     }
@@ -517,27 +512,30 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
         });
 
         // LandCadastral
-        Optional.of(landCadastralDescriptionType()).ifPresentOrElse(tp -> {
-                    type.getLandCadastralDescription().add(tp);
-                    type.setLandCadastralAvailability(AvailabilityDocType.AVAILABLE);
-                },
-                () -> type.setLandCadastralAvailability(AvailabilityDocType.NOT_AVAILABLE)
-        );
+        Optional.of(landCadastralDescriptionType())
+                .ifPresentOrElse(tp -> {
+                                     type.getLandCadastralDescription().add(tp);
+                                     type.setLandCadastralAvailability(AvailabilityDocType.AVAILABLE);
+                                 },
+                                 () -> type.setLandCadastralAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                );
 
         // Demarcation
-        Optional.of(demarcationDescriptionType()).ifPresentOrElse(tp -> {
-                    type.getDemarcationDescription().add(tp);
-                    type.setDemarcationAvailability(AvailabilityDocType.AVAILABLE);
-                },
-                () -> type.setDemarcationAvailability(AvailabilityDocType.NOT_AVAILABLE)
-        );
+        Optional.of(demarcationDescriptionType())
+                .ifPresentOrElse(tp -> {
+                                     type.getDemarcationDescription().add(tp);
+                                     type.setDemarcationAvailability(AvailabilityDocType.AVAILABLE);
+                                 },
+                                 () -> type.setDemarcationAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                );
 
         // DevPlanLandPlot
-        Optional.of(devPlanLandPlotDescriptionType()).ifPresentOrElse(tp -> {
-                    type.getDevPlanLandPlotDescription().add(tp);
-                    type.setDevPlanLandPlotAvailability(AvailabilityDocType.AVAILABLE);
-                }, () -> type.setDevPlanLandPlotAvailability(AvailabilityDocType.NOT_AVAILABLE)
-        );
+        Optional.of(devPlanLandPlotDescriptionType())
+                .ifPresentOrElse(tp -> {
+                                     type.getDevPlanLandPlotDescription().add(tp);
+                                     type.setDevPlanLandPlotAvailability(AvailabilityDocType.AVAILABLE);
+                                 }, () -> type.setDevPlanLandPlotAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                );
 
         // EcologicalExpertise
         ecologicalExpertiseDescriptionType().ifPresentOrElse(tp -> {
@@ -750,7 +748,8 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                             ref.setCode("7");
                             break;
                         default:
-                            throw new SmevRequestException("document constructor kind is undefined :" + refType.getCode());
+                            throw new SmevRequestException(
+                                    "document constructor kind is undefined :" + refType.getCode());
                     }
 
                     return ref;
@@ -795,6 +794,7 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
      * Для хранения объектов, который будут переиспользоваться
      */
     static class ReusableElements {
+
         private IRecord section13Record;
         private IRecord developer_CustomerRecord;
         private IRecord developerOrganizationRecord;

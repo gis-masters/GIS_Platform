@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
@@ -30,40 +30,31 @@ public class ReceiptRnsRequestService extends RequestProcessor {
 
     private final Logger log = LoggerFactory.getLogger(ReceiptRnsRequestService.class);
 
-    private final ReceiptRnsResponseService rnsResponseService;
-
     public ReceiptRnsRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
-                                    SmevMessageSenderService messageService,
-                                    ReceiptRnsResponseService rnsResponseService) {
+                                    SmevMessageSenderService messageService) {
         super(Mnemonic.RECEIPT_RNS_1_0_9, messageService, null, null, null, resourceLoader, smev3Config);
-        this.rnsResponseService = rnsResponseService;
     }
 
     @Override
-    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
-        if (dto.isStubResponse()) {
-            rnsResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
-            return null;
-        } else {
-            return super.sendRequest(dto);
-        }
+    public SmevRequestMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        return super.sendRequest(dto);
     }
 
     @Override
-    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("Построение запроса receipt-rns в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new ReceiptRnsRequestXmlProcessor(this).run((ReceiptRnsRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
-        var meta = new XmlBuildMeta(
+        var meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson()
+                buildRequest.getSourcesAsJson(),
+                buildRequest.getAttachmentsAsJson()
         );
         validate(meta, buildRequest.getRequest(), Request.class);
 

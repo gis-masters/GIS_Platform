@@ -23,7 +23,7 @@ public class ReceiptRnvRequestTest extends AProcessorTest {
         var smev3Config = new Smev3Config();
         smev3Config.setSystemMnemonic("mnemonic");
 
-        var processor = new ReceiptRnvRequestService(smev3Config, null, null, null);
+        var processor = new ReceiptRnvRequestService(smev3Config, null, null);
 
         var dto = new ReceiptRnvRequestDto();
         dto.setPermitDateFrom(LocalDate.of(2022, 1, 1));

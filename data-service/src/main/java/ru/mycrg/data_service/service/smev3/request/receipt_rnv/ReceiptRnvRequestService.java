@@ -12,12 +12,11 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.UUID;
-
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
@@ -28,41 +27,34 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class ReceiptRnvRequestService extends RequestProcessor {
+
     private final Logger log = LoggerFactory.getLogger(ReceiptRnvRequestService.class);
-    private final ReceiptRnvResponseService rnvResponseService;
 
     public ReceiptRnvRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
-                                    SmevMessageSenderService messageService,
-                                    ReceiptRnvResponseService rnvResponseService) {
+                                    SmevMessageSenderService messageService) {
         super(Mnemonic.RECEIPT_RNV_1_0_9, messageService, null, null, null, resourceLoader, smev3Config);
-        this.rnvResponseService = rnvResponseService;
     }
 
     @Override
-    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
-        if (dto.isStubResponse()) {
-            rnvResponseService.processMessageFromSmev(dto.getStubSmevResponseAsXml());
-            return null;
-        } else {
-            return super.sendRequest(dto);
-        }
+    public SmevRequestMeta sendRequest(@NotNull ISmevRequestDto dto) {
+        return super.sendRequest(dto);
     }
 
     @Override
-    protected XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        log.debug("Построение запроса в СМЭВ на основе ДТО: {}", dto);
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        log.debug("Построение запроса receipt-rnv в СМЭВ на основе ДТО: {}", dto);
 
         var buildRequest = new ReceiptRnvXmlBuildProcessor(this).run((ReceiptRnvRequestDto) dto);
         var clientMessage = clientMessage(buildRequest.getRequest());
-        var meta = new XmlBuildMeta(
+        var meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesJson(),
-                buildRequest.getAttachmentsJson()
+                buildRequest.getSourcesAsJson(),
+                buildRequest.getAttachmentsAsJson()
         );
         validate(meta, buildRequest.getRequest(), Request.class);
 

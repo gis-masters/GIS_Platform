@@ -25,6 +25,7 @@ import java.util.UUID;
         typeClass = JsonNodeBinaryType.class
 )
 public class SmevMessageMetaEntity implements IContent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -187,7 +188,7 @@ public class SmevMessageMetaEntity implements IContent {
                                                        @NotNull UUID referenceReestrIncoming,
                                                        @NotNull JsonNode xmlObject,
                                                        @NotNull String xmlString) {
-        var message = new SmevMessageMetaEntity();
+        SmevMessageMetaEntity message = new SmevMessageMetaEntity();
         message.setId(UUID.randomUUID());
         message.setDirection(MessageDirection.INCOMING);
         message.setClientId(clientId);
@@ -197,6 +198,7 @@ public class SmevMessageMetaEntity implements IContent {
         message.setReferenceReestrIncoming(referenceReestrIncoming);
         message.setXmlObject(xmlObject);
         message.setXmlString(xmlString);
+
         return message;
     }
 
@@ -205,7 +207,7 @@ public class SmevMessageMetaEntity implements IContent {
                                                        @NotNull UUID referenceReestrOutgoing,
                                                        @NotNull JsonNode xmlObject,
                                                        @NotNull String xmlString) {
-        var message = new SmevMessageMetaEntity();
+        SmevMessageMetaEntity message = new SmevMessageMetaEntity();
         message.setId(UUID.randomUUID());
         message.setDirection(MessageDirection.OUTGOING);
         message.setClientId(clientId);
@@ -214,6 +216,7 @@ public class SmevMessageMetaEntity implements IContent {
         message.setReferenceReestrOutgoing(referenceReestrOutgoing);
         message.setXmlObject(xmlObject);
         message.setXmlString(xmlString);
+
         return message;
     }
 }

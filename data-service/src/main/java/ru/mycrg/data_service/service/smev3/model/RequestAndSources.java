@@ -14,55 +14,57 @@ import java.util.stream.Stream;
 
 import static java.util.Optional.ofNullable;
 
-public class BuildRequestAndSources<T> {
-    private final T request;
-    private final Map<RecordData, IRecord> sourceRecordsMap;
-    private final Map<String, SmevAttachment> attachmentsMap;
-    private final JsonNode sourcesJson;
-    private final JsonNode attachmentsJson;
+public class RequestAndSources<T> {
 
-    public BuildRequestAndSources(
-            @NotNull T request,
-            @Nullable Map<RecordData, IRecord> sourceRecordsMap,
-            @Nullable Map<String, SmevAttachment> attachmentsMap) {
+    private final T request;
+    private final Map<RecordData, IRecord> sources;
+    private final Map<String, SmevAttachment> attachments;
+    private final JsonNode sourcesAsJson;
+    private final JsonNode attachmentsAsJson;
+
+    public RequestAndSources(@NotNull T request,
+                             @Nullable Map<RecordData, IRecord> sources,
+                             @Nullable Map<String, SmevAttachment> attachments) {
         this.request = request;
-        this.sourceRecordsMap = sourceRecordsMap;
-        this.attachmentsMap = attachmentsMap;
-        this.sourcesJson = ofNullable(this.sourceRecordsMap)
+        this.sources = sources;
+        this.attachments = attachments;
+
+        this.sourcesAsJson = ofNullable(this.sources)
                 .map(map -> map.isEmpty() ? null : map.entrySet())
                 .map(Collection::stream)
                 .map(this::mapSourcesToJson)
                 .map(JsonConverter::toJsonNode)
                 .orElse(null);
-        this.attachmentsJson = ofNullable(this.attachmentsMap)
+        this.attachmentsAsJson = ofNullable(this.attachments)
                 .map(object -> object.isEmpty() ? null : object.values())
                 .map(ArrayList::new)
                 .map(JsonConverter::toJsonNode)
                 .orElse(null);
-
     }
 
     public T getRequest() {
         return request;
     }
 
-    public Map<RecordData, IRecord> getSourceRecordsMap() {
-        return sourceRecordsMap;
+    public Map<RecordData, IRecord> getSources() {
+        return sources;
     }
 
-    public Map<String, SmevAttachment> getAttachmentsMap() {
-        return attachmentsMap;
+    public Map<String, SmevAttachment> getAttachments() {
+        return attachments;
     }
 
-    public JsonNode getSourcesJson() {
-        return sourcesJson;
+    public JsonNode getSourcesAsJson() {
+        return sourcesAsJson;
     }
 
-    public JsonNode getAttachmentsJson() {
-        return attachmentsJson;
+    public JsonNode getAttachmentsAsJson() {
+        return attachmentsAsJson;
     }
 
     private Map<String, Map<String, Object>> mapSourcesToJson(Stream<Map.Entry<RecordData, IRecord>> stream) {
-        return stream.collect(Collectors.toMap(entry -> entry.getKey().getDescription(), entry -> entry.getValue().getContent()));
+        return stream.collect(
+                Collectors.toMap(entry -> entry.getKey().getDescription(),
+                                 entry -> entry.getValue().getContent()));
     }
 }

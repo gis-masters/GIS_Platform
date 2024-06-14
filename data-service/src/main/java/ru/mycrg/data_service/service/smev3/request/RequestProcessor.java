@@ -16,7 +16,7 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.model.XmlValidationResult;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
@@ -27,6 +27,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -98,27 +99,26 @@ public abstract class RequestProcessor {
     }
 
     @NoContextTransaction(dbProperty = "crg-options.integration.smev3.targetDb")
-    public XmlBuildMeta sendRequest(@NotNull ISmevRequestDto dto) {
+    public SmevRequestMeta sendRequest(@NotNull ISmevRequestDto dto) {
         log.info("SMEV3 | {}  dto {}", mnemonicEnum(), dto);
         try {
-            var xmlMeta = buildRequest(dto);
+            SmevRequestMeta requestMeta = buildRequest(dto);
 
-            log.info("Request is valid. Try send to SMEV. Client ID: {}", xmlMeta.getClientId());
-            messageService.sendMessage(xmlMeta, dto.isSendToSmev(), mnemonic.getSystem());
+            log.info("Request is valid. Try send to SMEV. Client ID: {}", requestMeta.getClientId());
+            messageService.sendMessage(requestMeta, mnemonic.getSystem());
 
-            return xmlMeta;
+            return requestMeta;
         } catch (Exception e) {
-            if (e instanceof SmevRequestException) {
-                throw (SmevRequestException) e;
-            }
+            String msg = "Ошибка отправки запроса в СМЭВ => " + e.getMessage();
+            log.error(msg, e);
 
-            log.error("SMEV. push to queue error: {}", e.getMessage());
-            throw new SmevRequestException("push to queue error :" + e.getMessage());
+            throw new SmevRequestException(msg);
         }
     }
 
-    protected <T> void validate(XmlBuildMeta meta, T request, Class<T> tClass) {
-        log.info("validation: " + request);
+    protected <T> void validate(SmevRequestMeta meta, T request, Class<T> tClass) {
+        log.info("try validate request: {}", request);
+
         byte[] xmlBytes = null;
         XmlValidationResult validationResult = null;
 
@@ -126,15 +126,16 @@ public abstract class RequestProcessor {
             xmlBytes = xmlMarshaller().marshall(request, tClass).getBytes(StandardCharsets.UTF_8);
             schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         } catch (SAXParseException e) {
-            var base64str = new String(base64Encoder.encode(xmlBytes));
+            String base64str = new String(base64Encoder.encode(xmlBytes));
             validationResult = new XmlValidationResult(e.getMessage(), e.getLineNumber(), base64str);
         } catch (SAXException | JAXBException | IOException e) {
             validationResult = new XmlValidationResult(e.getMessage(), null, null);
         }
 
         if (validationResult != null) {
-            var message = "validation fail: " + validationResult.getFailMessage();
+            String message = "validation fail: " + validationResult.getFailMessage();
             log.error(message);
+
             throw new SmevRequestException(message, meta, validationResult);
         }
 
@@ -146,14 +147,16 @@ public abstract class RequestProcessor {
             if (resourceLoader == null) {
                 return null;
             }
-            var xmlUrl = resourceLoader.getResource("classpath:" + schemaPath).getURL();
+            URL xmlUrl = resourceLoader.getResource("classpath:" + schemaPath).getURL();
+
             return schemaFactory.newSchema(xmlUrl);
         } catch (SAXException | IOException e) {
-            var message = "load schema fail: " + e.getMessage();
+            String message = "load schema fail: " + e.getMessage();
             log.info(message);
+
             throw new DataServiceException(message);
         }
     }
 
-    protected abstract XmlBuildMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception;
+    protected abstract SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception;
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 
 @Service
 @ConditionalOnProperty(
@@ -16,9 +16,11 @@ import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
         havingValue = "true",
         matchIfMissing = true)
 public class SmevMessageSenderService {
+
     private final Logger log = LoggerFactory.getLogger(SmevMessageSenderService.class);
-    private final RabbitTemplate rabbitTemplate;
+
     private final Queue adapterSendQueue;
+    private final RabbitTemplate rabbitTemplate;
     private final SmevMessageService messageService;
 
     public SmevMessageSenderService(RabbitTemplate rabbitSmevAdapterTemplate,
@@ -30,18 +32,17 @@ public class SmevMessageSenderService {
     }
 
     @Transactional
-    public void sendMessage(XmlBuildMeta buildMeta, Boolean sendQueue, String userTo) {
+    public void sendMessage(SmevRequestMeta requestMeta, String userTo) {
         try {
-            log.debug("Попытка отправить сообщение в СМЭВ: {}", buildMeta.toString());
-            messageService.saveOutgoing(buildMeta, userTo);
-            // TODO sendQueue - временное явление
-            if (sendQueue) {
-                log.info("Сообщение отправлено в очередь адаптера");
-                rabbitTemplate.convertAndSend(adapterSendQueue.getName(), buildMeta.getRequestXmlString());
-            }
-            log.info("Успешно отправлено и сохранено");
+            log.debug("Попытка отправить сообщение в СМЭВ: {}", requestMeta.toString());
+            messageService.saveOutgoing(requestMeta, userTo);
+
+            rabbitTemplate.convertAndSend(adapterSendQueue.getName(), requestMeta.getRequestXmlString());
+
+            log.info("Сообщение успешно отправлено очередь адаптера и сохранено");
         } catch (Exception e) {
-            log.error("Ошибка при отправке сообщения в СМЭВ. {}", e.getMessage());
+            log.error("Ошибка при отправке сообщения в СМЭВ => {}", e.getMessage(), e);
+
             throw new SmevRequestException("Ошибка при отправке сообщения в СМЭВ. " + e.getMessage());
         }
     }

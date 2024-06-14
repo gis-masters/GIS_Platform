@@ -58,24 +58,25 @@ public class SmevOutgoingAttachmentService {
 
             return new SmevAttachment(fileId, fileTitle, attachmentId, s3fileName);
         } catch (Exception e) {
-            throw SmevRequestException.attachmentFail(e);
+            throw new SmevRequestException("Не удалось добавить attachment => " + e.getMessage());
         }
     }
 
     /**
      * Загружает объект с заданным именем и содержимым в корзину S3.
      */
-    private void putObject(String name, byte[] bytes) throws RuntimeException {
+    private void putObject(String name, byte[] bytes) {
         try {
-            var putObject = PutObjectArgs
+            PutObjectArgs objectArgs = PutObjectArgs
                     .builder()
                     .bucket(smev3Config.getS3bucketOutgoing())
                     .object(name)
                     .stream(new ByteArrayInputStream(bytes), bytes.length, -1)
                     .build();
-            s3client.putObject(putObject);
+
+            s3client.putObject(objectArgs);
         } catch (Exception e) {
-            throw SmevRequestException.attachmentFail(e);
+            throw new SmevRequestException("Не удалось добавить объект в хранилище => " + e.getMessage());
         }
     }
 }

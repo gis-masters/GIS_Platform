@@ -6,7 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.smev3.*;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
-import ru.mycrg.data_service.service.smev3.model.XmlBuildMeta;
+import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rns.ReceiptRnsRequestService;
 import ru.mycrg.data_service.service.smev3.request.receipt_rnv.ReceiptRnvRequestService;
@@ -14,6 +14,7 @@ import ru.mycrg.data_service.service.smev3.request.register_rns.RegisterRnsReque
 import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvRequestService;
 import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -55,7 +56,7 @@ public class Smev3RequestController {
      */
     @GetMapping("/meta/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> getMeta(@PathVariable UUID id) {
+    public ResponseEntity<SmevRequestMeta> getMeta(@PathVariable UUID id) {
         return ResponseEntity.ok(storageService.getMeta(id));
     }
 
@@ -75,8 +76,8 @@ public class Smev3RequestController {
      */
     @PostMapping("/receipt-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> receiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
-        var response = rnsRequestService.sendRequest(rnsRequestDto);
+    public ResponseEntity<SmevRequestMeta> receiptRns(@RequestBody ReceiptRnsRequestDto rnsRequestDto) {
+        SmevRequestMeta response = rnsRequestService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -86,8 +87,8 @@ public class Smev3RequestController {
      */
     @PostMapping("/receipt-rnv")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
-        var response = rnvRequestService.sendRequest(rnvRequestDto);
+    public ResponseEntity<SmevRequestMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
+        SmevRequestMeta response = rnvRequestService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -97,8 +98,8 @@ public class Smev3RequestController {
      */
     @PostMapping("/register-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> registerRns(@RequestBody RegisterRnsRequestDto rnsRequestDto) {
-        var response = registerRnsService.sendRequest(rnsRequestDto);
+    public ResponseEntity<SmevRequestMeta> registerRns(@Valid @RequestBody RegisterRnsRequestDto rnsRequestDto) {
+        SmevRequestMeta response = registerRnsService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -108,8 +109,8 @@ public class Smev3RequestController {
      */
     @PostMapping("/register-rnv")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> registerRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
-        var response = registerRnvService.sendRequest(rnvRequestDto);
+    public ResponseEntity<SmevRequestMeta> registerRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
+        SmevRequestMeta response = registerRnvService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
     }
@@ -119,9 +120,9 @@ public class Smev3RequestController {
      */
     @PostMapping("/terminate-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<XmlBuildMeta> requestTerminateRns(
+    public ResponseEntity<SmevRequestMeta> requestTerminateRns(
             @RequestBody TerminateRnsRequestDto terminateRnsRequestDto) {
-        var response = terminateRnsRequestService.sendRequest(terminateRnsRequestDto);
+        SmevRequestMeta response = terminateRnsRequestService.sendRequest(terminateRnsRequestDto);
 
         return ResponseEntity.ok(response);
     }

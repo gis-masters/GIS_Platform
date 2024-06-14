@@ -8,7 +8,8 @@ import java.util.UUID;
 /**
  * Мета информация по запросу
  */
-public class XmlBuildMeta {
+public class SmevRequestMeta {
+
     private final Mnemonic mnemonic;
     private final UUID clientId;
     private final UUID referenceClientId;
@@ -17,13 +18,13 @@ public class XmlBuildMeta {
     private final JsonNode sources;
     private final JsonNode attachments;
 
-    public XmlBuildMeta(Mnemonic mnemonic,
-                        UUID clientId,
-                        UUID referenceClientId,
-                        String requestXmlString,
-                        JsonNode requestJson,
-                        JsonNode sources,
-                        JsonNode attachments) {
+    public SmevRequestMeta(Mnemonic mnemonic,
+                           UUID clientId,
+                           UUID referenceClientId,
+                           String requestXmlString,
+                           JsonNode requestJson,
+                           JsonNode sources,
+                           JsonNode attachments) {
         this.mnemonic = mnemonic;
         this.clientId = clientId;
         this.referenceClientId = referenceClientId;

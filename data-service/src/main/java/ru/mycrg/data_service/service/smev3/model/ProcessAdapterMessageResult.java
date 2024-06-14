@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.smev3.model;
 
 public class ProcessAdapterMessageResult {
 
-    private XmlBuildMeta xmlBuildMeta;
+    private SmevRequestMeta smevRequestMeta;
     private ProcessMessageStatus status;
     private String message;
 
@@ -11,12 +11,12 @@ public class ProcessAdapterMessageResult {
         this.message = status.getDescription();
     }
 
-    public XmlBuildMeta getXmlBuildMeta() {
-        return xmlBuildMeta;
+    public SmevRequestMeta getXmlBuildMeta() {
+        return smevRequestMeta;
     }
 
-    public ProcessAdapterMessageResult setXmlBuildMeta(XmlBuildMeta xmlBuildMeta) {
-        this.xmlBuildMeta = xmlBuildMeta;
+    public ProcessAdapterMessageResult setXmlBuildMeta(SmevRequestMeta smevRequestMeta) {
+        this.smevRequestMeta = smevRequestMeta;
         return this;
     }
 
@@ -44,6 +44,6 @@ public class ProcessAdapterMessageResult {
     }
 
     public boolean isFgisEgrnMessage() {
-        return xmlBuildMeta.getRequestXmlString().contains("RRTR02");
+        return smevRequestMeta.getRequestXmlString().contains("RRTR02");
     }
 }

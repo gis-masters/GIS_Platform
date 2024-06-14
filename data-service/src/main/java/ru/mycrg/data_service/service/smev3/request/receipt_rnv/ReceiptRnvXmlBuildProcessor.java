@@ -8,7 +8,7 @@ import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.ReceiptExploitationType;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.ReceiptListExploitationType;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.Request;
-import ru.mycrg.data_service.service.smev3.model.BuildRequestAndSources;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.request.AXmlBuildProcessor;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.xml.XmlMapper;
@@ -22,7 +22,7 @@ public class ReceiptRnvXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public BuildRequestAndSources<Request> run(@NotNull ReceiptRnvRequestDto rnvRequestDto) {
+    public RequestAndSources<Request> run(@NotNull ReceiptRnvRequestDto rnvRequestDto) {
         try {
             var request = new Request();
 
