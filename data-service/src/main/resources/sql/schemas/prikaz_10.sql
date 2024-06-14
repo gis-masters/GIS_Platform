@@ -683,7 +683,6 @@ SET class_rule =
             "title": "Диаметр подающего трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -691,7 +690,6 @@ SET class_rule =
             "title": "Диаметр обратного трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -699,7 +697,6 @@ SET class_rule =
             "title": "Диаметр подающего трубопровода горячего водоснабжения, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -707,7 +704,6 @@ SET class_rule =
             "title": "Диаметр циркуляционного трубопровода горячего водоснабжения, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -727,7 +723,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -936,7 +931,6 @@ SET class_rule =
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -944,7 +938,6 @@ SET class_rule =
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -978,7 +971,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -1276,7 +1268,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -1426,11 +1417,11 @@ SET class_rule =
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Электрическая подстанция 1150 кВ",
+                "title": "Электрическая подстанция 1150 кВ",
                 "value": "602040201"
               },
               {
-                "title": "Электрическая подстанция 800 кВ",
+                "title": "Электрическая подстанция 800 кВ",
                 "value": "602040202"
               },
               {
@@ -1438,55 +1429,55 @@ SET class_rule =
                 "value": "602040203"
               },
               {
-                "title": "Электрическая подстанция 600 кВ",
+                "title": "Электрическая подстанция 600 кВ",
                 "value": "602040204"
               },
               {
-                "title": "Электрическая подстанция 500 кВ",
+                "title": "Электрическая подстанция 500 кВ",
                 "value": "602040205"
               },
               {
-                "title": "Электрическая подстанция 400 кВ",
+                "title": "Электрическая подстанция 400 кВ",
                 "value": "602040206"
               },
               {
-                "title": "Электрическая подстанция 330 кВ",
+                "title": "Электрическая подстанция 330 кВ",
                 "value": "602040207"
               },
               {
-                "title": "Электрическая подстанция 300 кВ",
+                "title": "Электрическая подстанция 300 кВ",
                 "value": "602040208"
               },
               {
-                "title": "Электрическая подстанция 220 кВ",
+                "title": "Электрическая подстанция 220 кВ",
                 "value": "602040209"
               },
               {
-                "title": "Электрическая подстанция 150 кВ",
+                "title": "Электрическая подстанция 150 кВ",
                 "value": "602040210"
               },
               {
-                "title": "Электрическая подстанция 110 кВ",
+                "title": "Электрическая подстанция 110 кВ",
                 "value": "602040211"
               },
               {
-                "title": "Электрическая подстанция 60 кВ",
+                "title": "Электрическая подстанция 60 кВ",
                 "value": "602040212"
               },
               {
-                "title": "Электрическая подстанция 35 кВ",
+                "title": "Электрическая подстанция 35 кВ",
                 "value": "602040213"
               },
               {
-                "title": "Электрическая подстанция 20 кВ",
+                "title": "Электрическая подстанция 20 кВ",
                 "value": "602040214"
               },
               {
-                "title": "Электрическая подстанция 10 кВ",
+                "title": "Электрическая подстанция 10 кВ",
                 "value": "602040215"
               },
               {
-                "title": "Электрическая подстанция 6 кВ",
+                "title": "Электрическая подстанция 6 кВ",
                 "value": "602040216"
               },
               {
@@ -1498,7 +1489,7 @@ SET class_rule =
                 "value": "602040218"
               },
               {
-                "title": "Электрическая подстанция 400 кВ преобразовательная",
+                "title": "Электрическая подстанция 400 кВ преобразовательная",
                 "value": "602040221"
               },
               {
@@ -1673,7 +1664,6 @@ SET class_rule =
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -1700,7 +1690,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -1968,7 +1957,6 @@ SET class_rule =
             "title": "Вместимость железнодорожного вокзала, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -1998,7 +1986,6 @@ SET class_rule =
             "title": "Размер движения пассажирских поездов, пар в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -2006,7 +1993,6 @@ SET class_rule =
             "title": "Размер движения грузовых поездов, пар в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -2079,7 +2065,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -2542,7 +2527,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -2661,7 +2645,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -2980,7 +2963,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3173,7 +3155,6 @@ SET class_rule =
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3241,7 +3222,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3453,7 +3433,6 @@ SET class_rule =
             "title": "Пропускная способность аэропорта, пасс./час",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3584,7 +3563,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3802,7 +3780,6 @@ SET class_rule =
             "title": "Количество топливораздаточных колонок автозаправочных станций",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3810,7 +3787,6 @@ SET class_rule =
             "title": "Количество постов станций технического обслуживания",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3875,7 +3851,6 @@ SET class_rule =
             "title": "Этажность стоянок",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3884,7 +3859,6 @@ SET class_rule =
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -3897,7 +3871,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4520,7 +4493,6 @@ SET class_rule =
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4528,7 +4500,6 @@ SET class_rule =
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4543,7 +4514,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4556,7 +4526,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4808,7 +4777,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -4954,7 +4922,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -5229,7 +5196,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -5502,7 +5468,6 @@ SET class_rule =
             "title": "Вместимость, читательских, посетительских, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -5524,7 +5489,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -5537,7 +5501,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6016,7 +5979,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6189,7 +6151,6 @@ SET class_rule =
             "title": "Вместимость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6202,7 +6163,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6391,7 +6351,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6600,7 +6559,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6758,7 +6716,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6968,7 +6925,6 @@ SET class_rule =
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6976,7 +6932,6 @@ SET class_rule =
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -6996,7 +6951,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -7269,7 +7223,6 @@ SET class_rule =
             "title": "Вместимость, читательских, посетительских, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -7291,7 +7244,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -7304,7 +7256,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -7602,7 +7553,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -7748,7 +7698,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8102,7 +8051,6 @@ SET class_rule =
             "title": "Количество посадочных мест объекта общественного питания, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8110,7 +8058,6 @@ SET class_rule =
             "title": "Количество рабочих (операционных) мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8123,7 +8070,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8321,7 +8267,7 @@ SET class_rule =
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
+                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
                 "value": "602010301"
               },
               {
@@ -8492,7 +8438,6 @@ SET class_rule =
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8500,7 +8445,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8513,7 +8457,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -8985,7 +8928,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -9297,7 +9239,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -9609,7 +9550,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -9782,7 +9722,6 @@ SET class_rule =
             "title": "Вместимость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -9795,7 +9734,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -10120,7 +10058,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -10317,7 +10254,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -10642,7 +10578,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -11042,7 +10977,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -11319,7 +11253,6 @@ SET class_rule =
             "title": "Емкость, абонентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -11408,7 +11341,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -11686,7 +11618,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12076,7 +12007,6 @@ SET class_rule =
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12091,7 +12021,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12104,7 +12033,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12408,7 +12336,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12631,7 +12558,6 @@ SET class_rule =
             "title": "Емкость, абонентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12720,7 +12646,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12936,7 +12861,6 @@ SET class_rule =
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12944,7 +12868,6 @@ SET class_rule =
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц (посещений) в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12959,7 +12882,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -12972,7 +12894,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -13224,7 +13145,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -13370,7 +13290,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -14057,7 +13976,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -14189,6 +14107,7 @@ SET class_rule =
        '{
         "name": "transportobj_line",
         "title": "Искусственные дорожные сооружения",
+        "styleName": "transportobj_line",
         "readOnly": true,
         "tableName": "transportobj_line",
         "originName": "TransportObj",
@@ -14359,7 +14278,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -14661,7 +14579,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -15023,7 +14940,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -15142,7 +15058,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -15461,7 +15376,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -15644,7 +15558,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -15722,7 +15635,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -16013,7 +15925,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -16376,7 +16287,6 @@ SET class_rule =
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -16391,7 +16301,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -16896,7 +16805,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -17081,7 +16989,6 @@ SET class_rule =
             "title": "Вместимость, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -17149,7 +17056,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -17361,7 +17267,6 @@ SET class_rule =
             "title": "Пропускная способность аэропорта, пасс./час",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -17492,7 +17397,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -17953,7 +17857,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18165,7 +18068,6 @@ SET class_rule =
             "title": "Количество топливораздаточных колонок автозаправочных станций",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18173,7 +18075,6 @@ SET class_rule =
             "title": "Количество постов станций технического обслуживания",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18238,7 +18139,6 @@ SET class_rule =
             "title": "Этажность стоянок",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18247,7 +18147,6 @@ SET class_rule =
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18260,7 +18159,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18609,7 +18507,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18836,7 +18733,6 @@ SET class_rule =
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18844,7 +18740,6 @@ SET class_rule =
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -18857,7 +18752,7 @@ SET class_rule =
                 "value": "1"
               },
               {
-                "title": "I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))",
+                "title": "I (Высокое, св. 0,6 до 1,2 МПа включительно (для СУГ до 1,6 МПа включительно))",
                 "value": "2"
               },
               {
@@ -18905,7 +18800,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19182,7 +19076,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19508,7 +19401,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19820,7 +19712,7 @@ SET class_rule =
                 "value": "3"
               },
               {
-                "title": "Медицинский отряд (в т. ч. специального назначения)",
+                "title": "Медицинский отряд (в т. ч. специального назначения)",
                 "value": "4"
               }
             ]
@@ -19903,7 +19795,6 @@ SET class_rule =
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19911,7 +19802,6 @@ SET class_rule =
             "title": "Мощность круглосуточного стационара, количество коек",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19919,7 +19809,6 @@ SET class_rule =
             "title": "Мощность дневного стационара, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19927,7 +19816,6 @@ SET class_rule =
             "title": "Число автомобилей скорой медицинской помощи, единиц автомобилей",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19942,7 +19830,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -19955,7 +19842,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 10
           },
           {
@@ -20303,7 +20189,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20615,7 +20500,7 @@ SET class_rule =
                 "value": "3"
               },
               {
-                "title": "Медицинский отряд (в т. ч. специального назначения)",
+                "title": "Медицинский отряд (в т. ч. специального назначения)",
                 "value": "4"
               }
             ]
@@ -20698,7 +20583,6 @@ SET class_rule =
             "title": "Мощность медицинской организации по оказанию медицинской помощи амбулаторно, количество посещений в смену",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20706,7 +20590,6 @@ SET class_rule =
             "title": "Мощность круглосуточного стационара, количество коек",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20714,7 +20597,6 @@ SET class_rule =
             "title": "Мощность дневного стационара, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20722,7 +20604,6 @@ SET class_rule =
             "title": "Число автомобилей скорой медицинской помощи, единиц автомобилей",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20737,7 +20618,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -20750,7 +20630,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 10
           },
           {
@@ -21096,7 +20975,6 @@ SET class_rule =
             "title": "Пропускная способность, ед./сут.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -21189,7 +21067,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -21403,7 +21280,6 @@ SET class_rule =
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -21411,7 +21287,6 @@ SET class_rule =
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -21460,7 +21335,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -21754,7 +21628,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -22069,7 +21942,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -22289,7 +22161,6 @@ SET class_rule =
             "title": "Срок функционирования зоны ",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -22297,7 +22168,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -22645,7 +22515,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -23127,7 +22996,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -23486,7 +23354,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -23909,7 +23776,6 @@ SET class_rule =
             "title": "Среднесуточная посещаемость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -23941,7 +23807,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -23954,7 +23819,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -24256,7 +24120,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -24797,7 +24660,6 @@ SET class_rule =
             "title": "Этажность застройки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -24812,7 +24674,6 @@ SET class_rule =
             "title": "Численность населения, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -24820,7 +24681,6 @@ SET class_rule =
             "title": "Класс опасности объекта в соответствии с санитарной классификацией",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -24833,7 +24693,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -25475,7 +25334,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -25837,7 +25695,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26020,7 +25877,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26098,7 +25954,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26270,7 +26125,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26605,7 +26459,6 @@ SET class_rule =
             "title": "Вместимость стационарных учреждений (отделений), мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26613,7 +26466,6 @@ SET class_rule =
             "title": "Численность граждан, обслуживаемых на дому, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26621,7 +26473,6 @@ SET class_rule =
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26636,7 +26487,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -26649,7 +26499,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27098,7 +26947,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27244,7 +27092,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27581,7 +27428,6 @@ SET class_rule =
             "title": "Вместимость стационарных учреждений (отделений), мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27589,7 +27435,6 @@ SET class_rule =
             "title": "Численность граждан, обслуживаемых на дому, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27597,7 +27442,6 @@ SET class_rule =
             "title": "Мощность учреждений (отделений), число обслуживаемых лиц в сутки (без услуг стационара)",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27612,7 +27456,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -27625,7 +27468,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -28074,7 +27916,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -28220,7 +28061,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -28433,7 +28273,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29054,7 +28893,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29774,7 +29612,6 @@ SET class_rule =
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29782,7 +29619,6 @@ SET class_rule =
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29790,7 +29626,6 @@ SET class_rule =
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29798,7 +29633,6 @@ SET class_rule =
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29806,7 +29640,6 @@ SET class_rule =
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29837,7 +29670,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -29850,7 +29682,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30203,7 +30034,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30381,7 +30211,6 @@ SET class_rule =
             "title": "Оценка количества рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30394,7 +30223,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30629,7 +30457,6 @@ SET class_rule =
             "title": "Количество автомобилей",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30742,7 +30569,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -30932,11 +30758,11 @@ SET class_rule =
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Электрическая подстанция 1150 кВ",
+                "title": "Электрическая подстанция 1150 кВ",
                 "value": "602040201"
               },
               {
-                "title": "Электрическая подстанция 800 кВ",
+                "title": "Электрическая подстанция 800 кВ",
                 "value": "602040202"
               },
               {
@@ -30944,55 +30770,55 @@ SET class_rule =
                 "value": "602040203"
               },
               {
-                "title": "Электрическая подстанция 600 кВ",
+                "title": "Электрическая подстанция 600 кВ",
                 "value": "602040204"
               },
               {
-                "title": "Электрическая подстанция 500 кВ",
+                "title": "Электрическая подстанция 500 кВ",
                 "value": "602040205"
               },
               {
-                "title": "Электрическая подстанция 400 кВ",
+                "title": "Электрическая подстанция 400 кВ",
                 "value": "602040206"
               },
               {
-                "title": "Электрическая подстанция 330 кВ",
+                "title": "Электрическая подстанция 330 кВ",
                 "value": "602040207"
               },
               {
-                "title": "Электрическая подстанция 300 кВ",
+                "title": "Электрическая подстанция 300 кВ",
                 "value": "602040208"
               },
               {
-                "title": "Электрическая подстанция 220 кВ",
+                "title": "Электрическая подстанция 220 кВ",
                 "value": "602040209"
               },
               {
-                "title": "Электрическая подстанция 150 кВ",
+                "title": "Электрическая подстанция 150 кВ",
                 "value": "602040210"
               },
               {
-                "title": "Электрическая подстанция 110 кВ",
+                "title": "Электрическая подстанция 110 кВ",
                 "value": "602040211"
               },
               {
-                "title": "Электрическая подстанция 60 кВ",
+                "title": "Электрическая подстанция 60 кВ",
                 "value": "602040212"
               },
               {
-                "title": "Электрическая подстанция 35 кВ",
+                "title": "Электрическая подстанция 35 кВ",
                 "value": "602040213"
               },
               {
-                "title": "Электрическая подстанция 20 кВ",
+                "title": "Электрическая подстанция 20 кВ",
                 "value": "602040214"
               },
               {
-                "title": "Электрическая подстанция 10 кВ",
+                "title": "Электрическая подстанция 10 кВ",
                 "value": "602040215"
               },
               {
-                "title": "Электрическая подстанция 6 кВ",
+                "title": "Электрическая подстанция 6 кВ",
                 "value": "602040216"
               },
               {
@@ -31004,7 +30830,7 @@ SET class_rule =
                 "value": "602040218"
               },
               {
-                "title": "Электрическая подстанция 400 кВ преобразовательная",
+                "title": "Электрическая подстанция 400 кВ преобразовательная",
                 "value": "602040221"
               },
               {
@@ -31179,7 +31005,6 @@ SET class_rule =
             "pattern": "[\\-+]?[0-9]+",
             "required": true,
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -31206,7 +31031,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -31473,7 +31297,6 @@ SET class_rule =
             "title": "Вместимость железнодорожного вокзала, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -31503,7 +31326,6 @@ SET class_rule =
             "title": "Размер движения пассажирских поездов, пар в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -31511,7 +31333,6 @@ SET class_rule =
             "title": "Размер движения грузовых поездов, пар в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -31584,7 +31405,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -32030,7 +31850,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -32273,7 +32092,6 @@ SET class_rule =
             "title": "Количество автомобилей",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -32386,7 +32204,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -32700,7 +32517,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -32846,7 +32662,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33200,7 +33015,6 @@ SET class_rule =
             "title": "Количество посадочных мест объекта общественного питания, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33208,7 +33022,6 @@ SET class_rule =
             "title": "Количество рабочих (операционных) мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33221,7 +33034,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33419,7 +33231,7 @@ SET class_rule =
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
+                "title": "Объект спорта, включающий раздельно нормируемые спортивные сооружения (объекты) (в т. ч. физкультурно-оздоровительный комплекс)",
                 "value": "602010301"
               },
               {
@@ -33590,7 +33402,6 @@ SET class_rule =
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33598,7 +33409,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33611,7 +33421,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33948,7 +33757,6 @@ SET class_rule =
             "title": "Вместимость объектов, обеспечивающих временное проживание, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33956,7 +33764,6 @@ SET class_rule =
             "title": "Мощность объектов, не предусматривающих проживания, число обслуживаемых лиц в сутки",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33964,7 +33771,6 @@ SET class_rule =
             "title": "Единовременная пропускная способность, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33972,7 +33778,6 @@ SET class_rule =
             "title": "Количество стояночных мест лодочных станций и яхт-клубов, мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -33980,7 +33785,6 @@ SET class_rule =
             "title": "Вместимость объектов зрелищного назначения, зрительских мест",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34011,7 +33815,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34024,7 +33827,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34390,7 +34192,6 @@ SET class_rule =
             "title": "Среднесуточная посещаемость, чел.",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34422,7 +34223,6 @@ SET class_rule =
             "title": "Количество рабочих мест, единиц",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34435,7 +34235,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -34867,7 +34666,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -35434,7 +35232,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -36741,7 +36538,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -37156,7 +36952,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -37427,7 +37222,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -37698,7 +37492,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38016,7 +37809,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38187,7 +37979,6 @@ SET class_rule =
             "title": "Количество труб",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38195,7 +37986,6 @@ SET class_rule =
             "title": "Диаметр трубопровода, мм",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38208,7 +37998,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38421,7 +38210,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -38885,7 +38673,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -39253,7 +39040,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -39472,7 +39258,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -39685,7 +39470,6 @@ SET class_rule =
             "title": "Срок реализации",
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT",
-            "maxInclusive": 2147483647,
             "minInclusive": 1
           },
           {
@@ -39793,6 +39577,7 @@ SET class_rule =
           "name": "mp",
           "title": "Образуемые земельные участки",
           "tableName": "mp",
+          "styleName": "mp",
           "originName": "mp",
           "tags": ["system", "Приказ 10"],
           "properties": [

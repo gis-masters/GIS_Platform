@@ -71,7 +71,6 @@ SET class_rule =
       "targetProperty": "cad_num"
     }
   ],
-  "styleName": "dl_data_kpt",
   "tableName": "dl_data_kpt",
   "properties": [
     {
@@ -354,7 +353,7 @@ UPDATE data.schemas
 SET class_rule =
     '{
     "tags": [
-        "System",
+        "system",
         "КПТ"
     ],
     "name": "borderwaterobj_polilyne_pro",
@@ -1317,7 +1316,7 @@ UPDATE data.schemas
 SET class_rule =
     '{
     "tags": [
-        "System",
+        "system",
         "КПТ"
     ],
     "name": "zouit_pro",

@@ -3495,7 +3495,6 @@ SET class_rule =
   "name": "dl_data_owners_schema",
   "title": "Собственники",
   "readOnly": true,
-  "styleName": "dl_data_owners_schema",
   "tableName": "dl_data_owners",
   "properties": [
     {

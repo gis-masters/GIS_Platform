@@ -4025,7 +4025,6 @@ WHERE name = 'dl_data_section8_schema';
 UPDATE data.schemas 
 SET class_rule =
     '{
-    "styleName": "documents",
     "tags": [
         "system",
         "ГИСОГД"
@@ -35842,13 +35841,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section10",
     "title": "10. Зоны с особыми условиями использования территории",
-    "styleName": "dl_data_section10",
     "tableName": "dl_data_section10",
     "originName": "dl_data_section10",
     "properties": [
@@ -36444,13 +36442,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section11",
     "title": "11. Материалы по надземным и подземным коммуникациям",
-    "styleName": "dl_data_section11",
     "tableName": "dl_data_section11",
     "originName": "dl_data_section11",
     "properties": [
@@ -37305,13 +37302,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
   "name": "dl_data_section13",
   "title": "13. Дела о застроенных или подлежащих застройке земельных участках",
-  "styleName": "dl_data_section13",
   "tableName": "dl_data_section13",
   "originName": "dl_data_section13",
   "properties": [
@@ -42724,13 +42720,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section14",
     "title": "14. Программы реализации документов территориального планирования",
-    "styleName": "dl_data_section14",
     "tableName": "dl_data_section14",
     "originName": "dl_data_section14",
     "properties": [
@@ -43761,13 +43756,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section17",
     "title": "17. Информационные модели объектов капитального строительства",
-    "styleName": "dl_data_section17",
     "tableName": "dl_data_section17",
     "properties": [
         {
@@ -44300,13 +44294,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section18",
     "title": "18. Иные сведения,документы,материалы",
-    "styleName": "dl_data_section18",
     "tableName": "dl_data_section18",
     "properties": [
         {
@@ -44772,13 +44765,12 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],
     "name": "dl_data_section19_schema",
     "title": "Cервисы предоставления государственных и муниципальных услуг",
-    "styleName": "dl_data_section19_schema",
     "tableName": "dl_data_section19",
     "originName": "dl_data_section19",
     "properties": [
@@ -45637,7 +45629,7 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "System",
+        "system",
         "Библиотека",
         "ГИСОГД"
     ],

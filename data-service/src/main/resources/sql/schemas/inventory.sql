@@ -5181,7 +5181,6 @@ SET class_rule =
       "targetProperty": "cad_num"
     }
   ],
-  "styleName": "dl_data_flats",
   "tableName": "dl_data_flats",
   "originName": "dl_data_flats",
   "properties": [
@@ -5541,7 +5540,6 @@ SET class_rule =
   "name": "dl_data_owners_balaklava_schema",
   "title": "Права",
   "readOnly": true,
-  "styleName": "dl_data_owners_balaklava_schema",
   "tableName": "dl_data_owners_balaklava",
   "originName": "dl_data_owners_balaklava",
   "properties": [

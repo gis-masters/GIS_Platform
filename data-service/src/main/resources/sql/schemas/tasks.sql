@@ -13,7 +13,6 @@ SET class_rule =
   "tableName": "tasks",
   "description": "Реестр системных и настраиваемых задач",
   "originName": "tasks",
-  "styleName": "tasks_schema_v1",
   "readOnly": false,
   "geometryType": "MultiPolygon",
   "properties": [

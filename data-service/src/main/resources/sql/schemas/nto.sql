@@ -38,8 +38,8 @@ UPDATE data.schemas
 SET class_rule =
     '{
     "tags": [
-        "system",
-        "НТО"
+      "system",
+      "НТО"
     ],
     "name": "trading_responsezone_simf_2022",
     "title": "Зоны ответственности",
@@ -93,6 +93,10 @@ WHERE name = 'trading_responsezone_simf_2022';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "nto_all",
   "title": "Нестационарные торговые объекты",
   "views": [
@@ -776,6 +780,10 @@ WHERE name = 'nto_all';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "nto_doc_point",
   "title": "Нестационарные торговые объекты c документами",
   "views": [
@@ -1559,6 +1567,10 @@ WHERE name = 'nto_doc_point';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "nto_doc",
   "title": "Нестационарные торговые объекты",
   "views": [
@@ -2352,6 +2364,10 @@ WHERE name = 'nto_doc';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "nto_all_point",
   "title": "Нестационарные торговые объекты",
   "views": [
@@ -3025,6 +3041,10 @@ WHERE name = 'nto_all_point';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "nto_zone",
   "title": "Зоны проведения мероприятий",
   "readOnly": false,
@@ -3172,6 +3192,10 @@ WHERE name = 'nto_zone';
 UPDATE data.schemas 
 SET class_rule =
 '{
+  "tags": [
+    "system",
+    "НТО"
+  ],
   "name": "zone_requirement_nto",
   "title": "Зоны требований к НТО",
   "readOnly": false,
