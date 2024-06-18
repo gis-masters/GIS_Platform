@@ -4,10 +4,11 @@ import { Adjust } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
+import { PropertySchema } from '../../../../services/data/schema/schema.models';
 import { customStyleStrokeColors, PointRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 import { cnCustomStyleControl } from '../../CustomStyleControl';
-import { CustomStyleControlLabelPropertyNameSelect } from '../../LabelPropertyNameSelect/CustomStyleControl-LabelPropertyNameSelect';
+import { CustomStyleControlLabelPropertySelect } from '../../LabelPropertySelect/CustomStyleControl-LabelPropertySelect';
 import { CustomStyleControlMarkSelect } from '../../MarkSelect/CustomStyleControl-MarkSelect';
 import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
@@ -47,11 +48,11 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
             onChange={this.handleStrokeColorChange}
           />
 
-          <CustomStyleControlLabelPropertyNameSelect
+          <CustomStyleControlLabelPropertySelect
             label='подпись'
             schema={this.props.schema}
             onChange={this.handlerLabelChange}
-            value={value.rule.labelPropertyName}
+            labelProperty={value.rule.labelProperty}
           />
         </div>
       </div>
@@ -59,7 +60,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
   }
 
   @boundMethod
-  private handlerLabelChange(labelPropertyName: string) {
+  private handlerLabelChange(labelProperty: PropertySchema) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'point') {
@@ -68,7 +69,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
 
     const rule: PointRule = {
       ...value.rule,
-      labelPropertyName
+      labelProperty
     };
 
     onChange({ ...value, rule });

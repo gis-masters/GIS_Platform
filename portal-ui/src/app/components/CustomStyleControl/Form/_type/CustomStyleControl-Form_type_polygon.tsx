@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
+import { PropertySchema } from '../../../../services/data/schema/schema.models';
 import {
   customStyleFillColors,
   customStyleStrokeColors,
@@ -13,7 +14,7 @@ import { Shape } from '../../../Icons/Shape';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
 import { cnCustomStyleControl } from '../../CustomStyleControl';
 import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
-import { CustomStyleControlLabelPropertyNameSelect } from '../../LabelPropertyNameSelect/CustomStyleControl-LabelPropertyNameSelect';
+import { CustomStyleControlLabelPropertySelect } from '../../LabelPropertySelect/CustomStyleControl-LabelPropertySelect';
 import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
 import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
@@ -59,11 +60,11 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
             onChange={this.handleFillColorChange}
           />
 
-          <CustomStyleControlLabelPropertyNameSelect
+          <CustomStyleControlLabelPropertySelect
             label='подпись'
             schema={this.props.schema}
             onChange={this.labelChange}
-            value={value.rule.labelPropertyName}
+            labelProperty={value.rule.labelProperty}
           />
         </div>
       </div>
@@ -71,7 +72,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
   }
 
   @boundMethod
-  private labelChange(labelPropertyName: string) {
+  private labelChange(labelProperty: PropertySchema) {
     const { onChange, value } = this.props;
 
     if (value.type !== 'polygon') {
@@ -80,7 +81,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
 
     const rule: PolygonRule = {
       ...value.rule,
-      labelPropertyName
+      labelProperty
     };
 
     onChange({ ...value, rule });

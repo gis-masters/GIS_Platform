@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 
+import { Schema } from '../../data/schema/schema.models';
 import { Mime } from '../../util/Mime';
 import { GeometryType } from '../wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../wfs/wfs.util';
@@ -34,7 +35,7 @@ export function buildCustomSld(layerComplexName: string, style: CustomStyleDescr
   );
 }
 
-export function parseCustomStyle(sld: string): CustomStyleDescription {
+export function parseCustomStyle(sld: string, schema?: Schema): CustomStyleDescription {
   const sldDocument = new DOMParser().parseFromString(sld, 'application/xml');
 
   const lineSymbolizerNode = sldDocument.querySelector('LineSymbolizer');
@@ -42,20 +43,20 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
   const pointSymbolizerNode = sldDocument.querySelector('PointSymbolizer');
   const textSymbolizerNode = sldDocument.querySelector('TextSymbolizer');
 
-  const labelPropertyName = textSymbolizerNode?.querySelector('PropertyName');
+  const labelProperty = textSymbolizerNode?.querySelector('PropertyName');
 
   if (pointSymbolizerNode && lineSymbolizerNode && polygonSymbolizerNode) {
     return {
       type: 'all',
-      rule: getCustomStyleAllRule(sldDocument)
+      rule: getCustomStyleAllRule(sldDocument, schema)
     };
   }
 
   if (lineSymbolizerNode) {
     const rule = parseLineSymbolizer(lineSymbolizerNode);
 
-    if (labelPropertyName?.textContent) {
-      rule.labelPropertyName = labelPropertyName?.textContent;
+    if (labelProperty?.textContent) {
+      rule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
     }
 
     return {
@@ -67,8 +68,8 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
   if (polygonSymbolizerNode) {
     const rule = parsePolygonSymbolizer(polygonSymbolizerNode);
 
-    if (labelPropertyName?.textContent) {
-      rule.labelPropertyName = labelPropertyName?.textContent;
+    if (labelProperty?.textContent) {
+      rule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
     }
 
     return {
@@ -80,8 +81,8 @@ export function parseCustomStyle(sld: string): CustomStyleDescription {
   if (pointSymbolizerNode) {
     const rule = parsePointSymbolizer(pointSymbolizerNode);
 
-    if (labelPropertyName?.textContent) {
-      rule.labelPropertyName = labelPropertyName?.textContent;
+    if (labelProperty?.textContent) {
+      rule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
     }
 
     return {
@@ -220,7 +221,7 @@ export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygo
   throw new Error('неподдерживаемый тип геометрии ' + geometryType);
 }
 
-function getCustomStyleAllRule(sldDocument: Document): [PointRule, LineRule, PolygonRule] {
+function getCustomStyleAllRule(sldDocument: Document, schema?: Schema): [PointRule, LineRule, PolygonRule] {
   const sldRules = sldDocument.querySelectorAll('Rule');
 
   let pointRule: PointRule;
@@ -229,14 +230,14 @@ function getCustomStyleAllRule(sldDocument: Document): [PointRule, LineRule, Pol
 
   for (const rule of sldRules) {
     const textSymbolizerNode = rule.querySelector('TextSymbolizer');
-    const labelPropertyName = textSymbolizerNode?.querySelector('PropertyName');
+    const labelProperty = textSymbolizerNode?.querySelector('PropertyName');
 
     const pointSymbolizer = rule.querySelector('PointSymbolizer');
     if (pointSymbolizer) {
       pointRule = parsePointSymbolizer(pointSymbolizer);
 
-      if (labelPropertyName?.textContent) {
-        pointRule.labelPropertyName = labelPropertyName?.textContent;
+      if (labelProperty?.textContent) {
+        pointRule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
       }
     }
 
@@ -244,8 +245,8 @@ function getCustomStyleAllRule(sldDocument: Document): [PointRule, LineRule, Pol
     if (lineSymbolizer) {
       lineRule = parseLineSymbolizer(lineSymbolizer);
 
-      if (labelPropertyName?.textContent) {
-        lineRule.labelPropertyName = labelPropertyName?.textContent;
+      if (labelProperty?.textContent) {
+        lineRule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
       }
     }
 
@@ -253,8 +254,8 @@ function getCustomStyleAllRule(sldDocument: Document): [PointRule, LineRule, Pol
     if (polygonSymbolizer) {
       polygonRule = parsePolygonSymbolizer(polygonSymbolizer);
 
-      if (labelPropertyName?.textContent) {
-        polygonRule.labelPropertyName = labelPropertyName?.textContent;
+      if (labelProperty?.textContent) {
+        polygonRule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
       }
     }
   }

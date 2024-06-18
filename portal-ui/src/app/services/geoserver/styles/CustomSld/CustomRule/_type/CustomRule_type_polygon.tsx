@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from 'react';
 
-import { LABEL_PROPERTY_NAME_DEFAULT } from '../../../styles.models';
+import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
 import { Fill } from '../../Fill/Fill';
 import { Filter } from '../../Filter/Filter';
@@ -66,8 +66,8 @@ export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare })
           </Stroke>
         </PolygonSymbolizer>
 
-        {rule.labelPropertyName && rule.labelPropertyName !== LABEL_PROPERTY_NAME_DEFAULT && (
-          <CustomLabel propertyName={rule.labelPropertyName} />
+        {rule.labelProperty && rule.labelProperty !== LABEL_PROPERTY_DEFAULT && (
+          <CustomLabel labelProperty={rule.labelProperty} />
         )}
       </Wrapper>
     </>

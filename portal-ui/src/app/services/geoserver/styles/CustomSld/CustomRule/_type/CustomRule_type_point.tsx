@@ -1,6 +1,6 @@
 import React, { FC, Fragment } from 'react';
 
-import { LABEL_PROPERTY_NAME_DEFAULT } from '../../../styles.models';
+import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
 import { ElseFilter } from '../../ElseFilter/ElseFilter';
 import { Fill } from '../../Fill/Fill';
@@ -39,8 +39,8 @@ export const CustomRuleTypePoint: FC<CustomRuleProps> = ({ rule, type, bare }) =
         </Graphic>
       </PointSymbolizer>
 
-      {rule.labelPropertyName && rule.labelPropertyName !== LABEL_PROPERTY_NAME_DEFAULT && (
-        <CustomLabel propertyName={rule.labelPropertyName} />
+      {rule.labelProperty && rule.labelProperty !== LABEL_PROPERTY_DEFAULT && (
+        <CustomLabel labelProperty={rule.labelProperty} />
       )}
     </Wrapper>
   );

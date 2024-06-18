@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Schema } from '../../services/data/schema/schema.models';
 import {
   CustomStyleDescription,
-  LABEL_PROPERTY_NAME_DEFAULT,
+  LABEL_PROPERTY_DEFAULT,
   LineRule,
   PointRule,
   PolygonRule,
@@ -30,20 +30,20 @@ const defaultPointRule: PointRule = {
   markSize: 20,
   markColor: '#ed5c57',
   strokeColor: '#0f5c1a',
-  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
+  labelProperty: LABEL_PROPERTY_DEFAULT,
   strokeWidth: 2
 };
 
 const defaultLineRule: LineRule = {
   strokeColor: '#0f5c1a',
-  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
+  labelProperty: LABEL_PROPERTY_DEFAULT,
   strokeWidth: 2
 };
 
 const defaultPolygonRule: PolygonRule = {
   fillColor: '#80ff80',
   strokeColor: '#0f5c1a',
-  labelPropertyName: LABEL_PROPERTY_NAME_DEFAULT,
+  labelProperty: LABEL_PROPERTY_DEFAULT,
   strokeWidth: 2
 };
 
@@ -123,7 +123,11 @@ export class CustomStyleControl extends Component<FormControlProps> {
   private get parsedValue(): CustomStyleDescription | undefined {
     const { fieldValue } = this.props;
 
-    return typeof fieldValue === 'string' ? parseCustomStyle(fieldValue) : defaultCustomStyles[this.type];
+    if (this.schema) {
+      return typeof fieldValue === 'string'
+        ? parseCustomStyle(fieldValue, this.schema)
+        : defaultCustomStyles[this.type];
+    }
   }
 
   @boundMethod
