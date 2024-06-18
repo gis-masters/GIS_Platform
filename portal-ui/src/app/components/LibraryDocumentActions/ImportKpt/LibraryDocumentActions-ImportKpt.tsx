@@ -8,14 +8,12 @@ import { boundMethod } from 'autobind-decorator';
 import { importKpt } from '../../../services/data/kpt/kpt.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
-import { CrgLayer } from '../../../services/gis/layers/layers.models';
-import { FieldValidator } from '../../../services/util/form/formValidation.utils';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Datasource } from '../../AddLayerDialog/AddLayerDialog';
+import { ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { SelectVectorTableControl } from '../../SelectVectorTableControl/SelectVectorTableControl';
+import { SelectedVectorTable, SelectVectorTableControl } from '../../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsImportKpt = cn('LibraryDocumentActions', 'ImportKpt');
@@ -25,23 +23,14 @@ interface LibraryDocumentActionsImportKptProps {
   as: ActionsItemVariant;
 }
 
-const validateLayer: FieldValidator = value => {
-  if (!value) {
-    return ['Некорректное значение'];
-  }
-};
-
-interface FormValue extends CrgLayer {
-  datasource?: Datasource;
-  layerType?: string;
-}
+type FormValue = Record<string, SelectedVectorTable>;
 
 @observer
 export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentActionsImportKptProps> {
-  @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
-  @observable private importDisabled = true;
+  @observable private formValue: FormValue = getDefaultValues(this.fields);
   @observable private busy = false;
   @observable private open = false;
+  @observable private lastPath?: ExplorerItemData[];
 
   constructor(props: LibraryDocumentActionsImportKptProps) {
     super(props);
@@ -68,9 +57,9 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
             open={this.open}
             subtitle='Выберите таблицы для импорта'
             schema={{ properties: this.fields }}
-            actionFunction={this.add}
+            actionFunction={this.doImport}
             onFormChange={this.handleFormChange}
-            disabled={this.importDisabled}
+            onFieldChange={this.handleFieldChange}
             actionButtonProps={{ children: 'Импортировать' }}
             onClose={this.close}
             value={this.formValue}
@@ -83,16 +72,36 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
 
   @action.bound
   private handleFormChange(formValue: FormValue) {
-    this.setImportDisabled(!Object.values(formValue).filter(item => item !== true).length);
-
     this.formValue = formValue;
   }
 
+  @action.bound
+  private handleFieldChange(value: SelectedVectorTable): void {
+    if (
+      value &&
+      typeof value === 'object' &&
+      'path' in value &&
+      Array.isArray(value.path) &&
+      value.path.every(item => isExplorerItemData(item))
+    ) {
+      this.lastPath = value.path;
+    }
+  }
+
   @boundMethod
-  private async add() {
+  private async doImport() {
     this.setBusy(true);
 
-    const dataSources = Object.values(this.formValue).filter(item => item !== true) as Datasource[];
+    const dataSources = Object.values(this.formValue).filter(Boolean);
+
+    if (!dataSources.length) {
+      throw new Error('Необходимо выбрать хотя бы один слой для импорта');
+    }
+
+    dataSources.forEach(item => {
+      delete item.path;
+    });
+
     const tables = dataSources.map(source => {
       return { dataset: source.vectorTable?.dataset, table: source.vectorTable?.identifier };
     });
@@ -110,8 +119,9 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
       const response = await importKpt(importRequest);
 
       Toast.success(`выполняется задача импорт кпт №${response.id}`);
-    } catch {
+    } catch (error) {
       this.setBusy(false);
+      throw error;
     }
 
     this.setBusy(false);
@@ -125,73 +135,147 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
         propertyType: PropertyType.CUSTOM,
         name: 'zu_pro',
         title: 'Земельные участки',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%zu_pro%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'oks_pro',
-        title: 'Объекты капитального строительства (полиогональные)',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        title: 'Объекты капитального строительства (полигональные)',
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%oks_pro%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
-        name: 'oks_polyline_pro',
+        name: 'oks_polyline',
         title: 'Объекты капитального строительства (линейные)',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%oks_polyline%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'oks_constructions_points',
         title: 'Объекты капитального строительства (точечные)',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%oks_constructions%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'zouit_pro',
         title: 'Зоны с особыми условиями использования территорий',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%zouit_pro%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'borderwaterobj',
         title: 'Береговая линия (полиогональные)',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            $and: [
+              {
+                identifier: {
+                  $like: '%borderwaterobj%'
+                }
+              },
+              {
+                $not: {
+                  identifier: {
+                    $like: '%polilyne%'
+                  }
+                }
+              }
+            ]
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'borderwaterobj_polyline',
         title: 'Береговая линия (линейные)',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%borderwaterobj_polilyne%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'municipalityBoundariesEGRN',
         title: 'Границы муниципальных образований',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%municipality_boundaries_egrn%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       },
       {
         propertyType: PropertyType.CUSTOM,
         name: 'kvartal_kpt',
         title: 'Кадастровые кварталы',
-        defaultValue: true,
-        ControlComponent: props => <SelectVectorTableControl writableOnly {...props} />,
-        validationFormula: validateLayer
+        startPath: this.lastPath,
+        writableTablesOnly: true,
+        customFilters: {
+          [ExplorerItemType.DATASET]: {
+            identifier: {
+              $like: '%kvartal_kpt%'
+            }
+          }
+        },
+        ControlComponent: SelectVectorTableControl
       }
     ];
   }
@@ -205,11 +289,6 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
   @action.bound
   private clearForm() {
     this.formValue = getDefaultValues(this.fields);
-  }
-
-  @action.bound
-  private setImportDisabled(importDisabled: boolean) {
-    this.importDisabled = importDisabled;
   }
 
   @action.bound

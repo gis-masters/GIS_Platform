@@ -6,16 +6,21 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { isFeaturesUpdateAllowed } from '../../services/data/permissions/permissions.service';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { ExplorerItemData, ExplorerItemType, isCustomFilters } from '../Explorer/Explorer.models';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./SelectVectorTableControl.scss';
 
 const cnSelectVectorTable = cn('SelectVectorTableControl');
+
+export interface SelectedVectorTable extends Datasource {
+  path: ExplorerItemData[];
+}
 
 interface Datasource {
   dataset: Dataset;
@@ -24,14 +29,14 @@ interface Datasource {
 
 interface SelectVectorTableControlProps extends FormControlProps {
   usedVectorTables?: VectorTable[];
-  writableOnly?: boolean;
 }
 
 @observer
 export class SelectVectorTableControl extends Component<SelectVectorTableControlProps> {
   @observable private dialogOpen = false;
-  @observable private selectedDataset?: Dataset;
   @observable private selectedVectorTable?: VectorTable;
+  private selectedDataset?: Dataset;
+  private path?: ExplorerItemData[];
 
   constructor(props: SelectVectorTableControlProps) {
     super(props);
@@ -39,8 +44,15 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   }
 
   render() {
-    const { className, htmlId, fieldValue = {} } = this.props;
+    const { property, className, htmlId, fieldValue = {} } = this.props;
     const { vectorTable } = fieldValue as Datasource;
+
+    if (property.propertyType !== PropertyType.CUSTOM) {
+      throw new Error('Невозможный тип свойства');
+    }
+
+    const { startPath, customFilters } = property;
+    const hasStartPath = Array.isArray(startPath);
 
     return (
       <>
@@ -63,10 +75,20 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
             <Explorer
               explorerRole='SelectVectorTable'
               className={cnSelectVectorTable('Explorer')}
-              preset={ExplorerItemType.DATASET_ROOT}
+              preset={hasStartPath ? undefined : ExplorerItemType.DATASET_ROOT}
+              path={hasStartPath ? startPath : undefined}
               onSelect={this.handleSelect}
               onOpen={this.handleOpen}
               disabledTester={this.testForDisabled}
+              customFilters={isCustomFilters(customFilters) ? customFilters : undefined}
+              adaptersOverride={{
+                [ExplorerItemType.TABLE]: {
+                  customOpenAction: () => {
+                    this.submitDialog();
+                  },
+                  isFolder: () => false
+                }
+              }}
             />
           </DialogContent>
           <DialogActions>
@@ -94,16 +116,19 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
   @boundMethod
   private handleSelect(item: ExplorerItemData, path: ExplorerItemData[]) {
     if (item.type === ExplorerItemType.TABLE && !this.testForDisabled(item)) {
-      this.select(path[1].payload as Dataset, item.payload);
+      this.select(path[1].payload as Dataset, item.payload, path);
     } else {
       this.select();
     }
   }
 
   @action
-  private select(dataset?: Dataset, table?: VectorTable) {
+  private select(dataset?: Dataset, table?: VectorTable, path?: ExplorerItemData[]) {
     this.selectedDataset = dataset;
     this.selectedVectorTable = table;
+    if (path) {
+      this.path = path;
+    }
   }
 
   @boundMethod
@@ -132,7 +157,7 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
 
     if (onChange) {
       onChange({
-        value: { dataset: this.selectedDataset, vectorTable: this.selectedVectorTable },
+        value: { dataset: this.selectedDataset, vectorTable: this.selectedVectorTable, path: this.path },
         propertyName: property.name
       });
     }
@@ -146,7 +171,12 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
     if (item.type === ExplorerItemType.TABLE) {
       const table = item.payload;
 
-      if (this.props.writableOnly) {
+      const property = this.props.property;
+      if (property.propertyType !== PropertyType.CUSTOM) {
+        throw new Error('Невозможный тип свойства');
+      }
+
+      if (property.writableTablesOnly) {
         return !isFeaturesUpdateAllowed(table.dataset, table.identifier);
       }
 

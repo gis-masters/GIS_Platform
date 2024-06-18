@@ -39,6 +39,7 @@ export interface FormDialogProps<T> extends IClassNameProps {
   onSuccess?(): void;
   onError?(): void;
   onFormChange?(changedValue: T): void;
+  onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T], formValue: Partial<T>): void;
   additionalAction?: ReactNode;
   actionButtonProps?: Omit<ButtonProps, 'ref'>;
   actionFunction(value: T): Promise<void> | void;
@@ -86,8 +87,9 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       additionalAction,
       afterForm,
       actionButtonProps = {},
+      closeButtonProps,
       actionFunction,
-      closeButtonProps
+      onFieldChange
     } = this.props;
     const htmlId = generateRandomId();
 
@@ -116,6 +118,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
                 onFormSubmit={this.handleSubmit}
                 onActionSuccess={this.handleSuccess}
                 onActionError={this.handleError}
+                onFieldChange={onFieldChange}
                 actionFunction={actionFunction}
                 invoke={this.formInvoke}
               />
