@@ -117,84 +117,87 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
         this.featureDescription = applyViewOld(changeSchemaNamesCaseByFeature(oldSchema, firstFeature), view);
 
-        const schema = changeSchemaNamesCaseByFeature(oldSchema, firstFeature);
-        const newSchema = applyView(layerSchema, view);
+        const propertiesWithAppliedView = applyView(layerSchema, view).properties;
+        const propertiesWithChangedNames = changeSchemaNamesCaseByFeature(oldSchema, firstFeature).properties;
 
         this.features = this.features.map(feature => ({
           ...feature,
-          properties: feature.properties && calculateValues(feature.properties, newSchema.properties)
+          properties: feature.properties && calculateValues(feature.properties, propertiesWithAppliedView)
         }));
 
         this.editFeatureData = [];
 
-        this.featureDescription.properties.forEach(({ name, valueType }) => {
+        const featureProperties = this.featureDescription.properties;
+        featureProperties.forEach(({ name, valueType }) => {
           if (!Object.keys(firstFeature.properties).includes(name) && valueType !== ValueType.GEOMETRY) {
             firstFeature.properties[name] = null;
           }
         });
+        const convertedProperties = convertOldToNewProperties(featureProperties);
 
         Object.keys(firstFeature.properties)
-          .filter(
-            key =>
-              (key !== 'bbox' && newSchema.properties.some(item => key === item.name)) ||
-              (key !== 'bbox' &&
-                !newSchema.properties.some(item => key === item.name) &&
-                !schema.properties.some(item => key === item.name))
-          )
+          .filter(key => this.keyMatchBySchemas(key, propertiesWithAppliedView, propertiesWithChangedNames))
           .sort((a, b) => {
-            let indexA = newSchema.properties.findIndex(({ name }) => name === a);
+            let indexA = propertiesWithAppliedView.findIndex(({ name }) => name.toLowerCase() === a.toLowerCase());
             if (indexA === -1) {
-              indexA = newSchema.properties.length;
+              indexA = propertiesWithAppliedView.length;
             }
-            let indexB = newSchema.properties.findIndex(({ name }) => name === b);
+            let indexB = propertiesWithAppliedView.findIndex(({ name }) => name.toLowerCase() === b.toLowerCase());
             if (indexB === -1) {
-              indexB = newSchema.properties.length;
+              indexB = propertiesWithAppliedView.length;
             }
 
             return indexA - indexB;
           })
           .forEach(key => {
-            let currentValue = this.getFieldByKey(key)
-              ? convertToComplexField(this.getFieldByKey(key), firstFeature.properties)
+            const propertyByKey = convertedProperties.find(({ name }) => name.toLowerCase() === key.toLowerCase());
+
+            let currentProperty = propertyByKey
+              ? convertToComplexField(propertyByKey, firstFeature.properties)
               : firstFeature.properties[key];
 
             let property: OldPropertySchema | undefined;
             if (this.featureDescription) {
-              property = schemaService.getPropertySchemaByName(key, this.featureDescription.properties);
+              property = schemaService.getPropertySchemaByName(key, featureProperties);
             }
 
             if (
               property?.valueType === ValueType.DOUBLE &&
-              currentValue &&
+              currentProperty &&
               isNumber(property.fractionDigits) &&
               property.fractionDigits !== -1
             ) {
-              currentValue = Number(currentValue).toFixed(property.fractionDigits);
+              currentProperty = Number(currentProperty).toFixed(property.fractionDigits);
             }
 
-            if (property?.valueType === ValueType.DATETIME && currentValue) {
-              currentValue =
-                currentValue instanceof Date || typeof currentValue === 'number' || typeof currentValue === 'string'
-                  ? formatDate(currentValue, systemFormat)
+            if (property?.valueType === ValueType.DATETIME && currentProperty) {
+              currentProperty =
+                currentProperty instanceof Date ||
+                typeof currentProperty === 'number' ||
+                typeof currentProperty === 'string'
+                  ? formatDate(currentProperty, systemFormat)
                   : '';
             }
 
-            if ((property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) && currentValue) {
-              currentValue = String(currentValue).trim();
+            if (
+              (property?.valueType === ValueType.STRING || property?.valueType === ValueType.TEXT) &&
+              currentProperty
+            ) {
+              currentProperty = String(currentProperty).trim();
             }
 
             if (property) {
               this.editFeatureData.push({
                 name: key,
                 property,
-                value: currentValue === null ? null : String(currentValue),
+                value: currentProperty === null ? null : String(currentProperty),
                 isFgistpProperty: true,
                 relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
               });
 
               const formControl = new UntypedFormControl(
                 {
-                  value: currentValue,
+                  value: currentProperty,
                   disabled: property.name === 'GLOBALID'
                 },
                 {
@@ -215,12 +218,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   title: key,
                   valueType: ValueType.STRING
                 },
-                value: currentValue === null ? null : String(currentValue),
+                value: currentProperty === null ? null : String(currentProperty),
                 isFgistpProperty: false,
                 relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
               });
 
-              const formControl = new UntypedFormControl(currentValue);
+              const formControl = new UntypedFormControl(currentProperty);
 
               if (this.mode === EditFeatureMode.multipleEdit) {
                 formControl.disable();
@@ -325,6 +328,13 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
   }
 
+  private keyMatchBySchemas(key: string, newProperties: PropertySchema[], oldProperties: OldPropertySchema[]) {
+    const keyExistInNew = newProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
+    const keyExistInOld = oldProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
+
+    return keyExistInNew || (!keyExistInNew && !keyExistInOld);
+  }
+
   async ngOnDestroy() {
     await mapService.highlightFeatures(mapStore.highlightedFeatures);
   }
@@ -346,25 +356,24 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.isSaveInProgress = true;
 
-    let newProperties = this.getActualValuesFromForm();
-
-    for (const key of Object.keys(newProperties)) {
-      const field = this.getFieldByKey(key as string);
-      if (field) {
-        const { [key]: value, ...rests } = newProperties;
+    const featureProperties = convertOldToNewProperties(this.featureDescription.properties);
+    let actualProperties = this.getActualValuesFromForm();
+    for (const key of Object.keys(actualProperties)) {
+      const propertyByKey = featureProperties.find(({ name }) => name === key);
+      if (propertyByKey) {
+        const { [key]: value, ...rests } = actualProperties;
         let val = value;
-        if (field.propertyType === PropertyType.STRING) {
+        if (propertyByKey.propertyType === PropertyType.STRING) {
           val = value.trim();
         }
-        newProperties = applyFieldValue(field, rests, val) as Record<string, string>;
+        actualProperties = applyFieldValue(propertyByKey, rests, val) as Record<string, string>;
       }
     }
 
     let ids = this.features.map(({ id }) => id);
-
     if (this.isNew) {
       ids = await transformFeature.insertFeatures(
-        [{ ...this.features[0], properties: newProperties, geometry: this.changedGeometry }],
+        [{ ...this.features[0], properties: actualProperties, geometry: this.changedGeometry }],
         this.layer
       );
     } else {
@@ -378,7 +387,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         geometry = this.changedGeometry;
       }
 
-      await this.batchUpdateFeatures(this.features, newProperties, geometry);
+      await this.batchUpdateFeatures(this.features, actualProperties, geometry);
     }
 
     sidebars.setFeaturesEdited(false);
@@ -406,12 +415,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     mapService.refreshAllLayers();
     communicationService.featuresUpdated.emit();
-  }
-
-  private getFieldByKey(key: string): PropertySchema {
-    const fields = convertOldToNewProperties(this.featureDescription.properties);
-
-    return fields.find(({ name }) => name === key);
   }
 
   deleteFeature(): void {
@@ -496,6 +499,14 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     return formatDate(value);
   }
 
+  isReadOnly(property: OldPropertySchema): boolean {
+    if (this.updatingAllowed) {
+      return !property.readOnly;
+    }
+
+    return this.updatingAllowed;
+  }
+
   private async batchUpdateFeatures(
     features: WfsFeature<Coordinate | CoordinateEdited>[],
     newProperties: Properties,
@@ -528,13 +539,5 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     Toast.success('Сохранено');
 
     communicationService.featuresUpdated.emit();
-  }
-
-  isReadOnly(property: OldPropertySchema): boolean {
-    if (this.updatingAllowed) {
-      return !property.readOnly;
-    }
-
-    return this.updatingAllowed;
   }
 }
